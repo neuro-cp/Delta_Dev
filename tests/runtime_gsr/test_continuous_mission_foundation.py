@@ -3,9 +3,11 @@ from dataclasses import replace
 import pytest
 
 from orchestration.runtime.continuous_mission_foundation import (
+    BehavioralEvaluationRecord,
     OBSERVATION_STATE,
     MainGoalContract,
     assess_main_goal_completion,
+    capability_is_acquired,
     capability_inventory_from_knowledge,
     compile_developmental_insight_requests,
     compile_developmental_operator_explanation,
@@ -20,20 +22,28 @@ from orchestration.runtime.continuous_mission_foundation import (
     main_goal_from_developmental_plan,
     evidence_to_findings,
     make_satisfied_transfer_record,
+    normalize_capability_record_for_recovery,
+    promote_capability_with_behavioral_evaluation,
     rank_weakness_frontier,
+    validate_behavioral_evaluation,
 )
 from orchestration.runtime.continuous_runtime_controller import (
     assess_continuous_mission_runtime,
     attach_continuous_mission,
     consume_continuous_capability_reassessment,
     consume_continuous_mission_application_decision,
+    consume_continuous_operator_interaction_response,
     continue_continuous_mission_after_reassessment,
     controller_snapshot,
+    derive_observation_exit_actions,
     export_continuous_mission_restart_state,
+    exit_observation_with_action_derivation,
     mark_continuous_api_unavailable,
     pause_continuous_mission_for_application,
     queue_continuous_mission_sandbox_work,
     refresh_continuous_mission_frontier,
+    recover_accepted_boundary_operator_requests,
+    recover_missing_continuous_application_review_request,
     restore_continuous_mission_restart_state,
     assess_and_advance_continuous_main_goal,
     refresh_developmental_self_direction,
@@ -130,6 +140,120 @@ def test_frontier_ranking_is_deterministic_and_excludes_solved_or_duplicate_weak
     assert solved and solved[0].status == "satisfied"
 
 
+def test_legacy_satisfied_record_without_behavioral_evaluation_is_downgraded_and_reopens_gap():
+    legacy = replace(
+        make_satisfied_transfer_record(),
+        reassessment="satisfied",
+        evidence_stage="legacy_unclassified",
+        capability_acquired=False,
+        behavioral_evaluation_ref="",
+        behavioral_evaluation=None,
+    )
+    recovered = normalize_capability_record_for_recovery(legacy)
+
+    assert recovered.reassessment == "candidate_structurally_validated"
+    assert recovered.evidence_stage == "candidate_structurally_validated"
+    assert recovered.capability_acquired is False
+    assert recovered.eligible_for_behavioral_evaluation is True
+    assert capability_is_acquired(recovered) is False
+
+    findings = evidence_to_findings(
+        (
+            {
+                "evidence_source": "legacy transfer record",
+                "observed_behavior": "transfer dependency identity remains unproven by independent behavior",
+                "first_incorrect_transition": "candidate artifact -> legacy satisfied record -> solved frontier",
+                "affected_capability": "transfer_dependency_identity_preservation",
+                "baseline_metric": "transfer_dependency_identity_preservation=0.0",
+                "confidence": 0.8,
+                "operator_value": 0.9,
+                "severity": 0.8,
+                "validation_method": "legacy_recovery",
+            },
+        )
+    )
+    ranked = rank_weakness_frontier(findings, knowledge_ledger=(recovered,))
+    assert ranked[0].status == "eligible"
+
+
+def test_behavioral_evaluation_is_required_for_capability_promotion():
+    structural = replace(
+        make_satisfied_transfer_record(),
+        reassessment="candidate_structurally_validated",
+        evidence_stage="candidate_structurally_validated",
+        capability_acquired=False,
+        eligible_for_behavioral_evaluation=True,
+        behavioral_evaluation_ref="",
+        behavioral_evaluation=None,
+    )
+    failed = BehavioralEvaluationRecord(
+        evaluation_id="eval-failed",
+        task_family_id="transfer_dependency_identity_preservation",
+        capability_id="transfer_dependency_identity_preservation",
+        developmental_gap_id="transfer-gap",
+        baseline_attempt_id="baseline-1",
+        candidate_id="candidate-1",
+        evaluation_protocol_version="v1",
+        task_source="candidate_generated",
+        training_case_ids=("case-1",),
+        sealed_or_preexisting_case_ids=(),
+        control_case_ids=("control-1",),
+        baseline_metrics={"target": 0.0},
+        post_candidate_metrics={"target": 1.0},
+        transfer_metrics={"target": 1.0, "threshold": 1.0},
+        regression_metrics={"controls_stable": True},
+        evidence_independence={
+            "case_source": "candidate_generated",
+            "candidate_generated_expected_outputs": True,
+            "self_reported_success": True,
+            "artifact_existence_only": True,
+        },
+        disposition="behaviorally_demonstrated",
+        evidence_refs=("candidate_metric",),
+    )
+    valid, failures = validate_behavioral_evaluation(failed)
+    promoted = promote_capability_with_behavioral_evaluation(structural, failed)
+
+    assert valid is False
+    assert "missing_sealed_or_preexisting_cases" in failures
+    assert capability_is_acquired(promoted) is False
+    assert promoted.reassessment == "insufficient_independent_evidence"
+
+    passing = BehavioralEvaluationRecord(
+        evaluation_id="eval-passing",
+        task_family_id="transfer_dependency_identity_preservation",
+        capability_id="transfer_dependency_identity_preservation",
+        developmental_gap_id="transfer-gap",
+        baseline_attempt_id="baseline-1",
+        candidate_id="candidate-1",
+        evaluation_protocol_version="v1",
+        task_source="immutable_benchmark_fixture",
+        training_case_ids=("train-1",),
+        sealed_or_preexisting_case_ids=("sealed-1", "sealed-2"),
+        control_case_ids=("control-1",),
+        baseline_metrics={"target": 0.0},
+        post_candidate_metrics={"target": 1.0},
+        transfer_metrics={"target": 1.0, "threshold": 1.0},
+        regression_metrics={"controls_stable": True},
+        evidence_independence={
+            "case_source": "sealed",
+            "candidate_generated_expected_outputs": False,
+            "self_reported_success": False,
+            "artifact_existence_only": False,
+        },
+        disposition="behaviorally_demonstrated",
+        evidence_refs=("sealed-result", "control-result"),
+    )
+    valid, failures = validate_behavioral_evaluation(passing)
+    demonstrated = promote_capability_with_behavioral_evaluation(structural, passing)
+
+    assert valid is True
+    assert failures == ()
+    assert demonstrated.evidence_stage == "behaviorally_demonstrated"
+    assert demonstrated.capability_acquired is True
+    assert capability_is_acquired(demonstrated) is True
+
+
 def test_subgoal_compilation_selects_one_measurable_active_goal_through_controller():
     controller = _controller_with_subgoal()
 
@@ -174,6 +298,37 @@ def test_capability_reassessment_consumes_active_signature_and_continues_without
     assert reassessed.continuous_active_subgoal == {}
     assert continued.continuous_mission_state == "subgoal_active"
     assert continued.continuous_active_subgoal
+
+
+def test_structural_candidate_is_queued_for_behavioral_evaluation_before_frontier_or_operator_selection():
+    controller = _controller_with_subgoal()
+    structural = replace(
+        make_satisfied_transfer_record(),
+        capability_id="quote_instruction_isolation",
+        reassessment="candidate_structurally_validated",
+        evidence_stage="candidate_structurally_validated",
+        capability_acquired=False,
+        eligible_for_behavioral_evaluation=True,
+        behavioral_evaluation_ref="",
+        behavioral_evaluation=None,
+        metrics_before_after={"baseline": "quote_instruction_isolation=0.0", "candidate_id": "candidate-structural"},
+    )
+
+    queued = continue_continuous_mission_after_reassessment(
+        consume_continuous_capability_reassessment(controller, structural)
+    )
+    restart_state = export_continuous_mission_restart_state(queued)
+    restored = restore_continuous_mission_restart_state(
+        start_continuous_runtime_controller(session_id=queued.session_id),
+        restart_state,
+    )
+
+    assert queued.continuous_mission_state == "behavioral_evaluation_active"
+    assert queued.continuous_active_subgoal["execution_kind"] == "independent_behavioral_evaluation"
+    assert queued.continuous_active_subgoal["behavioral_evaluation"]["capability_id"] == "quote_instruction_isolation"
+    assert queued.continuous_mission_state != "awaiting_operator_insight"
+    assert restored.continuous_active_subgoal == queued.continuous_active_subgoal
+    assert restored.continuous_mission_state == "behavioral_evaluation_active"
 
 
 def test_api_exhaustion_preserves_provider_task_and_does_not_complete_mission():
@@ -908,17 +1063,24 @@ def test_terminal_satisfied_main_goal_observation_is_idempotent():
             "disposition": "satisfied",
         }
     )
+    terminal_criteria = tuple(dict.fromkeys(terminal.success_criteria + ("capability_inventory_generation", "developmental_gap_analysis", "operator_progress_explanation")))
     records = tuple(
         make_satisfied_transfer_record().__class__(
-            **{
-                **make_satisfied_transfer_record().as_dict(),
-                "capability_id": criterion,
-                "original_weakness": f"{criterion} completed",
-                "successful_mechanism": criterion,
-                "reassessment": "satisfied",
-            }
-        )
-        for criterion in terminal.success_criteria
+                **{
+                    **make_satisfied_transfer_record().as_dict(),
+                    "capability_id": criterion,
+                    "original_weakness": f"{criterion} completed",
+                    "successful_mechanism": criterion,
+                    "reassessment": "satisfied",
+                    "evidence": ("clean terminal evidence",),
+                    "regression_evidence": "broad non-fixture regression passed",
+                    "reproduction_evidence": "independent reproduction passed",
+                    "residual_uncertainty": "",
+                    "held_out_evidence": {"transfer": True},
+                    "provider_contribution": "none",
+                }
+            )
+            for criterion in terminal_criteria
     )
     controller = replace(controller, continuous_main_goal=terminal.as_dict(), continuous_knowledge_ledger=tuple(record.as_dict() for record in records))
 
@@ -950,6 +1112,10 @@ def test_developmental_self_assessment_separates_verified_from_assumed_capabilit
                 "original_weakness": "science reasoning assumed but not transfer validated",
                 "successful_mechanism": "",
                 "reassessment": "",
+                "evidence_stage": "hypothesis",
+                "capability_acquired": False,
+                "behavioral_evaluation_ref": "",
+                "behavioral_evaluation": None,
             }
         ),
     )
@@ -1057,7 +1223,8 @@ def test_refresh_developmental_self_direction_does_not_authorize_mutation_or_api
 def test_knowledge_retention_preserves_solved_failed_and_evidence_quality():
     record = make_satisfied_transfer_record()
 
-    assert record.reassessment == "satisfied"
+    assert record.reassessment == "behaviorally_demonstrated"
+    assert record.capability_acquired is True
     assert "unvalidated provider-only candidate" in record.failed_approaches
     assert record.held_out_evidence["sealed"] is True
     assert "sandbox success requires clean reproduction" in record.reusable_process_rules
@@ -1082,3 +1249,503 @@ def test_operator_language_pilot_reaches_subgoal_through_existing_controller():
     assert snapshot["continuous_mission"]["active_subgoal"]["subgoal_id"]
     assert snapshot["continuous_mission"]["pending_application_decision_id"] == ""
     assert controller.continuous_api_authority["enabled"] is False
+
+
+def test_material_gaps_without_active_work_exit_observation_to_local_subgoal():
+    controller = start_continuous_runtime_controller(session_id="observation-exit-local")
+    controller = attach_continuous_mission(controller, "Optimize your runtime.")
+    controller = replace(
+        controller,
+        continuous_mission_state="observing_for_new_weaknesses",
+        continuous_active_subgoal={},
+        continuous_developmental_self_assessment={
+            "developmental_gaps": (
+                "missing_tracked_application_proof",
+                "local_diagnostic_only_validation",
+                "fixture_scoped_validation",
+            ),
+            "needs_additional_insight": True,
+            "confidence": 0.7,
+        },
+    )
+
+    actions = derive_observation_exit_actions(controller)
+    updated = exit_observation_with_action_derivation(controller)
+
+    assert [action["classification"] for action in actions] == [
+        "locally_actionable",
+        "requires_additional_local_evidence",
+        "requires_explicit_authority",
+    ]
+    assert updated.continuous_mission_state == "subgoal_active"
+    assert updated.continuous_active_subgoal
+    assert "fixture_scoped_validation" in updated.continuous_active_subgoal["measurable_objective"]
+    assert updated.continuous_observation_state["selected_action"]["classification"] == "locally_actionable"
+
+
+def test_operator_insight_request_is_concrete_and_consumed_without_authority():
+    controller = start_continuous_runtime_controller(session_id="observation-exit-insight")
+    controller = attach_continuous_mission(controller, "Optimize your runtime.")
+    controller = replace(
+        controller,
+        continuous_mission_state="observing_for_new_weaknesses",
+        continuous_active_subgoal={},
+        continuous_developmental_self_assessment={
+            "developmental_gaps": ("uncertain operator intent for tracked proof",),
+            "needs_additional_insight": True,
+            "confidence": 0.62,
+        },
+    )
+
+    requested = exit_observation_with_action_derivation(controller)
+    request = requested.continuous_developmental_insight_requests[-1]
+    consumed = consume_continuous_operator_interaction_response(
+        requested,
+        request_id=request["request_id"],
+        response_kind="insight",
+        operator_text="Continue with local simulation only.",
+        selected_option="continue local simulation only",
+    )
+    replayed = consume_continuous_operator_interaction_response(
+        consumed,
+        request_id=request["request_id"],
+        response_kind="insight",
+        operator_text="Try to replay.",
+        selected_option="continue local simulation only",
+    )
+
+    assert requested.continuous_mission_state == "awaiting_operator_insight"
+    assert request["exact_question"]
+    assert request["authority_scope"] == "none; ordinary insight text grants no authority"
+    assert consumed.continuous_operator_interaction_responses[-1]["authority_granted"] is False
+    assert consumed.continuous_developmental_insight_requests[-1]["status"] == "consumed"
+    assert consumed.continuous_mission_state == "observing_for_new_weaknesses"
+    assert consumed.continuous_active_subgoal == {}
+    assert len(replayed.continuous_operator_interaction_responses) == len(consumed.continuous_operator_interaction_responses)
+
+
+def test_exhausted_local_observation_actions_create_operator_request():
+    controller = start_continuous_runtime_controller(session_id="observation-exit-exhausted")
+    controller = attach_continuous_mission(controller, "Optimize your runtime.")
+    controller = replace(
+        controller,
+        continuous_mission_state="observing_for_new_weaknesses",
+        continuous_active_subgoal={},
+        continuous_developmental_self_assessment={
+            "developmental_gaps": ("fixture_scoped_validation",),
+            "needs_additional_insight": True,
+            "confidence": 0.7,
+        },
+    )
+    action = derive_observation_exit_actions(controller)[0]
+    controller = replace(controller, continuous_observation_state={"attempted_exit_actions": (action["action_id"],)})
+
+    updated = exit_observation_with_action_derivation(controller)
+
+    assert updated.continuous_mission_state == "awaiting_operator_insight"
+    request = updated.continuous_developmental_insight_requests[-1]
+    assert request["request_kind"] == "insight"
+    assert request["status"] == "pending"
+    assert request["authority_granted"] is False
+    assert request["authority_scope"] == "none; ordinary insight text grants no authority"
+
+
+def test_consumed_operator_request_id_is_not_recreated_after_local_retry_exhausts():
+    controller = start_continuous_runtime_controller(session_id="observation-request-replay")
+    controller = attach_continuous_mission(controller, "Optimize your runtime.")
+    controller = replace(
+        controller,
+        continuous_mission_state="observing_for_new_weaknesses",
+        continuous_active_subgoal={},
+        continuous_developmental_self_assessment={
+            "developmental_gaps": ("fixture_scoped_validation",),
+            "needs_additional_insight": True,
+            "confidence": 0.7,
+        },
+    )
+    action = derive_observation_exit_actions(controller)[0]
+    exhausted = replace(controller, continuous_observation_state={"attempted_exit_actions": (action["action_id"],)})
+    first = exit_observation_with_action_derivation(exhausted)
+    first_request = first.continuous_developmental_insight_requests[-1]
+    consumed = consume_continuous_operator_interaction_response(
+        first,
+        request_id=first_request["request_id"],
+        response_kind="insight",
+        operator_text="Continue local simulation for fixture_scoped_validation.",
+        selected_option="continue local simulation only",
+    )
+    exhausted_again = replace(
+        consumed,
+        continuous_mission_state="observing_for_new_weaknesses",
+        continuous_active_subgoal={},
+        continuous_observation_state={"attempted_exit_actions": (action["action_id"],)},
+    )
+
+    second = exit_observation_with_action_derivation(exhausted_again)
+    second_request = second.continuous_developmental_insight_requests[-1]
+
+    assert first_request["request_id"] != second_request["request_id"]
+    assert first_request["status"] == "pending"
+    assert any(item["request_id"] == first_request["request_id"] and item["status"] == "consumed" for item in consumed.continuous_developmental_insight_requests)
+    assert second_request["status"] == "pending"
+    assert "request scoped application review" in second_request["permitted_responses"]
+    assert "continue local simulation only" not in second_request["permitted_responses"]
+
+
+def test_scoped_application_review_response_creates_pending_application_boundary():
+    controller = start_continuous_runtime_controller(session_id="operator-request-scoped-application")
+    controller = attach_continuous_mission(controller, "Optimize your runtime.")
+    controller = replace(
+        controller,
+        continuous_mission_state="observing_for_new_weaknesses",
+        continuous_active_subgoal={},
+        continuous_developmental_self_assessment={
+            "developmental_gaps": ("missing_tracked_application_proof",),
+            "needs_additional_insight": True,
+            "confidence": 0.7,
+        },
+        continuous_operator_interaction_responses=(
+            {
+                "request_id": "operator-insight-prior",
+                "response_kind": "insight",
+                "selected_option": "continue local simulation only",
+                "operator_text": "Continue local simulation for missing_tracked_application_proof.",
+                "consumed_at": "2026-07-16T00:44:30+00:00",
+                "authority_granted": False,
+            },
+        ),
+    )
+    action = derive_observation_exit_actions(controller)[0]
+    requested = exit_observation_with_action_derivation(
+        replace(controller, continuous_observation_state={"attempted_exit_actions": (action["action_id"],)})
+    )
+    request = requested.continuous_developmental_insight_requests[-1]
+
+    updated = consume_continuous_operator_interaction_response(
+        requested,
+        request_id=request["request_id"],
+        response_kind="insight",
+        operator_text="Prepare scoped application review. Do not apply automatically.",
+        selected_option="request scoped application review",
+    )
+
+    assert updated.continuous_mission_state == "awaiting_operator_application"
+    assert updated.active_work_item == "awaiting_operator_application"
+    assert updated.pending_application_decision_id
+    assert updated.continuous_operator_interaction_responses[-1]["authority_granted"] is False
+    assert updated.continuous_observation_state["pending_application_review"]["decision_id"] == updated.pending_application_decision_id
+
+
+def test_accepted_boundary_retires_gap_and_prevents_repeat_question():
+    controller = start_continuous_runtime_controller(session_id="operator-accepted-boundary")
+    controller = attach_continuous_mission(controller, "Optimize your runtime.")
+    controller = replace(
+        controller,
+        continuous_mission_state="observing_for_new_weaknesses",
+        continuous_active_subgoal={},
+        continuous_developmental_self_assessment={
+            "developmental_gaps": ("fixture_scoped_validation",),
+            "needs_additional_insight": True,
+            "confidence": 0.7,
+        },
+        continuous_operator_interaction_responses=(
+            {
+                "request_id": "operator-insight-prior",
+                "response_kind": "insight",
+                "selected_option": "continue local simulation only",
+                "operator_text": "Continue local simulation for fixture_scoped_validation.",
+                "consumed_at": "2026-07-16T00:44:30+00:00",
+                "authority_granted": False,
+            },
+        ),
+    )
+    action = derive_observation_exit_actions(controller)[0]
+    requested = exit_observation_with_action_derivation(
+        replace(controller, continuous_observation_state={"attempted_exit_actions": (action["action_id"],)})
+    )
+    request = requested.continuous_developmental_insight_requests[-1]
+
+    accepted = consume_continuous_operator_interaction_response(
+        requested,
+        request_id=request["request_id"],
+        response_kind="insight",
+        operator_text="Treat this caveat as a known limitation for now.",
+        selected_option="treat as accepted boundary",
+    )
+    repeated = exit_observation_with_action_derivation(accepted)
+
+    assert accepted.continuous_mission_state == "observing_for_new_weaknesses"
+    assert "fixture_scoped_validation" in accepted.continuous_observation_state["accepted_boundary_gaps"]
+    assert accepted.continuous_developmental_self_assessment["developmental_gaps"] == ()
+    assert len(repeated.continuous_developmental_insight_requests) == len(accepted.continuous_developmental_insight_requests)
+
+
+def test_accepted_boundary_survives_refresh_and_suppresses_pending_repeat():
+    controller = start_continuous_runtime_controller(session_id="operator-accepted-boundary-refresh")
+    controller = attach_continuous_mission(controller, "Optimize your runtime.")
+    controller = replace(
+        controller,
+        continuous_observation_state={
+            "accepted_boundary_gaps": (
+                "capability_inventory_generation, long_horizon_gap_analysis, operator_progress_explanation, developmental_gap_analysis",
+            )
+        },
+    )
+
+    refreshed = refresh_developmental_self_direction(controller)
+
+    assert refreshed.continuous_developmental_self_assessment["developmental_gaps"] == ()
+
+    pending = replace(
+        refreshed,
+        continuous_mission_state="awaiting_operator_insight",
+        active_work_item="awaiting_operator_insight",
+        continuous_developmental_insight_requests=refreshed.continuous_developmental_insight_requests
+        + (
+            {
+                "request_id": "operator-insight-repeat",
+                "request_kind": "insight",
+                "status": "pending",
+                "source_gap_ids": ("capability_inventory_generation, long_horizon_gap_analysis, operator_progress_explanation, developmental_gap_analysis",),
+                "permitted_responses": ("treat as accepted boundary",),
+            },
+        ),
+    )
+    recovered = recover_accepted_boundary_operator_requests(pending)
+
+    assert recovered.continuous_mission_state == "observing_for_new_weaknesses"
+    assert recovered.continuous_developmental_insight_requests[-1]["status"] == "consumed"
+    assert recovered.continuous_developmental_insight_requests[-1]["recovery_disposition"] == "pending_request_suppressed_by_accepted_boundary"
+
+
+def test_accepted_boundaries_still_allow_knowledge_reuse_next_goal():
+    controller = start_continuous_runtime_controller(session_id="knowledge-reuse-after-boundary")
+    controller = attach_continuous_mission(controller, "Optimize your runtime continuously.")
+    record = make_satisfied_transfer_record()
+    record = replace(
+        record,
+        capability_id="local_diagnostic_only_validation",
+        residual_uncertainty="candidate is local diagnostic unless future evidence proves reuse",
+        reusable_process_rules=("do not repeat failed strategies without checking retained evidence",),
+    )
+    controller = replace(
+        controller,
+        continuous_main_goal={
+            **controller.continuous_main_goal,
+            "normalized_objective": "non_fixture_evaluation",
+            "original_objective": "Develop non-fixture evaluation for locally validated developmental capabilities",
+            "success_criteria": ("non_fixture_case_generation", "non_fixture_validation_metric", "fixture_to_non_fixture_regression_control"),
+            "completed_subgoals": ("non_fixture_case_generation", "non_fixture_validation_metric", "fixture_to_non_fixture_regression_control"),
+            "capability_changes": ("non_fixture_case_generation", "non_fixture_validation_metric", "fixture_to_non_fixture_regression_control"),
+            "disposition": "satisfied",
+        },
+        continuous_knowledge_ledger=controller.continuous_knowledge_ledger
+        + (
+            record.as_dict(),
+            {
+                **record.as_dict(),
+                "capability_id": "non_fixture_case_generation",
+                "residual_uncertainty": "case generation succeeded but reuse in future goal selection is unproven",
+            },
+            {
+                **record.as_dict(),
+                "capability_id": "non_fixture_validation_metric",
+                "residual_uncertainty": "metric succeeded but prior failure avoidance is unproven",
+            },
+            {
+                **record.as_dict(),
+                "capability_id": "fixture_to_non_fixture_regression_control",
+                "residual_uncertainty": "control passed but knowledge reuse is unproven",
+            },
+        ),
+        continuous_observation_state={
+            "accepted_boundary_gaps": (
+                "missing_tracked_application_proof, local_diagnostic_only_validation, fixture_scoped_validation",
+            )
+        },
+        continuous_mission_frontier=(),
+        continuous_mission_state="observing_for_new_weaknesses",
+        continuous_active_subgoal={},
+    )
+
+    advanced = assess_and_advance_continuous_main_goal(controller)
+
+    assert advanced.continuous_main_goal["normalized_objective"] == "capability_knowledge_reuse_validation"
+    assert advanced.continuous_mission_state == "subgoal_active"
+    assert "knowledge_retrieval_index" in advanced.continuous_active_subgoal["measurable_objective"]
+    assert "knowledge ledger" in advanced.continuous_main_goal["completion_rationale"]
+
+
+def test_completed_knowledge_reuse_derives_available_resource_validation():
+    controller = start_continuous_runtime_controller(session_id="resource-validation-after-knowledge")
+    controller = attach_continuous_mission(controller, "Optimize your runtime continuously.")
+    record = make_satisfied_transfer_record()
+    knowledge = tuple(
+        {
+            **record.as_dict(),
+            "capability_id": criterion,
+            "metrics_before_after": {
+                **dict(record.metrics_before_after),
+                "substantive_evidence": {"passed": True},
+            },
+            "residual_uncertainty": "resource use after knowledge reuse remains unproven",
+            "reassessment": "satisfied",
+        }
+        for criterion in ("knowledge_retrieval_index", "prior_failure_avoidance_check", "next_goal_evidence_reuse_record")
+    )
+    controller = replace(
+        controller,
+        continuous_main_goal={
+            **controller.continuous_main_goal,
+            "normalized_objective": "capability_knowledge_reuse_validation",
+            "original_objective": "Develop validation that accumulated capability evidence is retrieved and used before selecting future work",
+            "success_criteria": ("knowledge_retrieval_index", "prior_failure_avoidance_check", "next_goal_evidence_reuse_record"),
+            "completed_subgoals": ("knowledge_retrieval_index", "prior_failure_avoidance_check", "next_goal_evidence_reuse_record"),
+            "capability_changes": ("knowledge_retrieval_index", "prior_failure_avoidance_check", "next_goal_evidence_reuse_record"),
+            "disposition": "satisfied",
+        },
+        continuous_knowledge_ledger=controller.continuous_knowledge_ledger + knowledge,
+        continuous_mission_frontier=(),
+        continuous_mission_state="observing_for_new_weaknesses",
+        continuous_active_subgoal={},
+    )
+
+    advanced = assess_and_advance_continuous_main_goal(controller)
+
+    assert advanced.continuous_main_goal["normalized_objective"] == "available_resource_utilization_validation"
+    assert advanced.continuous_mission_state == "subgoal_active"
+    assert "available_resource_inventory" in advanced.continuous_active_subgoal["measurable_objective"]
+
+
+def test_ranked_frontier_without_executable_subgoal_does_not_recurse():
+    controller = start_continuous_runtime_controller(session_id="ranked-frontier-no-executable")
+    controller = attach_continuous_mission(controller, "Optimize your runtime continuously.")
+    controller = replace(
+        controller,
+        continuous_mission_state="selecting_weakness",
+        continuous_mission_frontier=(
+            {
+                "weakness_id": "blocked-weakness",
+                "semantic_signature": "blocked-semantic",
+                "description": "blocked capability cannot execute",
+                "source_evidence": ("ref",),
+                "measurable_target": "blocked_capability improves beyond blocked_capability=0.0",
+                "baseline": "blocked_capability=0.0",
+                "controls": ("control",),
+                "adversarial_plan": "blocked",
+                "held_out_plan": "blocked",
+                "prerequisites": ("missing_prerequisite",),
+                "estimated_scope": "large",
+                "risk": 0.8,
+                "operator_value": 0.7,
+                "priority": 0.7,
+                "status": "blocked_dependency",
+                "first_incorrect_transition": "ranked frontier -> no executable subgoal",
+            },
+        ),
+    )
+
+    observed = select_continuous_mission_subgoal(controller)
+
+    assert observed.continuous_mission_state == "observing_for_new_weaknesses"
+    assert observed.continuous_observation_state["observation_reason"] == "ranked_frontier_has_no_executable_subgoal"
+
+
+def test_completed_resource_validation_derives_advisory_resource_integration():
+    controller = start_continuous_runtime_controller(session_id="advisory-resource-after-inventory")
+    controller = attach_continuous_mission(controller, "Optimize your runtime continuously.")
+    record = make_satisfied_transfer_record()
+    knowledge = tuple(
+        {
+            **record.as_dict(),
+            "capability_id": criterion,
+            "metrics_before_after": {
+                **dict(record.metrics_before_after),
+                "substantive_evidence": {"passed": True},
+            },
+            "residual_uncertainty": "advisory resource integration remains unproven",
+            "reassessment": "satisfied",
+        }
+        for criterion in (
+            "knowledge_retrieval_index",
+            "prior_failure_avoidance_check",
+            "next_goal_evidence_reuse_record",
+            "available_resource_inventory",
+            "local_resource_selection_trace",
+            "authority_boundary_resource_filter",
+        )
+    )
+    controller = replace(
+        controller,
+        continuous_main_goal={
+            **controller.continuous_main_goal,
+            "normalized_objective": "available_resource_utilization_validation",
+            "original_objective": "Develop validation that available local and governed resources are inventoried before declaring a developmental frontier empty",
+            "success_criteria": ("available_resource_inventory", "local_resource_selection_trace", "authority_boundary_resource_filter"),
+            "completed_subgoals": ("available_resource_inventory", "local_resource_selection_trace", "authority_boundary_resource_filter"),
+            "capability_changes": ("available_resource_inventory", "local_resource_selection_trace", "authority_boundary_resource_filter"),
+            "disposition": "satisfied",
+        },
+        continuous_knowledge_ledger=controller.continuous_knowledge_ledger + knowledge,
+        continuous_mission_frontier=(),
+        continuous_mission_state="observing_for_new_weaknesses",
+        continuous_active_subgoal={},
+    )
+
+    advanced = assess_and_advance_continuous_main_goal(controller)
+
+    assert advanced.continuous_main_goal["normalized_objective"] == "advisory_resource_evidence_integration"
+    assert advanced.continuous_mission_state == "subgoal_active"
+    assert "local_model_advisory_probe" in advanced.continuous_active_subgoal["measurable_objective"]
+
+
+def test_missing_application_review_boundary_recovers_from_legacy_checkpoint():
+    controller = start_continuous_runtime_controller(session_id="operator-application-recovery")
+    controller = attach_continuous_mission(controller, "Optimize your runtime.")
+    legacy = replace(
+        controller,
+        continuous_mission_state="awaiting_operator_application",
+        active_work_item="awaiting_operator_application",
+        pending_application_decision_id="",
+        continuous_observation_state={"last_operator_response_id": "operator-insight-old"},
+    )
+
+    recovered = recover_missing_continuous_application_review_request(legacy)
+
+    assert recovered.continuous_mission_state == "awaiting_operator_application"
+    assert recovered.pending_application_decision_id
+    assert recovered.continuous_observation_state["pending_application_review"]["source_request_id"] == "operator-insight-old"
+
+
+def test_restart_normalizes_legacy_pending_request_with_consumed_response():
+    controller = start_continuous_runtime_controller(session_id="operator-request-restart-normalize")
+    controller = attach_continuous_mission(controller, "Optimize your runtime.")
+    controller = replace(
+        controller,
+        continuous_developmental_insight_requests=(
+            {
+                "request_id": "operator-insight-old",
+                "request_kind": "insight",
+                "status": "pending",
+                "permitted_responses": ("continue local simulation only",),
+            },
+        ),
+        continuous_operator_interaction_responses=(
+            {
+                "request_id": "operator-insight-old",
+                "response_kind": "insight",
+                "selected_option": "continue local simulation only",
+                "operator_text": "already answered",
+                "consumed_at": "2026-07-16T00:44:30+00:00",
+                "authority_granted": False,
+            },
+        ),
+    )
+
+    restored = restore_continuous_mission_restart_state(
+        start_continuous_runtime_controller(session_id="operator-request-restart-normalize"),
+        export_continuous_mission_restart_state(controller),
+    )
+
+    assert restored.continuous_developmental_insight_requests[0]["status"] == "consumed"
+    assert restored.continuous_developmental_insight_requests[0]["recovery_disposition"] == "normalized_pending_request_with_consumed_response"

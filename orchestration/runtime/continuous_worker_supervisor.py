@@ -15,7 +15,7 @@ import os
 import subprocess
 import sys
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -25,8 +25,12 @@ from orchestration.runtime.continuous_runtime_controller import (
     continue_continuous_mission_after_reassessment,
     consume_continuous_capability_reassessment,
     consume_continuous_mission_application_decision,
+    consume_continuous_operator_interaction_response,
     controller_snapshot,
+    exit_observation_with_action_derivation,
     export_continuous_mission_restart_state,
+    recover_accepted_boundary_operator_requests,
+    recover_missing_continuous_application_review_request,
     restore_continuous_mission_restart_state,
     start_continuous_runtime_controller,
 )
@@ -44,6 +48,8 @@ SUBGOAL_EXECUTION_LEDGER = "subgoal_execution_ledger.json"
 OBSERVATION_EVIDENCE_LEDGER = "observation_evidence_ledger.json"
 OPERATOR_APPLICATION_DECISION = "operator_application_decision.json"
 OPERATOR_APPLICATION_DECISION_LEDGER = "operator_application_decision_ledger.json"
+OPERATOR_INTERACTION_RESPONSE = "operator_interaction_response.json"
+OPERATOR_INTERACTION_RESPONSE_LEDGER = "operator_interaction_response_ledger.json"
 
 
 @dataclass
@@ -56,6 +62,7 @@ class ContinuousWorkerSupervisor:
     max_relaunches: int = 3
     complete_transition_once: bool = False
     execute_active_subgoal: bool = False
+    allow_local_model_execution: bool = False
     process: subprocess.Popen[str] | None = None
     relaunch_count: int = 0
     last_worker_pid: int = 0
@@ -99,6 +106,7 @@ def initialize_supervisor_state(
     max_relaunches: int = 3,
     complete_transition_once: bool = False,
     execute_active_subgoal: bool = False,
+    allow_local_model_execution: bool = False,
 ) -> ContinuousWorkerSupervisor:
     root = Path(supervisor_root)
     repo = Path(repository_root).resolve()
@@ -136,6 +144,7 @@ def initialize_supervisor_state(
         max_relaunches=max_relaunches,
         complete_transition_once=complete_transition_once,
         execute_active_subgoal=execute_active_subgoal,
+        allow_local_model_execution=allow_local_model_execution,
     )
 
 
@@ -147,7 +156,9 @@ def _write_worker_bootstrap(path: Path, repository_root: Path) -> None:
         f"repo = Path({str(repository_root)!r})\n"
         "sys.path.insert(0, str(repo))\n"
         "from orchestration.runtime.continuous_worker_supervisor import worker_main\n"
-        "raise SystemExit(worker_main())\n"
+        "\n"
+        "if __name__ == '__main__':\n"
+        "    raise SystemExit(worker_main())\n"
     )
     path.write_text(script, encoding="utf-8")
 
@@ -167,6 +178,8 @@ def start_supervised_worker(supervisor: ContinuousWorkerSupervisor) -> Continuou
         command.append("--complete-transition-once")
     if supervisor.execute_active_subgoal:
         command.append("--execute-active-subgoal")
+    if supervisor.allow_local_model_execution:
+        command.append("--execute-local-model")
     env = dict(os.environ)
     env.pop("PYTHONPATH", None)
     env["PYTHONNOUSERSITE"] = "1"
@@ -270,7 +283,12 @@ def wait_for_worker_status(supervisor_root: Path, *, timeout_seconds: float = 5.
     path = Path(supervisor_root) / WORKER_STATUS
     while _now_monotonic() < deadline:
         if path.exists():
-            return _read_json(path)
+            try:
+                return _read_json(path)
+            except (OSError, ValueError, json.JSONDecodeError):
+                # A concurrent atomic replacement can briefly leave the reader
+                # between existence and replacement on Windows.
+                time.sleep(0.02)
         time.sleep(0.05)
     raise TimeoutError("worker status was not written")
 
@@ -281,6 +299,7 @@ def worker_main(argv: list[str] | None = None) -> int:
     parser.add_argument("--heartbeat-interval", type=float, default=0.25)
     parser.add_argument("--complete-transition-once", action="store_true")
     parser.add_argument("--execute-active-subgoal", action="store_true")
+    parser.add_argument("--execute-local-model", action="store_true")
     args = parser.parse_args(argv)
     root = Path(args.supervisor_root)
     try:
@@ -289,6 +308,9 @@ def worker_main(argv: list[str] | None = None) -> int:
         session_id = str(restart_state.get("session_id") or "")
         controller = start_continuous_runtime_controller(session_id=session_id)
         controller = restore_continuous_mission_restart_state(controller, restart_state)
+        controller = recover_missing_continuous_application_review_request(controller)
+        controller = recover_accepted_boundary_operator_requests(controller)
+        _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(controller))
         if args.complete_transition_once and controller.continuous_active_subgoal and not (root / TRANSITION_MARKER).exists():
             record = _worker_reassessment_record(controller)
             controller = consume_continuous_capability_reassessment(controller, record)
@@ -308,9 +330,20 @@ def worker_main(argv: list[str] | None = None) -> int:
                 _write_worker_status(root, controller, "stopped_intentionally")
                 return 0
             if args.execute_active_subgoal and controller.continuous_mission_state == "awaiting_operator_application":
+                controller = recover_missing_continuous_application_review_request(controller)
+                _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(controller))
                 controller = _consume_operator_application_decision_if_present(root, controller)
+            elif args.execute_active_subgoal and controller.continuous_mission_state == "awaiting_operator_insight":
+                controller = recover_accepted_boundary_operator_requests(controller)
+                _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(controller))
+                controller = _consume_operator_interaction_response_if_present(root, controller)
             elif args.execute_active_subgoal and controller.continuous_active_subgoal:
-                controller = _execute_next_worker_subgoal(root, controller)
+                _write_worker_status(root, controller, "executing_active_subgoal")
+                controller = _execute_next_worker_subgoal(
+                    root,
+                    controller,
+                    allow_local_model_execution=args.execute_local_model,
+                )
             elif args.execute_active_subgoal and controller.continuous_mission_state == "observing_for_new_weaknesses":
                 controller = _observe_runtime_and_requeue(root, controller)
             _write_worker_status(root, controller, "running")
@@ -328,7 +361,7 @@ def worker_main(argv: list[str] | None = None) -> int:
         return 2
 
 
-def _execute_next_worker_subgoal(root: Path, controller: Any) -> Any:
+def _execute_next_worker_subgoal(root: Path, controller: Any, *, allow_local_model_execution: bool = False) -> Any:
     subgoal = dict(controller.continuous_active_subgoal or {})
     subgoal_id = str(subgoal.get("subgoal_id") or "")
     if not subgoal_id:
@@ -354,6 +387,7 @@ def _execute_next_worker_subgoal(root: Path, controller: Any) -> Any:
         repository_root=repository_root,
         python_executable=sys.executable,
         create_application_request=_subgoal_requires_application_boundary(subgoal),
+        allow_local_model_execution=allow_local_model_execution,
     )
     event = {
         "timestamp": utc_now(),
@@ -423,6 +457,82 @@ def _consume_operator_application_decision_if_present(root: Path, controller: An
     return continued
 
 
+def _consume_operator_interaction_response_if_present(root: Path, controller: Any) -> Any:
+    response_path = root / OPERATOR_INTERACTION_RESPONSE
+    pending_runtime_requests = tuple(
+        item
+        for item in (controller.continuous_developmental_insight_requests or ())
+        if item.get("status") == "pending" and item.get("request_kind") in {"insight", "clarification", "priority_choice", "tracked_application_authority"}
+    )
+    if not response_path.exists() and not pending_runtime_requests:
+        recovered = exit_observation_with_action_derivation(
+            replace(
+                controller,
+                continuous_mission_state="observing_for_new_weaknesses",
+                active_work_item="runtime_currently_stable_no_immediate_high_value_work",
+            )
+        )
+        _atomic_write_json(
+            root / "operator_interaction_wait_recovered.json",
+            {
+                "timestamp": utc_now(),
+                "reason": "awaiting_operator_insight_without_pending_runtime_request",
+                "next_state": recovered.continuous_mission_state,
+                "next_subgoal_id": (recovered.continuous_active_subgoal or {}).get("subgoal_id", ""),
+            },
+        )
+        _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(recovered))
+        return recovered
+    if not response_path.exists():
+        return controller
+    payload = _read_json(response_path)
+    request_id = str(payload.get("request_id") or "")
+    selected_option = str(payload.get("selected_option") or "")
+    pending = tuple(
+        item
+        for item in (controller.continuous_developmental_insight_requests or ())
+        if item.get("request_id") == request_id and item.get("status") == "pending"
+    )
+    if not pending:
+        _atomic_write_json(
+            root / "operator_interaction_response_rejected.json",
+            {
+                "timestamp": utc_now(),
+                "reason": "request_id_does_not_match_pending_interaction",
+                "received_request_id": request_id,
+            },
+        )
+        return controller
+    consumed = consume_continuous_operator_interaction_response(
+        controller,
+        request_id=request_id,
+        response_kind=str(payload.get("response_kind") or "insight"),
+        operator_text=str(payload.get("operator_text") or ""),
+        selected_option=selected_option,
+        approved_scope=str(payload.get("approved_scope") or ""),
+    )
+    ledger_path = root / OPERATOR_INTERACTION_RESPONSE_LEDGER
+    ledger = _read_json(ledger_path) if ledger_path.exists() else {"responses": []}
+    ledger["responses"] = list(ledger.get("responses", [])) + [
+        {
+            "timestamp": utc_now(),
+            "request_id": request_id,
+            "selected_option": selected_option,
+            "next_state": consumed.continuous_mission_state,
+            "next_subgoal_id": (consumed.continuous_active_subgoal or {}).get("subgoal_id", ""),
+            "authority_granted": False,
+        }
+    ]
+    _atomic_write_json(ledger_path, ledger)
+    _atomic_write_json(root / f"operator_interaction_response_consumed_{request_id}.json", {**payload, "consumed_at": utc_now(), "authority_granted": False})
+    try:
+        response_path.unlink()
+    except FileNotFoundError:
+        pass
+    _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(consumed))
+    return consumed
+
+
 def _operator_application_reassessment_record(controller: Any, action: str, decision_id: str) -> CapabilityKnowledgeRecord:
     subgoal = dict(controller.continuous_active_subgoal or {})
     objective = str(subgoal.get("measurable_objective") or "operator application decision")
@@ -454,6 +564,20 @@ def _operator_application_reassessment_record(controller: Any, action: str, deci
 
 
 def _observe_runtime_and_requeue(root: Path, controller: Any) -> Any:
+    observation = dict(controller.continuous_observation_state or {})
+    if observation.get("candidate_design_evidence_exhausted"):
+        marker = root / "repository_bound_candidate_design_blocked.json"
+        if not marker.exists():
+            _atomic_write_json(
+                marker,
+                {
+                    "timestamp": utc_now(),
+                    "reason": "no_new_repository_bound_evidence_after_untrusted_candidate_design_rejection",
+                    "scope_signature": observation.get("candidate_design_evidence_scope_signature"),
+                    "blocked_subgoal_id": observation.get("blocked_subgoal_id", ""),
+                },
+            )
+        return controller
     queued = assess_and_advance_continuous_main_goal(controller)
     _atomic_write_json(
         root / "observation_requeue.json",
@@ -506,8 +630,9 @@ def _write_worker_status(root: Path, controller: Any, worker_state: str) -> None
             "mission_id": mission["contract"].get("mission_id") if mission["contract"] else "",
             "continuous_mission_state": mission["state"],
             "active_subgoal": mission["active_subgoal"],
-            "pending_application_decision_id": mission["pending_application_decision_id"],
-            "api_authority": mission["api_authority"],
+        "pending_application_decision_id": mission["pending_application_decision_id"],
+        "pending_operator_interactions": mission["developmental_insight_requests"],
+        "api_authority": mission["api_authority"],
             "lifecycle_owner": "continuous_runtime_controller",
             "tracked_source_mutation_authorized": False,
             "git_or_deployment_authorized": False,

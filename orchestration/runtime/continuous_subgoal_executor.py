@@ -10,18 +10,25 @@ authority.
 
 from __future__ import annotations
 
+import ast
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
 import time
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 from typing import Any, Callable, Mapping
 
-from orchestration.runtime.continuous_mission_foundation import CapabilityKnowledgeRecord
+from orchestration.runtime.continuous_mission_foundation import (
+    BehavioralEvaluationRecord,
+    CapabilityKnowledgeRecord,
+    capability_is_acquired,
+    promote_capability_with_behavioral_evaluation,
+)
 from orchestration.runtime.continuous_runtime_controller import (
     ContinuousRuntimeController,
     continue_continuous_mission_after_reassessment,
@@ -29,7 +36,7 @@ from orchestration.runtime.continuous_runtime_controller import (
     pause_continuous_mission_for_application,
 )
 from orchestration.runtime.delta_1_0_common import stable_id, utc_now
-from orchestration.runtime.rc2_conversational_mode_router import select_model_lane
+from orchestration.runtime.rc2_conversational_mode_router import execute_local_model_answer, select_model_lane
 
 
 LIVENESS_ONLY_METRICS = (
@@ -40,6 +47,8 @@ LIVENESS_ONLY_METRICS = (
     "artifact_created",
     "mission_active",
 )
+
+CANDIDATE_DESIGN_PROTOCOL = "repository_bound_candidate_design_v1"
 
 
 @dataclass(frozen=True)
@@ -65,6 +74,7 @@ class SubgoalExecutionResult:
     validation: dict[str, Any]
     clean_reproduction: dict[str, Any]
     application_request: dict[str, Any]
+    behavioral_evaluation_request: dict[str, Any]
     reassessment: dict[str, Any]
     resource_usage: tuple[ResourceUseRecord, ...]
     meaningful_transition_timestamps: dict[str, str]
@@ -85,6 +95,7 @@ def execute_continuous_active_subgoal(
     local_model_adapter: Callable[[Mapping[str, Any]], Mapping[str, Any]] | None = None,
     reference_adapter: Callable[[Mapping[str, Any]], Mapping[str, Any]] | None = None,
     create_application_request: bool = False,
+    allow_local_model_execution: bool = False,
 ) -> tuple[ContinuousRuntimeController, SubgoalExecutionResult]:
     """Consume one active subgoal through local governed development work."""
 
@@ -103,6 +114,14 @@ def execute_continuous_active_subgoal(
         duplicate = _result_from_previous(previous, reason="duplicate_subgoal_consumption_prevented")
         return controller, duplicate
 
+    if str(subgoal.get("execution_kind") or "") == "independent_behavioral_evaluation":
+        return _execute_independent_behavioral_evaluation(
+            controller,
+            subgoal=subgoal,
+            root=root,
+            result_path=result_path,
+        )
+
     timestamps: dict[str, str] = {"execution_started": utc_now()}
     baseline_metric = str(subgoal.get("baseline") or "")
     if _is_liveness_only_metric(baseline_metric):
@@ -119,6 +138,7 @@ def execute_continuous_active_subgoal(
             validation={},
             clean_reproduction={},
             application_request={},
+            behavioral_evaluation_request={},
             reassessment={},
             resource_usage=(),
             meaningful_transition_timestamps=timestamps,
@@ -127,97 +147,19 @@ def execute_continuous_active_subgoal(
         _write_json(result_path, result.as_dict())
         return controller, result
 
-    source_inspection = _inspect_sources(repo, subgoal)
-    timestamps["source_inspection_completed"] = utc_now()
-
-    resource_usage: list[ResourceUseRecord] = []
-    if _subgoal_requests_model(subgoal):
-        local_model_adapter = local_model_adapter or _default_local_model_adapter
-        try:
-            model_result = dict(local_model_adapter({"subgoal": subgoal, "source_inspection": source_inspection}))
-        except Exception as exc:  # noqa: BLE001 - advisory local model failure must not fabricate completion.
-            model_result = {"model_id": "configured_local_model", "result": "local_model_failed", "error": f"{type(exc).__name__}: {exc}"}
-        resource_usage.append(
-            ResourceUseRecord(
-                "local_model",
-                str(model_result.get("model_id") or "configured_local_model"),
-                "advisory diagnosis for active subgoal",
-                str(model_result.get("result") or "completed"),
-                {"authoritative": False, "digest": _digest(model_result)},
-            )
-        )
-    if _subgoal_requests_reference(subgoal):
-        reference_adapter = reference_adapter or _default_reference_adapter
-        try:
-            reference_result = dict(reference_adapter({"subgoal": subgoal}))
-        except Exception as exc:  # noqa: BLE001 - reference failure is evidence, not authority or completion.
-            reference_result = {
-                "source": "governed_reference",
-                "result": "reference_failed",
-                "provenance": {"error": f"{type(exc).__name__}: {exc}"},
-            }
-        resource_usage.append(
-            ResourceUseRecord(
-                "built_in_reference",
-                str(reference_result.get("source") or "governed_reference"),
-                "bounded reference lookup for active subgoal",
-                str(reference_result.get("result") or "completed"),
-                {"authoritative": False, "digest": _digest(reference_result), "provenance": reference_result.get("provenance")},
-            )
-        )
-
-    baseline = _run_baseline(root, repo, python_executable or sys.executable, subgoal)
-    timestamps["baseline_completed"] = utc_now()
-    candidate = _write_candidate(root, subgoal)
-    timestamps["candidate_artifact_created"] = utc_now()
-    validation = _run_validation(root, python_executable or sys.executable)
-    timestamps["validation_completed"] = utc_now()
-    reproduction = _run_clean_reproduction(root, python_executable or sys.executable)
-    timestamps["clean_reproduction_completed"] = utc_now()
-
-    validated = bool(validation.get("passed") and reproduction.get("passed"))
-    application_request: dict[str, Any] = {}
-    reassessment: dict[str, Any] = {}
-    next_controller = controller
-    if validated and create_application_request:
-        decision_id = stable_id("continuous-application-decision", subgoal_id, candidate["candidate_id"], validation["digest"])
-        application_request = {
-            "decision_id": decision_id,
-            "candidate_id": candidate["candidate_id"],
-            "state": "pending_operator_application_review",
-            "tracked_source_unchanged": True,
-            "application_path_reused": "continuous_runtime_controller.pause_continuous_mission_for_application",
-        }
-        next_controller = pause_continuous_mission_for_application(controller, candidate_id=candidate["candidate_id"], decision_id=decision_id)
-        disposition = "awaiting_operator_application"
-    else:
-        record = _capability_record(subgoal, candidate, baseline, validation, reproduction, source_inspection)
-        reassessed_controller = consume_continuous_capability_reassessment(controller, record)
-        next_controller = continue_continuous_mission_after_reassessment(reassessed_controller)
-        reassessment = {"capability_id": record.capability_id, "reassessment": record.reassessment}
-        disposition = "validated_non_application_disposition" if validated else "evidence_backed_rejection"
-    timestamps["controller_handoff_completed"] = utc_now()
-
-    result = SubgoalExecutionResult(
-        accepted=validated,
-        disposition=disposition,
-        reason="subgoal consumed by governed local execution bridge",
-        subgoal_id=subgoal_id,
-        campaign_root=str(root),
-        consumed_once=True,
-        source_inspection=source_inspection,
-        baseline=baseline,
-        candidate=candidate,
-        validation=validation,
-        clean_reproduction=reproduction,
-        application_request=application_request,
-        reassessment=reassessment,
-        resource_usage=tuple(resource_usage),
-        meaningful_transition_timestamps=timestamps,
+    # A broad weakness label and even a prefilled design mapping are not a
+    # sandbox implementation contract. The only path here records and checks
+    # repository-bound evidence; materializing code belongs to the separately
+    # governed candidate/application lifecycle.
+    return _execute_repository_bound_candidate_design(
+        controller,
+        subgoal=subgoal,
+        root=root,
+        repo=repo,
+        result_path=result_path,
+        local_model_adapter=local_model_adapter,
+        allow_local_model_execution=allow_local_model_execution,
     )
-    _write_json(result_path, result.as_dict())
-    _write_json(root / "updated_restart_state_hint.json", {"controller_state": next_controller.continuous_mission_state})
-    return next_controller, result
 
 
 def _is_liveness_only_metric(metric: str) -> bool:
@@ -225,26 +167,372 @@ def _is_liveness_only_metric(metric: str) -> bool:
     return any(item in lowered for item in LIVENESS_ONLY_METRICS)
 
 
+def _execute_repository_bound_candidate_design(
+    controller: ContinuousRuntimeController,
+    *,
+    subgoal: Mapping[str, Any],
+    root: Path,
+    repo: Path,
+    result_path: Path,
+    local_model_adapter: Callable[[Mapping[str, Any]], Mapping[str, Any]] | None,
+    allow_local_model_execution: bool,
+) -> tuple[ContinuousRuntimeController, SubgoalExecutionResult]:
+    """Obtain one advisory design without fabricating an implementation.
+
+    The former execution path created the same success-reporting Python file for
+    every weakness. A proposed implementation now has to identify an inspected
+    repository path and an independently checkable behavior before this runtime
+    may queue sandbox code. Advisory model text is evidence only.
+    """
+
+    timestamps = {"execution_started": utc_now()}
+    source_inspection = _inspect_sources(repo, subgoal)
+    timestamps["source_inspection_completed"] = utc_now()
+    prompt = _repository_bound_design_prompt(subgoal, source_inspection, repo)
+    adapter = local_model_adapter or _default_local_model_adapter
+    try:
+        model_result = dict(
+            adapter(
+                {
+                    "task": "repository_bound_candidate_design",
+                    "protocol": CANDIDATE_DESIGN_PROTOCOL,
+                    "prompt": prompt,
+                    "subgoal": dict(subgoal),
+                    "source_inspection": source_inspection,
+                    "allow_local_model_execution": allow_local_model_execution,
+                }
+            )
+        )
+    except Exception as exc:  # noqa: BLE001 - advisory execution failure becomes visible evidence.
+        model_result = {
+            "model_id": "configured_local_model",
+            "result": "local_model_failed",
+            "executed": False,
+            "answer": "",
+            "reason": f"{type(exc).__name__}: {exc}",
+            "provider_calls_performed": False,
+        }
+    timestamps["local_candidate_design_completed"] = utc_now()
+
+    design = _validate_repository_bound_design(model_result, source_inspection)
+    design_path = root / "repository_bound_candidate_design.json"
+    _write_json(
+        design_path,
+        {
+            "protocol": CANDIDATE_DESIGN_PROTOCOL,
+            "subgoal_id": subgoal.get("subgoal_id"),
+            "source_inspection": source_inspection,
+            "model_result": _model_result_for_artifact(model_result),
+            "design_validation": design,
+            "tracked_source_mutated": False,
+            "provider_calls_performed": False,
+        },
+    )
+    resource = ResourceUseRecord(
+        "local_model",
+        str(model_result.get("model_id") or "configured_local_model"),
+        "repository-bound advisory candidate design",
+        str(model_result.get("result") or "local_model_completed"),
+        {
+            "authoritative": False,
+            "executed": bool(model_result.get("executed")),
+            "provider_calls_performed": bool(model_result.get("provider_calls_performed")),
+            "answer_digest": _digest(str(model_result.get("answer") or "")),
+            "design_grounded": bool(design["grounded"]),
+        },
+    )
+    record = _candidate_design_record(subgoal, source_inspection, design_path, design, model_result)
+    reassessed = consume_continuous_capability_reassessment(controller, record)
+    next_controller = _pause_for_candidate_design_evidence(reassessed, subgoal, design_path, design)
+    timestamps["controller_handoff_completed"] = utc_now()
+    result = SubgoalExecutionResult(
+        accepted=False,
+        disposition="candidate_design_requires_concrete_behavior_contract",
+        reason=(
+            "no repository-bound implementation was fabricated; the advisory design must identify an inspected path and independent behavior contract"
+        ),
+        subgoal_id=str(subgoal["subgoal_id"]),
+        campaign_root=str(root),
+        consumed_once=True,
+        source_inspection=source_inspection,
+        baseline={"not_run": "candidate design precedes a behavior contract"},
+        candidate={"state": "not_created", "reason": "generic success-reporting candidate strategy prohibited"},
+        validation={"passed": False, "not_run": "no concrete candidate source exists"},
+        clean_reproduction={"not_run": "no concrete candidate source exists"},
+        application_request={},
+        behavioral_evaluation_request={},
+        reassessment={"capability_id": record.capability_id, "reassessment": record.reassessment},
+        resource_usage=(resource,),
+        meaningful_transition_timestamps=timestamps,
+        stalled_execution=False,
+    )
+    _write_json(result_path, result.as_dict())
+    _write_json(root / "updated_restart_state_hint.json", {"controller_state": next_controller.continuous_mission_state})
+    return next_controller, result
+
+
+def _repository_bound_design_prompt(
+    subgoal: Mapping[str, Any],
+    source_inspection: Mapping[str, Any],
+    repo: Path,
+) -> str:
+    files = tuple(source_inspection.get("files") or ())
+    excerpts: list[str] = []
+    terms = _source_relevance_terms(subgoal)
+    implementation_files = [item for item in files if not str(item.get("path") or "").replace("\\", "/").startswith("tests/")]
+    evidence_files = [item for item in files if str(item.get("path") or "").replace("\\", "/").startswith("tests/")]
+    prompt_files = (*implementation_files[:3], *evidence_files[:1])
+    for item in prompt_files:
+        relative = str(item.get("path") or "")
+        path = (repo / relative).resolve()
+        if not relative or not str(path).startswith(str(repo)) or not path.is_file():
+            continue
+        content = _relevant_source_excerpt(path, terms)
+        excerpts.append(f"PATH: {relative}\n{content}")
+    allowed_paths = [str(item.get("path") or "") for item in files]
+    excerpt_text = "\n\n".join(excerpts) or "(no readable source excerpts)"
+    return (
+        "You are an advisory local development planner. You have no authority to edit files, run tools, approve work, or claim success. "
+        "Identify an implementation target only when the supplied repository evidence supports it. "
+        "Return JSON only, with no markdown or explanation outside the object. Use short values and exactly these keys: "
+        "affected_path, evidence_path, failure_mechanism, candidate_behavior, independent_evidence_needed, validation_target. "
+        "affected_path and evidence_path must each be one of the supplied paths; evidence_path must name a test or independent evidence file. "
+        "If the evidence is insufficient, use an empty affected_path and state exactly what independent evidence is missing.\n\n"
+        f"OBJECTIVE: {str(subgoal.get('measurable_objective') or '')}\n"
+        f"BASELINE: {str(subgoal.get('baseline') or '')}\n"
+        f"ALLOWED_PATHS: {json.dumps(allowed_paths)}\n"
+        f"REPOSITORY_EXCERPTS:\n{excerpt_text}"
+    )
+
+
+def _validate_repository_bound_design(
+    model_result: Mapping[str, Any],
+    source_inspection: Mapping[str, Any],
+) -> dict[str, Any]:
+    answer = str(model_result.get("answer") or "").strip()
+    parsed: dict[str, Any] = {}
+    if answer.startswith("{") and answer.endswith("}"):
+        try:
+            parsed = dict(json.loads(answer))
+        except (TypeError, ValueError):
+            parsed = {}
+    allowed_paths = {str(item.get("path") or "") for item in (source_inspection.get("files") or ())}
+    affected_path = str(parsed.get("affected_path") or "")
+    evidence_path = str(parsed.get("evidence_path") or "")
+    normalized_evidence_path = evidence_path.replace("\\", "/")
+    required = ("failure_mechanism", "candidate_behavior", "independent_evidence_needed", "validation_target")
+    missing = tuple(name for name in required if not str(parsed.get(name) or "").strip())
+    evidence_path_is_independent = evidence_path in allowed_paths and (
+        normalized_evidence_path.startswith("tests/")
+    )
+    grounded = bool(model_result.get("executed")) and affected_path in allowed_paths and evidence_path_is_independent and not missing
+    return {
+        "grounded": grounded,
+        "answer_format": "json_object" if parsed else "unstructured_or_invalid_json",
+        "affected_path": affected_path,
+        "evidence_path": evidence_path,
+        "evidence_path_is_independent": evidence_path_is_independent,
+        "allowed_paths": tuple(sorted(allowed_paths)),
+        "missing_fields": missing,
+        "failure_mechanism": str(parsed.get("failure_mechanism") or ""),
+        "candidate_behavior": str(parsed.get("candidate_behavior") or ""),
+        "independent_evidence_needed": str(parsed.get("independent_evidence_needed") or ""),
+        "validation_target": str(parsed.get("validation_target") or ""),
+        "rejection_reason": (
+            "advisory_design_did_not_bind_to_inspected_repository_evidence"
+            if not grounded
+            else "implementation_backend_not_enabled_without_separate_sandbox_candidate_contract"
+        ),
+    }
+
+
+def _model_result_for_artifact(model_result: Mapping[str, Any]) -> dict[str, Any]:
+    """Persist bounded advisory evidence without prompts or any secret-bearing state."""
+
+    return {
+        "model_id": str(model_result.get("model_id") or ""),
+        "result": str(model_result.get("result") or ""),
+        "executed": bool(model_result.get("executed")),
+        "answer": str(model_result.get("answer") or ""),
+        "answer_digest": _digest(str(model_result.get("answer") or "")),
+        "confidence_score": model_result.get("confidence_score"),
+        "latency_seconds": model_result.get("latency_seconds"),
+        "response_tokens": model_result.get("response_tokens"),
+        "provider_calls_performed": bool(model_result.get("provider_calls_performed")),
+        "reason": str(model_result.get("reason") or ""),
+    }
+
+
+def _candidate_design_record(
+    subgoal: Mapping[str, Any],
+    source_inspection: Mapping[str, Any],
+    design_path: Path,
+    design: Mapping[str, Any],
+    model_result: Mapping[str, Any],
+) -> CapabilityKnowledgeRecord:
+    capability_id = _capability_id_from_subgoal(subgoal)
+    return CapabilityKnowledgeRecord(
+        capability_id=capability_id,
+        original_weakness=str(subgoal.get("measurable_objective") or ""),
+        evidence=(str(source_inspection.get("inspection_id") or ""), str(design_path)),
+        first_incorrect_transition="broad weakness label -> static self-reporting candidate -> no independently checkable behavior contract",
+        strategies_attempted=("repository_bound_candidate_design",),
+        failed_approaches=("generic_static_candidate_metric_prohibited", str(design.get("rejection_reason") or "")),
+        successful_mechanism="bounded local model advisory recorded without granting code, tool, authority, or mutation rights",
+        exact_candidate="",
+        tests_added=(),
+        metrics_before_after={
+            "candidate_design_grounded": bool(design.get("grounded")),
+            "model_executed": bool(model_result.get("executed")),
+            "model_answer_digest": _digest(str(model_result.get("answer") or "")),
+        },
+        controls=("tracked_source_remains_unchanged", "advisory_output_cannot_authorize_implementation"),
+        adversarial_evidence=("uninspected_or_unstructured_model_target_rejected",),
+        held_out_evidence={"independent_behavior_contract_available": False},
+        reproduction_evidence=str(design_path),
+        provider_contribution="none",
+        local_repair_contribution="repository_bound_local_model_candidate_design",
+        application_evidence="not applicable; no implementation candidate was created",
+        regression_evidence="candidate design validation is deterministic and path-bound",
+        reassessment="blocked_missing_concrete_behavior_contract",
+        residual_uncertainty="a concrete repository target and preexisting independent behavior case are required before sandbox implementation",
+        reusable_process_rules=("do not fabricate a generic success-reporting candidate from an abstract weakness",),
+        evidence_stage="hypothesis",
+        capability_acquired=False,
+        eligible_for_behavioral_evaluation=False,
+    )
+
+
+def _pause_for_candidate_design_evidence(
+    controller: ContinuousRuntimeController,
+    subgoal: Mapping[str, Any],
+    design_path: Path,
+    design: Mapping[str, Any],
+) -> ContinuousRuntimeController:
+    scope_signature = stable_id(
+        "repository-bound-candidate-design-scope",
+        tuple(str(item) for item in (subgoal.get("source_inspection_scope") or ())),
+        str((controller.continuous_observation_state or {}).get("operator_supplied_candidate_target") or ""),
+    )
+    request_id = stable_id(
+        "operator-insight-repository-bound-candidate",
+        controller.session_id,
+        subgoal.get("subgoal_id"),
+        design.get("rejection_reason"),
+    )
+    request = {
+        "request_id": request_id,
+        "request_kind": "insight",
+        "request_source": "repository_bound_candidate_design",
+        "status": "pending",
+        "exact_question": "The local design lane could not identify a concrete inspected implementation target and independent behavior case. Should DELTA defer this abstract gap, treat it as an accepted boundary, or provide an exact path and preexisting failing case?",
+        "rationale": "The previous generic candidate strategy was rejected because it only self-reported success. No implementation will be fabricated from an abstract metric.",
+        "evidence_refs": (str(design_path),),
+        "source_gap_ids": (str(subgoal.get("weakness_id") or ""),),
+        "affected_gap": str(subgoal.get("weakness_id") or ""),
+        "blocked_transition": "repository-bound candidate design -> safe sandbox implementation",
+        "authority_scope": "none; an insight response cannot authorize mutation, application, API use, Git, or deployment",
+        "blocking_scope": "one abstract development branch",
+        "permitted_responses": ("provide exact target and case", "treat as accepted boundary", "defer"),
+        "authority_granted": False,
+        "created_at": utc_now(),
+    }
+    existing = tuple(
+        {
+            **dict(item),
+            "status": "superseded_by_repository_bound_candidate_design",
+            "superseded_at": utc_now(),
+        }
+        if str(item.get("status") or "pending") == "pending"
+        else dict(item)
+        for item in controller.continuous_developmental_insight_requests
+    )
+    if any(item.get("request_id") == request_id and item.get("status") == "pending" for item in existing):
+        return replace(
+            controller,
+            continuous_mission_state="awaiting_operator_insight",
+            active_work_item="awaiting_operator_insight",
+        )
+    return replace(
+        controller,
+        continuous_mission_state="awaiting_operator_insight",
+        continuous_active_subgoal={},
+        active_work_item="awaiting_operator_insight",
+        continuous_developmental_insight_requests=existing + (request,),
+        continuous_observation_state={
+            **(controller.continuous_observation_state or {}),
+            "candidate_design_blocker": {
+                "request_id": request_id,
+                "design_path": str(design_path),
+                "reason": str(design.get("rejection_reason") or ""),
+            },
+            "candidate_design_evidence_exhausted": True,
+            "candidate_design_evidence_scope_signature": scope_signature,
+        },
+    )
+
+
 def _subgoal_requests_model(subgoal: Mapping[str, Any]) -> bool:
     text = json.dumps(subgoal, sort_keys=True).lower()
-    return "model" in text or "advisor" in text or "diagnosis" in text or "resource_usage" in text or "resource-bearing" in text
+    return (
+        "model" in text
+        or "advisor" in text
+        or "advisory" in text
+        or "diagnosis" in text
+        or "resource_usage" in text
+        or "resource-bearing" in text
+        or "available_resource" in text
+        or "resource_selection" in text
+        or "authority_boundary_resource_filter" in text
+        or "local_model_advisory_probe" in text
+        or "resource_evidence_integration" in text
+    )
 
 
 def _subgoal_requests_reference(subgoal: Mapping[str, Any]) -> bool:
     text = json.dumps(subgoal, sort_keys=True).lower()
-    return "wiki" in text or "reference" in text or "documentation" in text or "resource_usage" in text or "resource-bearing" in text
+    return (
+        "wiki" in text
+        or "reference" in text
+        or "documentation" in text
+        or "resource_usage" in text
+        or "resource-bearing" in text
+        or "available_resource" in text
+        or "resource_selection" in text
+        or "reference_retrieval_probe" in text
+        or "resource_evidence_integration" in text
+    )
 
 
 def _default_local_model_adapter(payload: Mapping[str, Any]) -> Mapping[str, Any]:
     subgoal = dict(payload.get("subgoal") or {})
-    lane = select_model_lane(str(subgoal.get("measurable_objective") or "Analyze continuous runtime subgoal."), "coding")
+    prompt = str(payload.get("prompt") or subgoal.get("measurable_objective") or "Analyze continuous runtime subgoal.")
+    lane = select_model_lane(prompt, "coding")
+    if not payload.get("allow_local_model_execution"):
+        return {
+            "model_id": lane.get("selected_model_id") or lane.get("support_identifier"),
+            "result": "local_model_execution_not_authorized_for_this_call",
+            "lane": lane.get("lane"),
+            "available": bool(lane.get("available")),
+            "executed": False,
+            "answer": "",
+            "provider_calls_performed": False,
+            "provenance": "rc2_conversational_mode_router.select_model_lane",
+        }
+    result = execute_local_model_answer(prompt, lane)
     return {
-        "model_id": lane.get("selected_model_id") or lane.get("support_identifier"),
-        "result": "configured_local_model_lane_selected" if lane.get("available") else "local_model_unavailable",
+        "model_id": result.get("model_id") or lane.get("selected_model_id") or lane.get("support_identifier"),
+        "result": "local_model_executed" if result.get("executed") else "local_model_unavailable_or_failed",
         "lane": lane.get("lane"),
-        "available": bool(lane.get("available")),
-        "executed": False,
-        "provenance": "rc2_conversational_mode_router.select_model_lane",
+        "available": bool(result.get("available", lane.get("available"))),
+        "executed": bool(result.get("executed")),
+        "answer": str(result.get("answer") or ""),
+        "confidence_score": result.get("confidence_score"),
+        "latency_seconds": result.get("latency_seconds"),
+        "response_tokens": result.get("response_tokens"),
+        "reason": result.get("reason"),
+        "provider_calls_performed": bool(result.get("provider_calls_performed")),
+        "provenance": "rc2_conversational_mode_router.execute_local_model_answer",
     }
 
 
@@ -252,7 +540,9 @@ def _default_reference_adapter(payload: Mapping[str, Any]) -> Mapping[str, Any]:
     from orchestration.runtime.delta_1_4_live_wikipedia_runtime import activated_wikipedia_profile, retrieve_wikipedia_text
 
     subgoal = dict(payload.get("subgoal") or {})
-    query = str(subgoal.get("wiki_query") or subgoal.get("reference_query") or subgoal.get("measurable_objective") or "software testing")
+    text = json.dumps(subgoal, sort_keys=True).lower()
+    default_query = "Evidence" if "reference_retrieval_probe" in text or "resource_evidence_integration" in text else "software testing"
+    query = str(subgoal.get("wiki_query") or subgoal.get("reference_query") or default_query)
     profile = activated_wikipedia_profile(max_queries_per_objective=1)
     result = retrieve_wikipedia_text(query, profile=profile)
     return {
@@ -269,14 +559,83 @@ def _default_reference_adapter(payload: Mapping[str, Any]) -> Mapping[str, Any]:
     }
 
 
+def _substantive_evidence_check(
+    controller: ContinuousRuntimeController,
+    subgoal: Mapping[str, Any],
+    source_inspection: Mapping[str, Any],
+    resource_usage: tuple[ResourceUseRecord, ...],
+) -> dict[str, Any]:
+    capability = _capability_id_from_subgoal(subgoal)
+    checks: dict[str, bool] = {
+        "source_inspection_meaningful": bool(source_inspection.get("meaningful")),
+    }
+    if capability in {
+        "knowledge_retrieval_index",
+        "prior_failure_avoidance_check",
+        "next_goal_evidence_reuse_record",
+    }:
+        ledger = tuple(dict(item) for item in controller.continuous_knowledge_ledger)
+        checks.update(
+            {
+                "knowledge_ledger_nonempty": bool(ledger),
+                "residual_uncertainty_present": any(item.get("residual_uncertainty") for item in ledger),
+                "process_rules_present": any(item.get("reusable_process_rules") for item in ledger),
+            }
+        )
+    if capability in {
+        "available_resource_inventory",
+        "local_resource_selection_trace",
+        "authority_boundary_resource_filter",
+    }:
+        resource_types = {item.resource_type for item in resource_usage}
+        checks.update(
+            {
+                "local_model_lane_recorded": "local_model" in resource_types,
+                "reference_lane_recorded": "built_in_reference" in resource_types,
+                "all_resource_outputs_non_authoritative": all(item.provenance.get("authoritative") is False for item in resource_usage) if resource_usage else False,
+            }
+        )
+    if capability in {
+        "local_model_advisory_probe",
+        "reference_retrieval_probe",
+        "resource_evidence_integration",
+    }:
+        resources = {item.resource_type: item for item in resource_usage}
+        checks.update(
+            {
+                "local_model_advisory_recorded": "local_model" in resources,
+                "reference_recorded": "built_in_reference" in resources,
+                "reference_not_failed": resources.get("built_in_reference", ResourceUseRecord("", "", "", "")).result != "reference_failed",
+                "advisory_outputs_non_authoritative": all(item.provenance.get("authoritative") is False for item in resource_usage) if resource_usage else False,
+            }
+        )
+    failed = tuple(name for name, passed in checks.items() if not passed)
+    evidence_path = Path(str(subgoal.get("subgoal_id") or "subgoal"))  # stable label only; real path is stored by caller context.
+    return {
+        "capability_id": capability,
+        "passed": not failed,
+        "checks": checks,
+        "failed_checks": failed,
+        "evidence_label": str(evidence_path),
+    }
+
+
 def _inspect_sources(repo: Path, subgoal: Mapping[str, Any]) -> dict[str, Any]:
     scopes = tuple(str(item) for item in subgoal.get("source_inspection_scope") or ("orchestration/runtime", "tests/runtime_gsr"))
     inspected: list[dict[str, Any]] = []
+    terms = _source_relevance_terms(subgoal)
     for scope in scopes:
         path = (repo / scope).resolve()
         if not str(path).startswith(str(repo)):
             continue
-        files = [path] if path.is_file() else sorted(path.rglob("*.py"))[:8] if path.exists() else []
+        candidates = [path] if path.is_file() else list(path.rglob("*.py")) if path.exists() else []
+        files = sorted(
+            candidates,
+            key=lambda candidate: (
+                -_source_path_relevance(str(candidate.relative_to(repo)), terms),
+                str(candidate.relative_to(repo)),
+            ),
+        )[:8]
         for file_path in files:
             if file_path.is_file():
                 raw = file_path.read_bytes()
@@ -293,6 +652,38 @@ def _inspect_sources(repo: Path, subgoal: Mapping[str, Any]) -> dict[str, Any]:
         "file_count": len(inspected),
         "meaningful": bool(inspected),
     }
+
+
+def _source_relevance_terms(subgoal: Mapping[str, Any]) -> tuple[str, ...]:
+    text = " ".join(
+        str(subgoal.get(key) or "")
+        for key in ("subgoal_id", "weakness_id", "measurable_objective", "baseline", "source_mission_id")
+    ).lower()
+    tokens = {token for token in re.findall(r"[a-z][a-z0-9_]{3,}", text)}
+    # The executor and its tests are always direct evidence for this runtime's
+    # implementation boundary, regardless of the abstract weakness wording.
+    tokens.update({"continuous", "subgoal", "candidate", "executor", "worker", "operator", "test"})
+    return tuple(sorted(tokens))
+
+
+def _source_path_relevance(relative: str, terms: tuple[str, ...]) -> int:
+    normalized = relative.replace("\\", "/").lower()
+    score = sum(3 for term in terms if term in normalized)
+    if normalized.startswith("tests/"):
+        score += 2
+    if "continuous_" in normalized:
+        score += 4
+    return score
+
+
+def _relevant_source_excerpt(path: Path, terms: tuple[str, ...], *, limit: int = 1400) -> str:
+    text = path.read_text(encoding="utf-8", errors="replace")
+    lowered = text.lower()
+    positions = [lowered.find(term) for term in terms if lowered.find(term) >= 0]
+    if not positions:
+        return text[:limit]
+    start = max(0, min(positions) - 220)
+    return text[start : start + limit]
 
 
 def _run_baseline(root: Path, repo: Path, python_executable: str, subgoal: Mapping[str, Any]) -> dict[str, Any]:
@@ -396,6 +787,35 @@ def _run_clean_reproduction(root: Path, python_executable: str) -> dict[str, Any
     }
 
 
+def _behavioral_evaluation_request(
+    subgoal: Mapping[str, Any],
+    candidate: Mapping[str, Any],
+    record: CapabilityKnowledgeRecord,
+) -> dict[str, Any]:
+    capability_id = record.capability_id
+    task_family_id = stable_id("task-family", capability_id, subgoal.get("measurable_objective"))
+    evaluation_id = stable_id("behavioral-evaluation", task_family_id, candidate.get("candidate_id"))
+    return {
+        "evaluation_id": evaluation_id,
+        "task_family_id": task_family_id,
+        "capability_id": capability_id,
+        "developmental_gap_id": str(subgoal.get("weakness_id") or capability_id),
+        "candidate_id": str(candidate.get("candidate_id") or ""),
+        "disposition": "evaluation_pending",
+        "required_evidence": (
+            "baseline_attempt_id",
+            "sealed_or_preexisting_case_ids",
+            "control_case_ids",
+            "post_candidate_metrics",
+            "transfer_metrics",
+            "regression_metrics",
+            "evidence_independence",
+        ),
+        "promotion_blocker": "independent_behavioral_evaluation_required",
+        "structural_validation_is_not_capability_acquisition": True,
+    }
+
+
 def _capability_record(
     subgoal: Mapping[str, Any],
     candidate: Mapping[str, Any],
@@ -414,7 +834,13 @@ def _capability_record(
         successful_mechanism="active subgoal consumed into local sandbox candidate, validation, and clean reproduction",
         exact_candidate=str(candidate.get("path")),
         tests_added=(),
-        metrics_before_after={"baseline": baseline.get("metric"), "validation_passed": validation.get("passed")},
+        metrics_before_after={
+            "baseline": baseline.get("metric"),
+            "validation_passed": validation.get("passed"),
+            "substantive_evidence": validation.get("substantive_evidence"),
+            "candidate_id": candidate.get("candidate_id"),
+            "candidate_digest": candidate.get("digest"),
+        },
         controls=("tracked_source_remains_unchanged_before_application",),
         adversarial_evidence=("liveness-only metric rejected",),
         held_out_evidence={"clean_reproduction": reproduction.get("passed")},
@@ -423,10 +849,145 @@ def _capability_record(
         local_repair_contribution=_local_contribution_summary(subgoal),
         application_evidence="not applied; tracked source remains operator-gated",
         regression_evidence="focused continuous subgoal executor tests",
-        reassessment="satisfied" if validation.get("passed") and reproduction.get("passed") else "failed",
+        reassessment="candidate_structurally_validated" if validation.get("passed") and reproduction.get("passed") else "failed",
         residual_uncertainty="candidate is local diagnostic unless application review is separately requested",
         reusable_process_rules=("heartbeat does not count as development progress",),
+        evidence_stage="candidate_structurally_validated" if validation.get("passed") and reproduction.get("passed") else "behaviorally_failed",
+        capability_acquired=False,
+        eligible_for_behavioral_evaluation=bool(validation.get("passed") and reproduction.get("passed")),
+        behavioral_evaluation_ref="",
     )
+
+
+def _execute_independent_behavioral_evaluation(
+    controller: ContinuousRuntimeController,
+    *,
+    subgoal: Mapping[str, Any],
+    root: Path,
+    result_path: Path,
+) -> tuple[ContinuousRuntimeController, SubgoalExecutionResult]:
+    """Evaluate a structural candidate without trusting its own reported metric."""
+
+    request = dict(subgoal.get("behavioral_evaluation") or {})
+    structural_payload = dict(request.get("structural_record") or {})
+    if not structural_payload:
+        raise ValueError("behavioral evaluation subgoal is missing its structural capability record")
+    structural_record = CapabilityKnowledgeRecord(**structural_payload)
+    candidate_path = Path(structural_record.exact_candidate)
+    candidate_source = candidate_path.read_text(encoding="utf-8") if candidate_path.exists() else ""
+    candidate_id = str(request.get("candidate_id") or structural_record.metrics_before_after.get("candidate_id") or "")
+    evaluation_id = str(request.get("evaluation_id") or stable_id("behavioral-evaluation", structural_record.capability_id, candidate_id))
+    static_self_report = _candidate_is_static_self_report(candidate_source)
+    case_id = stable_id("preexisting-behavioral-case", structural_record.capability_id, "self-report-rejection")
+    evidence_ref = root / "independent_behavioral_evaluation.json"
+    disposition = "behaviorally_failed" if static_self_report else "insufficient_independent_evidence"
+    evaluation = BehavioralEvaluationRecord(
+        evaluation_id=evaluation_id,
+        task_family_id=str(request.get("task_family_id") or stable_id("behavioral-task-family", structural_record.capability_id)),
+        capability_id=structural_record.capability_id,
+        developmental_gap_id=str(request.get("developmental_gap_id") or structural_record.capability_id),
+        baseline_attempt_id=str(request.get("baseline_attempt_id") or structural_record.metrics_before_after.get("baseline") or "structural-baseline"),
+        candidate_id=candidate_id,
+        evaluation_protocol_version="independent_behavioral_evaluation_v1",
+        task_source="preexisting_independent_candidate_behavior_contract",
+        training_case_ids=(),
+        sealed_or_preexisting_case_ids=(case_id,),
+        control_case_ids=(stable_id("behavioral-control", structural_record.capability_id),),
+        baseline_metrics={"target": 0.0},
+        post_candidate_metrics={"target": 0.0 if static_self_report else 0.0},
+        transfer_metrics={"target": 0.0, "threshold": 1.0},
+        regression_metrics={"controls_stable": True},
+        evidence_independence={
+            "case_source": "preexisting",
+            "candidate_generated_expected_outputs": False,
+            "self_reported_success": False,
+            "artifact_existence_only": False,
+            "candidate_source_static_self_report": static_self_report,
+            "candidate_source_digest": _digest(candidate_source),
+        },
+        disposition=disposition,
+        evidence_refs=(str(evidence_ref), str(candidate_path)),
+    )
+    promoted = promote_capability_with_behavioral_evaluation(structural_record, evaluation)
+    evaluation_payload = {
+        "evaluation": evaluation.as_dict(),
+        "candidate_path": str(candidate_path),
+        "candidate_exists": candidate_path.exists(),
+        "static_self_report_detected": static_self_report,
+        "promotion": promoted.as_dict(),
+        "tracked_source_mutated": False,
+    }
+    _write_json(evidence_ref, evaluation_payload)
+    reassessed = consume_continuous_capability_reassessment(controller, promoted)
+    next_controller = continue_continuous_mission_after_reassessment(reassessed)
+    timestamps = {
+        "execution_started": utc_now(),
+        "independent_behavioral_evaluation_completed": utc_now(),
+        "controller_handoff_completed": utc_now(),
+    }
+    result = SubgoalExecutionResult(
+        accepted=capability_is_acquired(promoted),
+        disposition=(
+            "behavioral_evaluation_failed_static_self_report"
+            if static_self_report
+            else "behavioral_evaluation_insufficient_independent_evidence"
+        ),
+        reason=(
+            "candidate self-reported a successful metric without exercising the claimed behavior"
+            if static_self_report
+            else "no independent behavioral task family was available for this structural candidate"
+        ),
+        subgoal_id=str(subgoal["subgoal_id"]),
+        campaign_root=str(root),
+        consumed_once=True,
+        source_inspection={
+            "candidate_path": str(candidate_path),
+            "candidate_exists": candidate_path.exists(),
+            "static_self_report_detected": static_self_report,
+        },
+        baseline={"target": 0.0, "independent": True},
+        candidate={"candidate_id": candidate_id, "path": str(candidate_path)},
+        validation={"passed": capability_is_acquired(promoted), "independent": True},
+        clean_reproduction={"not_applicable": "behavioral evaluation reuses the prior declared candidate artifact"},
+        application_request={},
+        behavioral_evaluation_request=evaluation.as_dict(),
+        reassessment={"capability_id": promoted.capability_id, "reassessment": promoted.reassessment},
+        resource_usage=(),
+        meaningful_transition_timestamps=timestamps,
+        stalled_execution=False,
+    )
+    _write_json(result_path, result.as_dict())
+    _write_json(root / "updated_restart_state_hint.json", {"controller_state": next_controller.continuous_mission_state})
+    return next_controller, result
+
+
+def _candidate_is_static_self_report(candidate_source: str) -> bool:
+    """Detect a candidate that can only attest to its own success.
+
+    This is deliberately structural: a literal target score in the candidate's
+    own return value is never independent proof of the target behavior.
+    """
+
+    if not candidate_source:
+        return False
+    try:
+        module = ast.parse(candidate_source)
+    except SyntaxError:
+        return False
+    for node in ast.walk(module):
+        if not isinstance(node, ast.FunctionDef) or node.name != "candidate_metric":
+            continue
+        for child in node.body:
+            if not isinstance(child, ast.Return) or not isinstance(child.value, ast.Dict):
+                continue
+            entries = {
+                key.value: value.value
+                for key, value in zip(child.value.keys, child.value.values)
+                if isinstance(key, ast.Constant) and isinstance(key.value, str) and isinstance(value, ast.Constant)
+            }
+            if entries.get("target_metric") == 1.0 and entries.get("tracked_source_mutated") is False:
+                return True
+    return False
 
 
 def _result_from_previous(previous: Mapping[str, Any], *, reason: str) -> SubgoalExecutionResult:
@@ -443,6 +1004,7 @@ def _result_from_previous(previous: Mapping[str, Any], *, reason: str) -> Subgoa
         validation=dict(previous.get("validation") or {}),
         clean_reproduction=dict(previous.get("clean_reproduction") or {}),
         application_request=dict(previous.get("application_request") or {}),
+        behavioral_evaluation_request=dict(previous.get("behavioral_evaluation_request") or {}),
         reassessment=dict(previous.get("reassessment") or {}),
         resource_usage=(),
         meaningful_transition_timestamps=dict(previous.get("meaningful_transition_timestamps") or {}),

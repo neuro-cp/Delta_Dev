@@ -17,10 +17,11 @@ import os
 import subprocess
 import time
 import threading
-from typing import Any, Iterable
+from typing import Any, Iterable, Mapping
 
 from orchestration.runtime.delta_1_0_common import safety_metadata, stable_id, utc_now, write_json, write_markdown
 from orchestration.runtime.continuous_mission_foundation import (
+    ActiveSubgoal,
     ApiAuthorityState,
     BroadMissionContract,
     CapabilityKnowledgeRecord,
@@ -30,6 +31,8 @@ from orchestration.runtime.continuous_mission_foundation import (
     assess_main_goal_completion,
     assess_developmental_capability_state,
     api_unavailable_update,
+    capability_evidence_stage,
+    capability_is_acquired,
     capability_inventory_from_knowledge,
     compile_developmental_insight_requests,
     compile_developmental_operator_explanation,
@@ -42,6 +45,7 @@ from orchestration.runtime.continuous_mission_foundation import (
     derive_next_main_goal,
     derive_subgoal_evidence_for_main_goal,
     evidence_to_findings,
+    normalize_capability_record_for_recovery,
     rank_weakness_frontier,
 )
 from orchestration.runtime.delta_1_6_operational_autonomy import (
@@ -302,8 +306,10 @@ class ContinuousRuntimeController:
     continuous_capability_inventory: tuple[dict[str, Any], ...] = ()
     continuous_developmental_self_assessment: dict[str, Any] = field(default_factory=dict)
     continuous_developmental_insight_requests: tuple[dict[str, Any], ...] = ()
+    continuous_operator_interaction_responses: tuple[dict[str, Any], ...] = ()
     continuous_operator_explanation: dict[str, Any] = field(default_factory=dict)
     continuous_api_authority: dict[str, Any] = field(default_factory=dict)
+    continuous_observation_state: dict[str, Any] = field(default_factory=dict)
     pending_application_decision_id: str = ""
     cancellation_requested: bool = False
     last_idle_reflection_at: float = 0.0
@@ -663,11 +669,34 @@ def refresh_continuous_mission_frontier(controller: ContinuousRuntimeController)
 def select_continuous_mission_subgoal(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
     if not controller.continuous_mission_contract:
         return controller
+    behavioral_evaluation = _activate_pending_behavioral_evaluation(controller)
+    if behavioral_evaluation is not None:
+        return behavioral_evaluation
     contract = compile_broad_mission_contract(controller.continuous_mission_contract["original_operator_goal"])
-    frontier = [WeaknessCandidate(**item) for item in controller.continuous_mission_frontier]
+    frontier = [WeaknessCandidate(**item) for item in controller.continuous_mission_frontier if item.get("status", "eligible") == "eligible"]
     subgoal = compile_active_subgoal(contract, frontier)
     if subgoal is None:
+        if controller.continuous_mission_frontier:
+            observed = replace(
+                controller,
+                continuous_mission_state="observing_for_new_weaknesses",
+                continuous_active_subgoal={},
+                active_work_item=OBSERVATION_STATE,
+                continuous_observation_state={
+                    **(controller.continuous_observation_state or {}),
+                    "observation_reason": "ranked_frontier_has_no_executable_subgoal",
+                    "ranked_frontier_count": len(controller.continuous_mission_frontier),
+                },
+                journal=controller.journal
+                + (_journal_entry("continuous_mission", "ranked_frontier_had_no_executable_subgoal", (str(len(controller.continuous_mission_frontier)),)),),
+            )
+            statuses = {str(item.get("status") or "eligible") for item in controller.continuous_mission_frontier}
+            if statuses and statuses <= {"satisfied", "superseded", "rejected"}:
+                return exit_observation_with_action_derivation(observed)
+            return observed
         return assess_and_advance_continuous_main_goal(controller)
+    if _candidate_design_scope_is_exhausted(controller, subgoal.as_dict()):
+        return _hold_for_new_repository_bound_evidence(controller, subgoal.as_dict())
     objective = ContinuousObjective(
         objective_id=subgoal.subgoal_id,
         title=subgoal.measurable_objective[:240],
@@ -686,6 +715,648 @@ def select_continuous_mission_subgoal(controller: ContinuousRuntimeController) -
         objectives=_merge_objectives(controller.objectives, (objective,)),
         journal=controller.journal + (_journal_entry("continuous_mission", "highest_ranked_eligible_weakness_compiled_to_active_subgoal", (subgoal.subgoal_id,)),),
     )
+
+
+def _candidate_design_scope_signature(
+    controller: ContinuousRuntimeController,
+    subgoal: Mapping[str, Any],
+) -> str:
+    observation = controller.continuous_observation_state or {}
+    return stable_id(
+        "repository-bound-candidate-design-scope",
+        tuple(str(item) for item in (subgoal.get("source_inspection_scope") or ())),
+        str(observation.get("operator_supplied_candidate_target") or ""),
+    )
+
+
+def _candidate_design_scope_is_exhausted(
+    controller: ContinuousRuntimeController,
+    subgoal: Mapping[str, Any],
+) -> bool:
+    observation = controller.continuous_observation_state or {}
+    return bool(observation.get("candidate_design_evidence_exhausted")) and (
+        str(observation.get("candidate_design_evidence_scope_signature") or "")
+        == _candidate_design_scope_signature(controller, subgoal)
+    )
+
+
+def _hold_for_new_repository_bound_evidence(
+    controller: ContinuousRuntimeController,
+    subgoal: Mapping[str, Any],
+) -> ContinuousRuntimeController:
+    return replace(
+        controller,
+        continuous_mission_state="observing_for_new_weaknesses",
+        continuous_active_subgoal={},
+        active_work_item=OBSERVATION_STATE,
+        continuous_observation_state={
+            **(controller.continuous_observation_state or {}),
+            "observation_reason": "repository_bound_candidate_design_evidence_scope_exhausted",
+            "candidate_design_evidence_exhausted": True,
+            "blocked_subgoal_id": str(subgoal.get("subgoal_id") or ""),
+        },
+        journal=controller.journal
+        + (
+            _journal_entry(
+                "continuous_mission",
+                "blocked_repeat_of_abstract_candidate_design_without_new_repository_evidence",
+                (str(subgoal.get("subgoal_id") or ""),),
+            ),
+        ),
+    )
+
+
+def _activate_pending_behavioral_evaluation(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController | None:
+    """Promote one structurally-valid candidate into independent local evaluation.
+
+    The normal frontier is intentionally not consulted first here. A candidate
+    that has passed only self-contained sandbox checks must receive its one
+    independent evaluation before the runtime can treat later frontier work as
+    a new developmental result.
+    """
+
+    if controller.continuous_active_subgoal or controller.pending_application_decision_id:
+        return None
+    record = _next_pending_behavioral_evaluation_record(controller)
+    if record is None:
+        return None
+    contract = _broad_contract_from_state(controller)
+    candidate_id = str(record.metrics_before_after.get("candidate_id") or stable_id("structural-candidate", record.capability_id, record.exact_candidate))
+    task_family_id = stable_id("behavioral-task-family", record.capability_id, record.original_weakness)
+    evaluation_id = stable_id("behavioral-evaluation", contract.mission_id, task_family_id, candidate_id)
+    evaluation = {
+        "evaluation_id": evaluation_id,
+        "task_family_id": task_family_id,
+        "capability_id": record.capability_id,
+        "developmental_gap_id": record.capability_id,
+        "candidate_id": candidate_id,
+        "baseline_attempt_id": str(record.metrics_before_after.get("baseline") or "structural-baseline"),
+        "required_evidence": (
+            "sealed_or_preexisting_case_ids",
+            "control_case_ids",
+            "post_candidate_metrics",
+            "transfer_metrics",
+            "regression_metrics",
+            "evidence_independence",
+        ),
+        "promotion_blocker": "independent_behavioral_evaluation_required",
+        "structural_record": record.as_dict(),
+    }
+    subgoal = ActiveSubgoal(
+        subgoal_id=stable_id("behavioral-evaluation-subgoal", contract.mission_id, evaluation_id),
+        source_mission_id=contract.mission_id,
+        weakness_id=record.capability_id,
+        measurable_objective=f"independently evaluate {record.capability_id} beyond structural sandbox validation",
+        baseline="behavioral_evaluation=not_run",
+        success_threshold="independent_cases_show_target_and_transfer_improvement_without_control_regression",
+        controls=("candidate self-report is not accepted as evidence", "tracked source remains unchanged"),
+        adversarial_tests="candidate-generated expected outputs and artifact-existence-only evidence are rejected",
+        held_out_policy="use sealed or preexisting behavior cases that do not overlap training cases",
+        sandbox_scope="independent_local_behavioral_evaluation_only",
+        source_inspection_scope=("candidate artifact", "declared independent evaluation protocol"),
+        tracked_application_allowlist=(),
+        rollback_condition="never promote a capability when independent behavioral evidence is absent or fails",
+        completion_classification="behavioral_evaluation_pending",
+        execution_kind="independent_behavioral_evaluation",
+        behavioral_evaluation=evaluation,
+    )
+    objective = ContinuousObjective(
+        objective_id=subgoal.subgoal_id,
+        title=subgoal.measurable_objective[:240],
+        state="ACTIVE",
+        source="CONTINUOUS_BEHAVIORAL_EVALUATION",
+        authority_class="AUTONOMOUS_SAFE_LOCAL_EVALUATION_ONLY",
+        created_at=utc_now(),
+        updated_at=utc_now(),
+    )
+    return replace(
+        controller,
+        continuous_mission_state="behavioral_evaluation_active",
+        continuous_active_subgoal=subgoal.as_dict(),
+        active_work_item=subgoal.measurable_objective,
+        active_objective=objective,
+        objectives=_merge_objectives(controller.objectives, (objective,)),
+        journal=controller.journal
+        + (
+            _journal_entry(
+                "continuous_mission",
+                "structural_candidate_queued_for_independent_behavioral_evaluation",
+                (record.capability_id, evaluation_id),
+            ),
+        ),
+    )
+
+
+def _next_pending_behavioral_evaluation_record(
+    controller: ContinuousRuntimeController,
+) -> CapabilityKnowledgeRecord | None:
+    """Return the newest unresolved record for each capability exactly once."""
+
+    seen_capabilities: set[str] = set()
+    for raw in reversed(controller.continuous_knowledge_ledger):
+        record = normalize_capability_record_for_recovery(CapabilityKnowledgeRecord(**dict(raw)))
+        if record.capability_id in seen_capabilities:
+            continue
+        seen_capabilities.add(record.capability_id)
+        if (
+            record.eligible_for_behavioral_evaluation
+            and not record.behavioral_evaluation_ref
+            and not capability_is_acquired(record)
+            and capability_evidence_stage(record) in {"candidate_structurally_validated", "evaluation_pending"}
+        ):
+            return record
+    return None
+
+
+def _observation_gap_action(gap: str) -> dict[str, Any]:
+    normalized = gap.lower().replace("-", "_").replace(" ", "_")
+    if "tracked" in normalized and "application" in normalized:
+        return {
+            "action_id": stable_id("observation-action", gap, "local-risk-simulation"),
+            "gap": gap,
+            "classification": "requires_explicit_authority",
+            "action_type": "local_risk_simulation",
+            "rank": 0.72,
+            "evidence_gain": 0.74,
+            "authority_cost": 0.35,
+            "reversibility": 0.95,
+            "description": "derive a local simulation that narrows tracked-application risk before any authority request",
+            "blocked_transition": "validated local result -> tracked integration proof",
+        }
+    if "fixture" in normalized or "non_fixture" in normalized:
+        return {
+            "action_id": stable_id("observation-action", gap, "broader-local-evaluation"),
+            "gap": gap,
+            "classification": "locally_actionable",
+            "action_type": "local_subgoal",
+            "rank": 0.91,
+            "evidence_gain": 0.9,
+            "authority_cost": 0.0,
+            "reversibility": 1.0,
+            "description": "generate non-fixture local validation cases from a different context",
+            "blocked_transition": "fixture-scoped validation -> transferable local validation evidence",
+        }
+    if "local" in normalized and "diagnostic" in normalized:
+        return {
+            "action_id": stable_id("observation-action", gap, "broader-local-diagnostic"),
+            "gap": gap,
+            "classification": "requires_additional_local_evidence",
+            "action_type": "local_subgoal",
+            "rank": 0.86,
+            "evidence_gain": 0.82,
+            "authority_cost": 0.0,
+            "reversibility": 1.0,
+            "description": "run broader local validation beyond diagnostic-only evidence",
+            "blocked_transition": "diagnostic-only result -> evidence-backed capability confidence",
+        }
+    if "operator" in normalized or "intent" in normalized or "ambigu" in normalized:
+        return {
+            "action_id": stable_id("observation-action", gap, "operator-insight"),
+            "gap": gap,
+            "classification": "requires_operator_insight",
+            "action_type": "operator_insight",
+            "rank": 0.7,
+            "evidence_gain": 0.68,
+            "authority_cost": 0.0,
+            "reversibility": 1.0,
+            "description": "ask a concrete operator question before choosing the next interpretation",
+            "blocked_transition": "ambiguous developmental evidence -> priority selection",
+        }
+    return {
+        "action_id": stable_id("observation-action", gap, "local-evidence-inspection"),
+        "gap": gap,
+        "classification": "requires_additional_local_evidence",
+        "action_type": "local_subgoal",
+        "rank": 0.78,
+        "evidence_gain": 0.75,
+        "authority_cost": 0.0,
+        "reversibility": 1.0,
+        "description": "inspect local evidence for a more specific executable weakness",
+        "blocked_transition": "unresolved gap -> executable evidence-backed subgoal",
+    }
+
+
+def derive_observation_exit_actions(controller: ContinuousRuntimeController) -> tuple[dict[str, Any], ...]:
+    assessment = controller.continuous_developmental_self_assessment or {}
+    attempted = set((controller.continuous_observation_state or {}).get("attempted_exit_actions") or ())
+    accepted_boundaries = _accepted_boundary_gap_tokens(controller)
+    actions = [
+        _observation_gap_action(str(gap))
+        for gap in (assessment.get("developmental_gaps") or ())
+        if str(gap) not in accepted_boundaries
+    ]
+    return tuple(sorted((item for item in actions if item["action_id"] not in attempted), key=lambda item: (-float(item["rank"]), item["action_id"])))
+
+
+def _split_gap_tokens(values: Iterable[Any]) -> tuple[str, ...]:
+    tokens: list[str] = []
+    for value in values:
+        for part in str(value).split(","):
+            token = part.strip()
+            if token:
+                tokens.append(token)
+    return tuple(dict.fromkeys(tokens))
+
+
+def _accepted_boundary_gap_tokens(controller: ContinuousRuntimeController) -> set[str]:
+    return set(_split_gap_tokens((controller.continuous_observation_state or {}).get("accepted_boundary_gaps") or ()))
+
+
+def _observation_exit_evidence(controller: ContinuousRuntimeController, action: dict[str, Any]) -> dict[str, Any]:
+    main_goal = controller.continuous_main_goal or {}
+    objective = str(main_goal.get("normalized_objective") or "continuous developmental mission")
+    return {
+        "evidence_source": f"observation_exit:{action['action_id']}",
+        "observed_behavior": f"{action['gap']} remains unresolved while no active work is scheduled",
+        "first_incorrect_transition": "material gap -> passive observation without evidence-producing work",
+        "affected_capability": str(action["gap"]),
+        "baseline_metric": f"{str(action['gap']).replace(' ', '_')}=0.0",
+        "confidence": 0.84,
+        "operator_value": float(action["evidence_gain"]),
+        "severity": float(action["rank"]),
+        "estimated_implementation_breadth": "small",
+        "validation_method": "observation_exit_action_derivation",
+        "scope": "local_runtime",
+        "uncertainty": f"{objective} cannot be advanced without resolving or bounding {action['gap']}",
+    }
+
+
+def _operator_insight_from_observation(controller: ContinuousRuntimeController, action: dict[str, Any]) -> dict[str, Any]:
+    prior_responses = tuple(
+        item
+        for item in controller.continuous_operator_interaction_responses
+        if item.get("response_kind") == "insight" and str(action.get("gap") or "") in str(item.get("operator_text") or "") + str(item.get("selected_option") or "")
+    )
+    request_round = len(tuple(controller.continuous_operator_interaction_responses))
+    request_id = stable_id("operator-insight", controller.session_id, action["action_id"], request_round)
+    local_exhausted = request_round > 0 and action["action_type"] == "operator_insight"
+    question = (
+        "Local simulation has already been tried and the same caveats remain. Should DELTA request scoped application review, treat this as an accepted boundary, defer it, or ask for clarification?"
+        if local_exhausted
+        else "Should this unresolved caveat remain an active development gap, be treated as an accepted boundary, or be deferred?"
+    )
+    options = (
+        ("request scoped application review", "treat as accepted boundary", "defer", "ask for clarification")
+        if local_exhausted
+        else ("continue local simulation only", "treat as accepted boundary", "defer", "ask for clarification")
+    )
+    return {
+        "request_id": request_id,
+        "request_kind": "insight",
+        "status": "pending",
+        "exact_question": question,
+        "question": question,
+        "why_it_matters": f"The answer changes whether DELTA should pursue {action['gap']} or remove it from the active frontier.",
+        "rationale": (
+            f"Local simulation has already been attempted {len(prior_responses) or request_round} time(s); further progress now needs a priority or boundary decision."
+            if local_exhausted
+            else f"The answer changes whether DELTA should pursue {action['gap']} or remove it from the active frontier."
+        ),
+        "affected_main_goal": (controller.continuous_main_goal or {}).get("normalized_objective", ""),
+        "source_main_goal": (controller.continuous_main_goal or {}).get("normalized_objective", ""),
+        "source_subgoal": "",
+        "affected_gap": action["gap"],
+        "source_gap_ids": (action["gap"],),
+        "blocked_transition": action["blocked_transition"],
+        "blocking_scope": "developmental priority selection",
+        "authority_scope": "none; ordinary insight text grants no authority",
+        "options": options,
+        "permitted_responses": options,
+        "evidence_refs": (action["action_id"], action["gap"]),
+        "authority_granted": False,
+        "created_at": utc_now(),
+    }
+
+
+def _pending_runtime_interaction_requests(controller: ContinuousRuntimeController) -> tuple[dict[str, Any], ...]:
+    consumed_request_ids = {
+        str(item.get("request_id"))
+        for item in controller.continuous_operator_interaction_responses
+        if item.get("consumed_at")
+    }
+    return tuple(
+        dict(item)
+        for item in controller.continuous_developmental_insight_requests
+        if item.get("status") == "pending"
+        and item.get("request_kind") in {"insight", "clarification", "priority_choice", "tracked_application_authority"}
+        and str(item.get("request_id")) not in consumed_request_ids
+    )
+
+
+def _normalize_consumed_operator_interaction_requests(
+    requests: Iterable[Mapping[str, Any]],
+    responses: Iterable[Mapping[str, Any]],
+) -> tuple[dict[str, Any], ...]:
+    consumed = {
+        str(item.get("request_id"))
+        for item in responses
+        if item.get("consumed_at") and item.get("request_id")
+    }
+    normalized: list[dict[str, Any]] = []
+    for request in requests:
+        item = dict(request)
+        if str(item.get("request_id")) in consumed and item.get("status") == "pending":
+            item["status"] = "consumed"
+            item["recovery_disposition"] = "normalized_pending_request_with_consumed_response"
+        normalized.append(item)
+    return tuple(normalized)
+
+
+def exit_observation_with_action_derivation(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
+    if controller.continuous_mission_state != "observing_for_new_weaknesses":
+        return controller
+    if controller.continuous_active_subgoal or controller.pending_application_decision_id:
+        return controller
+    assessment = controller.continuous_developmental_self_assessment or {}
+    gaps = tuple(str(item) for item in (assessment.get("developmental_gaps") or ()))
+    if not gaps:
+        return controller
+    actions = derive_observation_exit_actions(controller)
+    if _pending_runtime_interaction_requests(controller):
+        return controller
+    observation_state = {
+        **(controller.continuous_observation_state or {}),
+        "observation_reason": "material_gaps_without_active_work",
+        "expected_external_change": "",
+        "last_meaningful_transition_at": utc_now(),
+        "gap_classifications": tuple({"gap": action["gap"], "classification": action["classification"]} for action in actions),
+        "candidate_actions": actions,
+    }
+    if not actions:
+        action = {
+            "action_id": stable_id("observation-action", controller.session_id, "operator-gap-priority", gaps),
+            "gap": ", ".join(gaps),
+            "classification": "requires_operator_insight",
+            "action_type": "operator_insight",
+            "rank": 0.69,
+            "evidence_gain": 0.66,
+            "authority_cost": 0.0,
+            "reversibility": 1.0,
+            "description": "ask operator whether exhausted gaps should remain active, become an accepted boundary, or trigger scoped review",
+            "blocked_transition": "exhausted local gap resolution -> next developmental priority",
+        }
+        request = _operator_insight_from_observation(controller, action)
+        return replace(
+            controller,
+            continuous_mission_state="awaiting_operator_insight",
+            continuous_developmental_insight_requests=tuple(controller.continuous_developmental_insight_requests) + (request,),
+            continuous_observation_state={
+                **observation_state,
+                "observation_reason": "all_observation_exit_actions_exhausted",
+                "selected_action": action,
+            },
+            active_work_item="awaiting_operator_insight",
+            journal=controller.journal + (_journal_entry("continuous_mission", "observation_exit_actions_exhausted_created_operator_request", (request["request_id"],)),),
+        )
+    selected = actions[0]
+    attempted = tuple(dict.fromkeys(tuple((controller.continuous_observation_state or {}).get("attempted_exit_actions") or ()) + (selected["action_id"],)))
+    observation_state = {
+        **observation_state,
+        "selected_action": selected,
+        "attempted_exit_actions": attempted,
+    }
+    if selected["action_type"] == "operator_insight":
+        request = _operator_insight_from_observation(controller, selected)
+        return replace(
+            controller,
+            continuous_mission_state="awaiting_operator_insight",
+            continuous_developmental_insight_requests=tuple(controller.continuous_developmental_insight_requests) + (request,),
+            continuous_observation_state=observation_state,
+            active_work_item="awaiting_operator_insight",
+            journal=controller.journal + (_journal_entry("continuous_mission", "observation_exit_created_operator_insight_request", (request["request_id"], selected["action_id"])),),
+        )
+    evidence = _observation_exit_evidence(controller, selected)
+    prepared = replace(
+        controller,
+        continuous_observation_state=observation_state,
+        continuous_mission_state="observation_exit_deriving_action",
+        journal=controller.journal + (_journal_entry("continuous_mission", "observation_exit_selected_productive_action", (selected["action_id"], selected["gap"])),),
+    )
+    return select_continuous_mission_subgoal(refresh_continuous_mission_frontier(assess_continuous_mission_runtime(prepared, (evidence,))))
+
+
+def consume_continuous_operator_interaction_response(
+    controller: ContinuousRuntimeController,
+    *,
+    request_id: str,
+    response_kind: str,
+    operator_text: str,
+    selected_option: str,
+    approved_scope: str = "",
+) -> ContinuousRuntimeController:
+    pending_requests = tuple(dict(item) for item in controller.continuous_developmental_insight_requests)
+    matched_index = next((index for index, item in enumerate(pending_requests) if item.get("request_id") == request_id and item.get("status") == "pending"), -1)
+    if matched_index < 0:
+        return replace(
+            controller,
+            journal=controller.journal + (_journal_entry("continuous_mission", "operator_interaction_response_rejected_no_pending_request", (request_id,)),),
+        )
+    request = pending_requests[matched_index]
+    permitted = tuple(request.get("permitted_responses") or request.get("options") or ())
+    if permitted and selected_option not in permitted:
+        return replace(
+            controller,
+            journal=controller.journal + (_journal_entry("continuous_mission", "operator_interaction_response_rejected_invalid_option", (request_id, selected_option)),),
+        )
+    if selected_option == "provide exact target and case" and not operator_text.strip():
+        return replace(
+            controller,
+            journal=controller.journal + (_journal_entry("continuous_mission", "operator_interaction_response_rejected_missing_concrete_target", (request_id,)),),
+        )
+    authority_granted = bool(approved_scope and request.get("request_kind") != "insight")
+    consumed_at = utc_now()
+    resolved_request = {
+        **request,
+        "status": "consumed",
+        "resolution": selected_option,
+        "consumed_at": consumed_at,
+        "authority_granted": authority_granted,
+    }
+    updated_requests = pending_requests[:matched_index] + (resolved_request,) + pending_requests[matched_index + 1 :]
+    response = {
+        "request_id": request_id,
+        "response_kind": response_kind,
+        "operator_text": operator_text,
+        "selected_option": selected_option,
+        "approved_scope": approved_scope,
+        "authority_granted": authority_granted,
+        "created_at": consumed_at,
+        "consumed_at": consumed_at,
+    }
+    updated = replace(
+        controller,
+        continuous_developmental_insight_requests=updated_requests,
+        continuous_operator_interaction_responses=tuple(controller.continuous_operator_interaction_responses) + (response,),
+        continuous_observation_state={
+            **(controller.continuous_observation_state or {}),
+            "last_operator_response_id": request_id,
+            "last_operator_response_option": selected_option,
+        },
+        journal=controller.journal + (_journal_entry("continuous_mission", "operator_interaction_response_consumed_once", (request_id, selected_option)),),
+    )
+    if selected_option == "continue local simulation only":
+        action = _observation_gap_action(str(request.get("affected_gap") or "operator insight gap"))
+        evidence = _observation_exit_evidence(updated, action)
+        prepared = replace(
+            updated,
+            continuous_mission_state="operator_insight_consumed_deriving_local_action",
+            journal=updated.journal + (_journal_entry("continuous_mission", "operator_insight_selected_local_simulation", (request_id, action["action_id"])),),
+        )
+    if selected_option == "provide exact target and case":
+        return replace(
+            updated,
+            continuous_mission_state="observing_for_new_weaknesses",
+            active_work_item=OBSERVATION_STATE,
+            continuous_observation_state={
+                **(updated.continuous_observation_state or {}),
+                "candidate_design_evidence_exhausted": False,
+                "candidate_design_evidence_scope_signature": "",
+                "operator_supplied_candidate_target": operator_text.strip(),
+                "candidate_design_blocker": {},
+            },
+            journal=updated.journal
+            + (_journal_entry("continuous_mission", "operator_supplied_new_repository_bound_candidate_evidence", (request_id,)),),
+        )
+        return select_continuous_mission_subgoal(refresh_continuous_mission_frontier(assess_continuous_mission_runtime(prepared, (evidence,))))
+    if selected_option == "request scoped application review":
+        return create_scoped_continuous_application_review_request(updated, source_request_id=request_id)
+    if selected_option == "treat as accepted boundary":
+        accepted_gaps = _split_gap_tokens(request.get("source_gap_ids") or (request.get("affected_gap") or "",))
+        prior_boundaries = tuple(str(item) for item in ((updated.continuous_observation_state or {}).get("accepted_boundary_gaps") or ()))
+        accepted_boundary_gaps = tuple(dict.fromkeys(prior_boundaries + accepted_gaps))
+        assessment = dict(updated.continuous_developmental_self_assessment or {})
+        accepted_tokens = set(_split_gap_tokens(accepted_boundary_gaps))
+        remaining_gaps = tuple(str(gap) for gap in (assessment.get("developmental_gaps") or ()) if str(gap) not in accepted_tokens)
+        assessment["developmental_gaps"] = remaining_gaps
+        assessment["needs_additional_insight"] = bool(remaining_gaps)
+        return replace(
+            updated,
+            continuous_mission_state="observing_for_new_weaknesses",
+            active_work_item=OBSERVATION_STATE,
+            continuous_developmental_self_assessment=assessment,
+            continuous_observation_state={
+                **(updated.continuous_observation_state or {}),
+                "accepted_boundary_gaps": accepted_boundary_gaps,
+                "accepted_boundary_source_request_id": request_id,
+                "candidate_actions": (),
+                "selected_action": {},
+            },
+            journal=updated.journal + (_journal_entry("continuous_mission", "operator_insight_marked_gap_as_accepted_boundary", (request_id,)),),
+        )
+    return replace(
+        updated,
+        continuous_mission_state="observing_for_new_weaknesses",
+        active_work_item=OBSERVATION_STATE,
+    )
+
+
+def create_scoped_continuous_application_review_request(
+    controller: ContinuousRuntimeController,
+    *,
+    source_request_id: str,
+) -> ContinuousRuntimeController:
+    """Create the concrete one-use application boundary requested by an insight response."""
+
+    if controller.pending_application_decision_id:
+        return controller
+    decision_id = stable_id(
+        "continuous-scoped-application-review",
+        controller.session_id,
+        source_request_id,
+        str(len(controller.continuous_operator_interaction_responses)),
+    )
+    review_record = {
+        "decision_id": decision_id,
+        "source_request_id": source_request_id,
+        "request_kind": "application_review",
+        "status": "pending",
+        "authority_scope": "one-time exact tracked-source application only",
+        "authority_granted": False,
+        "created_at": utc_now(),
+        "blocked_transition": "validated_local_evidence -> scoped_tracked_application_review",
+        "operator_note": "This request asks for review preparation only; no tracked source is mutated by creating it.",
+        "active_gap": ", ".join(str(item) for item in ((controller.continuous_developmental_self_assessment or {}).get("developmental_gaps") or ()))
+        or "operator requested scoped application review",
+    }
+    observation_state = {
+        **(controller.continuous_observation_state or {}),
+        "pending_application_review": review_record,
+    }
+    return replace(
+        controller,
+        continuous_mission_state="awaiting_operator_application",
+        pending_application_decision_id=decision_id,
+        active_work_item="awaiting_operator_application",
+        continuous_observation_state=observation_state,
+        journal=controller.journal
+        + (
+            _journal_entry(
+                "continuous_mission",
+                "operator_insight_created_scoped_application_review_boundary",
+                (source_request_id, decision_id),
+            ),
+        ),
+    )
+
+
+def recover_missing_continuous_application_review_request(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
+    if controller.continuous_mission_state != "awaiting_operator_application" or controller.pending_application_decision_id:
+        return controller
+    source_request_id = str((controller.continuous_observation_state or {}).get("last_operator_response_id") or "recovered-operator-application")
+    recovered = create_scoped_continuous_application_review_request(controller, source_request_id=source_request_id)
+    return replace(
+        recovered,
+        journal=recovered.journal
+        + (_journal_entry("continuous_mission", "recovered_missing_scoped_application_review_boundary", (source_request_id, recovered.pending_application_decision_id)),),
+    )
+
+
+def recover_accepted_boundary_operator_requests(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
+    accepted_tokens = _accepted_boundary_gap_tokens(controller)
+    if not accepted_tokens:
+        return controller
+    changed = False
+    requests: list[dict[str, Any]] = []
+    for request in controller.continuous_developmental_insight_requests:
+        item = dict(request)
+        request_tokens = set(_split_gap_tokens(item.get("source_gap_ids") or (item.get("affected_gap") or "",)))
+        if item.get("status") == "pending" and item.get("request_kind") == "insight" and request_tokens and request_tokens.issubset(accepted_tokens):
+            item["status"] = "consumed"
+            item["resolution"] = "accepted_boundary_already_recorded"
+            item["recovery_disposition"] = "pending_request_suppressed_by_accepted_boundary"
+            item["consumed_at"] = utc_now()
+            changed = True
+        requests.append(item)
+    if not changed:
+        return controller
+    assessment = _filter_accepted_boundary_assessment(controller.continuous_developmental_self_assessment, accepted_tokens)
+    return replace(
+        controller,
+        continuous_mission_state="observing_for_new_weaknesses",
+        active_work_item=OBSERVATION_STATE,
+        continuous_developmental_insight_requests=tuple(requests),
+        continuous_developmental_self_assessment=assessment,
+        journal=controller.journal + (_journal_entry("continuous_mission", "suppressed_pending_operator_request_for_accepted_boundary", tuple(sorted(accepted_tokens))),),
+    )
+
+
+def _filter_accepted_boundary_assessment(assessment: Mapping[str, Any], accepted_tokens: set[str]) -> dict[str, Any]:
+    updated = dict(assessment or {})
+    if not accepted_tokens:
+        return updated
+    gaps = tuple(str(gap) for gap in (updated.get("developmental_gaps") or ()) if str(gap) not in accepted_tokens)
+    updated["developmental_gaps"] = gaps
+    updated["needs_additional_insight"] = bool(gaps)
+    return updated
+
+
+def _recover_knowledge_ledger(records: Iterable[Mapping[str, Any]]) -> tuple[dict[str, Any], ...]:
+    recovered: list[dict[str, Any]] = []
+    for record in records:
+        recovered.append(normalize_capability_record_for_recovery(CapabilityKnowledgeRecord(**dict(record))).as_dict())
+    return tuple(recovered)
 
 
 def queue_continuous_mission_sandbox_work(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
@@ -746,6 +1417,7 @@ def consume_continuous_capability_reassessment(
     controller: ContinuousRuntimeController,
     record: CapabilityKnowledgeRecord,
 ) -> ContinuousRuntimeController:
+    record = normalize_capability_record_for_recovery(record)
     consumed = consumed_signatures_after_reassessment(
         [WeaknessCandidate(**item) for item in controller.continuous_mission_frontier],
         controller.continuous_active_subgoal or None,
@@ -754,7 +1426,7 @@ def consume_continuous_capability_reassessment(
     updated = replace(
         controller,
         continuous_mission_state="capability_reassessment",
-        continuous_knowledge_ledger=controller.continuous_knowledge_ledger + (record.as_dict(),),
+        continuous_knowledge_ledger=_recover_knowledge_ledger(controller.continuous_knowledge_ledger) + (record.as_dict(),),
         continuous_consumed_weakness_signatures=consumed,
         continuous_active_subgoal={},
         active_work_item="capability_reassessment",
@@ -776,14 +1448,19 @@ def refresh_developmental_self_direction(controller: ContinuousRuntimeController
     knowledge = tuple(CapabilityKnowledgeRecord(**item) for item in controller.continuous_knowledge_ledger)
     inventory = capability_inventory_from_knowledge(knowledge)
     assessment = assess_developmental_capability_state(objective, inventory)
-    insight_requests = compile_developmental_insight_requests(assessment)
+    accepted_tokens = _accepted_boundary_gap_tokens(controller)
+    assessment_dict = _filter_accepted_boundary_assessment(assessment.as_dict(), accepted_tokens)
+    insight_requests = tuple(
+        {**item.as_dict(), "status": "pending"}
+        for item in compile_developmental_insight_requests(assessment)
+    )
     plan = derive_developmental_capability_plan(objective, inventory)
     explanation = compile_developmental_operator_explanation(objective, assessment, plan)
     return replace(
         controller,
         continuous_capability_inventory=tuple(item.as_dict() for item in inventory),
-        continuous_developmental_self_assessment=assessment.as_dict(),
-        continuous_developmental_insight_requests=tuple(item.as_dict() for item in insight_requests),
+        continuous_developmental_self_assessment=assessment_dict,
+        continuous_developmental_insight_requests=insight_requests,
         continuous_operator_explanation=explanation.as_dict(),
         journal=controller.journal
         + (
@@ -814,13 +1491,13 @@ def _broad_contract_from_state(controller: ContinuousRuntimeController) -> Broad
 
 def assess_and_advance_continuous_main_goal(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
     if not controller.continuous_mission_contract or not controller.continuous_main_goal:
-        return replace(
+        return exit_observation_with_action_derivation(replace(
             controller,
             continuous_mission_state="observing_for_new_weaknesses",
             continuous_active_subgoal={},
             active_work_item=OBSERVATION_STATE,
             journal=controller.journal + (_journal_entry("continuous_mission", "observation_without_main_goal_contract", ()),),
-        )
+        ))
     controller = refresh_developmental_self_direction(controller)
     main_goal = MainGoalContract(**controller.continuous_main_goal)
     knowledge = tuple(CapabilityKnowledgeRecord(**item) for item in controller.continuous_knowledge_ledger)
@@ -833,7 +1510,7 @@ def assess_and_advance_continuous_main_goal(controller: ContinuousRuntimeControl
             completed_goals = controller.continuous_completed_main_goals
             if not any(item.get("main_goal_id") == assessed.main_goal_id for item in completed_goals):
                 completed_goals = completed_goals + (assessed.as_dict(),)
-            return replace(
+            observed = replace(
                 controller,
                 continuous_main_goal=assessed.as_dict(),
                 continuous_completed_main_goals=completed_goals,
@@ -852,6 +1529,9 @@ def assess_and_advance_continuous_main_goal(controller: ContinuousRuntimeControl
                     ),
                 ),
             )
+            if (observed.continuous_developmental_self_assessment or {}).get("developmental_gaps"):
+                return exit_observation_with_action_derivation(observed)
+            return observed
         advanced = replace(
             controller,
             continuous_main_goal=next_goal.as_dict(),
@@ -867,13 +1547,15 @@ def assess_and_advance_continuous_main_goal(controller: ContinuousRuntimeControl
         )
         evidence = derive_subgoal_evidence_for_main_goal(next_goal, knowledge, max_items=1)
         if evidence:
-            return select_continuous_mission_subgoal(refresh_continuous_mission_frontier(assess_continuous_mission_runtime(advanced, evidence)))
-        return replace(
+            ranked = refresh_continuous_mission_frontier(assess_continuous_mission_runtime(advanced, evidence))
+            if ranked.continuous_mission_frontier:
+                return select_continuous_mission_subgoal(ranked)
+        return exit_observation_with_action_derivation(replace(
             advanced,
             continuous_mission_state="observing_for_new_weaknesses",
             active_work_item=OBSERVATION_STATE,
             journal=advanced.journal + (_journal_entry("continuous_mission", "next_main_goal_has_no_immediate_subgoal_evidence", (next_goal.main_goal_id,)),),
-        )
+        ))
     if assessed.disposition == "partially_satisfied":
         evidence = derive_subgoal_evidence_for_main_goal(assessed, knowledge, max_items=1)
         if evidence:
@@ -883,15 +1565,17 @@ def assess_and_advance_continuous_main_goal(controller: ContinuousRuntimeControl
                 continuous_mission_state="main_goal_partial_generating_subgoal",
                 journal=controller.journal + (_journal_entry("continuous_mission", "main_goal_partial_completion_generated_subgoal_evidence", (assessed.main_goal_id,)),),
             )
-            return select_continuous_mission_subgoal(refresh_continuous_mission_frontier(assess_continuous_mission_runtime(updated, evidence)))
-    return replace(
+            ranked = refresh_continuous_mission_frontier(assess_continuous_mission_runtime(updated, evidence))
+            if ranked.continuous_mission_frontier:
+                return select_continuous_mission_subgoal(ranked)
+    return exit_observation_with_action_derivation(replace(
         controller,
         continuous_main_goal=assessed.as_dict(),
         continuous_mission_state="observing_for_new_weaknesses",
         continuous_active_subgoal={},
         active_work_item=OBSERVATION_STATE,
         journal=controller.journal + (_journal_entry("continuous_mission", "main_goal_assessed_without_immediate_eligible_subgoal", (assessed.main_goal_id, assessed.disposition)),),
-    )
+    ))
 
 
 def mark_continuous_api_unavailable(
@@ -927,8 +1611,10 @@ def export_continuous_mission_restart_state(controller: ContinuousRuntimeControl
         "continuous_capability_inventory": controller.continuous_capability_inventory,
         "continuous_developmental_self_assessment": controller.continuous_developmental_self_assessment,
         "continuous_developmental_insight_requests": controller.continuous_developmental_insight_requests,
+        "continuous_operator_interaction_responses": controller.continuous_operator_interaction_responses,
         "continuous_operator_explanation": controller.continuous_operator_explanation,
         "continuous_api_authority": controller.continuous_api_authority,
+        "continuous_observation_state": controller.continuous_observation_state,
         "pending_application_decision_id": controller.pending_application_decision_id,
         "active_work_item": controller.active_work_item,
     }
@@ -940,6 +1626,12 @@ def restore_continuous_mission_restart_state(
 ) -> ContinuousRuntimeController:
     if restart_state.get("session_id") != controller.session_id:
         raise ValueError("continuous mission restart state belongs to another session")
+    responses = tuple(restart_state.get("continuous_operator_interaction_responses") or ())
+    requests = _normalize_consumed_operator_interaction_requests(
+        tuple(restart_state.get("continuous_developmental_insight_requests") or ()),
+        responses,
+    )
+    recovered_ledger = _recover_knowledge_ledger(tuple(restart_state.get("continuous_knowledge_ledger") or ()))
     return replace(
         controller,
         continuous_mission_state=str(restart_state.get("continuous_mission_state") or ""),
@@ -950,12 +1642,14 @@ def restore_continuous_mission_restart_state(
         continuous_completed_main_goals=tuple(restart_state.get("continuous_completed_main_goals") or ()),
         continuous_active_subgoal=dict(restart_state.get("continuous_active_subgoal") or {}),
         continuous_consumed_weakness_signatures=tuple(restart_state.get("continuous_consumed_weakness_signatures") or ()),
-        continuous_knowledge_ledger=tuple(restart_state.get("continuous_knowledge_ledger") or ()),
+        continuous_knowledge_ledger=recovered_ledger,
         continuous_capability_inventory=tuple(restart_state.get("continuous_capability_inventory") or ()),
         continuous_developmental_self_assessment=dict(restart_state.get("continuous_developmental_self_assessment") or {}),
-        continuous_developmental_insight_requests=tuple(restart_state.get("continuous_developmental_insight_requests") or ()),
+        continuous_developmental_insight_requests=requests,
+        continuous_operator_interaction_responses=responses,
         continuous_operator_explanation=dict(restart_state.get("continuous_operator_explanation") or {}),
         continuous_api_authority=dict(restart_state.get("continuous_api_authority") or {}),
+        continuous_observation_state=dict(restart_state.get("continuous_observation_state") or {}),
         pending_application_decision_id=str(restart_state.get("pending_application_decision_id") or ""),
         active_work_item=str(restart_state.get("active_work_item") or ""),
         journal=tuple(controller.journal) + (_journal_entry("continuous_mission", "continuous_mission_restart_state_restored", (str(restart_state.get("continuous_mission_state") or ""),)),),

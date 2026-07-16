@@ -18,6 +18,27 @@ from orchestration.runtime.delta_1_0_common import stable_id, utc_now
 PROTECTED_PATH_PATTERNS = ("DELTA-75", "reports/RC4_*")
 OBSERVATION_STATE = "runtime_currently_stable_no_immediate_high_value_work"
 
+CAPABILITY_EVIDENCE_STAGES = (
+    "hypothesis",
+    "candidate_structurally_validated",
+    "evaluation_pending",
+    "behaviorally_demonstrated",
+    "behaviorally_failed",
+    "operator_accepted",
+    "operator_rejected",
+)
+CAPABILITY_ACQUIRED_STAGES = {"behaviorally_demonstrated", "operator_accepted"}
+STRUCTURAL_ONLY_STAGES = {"hypothesis", "candidate_structurally_validated", "evaluation_pending"}
+BEHAVIORAL_EVALUATION_DISPOSITIONS = (
+    "evaluation_pending",
+    "behaviorally_demonstrated",
+    "behaviorally_failed",
+    "insufficient_independent_evidence",
+    "invalid_evaluation",
+    "blocked_by_authority",
+    "blocked_by_resource",
+)
+
 
 @dataclass(frozen=True)
 class LocalRuntimeAuthority:
@@ -126,6 +147,8 @@ class ActiveSubgoal:
     tracked_application_allowlist: tuple[str, ...]
     rollback_condition: str
     completion_classification: str = "not_started"
+    execution_kind: str = "sandbox_development"
+    behavioral_evaluation: Mapping[str, Any] | None = None
 
     def as_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -154,6 +177,37 @@ class CapabilityKnowledgeRecord:
     reassessment: str
     residual_uncertainty: str
     reusable_process_rules: tuple[str, ...]
+    evidence_stage: str = "legacy_unclassified"
+    capability_acquired: bool = False
+    eligible_for_behavioral_evaluation: bool = False
+    behavioral_evaluation_ref: str = ""
+    behavioral_evaluation: Mapping[str, Any] | None = None
+    legacy_recovery_disposition: str = ""
+
+    def as_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class BehavioralEvaluationRecord:
+    evaluation_id: str
+    task_family_id: str
+    capability_id: str
+    developmental_gap_id: str
+    baseline_attempt_id: str
+    candidate_id: str
+    evaluation_protocol_version: str
+    task_source: str
+    training_case_ids: tuple[str, ...]
+    sealed_or_preexisting_case_ids: tuple[str, ...]
+    control_case_ids: tuple[str, ...]
+    baseline_metrics: Mapping[str, Any]
+    post_candidate_metrics: Mapping[str, Any]
+    transfer_metrics: Mapping[str, Any]
+    regression_metrics: Mapping[str, Any]
+    evidence_independence: Mapping[str, Any]
+    disposition: str
+    evidence_refs: tuple[str, ...]
 
     def as_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -381,8 +435,17 @@ def compile_long_horizon_objective(objective: str) -> LongHorizonObjective:
 
 def capability_inventory_from_knowledge(knowledge_ledger: Sequence[CapabilityKnowledgeRecord]) -> tuple[VerifiedCapability, ...]:
     inventory: list[VerifiedCapability] = []
-    for record in knowledge_ledger:
-        status = "functional" if record.reassessment == "satisfied" else "emerging" if record.reassessment else "unverified"
+    for raw_record in knowledge_ledger:
+        record = normalize_capability_record_for_recovery(raw_record)
+        stage = capability_evidence_stage(record)
+        if capability_is_acquired(record):
+            status = "functional"
+        elif stage in STRUCTURAL_ONLY_STAGES:
+            status = "structurally_valid_candidate"
+        elif stage == "behaviorally_failed":
+            status = "behaviorally_failed"
+        else:
+            status = "emerging" if record.reassessment else "unverified"
         category = _capability_category(record.capability_id, record.original_weakness, record.successful_mechanism)
         inventory.append(
             VerifiedCapability(
@@ -615,9 +678,145 @@ def compile_initial_main_goal(contract: BroadMissionContract) -> MainGoalContrac
     )
 
 
-def capability_satisfies_criterion(record: CapabilityKnowledgeRecord, criterion: str) -> bool:
-    if record.reassessment != "satisfied":
+def capability_evidence_stage(record: CapabilityKnowledgeRecord | Mapping[str, Any]) -> str:
+    raw = record.evidence_stage if isinstance(record, CapabilityKnowledgeRecord) else str(record.get("evidence_stage") or "")
+    if raw in CAPABILITY_EVIDENCE_STAGES:
+        return raw
+    reassessment = record.reassessment if isinstance(record, CapabilityKnowledgeRecord) else str(record.get("reassessment") or "")
+    evaluation_ref = record.behavioral_evaluation_ref if isinstance(record, CapabilityKnowledgeRecord) else str(record.get("behavioral_evaluation_ref") or "")
+    acquired = record.capability_acquired if isinstance(record, CapabilityKnowledgeRecord) else bool(record.get("capability_acquired"))
+    if acquired and evaluation_ref:
+        return "behaviorally_demonstrated"
+    if reassessment == "candidate_structurally_validated":
+        return "candidate_structurally_validated"
+    if reassessment == "evaluation_pending":
+        return "evaluation_pending"
+    if reassessment == "behaviorally_failed":
+        return "behaviorally_failed"
+    if reassessment == "satisfied" and not evaluation_ref:
+        return "candidate_structurally_validated"
+    return "hypothesis"
+
+
+def capability_is_acquired(record: CapabilityKnowledgeRecord | Mapping[str, Any]) -> bool:
+    stage = capability_evidence_stage(record)
+    if stage not in CAPABILITY_ACQUIRED_STAGES:
         return False
+    evaluation_ref = record.behavioral_evaluation_ref if isinstance(record, CapabilityKnowledgeRecord) else str(record.get("behavioral_evaluation_ref") or "")
+    return bool(evaluation_ref)
+
+
+def normalize_capability_record_for_recovery(record: CapabilityKnowledgeRecord) -> CapabilityKnowledgeRecord:
+    stage = capability_evidence_stage(record)
+    if record.reassessment == "satisfied" and stage == "candidate_structurally_validated" and not record.behavioral_evaluation_ref:
+        return CapabilityKnowledgeRecord(
+            **{
+                **record.as_dict(),
+                "reassessment": "candidate_structurally_validated",
+                "evidence_stage": "candidate_structurally_validated",
+                "capability_acquired": False,
+                "eligible_for_behavioral_evaluation": True,
+                "legacy_recovery_disposition": "legacy_satisfied_without_independent_behavioral_evaluation_downgraded",
+                "residual_uncertainty": (
+                    record.residual_uncertainty
+                    + "; legacy satisfied record lacks independent behavioral evaluation and cannot promote capability"
+                ),
+            }
+        )
+    return CapabilityKnowledgeRecord(
+        **{
+            **record.as_dict(),
+            "evidence_stage": stage,
+            "capability_acquired": capability_is_acquired(record),
+        }
+    )
+
+
+def validate_behavioral_evaluation(evaluation: BehavioralEvaluationRecord) -> tuple[bool, tuple[str, ...]]:
+    failures: list[str] = []
+    if evaluation.disposition not in BEHAVIORAL_EVALUATION_DISPOSITIONS:
+        failures.append("unsupported_disposition")
+    if not evaluation.sealed_or_preexisting_case_ids:
+        failures.append("missing_sealed_or_preexisting_cases")
+    if set(evaluation.training_case_ids) & set(evaluation.sealed_or_preexisting_case_ids):
+        failures.append("training_cases_overlap_evaluation_cases")
+    independence = dict(evaluation.evidence_independence or {})
+    if independence.get("candidate_generated_expected_outputs") is True:
+        failures.append("candidate_generated_expected_outputs")
+    if independence.get("self_reported_success") is True:
+        failures.append("self_reported_success")
+    if independence.get("artifact_existence_only") is True:
+        failures.append("artifact_existence_only")
+    if independence.get("case_source") not in {"preexisting", "sealed", "independently_generated", "operator_supplied", "immutable_benchmark"}:
+        failures.append("case_source_not_independent")
+    baseline = float(evaluation.baseline_metrics.get("target", 0.0) or 0.0)
+    post = float(evaluation.post_candidate_metrics.get("target", 0.0) or 0.0)
+    transfer = float(evaluation.transfer_metrics.get("target", 0.0) or 0.0)
+    controls = bool(evaluation.regression_metrics.get("controls_stable"))
+    if evaluation.disposition == "behaviorally_demonstrated":
+        if post <= baseline:
+            failures.append("target_behavior_not_improved")
+        if transfer < float(evaluation.transfer_metrics.get("threshold", 1.0) or 1.0):
+            failures.append("transfer_threshold_not_met")
+        if not controls:
+            failures.append("controls_not_stable")
+    return (not failures, tuple(failures))
+
+
+def promote_capability_with_behavioral_evaluation(
+    record: CapabilityKnowledgeRecord,
+    evaluation: BehavioralEvaluationRecord,
+    *,
+    operator_accepted: bool = False,
+) -> CapabilityKnowledgeRecord:
+    valid, failures = validate_behavioral_evaluation(evaluation)
+    if not valid or evaluation.disposition != "behaviorally_demonstrated":
+        return CapabilityKnowledgeRecord(
+            **{
+                **record.as_dict(),
+                "reassessment": "behaviorally_failed" if evaluation.disposition == "behaviorally_failed" else "insufficient_independent_evidence",
+                "evidence_stage": "behaviorally_failed" if evaluation.disposition == "behaviorally_failed" else "evaluation_pending",
+                "capability_acquired": False,
+                "eligible_for_behavioral_evaluation": evaluation.disposition in {"evaluation_pending", "insufficient_independent_evidence"},
+                "behavioral_evaluation_ref": evaluation.evaluation_id,
+                "behavioral_evaluation": evaluation.as_dict(),
+                "failed_approaches": tuple(dict.fromkeys(tuple(record.failed_approaches) + failures)),
+            }
+        )
+    stage = "operator_accepted" if operator_accepted else "behaviorally_demonstrated"
+    return CapabilityKnowledgeRecord(
+        **{
+            **record.as_dict(),
+            "reassessment": stage,
+            "evidence_stage": stage,
+            "capability_acquired": True,
+            "eligible_for_behavioral_evaluation": False,
+            "behavioral_evaluation_ref": evaluation.evaluation_id,
+            "behavioral_evaluation": evaluation.as_dict(),
+            "metrics_before_after": {
+                **dict(record.metrics_before_after),
+                "behavioral_baseline": dict(evaluation.baseline_metrics),
+                "behavioral_post_candidate": dict(evaluation.post_candidate_metrics),
+                "behavioral_transfer": dict(evaluation.transfer_metrics),
+                "behavioral_regression": dict(evaluation.regression_metrics),
+            },
+            "held_out_evidence": {
+                **dict(record.held_out_evidence),
+                "independent_cases": evaluation.sealed_or_preexisting_case_ids,
+                "transfer": dict(evaluation.transfer_metrics),
+            },
+        }
+    )
+
+
+def capability_satisfies_criterion(record: CapabilityKnowledgeRecord, criterion: str) -> bool:
+    record = normalize_capability_record_for_recovery(record)
+    if not capability_is_acquired(record):
+        return False
+    if _criterion_requires_substantive_evidence(criterion):
+        substantive = dict(record.metrics_before_after.get("substantive_evidence") or {})
+        if substantive.get("passed") is not True:
+            return False
     haystack = " ".join(
         (
             record.capability_id,
@@ -628,6 +827,20 @@ def capability_satisfies_criterion(record: CapabilityKnowledgeRecord, criterion:
         )
     )
     return criterion in haystack
+
+
+def _criterion_requires_substantive_evidence(criterion: str) -> bool:
+    return criterion in {
+        "knowledge_retrieval_index",
+        "prior_failure_avoidance_check",
+        "next_goal_evidence_reuse_record",
+        "available_resource_inventory",
+        "local_resource_selection_trace",
+        "authority_boundary_resource_filter",
+        "local_model_advisory_probe",
+        "reference_retrieval_probe",
+        "resource_evidence_integration",
+    }
 
 
 def satisfied_main_goal_criteria(main_goal: MainGoalContract, knowledge_ledger: Sequence[CapabilityKnowledgeRecord]) -> tuple[str, ...]:
@@ -737,14 +950,15 @@ def derive_developmental_next_goal_candidates(
     if not _is_developmental_direction(contract.original_operator_goal):
         return ()
 
-    satisfied = {record.capability_id for record in knowledge_ledger if record.reassessment == "satisfied"}
+    recovered_knowledge = tuple(normalize_capability_record_for_recovery(record) for record in knowledge_ledger)
+    satisfied = {record.capability_id for record in recovered_knowledge if capability_is_acquired(record)}
     def _candidate_already_satisfied(normalized_objective: str, criteria: Sequence[str]) -> bool:
         return completed_goal.normalized_objective == normalized_objective or all(item in satisfied for item in criteria)
 
     evidence_basis = tuple(
         record.capability_id
-        for record in knowledge_ledger
-        if record.reassessment == "satisfied" and record.capability_id in completed_goal.success_criteria
+        for record in recovered_knowledge
+        if capability_is_acquired(record) and record.capability_id in completed_goal.success_criteria
     )
     candidates: list[DevelopmentalNextGoalCandidate] = []
     if completed_goal.normalized_objective == "meaningful_progress_stall_detection" and "frontier_uncertainty_scan" not in satisfied:
@@ -956,6 +1170,127 @@ def derive_developmental_next_goal_candidates(
                     },
                 )
             )
+    knowledge_reuse_criteria = (
+        "knowledge_retrieval_index",
+        "prior_failure_avoidance_check",
+        "next_goal_evidence_reuse_record",
+    )
+    uncertainty_records = tuple(
+        record
+        for record in recovered_knowledge
+        if capability_is_acquired(record)
+        and (
+            record.residual_uncertainty
+            or record.failed_approaches
+            or record.reusable_process_rules
+        )
+    )
+    if not candidates and uncertainty_records and not _candidate_already_satisfied("capability_knowledge_reuse_validation", knowledge_reuse_criteria):
+        evidence = tuple(dict.fromkeys(record.capability_id for record in uncertainty_records[-8:]))
+        candidates.append(
+            DevelopmentalNextGoalCandidate(
+                candidate_id=stable_id("next-main-goal-candidate", contract.mission_id, completed_goal.main_goal_id, "capability_knowledge_reuse_validation", evidence),
+                normalized_objective="capability_knowledge_reuse_validation",
+                objective="Develop validation that accumulated capability evidence is retrieved and used before selecting future work",
+                evidence_basis=evidence,
+                missing_evidence=(
+                    "proof retained knowledge records influence next-goal selection",
+                    "proof prior failed approaches are not repeated",
+                    "proof reusable process rules are consulted before new work",
+                ),
+                confidence_before=0.41,
+                expected_value=0.73,
+                risk=0.18,
+                resource_need="local_knowledge_ledger_mining",
+                rationale=(
+                    "the active frontier is empty after accepted boundaries, but the knowledge ledger contains residual uncertainty, failed approaches, "
+                    "and reusable process rules that have not yet been proven to guide subsequent developmental choices"
+                ),
+                success_criteria=knowledge_reuse_criteria,
+                evidence_requirements=("knowledge_index_record", "failed_strategy_filter_record", "next_goal_reuse_trace"),
+                prerequisite_graph={
+                    "knowledge_retrieval_index": (),
+                    "prior_failure_avoidance_check": ("knowledge_retrieval_index",),
+                    "next_goal_evidence_reuse_record": ("prior_failure_avoidance_check",),
+                },
+            )
+        )
+    resource_use_criteria = (
+        "available_resource_inventory",
+        "local_resource_selection_trace",
+        "authority_boundary_resource_filter",
+    )
+    if (
+        not candidates
+        and "next_goal_evidence_reuse_record" in satisfied
+        and not _candidate_already_satisfied("available_resource_utilization_validation", resource_use_criteria)
+    ):
+        candidates.append(
+            DevelopmentalNextGoalCandidate(
+                candidate_id=stable_id("next-main-goal-candidate", contract.mission_id, completed_goal.main_goal_id, "available_resource_utilization_validation"),
+                normalized_objective="available_resource_utilization_validation",
+                objective="Develop validation that available local and governed resources are inventoried before declaring a developmental frontier empty",
+                evidence_basis=("knowledge_retrieval_index", "prior_failure_avoidance_check", "next_goal_evidence_reuse_record"),
+                missing_evidence=(
+                    "resource inventory for local, source, model, and operator lanes",
+                    "selection trace showing why local resources are used before authority requests",
+                    "proof disabled API or protected scopes remain filtered out",
+                ),
+                confidence_before=0.39,
+                expected_value=0.71,
+                risk=0.19,
+                resource_need="local_resource_inventory_first",
+                rationale=(
+                    "knowledge reuse is now validated, but an empty developmental frontier is still ambiguous unless the runtime proves it checked "
+                    "available resources and filtered unavailable authority-controlled lanes before stopping"
+                ),
+                success_criteria=resource_use_criteria,
+                evidence_requirements=("resource_inventory_record", "resource_selection_trace", "authority_filter_record"),
+                prerequisite_graph={
+                    "available_resource_inventory": (),
+                    "local_resource_selection_trace": ("available_resource_inventory",),
+                    "authority_boundary_resource_filter": ("local_resource_selection_trace",),
+                },
+            )
+        )
+    advisory_resource_criteria = (
+        "local_model_advisory_probe",
+        "reference_retrieval_probe",
+        "resource_evidence_integration",
+    )
+    if (
+        not candidates
+        and "authority_boundary_resource_filter" in satisfied
+        and not _candidate_already_satisfied("advisory_resource_evidence_integration", advisory_resource_criteria)
+    ):
+        candidates.append(
+            DevelopmentalNextGoalCandidate(
+                candidate_id=stable_id("next-main-goal-candidate", contract.mission_id, completed_goal.main_goal_id, "advisory_resource_evidence_integration"),
+                normalized_objective="advisory_resource_evidence_integration",
+                objective="Develop validation that advisory local-model and reference evidence can inform next-goal reasoning without gaining authority",
+                evidence_basis=("available_resource_inventory", "local_resource_selection_trace", "authority_boundary_resource_filter"),
+                missing_evidence=(
+                    "local model advisory lane availability or unavailability record",
+                    "bounded reference retrieval provenance record",
+                    "integration trace showing resource outputs remain evidence only",
+                ),
+                confidence_before=0.37,
+                expected_value=0.69,
+                risk=0.2,
+                resource_need="governed_local_model_and_reference_probe",
+                rationale=(
+                    "resource availability has been inventoried, but the runtime still needs proof that advisory model/reference evidence can be "
+                    "used for understanding while remaining non-authoritative"
+                ),
+                success_criteria=advisory_resource_criteria,
+                evidence_requirements=("local_model_advisory_record", "reference_provenance_record", "non_authoritative_integration_record"),
+                prerequisite_graph={
+                    "local_model_advisory_probe": (),
+                    "reference_retrieval_probe": (),
+                    "resource_evidence_integration": ("local_model_advisory_probe", "reference_retrieval_probe"),
+                },
+            )
+        )
     return tuple(sorted(candidates, key=lambda item: (-item.score, item.normalized_objective)))
 
 
@@ -974,7 +1309,7 @@ def main_goal_from_developmental_next_goal_candidate(
     knowledge_ledger: Sequence[CapabilityKnowledgeRecord],
     candidates: Sequence[DevelopmentalNextGoalCandidate],
 ) -> MainGoalContract:
-    gained = tuple(dict.fromkeys(record.capability_id for record in knowledge_ledger if record.reassessment == "satisfied"))
+    gained = tuple(dict.fromkeys(record.capability_id for record in knowledge_ledger if capability_is_acquired(record)))
     alternatives = tuple(item.normalized_objective for item in candidates)
     ranking = ", ".join(f"{item.normalized_objective}:{item.score}" for item in candidates)
     return MainGoalContract(
@@ -1003,7 +1338,7 @@ def main_goal_from_developmental_next_goal_candidate(
 
 
 def derive_next_main_goal(contract: BroadMissionContract, completed_goal: MainGoalContract, knowledge_ledger: Sequence[CapabilityKnowledgeRecord]) -> MainGoalContract | None:
-    gained = tuple(dict.fromkeys(record.capability_id for record in knowledge_ledger if record.reassessment == "satisfied"))
+    gained = tuple(dict.fromkeys(record.capability_id for record in knowledge_ledger if capability_is_acquired(record)))
     if completed_goal.normalized_objective == "developmental_self_assessment":
         objective = compile_long_horizon_objective(contract.original_operator_goal)
         plan = derive_developmental_capability_plan(objective, capability_inventory_from_knowledge(knowledge_ledger))
@@ -1156,6 +1491,8 @@ def _is_developmental_direction(objective: str) -> bool:
     lowered = objective.lower()
     if lowered.strip().rstrip(".") == "optimize your runtime":
         return False
+    if "optimize your runtime continuously" in lowered:
+        return True
     return any(term in lowered for term in ("capable", "master", "learn", "science", "research", "develop", "understand"))
 
 
@@ -1407,7 +1744,7 @@ def rank_weakness_frontier(
     knowledge_ledger: Sequence[CapabilityKnowledgeRecord] = (),
 ) -> tuple[WeaknessCandidate, ...]:
     consumed = set(consumed_signatures)
-    solved = {record.capability_id for record in knowledge_ledger if record.reassessment == "satisfied"}
+    solved = {record.capability_id for record in knowledge_ledger if capability_is_acquired(record)}
     frontier: list[WeaknessCandidate] = []
     for finding in findings:
         candidate = weakness_from_finding(finding)
@@ -1511,7 +1848,17 @@ def make_satisfied_transfer_record() -> CapabilityKnowledgeRecord:
         local_repair_contribution="path hardening and strict reproduction",
         application_evidence="operator-approved tracked application",
         regression_evidence="bounded adjacency passed",
-        reassessment="satisfied",
+        reassessment="behaviorally_demonstrated",
         residual_uncertainty="limited to current dependency id grammar",
         reusable_process_rules=("sandbox success requires clean reproduction", "path hardening must avoid manual PYTHONPATH"),
+        evidence_stage="behaviorally_demonstrated",
+        capability_acquired=True,
+        eligible_for_behavioral_evaluation=False,
+        behavioral_evaluation_ref="LIVE45_TRANSFER_BEHAVIORAL_EVALUATION",
+        behavioral_evaluation={
+            "evaluation_id": "LIVE45_TRANSFER_BEHAVIORAL_EVALUATION",
+            "task_family_id": "transfer_dependency_identity_preservation",
+            "disposition": "behaviorally_demonstrated",
+            "evidence_independence": {"case_source": "sealed", "self_reported_success": False},
+        },
     )

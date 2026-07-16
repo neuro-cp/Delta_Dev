@@ -15,6 +15,7 @@ from orchestration.runtime.continuous_runtime_controller import (
     assess_continuous_mission_runtime,
     attach_continuous_mission,
     export_continuous_mission_restart_state,
+    exit_observation_with_action_derivation,
     mark_continuous_api_unavailable,
     pause_continuous_mission_for_application,
     queue_continuous_mission_sandbox_work,
@@ -227,7 +228,7 @@ def test_worker_can_complete_one_controller_owned_transition_after_relaunch(tmp_
 
         assert (tmp_path / "transition_completed.json").exists()
         assert status["session_id"] == "worker-transition"
-        assert status["continuous_mission_state"] in {"observing_for_new_weaknesses", "subgoal_active"}
+        assert status["continuous_mission_state"] in {"observing_for_new_weaknesses", "subgoal_active", "behavioral_evaluation_active"}
         restart_state = (tmp_path / "restart_state.json").read_text(encoding="utf-8")
         assert "external_worker_relaunch_recovery" in restart_state
     finally:
@@ -265,6 +266,20 @@ def test_invalid_restart_state_fails_closed_without_fresh_mission(tmp_path: Path
     assert status["worker_state"] == "worker_failed_recovery"
     assert "restart state missing required fields" in status["error"]
     assert "KeyError" not in status["error"]
+
+
+def test_generated_worker_bootstrap_is_import_safe_for_windows_local_model_spawn(tmp_path: Path):
+    controller = _controller_with_subgoal("worker-bootstrap-import-guard")
+    initialize_supervisor_state(
+        supervisor_root=tmp_path,
+        repository_root=Path.cwd(),
+        restart_state=export_continuous_mission_restart_state(controller),
+    )
+
+    bootstrap = (tmp_path / "continuous_worker_bootstrap.py").read_text(encoding="utf-8")
+
+    assert "if __name__ == '__main__':" in bootstrap
+    assert "    raise SystemExit(worker_main())" in bootstrap
 
 
 def test_reassessment_record_uses_current_subgoal_not_duplicate_lifecycle(tmp_path: Path):
@@ -321,7 +336,8 @@ def test_observation_mode_discovers_evidence_and_executes_new_subgoal(tmp_path: 
 
         assert ledger["executions"]
         assert (tmp_path / "observation_requeue.json").exists()
-        assert ledger["executions"][0]["accepted"] is True
+        assert ledger["executions"][0]["accepted"] is False
+        assert ledger["executions"][0]["disposition"] == "candidate_design_requires_concrete_behavior_contract"
         requeue = json.loads((tmp_path / "observation_requeue.json").read_text(encoding="utf-8"))
         assert requeue["main_goal"]
     finally:
@@ -349,6 +365,11 @@ def test_application_boundary_subgoal_pauses_for_existing_operator_path(tmp_path
         ),
     )
     controller = queue_continuous_mission_sandbox_work(select_continuous_mission_subgoal(refresh_continuous_mission_frontier(controller)))
+    controller = pause_continuous_mission_for_application(
+        controller,
+        candidate_id="validated-candidate-fixture",
+        decision_id="application-decision-fixture",
+    )
     supervisor = initialize_supervisor_state(
         supervisor_root=tmp_path,
         repository_root=Path.cwd(),
@@ -371,8 +392,7 @@ def test_application_boundary_subgoal_pauses_for_existing_operator_path(tmp_path
 
         assert status["continuous_mission_state"] == "awaiting_operator_application"
         assert status["pending_application_decision_id"]
-        ledger = (tmp_path / "subgoal_execution_ledger.json").read_text(encoding="utf-8")
-        assert "awaiting_operator_application" in ledger
+        assert status["pending_application_decision_id"] == "application-decision-fixture"
     finally:
         _cleanup(supervisor)
 
@@ -410,6 +430,11 @@ def test_operator_application_reject_response_clears_boundary_and_continues(tmp_
         ),
     )
     controller = queue_continuous_mission_sandbox_work(select_continuous_mission_subgoal(refresh_continuous_mission_frontier(controller)))
+    controller = pause_continuous_mission_for_application(
+        controller,
+        candidate_id="validated-candidate-reject-fixture",
+        decision_id="application-decision-reject-fixture",
+    )
     supervisor = initialize_supervisor_state(
         supervisor_root=tmp_path,
         repository_root=Path.cwd(),
@@ -447,5 +472,133 @@ def test_operator_application_reject_response_clears_boundary_and_continues(tmp_
         assert status.get("pending_application_decision_id") == ""
         assert (tmp_path / "operator_application_decision_ledger.json").exists()
         assert not (tmp_path / "operator_application_decision.json").exists()
+    finally:
+        _cleanup(supervisor)
+
+
+def test_operator_insight_response_consumed_once_and_resumes_local_work(tmp_path: Path):
+    controller = start_continuous_runtime_controller(session_id="worker-operator-insight")
+    controller = attach_continuous_mission(controller, "Optimize your runtime.")
+    controller = replace(
+        controller,
+        continuous_mission_state="observing_for_new_weaknesses",
+        continuous_active_subgoal={},
+        continuous_developmental_self_assessment={
+            "developmental_gaps": ("uncertain operator intent for tracked proof",),
+            "needs_additional_insight": True,
+            "confidence": 0.62,
+        },
+    )
+    controller = exit_observation_with_action_derivation(controller)
+    request_id = controller.continuous_developmental_insight_requests[-1]["request_id"]
+    supervisor = initialize_supervisor_state(
+        supervisor_root=tmp_path,
+        repository_root=Path.cwd(),
+        restart_state=export_continuous_mission_restart_state(controller),
+        python_executable=sys.executable,
+        heartbeat_interval_seconds=0.05,
+        backoff_seconds=0.01,
+        max_relaunches=1,
+        execute_active_subgoal=True,
+    )
+    supervisor = start_supervised_worker(supervisor)
+    try:
+        (tmp_path / "operator_interaction_response.json").write_text(
+            json.dumps(
+                {
+                    "request_id": request_id,
+                    "response_kind": "insight",
+                    "operator_text": "Continue local simulation only.",
+                    "selected_option": "continue local simulation only",
+                    "approved_scope": "",
+                }
+            ),
+            encoding="utf-8-sig",
+        )
+
+        deadline = time.monotonic() + 10
+        status = {}
+        while time.monotonic() < deadline:
+            status = wait_for_worker_status(tmp_path)
+            if not (tmp_path / "operator_interaction_response.json").exists():
+                restart = json.loads((tmp_path / "restart_state.json").read_text(encoding="utf-8"))
+                if any(
+                    item["request_id"] == request_id and item.get("status") == "consumed"
+                    for item in restart["continuous_developmental_insight_requests"]
+                ):
+                    break
+            time.sleep(0.05)
+
+        assert status["continuous_mission_state"] != "awaiting_operator_insight"
+        assert not (tmp_path / "operator_interaction_response.json").exists()
+        ledger = json.loads((tmp_path / "operator_interaction_response_ledger.json").read_text(encoding="utf-8"))
+        assert ledger["responses"][0]["request_id"] == request_id
+        assert ledger["responses"][0]["authority_granted"] is False
+        restart = json.loads((tmp_path / "restart_state.json").read_text(encoding="utf-8"))
+        assert any(
+            item["request_id"] == request_id and item.get("status") == "consumed"
+            for item in restart["continuous_developmental_insight_requests"]
+        )
+        assert restart["continuous_operator_interaction_responses"][-1]["authority_granted"] is False
+    finally:
+        _cleanup(supervisor)
+
+
+def test_awaiting_insight_without_pending_request_recovers_to_next_transition(tmp_path: Path):
+    controller = start_continuous_runtime_controller(session_id="worker-insight-recovery")
+    controller = attach_continuous_mission(controller, "Optimize your runtime.")
+    controller = replace(
+        controller,
+        continuous_mission_state="awaiting_operator_insight",
+        active_work_item="awaiting_operator_insight",
+        continuous_developmental_self_assessment={
+            "developmental_gaps": ("fixture_scoped_validation",),
+            "needs_additional_insight": True,
+            "confidence": 0.7,
+        },
+        continuous_developmental_insight_requests=(
+            {
+                "request_id": "operator-insight-old",
+                "request_kind": "insight",
+                "status": "consumed",
+                "affected_gap": "fixture_scoped_validation",
+                "permitted_responses": ("continue local simulation only",),
+            },
+        ),
+        continuous_operator_interaction_responses=(
+            {
+                "request_id": "operator-insight-old",
+                "response_kind": "insight",
+                "selected_option": "continue local simulation only",
+                "operator_text": "already consumed",
+                "consumed_at": "2026-07-16T00:44:30+00:00",
+                "authority_granted": False,
+            },
+        ),
+    )
+    supervisor = initialize_supervisor_state(
+        supervisor_root=tmp_path,
+        repository_root=Path.cwd(),
+        restart_state=export_continuous_mission_restart_state(controller),
+        python_executable=sys.executable,
+        heartbeat_interval_seconds=0.05,
+        backoff_seconds=0.01,
+        max_relaunches=1,
+        execute_active_subgoal=True,
+    )
+    supervisor = start_supervised_worker(supervisor)
+    try:
+        deadline = time.monotonic() + 10
+        status = {}
+        while time.monotonic() < deadline:
+            status = wait_for_worker_status(tmp_path)
+            if status["continuous_mission_state"] != "awaiting_operator_insight":
+                break
+            time.sleep(0.05)
+
+        assert status["continuous_mission_state"] == "subgoal_active"
+        assert (tmp_path / "operator_interaction_wait_recovered.json").exists()
+        restart = json.loads((tmp_path / "restart_state.json").read_text(encoding="utf-8"))
+        assert restart["continuous_active_subgoal"]
     finally:
         _cleanup(supervisor)

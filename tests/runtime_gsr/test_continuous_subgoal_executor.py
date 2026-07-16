@@ -7,12 +7,18 @@ from pathlib import Path
 from orchestration.runtime.continuous_runtime_controller import (
     assess_continuous_mission_runtime,
     attach_continuous_mission,
+    consume_continuous_operator_interaction_response,
     queue_continuous_mission_sandbox_work,
     refresh_continuous_mission_frontier,
     select_continuous_mission_subgoal,
     start_continuous_runtime_controller,
 )
-from orchestration.runtime.continuous_subgoal_executor import execute_continuous_active_subgoal
+from orchestration.runtime.continuous_subgoal_executor import (
+    _inspect_sources,
+    _repository_bound_design_prompt,
+    _validate_repository_bound_design,
+    execute_continuous_active_subgoal,
+)
 
 
 def _controller_for_execution(*, session_id: str = "executor-test", capability: str = "continuous_subgoal_execution_bridge"):
@@ -40,12 +46,19 @@ def _controller_for_execution(*, session_id: str = "executor-test", capability: 
     return queue_continuous_mission_sandbox_work(controller)
 
 
-def test_active_subgoal_is_consumed_once_and_creates_real_sandbox_work(tmp_path: Path):
+def test_abstract_subgoal_records_one_repository_bound_design_and_never_creates_static_candidate(tmp_path: Path):
     controller = _controller_for_execution()
     updated, result = execute_continuous_active_subgoal(
         controller,
         artifact_root=tmp_path,
         repository_root=Path.cwd(),
+        local_model_adapter=lambda payload: {
+            "model_id": "local-test-model",
+            "result": "local_model_executed",
+            "executed": True,
+            "answer": "This is advice without a repository-bound JSON target.",
+            "provider_calls_performed": False,
+        },
     )
     duplicate_controller, duplicate = execute_continuous_active_subgoal(
         controller,
@@ -53,22 +66,68 @@ def test_active_subgoal_is_consumed_once_and_creates_real_sandbox_work(tmp_path:
         repository_root=Path.cwd(),
     )
 
-    assert result.accepted is True
+    assert result.accepted is False
     assert result.consumed_once is True
     assert result.source_inspection["file_count"] > 0
-    assert result.baseline["exit_code"] == 0
-    assert result.candidate["tracked_source_mutated"] is False
-    assert result.candidate["objective_digest"]
-    assert result.candidate["capability_key"] == "continuous_subgoal_execution_bridge"
+    assert result.disposition == "candidate_design_requires_concrete_behavior_contract"
+    assert result.candidate["state"] == "not_created"
+    assert result.validation["not_run"] == "no concrete candidate source exists"
     assert result.reassessment["capability_id"] == "continuous_subgoal_execution_bridge"
     assert "weakness-" not in result.reassessment["capability_id"]
-    assert result.validation["passed"] is True
-    assert result.clean_reproduction["passed"] is True
     assert "source_inspection_completed" in result.meaningful_transition_timestamps
-    assert updated.continuous_mission_state in {"observing_for_new_weaknesses", "subgoal_active"}
+    assert updated.continuous_mission_state == "awaiting_operator_insight"
+    pending = [item for item in updated.continuous_developmental_insight_requests if item["status"] == "pending"]
+    assert len(pending) == 1
+    request = pending[0]
+    assert request["request_source"] == "repository_bound_candidate_design"
+    assert request["authority_granted"] is False
+    assert updated.continuous_observation_state["candidate_design_evidence_exhausted"] is True
+    artifact = tmp_path / "subgoal_executions" / result.subgoal_id / "repository_bound_candidate_design.json"
+    assert artifact.exists()
+    assert "candidate_metric" not in artifact.read_text(encoding="utf-8")
     assert duplicate.consumed_once is False
     assert duplicate.disposition == "duplicate_consumption_prevented"
     assert duplicate_controller == controller
+
+    boundary = consume_continuous_operator_interaction_response(
+        updated,
+        request_id=request["request_id"],
+        response_kind="insight",
+        operator_text="Treat this ungrounded abstract branch as an accepted boundary.",
+        selected_option="treat as accepted boundary",
+    )
+    blocked = select_continuous_mission_subgoal(boundary)
+    assert blocked.continuous_mission_state == "observing_for_new_weaknesses"
+    assert blocked.continuous_active_subgoal == {}
+    assert blocked.continuous_observation_state["observation_reason"] == "repository_bound_candidate_design_evidence_scope_exhausted"
+
+
+def test_prefilled_design_mapping_cannot_restore_the_removed_static_candidate_path(tmp_path: Path):
+    controller = _controller_for_execution()
+    controller = replace(
+        controller,
+        continuous_active_subgoal={
+            **controller.continuous_active_subgoal,
+            "candidate_design": {"affected_path": "orchestration/runtime/continuous_subgoal_executor.py"},
+        },
+    )
+
+    _, result = execute_continuous_active_subgoal(
+        controller,
+        artifact_root=tmp_path,
+        repository_root=Path.cwd(),
+        local_model_adapter=lambda payload: {
+            "model_id": "local-test-model",
+            "result": "local_model_executed",
+            "executed": True,
+            "answer": "not a valid grounded design",
+            "provider_calls_performed": False,
+        },
+    )
+
+    assert result.accepted is False
+    assert result.disposition == "candidate_design_requires_concrete_behavior_contract"
+    assert not (tmp_path / "candidate" / "continuous_candidate.py").exists()
 
 
 def test_liveness_only_subgoal_is_rejected_as_stalled_execution(tmp_path: Path):
@@ -91,68 +150,39 @@ def test_liveness_only_subgoal_is_rejected_as_stalled_execution(tmp_path: Path):
     assert result.source_inspection == {}
 
 
-def test_existing_controller_application_boundary_is_reused(tmp_path: Path):
-    controller = _controller_for_execution(session_id="executor-application")
-    updated, result = execute_continuous_active_subgoal(
-        controller,
-        artifact_root=tmp_path,
-        repository_root=Path.cwd(),
-        create_application_request=True,
-    )
+def test_repository_bound_design_requires_an_inspected_implementation_and_test_path():
+    controller = _controller_for_execution()
+    subgoal = controller.continuous_active_subgoal
+    inspection = _inspect_sources(Path.cwd(), subgoal)
+    paths = [item["path"] for item in inspection["files"]]
+    implementation_path = next(path for path in paths if path.endswith("continuous_subgoal_executor.py"))
+    evidence_path = next(path for path in paths if path.endswith("test_continuous_subgoal_executor.py"))
 
-    assert result.application_request["state"] == "pending_operator_application_review"
-    assert result.application_request["application_path_reused"] == "continuous_runtime_controller.pause_continuous_mission_for_application"
-    assert updated.continuous_mission_state == "awaiting_operator_application"
-    assert updated.pending_application_decision_id == result.application_request["decision_id"]
-    assert result.candidate["tracked_source_mutated"] is False
-
-
-def test_local_model_and_reference_advisory_resources_are_logged_without_paid_api(tmp_path: Path):
-    controller = _controller_for_execution(session_id="executor-resources", capability="model_reference_executor_bridge")
-    controller = replace(
-        controller,
-        continuous_active_subgoal={
-            **controller.continuous_active_subgoal,
-            "measurable_objective": "use local model and wiki reference to improve model_reference_executor_bridge beyond 0.0",
-            "adversarial_tests": "consult local model and reference evidence without paid API authority",
-            "wiki_query": "Software testing",
+    prompt = _repository_bound_design_prompt(subgoal, inspection, Path.cwd())
+    design = _validate_repository_bound_design(
+        {
+            "executed": True,
+            "answer": json.dumps(
+                {
+                    "affected_path": implementation_path,
+                    "evidence_path": evidence_path,
+                    "failure_mechanism": "abstract subgoals lack a behavior contract",
+                    "candidate_behavior": "require inspected test evidence before a candidate can exist",
+                    "independent_evidence_needed": "the named focused test",
+                    "validation_target": "the focused test rejects a fabricated candidate",
+                }
+            ),
         },
+        inspection,
     )
 
-    def local_model(payload):
-        return {"model_id": "local-test-model", "result": "diagnosis_complete", "input_keys": tuple(payload)}
-
-    def reference(payload):
-        return {"source": "built_in_wiki_reference", "result": "reference_complete", "provenance": "local bounded fixture"}
-
-    _, result = execute_continuous_active_subgoal(
-        controller,
-        artifact_root=tmp_path,
-        repository_root=Path.cwd(),
-        local_model_adapter=local_model,
-        reference_adapter=reference,
-    )
-
-    resources = {item.resource_type: item for item in result.resource_usage}
-    assert resources["local_model"].resource_id == "local-test-model"
-    assert resources["local_model"].provenance["authoritative"] is False
-    assert resources["built_in_reference"].resource_id == "built_in_wiki_reference"
-    assert "local model/reference" in result.reassessment["reassessment"] or result.reassessment["reassessment"] == "satisfied"
-    assert controller.continuous_api_authority["enabled"] is False
+    assert f"PATH: {implementation_path}" in prompt
+    assert f"PATH: {evidence_path}" in prompt
+    assert design["grounded"] is True
+    assert design["evidence_path_is_independent"] is True
 
 
-def test_clean_reproduction_uses_declared_inputs_without_repo_import_leak(tmp_path: Path):
-    controller = _controller_for_execution(session_id="executor-repro")
-    _, result = execute_continuous_active_subgoal(controller, artifact_root=tmp_path, repository_root=Path.cwd())
-
-    reproduction_root = Path(result.clean_reproduction["root"])
-    assert (reproduction_root / "candidate" / "continuous_candidate.py").exists()
-    assert result.clean_reproduction["passed"] is True
-    validation_script = (reproduction_root / "validate_candidate.py").read_text(encoding="utf-8")
-    assert "orchestration.runtime" not in validation_script
-
-
-def test_worker_execution_mode_persists_result_and_restarts_without_duplicate(tmp_path: Path):
+def test_worker_execution_mode_persists_one_grounded_block_without_local_model_execution(tmp_path: Path):
     from orchestration.runtime.continuous_worker_supervisor import (
         initialize_supervisor_state,
         request_intentional_worker_stop,
@@ -173,85 +203,21 @@ def test_worker_execution_mode_persists_result_and_restarts_without_duplicate(tm
     )
     supervisor = start_supervised_worker(supervisor)
     try:
-        status = wait_for_worker_status(tmp_path)
         result_path = tmp_path / "subgoal_execution_completed.json"
-        assert result_path.exists()
-        result = json.loads(result_path.read_text(encoding="utf-8"))
-        assert result["accepted"] is True
-        assert status["lifecycle_owner"] == "continuous_runtime_controller"
-    finally:
-        request_intentional_worker_stop(tmp_path, reason="test_complete")
-        if supervisor.process is not None:
-            supervisor.process.wait(timeout=5)
-
-
-def test_worker_execution_mode_continues_to_next_distinct_subgoal(tmp_path: Path):
-    from orchestration.runtime.continuous_worker_supervisor import (
-        initialize_supervisor_state,
-        request_intentional_worker_stop,
-        start_supervised_worker,
-    )
-    from orchestration.runtime.continuous_runtime_controller import export_continuous_mission_restart_state
-
-    controller = start_continuous_runtime_controller(session_id="executor-worker-multi")
-    controller = attach_continuous_mission(controller, "Optimize your runtime.")
-    controller = assess_continuous_mission_runtime(
-        controller,
-        (
-            {
-                "evidence_source": "bridge defect",
-                "observed_behavior": "first executable weakness",
-                "first_incorrect_transition": "active subgoal one -> no executor",
-                "affected_capability": "continuous_subgoal_execution_bridge",
-                "baseline_metric": "continuous_subgoal_execution_bridge=0.0",
-                "confidence": 0.94,
-                "operator_value": 0.96,
-                "severity": 0.9,
-                "estimated_implementation_breadth": "small",
-                "validation_method": "multi_subgoal_worker",
-            },
-            {
-                "evidence_source": "resource defect",
-                "observed_behavior": "second executable weakness",
-                "first_incorrect_transition": "next active subgoal -> worker returned to heartbeat",
-                "affected_capability": "secondary_executor_bridge",
-                "baseline_metric": "secondary_executor_bridge=0.0",
-                "confidence": 0.8,
-                "operator_value": 0.91,
-                "severity": 0.72,
-                "estimated_implementation_breadth": "small",
-                "validation_method": "multi_subgoal_worker",
-            },
-        ),
-    )
-    controller = queue_continuous_mission_sandbox_work(select_continuous_mission_subgoal(refresh_continuous_mission_frontier(controller)))
-    supervisor = initialize_supervisor_state(
-        supervisor_root=tmp_path,
-        repository_root=Path.cwd(),
-        restart_state=export_continuous_mission_restart_state(controller),
-        execute_active_subgoal=True,
-        heartbeat_interval_seconds=0.05,
-        backoff_seconds=0.01,
-        max_relaunches=1,
-    )
-    supervisor = start_supervised_worker(supervisor)
-    try:
-        ledger_path = tmp_path / "subgoal_execution_ledger.json"
         import time
 
-        deadline = time.monotonic() + 10
-        ledger = {"executions": []}
+        deadline = time.monotonic() + 5
+        status = {}
         while time.monotonic() < deadline:
-            if ledger_path.exists():
-                ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
-                if len(ledger["executions"]) >= 2:
-                    break
+            status = wait_for_worker_status(tmp_path)
+            if result_path.exists():
+                break
             time.sleep(0.05)
-        assert len(ledger["executions"]) >= 2
-        subgoals = [item["subgoal_id"] for item in ledger["executions"]]
-        assert len(set(subgoals)) == len(subgoals)
-        assert (tmp_path / f"subgoal_execution_{subgoals[0]}.json").exists()
-        assert (tmp_path / f"subgoal_execution_{subgoals[1]}.json").exists()
+        assert result_path.exists()
+        result = json.loads(result_path.read_text(encoding="utf-8"))
+        assert result["accepted"] is False
+        assert result["disposition"] == "candidate_design_requires_concrete_behavior_contract"
+        assert status["lifecycle_owner"] == "continuous_runtime_controller"
     finally:
         request_intentional_worker_stop(tmp_path, reason="test_complete")
         if supervisor.process is not None:
