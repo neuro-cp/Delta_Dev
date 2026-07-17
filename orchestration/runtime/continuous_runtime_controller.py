@@ -84,9 +84,13 @@ from orchestration.runtime.rc2_conversational_mode_router import discover_local_
 from orchestration.runtime.local_model_request_result_ledger import LocalModelRequestResultLedger
 from orchestration.runtime.capability_evaluation_strategy import compile_capability_evaluation_strategy
 from orchestration.runtime.developmental_interest import (
+    agenda_state_is_valid,
+    compile_persistent_developmental_agenda,
     compile_developmental_goal_proposal,
     compile_developmental_interest_candidates,
     is_governed_autonomous_interest_instruction,
+    is_persistent_developmental_agenda_instruction,
+    material_evidence_digest,
     source_records_from_state,
 )
 
@@ -818,7 +822,7 @@ def compile_governed_developmental_interest_proposal(
     operator consumes the resulting existing interaction request.
     """
 
-    if not is_governed_autonomous_interest_instruction(operator_instruction):
+    if not (is_governed_autonomous_interest_instruction(operator_instruction) or is_persistent_developmental_agenda_instruction(operator_instruction)):
         return controller
     attached_parent = not bool(controller.continuous_mission_contract)
     parent = controller if not attached_parent else attach_continuous_mission(controller, operator_instruction)
@@ -838,6 +842,8 @@ def compile_governed_developmental_interest_proposal(
         learning_state=state,
         capability_inventory=parent.continuous_capability_inventory,
     )
+    if not sources:
+        sources = tuple(dict(item) for item in (interest_state.get("source_records") or ()) if isinstance(item, Mapping))
     active_or_recent = tuple(str(item) for item in (interest_state.get("active_or_recent_semantics") or ()))
     rejected = tuple(str(item) for item in (interest_state.get("cooldown_semantics") or ()))
     candidates = compile_developmental_interest_candidates(
@@ -853,6 +859,7 @@ def compile_governed_developmental_interest_proposal(
         "origin_state_id": origin_state_id,
         "operator_context": operator_instruction,
         "candidate_interests": tuple(item.as_dict() for item in candidates),
+        "source_records": tuple(dict(item) for item in sources),
         "ranked_interest_ids": tuple(item.interest_id for item in candidates if item.status == "candidate_interest"),
         "selected_interest_id": proposal.selected_interest_id if proposal else "",
         "proposal": proposal.as_dict() if proposal else {},
@@ -1003,29 +1010,352 @@ def consume_developmental_goal_proposal_response(
             journal=updated.journal + (_journal_entry("developmental_interest", "one_scoped_goal_clarification_requested", (proposal.get("proposal_id", ""),)),),
         )
     if selected_option != "approve_developmental_goal":
-        return replace(
+        resolved = replace(
             updated,
             continuous_mission_state="developmental_interest_deferred" if selected_option == "defer_developmental_goal" else "developmental_interest_rejected",
             active_work_item="developmental_interest_observation",
             continuous_active_subgoal={},
         )
+        return _advance_agenda_after_goal_decision(
+            resolved,
+            proposal_id=str(proposal.get("proposal_id") or ""),
+            semantic_identity=semantic,
+            decision=selected_option,
+        )
     if str(candidate.get("candidate_class") or "") == "acquire_evaluator_authority":
-        return replace(
+        retained = replace(
             updated,
             continuous_mission_state="learning_evaluator_authority_needed",
             active_work_item="developmental_interest_evaluator_authority_needed",
             continuous_active_subgoal={},
             journal=updated.journal + (_journal_entry("developmental_interest", "approved_evaluator_acquisition_goal_retained_without_learning_activation", (proposal.get("proposal_id", ""),)),),
         )
+        return _mark_agenda_mission_active(
+            retained,
+            proposal_id=str(proposal.get("proposal_id") or ""),
+            mission_id="",
+            awaiting_evaluator=True,
+        )
     learning_instruction = f"Learn {str(proposal.get('topic') or '').replace('_', ' ')}."
     activated = compile_operator_developmental_learning_mission(updated, learning_instruction)
-    return replace(
+    agenda_state = dict(state.get("developmental_agenda") or {})
+    activated = replace(
         activated,
-        continuous_learning_state={**dict(activated.continuous_learning_state or {}), "developmental_interest": updated_interest},
+        continuous_learning_state={
+            **dict(activated.continuous_learning_state or {}),
+            "developmental_interest": updated_interest,
+            **({"developmental_agenda": agenda_state} if agenda_state else {}),
+        },
         continuous_developmental_insight_requests=updated_requests,
         continuous_operator_interaction_responses=updated.continuous_operator_interaction_responses,
         journal=activated.journal + (_journal_entry("developmental_interest", "approved_goal_handed_to_existing_learning_lifecycle", (proposal.get("proposal_id", ""),)),),
     )
+    mission_id = str((activated.continuous_learning_state or {}).get("mission", {}).get("mission_id") or "")
+    return _mark_agenda_mission_active(
+        activated,
+        proposal_id=str(proposal.get("proposal_id") or ""),
+        mission_id=mission_id,
+        awaiting_evaluator=False,
+    )
+
+
+def start_persistent_developmental_agenda(
+    controller: ContinuousRuntimeController,
+    operator_instruction: str,
+) -> ContinuousRuntimeController:
+    """Initialize one bounded agenda and compile at most one first proposal."""
+
+    if not is_persistent_developmental_agenda_instruction(operator_instruction):
+        return controller
+    state = dict(controller.continuous_learning_state or {})
+    existing = dict(state.get("developmental_agenda") or {})
+    if existing and agenda_state_is_valid(existing):
+        return _compile_next_agenda_proposal(controller, operator_instruction, force=False)
+    sources = source_records_from_state(
+        learning_state=state,
+        capability_inventory=controller.continuous_capability_inventory,
+    )
+    digest = material_evidence_digest(
+        capability_inventory=controller.continuous_capability_inventory,
+        sources=sources,
+    )
+    agenda = compile_persistent_developmental_agenda(
+        operator_scope=operator_instruction,
+        material_digest=digest,
+    ).as_dict()
+    prepared = replace(
+        controller,
+        continuous_learning_state={**state, "interest_sources": tuple(sources), "developmental_agenda": agenda},
+        continuous_mission_state="developmental_agenda_compiling",
+        active_work_item="developmental_agenda_compiling",
+        journal=controller.journal + (_journal_entry("developmental_agenda", "persistent_agenda_initialized", (agenda["agenda_id"],)),),
+    )
+    return _compile_next_agenda_proposal(prepared, operator_instruction, force=True)
+
+
+def _compile_next_agenda_proposal(
+    controller: ContinuousRuntimeController,
+    operator_instruction: str,
+    *,
+    force: bool,
+) -> ContinuousRuntimeController:
+    state = dict(controller.continuous_learning_state or {})
+    agenda = dict(state.get("developmental_agenda") or {})
+    if not agenda_state_is_valid(agenda):
+        return replace(
+            controller,
+            continuous_mission_state="developmental_agenda_blocked",
+            continuous_active_subgoal={},
+            active_work_item="developmental_agenda_blocked",
+            continuous_learning_state={**state, "developmental_agenda": {**agenda, "status": "blocked", "exhaustion_reasons": ("invalid_agenda_state",)}},
+            journal=controller.journal + (_journal_entry("developmental_agenda", "invalid_agenda_state_failed_closed", (str(agenda.get("agenda_id") or ""),)),),
+        )
+    if agenda.get("status") == "paused":
+        return controller
+    if agenda.get("pending_proposal_id") or agenda.get("active_mission_id"):
+        return controller
+    interest = dict(state.get("developmental_interest") or {})
+    sources = tuple(dict(item) for item in (interest.get("source_records") or state.get("interest_sources") or ()) if isinstance(item, Mapping))
+    digest = material_evidence_digest(
+        capability_inventory=controller.continuous_capability_inventory,
+        sources=sources,
+        outcome_history=tuple(agenda.get("mission_outcome_history") or ()),
+        cooldown_records=tuple(agenda.get("cooldown_records") or ()),
+        budgets={
+            "session": agenda.get("remaining_session_budget"),
+            "proposal": agenda.get("remaining_proposal_budget"),
+            "attempt": agenda.get("remaining_attempt_budget"),
+        },
+    )
+    if not force and digest == agenda.get("last_material_evidence_digest"):
+        return replace(
+            controller,
+            continuous_mission_state="developmental_agenda_cooldown",
+            active_work_item="developmental_agenda_no_material_evidence_change",
+            continuous_learning_state={**state, "developmental_agenda": {**agenda, "status": "cooldown", "next_eligible_transition": "material_evidence_change_or_operator_refresh"}},
+            journal=controller.journal + (_journal_entry("developmental_agenda", "equivalent_evidence_state_did_not_recompile_proposal", (agenda["agenda_id"],)),),
+        )
+    if (
+        int(agenda.get("remaining_session_budget") or 0) <= 0
+        or int(agenda.get("remaining_proposal_budget") or 0) <= 0
+        or int(agenda.get("remaining_attempt_budget") or 0) <= 0
+    ):
+        return replace(
+            controller,
+            continuous_mission_state="developmental_agenda_completed_session",
+            active_work_item="developmental_agenda_budget_exhausted",
+            continuous_learning_state={**state, "developmental_agenda": {**agenda, "status": "completed_session", "exhaustion_reasons": ("agenda_budget_exhausted",), "last_material_evidence_digest": digest}},
+            journal=controller.journal + (_journal_entry("developmental_agenda", "agenda_budget_exhausted_before_proposal", (agenda["agenda_id"],)),),
+        )
+    prepared = replace(
+        controller,
+        continuous_learning_state={**state, "interest_sources": sources, "developmental_agenda": {**agenda, "status": "compiling_candidates", "last_material_evidence_digest": digest}},
+    )
+    compiled = compile_governed_developmental_interest_proposal(prepared, operator_instruction)
+    compiled_state = dict(compiled.continuous_learning_state or {})
+    compiled_interest = dict(compiled_state.get("developmental_interest") or {})
+    proposal = dict(compiled_interest.get("proposal") or {})
+    candidate_ids = tuple(str(item.get("interest_id") or "") for item in (compiled_interest.get("candidate_interests") or ()))
+    updated_agenda = dict(compiled_state.get("developmental_agenda") or agenda)
+    updated_agenda.update(
+        {
+            "current_candidate_set_id": stable_id("agenda-candidate-set", digest, candidate_ids),
+            "candidate_history": tuple(dict.fromkeys(tuple(updated_agenda.get("candidate_history") or ()) + candidate_ids)),
+            "last_material_evidence_digest": digest,
+            "last_rank_digest": _learning_bridge_digest(compiled_interest.get("ranked_interest_ids") or ()),
+            "updated_at": utc_now(),
+        }
+    )
+    if proposal:
+        prior = tuple(updated_agenda.get("proposal_history") or ())
+        is_new = proposal["proposal_id"] not in prior
+        updated_agenda.update(
+            {
+                "status": "proposal_pending",
+                "pending_proposal_id": proposal["proposal_id"],
+                "proposal_history": prior + ((proposal["proposal_id"],) if is_new else ()),
+                "remaining_proposal_budget": int(updated_agenda.get("remaining_proposal_budget") or 0) - (1 if is_new else 0),
+                "next_eligible_transition": "operator_goal_decision",
+            }
+        )
+    else:
+        updated_agenda.update(
+            {
+                "status": "exhausted",
+                "pending_proposal_id": "",
+                "exhaustion_reasons": ("no_valid_evidence_grounded_interest",),
+                "next_eligible_transition": "material_evidence_change_or_operator_refresh",
+            }
+        )
+    return replace(
+        compiled,
+        continuous_mission_state="awaiting_operator_insight" if proposal else "developmental_agenda_exhausted",
+        continuous_active_subgoal={} if not proposal else compiled.continuous_active_subgoal,
+        active_work_item="awaiting_developmental_goal_approval" if proposal else "developmental_agenda_exhausted",
+        continuous_learning_state={**compiled_state, "developmental_agenda": updated_agenda},
+        journal=compiled.journal + (_journal_entry("developmental_agenda", "agenda_candidate_ranking_compiled", (updated_agenda["agenda_id"], str(proposal.get("proposal_id") or ""))),),
+    )
+
+
+def observe_developmental_agenda_mission_outcome(
+    controller: ContinuousRuntimeController,
+    *,
+    outcome_id: str,
+    outcome: str,
+    evidence_refs: Sequence[str] = (),
+) -> ContinuousRuntimeController:
+    """Consume one terminal bounded mission outcome and advance only on new evidence."""
+
+    state = dict(controller.continuous_learning_state or {})
+    agenda = dict(state.get("developmental_agenda") or {})
+    if not agenda:
+        return controller
+    if not agenda_state_is_valid(agenda):
+        return _compile_next_agenda_proposal(controller, str(agenda.get("operator_scope") or ""), force=False)
+    outcomes = tuple(dict(item) for item in (agenda.get("mission_outcome_history") or ()))
+    if any(item.get("outcome_id") == outcome_id for item in outcomes):
+        return replace(controller, journal=controller.journal + (_journal_entry("developmental_agenda", "duplicate_mission_outcome_suppressed", (outcome_id,)),))
+    interest = dict(state.get("developmental_interest") or {})
+    proposal = dict(interest.get("proposal") or {})
+    candidate = next((dict(item) for item in (interest.get("candidate_interests") or ()) if item.get("interest_id") == proposal.get("selected_interest_id")), {})
+    semantic = str(candidate.get("semantic_identity") or "")
+    terminal = {"behaviorally_demonstrated", "completed", "behaviorally_failed", "prerequisite_blocked", "resource_blocked", "evaluator_blocked", "budget_exhausted", "inconclusive", "operator_stopped"}
+    if outcome not in terminal:
+        return controller
+    record = {"outcome_id": outcome_id, "outcome": outcome, "proposal_id": proposal.get("proposal_id", ""), "semantic_identity": semantic, "evidence_refs": tuple(evidence_refs), "recorded_at": utc_now()}
+    successful = outcome in {"behaviorally_demonstrated", "completed"}
+    cooldown_trigger = "recently_completed" if successful else outcome
+    cooldown = {"semantic_identity": semantic, "trigger": cooldown_trigger, "evidence_digest": _learning_bridge_digest(record), "release_condition": "material_evidence_change_or_explicit_operator_refresh", "reason": outcome, "status": "active"}
+    active_recent = tuple(dict.fromkeys(tuple(interest.get("active_or_recent_semantics") or ()) + ((semantic,) if semantic else ())))
+    cooldowns = tuple(agenda.get("cooldown_records") or ()) + ((cooldown,) if semantic else ())
+    updated_agenda = {
+        **agenda,
+        "status": "refreshing_evidence",
+        "active_mission_id": "",
+        "pending_proposal_id": "",
+        "mission_outcome_history": outcomes + (record,),
+        "completed_goal_ids": tuple(dict.fromkeys(tuple(agenda.get("completed_goal_ids") or ()) + ((str(proposal.get("proposal_id") or ""),) if successful else ()))),
+        "blocked_goal_ids": tuple(dict.fromkeys(tuple(agenda.get("blocked_goal_ids") or ()) + ((str(proposal.get("proposal_id") or ""),) if not successful else ()))),
+        "cooldown_records": cooldowns,
+        "cycle_count": int(agenda.get("cycle_count") or 0) + 1,
+        "successful_cycle_count": int(agenda.get("successful_cycle_count") or 0) + int(successful),
+        "failed_cycle_count": int(agenda.get("failed_cycle_count") or 0) + int(not successful),
+        "consecutive_failure_count": 0 if successful else int(agenda.get("consecutive_failure_count") or 0) + 1,
+        "remaining_session_budget": max(0, int(agenda.get("remaining_session_budget") or 0) - 1),
+        "remaining_attempt_budget": max(0, int(agenda.get("remaining_attempt_budget") or 0) - 1),
+        "recent_capability_updates": tuple(str(item) for item in evidence_refs),
+        "updated_at": utc_now(),
+    }
+    if updated_agenda["consecutive_failure_count"] >= int(updated_agenda.get("maximum_consecutive_failures") or 1):
+        updated_agenda.update({"status": "blocked", "exhaustion_reasons": ("consecutive_failure_budget_reached",), "next_eligible_transition": "material_evidence_change_or_operator_refresh"})
+        return replace(controller, continuous_mission_state="developmental_agenda_blocked", continuous_active_subgoal={}, active_work_item="developmental_agenda_diminishing_return", continuous_learning_state={**state, "developmental_interest": {**interest, "active_or_recent_semantics": active_recent}, "developmental_agenda": updated_agenda})
+    prepared = replace(
+        controller,
+        continuous_active_subgoal={},
+        continuous_learning_state={**state, "developmental_interest": {**interest, "active_or_recent_semantics": active_recent}, "developmental_agenda": updated_agenda},
+        continuous_mission_state="developmental_agenda_refreshing_evidence",
+        active_work_item="developmental_agenda_refreshing_evidence",
+        journal=controller.journal + (_journal_entry("developmental_agenda", "terminal_mission_outcome_consumed_once", (outcome_id, outcome)),),
+    )
+    return _compile_next_agenda_proposal(prepared, str(updated_agenda.get("operator_scope") or ""), force=True)
+
+
+def set_persistent_developmental_agenda_paused(
+    controller: ContinuousRuntimeController,
+    *,
+    paused: bool,
+) -> ContinuousRuntimeController:
+    state = dict(controller.continuous_learning_state or {})
+    agenda = dict(state.get("developmental_agenda") or {})
+    if not agenda_state_is_valid(agenda):
+        return controller
+    return replace(
+        controller,
+        continuous_mission_state="developmental_agenda_paused" if paused else "developmental_agenda_idle",
+        active_work_item="developmental_agenda_paused" if paused else "developmental_agenda_ready",
+        continuous_learning_state={**state, "developmental_agenda": {**agenda, "status": "paused" if paused else "idle", "next_eligible_transition": "operator_resume" if paused else "material_evidence_change_or_operator_refresh", "updated_at": utc_now()}},
+        journal=controller.journal + (_journal_entry("developmental_agenda", "agenda_paused" if paused else "agenda_resumed", (agenda["agenda_id"],)),),
+    )
+
+
+def _mark_agenda_mission_active(
+    controller: ContinuousRuntimeController,
+    *,
+    proposal_id: str,
+    mission_id: str,
+    awaiting_evaluator: bool,
+) -> ContinuousRuntimeController:
+    """Record an approved agenda item without changing learning lifecycle ownership."""
+
+    state = dict(controller.continuous_learning_state or {})
+    agenda = dict(state.get("developmental_agenda") or {})
+    if not agenda or not agenda_state_is_valid(agenda):
+        return controller
+    decision_history = tuple(agenda.get("decision_history") or ()) + (f"approved:{proposal_id}",)
+    return replace(
+        controller,
+        continuous_learning_state={
+            **state,
+            "developmental_agenda": {
+                **agenda,
+                "status": "awaiting_evaluator_authority" if awaiting_evaluator else "mission_active",
+                "active_mission_id": mission_id,
+                "pending_proposal_id": "",
+                "decision_history": decision_history,
+                "next_eligible_transition": "evaluator_authority" if awaiting_evaluator else "terminal_mission_outcome",
+                "updated_at": utc_now(),
+            },
+        },
+        journal=controller.journal + (_journal_entry("developmental_agenda", "approved_proposal_bound_to_existing_learning_mission", (proposal_id, mission_id)),),
+    )
+
+
+def _advance_agenda_after_goal_decision(
+    controller: ContinuousRuntimeController,
+    *,
+    proposal_id: str,
+    semantic_identity: str,
+    decision: str,
+) -> ContinuousRuntimeController:
+    """Consume a rejection/defer once, then rank one eligible alternative."""
+
+    state = dict(controller.continuous_learning_state or {})
+    agenda = dict(state.get("developmental_agenda") or {})
+    if not agenda or not agenda_state_is_valid(agenda):
+        return controller
+    decision_key = f"{decision}:{proposal_id}"
+    if decision_key in tuple(agenda.get("decision_history") or ()):
+        return controller
+    rejected = tuple(agenda.get("rejected_proposal_ids") or ())
+    deferred = tuple(agenda.get("deferred_proposal_ids") or ())
+    cooldown = {
+        "semantic_identity": semantic_identity,
+        "trigger": decision,
+        "status": "active",
+        "release_condition": "material_evidence_change_or_explicit_operator_refresh",
+        "proposal_id": proposal_id,
+    }
+    updated_agenda = {
+        **agenda,
+        "status": "refreshing_evidence",
+        "pending_proposal_id": "",
+        "rejected_proposal_ids": rejected + ((proposal_id,) if decision == "reject_developmental_goal" else ()),
+        "deferred_proposal_ids": deferred + ((proposal_id,) if decision == "defer_developmental_goal" else ()),
+        "cooldown_records": tuple(agenda.get("cooldown_records") or ()) + ((cooldown,) if semantic_identity else ()),
+        "decision_history": tuple(agenda.get("decision_history") or ()) + (decision_key,),
+        "rejected_cycle_count": int(agenda.get("rejected_cycle_count") or 0) + int(decision == "reject_developmental_goal"),
+        "deferred_cycle_count": int(agenda.get("deferred_cycle_count") or 0) + int(decision == "defer_developmental_goal"),
+        "next_eligible_transition": "compile_candidates",
+        "updated_at": utc_now(),
+    }
+    prepared = replace(
+        controller,
+        continuous_learning_state={**state, "developmental_agenda": updated_agenda},
+        continuous_mission_state="developmental_agenda_refreshing_evidence",
+        active_work_item="developmental_agenda_refreshing_evidence",
+        journal=controller.journal + (_journal_entry("developmental_agenda", "operator_rejection_or_defer_consumed_then_reranked", (proposal_id, decision)),),
+    )
+    return _compile_next_agenda_proposal(prepared, str(updated_agenda.get("operator_scope") or ""), force=True)
 
 
 def compile_mission_bound_local_model_learning_request(
@@ -1254,13 +1584,19 @@ def consume_developmental_learning_evaluation(
     typed_gaps = tuple(DevelopmentalGap(**dict(item)) for item in state.get("gaps") or ())
     next_subgoal = compile_learning_subgoal(typed_mission, typed_gaps, typed_plan, state["retained_bundle"], consumed_gap_ids=consumed)
     if next_subgoal is None:
-        return replace(
+        completed = replace(
             controller,
             continuous_mission_state="observing_for_new_learning_evidence",
             continuous_learning_state=updated_state,
             continuous_active_subgoal={},
             active_work_item=OBSERVATION_STATE,
             journal=controller.journal + (_journal_entry("developmental_learning", "learning_evaluation_consumed_exactly_once_frontier_exhausted", (evaluation.evaluation_id,)),),
+        )
+        return observe_developmental_agenda_mission_outcome(
+            completed,
+            outcome_id=evaluation.evaluation_id,
+            outcome="behaviorally_demonstrated" if evaluation.promotion_eligible else "behaviorally_failed",
+            evidence_refs=(evaluation.evaluation_id, *evaluation.case_ids),
         )
     return replace(
         controller,
@@ -2398,16 +2734,26 @@ def restore_continuous_mission_restart_state(
     )
     recovered_ledger = _recover_knowledge_ledger(tuple(restart_state.get("continuous_knowledge_ledger") or ()))
     recovered_failures = _recover_behavioral_failure_records(tuple(restart_state.get("continuous_behavioral_failure_records") or ()))
+    learning_state = dict(restart_state.get("continuous_learning_state") or {})
+    agenda = dict(learning_state.get("developmental_agenda") or {})
+    invalid_agenda = bool(agenda) and not agenda_state_is_valid(agenda)
+    if invalid_agenda:
+        learning_state["developmental_agenda"] = {
+            **agenda,
+            "status": "blocked",
+            "exhaustion_reasons": ("invalid_agenda_state_on_restart",),
+            "next_eligible_transition": "operator_refresh_required",
+        }
     return replace(
         controller,
-        continuous_mission_state=str(restart_state.get("continuous_mission_state") or ""),
+        continuous_mission_state="developmental_agenda_blocked" if invalid_agenda else str(restart_state.get("continuous_mission_state") or ""),
         continuous_mission_contract=dict(restart_state.get("continuous_mission_contract") or {}),
         continuous_behavioral_failure_records=tuple(item.as_dict() for item in recovered_failures),
         continuous_mission_findings=tuple(restart_state.get("continuous_mission_findings") or ()),
         continuous_mission_frontier=tuple(restart_state.get("continuous_mission_frontier") or ()),
         continuous_main_goal=dict(restart_state.get("continuous_main_goal") or {}),
         continuous_completed_main_goals=tuple(restart_state.get("continuous_completed_main_goals") or ()),
-        continuous_active_subgoal=dict(restart_state.get("continuous_active_subgoal") or {}),
+        continuous_active_subgoal={} if invalid_agenda else dict(restart_state.get("continuous_active_subgoal") or {}),
         continuous_consumed_weakness_signatures=tuple(restart_state.get("continuous_consumed_weakness_signatures") or ()),
         continuous_knowledge_ledger=recovered_ledger,
         continuous_pcm_bridge_ledger=tuple(restart_state.get("continuous_pcm_bridge_ledger") or ()),
@@ -2418,10 +2764,10 @@ def restore_continuous_mission_restart_state(
         continuous_operator_explanation=dict(restart_state.get("continuous_operator_explanation") or {}),
         continuous_api_authority=dict(restart_state.get("continuous_api_authority") or {}),
         continuous_observation_state=dict(restart_state.get("continuous_observation_state") or {}),
-        continuous_learning_state=dict(restart_state.get("continuous_learning_state") or {}),
+        continuous_learning_state=learning_state,
         pending_application_decision_id=str(restart_state.get("pending_application_decision_id") or ""),
-        active_work_item=str(restart_state.get("active_work_item") or ""),
-        journal=tuple(controller.journal) + (_journal_entry("continuous_mission", "continuous_mission_restart_state_restored", (str(restart_state.get("continuous_mission_state") or ""),)),),
+        active_work_item="developmental_agenda_blocked" if invalid_agenda else str(restart_state.get("active_work_item") or ""),
+        journal=tuple(controller.journal) + (_journal_entry("continuous_mission", "invalid_agenda_restart_failed_closed" if invalid_agenda else "continuous_mission_restart_state_restored", (str(restart_state.get("continuous_mission_state") or ""),)),),
     )
 
 

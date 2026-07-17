@@ -101,6 +101,52 @@ class DevelopmentalGoalProposal:
         return asdict(self)
 
 
+@dataclass(frozen=True)
+class PersistentDevelopmentalAgenda:
+    """Durable controller-owned references for one bounded agenda session."""
+
+    agenda_id: str
+    agenda_version: str
+    operator_scope: str
+    status: str
+    active_mission_id: str
+    pending_proposal_id: str
+    current_candidate_set_id: str
+    completed_goal_ids: tuple[str, ...]
+    blocked_goal_ids: tuple[str, ...]
+    rejected_proposal_ids: tuple[str, ...]
+    deferred_proposal_ids: tuple[str, ...]
+    cooldown_records: tuple[dict[str, Any], ...]
+    evaluator_blockers: tuple[str, ...]
+    resource_blockers: tuple[str, ...]
+    recent_capability_updates: tuple[str, ...]
+    unresolved_gap_ids: tuple[str, ...]
+    candidate_history: tuple[str, ...]
+    proposal_history: tuple[str, ...]
+    decision_history: tuple[str, ...]
+    mission_outcome_history: tuple[dict[str, Any], ...]
+    cycle_count: int
+    successful_cycle_count: int
+    failed_cycle_count: int
+    rejected_cycle_count: int
+    deferred_cycle_count: int
+    consecutive_failure_count: int
+    remaining_session_budget: int
+    remaining_attempt_budget: int
+    remaining_proposal_budget: int
+    maximum_consecutive_failures: int
+    last_material_evidence_digest: str
+    last_rank_digest: str
+    next_eligible_transition: str
+    exhaustion_reasons: tuple[str, ...]
+    created_at: str
+    updated_at: str
+    agenda_digest: str
+
+    def as_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
 def is_governed_autonomous_interest_instruction(instruction: str) -> bool:
     """Recognize the explicit operator request without treating every broad goal as one."""
 
@@ -109,6 +155,85 @@ def is_governed_autonomous_interest_instruction(instruction: str) -> bool:
         "continue developing your capabilities" in text
         and ("valuable thing" in text or "ask for approval" in text or "learn next" in text)
     )
+
+
+def is_persistent_developmental_agenda_instruction(instruction: str) -> bool:
+    text = " ".join(str(instruction or "").lower().split())
+    return "continue your governed developmental agenda" in text and "one goal at a time" in text
+
+
+def material_evidence_digest(
+    *,
+    capability_inventory: Sequence[Mapping[str, Any]],
+    sources: Sequence[Mapping[str, Any]],
+    outcome_history: Sequence[Mapping[str, Any]] = (),
+    cooldown_records: Sequence[Mapping[str, Any]] = (),
+    budgets: Mapping[str, Any] | None = None,
+) -> str:
+    """Exclude restart/presentation fields; include only eligibility-changing state."""
+
+    return _digest(
+        {
+            "capabilities": tuple(sorted(_digest(dict(item)) for item in capability_inventory)),
+            "sources": tuple(sorted(_digest(dict(item)) for item in sources)),
+            "outcomes": tuple(sorted(_digest(dict(item)) for item in outcome_history)),
+            "cooldowns": tuple(sorted(_digest(dict(item)) for item in cooldown_records)),
+            "budgets": dict(budgets or {}),
+        }
+    )
+
+
+def compile_persistent_developmental_agenda(
+    *,
+    operator_scope: str,
+    material_digest: str,
+    cycle_budget: int = 3,
+    proposal_budget: int = 3,
+    attempt_budget: int = 3,
+    failure_budget: int = 2,
+) -> PersistentDevelopmentalAgenda:
+    """Create the smallest agenda state; execution and persistence stay external."""
+
+    payload = {
+        "operator_scope": operator_scope,
+        "material_digest": material_digest,
+        "cycle_budget": cycle_budget,
+        "proposal_budget": proposal_budget,
+        "attempt_budget": attempt_budget,
+        "failure_budget": failure_budget,
+    }
+    agenda_id = stable_id("persistent-developmental-agenda", _digest(payload))
+    return PersistentDevelopmentalAgenda(
+        agenda_id=agenda_id, agenda_version="1", operator_scope=operator_scope, status="idle",
+        active_mission_id="", pending_proposal_id="", current_candidate_set_id="", completed_goal_ids=(),
+        blocked_goal_ids=(), rejected_proposal_ids=(), deferred_proposal_ids=(), cooldown_records=(),
+        evaluator_blockers=(), resource_blockers=(), recent_capability_updates=(), unresolved_gap_ids=(),
+        candidate_history=(), proposal_history=(), decision_history=(), mission_outcome_history=(),
+        cycle_count=0, successful_cycle_count=0, failed_cycle_count=0, rejected_cycle_count=0,
+        deferred_cycle_count=0, consecutive_failure_count=0, remaining_session_budget=cycle_budget,
+        remaining_attempt_budget=attempt_budget, remaining_proposal_budget=proposal_budget,
+        maximum_consecutive_failures=failure_budget,
+        last_material_evidence_digest=material_digest, last_rank_digest="", next_eligible_transition="compile_candidates",
+        exhaustion_reasons=(), created_at=utc_now(), updated_at=utc_now(), agenda_digest=_digest(payload),
+    )
+
+
+def agenda_state_is_valid(agenda: Mapping[str, Any]) -> bool:
+    required = {
+        "agenda_id", "status", "active_mission_id", "pending_proposal_id", "cycle_count",
+        "remaining_session_budget", "remaining_attempt_budget", "remaining_proposal_budget",
+        "maximum_consecutive_failures", "last_material_evidence_digest", "mission_outcome_history", "cooldown_records",
+    }
+    if not required.issubset(agenda):
+        return False
+    if int(agenda.get("remaining_session_budget") or 0) < 0 or int(agenda.get("remaining_proposal_budget") or 0) < 0:
+        return False
+    if agenda.get("active_mission_id") and agenda.get("pending_proposal_id"):
+        return False
+    return str(agenda.get("status") or "") in {
+        "idle", "compiling_candidates", "proposal_pending", "mission_active", "awaiting_mission_outcome", "awaiting_evaluator_authority",
+        "refreshing_evidence", "cooldown", "blocked", "exhausted", "paused", "completed_session",
+    }
 
 
 def source_records_from_state(
@@ -373,7 +498,8 @@ def compile_developmental_goal_proposal(
 
 
 __all__ = [
-    "MAX_CANDIDATE_INTERESTS", "DevelopmentalInterestCandidate", "DevelopmentalGoalProposal",
+    "MAX_CANDIDATE_INTERESTS", "DevelopmentalInterestCandidate", "DevelopmentalGoalProposal", "PersistentDevelopmentalAgenda",
     "is_governed_autonomous_interest_instruction", "source_records_from_state",
+    "is_persistent_developmental_agenda_instruction", "material_evidence_digest", "compile_persistent_developmental_agenda", "agenda_state_is_valid",
     "compile_developmental_interest_candidates", "compile_developmental_goal_proposal",
 ]
