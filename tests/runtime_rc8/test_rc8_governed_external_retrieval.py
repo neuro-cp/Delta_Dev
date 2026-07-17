@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import socket
+from urllib.error import HTTPError
 
 from orchestration.runtime.rc8_governed_external_retrieval import (
     ExternalRetrievalRequest,
@@ -14,6 +16,7 @@ from orchestration.runtime.rc8_governed_external_retrieval import (
     evaluate_retrieval_necessity,
     execute_mock_retrieval,
     execute_bounded_retrieval,
+    execute_bounded_transport_diagnostic,
     retrieval_foundation_report,
     retrieval_readiness_report,
     retrieval_safety_benchmark,
@@ -92,6 +95,67 @@ def test_rc8_bounded_retrieval_preserves_one_safe_text_response_with_injected_tr
     assert outcome.bundle is not None
     assert outcome.decision.retrieval_performed is True
     assert outcome.safety["live_network_call_performed"] is True
+
+
+def test_transport_diagnostic_preserves_metadata_without_reading_or_creating_source_content():
+    class Headers:
+        def get_content_type(self):
+            return "text/html"
+        def get(self, key):
+            return "123" if key == "Content-Length" else None
+
+    class Response:
+        headers = Headers()
+        status = 200
+        def geturl(self):
+            return "https://docs.python.org/3/"
+        def read(self, *_args):
+            raise AssertionError("transport diagnostic must not ingest content")
+        def __enter__(self):
+            return self
+        def __exit__(self, *_args):
+            return False
+
+    class Opener:
+        def open(self, request, timeout):
+            assert request.full_url == "https://docs.python.org/3/"
+            assert timeout == 8.0
+            return Response()
+
+    request = ExternalRetrievalRequest(stable_id("transport-ok"), "https://docs.python.org/3/", operator_approved=True)
+    diagnostic = execute_bounded_transport_diagnostic(
+        request,
+        env={RC8_RETRIEVAL_ENABLED_ENV: "true"},
+        resolver=lambda *_args, **_kwargs: (object(), object()),
+        opener=Opener(),
+    )
+    assert diagnostic.terminal_state == "diagnostic_completed"
+    assert diagnostic.response_length == 123
+    assert diagnostic.privacy_redaction_state == "no_credentials_or_response_body_persisted"
+
+
+def test_transport_diagnostic_classifies_dns_and_http_failures_without_source_records():
+    request = ExternalRetrievalRequest(stable_id("transport-dns"), "https://docs.python.org/3/", operator_approved=True)
+    dns = execute_bounded_transport_diagnostic(
+        request,
+        env={RC8_RETRIEVAL_ENABLED_ENV: "true"},
+        resolver=lambda *_args, **_kwargs: (_ for _ in ()).throw(socket.gaierror("dns unavailable")),
+    )
+    assert dns.normalized_exception_class == "dns_resolution_failure"
+    assert dns.systemic_indicator is True and dns.source_specific_indicator is False
+
+    class Opener:
+        def open(self, *_args, **_kwargs):
+            raise HTTPError("https://docs.python.org/3/", 503, "service unavailable", {}, None)
+
+    http = execute_bounded_transport_diagnostic(
+        request,
+        env={RC8_RETRIEVAL_ENABLED_ENV: "true"},
+        resolver=lambda *_args, **_kwargs: (object(),),
+        opener=Opener(),
+    )
+    assert http.normalized_exception_class == "http_server_error"
+    assert http.normalized_exception_code == "http_503"
 
 
 def test_rc8_hostile_content_is_detected_and_sanitized():

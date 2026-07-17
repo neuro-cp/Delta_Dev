@@ -16,6 +16,8 @@ import ipaddress
 import json
 from pathlib import Path
 import re
+import socket
+import ssl
 from urllib.parse import urlparse, urlunparse
 from urllib.error import HTTPError, URLError
 from urllib.request import HTTPRedirectHandler, Request, build_opener
@@ -246,6 +248,39 @@ class RetrievalExecutionResult:
     bundle: EvidenceBundle | None
     safety: Mapping[str, bool]
     failure_state: str = ""
+
+
+@dataclass(frozen=True)
+class ExternalTransportDiagnostic:
+    diagnostic_id: str
+    request_id: str
+    canonical_target: str
+    hostname: str
+    scheme: str
+    port: int
+    request_method: str
+    timeout_seconds: float
+    redirect_policy: str
+    dns_state: str
+    resolved_address_count: int
+    connection_state: str
+    tls_state: str
+    certificate_validation_state: str
+    http_status: int | None
+    response_content_type: str
+    response_length: int | None
+    normalized_exception_class: str
+    normalized_exception_code: str
+    bounded_error_message: str
+    source_specific_indicator: bool
+    systemic_indicator: bool
+    retryable: bool
+    privacy_redaction_state: str
+    terminal_state: str
+    diagnostic_digest: str
+
+    def as_dict(self) -> dict[str, Any]:
+        return asdict(self)
 
 
 def safety_metadata() -> dict[str, bool]:
@@ -514,6 +549,139 @@ def execute_bounded_retrieval(
     bundle = EvidenceBundle(stable_id("bundle", request.request_id, source_id), request.request_id, (source,), (assessment,), (citation,))
     performed = RetrievalDecision(decision.decision_id, decision.outcome, decision.reason, True, decision.permission, decision.risk)
     return RetrievalExecutionResult(performed, bundle, {**safety_metadata(), "live_network_call_performed": True})
+
+
+def _bounded_transport_message(exc: BaseException) -> str:
+    """Keep diagnostic text useful without retaining unbounded or credential-like data."""
+
+    text = CREDENTIAL_URL_PATTERN.sub("[REDACTED]", str(exc).replace("\r", " ").replace("\n", " "))
+    return text[:240]
+
+
+def _transport_failure_details(exc: BaseException) -> tuple[str, str, bool, bool, bool, str, str]:
+    if isinstance(exc, socket.gaierror):
+        return "dns_resolution_failure", "dns_resolution_failure", False, True, False, "dns_failed", "not_started"
+    if isinstance(exc, ConnectionRefusedError):
+        return "connection_refused", "connection_refused", False, True, False, "connection_refused", "not_started"
+    if isinstance(exc, ConnectionResetError):
+        return "connection_reset", "connection_reset", True, False, True, "connection_reset", "not_started"
+    if isinstance(exc, TimeoutError):
+        return "timeout", "timeout", True, False, True, "timeout", "not_started"
+    if isinstance(exc, ssl.SSLCertVerificationError):
+        return "tls_certificate_failure", "tls_certificate_failure", False, True, False, "connected", "certificate_rejected"
+    if isinstance(exc, ssl.SSLError):
+        return "tls_handshake_failure", "tls_handshake_failure", False, True, False, "connected", "handshake_failed"
+    if isinstance(exc, HTTPError):
+        code = int(exc.code)
+        if code == 429:
+            return "http_rate_limited", "http_429", True, True, False, "connected", "verified"
+        if 400 <= code < 500:
+            return "http_client_error", f"http_{code}", True, True, False, "connected", "verified"
+        return "http_server_error", f"http_{code}", True, True, False, "connected", "verified"
+    if isinstance(exc, URLError):
+        return "network_unreachable", "url_error", False, True, False, "connection_failed", "not_started"
+    if isinstance(exc, OSError):
+        return "network_unreachable", type(exc).__name__, False, True, False, "connection_failed", "not_started"
+    return "adapter_configuration_failure", type(exc).__name__, False, True, False, "not_started", "not_started"
+
+
+def execute_bounded_transport_diagnostic(
+    request: ExternalRetrievalRequest,
+    *,
+    env: Mapping[str, str] | None = None,
+    policy: RetrievalPolicy | None = None,
+    opener: Any | None = None,
+    resolver: Any | None = None,
+) -> ExternalTransportDiagnostic:
+    """Run one approved metadata-only GET without reading or retaining source content."""
+
+    policy = policy or build_retrieval_policy()
+    decision = decide_retrieval(request, env=env, policy=policy)
+    target = normalize_url(request.target)
+    parsed = urlparse(target)
+    host = _hostname(target)
+    port = parsed.port or 443
+    base = {
+        "request": request.request_id, "target": target, "host": host, "port": port,
+        "timeout": policy.budget.timeout_seconds, "redirect": "reject_any_redirect",
+    }
+    if decision.outcome != "RETRIEVAL_PERMITTED":
+        payload = {**base, "state": decision.outcome}
+        return ExternalTransportDiagnostic(
+            diagnostic_id=stable_id("transport-diagnostic", _digest_transport(payload)), request_id=request.request_id,
+            canonical_target=target, hostname=host, scheme=parsed.scheme, port=port, request_method="GET",
+            timeout_seconds=policy.budget.timeout_seconds, redirect_policy="reject_any_redirect", dns_state="not_attempted",
+            resolved_address_count=0, connection_state="not_attempted", tls_state="not_started", certificate_validation_state="not_started",
+            http_status=None, response_content_type="", response_length=None, normalized_exception_class="adapter_configuration_failure",
+            normalized_exception_code=decision.outcome, bounded_error_message=decision.reason[:240], source_specific_indicator=False,
+            systemic_indicator=True, retryable=False, privacy_redaction_state="no_credentials_or_response_body_persisted",
+            terminal_state="diagnostic_blocked", diagnostic_digest=_digest_transport(payload),
+        )
+    resolver = resolver or socket.getaddrinfo
+    try:
+        addresses = resolver(host, port, type=socket.SOCK_STREAM)
+    except BaseException as exc:
+        kind, code, retryable, systemic, source_specific, connection, tls = _transport_failure_details(exc)
+        payload = {**base, "kind": kind, "code": code}
+        return ExternalTransportDiagnostic(
+            diagnostic_id=stable_id("transport-diagnostic", _digest_transport(payload)), request_id=request.request_id,
+            canonical_target=target, hostname=host, scheme=parsed.scheme, port=port, request_method="GET",
+            timeout_seconds=policy.budget.timeout_seconds, redirect_policy="reject_any_redirect", dns_state="failed",
+            resolved_address_count=0, connection_state=connection, tls_state=tls, certificate_validation_state=tls,
+            http_status=None, response_content_type="", response_length=None, normalized_exception_class=kind,
+            normalized_exception_code=code, bounded_error_message=_bounded_transport_message(exc), source_specific_indicator=source_specific,
+            systemic_indicator=systemic, retryable=retryable, privacy_redaction_state="no_credentials_or_response_body_persisted",
+            terminal_state="diagnostic_failed", diagnostic_digest=_digest_transport(payload),
+        )
+    transport = opener or build_opener(_NoRedirect())
+    try:
+        response = transport.open(Request(target, method="GET", headers={"User-Agent": "DELTA-RC8-transport-diagnostic/1"}), timeout=policy.budget.timeout_seconds)
+        with response:
+            final_url = normalize_url(str(response.geturl() or target))
+            if final_url != target:
+                payload = {**base, "kind": "prohibited_redirect", "final": final_url}
+                return ExternalTransportDiagnostic(
+                    diagnostic_id=stable_id("transport-diagnostic", _digest_transport(payload)), request_id=request.request_id,
+                    canonical_target=target, hostname=host, scheme=parsed.scheme, port=port, request_method="GET",
+                    timeout_seconds=policy.budget.timeout_seconds, redirect_policy="reject_any_redirect", dns_state="resolved",
+                    resolved_address_count=len(addresses), connection_state="connected", tls_state="verified", certificate_validation_state="verified",
+                    http_status=None, response_content_type="", response_length=None, normalized_exception_class="prohibited_redirect",
+                    normalized_exception_code="redirect_rejected", bounded_error_message="redirect target omitted by policy", source_specific_indicator=True,
+                    systemic_indicator=False, retryable=True, privacy_redaction_state="no_credentials_or_response_body_persisted",
+                    terminal_state="diagnostic_failed", diagnostic_digest=_digest_transport(payload),
+                )
+            content_type = str(response.headers.get_content_type() or "").lower()
+            length_text = str(response.headers.get("Content-Length") or "")
+            length = int(length_text) if length_text.isdigit() else None
+            status = int(getattr(response, "status", 200) or 200)
+    except BaseException as exc:
+        kind, code, retryable, systemic, source_specific, connection, tls = _transport_failure_details(exc)
+        payload = {**base, "kind": kind, "code": code}
+        return ExternalTransportDiagnostic(
+            diagnostic_id=stable_id("transport-diagnostic", _digest_transport(payload)), request_id=request.request_id,
+            canonical_target=target, hostname=host, scheme=parsed.scheme, port=port, request_method="GET",
+            timeout_seconds=policy.budget.timeout_seconds, redirect_policy="reject_any_redirect", dns_state="resolved",
+            resolved_address_count=len(addresses), connection_state=connection, tls_state=tls, certificate_validation_state=tls,
+            http_status=getattr(exc, "code", None), response_content_type="", response_length=None, normalized_exception_class=kind,
+            normalized_exception_code=code, bounded_error_message=_bounded_transport_message(exc), source_specific_indicator=source_specific,
+            systemic_indicator=systemic, retryable=retryable, privacy_redaction_state="no_credentials_or_response_body_persisted",
+            terminal_state="diagnostic_failed", diagnostic_digest=_digest_transport(payload),
+        )
+    payload = {**base, "status": status, "content_type": content_type, "length": length}
+    return ExternalTransportDiagnostic(
+        diagnostic_id=stable_id("transport-diagnostic", _digest_transport(payload)), request_id=request.request_id,
+        canonical_target=target, hostname=host, scheme=parsed.scheme, port=port, request_method="GET",
+        timeout_seconds=policy.budget.timeout_seconds, redirect_policy="reject_any_redirect", dns_state="resolved",
+        resolved_address_count=len(addresses), connection_state="connected", tls_state="verified", certificate_validation_state="verified",
+        http_status=status, response_content_type=content_type, response_length=length, normalized_exception_class="",
+        normalized_exception_code="", bounded_error_message="", source_specific_indicator=False, systemic_indicator=False,
+        retryable=False, privacy_redaction_state="no_credentials_or_response_body_persisted", terminal_state="diagnostic_completed",
+        diagnostic_digest=_digest_transport(payload),
+    )
+
+
+def _digest_transport(value: Mapping[str, Any]) -> str:
+    return hashlib.sha256(json.dumps(value, sort_keys=True, default=str).encode("utf-8")).hexdigest()
 
 
 def retrieval_foundation_report() -> dict[str, Any]:

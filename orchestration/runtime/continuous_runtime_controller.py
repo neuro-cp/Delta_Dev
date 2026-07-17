@@ -105,8 +105,16 @@ from orchestration.runtime.developmental_resource_policy import (
     resource_policy_state_is_valid,
 )
 from orchestration.runtime.governed_external_research import (
+    ExternalResearchRetrievalError,
+    compile_adapter_repair_retry_candidate,
+    classify_terminal_research_failure,
     compile_execution_claim,
     compile_external_research_plan,
+    compile_fallback_external_research_plan,
+    compile_fallback_source_candidates,
+    compile_direct_topic_source_candidates,
+    compile_historical_transport_interpretation,
+    compile_retrieval_attempt,
     normalize_external_research_source,
     research_state_is_valid,
     synthesize_external_research_result,
@@ -1416,6 +1424,218 @@ def compile_governed_developmental_resource_policy(
     )
 
 
+def compile_failed_research_fallback_authority(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController:
+    """Offer at most one distinct source target after a durable target-specific failure."""
+
+    state = dict(controller.continuous_learning_state or {})
+    research = dict(state.get("external_research") or {})
+    plan = dict(research.get("plan") or {})
+    policy = dict(state.get("developmental_resource_policy") or {})
+    decision = dict(policy.get("decision") or {})
+    if not research_state_is_valid(research) or plan.get("status") != "research_failed" or research.get("claim", {}).get("claim_state") != "research_failed":
+        return replace(controller, continuous_mission_state="developmental_external_research_fallback_blocked", active_work_item="fallback_requires_terminal_failed_research", journal=controller.journal + (_journal_entry("external_research", "fallback_suppressed_without_terminal_failed_plan", (str(plan.get("research_plan_id") or ""),)),))
+    if dict(research.get("fallback") or {}).get("status") == "authority_pending":
+        return controller
+    retired_requests = tuple(
+        {
+            **dict(item),
+            "status": "blocked",
+            "resolution": "research_plan_terminal_failure",
+            "blocked_at": utc_now(),
+        }
+        if item.get("request_kind") == "developmental_resource_fulfillment"
+        and item.get("research_plan_id") == plan.get("research_plan_id")
+        and item.get("status") == "pending"
+        else dict(item)
+        for item in controller.continuous_developmental_insight_requests
+    )
+    failure = classify_terminal_research_failure(research)
+    interpretation = next(
+        (
+            dict(item)
+            for item in reversed(tuple(research.get("transport_diagnostic_interpretations") or ()))
+            if item.get("historical_failure_id") == failure.get("failure_id")
+        ),
+        {},
+    )
+    if interpretation.get("fallback_eligible"):
+        failure = {
+            **failure,
+            "normalized_failure_type": interpretation.get("derived_failure_type") or failure.get("normalized_failure_type"),
+            "source_specific": True,
+            "retryable": True,
+            "fallback_eligible": True,
+            "derived_interpretation_id": interpretation.get("interpretation_id"),
+        }
+    candidates = compile_fallback_source_candidates(plan, failure)
+    if not candidates:
+        blocked = {**research, "fallback": {"status": "fallback_ineligible", "failure": failure, "candidates": ()}}
+        return replace(controller, continuous_developmental_insight_requests=retired_requests, continuous_learning_state={**state, "external_research": blocked}, continuous_mission_state="developmental_external_research_fallback_blocked", active_work_item=str(failure.get("normalized_failure_type") or "fallback_ineligible"), journal=controller.journal + (_journal_entry("external_research", "fallback_suppressed_by_failure_classification", (str(failure.get("failure_id") or ""), str(failure.get("normalized_failure_type") or ""))),))
+    candidate = dict(candidates[0])
+    request_id = stable_id("developmental-external-research-fallback-authority", str(plan.get("research_plan_id") or ""), str(candidate.get("fallback_candidate_id") or ""))
+    fallback_plan = compile_fallback_external_research_plan(
+        prior_plan=plan,
+        failure=failure,
+        candidate=candidate,
+        authority_request_id=request_id,
+        operator_approval_id=request_id,
+    )
+    scope = f"one bounded fallback retrieval of {candidate['canonical_target']} for {plan.get('topic') or ''}; no provider, PCM, tracked-source, Git, deployment, or general web authority"
+    request = {
+        "request_id": request_id,
+        "request_kind": "developmental_resource_authority",
+        "policy_decision_id": decision.get("decision_id"),
+        "requirement_id": plan.get("requirement_id"),
+        "action_type": "request_external_research_authority",
+        "status": "pending",
+        "exact_question": f"The prior source {failure['source_target']} failed with {failure['normalized_failure_type']} and accepted no source. Approve one distinct fallback retrieval from {candidate['canonical_target']}?",
+        "rationale": "The original authority and claim remain terminal. This is a separate one-use plan for a materially distinct allowed source target.",
+        "evidence_refs": tuple(plan.get("information_need_ids") or ()),
+        "authority_scope": scope,
+        "permitted_responses": ("approve_scoped_authority", "reject_scoped_authority", "defer_resource_policy", "ask_for_clarification"),
+        "fallback_plan_id": fallback_plan.research_plan_id,
+        "prior_plan_id": plan.get("research_plan_id"),
+        "prior_failure_id": failure["failure_id"],
+        "created_at": utc_now(),
+    }
+    fallback = {
+        "status": "authority_pending",
+        "failure": failure,
+        "candidates": candidates,
+        "selected_candidate": candidate,
+        "plan": fallback_plan.as_dict(),
+        "authority_request_id": request_id,
+    }
+    return replace(
+        controller,
+        continuous_mission_state="awaiting_operator_insight",
+        active_work_item="awaiting_distinct_external_research_fallback_authority",
+        continuous_learning_state={**state, "external_research": {**research, "fallback": fallback}},
+        continuous_developmental_insight_requests=retired_requests + (request,),
+        journal=controller.journal + (_journal_entry("external_research", "distinct_fallback_authority_request_created", (fallback_plan.research_plan_id, request_id)),),
+    )
+
+
+def record_external_transport_diagnostic_interpretation(
+    controller: ContinuousRuntimeController,
+    diagnostics: Sequence[Mapping[str, Any]],
+) -> ContinuousRuntimeController:
+    """Append a derived interpretation without modifying the historical terminal failure."""
+
+    state = dict(controller.continuous_learning_state or {})
+    research = dict(state.get("external_research") or {})
+    if not research_state_is_valid(research):
+        return replace(controller, continuous_mission_state="developmental_external_research_blocked", active_work_item="invalid_research_state_before_transport_interpretation")
+    normalized_diagnostics = tuple(dict(item) for item in diagnostics)
+    interpretation = compile_historical_transport_interpretation(research, normalized_diagnostics)
+    existing = tuple(dict(item) for item in (research.get("transport_diagnostic_interpretations") or ()))
+    existing_diagnostics = tuple(dict(item) for item in (research.get("transport_diagnostics") or ()))
+    known_ids = {item.get("diagnostic_id") for item in existing_diagnostics}
+    appended_diagnostics = existing_diagnostics + tuple(item for item in normalized_diagnostics if item.get("diagnostic_id") not in known_ids)
+    interpretations = existing if any(item.get("interpretation_id") == interpretation["interpretation_id"] for item in existing) else existing + (interpretation,)
+    updated = {**research, "transport_diagnostics": appended_diagnostics, "transport_diagnostic_interpretations": interpretations}
+    return replace(
+        controller,
+        continuous_learning_state={**state, "external_research": updated},
+        journal=controller.journal + (_journal_entry("external_research", "transport_diagnostic_interpretation_persisted", (interpretation["interpretation_id"], interpretation["classification"])),),
+    )
+
+
+def compile_failed_research_adapter_repair_authority(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController:
+    """Request one corrected-locator retry after a proven adapter defect, never automatically."""
+
+    state = dict(controller.continuous_learning_state or {})
+    research = dict(state.get("external_research") or {})
+    plan = dict(research.get("plan") or {})
+    policy = dict(state.get("developmental_resource_policy") or {})
+    decision = dict(policy.get("decision") or {})
+    if not research_state_is_valid(research) or plan.get("status") != "research_failed" or research.get("claim", {}).get("claim_state") != "research_failed":
+        return replace(controller, continuous_mission_state="developmental_external_research_adapter_repair_blocked", active_work_item="adapter_repair_requires_terminal_failure")
+    failure = classify_terminal_research_failure(research)
+    candidate = compile_adapter_repair_retry_candidate(plan, failure, tuple(research.get("transport_diagnostics") or ()))
+    if not candidate:
+        return replace(controller, continuous_mission_state="developmental_external_research_adapter_repair_blocked", active_work_item="adapter_repair_retry_not_proven", journal=controller.journal + (_journal_entry("external_research", "adapter_repair_retry_suppressed", (str(plan.get("research_plan_id") or ""),)),))
+    request_id = stable_id("developmental-external-research-adapter-repair-authority", str(plan.get("research_plan_id") or ""), str(candidate["retry_candidate_id"]))
+    retry_plan = compile_fallback_external_research_plan(
+        prior_plan=plan,
+        failure=failure,
+        candidate={
+            "fallback_candidate_id": candidate["retry_candidate_id"], "canonical_target": candidate["canonical_target"],
+            "retrieval_target": candidate["retrieval_target"], "source_class": candidate["source_class"], "organization": candidate["organization"],
+        },
+        authority_request_id=request_id,
+        operator_approval_id=request_id,
+    )
+    scope = f"one corrected direct retrieval of {candidate['retrieval_target']} after adapter repair; no provider, PCM, tracked-source, Git, deployment, or general web authority"
+    request = {
+        "request_id": request_id, "request_kind": "developmental_resource_authority", "policy_decision_id": decision.get("decision_id"),
+        "requirement_id": plan.get("requirement_id"), "action_type": "request_external_research_authority", "status": "pending",
+        "exact_question": f"The prior OCW retrieval failed because the adapter removed required locator path semantics. Diagnostics confirm {candidate['retrieval_target']} is reachable. Approve one corrected direct retry?",
+        "rationale": "This is a separate one-use retry after a proven adapter defect, not reuse of either terminal research authority.",
+        "authority_scope": scope, "permitted_responses": ("approve_scoped_authority", "reject_scoped_authority", "defer_resource_policy", "ask_for_clarification"),
+        "fallback_plan_id": retry_plan.research_plan_id, "prior_plan_id": plan.get("research_plan_id"), "prior_failure_id": failure["failure_id"],
+        "created_at": utc_now(),
+    }
+    updated = {**research, "fallback": {"status": "authority_pending", "kind": "adapter_repair_retry", "candidate": candidate, "plan": retry_plan.as_dict(), "authority_request_id": request_id}}
+    return replace(
+        controller, continuous_mission_state="awaiting_operator_insight", active_work_item="awaiting_external_research_adapter_repair_authority",
+        continuous_learning_state={**state, "external_research": updated},
+        continuous_developmental_insight_requests=tuple(controller.continuous_developmental_insight_requests) + (request,),
+        journal=controller.journal + (_journal_entry("external_research", "adapter_repair_retry_authority_request_created", (retry_plan.research_plan_id, request_id)),),
+    )
+
+
+def compile_relevance_failed_direct_topic_authority(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController:
+    """Request one exact topic locator after a generic page fails relevance checks."""
+
+    state = dict(controller.continuous_learning_state or {})
+    research = dict(state.get("external_research") or {})
+    plan = dict(research.get("plan") or {})
+    policy = dict(state.get("developmental_resource_policy") or {})
+    decision = dict(policy.get("decision") or {})
+    if not research_state_is_valid(research) or research.get("status") != "research_validation_failed" or plan.get("status") != "research_validation_failed":
+        return replace(controller, continuous_mission_state="developmental_external_research_direct_target_blocked", active_work_item="direct_topic_target_requires_relevance_failure")
+    fallback = dict(research.get("fallback") or {})
+    if fallback.get("status") == "authority_pending":
+        return controller
+    candidates = compile_direct_topic_source_candidates(research)
+    if not candidates:
+        return replace(controller, continuous_mission_state="developmental_external_research_direct_target_blocked", active_work_item="no_untried_direct_topic_target", journal=controller.journal + (_journal_entry("external_research", "direct_topic_target_request_suppressed", (str(plan.get("research_plan_id") or ""),)),))
+    candidate = dict(candidates[0])
+    request_id = stable_id("developmental-external-research-direct-topic-authority", str(plan.get("research_plan_id") or ""), str(candidate.get("fallback_candidate_id") or ""))
+    direct_plan = compile_fallback_external_research_plan(
+        prior_plan=plan, failure={"failure_id": str(research.get("result", {}).get("research_result_id") or "")}, candidate=candidate,
+        authority_request_id=request_id, operator_approval_id=request_id,
+    )
+    scope = f"one direct allowlisted retrieval of {candidate['retrieval_target']} with required terms {candidate['required_topic_terms']}; no provider, PCM, tracked-source, Git, deployment, redirects, or general web authority"
+    request = {
+        "request_id": request_id, "request_kind": "developmental_resource_authority", "policy_decision_id": decision.get("decision_id"),
+        "requirement_id": plan.get("requirement_id"), "action_type": "request_external_research_authority", "status": "pending",
+        "exact_question": f"The approved host returned a generic page that could not prove relevance. Approve one exact topic-specific retrieval from {candidate['canonical_target']}?",
+        "rationale": "The target is an existing allowlisted MIT OpenCourseWare topic resource. Its exact locator and required topic terms are bound before retrieval; it remains advisory teaching evidence only.",
+        "evidence_refs": tuple(plan.get("information_need_ids") or ()), "authority_scope": scope,
+        "permitted_responses": ("approve_scoped_authority", "reject_scoped_authority", "defer_resource_policy", "ask_for_clarification"),
+        "fallback_plan_id": direct_plan.research_plan_id, "prior_plan_id": plan.get("research_plan_id"),
+        "prior_failure_id": str(research.get("result", {}).get("research_result_id") or ""), "created_at": utc_now(),
+    }
+    direct_fallback = {
+        "status": "authority_pending", "kind": "direct_topic_specific", "candidates": candidates,
+        "selected_candidate": candidate, "plan": direct_plan.as_dict(), "authority_request_id": request_id,
+    }
+    return replace(
+        controller, continuous_mission_state="awaiting_operator_insight", active_work_item="awaiting_direct_topic_external_research_authority",
+        continuous_learning_state={**state, "external_research": {**research, "fallback": direct_fallback}},
+        continuous_developmental_insight_requests=tuple(controller.continuous_developmental_insight_requests) + (request,),
+        journal=controller.journal + (_journal_entry("external_research", "direct_topic_authority_request_created", (direct_plan.research_plan_id, request_id)),),
+    )
+
+
 def _resource_authority_question(requirement: Mapping[str, Any], action_type: str) -> str:
     topic = str(requirement.get("topic") or "this bounded goal").replace("_", " ")
     target = str(requirement.get("target_behavior") or requirement.get("target_capability") or "the declared behavior")
@@ -1515,24 +1735,53 @@ def consume_developmental_resource_authority_response(
             }.get(action, action)
             updated_state["resource_policy_authorities"] = {**dict(state.get("resource_policy_authorities") or {}), authority_key: {"scope": approved_scope, "request_id": request_id, "granted_at": consumed_at}}
             if action == "request_external_research_authority":
-                plan = compile_external_research_plan(
-                    requirement=requirement,
-                    decision=decision,
-                    authority_request_id=request_id,
-                    operator_approval_id=request_id,
-                )
                 existing_research = dict(state.get("external_research") or {})
-                if existing_research and str(dict(existing_research.get("plan") or {}).get("semantic_identity") or "") == plan.semantic_identity:
-                    plan_state = existing_research
+                fallback = dict(existing_research.get("fallback") or {})
+                if request.get("fallback_plan_id"):
+                    plan = dict(fallback.get("plan") or {})
+                    if not plan or plan.get("research_plan_id") != request.get("fallback_plan_id") or plan.get("authority_request_id") != request_id:
+                        return replace(controller, journal=controller.journal + (_journal_entry("external_research", "fallback_approval_binding_mismatch", (request_id, str(request.get("fallback_plan_id") or ""))),))
+                    history_entry = {
+                        "plan": dict(existing_research.get("plan") or {}),
+                        "claim": dict(existing_research.get("claim") or {}),
+                        "retrieval_attempts": tuple(existing_research.get("retrieval_attempts") or ()),
+                        "source_records": tuple(existing_research.get("source_records") or ()),
+                        "result": dict(existing_research.get("result") or {}),
+                        "status": existing_research.get("status"),
+                    }
+                    plan_state = {
+                        "plan": plan,
+                        "claim": {},
+                        "retrieval_attempts": (),
+                        "source_records": (),
+                        "result": {},
+                        "status": "research_plan_compiled",
+                        "history": tuple(existing_research.get("history") or ()) + (history_entry,),
+                        "fallback_lineage": {
+                            "prior_plan_id": request.get("prior_plan_id"),
+                            "prior_failure_id": request.get("prior_failure_id"),
+                            "fallback_candidate_id": plan.get("fallback_candidate_id"),
+                        },
+                    }
                 else:
-                    plan_state = {"plan": plan.as_dict(), "claim": {}, "source_records": (), "result": {}, "status": "research_plan_compiled"}
+                    compiled_plan = compile_external_research_plan(
+                        requirement=requirement,
+                        decision=decision,
+                        authority_request_id=request_id,
+                        operator_approval_id=request_id,
+                    )
+                    if existing_research and str(dict(existing_research.get("plan") or {}).get("semantic_identity") or "") == compiled_plan.semantic_identity:
+                        plan_state = existing_research
+                    else:
+                        plan_state = {"plan": compiled_plan.as_dict(), "claim": {}, "source_records": (), "result": {}, "status": "research_plan_compiled"}
+                    plan = compiled_plan.as_dict()
                 fulfillment_request = {
-                    "request_id": stable_id("developmental-external-research-fulfillment", request_id, plan.research_plan_id),
+                    "request_id": stable_id("developmental-external-research-fulfillment", request_id, plan["research_plan_id"]),
                     "request_kind": "developmental_resource_fulfillment",
                     "authority_request_id": request_id,
                     "policy_decision_id": decision.get("decision_id"),
                     "requirement_id": requirement.get("requirement_id"), "action_type": action,
-                    "research_plan_id": plan.research_plan_id, "status": "pending",
+                    "research_plan_id": plan["research_plan_id"], "status": "pending",
                     "exact_question": "The approved bounded external-research plan is persisted. Execute only through the governed claim-before-call path; accepted sources remain advisory teaching evidence.",
                     "rationale": "One approved authority binds one plan, budgets, allowed domains, provenance requirements, and independent evaluator separation.",
                     "authority_scope": approved_scope,
@@ -1541,7 +1790,7 @@ def consume_developmental_resource_authority_response(
                 }
                 updated_state.update({
                     "external_research": plan_state,
-                    "developmental_resource_policy": {**policy_update, "status": "research_plan_compiled", "research_plan_id": plan.research_plan_id},
+                    "developmental_resource_policy": {**policy_update, "status": "research_plan_compiled", "research_plan_id": plan["research_plan_id"]},
                 })
                 return replace(
                     controller,
@@ -1550,7 +1799,7 @@ def consume_developmental_resource_authority_response(
                     continuous_learning_state=updated_state,
                     continuous_mission_state="developmental_external_research_plan_ready",
                     active_work_item="persist_external_research_claim_before_call",
-                    journal=controller.journal + (_journal_entry("developmental_resource_policy", "approved_external_research_plan_persisted", (request_id, plan.research_plan_id)),),
+                    journal=controller.journal + (_journal_entry("developmental_resource_policy", "approved_external_research_plan_persisted", (request_id, plan["research_plan_id"])),),
                 )
             fulfillment_request = {
                 "request_id": stable_id("developmental-resource-fulfillment-request", request_id),
@@ -1604,6 +1853,51 @@ def claim_developmental_external_research_execution(
     return replace(controller, continuous_learning_state={**state, "external_research": updated}, continuous_mission_state="developmental_external_research_claimed", active_work_item="restart_or_confirm_external_research_claim", journal=controller.journal + (_journal_entry("external_research", "execution_claim_persisted_before_external_call", (claim.claim_id, plan["research_plan_id"])),))
 
 
+def reconcile_terminal_external_research_requests(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController:
+    """Close stale fulfillment requests whenever their exact research plan is terminally unusable."""
+
+    state = dict(controller.continuous_learning_state or {})
+    research = dict(state.get("external_research") or {})
+    plan = dict(research.get("plan") or {})
+    status = str(research.get("status") or plan.get("status") or "")
+    if status not in {"research_failed", "research_validation_failed", "research_partially_completed", "research_budget_exhausted"}:
+        return controller
+    changed = False
+    requests = []
+    for item in controller.continuous_developmental_insight_requests:
+        current = dict(item)
+        if current.get("request_kind") == "developmental_resource_fulfillment" and current.get("research_plan_id") == plan.get("research_plan_id") and current.get("status") == "pending":
+            current.update({"status": "blocked", "resolution": "research_plan_terminal_validation_failure", "blocked_at": utc_now()})
+            changed = True
+        requests.append(current)
+    if not changed:
+        return controller
+    return replace(controller, continuous_developmental_insight_requests=tuple(requests), journal=controller.journal + (_journal_entry("external_research", "terminal_research_fulfillment_request_reconciled", (str(plan.get("research_plan_id") or ""), status)),))
+
+
+def claim_developmental_external_research_retrieval(
+    controller: ContinuousRuntimeController,
+    *,
+    adapter_identity: str,
+) -> ContinuousRuntimeController:
+    """Persist one exact retrieval attempt before invoking the RC8 adapter."""
+
+    state = dict(controller.continuous_learning_state or {})
+    research = dict(state.get("external_research") or {})
+    plan = dict(research.get("plan") or {})
+    claim = dict(research.get("claim") or {})
+    existing = tuple(dict(item) for item in (research.get("retrieval_attempts") or ()))
+    if not research_state_is_valid(research) or not plan or not claim or claim.get("claim_state") != "research_execution_claimed" or str(claim.get("adapter_identity") or "") != adapter_identity:
+        return replace(controller, continuous_mission_state="developmental_external_research_blocked", active_work_item="external_research_retrieval_claim_not_permitted", journal=controller.journal + (_journal_entry("external_research", "retrieval_claim_suppressed_without_durable_execution_claim", (str(claim.get("claim_id") or ""),)),))
+    if existing:
+        return controller
+    attempt = compile_retrieval_attempt(plan, claim, adapter_identity=adapter_identity)
+    updated = {**research, "retrieval_attempts": (attempt.as_dict(),), "status": "research_in_progress", "plan": {**plan, "status": "research_in_progress"}}
+    return replace(controller, continuous_learning_state={**state, "external_research": updated}, continuous_mission_state="developmental_external_research_retrieval_claimed", active_work_item="restart_or_confirm_external_retrieval_claim", journal=controller.journal + (_journal_entry("external_research", "retrieval_attempt_persisted_before_external_call", (attempt.retrieval_attempt_id, attempt.target_reference)),))
+
+
 def execute_claimed_developmental_external_research(
     controller: ContinuousRuntimeController,
     *,
@@ -1623,33 +1917,70 @@ def execute_claimed_developmental_external_research(
     claim = dict(research.get("claim") or {})
     if claim.get("claim_state") in {"research_completed", "research_partially_completed", "research_failed", "research_interrupted", "research_validation_failed", "research_budget_exhausted"}:
         return controller
-    if not research_state_is_valid(research) or not plan or not claim or claim.get("claim_state") != "research_execution_claimed":
+    retrieval_attempt = next((dict(item) for item in (research.get("retrieval_attempts") or ()) if item.get("status") == "retrieval_claimed"), {})
+    if not research_state_is_valid(research) or not plan or not claim or claim.get("claim_state") != "research_execution_claimed" or not retrieval_attempt:
         return replace(controller, continuous_mission_state="developmental_external_research_blocked", active_work_item="external_research_claim_not_durable", journal=controller.journal + (_journal_entry("external_research", "external_call_suppressed_without_durable_claim", (str(plan.get("research_plan_id") or ""),)),))
     if str(claim.get("adapter_identity") or "") != adapter_identity:
         return replace(controller, continuous_mission_state="developmental_external_research_blocked", active_work_item="external_research_adapter_identity_mismatch", journal=controller.journal + (_journal_entry("external_research", "adapter_identity_mismatch", (str(claim.get("claim_id") or ""),)),))
     try:
         raw_sources = tuple(adapter(dict(plan)))
     except Exception as exc:
-        failed = {**research, "status": "research_failed", "claim": {**claim, "claim_state": "research_failed", "failure_state": type(exc).__name__}, "plan": {**plan, "status": "research_failed"}, "result": {"status": "research_failed", "failure": type(exc).__name__}}
-        return replace(controller, continuous_learning_state={**state, "external_research": failed}, continuous_mission_state="developmental_external_research_failed", active_work_item="external_research_failure_recorded", journal=controller.journal + (_journal_entry("external_research", "retrieval_failure_persisted_without_fabricated_source", (str(claim.get("claim_id") or ""), type(exc).__name__)),))
+        failure_state = exc.failure_state if isinstance(exc, ExternalResearchRetrievalError) else type(exc).__name__
+        failed_attempts = tuple({**dict(item), "status": "retrieval_failed", "failure_state": failure_state} for item in (research.get("retrieval_attempts") or ()))
+        failed = {
+            **research,
+            "status": "research_failed",
+            "retrieval_attempts": failed_attempts,
+            "claim": {**claim, "claim_state": "research_failed", "failure_state": failure_state},
+            "plan": {**plan, "status": "research_failed"},
+            "result": {"status": "research_failed", "failure_state": failure_state},
+        }
+        retired_requests = tuple(
+            {
+                **dict(item),
+                "status": "blocked",
+                "resolution": "research_plan_terminal_failure",
+                "blocked_at": utc_now(),
+            }
+            if item.get("request_kind") == "developmental_resource_fulfillment"
+            and item.get("research_plan_id") == plan.get("research_plan_id")
+            and item.get("status") == "pending"
+            else dict(item)
+            for item in controller.continuous_developmental_insight_requests
+        )
+        return replace(controller, continuous_developmental_insight_requests=retired_requests, continuous_learning_state={**state, "external_research": failed}, continuous_mission_state="developmental_external_research_failed", active_work_item="external_research_failure_recorded", journal=controller.journal + (_journal_entry("external_research", "retrieval_failure_persisted_without_fabricated_source", (str(claim.get("claim_id") or ""), failure_state)),))
     existing = tuple(dict(item) for item in research.get("source_records") or ())
     retrieval_budget = int(plan.get("retrieval_budget") or 0)
     limited = raw_sources[:retrieval_budget]
     budget_exhausted = len(raw_sources) > retrieval_budget
     records = tuple(normalize_external_research_source(plan, item, existing=existing) for item in limited)
     combined = existing + tuple(item.as_dict() for item in records)
-    result = synthesize_external_research_result(plan, combined)
+    completed_attempts = tuple({**dict(item), "status": "retrieval_completed"} for item in (research.get("retrieval_attempts") or ()))
+    result = synthesize_external_research_result(plan, combined, retrieval_attempts=completed_attempts)
     if budget_exhausted:
         result = {
             **result,
             "status": "research_partially_completed" if result["accepted_source_ids"] else "research_budget_exhausted",
             "stopping_reason": "retrieval_budget_exhausted",
         }
-    completed_research = {**research, "source_records": combined, "result": result, "status": result["status"], "claim": {**claim, "claim_state": result["status"], "terminal_result_id": result["research_result_id"]}, "plan": {**plan, "status": result["status"]}}
+    completed_research = {**research, "retrieval_attempts": completed_attempts, "source_records": combined, "result": result, "status": result["status"], "claim": {**claim, "claim_state": result["status"], "terminal_result_id": result["research_result_id"]}, "plan": {**plan, "status": result["status"]}}
     prepared = replace(controller, continuous_learning_state={**state, "external_research": completed_research}, journal=controller.journal + (_journal_entry("external_research", "bounded_source_acquisition_completed", (str(plan.get("research_plan_id") or ""), result["research_result_id"])),))
     request = next((dict(item) for item in prepared.continuous_developmental_insight_requests if item.get("request_kind") == "developmental_resource_fulfillment" and item.get("research_plan_id") == plan.get("research_plan_id") and item.get("status") == "pending"), {})
     if result["status"] != "research_completed" or not request:
-        return replace(prepared, continuous_mission_state="developmental_external_research_incomplete", active_work_item="external_research_remaining_blocker")
+        retired_requests = tuple(
+            {
+                **dict(item),
+                "status": "blocked",
+                "resolution": "research_plan_terminal_validation_failure",
+                "blocked_at": utc_now(),
+            }
+            if item.get("request_kind") == "developmental_resource_fulfillment"
+            and item.get("research_plan_id") == plan.get("research_plan_id")
+            and item.get("status") == "pending"
+            else dict(item)
+            for item in prepared.continuous_developmental_insight_requests
+        )
+        return replace(prepared, continuous_developmental_insight_requests=retired_requests, continuous_mission_state="developmental_external_research_incomplete", active_work_item="external_research_remaining_blocker")
     requirement = dict(dict(prepared.continuous_learning_state.get("developmental_resource_policy") or {}).get("requirement") or {})
     material = {
         "fulfillment_type": "external_research_fulfillment", "source_identity": result["research_result_id"], "source_type": "authorized_external_research",
@@ -3359,7 +3690,7 @@ def restore_continuous_mission_restart_state(
         }
     if invalid_research:
         learning_state["external_research"] = {"status": "research_validation_failed", "failure_reason": "invalid_external_research_state_on_restart"}
-    return replace(
+    recovered = replace(
         controller,
         continuous_mission_state="developmental_agenda_blocked" if invalid_agenda else "developmental_resource_policy_blocked" if invalid_policy or invalid_fulfillments else "developmental_external_research_blocked" if invalid_research else str(restart_state.get("continuous_mission_state") or ""),
         continuous_mission_contract=dict(restart_state.get("continuous_mission_contract") or {}),
@@ -3384,6 +3715,7 @@ def restore_continuous_mission_restart_state(
         active_work_item="developmental_agenda_blocked" if invalid_agenda else "developmental_resource_policy_blocked" if invalid_policy or invalid_fulfillments else "developmental_external_research_blocked" if invalid_research else str(restart_state.get("active_work_item") or ""),
         journal=tuple(controller.journal) + (_journal_entry("continuous_mission", "invalid_agenda_restart_failed_closed" if invalid_agenda else "invalid_resource_policy_restart_failed_closed" if invalid_policy else "invalid_resource_fulfillment_restart_failed_closed" if invalid_fulfillments else "invalid_external_research_restart_failed_closed" if invalid_research else "continuous_mission_restart_state_restored", (str(restart_state.get("continuous_mission_state") or ""),)),),
     )
+    return reconcile_terminal_external_research_requests(recovered)
 
 
 def run_bounded_long_run(controller: ContinuousRuntimeController, *, cycles: int = 30) -> tuple[ContinuousRuntimeController, dict[str, Any]]:
