@@ -95,10 +95,13 @@ from orchestration.runtime.developmental_interest import (
 )
 from orchestration.runtime.developmental_resource_policy import (
     REQUEST_ACTIONS,
+    DevelopmentalResourceAuthorityFulfillment,
+    compile_developmental_resource_authority_fulfillment,
     compile_developmental_resource_authority_requirement,
     compile_resource_authority_decision,
     compile_resource_policy_candidates,
     observe_developmental_resources,
+    resource_fulfillment_state_is_valid,
     resource_policy_state_is_valid,
 )
 
@@ -1344,6 +1347,11 @@ def compile_governed_developmental_resource_policy(
         has_alternative=bool(eligible_alternatives),
         external_authority_granted=bool(authority.get("external_research")),
         execution_authority_granted=bool(authority.get("execution")),
+        prefer_operator_teaching=any(
+            item.get("status") == "validated" and item.get("fulfillment_type") == "operator_sealed_evaluator_fulfillment"
+            for item in (state.get("developmental_resource_fulfillments") or ())
+            if isinstance(item, Mapping)
+        ),
     )
     decision = compile_resource_authority_decision(requirement, candidates)
     policy = {
@@ -1460,6 +1468,8 @@ def consume_developmental_resource_authority_response(
         follow_up = {**request, "request_id": stable_id("developmental-resource-policy-clarification", request_id), "status": "pending", "exact_question": f"What bounded clarification is needed for: {request.get('exact_question', '')}", "permitted_responses": ("approve_scoped_authority", "reject_scoped_authority", "defer_resource_policy"), "created_at": consumed_at}
         return replace(controller, continuous_developmental_insight_requests=updated_requests + (follow_up,), continuous_operator_interaction_responses=tuple(controller.continuous_operator_interaction_responses) + (response,), continuous_learning_state={**state, "developmental_resource_policy": {**policy, "status": "clarification_requested"}}, continuous_mission_state="awaiting_operator_insight")
     if selected_option == "approve_scoped_authority":
+        if not approved_scope or approved_scope != str(request.get("authority_scope") or ""):
+            return replace(controller, journal=controller.journal + (_journal_entry("developmental_resource_policy", "authority_response_scope_mismatch", (request_id,)),))
         action = str(decision.get("action_type") or "")
         policy_update = {**policy, "status": "authority_granted", "approved_authority": {"request_id": request_id, "action_type": action, "scope": approved_scope, "granted_at": consumed_at}}
         updated_state = {**state, "developmental_resource_policy": policy_update}
@@ -1473,6 +1483,21 @@ def consume_developmental_resource_authority_response(
                 mission_information_need_identity=str(requirement.get("semantic_identity") or ""), question_objective=str(requirement.get("target_capability") or ""),
             )
             updated_state.update({"local_model_request": model_request, "local_model_execution_count": int(model_request.get("execution_attempt_count") or 0), "developmental_resource_policy": {**policy_update, "status": "local_model_request_pending", "decision": {**decision, "target_request_id": model_request["request_id"], "status": "authority_granted"}}})
+            fulfillment_request = {
+                "request_id": stable_id("developmental-resource-local-model-result", request_id, model_request["request_id"]),
+                "request_kind": "developmental_resource_fulfillment",
+                "authority_request_id": request_id,
+                "policy_decision_id": decision.get("decision_id"),
+                "requirement_id": requirement.get("requirement_id"),
+                "action_type": action,
+                "local_model_request_id": model_request["request_id"],
+                "status": "pending",
+                "exact_question": "Await the existing shared local-model result. Its completed result may be observed as advisory teaching evidence only.",
+                "rationale": "The controller does not execute the model or promote capability from model prose.",
+                "authority_scope": approved_scope,
+                "permitted_responses": ("observe_completed_local_model_result", "defer_fulfillment"),
+                "created_at": consumed_at,
+            }
             next_state, work = "learning_local_model_request_pending", "awaiting_shared_local_model_approval"
         else:
             authority_key = {
@@ -1482,11 +1507,214 @@ def consume_developmental_resource_authority_response(
                 "request_execution_authority": "execution",
             }.get(action, action)
             updated_state["resource_policy_authorities"] = {**dict(state.get("resource_policy_authorities") or {}), authority_key: {"scope": approved_scope, "request_id": request_id, "granted_at": consumed_at}}
+            fulfillment_request = {
+                "request_id": stable_id("developmental-resource-fulfillment-request", request_id),
+                "request_kind": "developmental_resource_fulfillment",
+                "authority_request_id": request_id,
+                "policy_decision_id": decision.get("decision_id"),
+                "requirement_id": requirement.get("requirement_id"),
+                "action_type": action,
+                "status": "pending",
+                "exact_question": "Supply one structured, scope-bound fulfillment for the approved resource authority. The material will be validated before the original goal may resume.",
+                "rationale": "Approval grants only the exact authority scope; supplied teaching and evaluator material remain separate and must pass provenance, integrity, and scope validation.",
+                "authority_scope": approved_scope,
+                "permitted_responses": ("supply_fulfillment", "reject_fulfillment", "defer_fulfillment", "ask_for_clarification"),
+                "created_at": consumed_at,
+            }
+            updated_state["developmental_resource_policy"] = {**policy_update, "status": "awaiting_fulfillment"}
             next_state, work = "developmental_resource_authority_granted_pending_material", "awaiting_authorized_resource_or_evaluator_material"
-        return replace(controller, continuous_developmental_insight_requests=updated_requests, continuous_operator_interaction_responses=tuple(controller.continuous_operator_interaction_responses) + (response,), continuous_learning_state=updated_state, continuous_mission_state=next_state, active_work_item=work, journal=controller.journal + (_journal_entry("developmental_resource_policy", "scoped_authority_consumed_without_execution", (request_id, action)),))
+            return replace(
+                controller,
+                continuous_developmental_insight_requests=updated_requests + (fulfillment_request,),
+                continuous_operator_interaction_responses=tuple(controller.continuous_operator_interaction_responses) + (response,),
+                continuous_learning_state=updated_state,
+                continuous_mission_state=next_state,
+                active_work_item=work,
+                journal=controller.journal + (_journal_entry("developmental_resource_policy", "scoped_authority_consumed_pending_typed_fulfillment", (request_id, action)),),
+            )
+        return replace(controller, continuous_developmental_insight_requests=updated_requests + (fulfillment_request,), continuous_operator_interaction_responses=tuple(controller.continuous_operator_interaction_responses) + (response,), continuous_learning_state=updated_state, continuous_mission_state=next_state, active_work_item=work, journal=controller.journal + (_journal_entry("developmental_resource_policy", "scoped_authority_consumed_without_execution", (request_id, action)),))
     policy_update = {**policy, "status": "deferred" if selected_option == "defer_resource_policy" else "rejected", "operator_disposition": {"request_id": request_id, "selected_option": selected_option, "at": consumed_at}}
     updated = replace(controller, continuous_developmental_insight_requests=updated_requests, continuous_operator_interaction_responses=tuple(controller.continuous_operator_interaction_responses) + (response,), continuous_learning_state={**state, "developmental_resource_policy": policy_update}, continuous_mission_state="developmental_resource_policy_deferred" if selected_option == "defer_resource_policy" else "developmental_resource_policy_rejected", active_work_item="resource_policy_agenda_refresh")
     return observe_developmental_agenda_mission_outcome(updated, outcome_id=stable_id("resource-policy-outcome", str(decision.get("decision_id") or ""), selected_option), outcome="resource_blocked", evidence_refs=(str(decision.get("decision_id") or ""), selected_option))
+
+
+def _fulfillment_learning_bundle(
+    requirement: Mapping[str, Any],
+    fulfillment: DevelopmentalResourceAuthorityFulfillment,
+    supplied: Mapping[str, Any],
+    existing_bundle: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Merge validated material into the existing bundle shape, preserving roles."""
+
+    base = dict(existing_bundle or load_retained_learning_bundle(str(requirement.get("domain") or ""), str(requirement.get("topic") or "")) or {})
+    material = dict(supplied)
+    provenance = tuple(base.get("resource_provenance") or ()) + ({
+        "fulfillment_id": fulfillment.fulfillment_id,
+        "source_identity": fulfillment.source_identity,
+        "source_digest": fulfillment.source_digest,
+        "intended_role": fulfillment.intended_role,
+    },)
+    if fulfillment.fulfillment_type == "operator_teaching_resource_fulfillment":
+        base["study_resources"] = tuple(base.get("study_resources") or ()) + tuple(dict(item) for item in (material.get("study_resources") or ()))
+        base["assessment_dimensions"] = tuple(base.get("assessment_dimensions") or ()) + tuple(dict(item) for item in (material.get("assessment_dimensions") or ()))
+        base["capability_catalog"] = tuple(dict.fromkeys(tuple(base.get("capability_catalog") or ()) + tuple(str(item) for item in (material.get("capability_catalog") or ()))))
+    elif fulfillment.fulfillment_type == "operator_sealed_evaluator_fulfillment":
+        base["sealed_evaluation_cases"] = tuple(dict(item) for item in (material.get("sealed_evaluation_cases") or ()))
+        base["independent_evaluator"] = dict(material.get("independent_evaluator") or {})
+    elif fulfillment.fulfillment_type == "local_model_result_fulfillment":
+        mission = compile_developmental_mission_contract(f"Learn {str(requirement.get('topic') or '').replace('_', ' ')}.")
+        request = {
+            "request_id": str(material.get("request_id") or fulfillment.authority_request_id),
+            "request_digest": fulfillment.semantic_identity,
+            "model_identity": str(material.get("model_identity") or ""),
+            "adapter_identity": str(material.get("adapter_identity") or ""),
+        }
+        result = {
+            "result_id": fulfillment.source_identity,
+            "response_digest": str(material.get("response_digest") or fulfillment.source_digest),
+            "response_reference": str(material.get("response_reference") or ""),
+            "model_identity": str(material.get("model_identity") or ""),
+            "adapter_identity": str(material.get("adapter_identity") or ""),
+            "provenance": {"request_id": fulfillment.authority_request_id},
+        }
+        if mission is not None:
+            evidence = compile_mission_bound_advisory_learning_evidence(mission, compile_mission_information_need(mission), request, result)
+            provisional = compile_provisional_learning_bundle_from_advisory(mission, evidence)
+            if provisional is not None:
+                base = provisional
+    base.update({
+        "resource_bundle_id": stable_id("fulfilled-learning-bundle", str(base.get("resource_bundle_id") or ""), fulfillment.fulfillment_id),
+        "resource_provenance": provenance,
+        "fulfillment_reference": fulfillment.fulfillment_id,
+    })
+    return base
+
+
+def consume_developmental_resource_fulfillment(
+    controller: ContinuousRuntimeController,
+    *,
+    request_id: str,
+    selected_option: str,
+    supplied: Mapping[str, Any] | None = None,
+    operator_text: str = "",
+) -> ContinuousRuntimeController:
+    """Validate one material response, resolve only its matching blocker, and resume once."""
+
+    requests = tuple(dict(item) for item in controller.continuous_developmental_insight_requests)
+    index = next((position for position, item in enumerate(requests) if item.get("request_id") == request_id and item.get("request_kind") == "developmental_resource_fulfillment" and item.get("status") == "pending"), -1)
+    if index < 0:
+        return replace(controller, journal=controller.journal + (_journal_entry("developmental_resource_policy", "duplicate_or_unknown_fulfillment_suppressed", (request_id,)),))
+    request = requests[index]
+    if selected_option not in tuple(request.get("permitted_responses") or ()):
+        return replace(controller, journal=controller.journal + (_journal_entry("developmental_resource_policy", "invalid_fulfillment_response_rejected", (request_id, selected_option)),))
+    state = dict(controller.continuous_learning_state or {})
+    policy = dict(state.get("developmental_resource_policy") or {})
+    requirement = dict(policy.get("requirement") or {})
+    decision = dict(policy.get("decision") or {})
+    authority_request_id = str(request.get("authority_request_id") or "")
+    if not requirement or str(request.get("policy_decision_id") or "") != str(decision.get("decision_id") or ""):
+        return replace(controller, journal=controller.journal + (_journal_entry("developmental_resource_policy", "fulfillment_identity_mismatch", (request_id,)),))
+    material = dict(supplied or {})
+    if selected_option == "observe_completed_local_model_result":
+        model_request_id = str(request.get("local_model_request_id") or "")
+        try:
+            model_request = LocalModelRequestResultLedger().observe_request(model_request_id)
+            model_result = LocalModelRequestResultLedger().observe_result(str(model_request.get("result_id") or ""))
+        except (KeyError, RuntimeError):
+            model_request, model_result = {}, {}
+        material = {
+            "fulfillment_type": "local_model_result_fulfillment",
+            "source_identity": str(model_result.get("result_id") or model_request_id),
+            "source_type": "shared_local_model_result",
+            "source_reference": str(model_result.get("result_id") or model_request_id),
+            "source_digest": str(model_result.get("response_digest") or ""),
+            "provenance": (str(model_request.get("request_id") or ""), str(model_result.get("result_id") or "")),
+            "request_id": str(model_request.get("request_id") or ""),
+            "topic": str(requirement.get("topic") or ""),
+            "target_capability": str(requirement.get("target_capability") or ""),
+            "intended_role": "advisory_teaching_evidence",
+            "lifecycle_state": str(model_request.get("lifecycle_state") or ""),
+            "execution_attempt_count": int(model_request.get("execution_attempt_count") or 0),
+            "response_digest": str(model_result.get("response_digest") or ""),
+            "response_reference": str(model_result.get("response_reference") or ""),
+            "model_identity": str(model_result.get("model_identity") or ""),
+            "adapter_identity": str(model_result.get("adapter_identity") or ""),
+        }
+    if selected_option == "reject_fulfillment":
+        material = {**material, "fulfillment_type": "fulfillment_rejected"}
+    elif selected_option == "defer_fulfillment":
+        material = {**material, "fulfillment_type": "fulfillment_deferred"}
+    elif selected_option == "ask_for_clarification":
+        material = {**material, "fulfillment_type": "partial_fulfillment", "partial_sections": ("operator_clarification_required",)}
+    fulfillment = compile_developmental_resource_authority_fulfillment(
+        requirement,
+        decision,
+        authority_request_id=authority_request_id,
+        operator_interaction_id=request_id,
+        supplied=material,
+    )
+    existing = tuple(dict(item) for item in (state.get("developmental_resource_fulfillments") or ()))
+    duplicate = next((item for item in existing if item.get("semantic_identity") == fulfillment.semantic_identity and item.get("status") == fulfillment.status), None)
+    if duplicate is not None:
+        return replace(controller, journal=controller.journal + (_journal_entry("developmental_resource_policy", "equivalent_fulfillment_replay_suppressed", (request_id, str(duplicate.get("fulfillment_id") or ""))),))
+    consumed_at = utc_now()
+    resolved = {**request, "status": "consumed", "resolution": selected_option, "consumed_at": consumed_at}
+    responses = tuple(controller.continuous_operator_interaction_responses) + ({
+        "request_id": request_id, "response_kind": "developmental_resource_fulfillment", "selected_option": selected_option,
+        "operator_text": operator_text, "authority_granted": False, "created_at": consumed_at, "consumed_at": consumed_at,
+    },)
+    base_state = {
+        **state,
+        "developmental_resource_fulfillments": existing + (fulfillment.as_dict(),),
+        "developmental_resource_policy": {**policy, "status": "fulfillment_validated" if fulfillment.status == "validated" else fulfillment.status, "fulfillment_id": fulfillment.fulfillment_id},
+    }
+    if fulfillment.fulfillment_type == "local_model_result_fulfillment":
+        base_state["local_model_execution_count"] = int(material.get("execution_attempt_count") or 0)
+        base_state["local_model_result_reference"] = {
+            "result_id": fulfillment.source_identity,
+            "response_digest": str(material.get("response_digest") or fulfillment.source_digest),
+            "response_reference": str(material.get("response_reference") or ""),
+            "model_identity": str(material.get("model_identity") or ""),
+        }
+    updated = replace(
+        controller,
+        continuous_developmental_insight_requests=requests[:index] + (resolved,) + requests[index + 1 :],
+        continuous_operator_interaction_responses=responses,
+        continuous_learning_state=base_state,
+        journal=controller.journal + (_journal_entry("developmental_resource_policy", "typed_fulfillment_validated" if fulfillment.status == "validated" else "typed_fulfillment_did_not_resolve_blocker", (fulfillment.fulfillment_id, fulfillment.status)),),
+    )
+    if fulfillment.status != "validated":
+        status = "developmental_resource_fulfillment_deferred" if fulfillment.fulfillment_type == "fulfillment_deferred" else "developmental_resource_fulfillment_invalid"
+        return replace(updated, continuous_mission_state=status, active_work_item="resource_blocker_remains_active", continuous_active_subgoal={})
+    bundle = _fulfillment_learning_bundle(requirement, fulfillment, material, state.get("retained_bundle"))
+    instruction = f"Learn {str(requirement.get('topic') or '').replace('_', ' ')}."
+    resumed = attach_developmental_learning_mission(updated, instruction, bundle)
+    resumed_state = {
+        **base_state,
+        **dict(resumed.continuous_learning_state or {}),
+        "developmental_resource_fulfillments": base_state["developmental_resource_fulfillments"],
+        "developmental_resource_policy": {**base_state["developmental_resource_policy"], "status": "blocker_resolved", "resumed_mission_id": str((resumed.continuous_learning_state or {}).get("mission", {}).get("mission_id") or "")},
+    }
+    agenda = dict(resumed_state.get("developmental_agenda") or {})
+    resumed_active = bool(resumed.continuous_active_subgoal)
+    if agenda and agenda_state_is_valid(agenda):
+        resumed_state["developmental_agenda"] = {
+            **agenda,
+            "status": "mission_active" if resumed_active else "awaiting_resource_policy_authority",
+            "active_mission_id": str((resumed.continuous_learning_state or {}).get("mission", {}).get("mission_id") or agenda.get("active_mission_id") or ""),
+            "next_eligible_transition": "bounded_learning_attempt_or_evaluation" if resumed_active else "resource_policy_refresh_after_partial_blocker_resolution",
+            "updated_at": consumed_at,
+        }
+    completed = replace(
+        resumed,
+        continuous_mission_state=resumed.continuous_mission_state if resumed_active else "developmental_resource_fulfillment_incomplete",
+        active_work_item=resumed.active_work_item if resumed_active else "resource_blocker_partially_resolved",
+        continuous_learning_state=resumed_state,
+        continuous_developmental_insight_requests=updated.continuous_developmental_insight_requests,
+        continuous_operator_interaction_responses=responses,
+        journal=resumed.journal + (_journal_entry("developmental_resource_policy", "validated_fulfillment_resumed_original_goal_once", (fulfillment.fulfillment_id, str(requirement.get("goal_id") or ""))),),
+    )
+    return completed if resumed_active else compile_governed_developmental_resource_policy(completed, explicit_refresh=True)
 
 
 def _mark_agenda_mission_active(
@@ -2391,6 +2619,22 @@ def consume_continuous_operator_interaction_response(
             operator_text=operator_text,
             approved_scope=approved_scope,
         )
+    if request.get("request_kind") == "developmental_resource_fulfillment":
+        supplied: Mapping[str, Any] | None = None
+        if operator_text.strip():
+            try:
+                parsed = json.loads(operator_text)
+            except json.JSONDecodeError:
+                parsed = None
+            if isinstance(parsed, Mapping):
+                supplied = parsed
+        return consume_developmental_resource_fulfillment(
+            controller,
+            request_id=request_id,
+            selected_option=selected_option,
+            supplied=supplied,
+            operator_text=operator_text,
+        )
     if selected_option == "provide exact target and case" and not operator_text.strip():
         return replace(
             controller,
@@ -2957,7 +3201,9 @@ def restore_continuous_mission_restart_state(
     agenda = dict(learning_state.get("developmental_agenda") or {})
     policy = dict(learning_state.get("developmental_resource_policy") or {})
     invalid_agenda = bool(agenda) and not agenda_state_is_valid(agenda)
+    fulfillments = tuple(dict(item) for item in (learning_state.get("developmental_resource_fulfillments") or ()) if isinstance(item, Mapping))
     invalid_policy = bool(policy) and not resource_policy_state_is_valid(policy)
+    invalid_fulfillments = not resource_fulfillment_state_is_valid(fulfillments, policy=policy)
     if invalid_agenda:
         learning_state["developmental_agenda"] = {
             **agenda,
@@ -2971,9 +3217,16 @@ def restore_continuous_mission_restart_state(
             "status": "unavailable",
             "failure_reason": "invalid_resource_policy_state_on_restart",
         }
+    if invalid_fulfillments:
+        learning_state["developmental_resource_fulfillments"] = ()
+        learning_state["developmental_resource_policy"] = {
+            **policy,
+            "status": "unavailable",
+            "failure_reason": "invalid_resource_fulfillment_state_on_restart",
+        }
     return replace(
         controller,
-        continuous_mission_state="developmental_agenda_blocked" if invalid_agenda else "developmental_resource_policy_blocked" if invalid_policy else str(restart_state.get("continuous_mission_state") or ""),
+        continuous_mission_state="developmental_agenda_blocked" if invalid_agenda else "developmental_resource_policy_blocked" if invalid_policy or invalid_fulfillments else str(restart_state.get("continuous_mission_state") or ""),
         continuous_mission_contract=dict(restart_state.get("continuous_mission_contract") or {}),
         continuous_behavioral_failure_records=tuple(item.as_dict() for item in recovered_failures),
         continuous_mission_findings=tuple(restart_state.get("continuous_mission_findings") or ()),
@@ -2993,8 +3246,8 @@ def restore_continuous_mission_restart_state(
         continuous_observation_state=dict(restart_state.get("continuous_observation_state") or {}),
         continuous_learning_state=learning_state,
         pending_application_decision_id=str(restart_state.get("pending_application_decision_id") or ""),
-        active_work_item="developmental_agenda_blocked" if invalid_agenda else "developmental_resource_policy_blocked" if invalid_policy else str(restart_state.get("active_work_item") or ""),
-        journal=tuple(controller.journal) + (_journal_entry("continuous_mission", "invalid_agenda_restart_failed_closed" if invalid_agenda else "invalid_resource_policy_restart_failed_closed" if invalid_policy else "continuous_mission_restart_state_restored", (str(restart_state.get("continuous_mission_state") or ""),)),),
+        active_work_item="developmental_agenda_blocked" if invalid_agenda else "developmental_resource_policy_blocked" if invalid_policy or invalid_fulfillments else str(restart_state.get("active_work_item") or ""),
+        journal=tuple(controller.journal) + (_journal_entry("continuous_mission", "invalid_agenda_restart_failed_closed" if invalid_agenda else "invalid_resource_policy_restart_failed_closed" if invalid_policy else "invalid_resource_fulfillment_restart_failed_closed" if invalid_fulfillments else "continuous_mission_restart_state_restored", (str(restart_state.get("continuous_mission_state") or ""),)),),
     )
 
 

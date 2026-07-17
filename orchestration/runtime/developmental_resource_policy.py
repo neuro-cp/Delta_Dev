@@ -21,6 +21,18 @@ REQUEST_ACTIONS = frozenset({
     "request_operator_sealed_evaluator", "request_external_research_authority",
     "request_execution_authority",
 })
+FULFILLMENT_TYPES = frozenset({
+    "operator_teaching_resource_fulfillment",
+    "operator_sealed_evaluator_fulfillment",
+    "local_model_request_approval",
+    "local_model_result_fulfillment",
+    "execution_authority_fulfillment",
+    "partial_fulfillment",
+    "fulfillment_rejected",
+    "fulfillment_deferred",
+    "fulfillment_invalid",
+    "fulfillment_unavailable",
+})
 
 
 def _digest(value: Any) -> str:
@@ -148,6 +160,195 @@ class DevelopmentalResourceAuthorityDecision:
         return asdict(self)
 
 
+@dataclass(frozen=True)
+class DevelopmentalResourceAuthorityFulfillment:
+    """Validated, typed evidence that may resolve one resource-policy blocker.
+
+    The record keeps ownership with the caller: it records source identity and
+    validation results, but does not become a second resource store or execute
+    model, web, PCM, or tracked-source work.
+    """
+
+    fulfillment_id: str
+    agenda_id: str
+    mission_id: str
+    goal_id: str
+    proposal_id: str
+    requirement_id: str
+    policy_decision_id: str
+    authority_request_id: str
+    operator_interaction_id: str
+    fulfillment_type: str
+    source_identity: str
+    source_type: str
+    source_reference: str
+    source_digest: str
+    supplied_by: str
+    scope: str
+    topic: str
+    target_capability: str
+    intended_role: str
+    provenance: tuple[str, ...]
+    provenance_state: str
+    integrity_state: str
+    scope_compatibility: str
+    evaluator_independence_state: str
+    teaching_compatibility: str
+    evaluator_compatibility: str
+    authority_state: str
+    validation_errors: tuple[str, ...]
+    uncertainty: str
+    partial_sections: tuple[str, ...]
+    accepted_components: tuple[str, ...]
+    rejected_components: tuple[str, ...]
+    blocker_resolution_state: str
+    semantic_identity: str
+    fulfillment_digest: str
+    status: str
+
+    def as_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+def _case_kinds(payload: Mapping[str, Any]) -> set[str]:
+    return {
+        str(dict(item).get("case_kind") or dict(item).get("kind") or "")
+        for item in (payload.get("sealed_evaluation_cases") or ())
+        if isinstance(item, Mapping)
+    }
+
+
+def compile_developmental_resource_authority_fulfillment(
+    requirement: DevelopmentalResourceAuthorityRequirement | Mapping[str, Any],
+    decision: DevelopmentalResourceAuthorityDecision | Mapping[str, Any],
+    *,
+    authority_request_id: str,
+    operator_interaction_id: str,
+    supplied: Mapping[str, Any] | None,
+    supplied_by: str = "operator",
+) -> DevelopmentalResourceAuthorityFulfillment:
+    """Validate one supplied fulfillment against the exact pending policy action."""
+
+    required = requirement.as_dict() if isinstance(requirement, DevelopmentalResourceAuthorityRequirement) else dict(requirement or {})
+    selected = decision.as_dict() if isinstance(decision, DevelopmentalResourceAuthorityDecision) else dict(decision or {})
+    material = dict(supplied or {})
+    action = str(selected.get("action_type") or "")
+    fulfillment_type = str(material.get("fulfillment_type") or "")
+    source_identity = str(material.get("source_identity") or material.get("resource_id") or material.get("result_id") or "")
+    source_reference = str(material.get("source_reference") or source_identity)
+    topic = str(material.get("topic") or "")
+    target = str(material.get("target_capability") or "")
+    provenance = tuple(str(item) for item in (material.get("provenance") or material.get("resource_provenance") or ()) if item)
+    errors: list[str] = []
+    accepted: list[str] = []
+    rejected: list[str] = []
+    partial: list[str] = []
+    if fulfillment_type not in FULFILLMENT_TYPES:
+        errors.append("unknown_fulfillment_type")
+    expected_types = {
+        "request_operator_teaching_resource": {"operator_teaching_resource_fulfillment", "partial_fulfillment"},
+        "request_operator_sealed_evaluator": {"operator_sealed_evaluator_fulfillment", "partial_fulfillment"},
+        "request_local_model_resource": {"local_model_request_approval", "local_model_result_fulfillment", "fulfillment_unavailable"},
+        "request_execution_authority": {"execution_authority_fulfillment"},
+    }
+    if action in expected_types and fulfillment_type not in expected_types[action]:
+        errors.append("fulfillment_type_does_not_match_selected_policy_action")
+    if not source_identity:
+        errors.append("missing_source_identity")
+    if not source_reference:
+        errors.append("missing_source_reference")
+    if not provenance:
+        errors.append("provenance_missing")
+    if topic != str(required.get("topic") or ""):
+        errors.append("scope_mismatch")
+    if target != str(required.get("target_capability") or ""):
+        errors.append("target_capability_mismatch")
+    if fulfillment_type == "operator_teaching_resource_fulfillment":
+        resources = tuple(item for item in (material.get("study_resources") or ()) if isinstance(item, Mapping))
+        if not resources:
+            errors.append("teaching_content_unavailable")
+        if material.get("sealed_evaluation_cases") or material.get("independent_evaluator"):
+            errors.append("evaluator_leakage_detected")
+        else:
+            accepted.append("teaching_resource")
+    elif fulfillment_type == "operator_sealed_evaluator_fulfillment":
+        cases = tuple(item for item in (material.get("sealed_evaluation_cases") or ()) if isinstance(item, Mapping))
+        kinds = _case_kinds(material)
+        required_kinds = {"baseline", "control", "held_out", "adversarial", "transfer"}
+        if material.get("study_resources"):
+            errors.append("teaching_source_conflict")
+        if not dict(material.get("independent_evaluator") or {}):
+            errors.append("missing_evaluator_authority")
+        if bool(material.get("candidate_mutable")):
+            errors.append("mutable_by_candidate")
+        if not cases:
+            errors.append("sealed_cases_unavailable")
+        missing_kinds = required_kinds - kinds
+        if missing_kinds:
+            partial.extend(sorted(missing_kinds))
+            errors.append("insufficient_case_coverage")
+        if not errors:
+            accepted.extend(("sealed_evaluator", "sealed_cases"))
+    elif fulfillment_type == "local_model_request_approval":
+        if str(material.get("lifecycle_state") or "") not in {"approved", "executing"}:
+            errors.append("local_model_request_not_approved")
+        else:
+            accepted.append("local_model_request")
+    elif fulfillment_type == "local_model_result_fulfillment":
+        if str(material.get("lifecycle_state") or "") != "completed" or not material.get("response_digest"):
+            errors.append("local_model_result_not_completed")
+        else:
+            accepted.append("advisory_local_model_result")
+    elif fulfillment_type == "execution_authority_fulfillment":
+        scope = _words(material.get("scope"))
+        if not scope or "tracked" in scope or "deploy" in scope or "git" in scope:
+            errors.append("execution_scope_not_disposable")
+        else:
+            accepted.append("disposable_execution_authority")
+    elif fulfillment_type == "partial_fulfillment":
+        partial.extend(str(item) for item in (material.get("partial_sections") or ()) if item)
+        if not partial:
+            errors.append("partial_fulfillment_missing_sections")
+        else:
+            accepted.append("partial_fulfillment")
+            rejected.extend(partial)
+    elif fulfillment_type in {"fulfillment_rejected", "fulfillment_deferred", "fulfillment_unavailable"}:
+        rejected.append(fulfillment_type)
+    elif fulfillment_type == "fulfillment_invalid":
+        errors.append("operator_marked_material_invalid")
+    source_digest = str(material.get("source_digest") or _digest({"identity": source_identity, "reference": source_reference, "payload": material}))
+    semantic = _digest({
+        "requirement": required.get("requirement_id"), "decision": selected.get("decision_id"),
+        "authority": authority_request_id, "type": fulfillment_type, "source": source_identity,
+        "source_digest": source_digest, "topic": topic, "target": target,
+    })
+    terminal = fulfillment_type in {"fulfillment_rejected", "fulfillment_deferred", "fulfillment_unavailable"}
+    valid = not errors and not terminal and bool(accepted)
+    blocker_state = "resolved" if valid and not partial else "partially_resolved" if valid else "unresolved"
+    status = "validated" if valid and not partial else "partial" if valid else "rejected" if terminal else "invalid"
+    payload = {"semantic": semantic, "status": status, "errors": tuple(sorted(errors)), "accepted": tuple(sorted(accepted)), "partial": tuple(sorted(partial))}
+    return DevelopmentalResourceAuthorityFulfillment(
+        fulfillment_id=stable_id("developmental-resource-fulfillment", _digest(payload)),
+        agenda_id=str(required.get("agenda_id") or ""), mission_id=str(required.get("mission_id") or ""),
+        goal_id=str(required.get("goal_id") or ""), proposal_id=str(required.get("proposal_id") or ""),
+        requirement_id=str(required.get("requirement_id") or ""), policy_decision_id=str(selected.get("decision_id") or ""),
+        authority_request_id=authority_request_id, operator_interaction_id=operator_interaction_id,
+        fulfillment_type=fulfillment_type, source_identity=source_identity, source_type=str(material.get("source_type") or "operator_supplied"),
+        source_reference=source_reference, source_digest=source_digest, supplied_by=supplied_by,
+        scope=str(material.get("scope") or ""), topic=topic, target_capability=target,
+        intended_role=str(material.get("intended_role") or ""), provenance=provenance,
+        provenance_state="verified" if provenance else "missing", integrity_state="verified" if material.get("source_digest") or source_identity else "unverified",
+        scope_compatibility="compatible" if "scope_mismatch" not in errors and "target_capability_mismatch" not in errors else "mismatch",
+        evaluator_independence_state="independent" if fulfillment_type == "operator_sealed_evaluator_fulfillment" and not errors else "not_applicable" if fulfillment_type != "operator_sealed_evaluator_fulfillment" else "invalid",
+        teaching_compatibility="compatible" if fulfillment_type == "operator_teaching_resource_fulfillment" and not errors else "not_applicable" if fulfillment_type != "operator_teaching_resource_fulfillment" else "invalid",
+        evaluator_compatibility="compatible" if fulfillment_type == "operator_sealed_evaluator_fulfillment" and not errors else "not_applicable" if fulfillment_type != "operator_sealed_evaluator_fulfillment" else "invalid",
+        authority_state="validated" if valid else "not_granted", validation_errors=tuple(sorted(errors)),
+        uncertainty=str(material.get("uncertainty") or "resource fulfillment does not promote capability"),
+        partial_sections=tuple(sorted(set(partial))), accepted_components=tuple(sorted(set(accepted))), rejected_components=tuple(sorted(set(rejected))),
+        blocker_resolution_state=blocker_state, semantic_identity=semantic, fulfillment_digest=_digest(payload), status=status,
+    )
+
+
 def compile_developmental_resource_authority_requirement(
     *,
     agenda: Mapping[str, Any],
@@ -162,6 +363,9 @@ def compile_developmental_resource_authority_requirement(
     state = dict(learning_state or {})
     retained = dict(state.get("retained_bundle") or {})
     provisional = dict(state.get("provisional_resource_bundle") or {})
+    fulfillments = tuple(dict(item) for item in (state.get("developmental_resource_fulfillments") or ()) if isinstance(item, Mapping))
+    fulfilled_teaching = any(item.get("status") == "validated" and item.get("fulfillment_type") == "operator_teaching_resource_fulfillment" for item in fulfillments)
+    fulfilled_evaluator = any(item.get("status") == "validated" and item.get("fulfillment_type") == "operator_sealed_evaluator_fulfillment" for item in fulfillments)
     local_request = dict(state.get("local_model_request") or {})
     result = dict(state.get("local_model_result_reference") or {})
     strategy = dict(state.get("evaluation_strategy") or {})
@@ -169,11 +373,11 @@ def compile_developmental_resource_authority_requirement(
     topic = str(proposal.get("topic") or candidate.get("topic") or mission.get("topic") or "")
     target = str(proposal.get("target_capability") or candidate.get("target_capability") or mission.get("primary_capability_target") or "")
     behavior = str(proposal.get("measurable_outcome") or candidate.get("target_behavior") or "")
-    retained_state = "available_validated" if retained.get("study_resources") else "unavailable"
+    retained_state = "available_validated" if retained.get("study_resources") or fulfilled_teaching else "unavailable"
     provisional_state = "available_advisory" if provisional else "unavailable"
     model_state = str(local_request.get("lifecycle_state") or "unavailable")
-    evaluator_state = str(selected_plan.get("status") or candidate.get("evaluator_state") or "evaluation_unavailable")
-    evaluator_independence = "independent" if selected_plan.get("selected_strategy") not in {"", "evaluation_unavailable"} else "unavailable"
+    evaluator_state = "evaluation_plan_ready" if fulfilled_evaluator else str(selected_plan.get("status") or candidate.get("evaluator_state") or "evaluation_unavailable")
+    evaluator_independence = "independent" if fulfilled_evaluator or str(selected_plan.get("selected_strategy") or "") not in {"", "evaluation_unavailable"} else "unavailable"
     blockers: list[str] = []
     if retained_state == "unavailable" and provisional_state == "unavailable" and model_state != "completed":
         blockers.append("teaching_resource_unavailable")
@@ -252,6 +456,7 @@ def compile_resource_policy_candidates(
     has_alternative: bool,
     external_authority_granted: bool = False,
     execution_authority_granted: bool = False,
+    prefer_operator_teaching: bool = False,
 ) -> tuple[DevelopmentalResourcePolicyCandidate, ...]:
     """Compile the bounded policy vocabulary and reject unsafe routes explicitly."""
 
@@ -260,12 +465,13 @@ def compile_resource_policy_candidates(
     provisional = by_type.get("provisional_resource")
     result = by_type.get("local_model_result")
     local_request = by_type.get("local_model_request")
+    teaching_rank = 0.78 if prefer_operator_teaching else 0.62
     specs = (
         ("reuse_validated_retained_resource", retained, 1.0, "local_reuse_ready"),
         ("reuse_provisional_resource", provisional, 0.85, "local_reuse_ready"),
         ("reuse_existing_local_model_result", result, 0.82, "local_reuse_ready"),
         ("request_local_model_resource", None, 0.74, "awaiting_local_model_approval"),
-        ("request_operator_teaching_resource", None, 0.62, "awaiting_operator_authority"),
+        ("request_operator_teaching_resource", None, teaching_rank, "awaiting_operator_authority"),
         ("request_operator_sealed_evaluator", None, 0.76, "awaiting_operator_authority"),
         ("request_external_research_authority", None, 0.56, "awaiting_operator_authority"),
         ("request_execution_authority", None, 0.54, "awaiting_operator_authority"),
@@ -386,13 +592,43 @@ def resource_policy_state_is_valid(policy: Mapping[str, Any]) -> bool:
         return False
     return str(policy.get("status") or "") in {
         "decision_compiled", "authority_pending", "clarification_requested", "authority_granted",
-        "local_model_request_pending", "rejected", "deferred", "unavailable",
+        "local_model_request_pending", "awaiting_fulfillment", "fulfillment_validated", "blocker_resolved",
+        "rejected", "deferred", "unavailable",
     }
+
+
+def resource_fulfillment_state_is_valid(
+    fulfillments: Sequence[Mapping[str, Any]],
+    *,
+    policy: Mapping[str, Any] | None = None,
+) -> bool:
+    """Fail closed if persisted fulfillment bindings or integrity summaries disagree."""
+
+    seen: set[str] = set()
+    for raw in fulfillments:
+        item = dict(raw)
+        semantic = str(item.get("semantic_identity") or "")
+        status = str(item.get("status") or "")
+        if not semantic or semantic in seen or status not in {"validated", "partial", "invalid", "rejected"}:
+            return False
+        if not item.get("fulfillment_id") or not item.get("requirement_id") or not item.get("policy_decision_id"):
+            return False
+        payload = {
+            "semantic": semantic,
+            "status": status,
+            "errors": tuple(sorted(str(value) for value in (item.get("validation_errors") or ()))),
+            "accepted": tuple(sorted(str(value) for value in (item.get("accepted_components") or ()))),
+            "partial": tuple(sorted(str(value) for value in (item.get("partial_sections") or ()))),
+        }
+        if str(item.get("fulfillment_digest") or "") != _digest(payload):
+            return False
+        seen.add(semantic)
+    return True
 
 
 __all__ = [
     "MAX_POLICY_CANDIDATES", "REQUEST_ACTIONS", "DevelopmentalResourceAuthorityRequirement",
-    "DevelopmentalResourceObservation", "DevelopmentalResourcePolicyCandidate", "DevelopmentalResourceAuthorityDecision",
+    "FULFILLMENT_TYPES", "DevelopmentalResourceObservation", "DevelopmentalResourcePolicyCandidate", "DevelopmentalResourceAuthorityDecision", "DevelopmentalResourceAuthorityFulfillment",
     "compile_developmental_resource_authority_requirement", "observe_developmental_resources",
-    "compile_resource_policy_candidates", "compile_resource_authority_decision", "resource_policy_state_is_valid",
+    "compile_resource_policy_candidates", "compile_resource_authority_decision", "compile_developmental_resource_authority_fulfillment", "resource_policy_state_is_valid", "resource_fulfillment_state_is_valid",
 ]
