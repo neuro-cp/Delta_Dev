@@ -101,6 +101,7 @@ from orchestration.runtime.delta_1_4_live_wikipedia_runtime import (  # noqa: E4
     suspend_live_runtime_initiative,
 )
 from orchestration.runtime.continuous_runtime_controller import (  # noqa: E402
+    compile_mission_bound_local_model_learning_request,
     compile_operator_developmental_learning_mission,
     controller_snapshot,
     start_continuous_runtime_controller,
@@ -2393,9 +2394,16 @@ class DeltaApp:
         prior_instruction = str((controller.continuous_learning_state.get("mission") or {}).get("operator_instruction") or "") if controller else ""
         if controller is None or not controller.continuous_learning_state or prior_instruction != message.strip():
             controller = start_continuous_runtime_controller(session_id=f"tk-learning-{uuid.uuid4().hex[:16]}")
-            controller = compile_operator_developmental_learning_mission(controller, message)
+            controller = compile_mission_bound_local_model_learning_request(controller, message)
         if not controller.continuous_active_subgoal:
             self.developmental_learning_controller = controller
+            request = dict(controller.continuous_learning_state.get("local_model_request") or {})
+            if request:
+                return (
+                    "Developmental learning mission compiled with an existing one-use local-model request. "
+                    f"State={controller.continuous_mission_state}; request_id={request.get('request_id')}; "
+                    "no local model, provider, web, PCM, source application, or capability promotion occurred before operator approval."
+                )
             return (
                 "Developmental learning mission compiled, but local retained evidence was insufficient to start a bounded attempt. "
                 f"State={controller.continuous_mission_state}. No provider, web, PCM, source application, or capability promotion occurred."

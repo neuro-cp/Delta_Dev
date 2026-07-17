@@ -195,14 +195,149 @@ class DevelopmentalEvaluationRecord:
         return asdict(self)
 
 
+@dataclass(frozen=True)
+class MissionBoundLocalModelBridge:
+    """A mission reference to an existing local-model request/result lifecycle.
+
+    It deliberately contains digests and identifiers, not raw model prose. The
+    response remains advisory evidence until the ordinary sealed evaluator
+    demonstrates a narrow capability.
+    """
+
+    bridge_id: str
+    mission_id: str
+    mission_semantic_identity: str
+    information_need_id: str
+    information_need_digest: str
+    topic: str
+    local_model_request_id: str
+    local_model_request_digest: str
+    local_model_result_id: str
+    local_model_response_digest: str
+    model_identity: str
+    adapter_identity: str
+    authority_state: str
+    request_state: str
+    evidence_sufficiency_state: str
+    provisional_resource_bundle_id: str
+    curriculum_handoff_id: str
+    created_at: str
+    updated_at: str
+    bridge_digest: str
+    status: str
+
+    def as_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+def compile_mission_information_need(mission: DevelopmentalMissionContract) -> dict[str, Any]:
+    """Compile a bounded, semantic learning question without lesson content."""
+
+    payload = {
+        "mission_id": mission.mission_id,
+        "domain": mission.domain,
+        "topic": mission.topic,
+        "required_sections": (
+            "prerequisites", "concept_statement", "intuitive_explanation",
+            "worked_example", "misconceptions", "practice_questions", "uncertainties",
+        ),
+        "excluded_sections": ("sealed_evaluation_answers", "capability_claims", "file_mutation", "unrestricted_exploration"),
+    }
+    digest = _digest(payload)
+    return {
+        "information_need_id": stable_id("mission-learning-information-need", mission.mission_id, digest),
+        "semantic_identity": _digest((mission.domain, mission.topic, payload["required_sections"])),
+        "information_need_digest": digest,
+        "topic": mission.topic,
+        "request_text": (
+            f"Provide a bounded study resource for {mission.topic.replace('_', ' ')}. "
+            "Include prerequisites, a precise concept statement, an intuitive explanation, "
+            "one worked example, common misconceptions, suggested practice questions, and uncertainties. "
+            "Do not claim the learner has mastered the topic and do not provide assessment answers."
+        ),
+        **payload,
+    }
+
+
+def assess_local_model_learning_evidence(
+    response: str,
+    *,
+    topic: str,
+) -> dict[str, Any]:
+    """Classify advisory prose conservatively; it cannot grant capability."""
+
+    text = " ".join(str(response or "").split())
+    lowered = text.lower()
+    if not text:
+        return {"state": "empty", "validated_claims": (), "uncertain_claims": (), "rejected_claims": ("empty_response",)}
+    required = {
+        "prerequisites": ("prerequisite", "background"),
+        "concept_statement": ("theorem", "statement", "definition"),
+        "intuitive_explanation": ("intuition", "intuitive", "means"),
+        "worked_example": ("example", "matrix", "worked"),
+        "misconceptions": ("misconception", "not every", "false"),
+        "practice_questions": ("practice", "question", "exercise"),
+    }
+    present = tuple(key for key, markers in required.items() if any(marker in lowered for marker in markers))
+    # A response may explicitly preserve a contradiction; content-specific fact
+    # checking belongs to an independent evaluator, never this prose parser.
+    contradictions = ("explicit_model_contradiction",) if "[contradiction]" in lowered else ()
+    if contradictions:
+        return {"state": "contradictory", "validated_claims": present, "uncertain_claims": ("contradictory_claim_retained",), "rejected_claims": contradictions}
+    if topic.replace("_", " ") not in lowered and topic not in lowered:
+        return {"state": "insufficient", "validated_claims": present, "uncertain_claims": ("topic_not_identifiable",), "rejected_claims": ()}
+    if len(present) < 4:
+        return {"state": "partially_sufficient", "validated_claims": present, "uncertain_claims": tuple(sorted(set(required) - set(present))), "rejected_claims": ()}
+    return {"state": "sufficient_for_provisional_resource", "validated_claims": present, "uncertain_claims": ("model_output_is_advisory",), "rejected_claims": ()}
+
+
+def compile_provisional_learning_bundle(
+    mission: DevelopmentalMissionContract,
+    bridge: MissionBoundLocalModelBridge,
+    response: str,
+    *,
+    sealed_evaluation_cases: Sequence[Mapping[str, Any]] = (),
+) -> dict[str, Any] | None:
+    """Create a temporary resource shell only from a sufficient model result.
+
+    Structured study fields are extracted from the returned evidence; sealed
+    cases are supplied independently by the caller and never enter the model
+    request or bridge response reference.
+    """
+
+    if bridge.evidence_sufficiency_state != "sufficient_for_provisional_resource":
+        return None
+    sections = assess_local_model_learning_evidence(response, topic=mission.topic)
+    resource_id = stable_id("provisional-local-model-resource", bridge.bridge_id, bridge.local_model_response_digest)
+    # The learning attempt works against explicitly declared components. These
+    # are response-derived labels, not capability claims or sealed answers.
+    components = tuple(str(value) for value in sections["validated_claims"])
+    dimension = f"{mission.topic}_understanding"
+    return {
+        "resource_bundle_id": stable_id("provisional-learning-bundle", mission.mission_id, resource_id),
+        "domain": mission.domain,
+        "topic": mission.topic,
+        "provisional": True,
+        "mission_bound_bridge_id": bridge.bridge_id,
+        "resource_provenance": ({"request_id": bridge.local_model_request_id, "result_id": bridge.local_model_result_id, "model_identity": bridge.model_identity, "response_digest": bridge.local_model_response_digest},),
+        "assessment_dimensions": ({"dimension": dimension, "topic": mission.topic, "baseline_case_id": "independent-baseline-required", "baseline_components": (), "required_components": components, "prerequisites": (), "evidence_ref": bridge.bridge_id, "expected_learning_value": 0.7, "information_gain": 0.7, "estimated_effort": 1.0},),
+        "study_resources": ({"resource_id": resource_id, "topic": mission.topic, "supports_dimensions": (dimension,), "study_components": components, "model_result_reference": bridge.local_model_result_id},),
+        "visible_practice_cases": (),
+        "sealed_evaluation_cases": tuple(dict(item) for item in sealed_evaluation_cases),
+        "validated_claims": sections["validated_claims"],
+        "uncertain_claims": sections["uncertain_claims"],
+        "rejected_claims": sections["rejected_claims"],
+    }
+
+
 def classify_developmental_instruction(instruction: str) -> dict[str, str] | None:
     """Classify a small, explicit learning-intent surface without model authority."""
 
     normalized = _text(instruction)
     if not any(token in normalized for token in ("learn", "study", "understand", "practice")):
         return None
-    domain = "mathematics" if any(token in normalized for token in ("math", "mathematics", "induction", "algebra", "calculus")) else "biology" if any(token in normalized for token in ("biology", "natural selection", "evolution")) else "general_learning"
-    topic = "mathematical_induction" if "induction" in normalized else "natural_selection" if "natural selection" in normalized else "exploratory"
+    domain = "mathematics" if any(token in normalized for token in ("math", "mathematics", "induction", "algebra", "calculus", "spectral theorem")) else "biology" if any(token in normalized for token in ("biology", "natural selection", "evolution")) else "general_learning"
+    topic = "spectral_theorem" if "spectral theorem" in normalized else "mathematical_induction" if "induction" in normalized else "natural_selection" if "natural selection" in normalized else "exploratory"
     return {
         "mission_type": "developmental_learning",
         "domain": domain,

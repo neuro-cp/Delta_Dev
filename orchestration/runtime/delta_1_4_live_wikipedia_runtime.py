@@ -14,7 +14,7 @@ import json
 import re
 import threading
 import time
-from typing import Any, Callable
+from typing import Any, Callable, Mapping
 from urllib.error import URLError
 from urllib.parse import quote
 from urllib.request import Request, urlopen
@@ -906,6 +906,39 @@ def _new_local_model_request(
         "selected_model_id": str(lane.get("selected_model_id") or ""),
         "prompt": str(offer.get("prompt") or "Ask the selected local model for this one question?"),
         "created_at": created_at,
+        "expires_after_unrelated_turns": 1,
+        "authority_class": "OPERATOR_APPROVAL_REQUIRED",
+        "provider_calls_performed": False,
+        "memory_write_performed": False,
+    }
+
+
+def create_local_model_pending_request(
+    *,
+    session_id: str,
+    message: str,
+    lane: Mapping[str, Any],
+    semantic_identity: str,
+) -> dict[str, Any]:
+    """Create the existing one-use local-model request record for another owner.
+
+    The live runtime remains the owner of this record shape and approval
+    semantics.  Other governed lifecycles may reference it, but do not get a
+    separate request-store or execution protocol.
+    """
+
+    normalized = " ".join(str(message or "").split())
+    request_digest = stable_id("delta14-local-model-request-digest", semantic_identity, normalized, dict(lane))
+    return {
+        "request_id": stable_id("delta14-local-model-request", session_id, request_digest),
+        "request_digest": request_digest,
+        "semantic_identity": semantic_identity,
+        "status": "PENDING_OPERATOR_APPROVAL",
+        "message": normalized,
+        "lane": str(lane.get("lane") or ""),
+        "selected_model": str(lane.get("selected_model") or ""),
+        "selected_model_id": str(lane.get("selected_model_id") or ""),
+        "created_at": utc_now(),
         "expires_after_unrelated_turns": 1,
         "authority_class": "OPERATOR_APPROVAL_REQUIRED",
         "provider_calls_performed": False,
