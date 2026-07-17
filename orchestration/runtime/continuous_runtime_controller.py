@@ -83,6 +83,12 @@ from orchestration.runtime.delta_1_6_operational_autonomy import (
 from orchestration.runtime.rc2_conversational_mode_router import discover_local_model_lanes, select_model_lane
 from orchestration.runtime.local_model_request_result_ledger import LocalModelRequestResultLedger
 from orchestration.runtime.capability_evaluation_strategy import compile_capability_evaluation_strategy
+from orchestration.runtime.developmental_interest import (
+    compile_developmental_goal_proposal,
+    compile_developmental_interest_candidates,
+    is_governed_autonomous_interest_instruction,
+    source_records_from_state,
+)
 
 
 DOC_ROOT = Path("docs") / "continuous_runtime"
@@ -799,6 +805,227 @@ def compile_operator_developmental_learning_mission(
             journal=controller.journal + (_journal_entry("developmental_learning", "operator_instruction_requires_governed_resource_plan", (mission.mission_id,)),),
         )
     return attach_developmental_learning_mission(controller, operator_instruction, bundle)
+
+
+def compile_governed_developmental_interest_proposal(
+    controller: ContinuousRuntimeController,
+    operator_instruction: str,
+) -> ContinuousRuntimeController:
+    """Compile one evidence-backed goal proposal without starting learning.
+
+    The broad instruction establishes the existing parent mission boundary when
+    necessary.  The narrower learning mission remains dormant until the
+    operator consumes the resulting existing interaction request.
+    """
+
+    if not is_governed_autonomous_interest_instruction(operator_instruction):
+        return controller
+    attached_parent = not bool(controller.continuous_mission_contract)
+    parent = controller if not attached_parent else attach_continuous_mission(controller, operator_instruction)
+    retained_requests = () if attached_parent else parent.continuous_developmental_insight_requests
+    state = dict(parent.continuous_learning_state or {})
+    interest_state = dict(state.get("developmental_interest") or {})
+    origin_state_id = stable_id(
+        "developmental-interest-origin",
+        str((parent.continuous_mission_contract or {}).get("mission_id") or parent.session_id),
+        _learning_bridge_digest({
+            "inventory": parent.continuous_capability_inventory,
+            "learning": state.get("next_learning_gap") or state.get("interest_sources") or (),
+            "assessment": parent.continuous_developmental_self_assessment,
+        }),
+    )
+    sources = source_records_from_state(
+        learning_state=state,
+        capability_inventory=parent.continuous_capability_inventory,
+    )
+    active_or_recent = tuple(str(item) for item in (interest_state.get("active_or_recent_semantics") or ()))
+    rejected = tuple(str(item) for item in (interest_state.get("cooldown_semantics") or ()))
+    candidates = compile_developmental_interest_candidates(
+        origin_state_id=origin_state_id,
+        operator_context=operator_instruction,
+        sources=sources,
+        capability_inventory=parent.continuous_capability_inventory,
+        active_or_recent_semantics=active_or_recent,
+        rejected_semantics=rejected,
+    )
+    proposal = compile_developmental_goal_proposal(operator_context=operator_instruction, candidates=candidates)
+    compiled_interest = {
+        "origin_state_id": origin_state_id,
+        "operator_context": operator_instruction,
+        "candidate_interests": tuple(item.as_dict() for item in candidates),
+        "ranked_interest_ids": tuple(item.interest_id for item in candidates if item.status == "candidate_interest"),
+        "selected_interest_id": proposal.selected_interest_id if proposal else "",
+        "proposal": proposal.as_dict() if proposal else {},
+        "proposal_status": proposal.status if proposal else "exhausted",
+        "cooldown_semantics": rejected,
+        "active_or_recent_semantics": active_or_recent,
+        "exhaustion_reason": "no_valid_evidence_grounded_developmental_interest" if proposal is None else "",
+        "deferred_assessment_request_ids": tuple(
+            str(item.get("request_id") or "") for item in parent.continuous_developmental_insight_requests
+        ) if attached_parent else (),
+    }
+    if proposal is None:
+        return replace(
+            parent,
+            continuous_mission_state="developmental_interest_exhausted",
+            continuous_learning_state={**state, "developmental_interest": compiled_interest},
+            continuous_developmental_insight_requests=tuple(retained_requests),
+            continuous_active_subgoal={},
+            active_work_item="developmental_interest_exhausted",
+            journal=parent.journal + (_journal_entry("developmental_interest", "candidate_interests_exhausted_without_operator_request", (origin_state_id,)),),
+        )
+    existing = next(
+        (
+            dict(item)
+            for item in retained_requests
+            if item.get("request_kind") == "developmental_goal_approval"
+            and item.get("proposal_id") == proposal.proposal_id
+            and item.get("status") == "pending"
+        ),
+        None,
+    )
+    if existing:
+        return replace(
+            parent,
+            continuous_mission_state="awaiting_operator_insight",
+            continuous_learning_state={**state, "developmental_interest": compiled_interest},
+            active_work_item="awaiting_developmental_goal_approval",
+        )
+    request = {
+        "request_id": stable_id("developmental-goal-approval", proposal.proposal_id),
+        "request_kind": "developmental_goal_approval",
+        "proposal_id": proposal.proposal_id,
+        "selected_interest_id": proposal.selected_interest_id,
+        "status": "pending",
+        "exact_question": f"Approve the bounded developmental goal: {proposal.proposed_goal}?",
+        "rationale": "The proposed goal was selected from retained capability and gap evidence. Approval starts at most one existing developmental-learning mission.",
+        "evidence_refs": proposal.source_evidence,
+        "source_gap_ids": proposal.source_evidence,
+        "blocked_transition": "ranked_interest -> approved_developmental_goal -> existing_learning_lifecycle",
+        "authority_scope": "one bounded developmental-learning mission only; no provider, web, PCM, tracked-source application, Git, or deployment authority",
+        "blocking_scope": "developmental-goal selection",
+        "permitted_responses": ("approve_developmental_goal", "reject_developmental_goal", "defer_developmental_goal", "ask_for_clarification"),
+        "authority_granted": False,
+        "created_at": utc_now(),
+    }
+    return replace(
+        parent,
+        continuous_mission_state="awaiting_operator_insight",
+        continuous_learning_state={**state, "developmental_interest": compiled_interest},
+        continuous_developmental_insight_requests=tuple(retained_requests) + (request,),
+        continuous_active_subgoal={},
+        active_work_item="awaiting_developmental_goal_approval",
+        journal=parent.journal + (_journal_entry("developmental_interest", "ranked_interest_compiled_to_operator_goal_proposal", (proposal.proposal_id, proposal.selected_interest_id)),),
+    )
+
+
+def consume_developmental_goal_proposal_response(
+    controller: ContinuousRuntimeController,
+    *,
+    request_id: str,
+    selected_option: str,
+    operator_text: str = "",
+) -> ContinuousRuntimeController:
+    """Consume one goal disposition through the existing interaction ledger."""
+
+    requests = tuple(dict(item) for item in controller.continuous_developmental_insight_requests)
+    index = next((position for position, item in enumerate(requests) if item.get("request_id") == request_id and item.get("status") == "pending"), -1)
+    if index < 0:
+        return replace(controller, journal=controller.journal + (_journal_entry("developmental_interest", "duplicate_or_unknown_goal_proposal_response_suppressed", (request_id,)),))
+    request = requests[index]
+    permitted = tuple(request.get("permitted_responses") or ())
+    if selected_option not in permitted:
+        return replace(controller, journal=controller.journal + (_journal_entry("developmental_interest", "invalid_goal_proposal_response_rejected", (request_id, selected_option)),))
+    state = dict(controller.continuous_learning_state or {})
+    interest = dict(state.get("developmental_interest") or {})
+    proposal = dict(interest.get("proposal") or {})
+    if str(proposal.get("proposal_id") or "") != str(request.get("proposal_id") or ""):
+        return replace(controller, journal=controller.journal + (_journal_entry("developmental_interest", "goal_proposal_response_rejected_identity_mismatch", (request_id,)),))
+    candidate = next((dict(item) for item in (interest.get("candidate_interests") or ()) if item.get("interest_id") == proposal.get("selected_interest_id")), {})
+    semantic = str(candidate.get("semantic_identity") or "")
+    consumed_at = utc_now()
+    resolution = {
+        "request_id": request_id,
+        "response_kind": "developmental_goal_approval",
+        "selected_option": selected_option,
+        "operator_text": operator_text,
+        "created_at": consumed_at,
+        "consumed_at": consumed_at,
+        "authority_granted": selected_option == "approve_developmental_goal",
+    }
+    resolved_request = {
+        **request,
+        "status": "consumed",
+        "resolution": selected_option,
+        "consumed_at": consumed_at,
+        "authority_granted": selected_option == "approve_developmental_goal",
+    }
+    updated_requests = requests[:index] + (resolved_request,) + requests[index + 1 :]
+    cooldown = tuple(dict.fromkeys(tuple(interest.get("cooldown_semantics") or ()) + ((semantic,) if selected_option != "approve_developmental_goal" and semantic else ())))
+    active_recent = tuple(dict.fromkeys(tuple(interest.get("active_or_recent_semantics") or ()) + ((semantic,) if selected_option == "approve_developmental_goal" and semantic else ())))
+    proposal["status"] = (
+        "approved_developmental_goal" if selected_option == "approve_developmental_goal"
+        else "deferred" if selected_option == "defer_developmental_goal"
+        else "rejected" if selected_option == "reject_developmental_goal"
+        else "clarification_requested"
+    )
+    updated_interest = {**interest, "proposal": proposal, "proposal_status": proposal["status"], "cooldown_semantics": cooldown, "active_or_recent_semantics": active_recent, "operator_decision": resolution}
+    updated = replace(
+        controller,
+        continuous_developmental_insight_requests=updated_requests,
+        continuous_operator_interaction_responses=controller.continuous_operator_interaction_responses + (resolution,),
+        continuous_learning_state={**state, "developmental_interest": updated_interest},
+        journal=controller.journal + (_journal_entry("developmental_interest", "operator_goal_proposal_response_consumed_once", (request_id, selected_option)),),
+    )
+    if selected_option == "ask_for_clarification":
+        clarification = {
+            **request,
+            "request_id": stable_id("developmental-goal-clarification", proposal.get("proposal_id", "")),
+            "status": "pending",
+            "clarification_round": 1,
+            "exact_question": (
+                f"What bounded priority, resource, evaluator, or scope clarification should be retained for: "
+                f"{proposal.get('proposed_goal', '')}? Enter it, then approve, reject, or defer this same proposal."
+            ),
+            "rationale": "One operator clarification is permitted; it does not change evaluator independence or grant implementation authority.",
+            "permitted_responses": ("approve_developmental_goal", "reject_developmental_goal", "defer_developmental_goal"),
+            "created_at": consumed_at,
+        }
+        return replace(
+            updated,
+            continuous_mission_state="awaiting_operator_insight",
+            continuous_developmental_insight_requests=updated_requests + (clarification,),
+            continuous_learning_state={
+                **dict(updated.continuous_learning_state or {}),
+                "developmental_interest": {**updated_interest, "proposal_status": "clarification_requested"},
+            },
+            active_work_item="awaiting_developmental_goal_clarification",
+            journal=updated.journal + (_journal_entry("developmental_interest", "one_scoped_goal_clarification_requested", (proposal.get("proposal_id", ""),)),),
+        )
+    if selected_option != "approve_developmental_goal":
+        return replace(
+            updated,
+            continuous_mission_state="developmental_interest_deferred" if selected_option == "defer_developmental_goal" else "developmental_interest_rejected",
+            active_work_item="developmental_interest_observation",
+            continuous_active_subgoal={},
+        )
+    if str(candidate.get("candidate_class") or "") == "acquire_evaluator_authority":
+        return replace(
+            updated,
+            continuous_mission_state="learning_evaluator_authority_needed",
+            active_work_item="developmental_interest_evaluator_authority_needed",
+            continuous_active_subgoal={},
+            journal=updated.journal + (_journal_entry("developmental_interest", "approved_evaluator_acquisition_goal_retained_without_learning_activation", (proposal.get("proposal_id", ""),)),),
+        )
+    learning_instruction = f"Learn {str(proposal.get('topic') or '').replace('_', ' ')}."
+    activated = compile_operator_developmental_learning_mission(updated, learning_instruction)
+    return replace(
+        activated,
+        continuous_learning_state={**dict(activated.continuous_learning_state or {}), "developmental_interest": updated_interest},
+        continuous_developmental_insight_requests=updated_requests,
+        continuous_operator_interaction_responses=updated.continuous_operator_interaction_responses,
+        journal=activated.journal + (_journal_entry("developmental_interest", "approved_goal_handed_to_existing_learning_lifecycle", (proposal.get("proposal_id", ""),)),),
+    )
 
 
 def compile_mission_bound_local_model_learning_request(
@@ -1601,6 +1828,13 @@ def consume_continuous_operator_interaction_response(
         return replace(
             controller,
             journal=controller.journal + (_journal_entry("continuous_mission", "operator_interaction_response_rejected_invalid_option", (request_id, selected_option)),),
+        )
+    if request.get("request_kind") == "developmental_goal_approval":
+        return consume_developmental_goal_proposal_response(
+            controller,
+            request_id=request_id,
+            selected_option=selected_option,
+            operator_text=operator_text,
         )
     if selected_option == "provide exact target and case" and not operator_text.strip():
         return replace(

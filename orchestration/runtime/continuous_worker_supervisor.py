@@ -462,7 +462,7 @@ def _consume_operator_interaction_response_if_present(root: Path, controller: An
     pending_runtime_requests = tuple(
         item
         for item in (controller.continuous_developmental_insight_requests or ())
-        if item.get("status") == "pending" and item.get("request_kind") in {"insight", "clarification", "priority_choice", "tracked_application_authority"}
+        if item.get("status") == "pending" and item.get("request_kind") in {"insight", "clarification", "priority_choice", "tracked_application_authority", "developmental_goal_approval"}
     )
     if not response_path.exists() and not pending_runtime_requests:
         recovered = exit_observation_with_action_derivation(
