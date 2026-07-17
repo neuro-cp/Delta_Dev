@@ -122,6 +122,14 @@ def test_policy_compiles_all_governed_authority_paths_without_external_execution
     assert external.permission_state == "operator_authority_required"
 
 
+def test_external_evidence_requirement_prefers_bounded_external_authority_over_generic_teaching():
+    requirement = _requirement({}, resource_state="external_research_required")
+    candidates = compile_resource_policy_candidates(requirement, observe_developmental_resources(requirement, learning_state={}), has_alternative=False)
+    decision = compile_resource_authority_decision(requirement, candidates)
+    assert "external_evidence_preferred" in requirement.external_source_requirements
+    assert decision.action_type == "request_external_research_authority"
+
+
 def test_agenda_evaluator_blocker_creates_one_scoped_request_and_rejection_selects_alternative():
     spectral = _source("spectral_theorem", "complex_inner_product_space_scope", "spectral-gap", 0.95, evaluator=False)
     induction = _source("mathematical_induction", "proof_structure", "induction-gap", 0.7, evaluator=True)

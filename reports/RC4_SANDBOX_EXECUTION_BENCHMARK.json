@@ -9,13 +9,13 @@
   "episode": {
     "authorization": {
       "authorization_id": "rc4-authorization-fa3dd696b0a7e9b6",
-      "created_at": "2026-07-10T18:33:07+00:00",
+      "created_at": "2026-07-13T06:31:24+00:00",
       "grant": {
         "approver": "operator",
         "approver_role": "operator",
-        "expires_at": "2026-07-10T18:43:07+00:00",
+        "expires_at": "2026-07-13T06:41:24+00:00",
         "grant_id": "rc4-permission-grant-05aa01c1105dd0f2",
-        "issued_at": "2026-07-10T18:33:07+00:00",
+        "issued_at": "2026-07-13T06:31:24+00:00",
         "meta": {
           "audit_requirements": [
             "provenance",
@@ -140,7 +140,7 @@
       },
       "policy_id": "rc4-default-execution-policy",
       "request": {
-        "created_at": "2026-07-10T18:33:07+00:00",
+        "created_at": "2026-07-13T06:31:24+00:00",
         "meta": {
           "audit_requirements": [
             "provenance",
@@ -192,7 +192,7 @@
     "decision": {
       "authorization_id": "rc4-authorization-fa3dd696b0a7e9b6",
       "decision_id": "rc4-authorization-decision-39232a4001614ceb",
-      "evaluated_at": "2026-07-10T18:33:07+00:00",
+      "evaluated_at": "2026-07-13T06:31:24+00:00",
       "evidence_requirements": [
         "transcript",
         "diff",
@@ -709,7 +709,7 @@
     },
     "repository_snapshot": {
       "base_fingerprint": "9dc6f00f1d2a30a7d76cd104fbb0f98f93080d1a00acf920ba4af27bb458bfaf",
-      "created_at": "2026-07-10T18:33:08+00:00",
+      "created_at": "2026-07-13T06:31:25+00:00",
       "entry_points": [],
       "file_count": 180,
       "language_counts": {

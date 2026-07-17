@@ -13,6 +13,7 @@ from orchestration.runtime.rc8_governed_external_retrieval import (
     detect_hostile_content,
     evaluate_retrieval_necessity,
     execute_mock_retrieval,
+    execute_bounded_retrieval,
     retrieval_foundation_report,
     retrieval_readiness_report,
     retrieval_safety_benchmark,
@@ -55,6 +56,42 @@ def test_rc8_mock_retrieval_never_marks_live_network_call_performed():
     assert result.decision.retrieval_performed is False
     assert result.bundle is not None
     assert result.safety["live_network_call_performed"] is False
+
+
+def test_rc8_bounded_retrieval_requires_approval_before_transport_is_used():
+    request = ExternalRetrievalRequest(stable_id("live-disabled"), "https://math.mit.edu/")
+    outcome = execute_bounded_retrieval(request, env={RC8_RETRIEVAL_ENABLED_ENV: "true"}, opener=object())
+    assert outcome.bundle is None
+    assert outcome.failure_state == "OPERATOR_APPROVAL_REQUIRED"
+
+
+def test_rc8_bounded_retrieval_preserves_one_safe_text_response_with_injected_transport():
+    class Headers:
+        def get_content_type(self):
+            return "text/plain"
+
+    class Response:
+        headers = Headers()
+        def geturl(self):
+            return "https://math.mit.edu/spectral"
+        def read(self, _limit):
+            return b"The spectral theorem requires a bounded independent evaluation."
+        def __enter__(self):
+            return self
+        def __exit__(self, *_args):
+            return False
+
+    class Opener:
+        def open(self, request, timeout):
+            assert request.full_url == "https://math.mit.edu/spectral"
+            assert timeout == 8.0
+            return Response()
+
+    request = ExternalRetrievalRequest(stable_id("live-fixture"), "https://math.mit.edu/spectral", operator_approved=True)
+    outcome = execute_bounded_retrieval(request, env={RC8_RETRIEVAL_ENABLED_ENV: "true"}, opener=Opener())
+    assert outcome.bundle is not None
+    assert outcome.decision.retrieval_performed is True
+    assert outcome.safety["live_network_call_performed"] is True
 
 
 def test_rc8_hostile_content_is_detected_and_sanitized():

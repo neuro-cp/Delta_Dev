@@ -6910,6 +6910,37 @@ def _diagnose_expected_symbol_missing(
     )
 
 
+def _diagnose_exact_behavioral_logic_replacement(
+    request: PythonBoundedDiagnosisRequest,
+    evidence: PythonSourceInspectionEvidence,
+    observations: tuple[PythonSourceStructuralObservation, ...],
+) -> PythonBoundedDiagnosticFinding | None:
+    if not observations or not request.expected_symbol.strip():
+        return None
+    path = request.exact_inspected_paths[0] if request.exact_inspected_paths else ""
+    digest = request.exact_source_digests.get(path, "")
+    observed_symbols = tuple(observations[0].function_names)
+    if request.expected_symbol not in observed_symbols:
+        return None
+    first_transition = f"expected_behavior_for_{request.expected_symbol}_not_satisfied_by_current_logic"
+    return PythonBoundedDiagnosticFinding(
+        finding_id=stable_id("pcm-1d-bounded-finding", request.diagnosis_request_id, path, digest, first_transition),
+        path=path,
+        source_digest=digest,
+        diagnosis_category="exact_behavioral_logic_replacement",
+        expected_transition=request.expected_transition,
+        observed_structural_evidence=f"function_names={observed_symbols}",
+        first_incorrect_or_missing_transition=first_transition,
+        responsible_symbol=request.expected_symbol,
+        responsible_structural_location=f"{path}:{request.expected_symbol}",
+        bounded_impact="one inspected function requires a bounded exact text replacement to satisfy sealed behavior",
+        evidence_references=(evidence.inspection_attempt_id, request.inspection_evidence_id),
+        confidence=0.72,
+        uncertainty="bounded to structural ownership and sealed external behavior; source behavior was not executed during diagnosis",
+        alternative_explanation="the failing behavior may require a broader change than one exact replacement",
+    )
+
+
 def perform_python_bounded_diagnosis(
     attachment_record: PythonCodingModuleAttachmentRecord,
     inspection_result: PythonSourceInspectionResult,
@@ -6942,7 +6973,7 @@ def perform_python_bounded_diagnosis(
         return _python_bounded_diagnosis_denial("execution_permission_present", request, authorization)
     if request.mutation_requested:
         return _python_bounded_diagnosis_denial("mutation_permission_present", request, authorization)
-    if request.diagnosis_category != "expected_symbol_missing":
+    if request.diagnosis_category not in {"expected_symbol_missing", "exact_behavioral_logic_replacement"}:
         return _python_bounded_diagnosis_denial("unsupported_diagnosis_category", request, authorization)
     if not request.expected_symbol.strip() or not request.expected_transition.strip() or not request.diagnosis_question.strip():
         return _python_bounded_diagnosis_denial("insufficient_structural_evidence", request, authorization)
@@ -6958,7 +6989,11 @@ def perform_python_bounded_diagnosis(
 
     consumed_authorization = replace(authorization, consumed=True)
     evidence = inspection_result.evidence
-    finding = _diagnose_expected_symbol_missing(request, evidence, observations)
+    finding = (
+        _diagnose_exact_behavioral_logic_replacement(request, evidence, observations)
+        if request.diagnosis_category == "exact_behavioral_logic_replacement"
+        else _diagnose_expected_symbol_missing(request, evidence, observations)
+    )
     reason = "valid" if finding is not None else "no_bounded_finding"
     diagnosis_evidence = PythonBoundedDiagnosisEvidence(
         diagnosis_attempt_id=stable_id("pcm-1d-bounded-diagnosis-attempt", request.diagnosis_request_id, authorization.diagnosis_authorization_id, sequence),
@@ -7225,7 +7260,8 @@ def create_python_focused_test_proposal(
     consumed_authorization = replace(authorization, consumed=True)
     proposal: PythonFocusedTestProposal | None = None
     reason = "no_bounded_test_proposal"
-    if finding is not None and finding.diagnosis_category == "expected_symbol_missing":
+    if finding is not None and finding.diagnosis_category in {"expected_symbol_missing", "exact_behavioral_logic_replacement"}:
+        bounded_scope = f"single {finding.diagnosis_category} diagnosis from accepted PCM-1D evidence"
         proposal = PythonFocusedTestProposal(
             proposal_id=stable_id("pcm-1e-focused-test-proposal", request.test_proposal_request_id, finding.finding_id, request.proposed_test_target_path),
             diagnosis_attempt_id=request.diagnosis_attempt_id,
@@ -7242,7 +7278,7 @@ def create_python_focused_test_proposal(
             expected_assertion=f"{request.responsible_symbol!r} appears in function_names",
             expected_pre_fix_result="fails while the expected symbol is absent from structural observations",
             expected_post_fix_result="passes after a future governed repair makes the expected symbol structurally present",
-            bounded_scope="single expected_symbol_missing diagnosis from accepted PCM-1D evidence",
+            bounded_scope=bounded_scope,
             uncertainty=finding.uncertainty,
         )
         reason = "valid"
@@ -8234,7 +8270,7 @@ def _candidate_patch_upstream_matches_request(
     proposal = deserialize(PythonFocusedTestProposal, test_proposal_result.evidence.proposal)
     if finding.finding_id != request.finding_id or finding.diagnosis_category != request.diagnosis_category:
         return False, "wrong_finding", None, None
-    if finding.diagnosis_category != "expected_symbol_missing":
+    if finding.diagnosis_category not in {"expected_symbol_missing", "exact_behavioral_logic_replacement"}:
         return False, "unsupported_diagnosis_category", None, None
     if proposal.proposal_id != request.test_proposal_id or proposal.finding_id != finding.finding_id:
         return False, "wrong_test_proposal", None, None

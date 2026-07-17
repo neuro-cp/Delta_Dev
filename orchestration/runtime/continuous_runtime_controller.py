@@ -104,6 +104,13 @@ from orchestration.runtime.developmental_resource_policy import (
     resource_fulfillment_state_is_valid,
     resource_policy_state_is_valid,
 )
+from orchestration.runtime.governed_external_research import (
+    compile_execution_claim,
+    compile_external_research_plan,
+    normalize_external_research_source,
+    research_state_is_valid,
+    synthesize_external_research_result,
+)
 
 
 DOC_ROOT = Path("docs") / "continuous_runtime"
@@ -1507,6 +1514,44 @@ def consume_developmental_resource_authority_response(
                 "request_execution_authority": "execution",
             }.get(action, action)
             updated_state["resource_policy_authorities"] = {**dict(state.get("resource_policy_authorities") or {}), authority_key: {"scope": approved_scope, "request_id": request_id, "granted_at": consumed_at}}
+            if action == "request_external_research_authority":
+                plan = compile_external_research_plan(
+                    requirement=requirement,
+                    decision=decision,
+                    authority_request_id=request_id,
+                    operator_approval_id=request_id,
+                )
+                existing_research = dict(state.get("external_research") or {})
+                if existing_research and str(dict(existing_research.get("plan") or {}).get("semantic_identity") or "") == plan.semantic_identity:
+                    plan_state = existing_research
+                else:
+                    plan_state = {"plan": plan.as_dict(), "claim": {}, "source_records": (), "result": {}, "status": "research_plan_compiled"}
+                fulfillment_request = {
+                    "request_id": stable_id("developmental-external-research-fulfillment", request_id, plan.research_plan_id),
+                    "request_kind": "developmental_resource_fulfillment",
+                    "authority_request_id": request_id,
+                    "policy_decision_id": decision.get("decision_id"),
+                    "requirement_id": requirement.get("requirement_id"), "action_type": action,
+                    "research_plan_id": plan.research_plan_id, "status": "pending",
+                    "exact_question": "The approved bounded external-research plan is persisted. Execute only through the governed claim-before-call path; accepted sources remain advisory teaching evidence.",
+                    "rationale": "One approved authority binds one plan, budgets, allowed domains, provenance requirements, and independent evaluator separation.",
+                    "authority_scope": approved_scope,
+                    "permitted_responses": ("execute_authorized_research", "supply_fulfillment", "defer_fulfillment", "reject_fulfillment"),
+                    "created_at": consumed_at,
+                }
+                updated_state.update({
+                    "external_research": plan_state,
+                    "developmental_resource_policy": {**policy_update, "status": "research_plan_compiled", "research_plan_id": plan.research_plan_id},
+                })
+                return replace(
+                    controller,
+                    continuous_developmental_insight_requests=updated_requests + (fulfillment_request,),
+                    continuous_operator_interaction_responses=tuple(controller.continuous_operator_interaction_responses) + (response,),
+                    continuous_learning_state=updated_state,
+                    continuous_mission_state="developmental_external_research_plan_ready",
+                    active_work_item="persist_external_research_claim_before_call",
+                    journal=controller.journal + (_journal_entry("developmental_resource_policy", "approved_external_research_plan_persisted", (request_id, plan.research_plan_id)),),
+                )
             fulfillment_request = {
                 "request_id": stable_id("developmental-resource-fulfillment-request", request_id),
                 "request_kind": "developmental_resource_fulfillment",
@@ -1538,6 +1583,85 @@ def consume_developmental_resource_authority_response(
     return observe_developmental_agenda_mission_outcome(updated, outcome_id=stable_id("resource-policy-outcome", str(decision.get("decision_id") or ""), selected_option), outcome="resource_blocked", evidence_refs=(str(decision.get("decision_id") or ""), selected_option))
 
 
+def claim_developmental_external_research_execution(
+    controller: ContinuousRuntimeController,
+    *,
+    adapter_identity: str,
+) -> ContinuousRuntimeController:
+    """Persist a one-use claim.  The caller must restart/confirm it before a call."""
+
+    state = dict(controller.continuous_learning_state or {})
+    research = dict(state.get("external_research") or {})
+    plan = dict(research.get("plan") or {})
+    authority = dict(dict(state.get("resource_policy_authorities") or {}).get("external_research") or {})
+    if not plan or not authority or authority.get("request_id") != plan.get("authority_request_id"):
+        return replace(controller, continuous_mission_state="developmental_external_research_blocked", active_work_item="external_research_authority_or_plan_missing", journal=controller.journal + (_journal_entry("external_research", "claim_rejected_without_exact_approved_plan", (str(plan.get("research_plan_id") or ""),)),))
+    existing = dict(research.get("claim") or {})
+    if existing:
+        return controller
+    claim = compile_execution_claim(plan, adapter_identity=adapter_identity)
+    updated = {**research, "claim": claim.as_dict(), "status": "research_execution_claimed", "plan": {**plan, "status": "research_execution_claimed"}}
+    return replace(controller, continuous_learning_state={**state, "external_research": updated}, continuous_mission_state="developmental_external_research_claimed", active_work_item="restart_or_confirm_external_research_claim", journal=controller.journal + (_journal_entry("external_research", "execution_claim_persisted_before_external_call", (claim.claim_id, plan["research_plan_id"])),))
+
+
+def execute_claimed_developmental_external_research(
+    controller: ContinuousRuntimeController,
+    *,
+    adapter: Any,
+    adapter_identity: str,
+) -> ContinuousRuntimeController:
+    """Consume a durable claim through a bounded adapter, then reuse fulfillment.
+
+    ``adapter`` receives the persisted plan and returns source mappings. It is
+    deliberately injected so RC8 or a controlled live transport stays the only
+    retrieval owner; no arbitrary browser is created here.
+    """
+
+    state = dict(controller.continuous_learning_state or {})
+    research = dict(state.get("external_research") or {})
+    plan = dict(research.get("plan") or {})
+    claim = dict(research.get("claim") or {})
+    if claim.get("claim_state") in {"research_completed", "research_partially_completed", "research_failed", "research_interrupted", "research_validation_failed", "research_budget_exhausted"}:
+        return controller
+    if not research_state_is_valid(research) or not plan or not claim or claim.get("claim_state") != "research_execution_claimed":
+        return replace(controller, continuous_mission_state="developmental_external_research_blocked", active_work_item="external_research_claim_not_durable", journal=controller.journal + (_journal_entry("external_research", "external_call_suppressed_without_durable_claim", (str(plan.get("research_plan_id") or ""),)),))
+    if str(claim.get("adapter_identity") or "") != adapter_identity:
+        return replace(controller, continuous_mission_state="developmental_external_research_blocked", active_work_item="external_research_adapter_identity_mismatch", journal=controller.journal + (_journal_entry("external_research", "adapter_identity_mismatch", (str(claim.get("claim_id") or ""),)),))
+    try:
+        raw_sources = tuple(adapter(dict(plan)))
+    except Exception as exc:
+        failed = {**research, "status": "research_failed", "claim": {**claim, "claim_state": "research_failed", "failure_state": type(exc).__name__}, "plan": {**plan, "status": "research_failed"}, "result": {"status": "research_failed", "failure": type(exc).__name__}}
+        return replace(controller, continuous_learning_state={**state, "external_research": failed}, continuous_mission_state="developmental_external_research_failed", active_work_item="external_research_failure_recorded", journal=controller.journal + (_journal_entry("external_research", "retrieval_failure_persisted_without_fabricated_source", (str(claim.get("claim_id") or ""), type(exc).__name__)),))
+    existing = tuple(dict(item) for item in research.get("source_records") or ())
+    retrieval_budget = int(plan.get("retrieval_budget") or 0)
+    limited = raw_sources[:retrieval_budget]
+    budget_exhausted = len(raw_sources) > retrieval_budget
+    records = tuple(normalize_external_research_source(plan, item, existing=existing) for item in limited)
+    combined = existing + tuple(item.as_dict() for item in records)
+    result = synthesize_external_research_result(plan, combined)
+    if budget_exhausted:
+        result = {
+            **result,
+            "status": "research_partially_completed" if result["accepted_source_ids"] else "research_budget_exhausted",
+            "stopping_reason": "retrieval_budget_exhausted",
+        }
+    completed_research = {**research, "source_records": combined, "result": result, "status": result["status"], "claim": {**claim, "claim_state": result["status"], "terminal_result_id": result["research_result_id"]}, "plan": {**plan, "status": result["status"]}}
+    prepared = replace(controller, continuous_learning_state={**state, "external_research": completed_research}, journal=controller.journal + (_journal_entry("external_research", "bounded_source_acquisition_completed", (str(plan.get("research_plan_id") or ""), result["research_result_id"])),))
+    request = next((dict(item) for item in prepared.continuous_developmental_insight_requests if item.get("request_kind") == "developmental_resource_fulfillment" and item.get("research_plan_id") == plan.get("research_plan_id") and item.get("status") == "pending"), {})
+    if result["status"] != "research_completed" or not request:
+        return replace(prepared, continuous_mission_state="developmental_external_research_incomplete", active_work_item="external_research_remaining_blocker")
+    requirement = dict(dict(prepared.continuous_learning_state.get("developmental_resource_policy") or {}).get("requirement") or {})
+    material = {
+        "fulfillment_type": "external_research_fulfillment", "source_identity": result["research_result_id"], "source_type": "authorized_external_research",
+        "source_reference": str(plan.get("research_plan_id") or ""), "source_digest": result["result_digest"],
+        "provenance": tuple(str(item.get("source_record_id") or "") for item in combined if item.get("status") == "accepted"),
+        "topic": str(requirement.get("topic") or ""), "target_capability": str(requirement.get("target_capability") or ""),
+        "intended_role": "advisory_teaching_evidence", "accepted_sources": tuple(item for item in combined if item.get("status") == "accepted"),
+        "provisional_resource": result["provisional_resource"],
+    }
+    return consume_developmental_resource_fulfillment(prepared, request_id=str(request.get("request_id") or ""), selected_option="supply_fulfillment", supplied=material)
+
+
 def _fulfillment_learning_bundle(
     requirement: Mapping[str, Any],
     fulfillment: DevelopmentalResourceAuthorityFulfillment,
@@ -1558,6 +1682,14 @@ def _fulfillment_learning_bundle(
         base["study_resources"] = tuple(base.get("study_resources") or ()) + tuple(dict(item) for item in (material.get("study_resources") or ()))
         base["assessment_dimensions"] = tuple(base.get("assessment_dimensions") or ()) + tuple(dict(item) for item in (material.get("assessment_dimensions") or ()))
         base["capability_catalog"] = tuple(dict.fromkeys(tuple(base.get("capability_catalog") or ()) + tuple(str(item) for item in (material.get("capability_catalog") or ()))))
+    elif fulfillment.fulfillment_type == "external_research_fulfillment":
+        base = {**base, **dict(material.get("provisional_resource") or {})}
+        provenance = tuple(base.get("resource_provenance") or ()) + ({
+            "fulfillment_id": fulfillment.fulfillment_id,
+            "source_identity": fulfillment.source_identity,
+            "source_digest": fulfillment.source_digest,
+            "intended_role": fulfillment.intended_role,
+        },)
     elif fulfillment.fulfillment_type == "operator_sealed_evaluator_fulfillment":
         base["sealed_evaluation_cases"] = tuple(dict(item) for item in (material.get("sealed_evaluation_cases") or ()))
         base["independent_evaluator"] = dict(material.get("independent_evaluator") or {})
@@ -3204,6 +3336,7 @@ def restore_continuous_mission_restart_state(
     fulfillments = tuple(dict(item) for item in (learning_state.get("developmental_resource_fulfillments") or ()) if isinstance(item, Mapping))
     invalid_policy = bool(policy) and not resource_policy_state_is_valid(policy)
     invalid_fulfillments = not resource_fulfillment_state_is_valid(fulfillments, policy=policy)
+    invalid_research = not research_state_is_valid(dict(learning_state.get("external_research") or {}))
     if invalid_agenda:
         learning_state["developmental_agenda"] = {
             **agenda,
@@ -3224,16 +3357,18 @@ def restore_continuous_mission_restart_state(
             "status": "unavailable",
             "failure_reason": "invalid_resource_fulfillment_state_on_restart",
         }
+    if invalid_research:
+        learning_state["external_research"] = {"status": "research_validation_failed", "failure_reason": "invalid_external_research_state_on_restart"}
     return replace(
         controller,
-        continuous_mission_state="developmental_agenda_blocked" if invalid_agenda else "developmental_resource_policy_blocked" if invalid_policy or invalid_fulfillments else str(restart_state.get("continuous_mission_state") or ""),
+        continuous_mission_state="developmental_agenda_blocked" if invalid_agenda else "developmental_resource_policy_blocked" if invalid_policy or invalid_fulfillments else "developmental_external_research_blocked" if invalid_research else str(restart_state.get("continuous_mission_state") or ""),
         continuous_mission_contract=dict(restart_state.get("continuous_mission_contract") or {}),
         continuous_behavioral_failure_records=tuple(item.as_dict() for item in recovered_failures),
         continuous_mission_findings=tuple(restart_state.get("continuous_mission_findings") or ()),
         continuous_mission_frontier=tuple(restart_state.get("continuous_mission_frontier") or ()),
         continuous_main_goal=dict(restart_state.get("continuous_main_goal") or {}),
         continuous_completed_main_goals=tuple(restart_state.get("continuous_completed_main_goals") or ()),
-        continuous_active_subgoal={} if invalid_agenda or invalid_policy else dict(restart_state.get("continuous_active_subgoal") or {}),
+        continuous_active_subgoal={} if invalid_agenda or invalid_policy or invalid_research else dict(restart_state.get("continuous_active_subgoal") or {}),
         continuous_consumed_weakness_signatures=tuple(restart_state.get("continuous_consumed_weakness_signatures") or ()),
         continuous_knowledge_ledger=recovered_ledger,
         continuous_pcm_bridge_ledger=tuple(restart_state.get("continuous_pcm_bridge_ledger") or ()),
@@ -3246,8 +3381,8 @@ def restore_continuous_mission_restart_state(
         continuous_observation_state=dict(restart_state.get("continuous_observation_state") or {}),
         continuous_learning_state=learning_state,
         pending_application_decision_id=str(restart_state.get("pending_application_decision_id") or ""),
-        active_work_item="developmental_agenda_blocked" if invalid_agenda else "developmental_resource_policy_blocked" if invalid_policy or invalid_fulfillments else str(restart_state.get("active_work_item") or ""),
-        journal=tuple(controller.journal) + (_journal_entry("continuous_mission", "invalid_agenda_restart_failed_closed" if invalid_agenda else "invalid_resource_policy_restart_failed_closed" if invalid_policy else "invalid_resource_fulfillment_restart_failed_closed" if invalid_fulfillments else "continuous_mission_restart_state_restored", (str(restart_state.get("continuous_mission_state") or ""),)),),
+        active_work_item="developmental_agenda_blocked" if invalid_agenda else "developmental_resource_policy_blocked" if invalid_policy or invalid_fulfillments else "developmental_external_research_blocked" if invalid_research else str(restart_state.get("active_work_item") or ""),
+        journal=tuple(controller.journal) + (_journal_entry("continuous_mission", "invalid_agenda_restart_failed_closed" if invalid_agenda else "invalid_resource_policy_restart_failed_closed" if invalid_policy else "invalid_resource_fulfillment_restart_failed_closed" if invalid_fulfillments else "invalid_external_research_restart_failed_closed" if invalid_research else "continuous_mission_restart_state_restored", (str(restart_state.get("continuous_mission_state") or ""),)),),
     )
 
 

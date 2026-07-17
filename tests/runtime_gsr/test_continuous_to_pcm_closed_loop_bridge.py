@@ -8,7 +8,9 @@ from pathlib import Path
 import pytest
 
 from orchestration.runtime.continuous_mission_foundation import make_satisfied_transfer_record
+from orchestration.runtime.continuous_mission_foundation import compile_behavioral_failure_record
 from orchestration.runtime.continuous_runtime_controller import (
+    assess_continuous_mission_behavioral_failures,
     assess_continuous_mission_runtime,
     attach_continuous_mission,
     consume_continuous_capability_reassessment,
@@ -21,6 +23,7 @@ from orchestration.runtime.continuous_runtime_controller import (
 from orchestration.runtime.continuous_subgoal_executor import (
     compile_continuous_pcm_bridge_fixture,
     execute_continuous_active_subgoal,
+    execute_repository_contract_exact_replacement_fixture,
     execute_continuous_to_pcm_closed_loop_fixture,
 )
 
@@ -120,6 +123,90 @@ def test_existing_subgoal_executor_dispatches_only_the_explicit_fixture_kind(tmp
 
     assert result.disposition == "behaviorally_demonstrated"
     assert updated.continuous_pcm_bridge_ledger[-1]["consumed_by_controller"] is True
+
+
+def _exact_replacement_controller():
+    evidence = {
+        "source_type": "failing_test",
+        "source_reference": "sealed_score_gate_behavior.json",
+        "source_digest": "sealed-score-gate-digest",
+        "observed_behavior": "classify_score(69) returns pass because the current threshold is score >= 0.",
+        "expected_behavior": "classify_score(69) returns fail while classify_score(70) returns pass.",
+        "expected_behavior_identity": "score_gate_threshold_behavior",
+        "expected_behavior_authority": "sealed_behavioral_evaluation_bundle",
+        "expected_vs_observed_result": "exact_behavioral_logic_replacement",
+        "baseline_reproduction": "score_gate_threshold=0.0",
+        "reproduction_command_or_predicate": "sealed score-gate behavior predicate",
+        "reproduction_attempts": (
+            {
+                "command_or_predicate_identity": "sealed score-gate behavior predicate",
+                "input_or_state_reference": "sealed_score_gate_behavior.json",
+                "started_at": "2026-07-16T00:00:00+00:00",
+                "completed_at": "2026-07-16T00:00:01+00:00",
+                "status": "completed",
+                "result_classification": "threshold_behavior_failed",
+                "result_digest": "score-gate-result-digest",
+                "environment_digest": "score-gate-env-digest",
+                "authoritative_runner_identity": "sealed_score_gate_behavior_v1",
+            },
+        ),
+        "reproduction_result": "failed",
+        "reproduction_output_digest": "score-gate-output-digest",
+        "first_incorrect_transition": "score 69 evaluated -> threshold condition score >= 0 -> pass",
+        "affected_runtime_stage": "repository_contract_exact_replacement",
+        "affected_capability_id": "score_gate_threshold_behavior",
+        "originating_mission_id": "repository-contract-exact-replacement-test",
+        "suspected_owner_paths": ("score_gate.py",),
+        "independent_evidence_paths": ("sealed_score_gate_behavior.json",),
+        "allowed_scope": ("score_gate.py",),
+        "excluded_scope": ("DELTA-75", "reports/RC4_*", "tests/"),
+        "materiality_reason": "The threshold behavior is wrong while the function and controls remain otherwise bounded.",
+        "reproducibility_status": "reproduced",
+        "environment_digest": "score-gate-env-digest",
+        "state_digest": "score-gate-state-digest",
+        "authority_class": "local_execution_allowed",
+        "ambiguity_status": "resolved",
+        "current_disposition": "behaviorally_failed",
+        "observed_at": "2026-07-16T00:00:02+00:00",
+    }
+    compiled = compile_behavioral_failure_record(evidence)
+    assert compiled.accepted
+    assert compiled.record is not None
+    controller = start_continuous_runtime_controller(session_id="repository-contract-exact-replacement")
+    controller = attach_continuous_mission(controller, "Repair one sealed score-gate threshold failure.")
+    controller = assess_continuous_mission_behavioral_failures(controller, (compiled.record,))
+    controller = refresh_continuous_mission_frontier(controller)
+    controller = select_continuous_mission_subgoal(controller)
+    assert controller.continuous_active_subgoal
+    return controller
+
+
+def test_repository_behavior_contract_enters_pcm_exact_replacement_and_reassessment(tmp_path: Path):
+    controller = _exact_replacement_controller()
+
+    updated, result = execute_repository_contract_exact_replacement_fixture(
+        controller,
+        artifact_root=tmp_path,
+        python_executable=sys.executable,
+    )
+    root = Path(result.campaign_root)
+    disposition = json.loads((root / "exact_replacement_bridge_disposition.json").read_text(encoding="utf-8"))
+    patch = disposition["patch_proposal"]
+    operation = patch["operations"][0]
+
+    assert result.accepted is True
+    assert result.disposition == "behaviorally_demonstrated"
+    assert result.baseline == {"target": False, "control": True, "held_out": False}
+    assert result.candidate["behavioral"] == {"target": True, "control": True, "held_out": True}
+    assert result.clean_reproduction["restored_baseline"] == {"target": False, "control": True, "held_out": False}
+    assert disposition["contract"]["local_implementation_eligibility"] == "locally_implementable_by_existing_pcm"
+    assert disposition["contract"]["failure_mechanism"] == "exact_behavioral_logic_replacement"
+    assert operation["operation"] == "exact_replace_text"
+    assert "score >= 0" in operation["expected_old_text"]
+    assert "score >= 70" in operation["replacement_text"]
+    assert disposition["behavioral"]["evidence_independence"]["candidate_generated_expected_outputs"] is False
+    assert disposition["tracked_source_mutated"] is False
+    assert updated.continuous_knowledge_ledger[-1]["capability_acquired"] is True
 
 
 def test_structural_evidence_does_not_consume_the_active_gap_as_solved():

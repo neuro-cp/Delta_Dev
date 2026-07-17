@@ -84,7 +84,7 @@ Freeze status: n/a
       "ticket_id": "rc4-rollback-ticket-09443b2deda50501"
     },
     "rollback_ticket": {
-      "created_at": "2026-07-10T18:33:08+00:00",
+      "created_at": "2026-07-13T06:31:25+00:00",
       "meta": {
         "audit_requirements": [
           "provenance",

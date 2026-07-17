@@ -20,7 +20,7 @@ Freeze status: n/a
       "base fingerprint remains unchanged",
       "operator approval remains bounded"
     ],
-    "design_id": "rc4-design-1847d7074ec0e0ef",
+    "design_id": "rc4-design-ba679c217b8ac426",
     "design_summary": "Apply a narrowly scoped deterministic patch and validate it in a disposable workspace.",
     "meta": {
       "audit_requirements": [
@@ -168,7 +168,7 @@ Freeze status: n/a
       "contract"
     ],
     "affected_tests": [],
-    "assessment_id": "rc4-impact-96f474bb83557360",
+    "assessment_id": "rc4-impact-7f5a3b3621cba7d1",
     "meta": {
       "audit_requirements": [
         "provenance",
@@ -211,8 +211,8 @@ Freeze status: n/a
   "report": "RC4_CODE_INTELLIGENCE_BENCHMARK",
   "score": 1.0,
   "snapshot": {
-    "base_fingerprint": "a14bfdf791240e6fc2ce46cf922c2d7a0538d87aea36d193cc3639a4017b3f1d",
-    "created_at": "2026-07-10T18:33:07+00:00",
+    "base_fingerprint": "46ca6c8af679cb3d1441489c18073d7d3cc65c76f97f27cebc55e88da4a6f6f3",
+    "created_at": "2026-07-13T06:31:24+00:00",
     "entry_points": [
       "DELTA.py"
     ],
@@ -221,17 +221,18 @@ Freeze status: n/a
       ".csv": 14,
       ".example": 1,
       ".html": 1,
-      ".json": 897,
-      ".jsonl": 342,
+      ".json": 861,
+      ".jsonl": 347,
       ".lnk": 1,
       ".local": 1,
-      ".log": 14,
-      ".md": 1354,
+      ".log": 12,
+      ".md": 1355,
+      ".patch": 1,
       ".pid": 3,
       ".png": 15,
       ".prof": 2,
       ".ps1": 3,
-      ".py": 2116,
+      ".py": 2147,
       ".sqlite": 6,
       ".toml": 1,
       ".txt": 227,
@@ -271,7 +272,7 @@ Freeze status: n/a
       "pyproject.toml"
     ],
     "root_name": "Delta_Dev",
-    "snapshot_id": "rc4-repo-snapshot-5e1b7e7a505390f7",
+    "snapshot_id": "rc4-repo-snapshot-9670fc3653590135",
     "test_files": [
       "engine/affective_urgency/tests/test_salience_value_urgency_convergence.py",
       "engine/affective_urgency/tests/test_salience_value_urgency_convergence.txt",
@@ -322,6 +323,5 @@ Freeze status: n/a
       "engine/execution/audit/tests/test_execution_audit_has_no_runtime_edges.py",
       "engine/execution/enablement/tests/test_enablement_controller_applies_and_revokes.py",
       "engine/execution/enablement/tests/test_enablement_has_no_learning_or_runtime_edges.py",
-      "engine/execution/enablement/tests/test_enablement_policy_is_time_bounded.py",
-      "en
+      "engine/execution/enablement/tests/test_enablement_policy_is_time_bou
 ```

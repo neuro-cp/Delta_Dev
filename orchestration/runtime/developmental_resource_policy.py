@@ -26,6 +26,7 @@ FULFILLMENT_TYPES = frozenset({
     "operator_sealed_evaluator_fulfillment",
     "local_model_request_approval",
     "local_model_result_fulfillment",
+    "external_research_fulfillment",
     "execution_authority_fulfillment",
     "partial_fulfillment",
     "fulfillment_rejected",
@@ -249,6 +250,7 @@ def compile_developmental_resource_authority_fulfillment(
         "request_operator_teaching_resource": {"operator_teaching_resource_fulfillment", "partial_fulfillment"},
         "request_operator_sealed_evaluator": {"operator_sealed_evaluator_fulfillment", "partial_fulfillment"},
         "request_local_model_resource": {"local_model_request_approval", "local_model_result_fulfillment", "fulfillment_unavailable"},
+        "request_external_research_authority": {"external_research_fulfillment", "partial_fulfillment", "fulfillment_unavailable"},
         "request_execution_authority": {"execution_authority_fulfillment"},
     }
     if action in expected_types and fulfillment_type not in expected_types[action]:
@@ -299,6 +301,17 @@ def compile_developmental_resource_authority_fulfillment(
             errors.append("local_model_result_not_completed")
         else:
             accepted.append("advisory_local_model_result")
+    elif fulfillment_type == "external_research_fulfillment":
+        sources = tuple(item for item in (material.get("accepted_sources") or ()) if isinstance(item, Mapping))
+        resource = dict(material.get("provisional_resource") or {})
+        if material.get("sealed_evaluation_cases") or material.get("independent_evaluator"):
+            errors.append("evaluator_leakage_detected")
+        if not sources or not resource or not resource.get("resource_bundle_id"):
+            errors.append("external_research_evidence_insufficient")
+        elif any(not item.get("source_record_id") or not item.get("content_digest") for item in sources):
+            errors.append("external_source_provenance_incomplete")
+        else:
+            accepted.extend(("external_research_teaching_evidence", "provisional_external_resource"))
     elif fulfillment_type == "execution_authority_fulfillment":
         scope = _words(material.get("scope"))
         if not scope or "tracked" in scope or "deploy" in scope or "git" in scope:
@@ -408,7 +421,7 @@ def compile_developmental_resource_authority_requirement(
         evaluator_plan_id=str(selected_plan.get("plan_id") or ""), evaluator_state=evaluator_state, evaluator_independence_state=evaluator_independence,
         teaching_source_constraints=("teaching_evidence_cannot_certify_capability",), sealed_source_constraints=("sealed_evaluator_must_remain_separate",),
         provenance_requirements=("durable_identity", "scope_compatibility"), authority_requirements=("operator_approval_for_new_resource_or_authority",),
-        execution_requirements=("execution_required", "disposable_execution_only_when_explicitly_authorized") if bool(candidate.get("execution_required")) else ("execution_not_required",), external_source_requirements=("external_research_requires_explicit_authority",),
+        execution_requirements=("execution_required", "disposable_execution_only_when_explicitly_authorized") if bool(candidate.get("execution_required")) else ("execution_not_required",), external_source_requirements=("external_research_requires_explicit_authority",) + (("external_evidence_preferred",) if str(candidate.get("resource_state") or "") in {"external_research_required", "external_evidence_required"} else ()),
         resource_budget=max(0, int(agenda.get("remaining_attempt_budget") or 0)), request_budget=1,
         authority_request_budget=max(0, 1 - sum(1 for item in state.get("resource_policy_requests") or () if item.get("status") == "pending")),
         risk_budget=0.2, uncertainty="resource routing does not establish capability", blockers=tuple(dict.fromkeys(blockers)),
@@ -466,6 +479,7 @@ def compile_resource_policy_candidates(
     result = by_type.get("local_model_result")
     local_request = by_type.get("local_model_request")
     teaching_rank = 0.78 if prefer_operator_teaching else 0.62
+    external_preferred = "external_evidence_preferred" in requirement.external_source_requirements
     specs = (
         ("reuse_validated_retained_resource", retained, 1.0, "local_reuse_ready"),
         ("reuse_provisional_resource", provisional, 0.85, "local_reuse_ready"),
@@ -473,7 +487,7 @@ def compile_resource_policy_candidates(
         ("request_local_model_resource", None, 0.74, "awaiting_local_model_approval"),
         ("request_operator_teaching_resource", None, teaching_rank, "awaiting_operator_authority"),
         ("request_operator_sealed_evaluator", None, 0.76, "awaiting_operator_authority"),
-        ("request_external_research_authority", None, 0.56, "awaiting_operator_authority"),
+        ("request_external_research_authority", None, 0.82 if external_preferred else 0.56, "awaiting_operator_authority"),
         ("request_execution_authority", None, 0.54, "awaiting_operator_authority"),
         ("defer_until_state_change", None, 0.18, "deferred"),
         ("return_to_agenda_alternative", None, 0.16, "agenda_alternative"),
@@ -593,7 +607,8 @@ def resource_policy_state_is_valid(policy: Mapping[str, Any]) -> bool:
     return str(policy.get("status") or "") in {
         "decision_compiled", "authority_pending", "clarification_requested", "authority_granted",
         "local_model_request_pending", "awaiting_fulfillment", "fulfillment_validated", "blocker_resolved",
-        "rejected", "deferred", "unavailable",
+        "research_plan_compiled", "research_execution_claimed", "research_completed", "research_partially_completed",
+        "research_failed", "research_validation_failed", "rejected", "deferred", "unavailable",
     }
 
 

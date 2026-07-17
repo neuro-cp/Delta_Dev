@@ -17,13 +17,13 @@ Freeze status: n/a
   "episode": {
     "authorization": {
       "authorization_id": "rc4-authorization-fa3dd696b0a7e9b6",
-      "created_at": "2026-07-10T18:33:07+00:00",
+      "created_at": "2026-07-13T06:31:24+00:00",
       "grant": {
         "approver": "operator",
         "approver_role": "operator",
-        "expires_at": "2026-07-10T18:43:07+00:00",
+        "expires_at": "2026-07-13T06:41:24+00:00",
         "grant_id": "rc4-permission-grant-05aa01c1105dd0f2",
-        "issued_at": "2026-07-10T18:33:07+00:00",
+        "issued_at": "2026-07-13T06:31:24+00:00",
         "meta": {
           "audit_requirements": [
             "provenance",
@@ -148,7 +148,7 @@ Freeze status: n/a
       },
       "policy_id": "rc4-default-execution-policy",
       "request": {
-        "created_at": "2026-07-10T18:33:07+00:00",
+        "created_at": "2026-07-13T06:31:24+00:00",
         "meta": {
           "audit_requirements": [
             "provenance",
@@ -200,7 +200,7 @@ Freeze status: n/a
     "decision": {
       "authorization_id": "rc4-authorization-fa3dd696b0a7e9b6",
       "decision_id": "rc4-authorization-decision-39232a4001614ceb",
-      "evaluated_at": "2026-07-10T18:33:07+00:00",
+      "evaluated_at": "2026-07-13T06:31:24+00:00",
       "evidence_requirements": [
         "transcript",
         "diff",

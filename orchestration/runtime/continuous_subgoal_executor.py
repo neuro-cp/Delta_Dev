@@ -597,6 +597,310 @@ def _create_sealed_pcm_behavioral_bundle(design: Mapping[str, Any], baseline_sou
     return {**bundle, "bundle_digest": _digest(bundle)}
 
 
+def execute_repository_contract_exact_replacement_fixture(
+    controller: ContinuousRuntimeController,
+    *,
+    artifact_root: str | Path,
+    python_executable: str | None = None,
+) -> tuple[ContinuousRuntimeController, SubgoalExecutionResult]:
+    """Bridge a sealed RepositoryBehaviorContract into PCM exact replacement.
+
+    This is an integration proof for the existing controller, contract, PCM
+    proposal, sandbox materialization, and independent behavioral evaluation
+    path. It deliberately uses a disposable fixture so it does not claim that a
+    naturally discovered repository defect has been repaired.
+    """
+
+    if not controller.continuous_active_subgoal:
+        raise ValueError("repository contract bridge requires an active controller subgoal")
+    if not controller.continuous_behavioral_failure_records:
+        raise ValueError("repository contract bridge requires a sealed BehavioralFailureRecord")
+    subgoal = dict(controller.continuous_active_subgoal)
+    root = Path(artifact_root) / "repository_contract_exact_replacement" / str(subgoal.get("subgoal_id") or "subgoal")
+    root.mkdir(parents=True, exist_ok=True)
+    result_path = root / "execution_result.json"
+    if result_path.exists():
+        previous = _read_json(result_path)
+        return controller, _result_from_previous(previous, reason="duplicate_exact_replacement_bridge_prevented")
+
+    baseline_source = "def classify_score(score):\n    if score >= 0:\n        return 'pass'\n    return 'fail'\n"
+    replacement_source = "def classify_score(score):\n    if score >= 70:\n        return 'pass'\n    return 'fail'\n"
+    fixture_root = root / "fixture"
+    fixture_root.mkdir(exist_ok=True)
+    source_path = fixture_root / "score_gate.py"
+    source_path.write_text(baseline_source, encoding="utf-8", newline="\n")
+    evidence_payload = {
+        "protocol": "sealed_score_gate_behavior_v1",
+        "expected": {"classify_score(-1)": "fail", "classify_score(69)": "fail", "classify_score(70)": "pass"},
+        "created_before_candidate": True,
+        "candidate_generated_expected_outputs": False,
+    }
+    evidence_path = root / "sealed_score_gate_behavior.json"
+    _write_json(evidence_path, evidence_payload)
+    source_inspection = {
+        "inspection_id": stable_id("repository-contract-exact-replacement-inspection", subgoal.get("subgoal_id"), _digest(baseline_source)),
+        "files": (
+            {
+                "path": "score_gate.py",
+                "byte_count": len(baseline_source.encode("utf-8")),
+                "sha256": hashlib.sha256(baseline_source.encode("utf-8")).hexdigest(),
+                "symbols": ("classify_score",),
+            },
+            {
+                "path": "sealed_score_gate_behavior.json",
+                "byte_count": evidence_path.stat().st_size,
+                "sha256": hashlib.sha256(evidence_path.read_bytes()).hexdigest(),
+                "symbols": (),
+            },
+        ),
+        "file_count": 2,
+        "meaningful": True,
+    }
+    contract = compile_repository_behavior_contract(
+        controller,
+        {
+            **subgoal,
+            "rollback_condition": "restore exact classify_score preimage and rerun sealed score-gate behavior",
+            "controls": ("negative_score_still_fails", "threshold_score_passes"),
+            "held_out_policy": "score 69 remains sealed until candidate evaluation",
+        },
+        source_inspection,
+        advisory_result={
+            "model_id": "deterministic_fixture_no_model_authority",
+            "executed": False,
+            "provider_calls_performed": False,
+            "answer": {
+                "failure_mechanism": "exact_behavioral_logic_replacement",
+                "candidate_behavior": "replace the inspected classify_score threshold condition only",
+                "expected_observable_change": "classify_score(69) changes from pass to fail while controls remain stable",
+            },
+        },
+    )
+    _write_json(root / "repository_behavior_contract.json", contract.as_dict())
+    if contract.local_implementation_eligibility != "locally_implementable_by_existing_pcm":
+        result = SubgoalExecutionResult(
+            accepted=False,
+            disposition=contract.local_implementation_eligibility,
+            reason="repository behavior contract did not authorize exact replacement bridge",
+            subgoal_id=str(subgoal.get("subgoal_id") or ""),
+            campaign_root=str(root),
+            consumed_once=True,
+            source_inspection=source_inspection,
+            baseline={},
+            candidate={},
+            validation={},
+            clean_reproduction={},
+            application_request={},
+            behavioral_evaluation_request={},
+            reassessment={"contract_id": contract.contract_id, "contract_disposition": contract.local_implementation_eligibility},
+            resource_usage=(),
+            meaningful_transition_timestamps={"bridge_completed": utc_now()},
+            stalled_execution=False,
+        )
+        _write_json(result_path, result.as_dict())
+        return controller, result
+
+    cycle = gsr.make_governed_objective_cycle(
+        gsr.make_development_objective("Repository contract exact replacement fixture", sequence=1),
+        sequence=1,
+    )
+    manifest = gsr.make_python_coding_module_manifest()
+    capability = gsr.make_python_coding_capability_request(cycle, manifest, requested_source_scope=("score_gate.py",), request_sequence=2)
+    attachment_request = gsr.make_python_coding_module_attachment_request(manifest, capability, requested_attachment_sequence=3)
+    attachment_authorization = gsr.make_python_coding_module_attachment_authorization(attachment_request, issued_sequence=4, expiration_sequence=90)
+    attachment_eligibility = gsr.evaluate_python_coding_module_attachment_eligibility(cycle, manifest, capability, attachment_request, attachment_authorization, sequence=5)
+    attachment = gsr.create_python_coding_module_inert_attachment_record(gsr.make_python_coding_module_attachment_state(), attachment_eligibility, sequence=6)
+    if not attachment.accepted or attachment.attachment_record is None:
+        raise RuntimeError(f"PCM attachment failed: {attachment.reason}")
+    record = attachment.attachment_record
+    inspection_request = gsr.make_python_source_inspection_request(record, requested_relative_paths=("score_gate.py",), request_sequence=7)
+    inspection_authorization = gsr.make_python_source_inspection_authorization(inspection_request, issued_sequence=8, expiration_sequence=90)
+    inspection = gsr.inspect_python_source_read_only(record, inspection_request, inspection_authorization, root=fixture_root, sequence=9)
+    diagnosis_request = gsr.make_python_bounded_diagnosis_request(
+        record,
+        inspection,
+        diagnosis_question="Does classify_score require exact behavioral logic replacement?",
+        expected_transition=contract.expected_behavior,
+        diagnosis_category="exact_behavioral_logic_replacement",
+        expected_symbol="classify_score",
+        request_sequence=10,
+    )
+    diagnosis_authorization = gsr.make_python_bounded_diagnosis_authorization(diagnosis_request, issued_sequence=11, expiration_sequence=90)
+    diagnosis = gsr.perform_python_bounded_diagnosis(record, inspection, diagnosis_request, diagnosis_authorization, sequence=12)
+    test_request = gsr.make_python_focused_test_proposal_request(
+        record,
+        diagnosis,
+        expected_behavior="classify_score remains importable for independent sealed behavior evaluation",
+        proposed_test_target_path="tests/test_pcm_generated_review.py",
+        request_sequence=13,
+    )
+    test_authorization = gsr.make_python_focused_test_proposal_authorization(test_request, issued_sequence=14, expiration_sequence=90)
+    test_proposal = gsr.create_python_focused_test_proposal(record, diagnosis, test_request, test_authorization, sequence=15)
+    handoff_request = gsr.make_python_sandbox_handoff_request(
+        record,
+        inspection,
+        diagnosis,
+        test_proposal,
+        allowed_target_paths=("score_gate.py", "tests/test_pcm_generated_review.py"),
+        request_sequence=16,
+    )
+    handoff_authorization = gsr.make_python_sandbox_handoff_authorization(handoff_request, issued_sequence=17, expiration_sequence=90)
+    handoff = gsr.create_python_sandbox_handoff_package(record, inspection, diagnosis, test_proposal, handoff_request, handoff_authorization, sequence=18)
+    patch_request = gsr.make_python_candidate_patch_request(
+        record,
+        inspection,
+        diagnosis,
+        test_proposal,
+        operation="exact_replace_text",
+        expected_old_text=baseline_source,
+        replacement_text=replacement_source,
+        expected_postcondition="symbol_present:classify_score",
+        request_sequence=19,
+    )
+    patch_authorization = gsr.make_python_candidate_patch_authorization(patch_request, issued_sequence=20, expiration_sequence=90)
+    patch = gsr.create_python_candidate_patch_proposal(record, inspection, diagnosis, test_proposal, patch_request, patch_authorization, sequence=21)
+    artifacts = (
+        ("pcm_1c_read_only_source_inspection", "inspection_evidence", inspection.evidence.__dict__),
+        ("pcm_1d_bounded_diagnosis", "diagnosis_evidence", diagnosis.evidence.__dict__),
+        ("pcm_1e_focused_test_proposal", "test_proposal_evidence", test_proposal.evidence.__dict__),
+        ("pcm_1f_sandbox_handoff", "sandbox_handoff_evidence", handoff.evidence.__dict__),
+        ("pcm_2a_candidate_patch_proposal", "candidate_patch_evidence", patch.evidence.__dict__),
+    )
+    chain = gsr.build_pcm2_artifact_chain(
+        objective_cycle_id=record.objective_cycle_id,
+        module_id=record.module_id,
+        module_version=record.module_version,
+        artifacts=artifacts,
+    )
+    materialization_request = gsr.make_python_sandbox_materialization_request(patch, test_proposal, chain, request_sequence=22)
+    materialization_authorization = gsr.make_python_sandbox_materialization_authorization(materialization_request, issued_sequence=23, expiration_sequence=90)
+    materialization = gsr.materialize_python_candidate_in_disposable_sandbox(
+        patch,
+        test_proposal,
+        chain,
+        materialization_request,
+        materialization_authorization,
+        fixture_root=fixture_root,
+        sandbox_parent=root / "sandboxes",
+        sequence=24,
+    )
+    if not materialization.accepted or materialization.manifest is None:
+        raise RuntimeError(f"PCM materialization failed: {materialization.reason}")
+    execution_request = gsr.make_python_sandbox_execution_request(
+        materialization.manifest,
+        command=(python_executable or sys.executable, "-m", "pytest", materialization.manifest.test_relative_path),
+        request_sequence=25,
+    )
+    execution_authorization = gsr.make_python_sandbox_execution_authorization(execution_request, issued_sequence=26, expiration_sequence=90)
+    execution = gsr.execute_python_sandbox_focused_test_once(materialization.manifest, execution_request, execution_authorization, sequence=27)
+    structural = gsr.evaluate_python_sandbox_result(materialization.manifest, patch, test_proposal, execution, chain, sequence=28)
+    candidate_source = (Path(materialization.manifest.workspace_root) / materialization.manifest.target_relative_path).read_text(encoding="utf-8")
+    baseline_outcome = _run_score_gate_behavioral_cases(baseline_source)
+    candidate_outcome = _run_score_gate_behavioral_cases(candidate_source)
+    restored_outcome = _run_score_gate_behavioral_cases(baseline_source)
+    behaviorally_demonstrated = bool(
+        structural.accepted
+        and structural.evaluation is not None
+        and structural.evaluation.classification == "proposal_passed"
+        and not baseline_outcome["target"]
+        and candidate_outcome["target"]
+        and not restored_outcome["target"]
+        and baseline_outcome["control"]
+        and candidate_outcome["control"]
+        and restored_outcome["control"]
+    )
+    behavioral = BehavioralEvaluationRecord(
+        evaluation_id=stable_id("repository-contract-exact-replacement-evaluation", contract.contract_id, patch.evidence.patch_attempt_id if patch.evidence else ""),
+        task_family_id="repository_contract_exact_replacement_fixture",
+        capability_id=contract.capability_id,
+        developmental_gap_id=str(subgoal.get("weakness_id") or contract.capability_id),
+        baseline_attempt_id=contract.failure_id,
+        candidate_id=str((patch.evidence.patch_proposal or {}).get("patch_proposal_id") or "") if patch.evidence is not None else "",
+        evaluation_protocol_version="repository_contract_exact_replacement_v1",
+        task_source="sealed_integration_fixture",
+        training_case_ids=("score_gate_importability",),
+        sealed_or_preexisting_case_ids=("score_69_threshold",),
+        control_case_ids=("negative_score_fails", "threshold_score_passes"),
+        baseline_metrics={"target": float(baseline_outcome["target"])},
+        post_candidate_metrics={"target": float(candidate_outcome["target"])},
+        transfer_metrics={"target": float(candidate_outcome["held_out"]), "threshold": 1.0},
+        regression_metrics={"controls_stable": baseline_outcome["control"] and candidate_outcome["control"] and restored_outcome["control"]},
+        evidence_independence={
+            "case_source": "sealed",
+            "candidate_generated_expected_outputs": False,
+            "self_reported_success": False,
+            "artifact_existence_only": False,
+            "tracked_source_mutated": False,
+        },
+        disposition="behaviorally_demonstrated" if behaviorally_demonstrated else "behaviorally_failed",
+        evidence_refs=(str(evidence_path), str(root / "exact_replacement_bridge_disposition.json")),
+    )
+    base_record = CapabilityKnowledgeRecord(
+        capability_id=contract.capability_id,
+        original_weakness=contract.expected_behavior,
+        evidence=(str(evidence_path), str(root / "repository_behavior_contract.json")),
+        first_incorrect_transition=contract.first_incorrect_transition,
+        strategies_attempted=("repository_behavior_contract", "pcm_exact_replace_text", "sealed_score_gate_evaluation"),
+        failed_approaches=(),
+        successful_mechanism="RepositoryBehaviorContract compiled into PCM exact_replace_text and passed sealed independent behavior",
+        exact_candidate=str((patch.evidence.patch_proposal or {}).get("patch_proposal_id") or "") if patch.evidence is not None else "",
+        tests_added=("score_gate_importability",),
+        metrics_before_after={"baseline": baseline_outcome, "candidate": candidate_outcome, "restored": restored_outcome},
+        controls=("tracked_source_unchanged", "negative_score_fails", "threshold_score_passes"),
+        adversarial_evidence=("candidate could not mutate sealed expected behavior",),
+        held_out_evidence={"score_69_threshold": candidate_outcome["held_out"]},
+        reproduction_evidence=str(evidence_path),
+        provider_contribution="none",
+        local_repair_contribution="pcm_exact_replace_text",
+        application_evidence="not applied; disposable sandbox only",
+        regression_evidence="sealed score-gate control and restoration outcomes",
+        reassessment="behaviorally_demonstrated" if behaviorally_demonstrated else "behaviorally_failed",
+        residual_uncertainty="disposable integration fixture; autonomous discovery of a natural compatible defect remains separate",
+        reusable_process_rules=("exact replacement requires deterministic preimage and sealed independent behavior",),
+        evidence_stage="behaviorally_demonstrated" if behaviorally_demonstrated else "behaviorally_failed",
+        capability_acquired=behaviorally_demonstrated,
+        eligible_for_behavioral_evaluation=False,
+        behavioral_evaluation=behavioral,
+        behavioral_evaluation_ref=behavioral.evaluation_id,
+    )
+    promoted = promote_capability_with_behavioral_evaluation(base_record, behavioral)
+    next_controller = continue_continuous_mission_after_reassessment(consume_continuous_capability_reassessment(controller, promoted))
+    cleaned, cleanup_reason = gsr.cleanup_python_disposable_sandbox(materialization.manifest)
+    disposition = {
+        "contract": contract.as_dict(),
+        "patch_proposal": patch.evidence.patch_proposal if patch.evidence else {},
+        "structural": structural.evaluation.__dict__ if structural.evaluation else {},
+        "behavioral": behavioral.as_dict(),
+        "baseline": baseline_outcome,
+        "candidate": candidate_outcome,
+        "restored": restored_outcome,
+        "cleanup": {"cleaned": cleaned, "reason": cleanup_reason},
+        "tracked_source_mutated": False,
+    }
+    _write_json(root / "exact_replacement_bridge_disposition.json", disposition)
+    result = SubgoalExecutionResult(
+        accepted=behaviorally_demonstrated,
+        disposition=behavioral.disposition,
+        reason="repository contract exact replacement evaluated in disposable sandbox",
+        subgoal_id=str(subgoal.get("subgoal_id") or ""),
+        campaign_root=str(root),
+        consumed_once=True,
+        source_inspection=source_inspection,
+        baseline=baseline_outcome,
+        candidate={"structural_classification": structural.evaluation.classification if structural.evaluation else "", "behavioral": candidate_outcome},
+        validation={"behaviorally_demonstrated": behaviorally_demonstrated, "controls_stable": behavioral.regression_metrics["controls_stable"]},
+        clean_reproduction={"restored_baseline": restored_outcome, "cleanup_confirmed": cleaned, "cleanup_reason": cleanup_reason},
+        application_request={},
+        behavioral_evaluation_request=behavioral.as_dict(),
+        reassessment={"capability_id": promoted.capability_id, "reassessment": promoted.reassessment},
+        resource_usage=(ResourceUseRecord("local_tool", "existing_pcm_exact_replace_text", "contract-to-PCM integration fixture", behavioral.disposition),),
+        meaningful_transition_timestamps={"bridge_completed": utc_now()},
+        stalled_execution=False,
+    )
+    _write_json(result_path, result.as_dict())
+    return next_controller, result
+
+
 def _run_sealed_pcm_behavioral_cases(source: str, expected_symbol: str) -> dict[str, bool]:
     namespace: dict[str, Any] = {}
     try:
@@ -608,6 +912,19 @@ def _run_sealed_pcm_behavioral_cases(source: str, expected_symbol: str) -> dict[
         target = False
         control = False
     return {"target": target, "control": control, "held_out": target and control}
+
+
+def _run_score_gate_behavioral_cases(source: str) -> dict[str, bool]:
+    namespace: dict[str, Any] = {}
+    try:
+        exec(compile(source, "score_gate.py", "exec"), {"__builtins__": {}}, namespace)
+        classify = namespace.get("classify_score")
+        target = callable(classify) and classify(69) == "fail"
+        controls = callable(classify) and classify(-1) == "fail" and classify(70) == "pass"
+    except Exception:  # noqa: BLE001 - failed candidate behavior is a truthful evaluation result.
+        target = False
+        controls = False
+    return {"target": target, "control": controls, "held_out": target and controls}
 
 
 def _recover_or_suppress_completed_pcm_bridge_result(

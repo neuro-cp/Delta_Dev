@@ -32,7 +32,7 @@ Freeze status: RC4_FREEZE_PENDING_REAL_OPERATOR_PILOT
     "blockers": [
       "operator_pilot_evidence"
     ],
-    "created_at": "2026-07-10T18:33:08+00:00",
+    "created_at": "2026-07-13T06:31:26+00:00",
     "criteria": {
       "authorization_precision": true,
       "bounded_repair": true,

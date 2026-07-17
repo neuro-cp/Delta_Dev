@@ -17,6 +17,8 @@ import json
 from pathlib import Path
 import re
 from urllib.parse import urlparse, urlunparse
+from urllib.error import HTTPError, URLError
+from urllib.request import HTTPRedirectHandler, Request, build_opener
 import sys
 from typing import Any, Mapping
 
@@ -35,6 +37,9 @@ DEFAULT_ALLOWED_DOMAINS = (
     "www.w3.org",
     "www.rfc-editor.org",
     "openai.com",
+    "math.mit.edu",
+    "ocw.mit.edu",
+    "encyclopediaofmath.org",
 )
 DEFAULT_DENIED_DOMAINS = (
     "localhost",
@@ -233,6 +238,14 @@ class MockRetrievalResult:
     decision: RetrievalDecision
     bundle: EvidenceBundle | None
     safety: Mapping[str, bool]
+
+
+@dataclass(frozen=True)
+class RetrievalExecutionResult:
+    decision: RetrievalDecision
+    bundle: EvidenceBundle | None
+    safety: Mapping[str, bool]
+    failure_state: str = ""
 
 
 def safety_metadata() -> dict[str, bool]:
@@ -450,6 +463,57 @@ def execute_mock_retrieval(
         risk=decision.risk,
     )
     return MockRetrievalResult(decision, bundle, safety_metadata())
+
+
+class _NoRedirect(HTTPRedirectHandler):
+    def redirect_request(self, request: Request, fp: Any, code: int, msg: str, headers: Any, newurl: str) -> None:
+        return None
+
+
+def execute_bounded_retrieval(
+    request: ExternalRetrievalRequest,
+    *,
+    env: Mapping[str, str] | None = None,
+    policy: RetrievalPolicy | None = None,
+    opener: Any | None = None,
+) -> RetrievalExecutionResult:
+    """Perform one explicitly approved RC8 request, retaining only bounded text.
+
+    Redirects, downloads, authentication, uploads, and unsupported content
+    types are rejected.  Callers retain the result; this function owns neither
+    mission state nor authority beyond the request's exact approval binding.
+    """
+
+    policy = policy or build_retrieval_policy()
+    decision = decide_retrieval(request, env=env, policy=policy)
+    if decision.outcome != "RETRIEVAL_PERMITTED":
+        return RetrievalExecutionResult(decision, None, safety_metadata(), decision.outcome)
+    transport = opener or build_opener(_NoRedirect())
+    try:
+        response = transport.open(Request(normalize_url(request.target), method="GET", headers={"User-Agent": "DELTA-RC8-governed-retrieval/1"}), timeout=policy.budget.timeout_seconds)
+        with response:
+            final_url = normalize_url(str(response.geturl() or request.target))
+            if final_url != normalize_url(request.target):
+                return RetrievalExecutionResult(decision, None, {**safety_metadata(), "live_network_call_performed": True}, "redirect_rejected")
+            content_type = str(response.headers.get_content_type() or "").lower()
+            if content_type not in policy.content_type_policy.allowed_content_types:
+                return RetrievalExecutionResult(decision, None, {**safety_metadata(), "live_network_call_performed": True}, "content_type_rejected")
+            raw = response.read(policy.budget.max_bytes + 1)
+            if len(raw) > policy.budget.max_bytes:
+                return RetrievalExecutionResult(decision, None, {**safety_metadata(), "live_network_call_performed": True}, "content_budget_exhausted")
+    except (HTTPError, URLError, TimeoutError, OSError) as exc:
+        return RetrievalExecutionResult(decision, None, {**safety_metadata(), "live_network_call_performed": True}, type(exc).__name__)
+    text = raw.decode("utf-8", errors="replace")
+    sanitized, hostile_findings = sanitize_content(text)
+    normalized = normalize_url(request.target)
+    source_id = stable_id("source", normalized, hashlib.sha256(sanitized.encode("utf-8")).hexdigest())
+    provenance = SourceProvenance(stable_id("provenance", normalized), normalized, _hostname(normalized), _now(), "GET", content_type)
+    citation = CitationRecord(stable_id("citation", source_id, normalized), source_id, "bounded source content retained for independent review", normalized, quote_available=bool(sanitized))
+    source = RetrievedSource(source_id, provenance, _hostname(normalized), sanitized, hostile_findings, (citation,))
+    assessment = EvidenceQualityAssessment(stable_id("quality", source_id, not hostile_findings), source_id, 0.82 if not hostile_findings else 0.0, ("bounded_live_https_get",) if not hostile_findings else ("hostile_content_detected",), usable=not hostile_findings)
+    bundle = EvidenceBundle(stable_id("bundle", request.request_id, source_id), request.request_id, (source,), (assessment,), (citation,))
+    performed = RetrievalDecision(decision.decision_id, decision.outcome, decision.reason, True, decision.permission, decision.risk)
+    return RetrievalExecutionResult(performed, bundle, {**safety_metadata(), "live_network_call_performed": True})
 
 
 def retrieval_foundation_report() -> dict[str, Any]:
