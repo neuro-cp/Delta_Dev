@@ -82,6 +82,7 @@ from orchestration.runtime.delta_1_6_operational_autonomy import (
 )
 from orchestration.runtime.rc2_conversational_mode_router import discover_local_model_lanes, select_model_lane
 from orchestration.runtime.local_model_request_result_ledger import LocalModelRequestResultLedger
+from orchestration.runtime.capability_evaluation_strategy import compile_capability_evaluation_strategy
 
 
 DOC_ROOT = Path("docs") / "continuous_runtime"
@@ -719,11 +720,49 @@ def attach_developmental_learning_mission(
                 (mission.mission_id,),
             ),),
         )
+    evaluator = dict(retained_bundle.get("independent_evaluator") or {})
+    evaluator_authorities: tuple[dict[str, Any], ...]
+    if evaluator:
+        evaluator_authorities = ({
+            "strategy": "deterministic_predicate",
+            "identity": str(evaluator.get("evaluator_identity") or "deterministic_content_task_evaluator_v1"),
+            "provenance": tuple(str(item) for item in (evaluator.get("authority_source"), evaluator.get("authority_digest")) if item),
+        },)
+    elif retained_bundle.get("sealed_evaluation_cases"):
+        evaluator_authorities = ({
+            "strategy": "deterministic_predicate",
+            "identity": "retained_sealed_content_evaluator_v1",
+            "provenance": (str(retained_bundle.get("resource_bundle_id") or "retained_sealed_case_bundle"),),
+        },)
+    else:
+        evaluator_authorities = ()
+    strategy = compile_capability_evaluation_strategy(
+        mission_id=mission.mission_id,
+        capability_id=subgoal.capability_target,
+        subgoal_id=subgoal.subgoal_id,
+        domain=mission.domain,
+        topic=subgoal.topic,
+        capability_target=subgoal.capability_target,
+        target_behavior=subgoal.measurable_objective,
+        teaching_evidence_ids=tuple(str(item.get("result_id") or item.get("request_id") or "") for item in retained_bundle.get("resource_provenance") or () if item),
+        execution_kind="developmental_learning",
+        evaluator_authorities=evaluator_authorities,
+    )
+    selected_plan = dict(strategy["selected_plan"])
+    if selected_plan.get("status") == "evaluation_unavailable":
+        return replace(
+            controller,
+            continuous_mission_state="learning_evaluator_authority_needed",
+            continuous_mission_contract={**mission.as_dict(), "original_operator_goal": mission.operator_instruction},
+            continuous_learning_state={**state, **strategy},
+            active_work_item="developmental_learning_evaluator_authority_needed",
+            journal=controller.journal + (_journal_entry("developmental_learning", "capability_evaluation_authority_unavailable", (mission.mission_id, subgoal.subgoal_id, selected_plan["plan_id"])),),
+        )
     return replace(
         controller,
         continuous_mission_state="learning_subgoal_active",
         continuous_mission_contract={**mission.as_dict(), "original_operator_goal": mission.operator_instruction},
-        continuous_learning_state={**state, "selected_frontier": {
+        continuous_learning_state={**state, **strategy, "selected_frontier": {
             "frontier_id": subgoal.source_gap_id,
             "topic": subgoal.topic,
             "capability_dimension": subgoal.capability_target,
