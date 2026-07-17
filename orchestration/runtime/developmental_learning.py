@@ -16,6 +16,13 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 from orchestration.runtime.delta_1_0_common import stable_id, utc_now
+from orchestration.runtime.deterministic_linear_algebra_evaluator import (
+    bind_spectral_evaluator,
+    derive_next_spectral_gap,
+    is_supported_spectral_task,
+    revise_spectral_bundle,
+    solve_spectral_task,
+)
 
 
 def _digest(value: Any) -> str:
@@ -166,6 +173,8 @@ class DevelopmentalAttemptRecord:
     resource_usage: Mapping[str, int]
     candidate_digest: str
     disposition: str
+    task_records: tuple[dict[str, Any], ...] = ()
+    revision_count: int = 0
 
     def as_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -191,6 +200,28 @@ class DevelopmentalEvaluationRecord:
     promotion_eligible: bool
     evaluation_digest: str
     content_case_results: tuple[dict[str, Any], ...] = ()
+
+    def as_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class LearningFailureLocalization:
+    """Evidence-derived remediation boundary for one failed learning evaluation."""
+
+    localization_id: str
+    evaluation_id: str
+    failed_case_ids: tuple[str, ...]
+    failed_predicates: tuple[str, ...]
+    implicated_concept: str
+    prerequisite_relationship: tuple[str, ...]
+    evidence: tuple[str, ...]
+    confidence: float
+    uncertainty: str
+    recommended_next_information_need: Mapping[str, Any]
+    recommended_revision_type: str
+    semantic_identity: str
+    localization_digest: str
 
     def as_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -447,6 +478,106 @@ def compile_provisional_learning_bundle_from_advisory(
         "study_resources": ({"resource_id": resource_id, "topic": mission.topic, "supports_dimensions": (dimension,), "study_components": components, "model_result_reference": evidence.shared_result_id},),
         "sealed_evaluation_cases": (), "bundle_digest": _digest(bundle_payload),
     }
+
+
+def bind_independent_learning_evaluator(
+    mission: DevelopmentalMissionContract,
+    bundle: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Attach a domain evaluator without giving its sealed cases to a resource."""
+
+    if mission.topic == "spectral_theorem":
+        return bind_spectral_evaluator(bundle)
+    return dict(bundle)
+
+
+def localize_learning_failure(
+    mission: DevelopmentalMissionContract,
+    evaluation: DevelopmentalEvaluationRecord,
+) -> LearningFailureLocalization | None:
+    """Derive one narrow follow-up need from failed independent predicates."""
+
+    failures = tuple(item for item in evaluation.content_case_results if not bool(item.get("score")))
+    if not failures:
+        return None
+    concepts = tuple(dict.fromkeys(str(item.get("failure_concept") or "") for item in failures if item.get("failure_concept")))
+    implicated = concepts[0] if concepts else "unclassified_reasoning_defect"
+    predicates = tuple(dict.fromkeys(predicate for item in failures for predicate in (item.get("failed_predicates") or ("answer_or_reasoning_constraint_failed",))))
+    case_ids = tuple(str(item.get("case_id") or "") for item in failures)
+    payload = {
+        "mission_id": mission.mission_id,
+        "evaluation_id": evaluation.evaluation_id,
+        "case_ids": case_ids,
+        "predicates": predicates,
+        "concept": implicated,
+    }
+    digest = _digest(payload)
+    need = {
+        "information_need_id": stable_id("learning-failure-follow-up", digest),
+        "semantic_identity": _digest((mission.topic, implicated, predicates)),
+        "topic": mission.topic,
+        "missing_evidence": implicated,
+        "reason": "independent evaluation localized an unsupported behavior",
+        "authority_state": "reuse_existing_evidence_before_new_local_model_request",
+    }
+    return LearningFailureLocalization(
+        localization_id=stable_id("learning-failure-localization", digest),
+        evaluation_id=evaluation.evaluation_id,
+        failed_case_ids=case_ids,
+        failed_predicates=predicates,
+        implicated_concept=implicated,
+        prerequisite_relationship=(implicated,),
+        evidence=tuple(f"{item.get('case_id')}: {item.get('failure_reason')}" for item in failures),
+        confidence=1.0,
+        uncertainty="feedback is limited to failed predicates and does not disclose sealed answers",
+        recommended_next_information_need=need,
+        recommended_revision_type="independent_evaluator_feedback_revision",
+        semantic_identity=_digest((mission.topic, implicated, predicates)),
+        localization_digest=digest,
+    )
+
+
+def compile_revised_learning_bundle(
+    bundle: Mapping[str, Any],
+    localization: LearningFailureLocalization,
+) -> dict[str, Any] | None:
+    """Reuse bounded evaluator feedback when it is sufficient for one revision."""
+
+    return revise_spectral_bundle(bundle, localization.as_dict())
+
+
+def compile_revised_learning_subgoal(
+    subgoal: LearningSubgoal,
+    revised_bundle: Mapping[str, Any],
+    localization: LearningFailureLocalization,
+) -> LearningSubgoal | None:
+    resources = tuple(
+        str(item.get("resource_id") or "")
+        for item in revised_bundle.get("study_resources") or ()
+        if subgoal.capability_target in tuple(item.get("supports_dimensions") or ())
+    )
+    if not resources:
+        return None
+    return LearningSubgoal(
+        **{
+            **subgoal.as_dict(),
+            "subgoal_id": stable_id("revised-learning-subgoal", subgoal.subgoal_id, localization.localization_id, revised_bundle.get("resource_bundle_id")),
+            "selection_reason": f"revision selected after {localization.implicated_concept} failed independent predicates",
+            "study_resource_ids": resources,
+            "attempt_type": "guided_study_revision",
+            "practice_specification": "apply bounded evaluator feedback to a distinct visible task without access to sealed cases",
+            "attempt_budget": 1,
+        }
+    )
+
+
+def derive_next_learning_gap(
+    bundle: Mapping[str, Any],
+    evaluation: DevelopmentalEvaluationRecord,
+) -> dict[str, Any] | None:
+    """Return an evidence-ranked unresolved behavior after narrow demonstration."""
+
+    return derive_next_spectral_gap(bundle, evaluation.evaluation_id)
 
 
 def compile_provisional_learning_bundle(
@@ -812,6 +943,8 @@ def _task_output(task: Mapping[str, Any], resources: Sequence[Mapping[str, Any]]
 
     kind = str(task.get("task_type") or "")
     data = dict(task.get("input_data") or {})
+    if is_supported_spectral_task(task):
+        return solve_spectral_task(task, resources)
     facts = tuple(str(value) for resource in resources for value in (resource.get("study_facts") or ()))
     if kind == "solve_equation":
         a, b, c, d = (float(data[key]) for key in ("left_coefficient", "left_constant", "right_coefficient", "right_constant"))
@@ -850,7 +983,20 @@ def _content_case_result(task: Mapping[str, Any], output: Mapping[str, Any]) -> 
     required = tuple(str(value) for value in (task.get("required_reasoning_constraints") or ()))
     forbidden = tuple(str(value) for value in (task.get("forbidden_reasoning_patterns") or ()))
     reasoning_ok = all(value.lower() in text for value in required) and not any(value.lower() in text for value in forbidden)
-    return {"case_id": str(task.get("case_id") or ""), "kind": str(task.get("case_kind") or "held_out"), "candidate_output": dict(output), "score": float(answer_ok and reasoning_ok), "answer_ok": answer_ok, "reasoning_ok": reasoning_ok, "failure_reason": "" if answer_ok and reasoning_ok else "answer_or_reasoning_constraint_failed", "evaluator_identity": "deterministic_content_task_evaluator_v1"}
+    passed = answer_ok and reasoning_ok
+    return {
+        "case_id": str(task.get("case_id") or ""),
+        "kind": str(task.get("case_kind") or "held_out"),
+        "task_type": str(task.get("task_type") or ""),
+        "candidate_output": dict(output),
+        "score": float(passed),
+        "answer_ok": answer_ok,
+        "reasoning_ok": reasoning_ok,
+        "failure_reason": "" if passed else "answer_or_reasoning_constraint_failed",
+        "failure_concept": str(task.get("failure_concept") or ""),
+        "failed_predicates": () if passed else (str(task.get("task_type") or "answer"),),
+        "evaluator_identity": str(task.get("evaluator_identity") or "deterministic_content_task_evaluator_v1"),
+    }
 
 
 def execute_learning_attempt(subgoal: LearningSubgoal, retained_bundle: Mapping[str, Any]) -> DevelopmentalAttemptRecord:
@@ -860,9 +1006,36 @@ def execute_learning_attempt(subgoal: LearningSubgoal, retained_bundle: Mapping[
     for item in resources:
         components.extend(str(value) for value in (item.get("study_components") or ()))
         refs.append(str(item.get("resource_id") or ""))
-    visible_tasks = [dict(item) for item in retained_bundle.get("visible_practice_cases") or () if _text(item.get("capability_dimension")) == _text(subgoal.capability_target)]
-    task_outputs = tuple({"case_id": item.get("case_id"), "output": _task_output(item, resources)} for item in visible_tasks)
-    output = {"components": tuple(dict.fromkeys(components)), "method": "retained_resource_grounded_study", "task_outputs": task_outputs}
+    visible_revision = max((int(resource.get("revision_count") or 0) for resource in resources if resource.get("visible_practice_cases")), default=0)
+    visible_tasks = [
+        dict(task)
+        for resource in resources
+        if int(resource.get("revision_count") or 0) == visible_revision
+        for task in resource.get("visible_practice_cases") or ()
+        if _text(task.get("capability_dimension")) == _text(subgoal.capability_target)
+    ]
+    revision_count = max((int(item.get("revision_count") or 0) for item in resources), default=0)
+    task_records = []
+    for item in visible_tasks:
+        task_output = _task_output(item, resources)
+        task_records.append({
+            "task_id": str(item.get("task_id") or item.get("case_id") or stable_id("learning-visible-task", item)),
+            "task_type": str(item.get("task_type") or ""),
+            "visible_prompt": str(item.get("visible_prompt") or ""),
+            "visible_input_data": dict(item.get("input_data") or {}),
+            "candidate_final_answer": task_output.get("final_answer"),
+            "intermediate_reasoning_steps": tuple(task_output.get("intermediate_steps") or ()),
+            "explicit_assumptions": tuple(task_output.get("assumptions") or ()),
+            "calculations": tuple(task_output.get("calculations") or ()),
+            "verification_attempts": tuple(task_output.get("verification_attempts") or ()),
+            "uncertainty": str(task_output.get("uncertainty") or ""),
+            "error_flags": tuple(task_output.get("error_flags") or ()),
+            "revision_count": revision_count,
+            "resource_references": tuple(refs),
+            "output_digest": _digest(task_output),
+        })
+    task_outputs = tuple({"case_id": item["task_id"], "output": {"final_answer": item["candidate_final_answer"], "intermediate_steps": item["intermediate_reasoning_steps"]}} for item in task_records)
+    output = {"components": tuple(dict.fromkeys(components)), "method": "retained_resource_grounded_study", "task_outputs": task_outputs, "task_records": tuple(task_records), "revision_count": revision_count}
     return DevelopmentalAttemptRecord(
         attempt_id=stable_id("learning-attempt", subgoal.subgoal_id, _digest(output)),
         mission_id=subgoal.mission_id,
@@ -875,6 +1048,8 @@ def execute_learning_attempt(subgoal: LearningSubgoal, retained_bundle: Mapping[
         resource_usage={"retained_local_sources": len(refs), "provider_calls": 0, "web_calls": 0},
         candidate_digest=_digest(output),
         disposition="attempt_completed_pending_independent_evaluation",
+        task_records=tuple(task_records),
+        revision_count=revision_count,
     )
 
 
@@ -883,7 +1058,8 @@ def evaluate_learning_attempt(
     attempt: DevelopmentalAttemptRecord,
     retained_bundle: Mapping[str, Any],
 ) -> DevelopmentalEvaluationRecord:
-    content_tasks = [dict(item) for item in retained_bundle.get("sealed_evaluation_cases") or () if _text(item.get("capability_dimension")) == _text(subgoal.capability_target) and item.get("task_type")]
+    active_case_ids = set(str(value) for value in (retained_bundle.get("active_sealed_case_ids") or ()))
+    content_tasks = [dict(item) for item in retained_bundle.get("sealed_evaluation_cases") or () if _text(item.get("capability_dimension")) == _text(subgoal.capability_target) and item.get("task_type") and (not active_case_ids or str(item.get("case_id") or "") in active_case_ids)]
     if content_tasks:
         resources = [dict(item) for item in retained_bundle.get("study_resources") or () if str(item.get("resource_id") or "") in attempt.selected_resource_ids]
         results = tuple(
@@ -897,7 +1073,7 @@ def evaluate_learning_attempt(
         payload = {"attempt": attempt.attempt_id, "content_results": results}
         return DevelopmentalEvaluationRecord(
             evaluation_id=stable_id("learning-content-evaluation", subgoal.subgoal_id, attempt.attempt_id, _digest(payload)), mission_id=subgoal.mission_id, subgoal_id=subgoal.subgoal_id, attempt_id=attempt.attempt_id, capability_dimension=subgoal.capability_target,
-            baseline_metrics={"target": average("baseline")}, candidate_metrics={"target": average("held_out")}, control_metrics={"target": average("control")}, held_out_metrics={"target": average("held_out")}, adversarial_metrics={"target": average("adversarial")}, transfer_metrics={"target": average("transfer")}, case_ids=tuple(item["case_id"] for item in results), evaluator_identity="deterministic_content_task_evaluator_v1", independence_proof={"sealed_cases_excluded_from_attempt": True, "candidate_self_report_not_scored": True, "provider_calls": 0, "web_calls": 0, "content_outputs_scored": True}, disposition="behaviorally_demonstrated" if passed else "behaviorally_failed", promotion_eligible=passed, evaluation_digest=_digest(payload), content_case_results=results,
+            baseline_metrics={"target": average("baseline")}, candidate_metrics={"target": average("held_out")}, control_metrics={"target": average("control")}, held_out_metrics={"target": average("held_out")}, adversarial_metrics={"target": average("adversarial")}, transfer_metrics={"target": average("transfer")}, case_ids=tuple(item["case_id"] for item in results), evaluator_identity=str((retained_bundle.get("independent_evaluator") or {}).get("evaluator_identity") or "deterministic_content_task_evaluator_v1"), independence_proof={"sealed_cases_excluded_from_attempt": True, "candidate_self_report_not_scored": True, "teaching_source_isolated": bool((retained_bundle.get("independent_evaluator") or {}).get("teaching_source_isolated")), "evaluation_authority_digest": str((retained_bundle.get("independent_evaluator") or {}).get("authority_digest") or ""), "provider_calls": 0, "web_calls": 0, "content_outputs_scored": True}, disposition="behaviorally_demonstrated" if passed else "behaviorally_failed", promotion_eligible=passed, evaluation_digest=_digest(payload), content_case_results=results,
         )
     candidate_components = set(str(value) for value in (attempt.candidate_output.get("components") or ()))
     metrics: dict[str, dict[str, float]] = {"baseline": {}, "candidate": {}, "control": {}, "held_out": {}, "adversarial": {}, "transfer": {}}
@@ -946,9 +1122,9 @@ def evaluate_learning_attempt(
 
 __all__ = [
     "DevelopmentalMissionContract", "DevelopmentalCapabilityAssessment", "ResourceAcquisitionPlan",
-    "DevelopmentalGap", "LearningSubgoal", "DevelopmentalAttemptRecord", "DevelopmentalEvaluationRecord", "MissionBoundLocalModelBridge", "MissionBoundAdvisoryLearningEvidence",
+    "DevelopmentalGap", "LearningSubgoal", "DevelopmentalAttemptRecord", "DevelopmentalEvaluationRecord", "LearningFailureLocalization", "MissionBoundLocalModelBridge", "MissionBoundAdvisoryLearningEvidence",
     "classify_developmental_instruction", "compile_developmental_mission_contract", "compile_capability_assessment",
     "compile_resource_acquisition_plan", "compile_developmental_gaps", "compile_learning_subgoal",
     "execute_learning_attempt", "evaluate_learning_attempt",
-    "load_retained_learning_bundle", "load_retained_learning_bundles", "merge_retained_learning_bundles", "compile_mission_information_need", "compile_mission_bound_advisory_learning_evidence", "compile_provisional_learning_bundle_from_advisory",
+    "load_retained_learning_bundle", "load_retained_learning_bundles", "merge_retained_learning_bundles", "compile_mission_information_need", "compile_mission_bound_advisory_learning_evidence", "compile_provisional_learning_bundle_from_advisory", "bind_independent_learning_evaluator", "localize_learning_failure", "compile_revised_learning_bundle", "compile_revised_learning_subgoal", "derive_next_learning_gap",
 ]

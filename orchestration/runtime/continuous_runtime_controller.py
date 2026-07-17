@@ -52,6 +52,7 @@ from orchestration.runtime.continuous_mission_foundation import (
     rank_weakness_frontier,
 )
 from orchestration.runtime.developmental_learning import (
+    DevelopmentalMissionContract,
     DevelopmentalEvaluationRecord,
     LearningSubgoal,
     compile_capability_assessment,
@@ -60,6 +61,11 @@ from orchestration.runtime.developmental_learning import (
     compile_mission_information_need,
     compile_mission_bound_advisory_learning_evidence,
     compile_provisional_learning_bundle_from_advisory,
+    bind_independent_learning_evaluator,
+    compile_revised_learning_bundle,
+    compile_revised_learning_subgoal,
+    derive_next_learning_gap,
+    localize_learning_failure,
     compile_provisional_learning_bundle,
     compile_learning_subgoal,
     compile_resource_acquisition_plan,
@@ -839,12 +845,26 @@ def consume_mission_bound_local_model_learning_approval(
         return controller
     result_id = str(request.get("result_id") or "")
     result = LocalModelRequestResultLedger().observe_result(result_id) if result_id else {}
+    existing_bundle = dict(state.get("provisional_resource_bundle") or {})
+    existing_evidence = dict(state.get("mission_bound_advisory_evidence") or {})
+    if existing_bundle and str(existing_evidence.get("shared_result_id") or "") == result_id:
+        return replace(
+            controller,
+            continuous_learning_state={
+                **state,
+                "local_model_request": request,
+                "local_model_result_reference": result,
+                "local_model_execution_count": int(request.get("execution_attempt_count") or 0),
+            },
+        )
     mission = compile_developmental_mission_contract(str((state.get("mission") or {}).get("operator_instruction") or ""))
     need = dict(state.get("information_need") or {})
     if mission is None or not need:
         return replace(controller, continuous_mission_state="learning_local_model_result_observed", active_work_item="learning_local_model_result_observed", continuous_learning_state={**state, "local_model_request": request, "local_model_result_reference": result, "local_model_execution_count": int(request.get("execution_attempt_count") or 0)})
     evidence = compile_mission_bound_advisory_learning_evidence(mission, need, request, result)
     bundle = compile_provisional_learning_bundle_from_advisory(mission, evidence)
+    if bundle is not None:
+        bundle = bind_independent_learning_evaluator(mission, bundle)
     common = {
         "information_need": need,
         "local_model_lane": dict(request.get("selected_lane") or {}),
@@ -877,18 +897,93 @@ def consume_developmental_learning_evaluation(
     if any(str(item.get("evaluation_id") or "") == evaluation.evaluation_id for item in evaluations):
         return controller
     active = dict(controller.continuous_active_subgoal or {})
-    consumed = tuple(dict.fromkeys(tuple(state.get("consumed_gap_ids") or ()) + (str(active.get("source_gap_id") or ""),)))
+    attempts = tuple(state.get("attempts") or ()) + ((dict(attempt),) if attempt else ())
     updated_state = {
         **state,
-        "consumed_gap_ids": consumed,
-        "attempts": tuple(state.get("attempts") or ()) + ((dict(attempt),) if attempt else ()),
+        "attempts": attempts,
         "evaluations": evaluations + (evaluation.as_dict(),),
         "last_evaluation": evaluation.as_dict(),
     }
+    typed_mission = DevelopmentalMissionContract(**mission)
+    retained_bundle = dict(state["retained_bundle"])
+    if not evaluation.promotion_eligible:
+        localization = localize_learning_failure(typed_mission, evaluation)
+        revised_bundle = compile_revised_learning_bundle(retained_bundle, localization) if localization is not None else None
+        typed_active = LearningSubgoal(**{key: value for key, value in active.items() if key in LearningSubgoal.__dataclass_fields__})
+        revised_subgoal = compile_revised_learning_subgoal(typed_active, revised_bundle, localization) if revised_bundle is not None and localization is not None else None
+        if revised_subgoal is not None:
+            revisions = tuple(state.get("resource_revisions") or ())
+            revision = dict(revised_bundle.get("resource_revision") or {})
+            return replace(
+                controller,
+                continuous_mission_state="learning_subgoal_active",
+                continuous_learning_state={
+                    **updated_state,
+                    "retained_bundle": revised_bundle,
+                    "provisional_resource_bundle": revised_bundle,
+                    "failure_localizations": tuple(state.get("failure_localizations") or ()) + (localization.as_dict(),),
+                    "follow_up_information_needs": tuple(state.get("follow_up_information_needs") or ()) + (dict(localization.recommended_next_information_need),),
+                    "resource_revisions": revisions + ((revision,) if revision else ()),
+                    "selected_frontier": {
+                        "frontier_id": revised_subgoal.source_gap_id,
+                        "topic": revised_subgoal.topic,
+                        "capability_dimension": revised_subgoal.capability_target,
+                        "rank": revised_subgoal.frontier_rank,
+                        "selection_reason": revised_subgoal.selection_reason,
+                    },
+                },
+                continuous_active_subgoal={**revised_subgoal.as_dict(), "execution_kind": "developmental_learning"},
+                active_work_item=revised_subgoal.measurable_objective,
+                journal=controller.journal + (_journal_entry("developmental_learning", "independent_failure_localized_to_revised_learning_subgoal", (evaluation.evaluation_id, localization.localization_id, revised_subgoal.subgoal_id)),),
+            )
+    consumed = tuple(dict.fromkeys(tuple(state.get("consumed_gap_ids") or ()) + (str(active.get("source_gap_id") or ""),)))
+    updated_state["consumed_gap_ids"] = consumed
+    knowledge = tuple(controller.continuous_knowledge_ledger)
+    if evaluation.promotion_eligible and not any(str(item.get("behavioral_evaluation_ref") or "") == evaluation.evaluation_id for item in knowledge):
+        record = CapabilityKnowledgeRecord(
+            capability_id=f"{typed_mission.topic}_{evaluation.capability_dimension}",
+            original_weakness="independently evaluated learning behavior was previously unassessed",
+            evidence=(evaluation.evaluation_id, *evaluation.case_ids),
+            first_incorrect_transition="provisional resource -> independently evaluated demonstrated behavior",
+            strategies_attempted=("visible typed reasoning attempt", "deterministic sealed evaluation"),
+            failed_approaches=(),
+            successful_mechanism="revision-aware bounded semantic learning against independent finite-dimensional predicates",
+            exact_candidate="no repository candidate; bounded learning attempt only",
+            tests_added=(evaluation.evaluator_identity,),
+            metrics_before_after={"baseline": dict(evaluation.baseline_metrics), "held_out": dict(evaluation.held_out_metrics), "control": dict(evaluation.control_metrics), "adversarial": dict(evaluation.adversarial_metrics), "transfer": dict(evaluation.transfer_metrics)},
+            controls=("teaching evidence isolated from evaluator", "sealed cases excluded from attempt", "candidate self-score ignored"),
+            adversarial_evidence=tuple(case_id for case_id in evaluation.case_ids if "adversarial" in case_id),
+            held_out_evidence={"case_ids": tuple(case_id for case_id in evaluation.case_ids if "heldout" in case_id or "held-out" in case_id), "evaluation_id": evaluation.evaluation_id},
+            reproduction_evidence=evaluation.evaluation_digest,
+            provider_contribution="advisory local-model result only; no provider call",
+            local_repair_contribution="independent evaluator feedback revision",
+            application_evidence="not applicable; tracked source unchanged",
+            regression_evidence="sealed control and adversarial metrics passed",
+            reassessment="behaviorally_demonstrated",
+            residual_uncertainty="complex inner-product-space scope remains unassessed",
+            reusable_process_rules=("resource ingestion is not capability promotion", "only independent sealed evaluation updates learning capability"),
+            evidence_stage="behaviorally_demonstrated",
+            capability_acquired=True,
+            eligible_for_behavioral_evaluation=False,
+            behavioral_evaluation_ref=evaluation.evaluation_id,
+            behavioral_evaluation=evaluation.as_dict(),
+        )
+        knowledge = knowledge + (record.as_dict(),)
+    next_gap = derive_next_learning_gap(retained_bundle, evaluation) if evaluation.promotion_eligible else None
+    if next_gap is not None:
+        return replace(
+            controller,
+            continuous_mission_state="learning_next_gap_resource_needed",
+            continuous_learning_state={**updated_state, "next_learning_gap": next_gap, "capability_update_evaluation_id": evaluation.evaluation_id},
+            continuous_knowledge_ledger=knowledge,
+            continuous_capability_inventory=tuple(item.as_dict() for item in capability_inventory_from_knowledge(tuple(CapabilityKnowledgeRecord(**dict(item)) for item in knowledge))),
+            continuous_active_subgoal={},
+            active_work_item="learning_resource_evidence_needed",
+            journal=controller.journal + (_journal_entry("developmental_learning", "narrow_capability_updated_next_gap_selected", (evaluation.evaluation_id, str(next_gap.get("gap_id") or ""))),),
+        )
     # Rebuild typed records only at the controller boundary. This preserves one
     # source of truth in persisted dictionaries while leaving helpers immutable.
-    from orchestration.runtime.developmental_learning import DevelopmentalGap, DevelopmentalMissionContract, ResourceAcquisitionPlan
-    typed_mission = DevelopmentalMissionContract(**mission)
+    from orchestration.runtime.developmental_learning import DevelopmentalGap, ResourceAcquisitionPlan
     typed_plan = ResourceAcquisitionPlan(**dict(state["resource_plan"]))
     typed_gaps = tuple(DevelopmentalGap(**dict(item)) for item in state.get("gaps") or ())
     next_subgoal = compile_learning_subgoal(typed_mission, typed_gaps, typed_plan, state["retained_bundle"], consumed_gap_ids=consumed)

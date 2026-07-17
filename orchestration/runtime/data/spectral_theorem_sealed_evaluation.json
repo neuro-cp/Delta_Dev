@@ -1,0 +1,23 @@
+{
+  "authority_id": "deterministic_finite_dimensional_linear_algebra_v1",
+  "topic": "spectral_theorem",
+  "authority_scope": "finite real matrices and orthogonal diagonalization",
+  "case_sets": {
+    "initial": [
+      {"case_id": "spectral-baseline-applicability", "case_kind": "baseline", "task_type": "spectral_theorem_applicability", "input_data": {"matrix": [[1, 1], [0, 1]]}, "deterministic_answer": false, "failure_concept": "orthogonal_diagonalization_conditions"},
+      {"case_id": "spectral-control-symmetry", "case_kind": "control", "task_type": "spectral_symmetry_recognition", "input_data": {"matrix": [[2, 1], [1, 3]]}, "deterministic_answer": true, "failure_concept": "matrix_symmetry_recognition"},
+      {"case_id": "spectral-heldout-eigenpair", "case_kind": "held_out", "task_type": "spectral_eigenpair_verification", "input_data": {"matrix": [[2, 0], [0, 3]], "vector": [1, 0], "eigenvalue": 2}, "deterministic_answer": true, "failure_concept": "eigenpair_verification"},
+      {"case_id": "spectral-heldout-orthogonality", "case_kind": "held_out", "task_type": "spectral_orthogonality_verification", "input_data": {"left": [1, 0], "right": [0, 1]}, "deterministic_answer": true, "failure_concept": "orthogonality_verification"},
+      {"case_id": "spectral-adversarial-overgeneralization", "case_kind": "adversarial", "task_type": "spectral_false_generalization", "input_data": {"claim": "Every real matrix has an orthonormal eigenbasis."}, "deterministic_answer": false, "failure_concept": "orthogonal_diagonalization_conditions"},
+      {"case_id": "spectral-transfer-nonsymmetric", "case_kind": "transfer", "task_type": "spectral_theorem_applicability", "input_data": {"matrix": [[0, 1], [-1, 0]]}, "deterministic_answer": false, "failure_concept": "orthogonal_diagonalization_conditions"}
+    ],
+    "revision": [
+      {"case_id": "spectral-baseline-revision", "case_kind": "baseline", "task_type": "spectral_theorem_applicability", "input_data": {"matrix": [[1, 2], [0, 1]]}, "deterministic_answer": false, "failure_concept": "orthogonal_diagonalization_conditions"},
+      {"case_id": "spectral-control-revision-symmetry", "case_kind": "control", "task_type": "spectral_symmetry_recognition", "input_data": {"matrix": [[4, -1], [-1, 4]]}, "deterministic_answer": true, "failure_concept": "matrix_symmetry_recognition"},
+      {"case_id": "spectral-heldout-revision-applicability", "case_kind": "held_out", "task_type": "spectral_theorem_applicability", "input_data": {"matrix": [[3, 2], [2, 3]]}, "deterministic_answer": true, "failure_concept": "orthogonal_diagonalization_conditions"},
+      {"case_id": "spectral-heldout-revision-diagonalization", "case_kind": "held_out", "task_type": "spectral_diagonalization_reconstruction", "input_data": {"matrix": [[2, 0], [0, 3]], "orthogonal_basis": [[1, 0], [0, 1]], "diagonal": [[2, 0], [0, 3]]}, "deterministic_answer": true, "failure_concept": "orthogonal_diagonalization_reconstruction"},
+      {"case_id": "spectral-adversarial-revision-overgeneralization", "case_kind": "adversarial", "task_type": "spectral_false_generalization", "input_data": {"claim": "Every real matrix has an orthonormal eigenbasis."}, "deterministic_answer": false, "failure_concept": "orthogonal_diagonalization_conditions"},
+      {"case_id": "spectral-transfer-revision-nonsymmetric", "case_kind": "transfer", "task_type": "spectral_theorem_applicability", "input_data": {"matrix": [[1, 3], [0, 1]]}, "deterministic_answer": false, "failure_concept": "orthogonal_diagonalization_conditions"}
+    ]
+  }
+}

@@ -2399,7 +2399,8 @@ class DeltaApp:
             controller = compile_mission_bound_local_model_learning_request(controller, message)
         provisional = dict(controller.continuous_learning_state.get("provisional_resource_bundle") or {})
         advisory = dict(controller.continuous_learning_state.get("mission_bound_advisory_evidence") or {})
-        if provisional:
+        retained_bundle = dict(controller.continuous_learning_state.get("retained_bundle") or {})
+        if provisional and not retained_bundle.get("independent_evaluator"):
             self.developmental_learning_controller = controller
             active = dict(controller.continuous_active_subgoal or {})
             return (
@@ -2410,6 +2411,13 @@ class DeltaApp:
             )
         if not controller.continuous_active_subgoal:
             self.developmental_learning_controller = controller
+            next_gap = dict(controller.continuous_learning_state.get("next_learning_gap") or {})
+            if next_gap:
+                return (
+                    "Independent learning evaluation completed and capability was updated only for the demonstrated scope. "
+                    f"Next gap={next_gap.get('capability_dimension')}; status={next_gap.get('status')}; "
+                    f"reason={next_gap.get('reason')}. No provider, web, PCM, or tracked-source action occurred."
+                )
             request = dict(controller.continuous_learning_state.get("local_model_request") or {})
             if request:
                 return (
@@ -2432,6 +2440,9 @@ class DeltaApp:
         next_subgoal = dict(controller.continuous_active_subgoal or {})
         frontier = dict(controller.continuous_learning_state.get("selected_frontier") or {})
         evaluation = dict(result.behavioral_evaluation_request or {})
+        failure = tuple(controller.continuous_learning_state.get("failure_localizations") or ())
+        revision = tuple(controller.continuous_learning_state.get("resource_revisions") or ())
+        next_gap = dict(controller.continuous_learning_state.get("next_learning_gap") or {})
         completed_subgoal = str(result.subgoal_id)
         active_resources = tuple(result.source_inspection.get("resource_ids") or ())
         return (
@@ -2444,10 +2455,12 @@ class DeltaApp:
             f"Selected local resources: {', '.join(active_resources) or 'none'}\n"
             f"Evaluation: {result.disposition}; baseline={result.baseline}; candidate={result.candidate}; "
             f"controls={result.validation.get('control')}; held_out={result.validation.get('held_out')}; "
-            f"adversarial={result.validation.get('adversarial')}.\n"
-            f"Next subgoal: {next_subgoal.get('capability_target') or 'honest observation'}\n"
+            f"adversarial={result.validation.get('adversarial')}; transfer={result.validation.get('transfer')}.\n"
+            f"Failure localization: {(failure[-1].get('implicated_concept') if failure else 'none')}\n"
+            f"Resource revision: {(revision[-1].get('revised_bundle_id') if revision else 'none')}\n"
+            f"Next subgoal: {next_subgoal.get('capability_target') or next_gap.get('capability_dimension') or 'honest observation'}\n"
             f"Evidence: {evaluation.get('evaluation_id') or 'none'}\n\n"
-            "No provider, web, PCM, tracked-source application, capability attachment, commit, or push occurred."
+            "No provider, web, PCM, tracked-source application, commit, or push occurred."
         )
 
     def _handle_oar_language_development_mission(self, message: str) -> str:
