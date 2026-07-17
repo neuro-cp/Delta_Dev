@@ -93,6 +93,14 @@ from orchestration.runtime.developmental_interest import (
     material_evidence_digest,
     source_records_from_state,
 )
+from orchestration.runtime.developmental_resource_policy import (
+    REQUEST_ACTIONS,
+    compile_developmental_resource_authority_requirement,
+    compile_resource_authority_decision,
+    compile_resource_policy_candidates,
+    observe_developmental_resources,
+    resource_policy_state_is_valid,
+)
 
 
 DOC_ROOT = Path("docs") / "continuous_runtime"
@@ -1030,12 +1038,13 @@ def consume_developmental_goal_proposal_response(
             continuous_active_subgoal={},
             journal=updated.journal + (_journal_entry("developmental_interest", "approved_evaluator_acquisition_goal_retained_without_learning_activation", (proposal.get("proposal_id", ""),)),),
         )
-        return _mark_agenda_mission_active(
+        marked = _mark_agenda_mission_active(
             retained,
             proposal_id=str(proposal.get("proposal_id") or ""),
             mission_id="",
             awaiting_evaluator=True,
         )
+        return compile_governed_developmental_resource_policy(marked) if dict(marked.continuous_learning_state or {}).get("developmental_agenda") else marked
     learning_instruction = f"Learn {str(proposal.get('topic') or '').replace('_', ' ')}."
     activated = compile_operator_developmental_learning_mission(updated, learning_instruction)
     agenda_state = dict(state.get("developmental_agenda") or {})
@@ -1276,6 +1285,208 @@ def set_persistent_developmental_agenda_paused(
         continuous_learning_state={**state, "developmental_agenda": {**agenda, "status": "paused" if paused else "idle", "next_eligible_transition": "operator_resume" if paused else "material_evidence_change_or_operator_refresh", "updated_at": utc_now()}},
         journal=controller.journal + (_journal_entry("developmental_agenda", "agenda_paused" if paused else "agenda_resumed", (agenda["agenda_id"],)),),
     )
+
+
+def compile_governed_developmental_resource_policy(
+    controller: ContinuousRuntimeController,
+    *,
+    explicit_refresh: bool = False,
+) -> ContinuousRuntimeController:
+    """Compile one resource/authority action for the current agenda goal.
+
+    The controller persists references and routes operator authority. Existing
+    resource stores, the shared local-model ledger, learning, and the agenda
+    remain their respective owners.
+    """
+
+    state = dict(controller.continuous_learning_state or {})
+    agenda = dict(state.get("developmental_agenda") or {})
+    interest = dict(state.get("developmental_interest") or {})
+    proposal = dict(interest.get("proposal") or {})
+    candidate = next(
+        (dict(item) for item in (interest.get("candidate_interests") or ()) if item.get("interest_id") == proposal.get("selected_interest_id")),
+        {},
+    )
+    if not agenda_state_is_valid(agenda) or not proposal or not candidate:
+        return controller
+    requirement = compile_developmental_resource_authority_requirement(
+        agenda=agenda,
+        proposal=proposal,
+        candidate=candidate,
+        mission=dict(state.get("mission") or {}),
+        learning_state=state,
+    )
+    existing = dict(state.get("developmental_resource_policy") or {})
+    if existing and not resource_policy_state_is_valid(existing):
+        return replace(
+            controller,
+            continuous_mission_state="developmental_resource_policy_blocked",
+            continuous_active_subgoal={},
+            active_work_item="developmental_resource_policy_invalid_state",
+            continuous_learning_state={**state, "developmental_resource_policy": {**existing, "status": "unavailable", "failure_reason": "invalid_resource_policy_state"}},
+            journal=controller.journal + (_journal_entry("developmental_resource_policy", "invalid_policy_state_failed_closed", (str(existing.get("policy_state_digest") or ""),)),),
+        )
+    if (
+        not explicit_refresh
+        and dict(existing.get("requirement") or {}).get("requirement_digest") == requirement.requirement_digest
+        and dict(existing.get("decision") or {}).get("status") in {"decision_compiled", "authority_pending", "authority_granted", "local_model_request_pending"}
+    ):
+        return controller
+    observations = observe_developmental_resources(requirement, learning_state=state)
+    eligible_alternatives = [
+        item for item in (interest.get("candidate_interests") or ())
+        if item.get("status") == "candidate_interest" and item.get("interest_id") != proposal.get("selected_interest_id")
+    ]
+    authority = dict(state.get("resource_policy_authorities") or {})
+    candidates = compile_resource_policy_candidates(
+        requirement,
+        observations,
+        has_alternative=bool(eligible_alternatives),
+        external_authority_granted=bool(authority.get("external_research")),
+        execution_authority_granted=bool(authority.get("execution")),
+    )
+    decision = compile_resource_authority_decision(requirement, candidates)
+    policy = {
+        "requirement": requirement.as_dict(),
+        "resource_inventory": tuple(item.as_dict() for item in observations),
+        "policy_candidates": tuple(item.as_dict() for item in candidates),
+        "decision": decision.as_dict(),
+        "policy_state_digest": _learning_bridge_digest({"requirement": requirement.requirement_digest, "inventory": tuple(item.digest for item in observations), "decision": decision.decision_digest}),
+        "status": "decision_compiled",
+    }
+    if decision.action_type not in REQUEST_ACTIONS:
+        state_name = "developmental_resource_policy_unavailable" if decision.action_type == "resource_policy_unavailable" else "developmental_resource_policy_local_reuse_ready"
+        return replace(
+            controller,
+            continuous_mission_state=state_name,
+            active_work_item=decision.action_type,
+            continuous_learning_state={**state, "developmental_resource_policy": policy},
+            journal=controller.journal + (_journal_entry("developmental_resource_policy", "resource_authority_policy_decision_compiled", (decision.decision_id, decision.action_type)),),
+        )
+    pending = next(
+        (
+            dict(item)
+            for item in controller.continuous_developmental_insight_requests
+            if item.get("request_kind") == "developmental_resource_authority"
+            and item.get("policy_decision_id") == decision.decision_id
+            and item.get("status") == "pending"
+        ),
+        None,
+    )
+    request = pending or {
+        "request_id": decision.target_authority_request_id,
+        "request_kind": "developmental_resource_authority",
+        "policy_decision_id": decision.decision_id,
+        "requirement_id": requirement.requirement_id,
+        "action_type": decision.action_type,
+        "status": "pending",
+        "exact_question": _resource_authority_question(requirement.as_dict(), decision.action_type),
+        "rationale": decision.rationale,
+        "evidence_refs": tuple(requirement.information_need_ids),
+        "blocked_transition": "agenda_goal -> governed_resource_authority_policy -> bounded_authority_or_local_reuse",
+        "authority_scope": _resource_authority_scope(decision.action_type, requirement.as_dict()),
+        "blocking_scope": "developmental_resource_or_evaluator_policy",
+        "permitted_responses": ("approve_scoped_authority", "reject_scoped_authority", "defer_resource_policy", "ask_for_clarification"),
+        "authority_granted": False,
+        "created_at": utc_now(),
+    }
+    updated_agenda = {**agenda, "status": "awaiting_resource_policy_authority", "next_eligible_transition": "operator_resource_authority_response", "updated_at": utc_now()}
+    return replace(
+        controller,
+        continuous_mission_state="awaiting_operator_insight",
+        active_work_item="awaiting_developmental_resource_authority",
+        continuous_learning_state={**state, "developmental_resource_policy": {**policy, "status": "authority_pending"}, "developmental_agenda": updated_agenda},
+        continuous_developmental_insight_requests=tuple(controller.continuous_developmental_insight_requests) if pending else tuple(controller.continuous_developmental_insight_requests) + (request,),
+        journal=controller.journal + (_journal_entry("developmental_resource_policy", "scoped_resource_authority_request_created", (decision.decision_id, request["request_id"])),),
+    )
+
+
+def _resource_authority_question(requirement: Mapping[str, Any], action_type: str) -> str:
+    topic = str(requirement.get("topic") or "this bounded goal").replace("_", " ")
+    target = str(requirement.get("target_behavior") or requirement.get("target_capability") or "the declared behavior")
+    labels = {
+        "request_local_model_resource": "Approve one exact-once local-model teaching-resource request",
+        "request_operator_teaching_resource": "Provide or authorize one bounded teaching resource",
+        "request_operator_sealed_evaluator": "Provide or authorize independently sealed evaluator cases",
+        "request_external_research_authority": "Authorize one bounded external-research evidence request",
+        "request_execution_authority": "Authorize one disposable execution environment",
+    }
+    return f"{labels.get(action_type, 'Approve scoped resource authority')} for {topic}: {target}?"
+
+
+def _resource_authority_scope(action_type: str, requirement: Mapping[str, Any]) -> str:
+    topic = str(requirement.get("topic") or "").replace("_", " ")
+    target = str(requirement.get("target_capability") or "")
+    if action_type == "request_local_model_resource":
+        return f"one exact-once advisory local-model request for {topic}/{target}; no execution until the shared ledger approval path consumes it"
+    if action_type == "request_operator_sealed_evaluator":
+        return f"one separately authored sealed evaluator package for {topic}/{target}; it cannot be used as teaching evidence"
+    if action_type == "request_operator_teaching_resource":
+        return f"one bounded teaching resource for {topic}/{target}; it cannot certify capability"
+    if action_type == "request_external_research_authority":
+        return f"authority request only for bounded external evidence on {topic}/{target}; no retrieval is performed"
+    return f"one disposable execution-authority request for {topic}/{target}; no tracked-source action"
+
+
+def consume_developmental_resource_authority_response(
+    controller: ContinuousRuntimeController,
+    *,
+    request_id: str,
+    selected_option: str,
+    operator_text: str = "",
+    approved_scope: str = "",
+) -> ContinuousRuntimeController:
+    """Consume one existing interaction request without granting broader authority."""
+
+    requests = tuple(dict(item) for item in controller.continuous_developmental_insight_requests)
+    index = next((position for position, item in enumerate(requests) if item.get("request_id") == request_id and item.get("status") == "pending"), -1)
+    if index < 0:
+        return replace(controller, journal=controller.journal + (_journal_entry("developmental_resource_policy", "duplicate_or_unknown_authority_response_suppressed", (request_id,)),))
+    request = requests[index]
+    permitted = tuple(request.get("permitted_responses") or ())
+    if selected_option not in permitted:
+        return replace(controller, journal=controller.journal + (_journal_entry("developmental_resource_policy", "invalid_authority_response_rejected", (request_id, selected_option)),))
+    state = dict(controller.continuous_learning_state or {})
+    policy = dict(state.get("developmental_resource_policy") or {})
+    decision = dict(policy.get("decision") or {})
+    requirement = dict(policy.get("requirement") or {})
+    if str(request.get("policy_decision_id") or "") != str(decision.get("decision_id") or ""):
+        return replace(controller, journal=controller.journal + (_journal_entry("developmental_resource_policy", "authority_response_identity_mismatch", (request_id,)),))
+    consumed_at = utc_now()
+    resolved = {**request, "status": "consumed", "resolution": selected_option, "consumed_at": consumed_at, "authority_granted": selected_option == "approve_scoped_authority"}
+    updated_requests = requests[:index] + (resolved,) + requests[index + 1 :]
+    response = {"request_id": request_id, "response_kind": "developmental_resource_authority", "selected_option": selected_option, "operator_text": operator_text, "approved_scope": approved_scope, "authority_granted": selected_option == "approve_scoped_authority", "created_at": consumed_at, "consumed_at": consumed_at}
+    if selected_option == "ask_for_clarification":
+        follow_up = {**request, "request_id": stable_id("developmental-resource-policy-clarification", request_id), "status": "pending", "exact_question": f"What bounded clarification is needed for: {request.get('exact_question', '')}", "permitted_responses": ("approve_scoped_authority", "reject_scoped_authority", "defer_resource_policy"), "created_at": consumed_at}
+        return replace(controller, continuous_developmental_insight_requests=updated_requests + (follow_up,), continuous_operator_interaction_responses=tuple(controller.continuous_operator_interaction_responses) + (response,), continuous_learning_state={**state, "developmental_resource_policy": {**policy, "status": "clarification_requested"}}, continuous_mission_state="awaiting_operator_insight")
+    if selected_option == "approve_scoped_authority":
+        action = str(decision.get("action_type") or "")
+        policy_update = {**policy, "status": "authority_granted", "approved_authority": {"request_id": request_id, "action_type": action, "scope": approved_scope, "granted_at": consumed_at}}
+        updated_state = {**state, "developmental_resource_policy": policy_update}
+        if action == "request_local_model_resource":
+            ledger = LocalModelRequestResultLedger()
+            semantic = stable_id("agenda-policy-local-model-need", str(requirement.get("semantic_identity") or ""))
+            question = f"Provide bounded teaching evidence for {str(requirement.get('topic') or '').replace('_', ' ')}: {requirement.get('target_behavior') or requirement.get('target_capability')}."
+            model_request = ledger.create_or_reuse_request(
+                semantic_identity=semantic, question=question, requester_type="developmental_resource_policy",
+                requester_reference=controller.session_id, mission_id=str(requirement.get("mission_id") or ""),
+                mission_information_need_identity=str(requirement.get("semantic_identity") or ""), question_objective=str(requirement.get("target_capability") or ""),
+            )
+            updated_state.update({"local_model_request": model_request, "local_model_execution_count": int(model_request.get("execution_attempt_count") or 0), "developmental_resource_policy": {**policy_update, "status": "local_model_request_pending", "decision": {**decision, "target_request_id": model_request["request_id"], "status": "authority_granted"}}})
+            next_state, work = "learning_local_model_request_pending", "awaiting_shared_local_model_approval"
+        else:
+            authority_key = {
+                "request_operator_teaching_resource": "operator_teaching_resource",
+                "request_operator_sealed_evaluator": "sealed_evaluator",
+                "request_external_research_authority": "external_research",
+                "request_execution_authority": "execution",
+            }.get(action, action)
+            updated_state["resource_policy_authorities"] = {**dict(state.get("resource_policy_authorities") or {}), authority_key: {"scope": approved_scope, "request_id": request_id, "granted_at": consumed_at}}
+            next_state, work = "developmental_resource_authority_granted_pending_material", "awaiting_authorized_resource_or_evaluator_material"
+        return replace(controller, continuous_developmental_insight_requests=updated_requests, continuous_operator_interaction_responses=tuple(controller.continuous_operator_interaction_responses) + (response,), continuous_learning_state=updated_state, continuous_mission_state=next_state, active_work_item=work, journal=controller.journal + (_journal_entry("developmental_resource_policy", "scoped_authority_consumed_without_execution", (request_id, action)),))
+    policy_update = {**policy, "status": "deferred" if selected_option == "defer_resource_policy" else "rejected", "operator_disposition": {"request_id": request_id, "selected_option": selected_option, "at": consumed_at}}
+    updated = replace(controller, continuous_developmental_insight_requests=updated_requests, continuous_operator_interaction_responses=tuple(controller.continuous_operator_interaction_responses) + (response,), continuous_learning_state={**state, "developmental_resource_policy": policy_update}, continuous_mission_state="developmental_resource_policy_deferred" if selected_option == "defer_resource_policy" else "developmental_resource_policy_rejected", active_work_item="resource_policy_agenda_refresh")
+    return observe_developmental_agenda_mission_outcome(updated, outcome_id=stable_id("resource-policy-outcome", str(decision.get("decision_id") or ""), selected_option), outcome="resource_blocked", evidence_refs=(str(decision.get("decision_id") or ""), selected_option))
 
 
 def _mark_agenda_mission_active(
@@ -2172,6 +2383,14 @@ def consume_continuous_operator_interaction_response(
             selected_option=selected_option,
             operator_text=operator_text,
         )
+    if request.get("request_kind") == "developmental_resource_authority":
+        return consume_developmental_resource_authority_response(
+            controller,
+            request_id=request_id,
+            selected_option=selected_option,
+            operator_text=operator_text,
+            approved_scope=approved_scope,
+        )
     if selected_option == "provide exact target and case" and not operator_text.strip():
         return replace(
             controller,
@@ -2736,7 +2955,9 @@ def restore_continuous_mission_restart_state(
     recovered_failures = _recover_behavioral_failure_records(tuple(restart_state.get("continuous_behavioral_failure_records") or ()))
     learning_state = dict(restart_state.get("continuous_learning_state") or {})
     agenda = dict(learning_state.get("developmental_agenda") or {})
+    policy = dict(learning_state.get("developmental_resource_policy") or {})
     invalid_agenda = bool(agenda) and not agenda_state_is_valid(agenda)
+    invalid_policy = bool(policy) and not resource_policy_state_is_valid(policy)
     if invalid_agenda:
         learning_state["developmental_agenda"] = {
             **agenda,
@@ -2744,16 +2965,22 @@ def restore_continuous_mission_restart_state(
             "exhaustion_reasons": ("invalid_agenda_state_on_restart",),
             "next_eligible_transition": "operator_refresh_required",
         }
+    if invalid_policy:
+        learning_state["developmental_resource_policy"] = {
+            **policy,
+            "status": "unavailable",
+            "failure_reason": "invalid_resource_policy_state_on_restart",
+        }
     return replace(
         controller,
-        continuous_mission_state="developmental_agenda_blocked" if invalid_agenda else str(restart_state.get("continuous_mission_state") or ""),
+        continuous_mission_state="developmental_agenda_blocked" if invalid_agenda else "developmental_resource_policy_blocked" if invalid_policy else str(restart_state.get("continuous_mission_state") or ""),
         continuous_mission_contract=dict(restart_state.get("continuous_mission_contract") or {}),
         continuous_behavioral_failure_records=tuple(item.as_dict() for item in recovered_failures),
         continuous_mission_findings=tuple(restart_state.get("continuous_mission_findings") or ()),
         continuous_mission_frontier=tuple(restart_state.get("continuous_mission_frontier") or ()),
         continuous_main_goal=dict(restart_state.get("continuous_main_goal") or {}),
         continuous_completed_main_goals=tuple(restart_state.get("continuous_completed_main_goals") or ()),
-        continuous_active_subgoal={} if invalid_agenda else dict(restart_state.get("continuous_active_subgoal") or {}),
+        continuous_active_subgoal={} if invalid_agenda or invalid_policy else dict(restart_state.get("continuous_active_subgoal") or {}),
         continuous_consumed_weakness_signatures=tuple(restart_state.get("continuous_consumed_weakness_signatures") or ()),
         continuous_knowledge_ledger=recovered_ledger,
         continuous_pcm_bridge_ledger=tuple(restart_state.get("continuous_pcm_bridge_ledger") or ()),
@@ -2766,8 +2993,8 @@ def restore_continuous_mission_restart_state(
         continuous_observation_state=dict(restart_state.get("continuous_observation_state") or {}),
         continuous_learning_state=learning_state,
         pending_application_decision_id=str(restart_state.get("pending_application_decision_id") or ""),
-        active_work_item="developmental_agenda_blocked" if invalid_agenda else str(restart_state.get("active_work_item") or ""),
-        journal=tuple(controller.journal) + (_journal_entry("continuous_mission", "invalid_agenda_restart_failed_closed" if invalid_agenda else "continuous_mission_restart_state_restored", (str(restart_state.get("continuous_mission_state") or ""),)),),
+        active_work_item="developmental_agenda_blocked" if invalid_agenda else "developmental_resource_policy_blocked" if invalid_policy else str(restart_state.get("active_work_item") or ""),
+        journal=tuple(controller.journal) + (_journal_entry("continuous_mission", "invalid_agenda_restart_failed_closed" if invalid_agenda else "invalid_resource_policy_restart_failed_closed" if invalid_policy else "continuous_mission_restart_state_restored", (str(restart_state.get("continuous_mission_state") or ""),)),),
     )
 
 

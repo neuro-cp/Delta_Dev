@@ -231,7 +231,7 @@ def agenda_state_is_valid(agenda: Mapping[str, Any]) -> bool:
     if agenda.get("active_mission_id") and agenda.get("pending_proposal_id"):
         return False
     return str(agenda.get("status") or "") in {
-        "idle", "compiling_candidates", "proposal_pending", "mission_active", "awaiting_mission_outcome", "awaiting_evaluator_authority",
+        "idle", "compiling_candidates", "proposal_pending", "mission_active", "awaiting_mission_outcome", "awaiting_evaluator_authority", "awaiting_resource_policy_authority",
         "refreshing_evidence", "cooldown", "blocked", "exhausted", "paused", "completed_session",
     }
 
