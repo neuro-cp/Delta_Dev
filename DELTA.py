@@ -2397,6 +2397,17 @@ class DeltaApp:
         if controller is None or not controller.continuous_learning_state or prior_instruction != message.strip():
             controller = start_continuous_runtime_controller(session_id=f"tk-learning-{uuid.uuid4().hex[:16]}")
             controller = compile_mission_bound_local_model_learning_request(controller, message)
+        provisional = dict(controller.continuous_learning_state.get("provisional_resource_bundle") or {})
+        advisory = dict(controller.continuous_learning_state.get("mission_bound_advisory_evidence") or {})
+        if provisional:
+            self.developmental_learning_controller = controller
+            active = dict(controller.continuous_active_subgoal or {})
+            return (
+                "Existing durable local-model result was translated into a provisional advisory learning resource. "
+                f"Evidence={advisory.get('evidence_id')}; sufficiency={advisory.get('sufficiency_state')}; "
+                f"resource={provisional.get('resource_bundle_id')}; first_subgoal={active.get('subgoal_id') or 'none'}. "
+                "The subgoal is queued but was not executed. No evaluation, capability update, provider, web, PCM, or tracked-source action occurred."
+            )
         if not controller.continuous_active_subgoal:
             self.developmental_learning_controller = controller
             request = dict(controller.continuous_learning_state.get("local_model_request") or {})
@@ -2973,12 +2984,17 @@ class DeltaApp:
                 ledger.approve_request(request_id, "operator_approved_one_use")
                 terminal = ledger.execute_claimed_request(request_id)
                 self.developmental_learning_controller = consume_mission_bound_local_model_learning_approval(controller)
+                state = self.developmental_learning_controller.continuous_learning_state
+                provisional = dict(state.get("provisional_resource_bundle") or {})
+                advisory = dict(state.get("mission_bound_advisory_evidence") or {})
                 result_id = str(terminal.get("result_id") or "")
                 self._append_chat(
                     "DELTA",
                     "The approval was routed to the shared local-model ledger. "
                     f"Request={request_id}; state={terminal.get('lifecycle_state')}; result_id={result_id or 'none'}. "
-                    "The learning controller observed the terminal record. No curriculum, evaluation, capability update, provider, web, PCM, or tracked-source action occurred.",
+                    f"The learning controller observed the terminal record; evidence={advisory.get('evidence_id') or 'none'}; "
+                    f"resource={provisional.get('resource_bundle_id') or 'none'}. The first subgoal remains unexecuted. "
+                    "No evaluation, capability update, provider, web, PCM, or tracked-source action occurred.",
                 )
             except (KeyError, RuntimeError, OSError) as exc:
                 self._append_chat("DELTA", f"The shared local-model request was not executed: {exc}.")

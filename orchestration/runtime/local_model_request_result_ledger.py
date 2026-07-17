@@ -135,6 +135,7 @@ class LocalModelRequestResultLedger:
         requester_type: str,
         requester_reference: str = "",
         mission_id: str = "",
+        mission_information_need_identity: str = "",
         session_reference: str = "",
         question_objective: str = "",
         lane: Mapping[str, Any] | None = None,
@@ -149,6 +150,7 @@ class LocalModelRequestResultLedger:
         record = {
             "request_id": request_id, "semantic_identity": semantic_identity, "request_digest": request_digest,
             "requester_type": requester_type, "requester_reference": requester_reference, "mission_id": mission_id,
+            "mission_information_need_identity": mission_information_need_identity,
             "session_reference": session_reference, "question": normalized_question, "question_objective": question_objective,
             "selected_lane": selected_lane, "model_identity": str(selected_lane.get("selected_model_id") or selected_lane.get("selected_model") or ""),
             "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
@@ -172,6 +174,41 @@ class LocalModelRequestResultLedger:
             if record.get("semantic_identity") == semantic_identity and record.get("request_digest") == request_digest:
                 return dict(record)
         return None
+
+    def find_completed_mission_request(
+        self,
+        *,
+        mission_id: str,
+        mission_information_need_identity: str,
+        question: str,
+        requester_type: str,
+        question_objective: str,
+    ) -> dict[str, Any] | None:
+        """Return a completed result for the same bounded learning need.
+
+        Mission IDs include a run timestamp, so they establish ownership but not
+        cross-run semantic identity.  The stable information-need identity is
+        authoritative for new records.  A legacy record without that field is
+        reusable only when its exact question and objective also match.
+        """
+
+        normalized = " ".join(str(question or "").split())
+        matches = [
+            record for record in (self._state.get("requests") or {}).values()
+            if record.get("requester_type") == requester_type
+            and record.get("question") == normalized
+            and record.get("question_objective") == question_objective
+            and record.get("lifecycle_state") == "completed"
+            and record.get("result_id")
+            and (
+                record.get("mission_id") == mission_id
+                or record.get("mission_information_need_identity") == mission_information_need_identity
+                or not record.get("mission_information_need_identity")
+            )
+        ]
+        if not matches:
+            return None
+        return dict(sorted(matches, key=lambda item: str(item.get("completed_at") or ""), reverse=True)[0])
 
     def approve_request(self, request_id: str, approval_authority: str) -> dict[str, Any]:
         record = self.get_request(request_id)

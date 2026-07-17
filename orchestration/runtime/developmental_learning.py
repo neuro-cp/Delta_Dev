@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Mapping, Sequence
@@ -230,11 +231,48 @@ class MissionBoundLocalModelBridge:
         return asdict(self)
 
 
+@dataclass(frozen=True)
+class MissionBoundAdvisoryLearningEvidence:
+    """Normalized, non-authoritative study evidence referenced from a ledger result."""
+
+    evidence_id: str
+    mission_id: str
+    information_need_id: str
+    shared_request_id: str
+    shared_result_id: str
+    request_digest: str
+    response_digest: str
+    model_identity: str
+    adapter_identity: str
+    provenance: Mapping[str, Any]
+    topic: str
+    raw_response_reference: str
+    normalized_claims: tuple[str, ...]
+    prerequisite_candidates: tuple[str, ...]
+    concept_definitions: tuple[str, ...]
+    theorem_statements: tuple[str, ...]
+    intuitive_explanations: tuple[str, ...]
+    worked_example_candidates: tuple[str, ...]
+    misconception_candidates: tuple[str, ...]
+    suggested_practice: tuple[str, ...]
+    follow_up_information_needs: tuple[dict[str, Any], ...]
+    uncertainties: tuple[str, ...]
+    contradictions: tuple[str, ...]
+    missing_sections: tuple[str, ...]
+    grounding_state: str
+    sufficiency_state: str
+    rejection_reasons: tuple[str, ...]
+    created_at: str
+    evidence_digest: str
+
+    def as_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
 def compile_mission_information_need(mission: DevelopmentalMissionContract) -> dict[str, Any]:
     """Compile a bounded, semantic learning question without lesson content."""
 
     payload = {
-        "mission_id": mission.mission_id,
         "domain": mission.domain,
         "topic": mission.topic,
         "required_sections": (
@@ -242,11 +280,12 @@ def compile_mission_information_need(mission: DevelopmentalMissionContract) -> d
             "worked_example", "misconceptions", "practice_questions", "uncertainties",
         ),
         "excluded_sections": ("sealed_evaluation_answers", "capability_claims", "file_mutation", "unrestricted_exploration"),
+        "protocol": "mission_learning_information_need_v1",
     }
     digest = _digest(payload)
     return {
         "information_need_id": stable_id("mission-learning-information-need", mission.mission_id, digest),
-        "semantic_identity": _digest((mission.domain, mission.topic, payload["required_sections"])),
+        "semantic_identity": digest,
         "information_need_digest": digest,
         "topic": mission.topic,
         "request_text": (
@@ -289,6 +328,125 @@ def assess_local_model_learning_evidence(
     if len(present) < 4:
         return {"state": "partially_sufficient", "validated_claims": present, "uncertain_claims": tuple(sorted(set(required) - set(present))), "rejected_claims": ()}
     return {"state": "sufficient_for_provisional_resource", "validated_claims": present, "uncertain_claims": ("model_output_is_advisory",), "rejected_claims": ()}
+
+
+def _advisory_sentences(response: str) -> tuple[str, ...]:
+    normalized = " ".join(str(response or "").replace("\\n", " ").split())
+    return tuple(sentence.strip() for sentence in re.split(r"(?<=[.!?])\s+", normalized) if sentence.strip())
+
+
+def _advisory_section(sentences: Sequence[str], markers: Sequence[str]) -> tuple[str, ...]:
+    lowered = tuple(marker.lower() for marker in markers)
+    return tuple(sentence for sentence in sentences if any(marker in sentence.lower() for marker in lowered))
+
+
+def compile_mission_bound_advisory_learning_evidence(
+    mission: DevelopmentalMissionContract,
+    information_need: Mapping[str, Any],
+    request: Mapping[str, Any],
+    result: Mapping[str, Any],
+) -> MissionBoundAdvisoryLearningEvidence:
+    """Translate one retained ledger result into bounded advisory study evidence.
+
+    The raw prose remains in the durable ledger.  This record stores only
+    normalized excerpts, provenance, and explicit uncertainty/rejection state.
+    """
+
+    raw = str(result.get("response_reference") or "")
+    sentences = _advisory_sentences(raw)
+    topic_text = mission.topic.replace("_", " ")
+    relevant = bool(topic_text and topic_text.lower() in raw.lower())
+    prerequisites = _advisory_section(sentences, ("prerequisite", "background", "understanding of", "linear algebra"))
+    definitions = _advisory_section(sentences, ("definition", "states that", "theorem"))
+    intuitive = _advisory_section(sentences, ("intuition", "means", "interpret"))
+    examples = _advisory_section(sentences, ("example", "consider", "matrix"))
+    misconceptions = _advisory_section(sentences, ("misconception", "not every", "does not apply", "not apply", "be aware", "cautious"))
+    practice = _advisory_section(sentences, ("practice", "exercise", "try ", "solve "))
+    uncertainties = _advisory_section(sentences, ("uncertain", "uncertainty", "be aware", "cautious", "limitation"))
+    absolute_scope = _advisory_section(sentences, ("every ", "all "))
+    limiting_scope = _advisory_section(sentences, ("not apply", "does not apply", "only applies", "limitation"))
+    contradictions = ("unresolved_scope_tension",) if absolute_scope and limiting_scope else ()
+    categories = {
+        "prerequisites": prerequisites,
+        "concept_statement": definitions,
+        "intuitive_explanation": intuitive,
+        "worked_example": examples,
+        "misconceptions": misconceptions,
+        "practice_questions": practice,
+    }
+    missing = tuple(name for name, values in categories.items() if not values)
+    normalized_claims = tuple(dict.fromkeys(definitions + intuitive + examples))
+    rejection = ("empty_response",) if not sentences else ("topic_not_identifiable",) if not relevant else ()
+    if rejection:
+        sufficiency = "empty" if not sentences else "irrelevant"
+    elif len(normalized_claims) == 0 or (not prerequisites and not practice):
+        sufficiency = "insufficient"
+    elif contradictions or missing:
+        sufficiency = "partially_sufficient"
+    else:
+        sufficiency = "sufficient_for_provisional_resource"
+    needs: list[dict[str, Any]] = []
+    for section in missing + tuple("resolve_scope_tension" for _ in contradictions):
+        payload = {"mission_id": mission.mission_id, "topic": mission.topic, "need": section, "response_digest": str(result.get("response_digest") or "")}
+        needs.append({"need_id": stable_id("advisory-learning-follow-up", _digest(payload)), "semantic_identity": _digest(payload), "concept": section, "status": "resource_gap", "confidence": 0.0, "uncertainty": "advisory_material_missing_or_tensioned", "digest": _digest(payload)})
+    evidence_payload = {
+        "mission_id": mission.mission_id, "information_need_id": str(information_need.get("information_need_id") or ""),
+        "request_id": str(request.get("request_id") or ""), "result_id": str(result.get("result_id") or ""),
+        "response_digest": str(result.get("response_digest") or ""), "normalized_claims": normalized_claims,
+        "missing": missing, "contradictions": contradictions, "sufficiency": sufficiency,
+    }
+    digest = _digest(evidence_payload)
+    return MissionBoundAdvisoryLearningEvidence(
+        evidence_id=stable_id("mission-bound-advisory-evidence", digest), mission_id=mission.mission_id,
+        information_need_id=str(information_need.get("information_need_id") or ""), shared_request_id=str(request.get("request_id") or ""),
+        shared_result_id=str(result.get("result_id") or ""), request_digest=str(request.get("request_digest") or ""),
+        response_digest=str(result.get("response_digest") or ""), model_identity=str(result.get("model_identity") or request.get("model_identity") or ""),
+        adapter_identity=str(result.get("adapter_identity") or request.get("adapter_identity") or ""), provenance=dict(result.get("provenance") or {}),
+        topic=mission.topic, raw_response_reference=str(result.get("result_id") or ""), normalized_claims=normalized_claims,
+        prerequisite_candidates=prerequisites, concept_definitions=definitions, theorem_statements=definitions,
+        intuitive_explanations=intuitive, worked_example_candidates=examples, misconception_candidates=misconceptions,
+        suggested_practice=practice, follow_up_information_needs=tuple(needs),
+        uncertainties=tuple(dict.fromkeys(("model_output_is_advisory",) + uncertainties + contradictions)), contradictions=contradictions,
+        missing_sections=missing, grounding_state="advisory_provenance_bound", sufficiency_state=sufficiency,
+        rejection_reasons=rejection, created_at=utc_now(), evidence_digest=digest,
+    )
+
+
+def compile_provisional_learning_bundle_from_advisory(
+    mission: DevelopmentalMissionContract,
+    evidence: MissionBoundAdvisoryLearningEvidence,
+) -> dict[str, Any] | None:
+    """Synthesize a temporary resource from supported advisory sections only."""
+
+    if evidence.sufficiency_state not in {"sufficient_for_provisional_resource", "partially_sufficient"}:
+        return None
+    components = tuple(name for name, values in (
+        ("concept_statement", evidence.theorem_statements), ("intuitive_explanation", evidence.intuitive_explanations),
+        ("worked_example", evidence.worked_example_candidates), ("misconceptions", evidence.misconception_candidates),
+        ("practice_questions", evidence.suggested_practice),
+    ) if values)
+    if not components:
+        return None
+    bundle_payload = {"mission_id": mission.mission_id, "evidence_digest": evidence.evidence_digest, "components": components}
+    resource_id = stable_id("provisional-advisory-resource", _digest(bundle_payload))
+    dimension = f"{mission.topic}_understanding"
+    prerequisite_graph = tuple({"concept": item, "status": "unassessed", "evidence": "advisory_prerequisite_candidate", "confidence": 0.0} for item in evidence.prerequisite_candidates)
+    return {
+        "resource_bundle_id": stable_id("provisional-learning-bundle", _digest(bundle_payload)), "mission_id": mission.mission_id,
+        "domain": mission.domain, "topic": mission.topic, "resource_status": "provisional", "provisional": True,
+        "source_type": "local_model_advisory", "source_evidence_id": evidence.evidence_id,
+        "shared_request_id": evidence.shared_request_id, "shared_result_id": evidence.shared_result_id,
+        "model_identity": evidence.model_identity, "provenance": evidence.provenance,
+        "validated_for_study_claims": evidence.normalized_claims, "uncertain_claims": evidence.uncertainties,
+        "rejected_claims": evidence.rejection_reasons + evidence.contradictions, "prerequisite_graph": prerequisite_graph,
+        "study_sections": {"definitions": evidence.concept_definitions, "intuitions": evidence.intuitive_explanations, "examples": evidence.worked_example_candidates, "misconceptions": evidence.misconception_candidates},
+        "example_references": evidence.worked_example_candidates, "misconception_warnings": evidence.misconception_candidates,
+        "visible_practice_suggestions": evidence.suggested_practice, "follow_up_information_needs": evidence.follow_up_information_needs,
+        "evaluation_requirements": "independently_authored_sealed_evaluation_required_before_capability_update", "created_at": utc_now(), "bundle_version": 1,
+        "assessment_dimensions": ({"dimension": dimension, "topic": mission.topic, "baseline_case_id": "independent-baseline-required", "baseline_components": (), "required_components": components, "prerequisites": tuple(item["concept"] for item in prerequisite_graph), "evidence_ref": evidence.evidence_id, "expected_learning_value": 0.7, "information_gain": 0.7, "estimated_effort": 1.0},),
+        "study_resources": ({"resource_id": resource_id, "topic": mission.topic, "supports_dimensions": (dimension,), "study_components": components, "model_result_reference": evidence.shared_result_id},),
+        "sealed_evaluation_cases": (), "bundle_digest": _digest(bundle_payload),
+    }
 
 
 def compile_provisional_learning_bundle(
@@ -788,9 +946,9 @@ def evaluate_learning_attempt(
 
 __all__ = [
     "DevelopmentalMissionContract", "DevelopmentalCapabilityAssessment", "ResourceAcquisitionPlan",
-    "DevelopmentalGap", "LearningSubgoal", "DevelopmentalAttemptRecord", "DevelopmentalEvaluationRecord",
+    "DevelopmentalGap", "LearningSubgoal", "DevelopmentalAttemptRecord", "DevelopmentalEvaluationRecord", "MissionBoundLocalModelBridge", "MissionBoundAdvisoryLearningEvidence",
     "classify_developmental_instruction", "compile_developmental_mission_contract", "compile_capability_assessment",
     "compile_resource_acquisition_plan", "compile_developmental_gaps", "compile_learning_subgoal",
     "execute_learning_attempt", "evaluate_learning_attempt",
-    "load_retained_learning_bundle", "load_retained_learning_bundles", "merge_retained_learning_bundles",
+    "load_retained_learning_bundle", "load_retained_learning_bundles", "merge_retained_learning_bundles", "compile_mission_information_need", "compile_mission_bound_advisory_learning_evidence", "compile_provisional_learning_bundle_from_advisory",
 ]

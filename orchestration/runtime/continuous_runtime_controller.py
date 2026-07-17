@@ -58,6 +58,8 @@ from orchestration.runtime.developmental_learning import (
     compile_developmental_gaps,
     compile_developmental_mission_contract,
     compile_mission_information_need,
+    compile_mission_bound_advisory_learning_evidence,
+    compile_provisional_learning_bundle_from_advisory,
     compile_provisional_learning_bundle,
     compile_learning_subgoal,
     compile_resource_acquisition_plan,
@@ -776,17 +778,23 @@ def compile_mission_bound_local_model_learning_request(
     existing = dict(current.get("local_model_request") or {})
     if existing and str(existing.get("request_digest") or "") == str(need["information_need_digest"]):
         return controller
-    request = LocalModelRequestResultLedger().create_or_reuse_request(
-        semantic_identity=stable_id("mission-bound-local-model-semantic", controller.session_id, mission.mission_id, str(need["semantic_identity"])),
+    ledger = LocalModelRequestResultLedger()
+    request = ledger.find_completed_mission_request(
+        mission_id=mission.mission_id,
+        mission_information_need_identity=str(need["semantic_identity"]),
         question=str(need["request_text"]),
         requester_type="mission_bound_learning",
-        requester_reference=controller.session_id,
-        mission_id=mission.mission_id,
+        question_objective=str(need.get("missing_evidence") or "mission-bound learning evidence"),
+    ) or ledger.create_or_reuse_request(
+        semantic_identity=stable_id("mission-bound-local-model-semantic", controller.session_id, mission.mission_id, str(need["semantic_identity"])),
+        question=str(need["request_text"]), requester_type="mission_bound_learning",
+        requester_reference=controller.session_id, mission_id=mission.mission_id,
+        mission_information_need_identity=str(need["semantic_identity"]),
         question_objective=str(need.get("missing_evidence") or "mission-bound learning evidence"),
     )
     lane = dict(request.get("selected_lane") or {})
-    status = "learning_local_model_request_pending" if lane.get("available") else "learning_local_model_unavailable"
-    return replace(
+    status = "learning_local_model_result_available" if request.get("lifecycle_state") == "completed" else "learning_local_model_request_pending" if lane.get("available") else "learning_local_model_unavailable"
+    updated = replace(
         controller,
         continuous_mission_state=status,
         continuous_mission_contract={**mission.as_dict(), "original_operator_goal": mission.operator_instruction},
@@ -798,9 +806,10 @@ def compile_mission_bound_local_model_learning_request(
             "local_model_execution_count": 0,
             "protocol": "mission_bound_local_model_learning_bridge_v1",
         },
-        active_work_item="learning_local_model_request_pending" if lane.get("available") else "learning_local_model_unavailable",
+        active_work_item="learning_local_model_result_available" if request.get("lifecycle_state") == "completed" else "learning_local_model_request_pending" if lane.get("available") else "learning_local_model_unavailable",
         journal=controller.journal + (_journal_entry("developmental_learning", "mission_bound_local_model_information_need_compiled", (mission.mission_id, str(need["information_need_id"]))),),
     )
+    return consume_mission_bound_local_model_learning_approval(updated) if request.get("lifecycle_state") == "completed" else updated
 
 
 def consume_mission_bound_local_model_learning_approval(
@@ -830,12 +839,26 @@ def consume_mission_bound_local_model_learning_approval(
         return controller
     result_id = str(request.get("result_id") or "")
     result = LocalModelRequestResultLedger().observe_result(result_id) if result_id else {}
-    return replace(
-        controller,
-        continuous_mission_state="learning_local_model_result_observed",
-        active_work_item="learning_local_model_result_observed",
-        continuous_learning_state={**state, "local_model_request": request, "local_model_result_reference": result, "local_model_execution_count": int(request.get("execution_attempt_count") or 0)},
-    )
+    mission = compile_developmental_mission_contract(str((state.get("mission") or {}).get("operator_instruction") or ""))
+    need = dict(state.get("information_need") or {})
+    if mission is None or not need:
+        return replace(controller, continuous_mission_state="learning_local_model_result_observed", active_work_item="learning_local_model_result_observed", continuous_learning_state={**state, "local_model_request": request, "local_model_result_reference": result, "local_model_execution_count": int(request.get("execution_attempt_count") or 0)})
+    evidence = compile_mission_bound_advisory_learning_evidence(mission, need, request, result)
+    bundle = compile_provisional_learning_bundle_from_advisory(mission, evidence)
+    common = {
+        "information_need": need,
+        "local_model_lane": dict(request.get("selected_lane") or {}),
+        "local_model_request": request,
+        "local_model_result_reference": result,
+        "mission_bound_advisory_evidence": evidence.as_dict(),
+        "local_model_execution_count": int(request.get("execution_attempt_count") or 0),
+        "capability_state_boundary": "unchanged_pending_independent_evaluation",
+    }
+    if bundle is None:
+        return replace(controller, continuous_mission_state="learning_model_evidence_insufficient", active_work_item="learning_model_evidence_insufficient", continuous_learning_state={**state, **common, "provisional_resource_bundle": None, "follow_up_information_needs": evidence.follow_up_information_needs})
+    attached = attach_developmental_learning_mission(controller, mission.operator_instruction, bundle)
+    attached_state = {**attached.continuous_learning_state, **common, "provisional_resource_bundle": bundle, "follow_up_information_needs": evidence.follow_up_information_needs}
+    return replace(attached, continuous_learning_state=attached_state)
 
 
 def consume_developmental_learning_evaluation(
