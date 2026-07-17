@@ -72,7 +72,8 @@ from orchestration.runtime.delta_1_6_operational_autonomy import (
     evaluate_authority,
     run_delta_1_6_background_cycle,
 )
-from orchestration.runtime.rc2_conversational_mode_router import discover_local_model_lanes, execute_local_model_answer, select_model_lane
+from orchestration.runtime.rc2_conversational_mode_router import discover_local_model_lanes, select_model_lane
+from orchestration.runtime.local_model_request_result_ledger import LocalModelRequestResultLedger
 
 
 DOC_ROOT = Path("docs") / "continuous_runtime"
@@ -775,15 +776,15 @@ def compile_mission_bound_local_model_learning_request(
     existing = dict(current.get("local_model_request") or {})
     if existing and str(existing.get("request_digest") or "") == str(need["information_need_digest"]):
         return controller
-    lane = select_model_lane(str(need["request_text"]), "analysis")
-    # This owner already defines the request record and one-use semantics.
-    from orchestration.runtime.delta_1_4_live_wikipedia_runtime import create_local_model_pending_request
-    request = create_local_model_pending_request(
-        session_id=controller.session_id,
-        message=str(need["request_text"]),
-        lane=lane,
-        semantic_identity=str(need["semantic_identity"]),
+    request = LocalModelRequestResultLedger().create_or_reuse_request(
+        semantic_identity=stable_id("mission-bound-local-model-semantic", controller.session_id, mission.mission_id, str(need["semantic_identity"])),
+        question=str(need["request_text"]),
+        requester_type="mission_bound_learning",
+        requester_reference=controller.session_id,
+        mission_id=mission.mission_id,
+        question_objective=str(need.get("missing_evidence") or "mission-bound learning evidence"),
     )
+    lane = dict(request.get("selected_lane") or {})
     status = "learning_local_model_request_pending" if lane.get("available") else "learning_local_model_unavailable"
     return replace(
         controller,
@@ -808,69 +809,33 @@ def consume_mission_bound_local_model_learning_approval(
     model_executor: Any | None = None,
     sealed_evaluation_cases: Sequence[Mapping[str, Any]] = (),
 ) -> ContinuousRuntimeController:
-    """Consume the existing pending request once and hand sufficient evidence on.
+    """Observe a terminal shared-ledger result without approving or executing it.
 
-    `model_executor` is an injectable existing RC2 executor for deterministic
-    validation.  It must return the normal `execute_local_model_answer` shape.
+    Kept as a compatibility entry point for callers restored from older state.
+    The parameters are intentionally unused: controller-owned execution is no
+    longer a permitted lifecycle path.
     """
 
+    del model_executor, sealed_evaluation_cases
     state = dict(controller.continuous_learning_state or {})
-    mission_data = dict(state.get("mission") or {})
-    request = dict(state.get("local_model_request") or {})
-    need = dict(state.get("information_need") or {})
-    if not mission_data or not request or not need:
+    request_reference = dict(state.get("local_model_request") or {})
+    request_id = str(request_reference.get("request_id") or "")
+    if not request_id:
         return controller
-    if str(request.get("status") or "") != "PENDING_OPERATOR_APPROVAL":
+    try:
+        request = LocalModelRequestResultLedger().observe_request(request_id)
+    except (KeyError, RuntimeError):
+        return replace(controller, continuous_mission_state="learning_local_model_ledger_unavailable", active_work_item="learning_local_model_ledger_unavailable")
+    if request.get("lifecycle_state") not in {"completed", "unavailable", "failed", "interrupted", "rejected"}:
         return controller
-    lane = dict(state.get("local_model_lane") or {})
-    if not lane.get("available"):
-        return replace(controller, continuous_mission_state="learning_local_model_unavailable", active_work_item="learning_local_model_unavailable")
-    executor = model_executor or execute_local_model_answer
-    result = dict(executor(str(request["message"]), lane))
-    response = str(result.get("answer") or "")
-    response_digest = stable_id("local-model-response-digest", response)
-    result_id = stable_id("existing-local-model-result", str(request.get("request_id") or ""), response_digest)
-    request_state = "COMPLETED" if bool(result.get("executed")) else "UNAVAILABLE"
-    completed_request = {**request, "status": request_state, "consumed_at": utc_now(), "result_id": result_id}
-    typed_mission = compile_developmental_mission_contract(str(mission_data.get("operator_instruction") or ""))
-    if typed_mission is None:
-        return controller
-    evidence = assess_local_model_learning_evidence(response, topic=typed_mission.topic) if result.get("executed") else {"state": "unavailable", "validated_claims": (), "uncertain_claims": (), "rejected_claims": (str(result.get("reason") or "local_model_execution_failed"),)}
-    now = utc_now()
-    bridge_payload = {
-        "mission_id": typed_mission.mission_id, "information_need_digest": need["information_need_digest"],
-        "request_id": completed_request["request_id"], "result_id": result_id, "response_digest": response_digest,
-        "state": evidence["state"],
-    }
-    bridge = MissionBoundLocalModelBridge(
-        bridge_id=stable_id("mission-bound-local-model-bridge", _learning_bridge_digest(bridge_payload)),
-        mission_id=typed_mission.mission_id,
-        mission_semantic_identity=str(typed_mission.contract_digest),
-        information_need_id=str(need["information_need_id"]),
-        information_need_digest=str(need["information_need_digest"]),
-        topic=typed_mission.topic,
-        local_model_request_id=str(completed_request["request_id"]),
-        local_model_request_digest=str(completed_request.get("request_digest") or ""),
-        local_model_result_id=result_id,
-        local_model_response_digest=response_digest,
-        model_identity=str(result.get("model_id") or lane.get("selected_model_id") or lane.get("selected_model") or ""),
-        adapter_identity=str(result.get("execution_adapter") or "rc2_conversational_mode_router.execute_local_model_answer"),
-        authority_state="operator_approved_one_use",
-        request_state=request_state,
-        evidence_sufficiency_state=str(evidence["state"]),
-        provisional_resource_bundle_id="",
-        curriculum_handoff_id="",
-        created_at=now, updated_at=now, bridge_digest=_learning_bridge_digest(bridge_payload), status="result_retained",
+    result_id = str(request.get("result_id") or "")
+    result = LocalModelRequestResultLedger().observe_result(result_id) if result_id else {}
+    return replace(
+        controller,
+        continuous_mission_state="learning_local_model_result_observed",
+        active_work_item="learning_local_model_result_observed",
+        continuous_learning_state={**state, "local_model_request": request, "local_model_result_reference": result, "local_model_execution_count": int(request.get("execution_attempt_count") or 0)},
     )
-    if evidence["state"] != "sufficient_for_provisional_resource":
-        return replace(controller, continuous_mission_state="learning_model_evidence_insufficient", continuous_learning_state={**state, "local_model_request": completed_request, "local_model_result": {**result, "result_id": result_id, "response_digest": response_digest}, "local_model_bridge": bridge.as_dict(), "model_evidence": evidence, "local_model_execution_count": int(state.get("local_model_execution_count") or 0) + 1}, active_work_item="learning_model_evidence_insufficient")
-    provisional = compile_provisional_learning_bundle(typed_mission, bridge, response, sealed_evaluation_cases=sealed_evaluation_cases)
-    if provisional is None:
-        return controller
-    bridge = MissionBoundLocalModelBridge(**{**bridge.as_dict(), "provisional_resource_bundle_id": str(provisional["resource_bundle_id"]), "curriculum_handoff_id": stable_id("learning-curriculum-handoff", typed_mission.mission_id, str(provisional["resource_bundle_id"])), "status": "provisional_resource_ready"})
-    attached = attach_developmental_learning_mission(controller, typed_mission.operator_instruction, provisional)
-    attached_state = {**attached.continuous_learning_state, "information_need": need, "local_model_lane": lane, "local_model_request": completed_request, "local_model_result": {**result, "result_id": result_id, "response_digest": response_digest}, "local_model_bridge": bridge.as_dict(), "model_evidence": evidence, "local_model_execution_count": int(state.get("local_model_execution_count") or 0) + 1}
-    return replace(attached, continuous_learning_state=attached_state)
 
 
 def consume_developmental_learning_evaluation(

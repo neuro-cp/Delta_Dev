@@ -103,9 +103,11 @@ from orchestration.runtime.delta_1_4_live_wikipedia_runtime import (  # noqa: E4
 from orchestration.runtime.continuous_runtime_controller import (  # noqa: E402
     compile_mission_bound_local_model_learning_request,
     compile_operator_developmental_learning_mission,
+    consume_mission_bound_local_model_learning_approval,
     controller_snapshot,
     start_continuous_runtime_controller,
 )
+from orchestration.runtime.local_model_request_result_ledger import LocalModelRequestResultLedger  # noqa: E402
 from orchestration.runtime.continuous_subgoal_executor import execute_continuous_active_subgoal  # noqa: E402
 from orchestration.runtime.developmental_learning import classify_developmental_instruction  # noqa: E402
 from orchestration.runtime import gsr_a_governed_self_regulation as gsr  # noqa: E402
@@ -2962,6 +2964,26 @@ class DeltaApp:
         affirm_words = {"yes", "y", "yes please", "sure", "okay", "ok", "go ahead", "do it", "tell me more", "more", "go deeper"}
         discourse_frame = build_discourse_frame(message, self.last_report_inspection)
         discourse_trace = discourse_frame.as_dict()
+        controller = getattr(self, "developmental_learning_controller", None)
+        learning_request = dict((controller.continuous_learning_state or {}).get("local_model_request") or {}) if controller else {}
+        if learning_request and lower in affirm_words:
+            request_id = str(learning_request.get("request_id") or "")
+            ledger = LocalModelRequestResultLedger()
+            try:
+                ledger.approve_request(request_id, "operator_approved_one_use")
+                terminal = ledger.execute_claimed_request(request_id)
+                self.developmental_learning_controller = consume_mission_bound_local_model_learning_approval(controller)
+                result_id = str(terminal.get("result_id") or "")
+                self._append_chat(
+                    "DELTA",
+                    "The approval was routed to the shared local-model ledger. "
+                    f"Request={request_id}; state={terminal.get('lifecycle_state')}; result_id={result_id or 'none'}. "
+                    "The learning controller observed the terminal record. No curriculum, evaluation, capability update, provider, web, PCM, or tracked-source action occurred.",
+                )
+            except (KeyError, RuntimeError, OSError) as exc:
+                self._append_chat("DELTA", f"The shared local-model request was not executed: {exc}.")
+            self._refresh_state_cards()
+            return
         if self._is_developmental_learning_mission(message):
             self._append_session("user", message)
             reply = self._handle_developmental_learning_mission(message)

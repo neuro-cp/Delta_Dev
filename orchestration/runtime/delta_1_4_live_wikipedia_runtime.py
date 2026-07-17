@@ -61,6 +61,7 @@ from orchestration.runtime.delta_1_6_operational_autonomy import (
     set_autonomy_status,
 )
 from orchestration.runtime.rc2_conversational_mode_router import render_route, route_message
+from orchestration.runtime.local_model_request_result_ledger import LocalModelRequestResultLedger
 
 
 WikipediaTransport = Callable[[str, int], dict[str, Any]]
@@ -236,6 +237,7 @@ def handle_live_chat(
 
     if _has_pending_local_model_request(session) and _is_explicit_local_model_cancellation(message):
         request = session.pending_local_model_request or {}
+        LocalModelRequestResultLedger().reject_request(str(request.get("request_id") or ""))
         answer = "The pending local-model request was cancelled. No model was called, no provider was called, and no memory was written."
         payload = _base_live_payload("live_local_model_request_cancelled", answer)
         payload.update({
@@ -834,7 +836,13 @@ def _is_rejection(message: str) -> bool:
 
 def _has_pending_local_model_request(session: LiveWikipediaRuntimeSession) -> bool:
     request = session.pending_local_model_request
-    return bool(isinstance(request, dict) and str(request.get("status") or "").upper() == "PENDING_OPERATOR_APPROVAL")
+    if not isinstance(request, dict) or not request.get("request_id"):
+        return False
+    try:
+        record = LocalModelRequestResultLedger().observe_request(str(request["request_id"]))
+    except (KeyError, RuntimeError):
+        return False
+    return record.get("lifecycle_state") == "pending_operator_approval"
 
 
 def _normalized_operator_text(message: str) -> str:
@@ -896,21 +904,16 @@ def _new_local_model_request(
 ) -> dict[str, Any]:
     lane = dict(payload.get("selected_model_lane") or {})
     offer = dict(payload.get("local_model_offer") or {})
-    created_at = utc_now()
-    return {
-        "request_id": stable_id("delta14-local-model-request", session.session_id, message, len(session.turns), created_at),
-        "status": "PENDING_OPERATOR_APPROVAL",
-        "message": message,
-        "lane": str(lane.get("lane") or ""),
-        "selected_model": str(lane.get("selected_model") or ""),
-        "selected_model_id": str(lane.get("selected_model_id") or ""),
-        "prompt": str(offer.get("prompt") or "Ask the selected local model for this one question?"),
-        "created_at": created_at,
-        "expires_after_unrelated_turns": 1,
-        "authority_class": "OPERATOR_APPROVAL_REQUIRED",
-        "provider_calls_performed": False,
-        "memory_write_performed": False,
-    }
+    record = LocalModelRequestResultLedger().create_or_reuse_request(
+        semantic_identity=stable_id("live-local-model-semantic", session.session_id, " ".join(message.split())),
+        question=message,
+        requester_type="live_conversation",
+        requester_reference=session.session_id,
+        session_reference=session.session_id,
+        question_objective=str(offer.get("prompt") or "local conversation answer"),
+        lane=lane,
+    )
+    return {**record, "status": "PENDING_OPERATOR_APPROVAL", "lane": str(lane.get("lane") or ""), "selected_model": str(lane.get("selected_model") or ""), "selected_model_id": str(lane.get("selected_model_id") or "")}
 
 
 def create_local_model_pending_request(
@@ -920,30 +923,18 @@ def create_local_model_pending_request(
     lane: Mapping[str, Any],
     semantic_identity: str,
 ) -> dict[str, Any]:
-    """Create the existing one-use local-model request record for another owner.
+    """Compatibility wrapper that delegates request ownership to the ledger."""
 
-    The live runtime remains the owner of this record shape and approval
-    semantics.  Other governed lifecycles may reference it, but do not get a
-    separate request-store or execution protocol.
-    """
-
-    normalized = " ".join(str(message or "").split())
-    request_digest = stable_id("delta14-local-model-request-digest", semantic_identity, normalized, dict(lane))
-    return {
-        "request_id": stable_id("delta14-local-model-request", session_id, request_digest),
-        "request_digest": request_digest,
-        "semantic_identity": semantic_identity,
-        "status": "PENDING_OPERATOR_APPROVAL",
-        "message": normalized,
-        "lane": str(lane.get("lane") or ""),
-        "selected_model": str(lane.get("selected_model") or ""),
-        "selected_model_id": str(lane.get("selected_model_id") or ""),
-        "created_at": utc_now(),
-        "expires_after_unrelated_turns": 1,
-        "authority_class": "OPERATOR_APPROVAL_REQUIRED",
-        "provider_calls_performed": False,
-        "memory_write_performed": False,
-    }
+    record = LocalModelRequestResultLedger().create_or_reuse_request(
+        semantic_identity=semantic_identity,
+        question=message,
+        requester_type="mission_bound_learning",
+        requester_reference=session_id,
+        mission_id=session_id,
+        question_objective="mission-bound information need",
+        lane=lane,
+    )
+    return {**record, "status": "PENDING_OPERATOR_APPROVAL", "lane": str(lane.get("lane") or ""), "selected_model": str(lane.get("selected_model") or ""), "selected_model_id": str(lane.get("selected_model_id") or "")}
 
 
 def _render_ambiguous_live_action(session: LiveWikipediaRuntimeSession) -> tuple[str, dict[str, Any]]:
@@ -979,25 +970,23 @@ def _run_approved_local_model_request(
     provider_manager: Any | None,
 ) -> tuple[LiveWikipediaRuntimeSession, LiveChatResponse]:
     request = dict(session.pending_local_model_request or {})
-    target = str(request.get("message") or "").strip()
+    target = str(request.get("question") or request.get("message") or "").strip()
     if not target:
         answer = "The pending local-model request was invalid, so it was cleared without calling a model."
         payload = _base_live_payload("live_local_model_request_invalid", answer)
         response = _response(answer, "live_local_model_request_invalid", payload, None, session.runtime.state, safety_metadata())
         return replace(session, pending_local_model_request=None, turns=session.turns + (response,)), response
 
-    local_payload = route_message(
-        "Conversation",
-        target,
-        history=history,
-        execute_local_model=True,
-        provider_manager=provider_manager,
-    )
-    model_result = dict(local_payload.get("local_model_result") or {})
-    lane = dict(local_payload.get("selected_model_lane") or request)
-    executed = bool(model_result.get("executed"))
+    ledger = LocalModelRequestResultLedger()
+    request_id = str(request.get("request_id") or "")
+    ledger.approve_request(request_id, "operator_approved_one_use")
+    terminal = ledger.execute_claimed_request(request_id, {"history": history, "provider_manager": provider_manager})
+    lane = dict(terminal.get("selected_lane") or request)
+    executed = terminal.get("lifecycle_state") == "completed"
+    result = ledger.observe_result(str(terminal.get("result_id") or "")) if executed else {}
+    model_result = {"executed": executed, "answer": str(result.get("response_reference") or ""), "model_id": str(result.get("model_identity") or ""), "reason": str(terminal.get("failure_classification") or "")}
     model_id = str(model_result.get("model_id") or lane.get("selected_model_id") or lane.get("selected_model") or "")
-    latency_seconds = float(model_result.get("latency_seconds") or 0.0)
+    latency_seconds = float(result.get("latency_seconds") or 0.0)
     updated = replace(session, pending_local_model_request=None)
 
     if executed:
@@ -1015,7 +1004,7 @@ def _run_approved_local_model_request(
             priority=70,
             correlation_id=str(request.get("request_id") or ""),
         )
-        answer = str(local_payload.get("answer") or "").strip()
+        answer = str(model_result.get("answer") or "").strip()
         answer += "\n\nThis was one explicitly approved local inference turn. No provider, external retrieval, or memory write was performed."
         route = "live_local_model_inference"
     else:
@@ -1042,12 +1031,13 @@ def _run_approved_local_model_request(
         route = "live_local_model_unavailable"
 
     payload = {
-        **local_payload,
+        **_base_live_payload(route, answer),
         "mode": "Live Runtime",
         "route": route,
         "answer": answer,
         "live_runtime_local_model_execution": True,
         "operator_approval_request_id": str(request.get("request_id") or ""),
+        "ledger_result_id": str(terminal.get("result_id") or ""),
         "local_model_request": request,
         "model_execution": {
             "executed": executed,
