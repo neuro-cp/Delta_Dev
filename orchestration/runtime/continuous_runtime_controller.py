@@ -110,6 +110,46 @@ from orchestration.runtime.developmental_resource_policy import (
     resource_fulfillment_state_is_valid,
     resource_policy_state_is_valid,
 )
+from orchestration.runtime.governed_learning_strategy import (
+    LEARNING_STRATEGY_VERSION,
+    compile_governed_learning_strategy,
+    learner_visible_strategy_packet,
+    validate_governed_learning_strategy,
+)
+from orchestration.runtime.governed_learning_strategy_acquisition import (
+    compile_strategy_acquisition_result,
+    compile_strategy_acquisition_evidence_linkage_reassessment,
+    is_same_exact_resource_chain,
+    retrieve_exact_source,
+)
+from orchestration.runtime.governed_learning_strategy_revision import (
+    compile_governed_learning_strategy_resource_revision as compile_resource_revision_record,
+    validate_governed_learning_strategy_resource_revision,
+)
+from orchestration.runtime.governed_learning_strategy_single_question_revision import (
+    compile_single_question_learning_strategy_revision as compile_single_question_revision_record,
+    validate_single_question_learning_strategy_revision,
+)
+from orchestration.runtime.governed_constructive_grounding import (
+    compile_constructive_grounding_assessment,
+    compile_constructive_grounding_source_review,
+    compile_independent_constructive_grounding_verification,
+    compile_advisory_claim_verification_targets as compile_advisory_claim_verification_target_record,
+    validate_constructive_grounding_assessment,
+)
+from orchestration.runtime.governed_constructive_escalation import (
+    compile_constructive_failure_synthesis,
+    compile_constructive_teaching_provider_packet,
+    constructive_teaching_provider_prompts,
+    adapt_constructive_teaching_response,
+    validate_constructive_teaching_provider_response,
+)
+from orchestration.runtime.governed_learning_strategy_source_discovery import (
+    compile_discovered_source_retrieval_authority_request,
+    compile_metadata_only_source_discovery_result,
+    validate_discovered_source_retrieval_authority_request,
+    validate_metadata_only_source_discovery_result,
+)
 from orchestration.runtime.governed_external_research import (
     ExternalResearchRetrievalError,
     compile_adapter_repair_retry_candidate,
@@ -888,6 +928,173 @@ def compile_operator_developmental_learning_mission(
             journal=controller.journal + (_journal_entry("developmental_learning", "operator_instruction_requires_governed_resource_plan", (mission.mission_id,)),),
         )
     return attach_developmental_learning_mission(controller, operator_instruction, bundle)
+
+
+def compile_governed_learning_strategy_for_mission(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController:
+    """Persist one evidence-bound learning strategy without executing it.
+
+    The strategy is compiled only from learner-visible teaching and failed-attempt
+    evidence.  A changed evidence digest supersedes the prior proposal; an
+    equivalent digest is an exact-once no-op.
+    """
+
+    state = dict(controller.continuous_learning_state or {})
+    mission = dict(state.get("mission") or {})
+    if not mission:
+        return controller
+    try:
+        packet = learner_visible_strategy_packet(state)
+    except ValueError as exc:
+        return replace(
+            controller,
+            continuous_mission_state="learning_strategy_validation_failed",
+            active_work_item="learning_strategy_packet_separation_failed",
+            continuous_learning_state={
+                **state,
+                "governed_learning_strategy": {
+                    "status": "learning_strategy_validation_failed",
+                    "errors": (str(exc),),
+                    "mission_id": mission.get("mission_id"),
+                },
+            },
+        )
+    existing = dict(state.get("governed_learning_strategy") or {})
+    if (
+        existing.get("status") in {"learning_strategy_validated", "learning_strategy_awaiting_authority"}
+        and str(existing.get("evidence_digest") or "") == str(packet.get("evidence_digest") or "")
+        and int(existing.get("strategy_version") or 0) == LEARNING_STRATEGY_VERSION
+    ):
+        request = dict(state.get("governed_learning_strategy_authority_request") or {})
+        if request:
+            request = {
+                **request,
+                "request_kind": "governed_learning_strategy_authority",
+                "authority_scope": str(request.get("authority_scope") or request.get("scope") or ""),
+                "permitted_responses": tuple(request.get("permitted_responses") or (
+                    "approve_learning_strategy_authority",
+                    "reject_learning_strategy_authority",
+                    "defer_learning_strategy_authority",
+                    "ask_for_clarification",
+                )),
+                "exact_question": str(request.get("exact_question") or "Authorize the narrow strategy-selected action, reject it, defer it, or ask for clarification."),
+                "authority_granted": False,
+            }
+            state = {**state, "governed_learning_strategy_authority_request": request}
+        requests = tuple(controller.continuous_developmental_insight_requests)
+        if request and not any(item.get("request_id") == request.get("request_id") for item in requests):
+            return replace(
+                controller,
+                continuous_developmental_insight_requests=requests + (request,),
+                continuous_learning_state=state,
+                journal=controller.journal + (_journal_entry(
+                    "developmental_learning", "persisted_learning_strategy_authority_request_restored_to_operator_transport",
+                    (str(request.get("request_id") or ""),),
+                ),),
+            )
+        if request:
+            reconciled_requests = tuple(
+                request if item.get("request_id") == request.get("request_id") else item
+                for item in requests
+            )
+            if reconciled_requests != requests:
+                return replace(
+                    controller,
+                    continuous_developmental_insight_requests=reconciled_requests,
+                    continuous_learning_state=state,
+                    journal=controller.journal + (_journal_entry(
+                        "developmental_learning", "persisted_learning_strategy_authority_request_schema_reconciled",
+                        (str(request.get("request_id") or ""),),
+                    ),),
+                )
+        return replace(
+            controller,
+            journal=controller.journal + (_journal_entry(
+                "developmental_learning", "duplicate_governed_learning_strategy_suppressed",
+                (str(existing.get("strategy_id") or ""),),
+            ),),
+        )
+    strategy = compile_governed_learning_strategy(packet)
+    validation = validate_governed_learning_strategy(strategy.as_dict(), packet)
+    history = tuple(state.get("governed_learning_strategy_history") or ())
+    if existing and existing.get("strategy_id"):
+        history = history + ({**existing, "superseded_at": utc_now(), "status": "learning_strategy_superseded"},)
+    stored = {
+        **strategy.as_dict(),
+        "validation": validation,
+        "status": "learning_strategy_validated" if validation["accepted"] else "learning_strategy_validation_failed",
+        "strategy_packet_digest": _learning_bridge_digest(packet),
+    }
+    if not validation["accepted"]:
+        return replace(
+            controller,
+            continuous_mission_state="learning_strategy_validation_failed",
+            active_work_item="learning_strategy_validation_failed",
+            continuous_learning_state={
+                **state,
+                "governed_learning_strategy": stored,
+                "governed_learning_strategy_history": history,
+            },
+            journal=controller.journal + (_journal_entry(
+                "developmental_learning", "learner_authored_strategy_failed_grounding_validation",
+                tuple(validation["errors"]),
+            ),),
+        )
+    authority = tuple(stored.get("authority_candidates") or ())
+    request = {}
+    mission_state = "learning_strategy_validated"
+    active_work_item = "learning_strategy_validated"
+    if authority:
+        candidate = dict(authority[0])
+        request = {
+            "request_id": candidate["authority_request_id"],
+            "request_kind": "governed_learning_strategy_authority",
+            "status": "pending",
+            "strategy_id": stored["strategy_id"],
+            "mission_id": stored["mission_id"],
+            "evidence_digest": stored["evidence_digest"],
+            "recommended_action": candidate["action_type"],
+            "scope": candidate["scope"],
+            "source_identity": candidate.get("source_identity") or "",
+            "source_locator": candidate.get("source_locator") or "",
+            "source_digest": candidate.get("source_digest") or "",
+            "question_ids": candidate["question_ids"],
+            "maximum_calls_or_retrievals": candidate["maximum_calls_or_retrievals"],
+            "fallback": "record_source_insufficiency_then_pause",
+            "exact_question": "Authorize the narrow strategy-selected action, reject it, defer it, or ask for clarification.",
+            "authority_scope": candidate["scope"],
+            "permitted_responses": (
+                "approve_learning_strategy_authority",
+                "reject_learning_strategy_authority",
+                "defer_learning_strategy_authority",
+                "ask_for_clarification",
+            ),
+            "authority_granted": False,
+            "created_at": utc_now(),
+        }
+        stored["status"] = "learning_strategy_awaiting_authority"
+        mission_state = "learning_strategy_awaiting_authority"
+        active_work_item = "learning_strategy_authority_request"
+    return replace(
+        controller,
+        continuous_mission_state=mission_state,
+        continuous_active_subgoal={},
+        active_work_item=active_work_item,
+        continuous_learning_state={
+            **state,
+            "governed_learning_strategy": stored,
+            "governed_learning_strategy_history": history,
+            "governed_learning_strategy_authority_request": request,
+        },
+        continuous_developmental_insight_requests=(
+            tuple(controller.continuous_developmental_insight_requests) + ((request,) if request else ())
+        ),
+        journal=controller.journal + (_journal_entry(
+            "developmental_learning", "learner_visible_failure_evidence_compiled_to_governed_learning_strategy",
+            (strategy.strategy_id, str(validation["accepted"])),
+        ),),
+    )
 
 
 def recover_nonexecutable_sealed_evaluator_execution(
@@ -4537,6 +4744,1355 @@ def record_recovered_retained_teaching_material(
     )
 
 
+def execute_governed_learning_strategy_exact_source_acquisition(
+    controller: ContinuousRuntimeController,
+    *,
+    retrieval_adapter=retrieve_exact_source,
+) -> ContinuousRuntimeController:
+    """Consume one approved exact-source authority and stop after study evidence."""
+
+    state = dict(controller.continuous_learning_state or {})
+    strategy = dict(state.get("governed_learning_strategy") or {})
+    request = dict(state.get("governed_learning_strategy_authority_request") or {})
+    existing = dict(state.get("governed_learning_strategy_acquisition") or {})
+    if existing.get("status") in {"completed", "failed"}:
+        return replace(controller, journal=controller.journal + (_journal_entry(
+            "developmental_learning", "duplicate_learning_strategy_exact_source_acquisition_suppressed", (str(existing.get("acquisition_result_id") or ""),),
+        ),))
+    if (
+        controller.continuous_mission_state != "learning_strategy_acquisition_ready"
+        or strategy.get("status") != "learning_strategy_acquisition_ready"
+        or request.get("status") != "consumed"
+        or not request.get("authority_granted")
+        or int(request.get("maximum_calls_or_retrievals") or 0) != 1
+        or not request.get("source_locator")
+    ):
+        return replace(controller, continuous_mission_state="learning_strategy_acquisition_blocked", active_work_item="learning_strategy_exact_source_authority_invalid")
+    claim = {
+        "claim_id": stable_id(
+            "learning-strategy-exact-source-claim",
+            request.get("request_id"),
+            request.get("source_digest"),
+            request.get("claim_nonce") or "initial",
+        ),
+        "request_id": request.get("request_id"), "strategy_id": strategy.get("strategy_id"),
+        "evidence_digest": strategy.get("evidence_digest"), "source_locator": request.get("source_locator"),
+        "claim_state": "executing", "execution_attempt_count": 1, "claimed_at": utc_now(),
+    }
+    try:
+        retrieval = dict(retrieval_adapter(str(request["source_locator"])))
+        if not is_same_exact_resource_chain(
+            str(request.get("source_locator") or ""),
+            str(retrieval.get("canonical_locator") or ""),
+        ):
+            raise ValueError("exact_source_canonical_locator_mismatch")
+        result = compile_strategy_acquisition_result(strategy=strategy, authority_request=request, retrieval=retrieval)
+    except Exception as exc:  # noqa: BLE001
+        failed = {"status": "failed", "claim": {**claim, "claim_state": "failed"}, "failure_reason": f"{type(exc).__name__}:{exc}", "provider_calls": 9}
+        return replace(controller, continuous_mission_state="learning_strategy_source_insufficient", active_work_item="exact_source_acquisition_failed", continuous_learning_state={**state, "governed_learning_strategy_acquisition": failed})
+    outcome = str(result["outcome"])
+    status = "completed"
+    next_strategy = {**strategy, "status": outcome, "superseded_by_acquisition_result": result["acquisition_result_id"]}
+    acquisition = {"status": status, "claim": {**claim, "claim_state": "completed"}, "result": result, "provider_calls": 9}
+    return replace(
+        controller,
+        continuous_mission_state=outcome,
+        active_work_item="learning_strategy_internal_verification_complete",
+        continuous_active_subgoal={},
+        continuous_learning_state={
+            **state,
+            "governed_learning_strategy": next_strategy,
+            "governed_learning_strategy_acquisition": acquisition,
+        },
+        journal=controller.journal + (_journal_entry(
+            "developmental_learning", "strategy_bound_exact_source_acquisition_completed_without_learner_retry",
+            (result["acquisition_result_id"], outcome),
+        ),),
+    )
+
+
+def compile_replacement_governed_learning_strategy_authority_request(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController:
+    """Compile one new approval boundary after a terminal exact-source attempt."""
+
+    state = dict(controller.continuous_learning_state or {})
+    strategy = dict(state.get("governed_learning_strategy") or {})
+    prior_request = dict(state.get("governed_learning_strategy_authority_request") or {})
+    acquisition = dict(state.get("governed_learning_strategy_acquisition") or {})
+    prior_claim = dict(acquisition.get("claim") or {})
+    if (
+        acquisition.get("status") != "failed"
+        or not prior_request.get("request_id")
+        or not prior_claim.get("claim_id")
+        or not strategy.get("strategy_id")
+        or not strategy.get("evidence_digest")
+        or not prior_request.get("source_locator")
+    ):
+        return replace(controller, journal=controller.journal + (_journal_entry(
+            "developmental_learning", "replacement_learning_strategy_authority_request_not_eligible", (),
+        ),))
+    if (
+        prior_request.get("replacement_for_claim_id")
+        and prior_request.get("status") == "pending"
+        and str(prior_request.get("strategy_id") or "") == str(strategy.get("strategy_id") or "")
+    ):
+        return replace(controller, journal=controller.journal + (_journal_entry(
+            "developmental_learning", "duplicate_replacement_learning_strategy_authority_request_suppressed",
+            (str(prior_request.get("request_id") or ""),),
+        ),))
+    nonce = stable_id(
+        "learning-strategy-replacement-nonce",
+        strategy.get("strategy_id"),
+        strategy.get("evidence_digest"),
+        prior_claim.get("claim_id"),
+        acquisition.get("failure_reason"),
+    )
+    request_id = stable_id("learning-strategy-authority-replacement", strategy.get("strategy_id"), nonce)
+    replacement = {
+        "request_id": request_id,
+        "request_kind": "governed_learning_strategy_authority",
+        "status": "pending",
+        "strategy_id": strategy.get("strategy_id"),
+        "mission_id": strategy.get("mission_id"),
+        "evidence_digest": strategy.get("evidence_digest"),
+        "recommended_action": "retained_exact_source",
+        "scope": str(prior_request.get("scope") or ""),
+        "authority_scope": str(prior_request.get("authority_scope") or prior_request.get("scope") or ""),
+        "source_identity": prior_request.get("source_identity") or "",
+        "source_locator": prior_request.get("source_locator") or "",
+        "source_digest": prior_request.get("source_digest") or "",
+        "question_ids": tuple(prior_request.get("question_ids") or ()),
+        "prerequisite_hypothesis_ids": tuple(
+            item.get("prerequisite_id") for item in (strategy.get("prerequisite_hypotheses") or ())
+            if isinstance(item, Mapping) and item.get("prerequisite_id")
+        ),
+        "maximum_calls_or_retrievals": 1,
+        "cost_boundary": "one bounded approved action",
+        "exact_question": "Authorize one replacement exact-source retrieval under the same strategy evidence, reject it, defer it, or ask for clarification.",
+        "permitted_responses": (
+            "approve_learning_strategy_authority",
+            "reject_learning_strategy_authority",
+            "defer_learning_strategy_authority",
+            "ask_for_clarification",
+        ),
+        "authority_granted": False,
+        "replacement_for_request_id": prior_request.get("request_id"),
+        "replacement_for_claim_id": prior_claim.get("claim_id"),
+        "claim_nonce": nonce,
+        "prohibited_actions": (
+            "broad_research", "alternate_source", "provider_call", "learner_retry", "evaluator_run",
+            "capability_update", "pcm_action", "git_action", "deployment",
+        ),
+        "created_at": utc_now(),
+    }
+    history = tuple(state.get("governed_learning_strategy_authority_history") or ())
+    if not any(item.get("request_id") == prior_request.get("request_id") for item in history if isinstance(item, Mapping)):
+        history = history + ({**prior_request, "terminal_history": True},)
+    acquisition_history = tuple(state.get("governed_learning_strategy_acquisition_history") or ())
+    if not any(item.get("claim", {}).get("claim_id") == prior_claim.get("claim_id") for item in acquisition_history if isinstance(item, Mapping)):
+        acquisition_history = acquisition_history + ({**acquisition, "terminal_history": True},)
+    return replace(
+        controller,
+        continuous_mission_state="learning_strategy_awaiting_authority",
+        active_work_item="learning_strategy_replacement_authority_request",
+        continuous_active_subgoal={},
+        continuous_developmental_insight_requests=tuple(controller.continuous_developmental_insight_requests) + (replacement,),
+        continuous_learning_state={
+            **state,
+            "governed_learning_strategy": {**strategy, "status": "learning_strategy_awaiting_authority"},
+            "governed_learning_strategy_authority_request": replacement,
+            "governed_learning_strategy_authority_history": history,
+            "governed_learning_strategy_acquisition_history": acquisition_history,
+            "governed_learning_strategy_acquisition": {},
+        },
+        journal=controller.journal + (_journal_entry(
+            "developmental_learning", "replacement_learning_strategy_authority_request_compiled",
+            (request_id, str(prior_claim.get("claim_id") or "")),
+        ),),
+    )
+
+
+def compile_governed_learning_strategy_resource_revision(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController:
+    """Compile one immutable next-resource revision from partial source evidence."""
+
+    state = dict(controller.continuous_learning_state or {})
+    strategy = dict(state.get("governed_learning_strategy") or {})
+    acquisition = dict(state.get("governed_learning_strategy_acquisition") or {})
+    result = dict(acquisition.get("result") or {})
+    if (
+        acquisition.get("status") != "completed"
+        or result.get("outcome") != "learning_strategy_source_partially_sufficient"
+        or not strategy.get("strategy_id")
+    ):
+        return replace(controller, journal=controller.journal + (_journal_entry(
+            "developmental_learning", "learning_strategy_resource_revision_not_eligible", (),
+        ),))
+    existing = dict(state.get("governed_learning_strategy_resource_revision") or {})
+    if str(existing.get("acquisition_result_digest") or "") == str(result.get("result_digest") or ""):
+        request = dict(existing.get("authority_request") or {})
+        requests = tuple(controller.continuous_developmental_insight_requests)
+        if request and not any(item.get("request_id") == request.get("request_id") for item in requests):
+            return replace(
+                controller,
+                continuous_developmental_insight_requests=requests + (request,),
+                journal=controller.journal + (_journal_entry(
+                    "developmental_learning", "learning_strategy_resource_revision_request_restored", (str(request.get("request_id") or ""),),
+                ),),
+            )
+        return replace(controller, journal=controller.journal + (_journal_entry(
+            "developmental_learning", "duplicate_learning_strategy_resource_revision_suppressed", (str(existing.get("revision_id") or ""),),
+        ),))
+    packet = learner_visible_strategy_packet(state)
+    inventory = ({
+        "source_identity": result.get("source_identity") or "",
+        "source_locator": result.get("source_locator") or "",
+        "source_digest": result.get("source_digest") or "",
+    },)
+    revision = compile_resource_revision_record(
+        strategy=strategy,
+        acquisition_result=result,
+        available_resource_classes=tuple(packet.get("available_resource_classes") or ()),
+        retained_source_inventory=inventory,
+    )
+
+
+    validation = validate_governed_learning_strategy_resource_revision(
+        revision, strategy=strategy, acquisition_result=result,
+    )
+    stored = {**revision, "validation": validation, "status": "validated" if validation["accepted"] else "validation_failed"}
+    history = tuple(state.get("governed_learning_strategy_revision_history") or ())
+    if not validation["accepted"]:
+        return replace(
+            controller,
+            continuous_mission_state="learning_strategy_resource_revision_failed",
+            active_work_item="learning_strategy_resource_revision_validation_failed",
+            continuous_learning_state={**state, "governed_learning_strategy_resource_revision": stored},
+            journal=controller.journal + (_journal_entry(
+                "developmental_learning", "learning_strategy_resource_revision_grounding_failed", tuple(validation["errors"]),
+            ),),
+        )
+    request = dict(stored.get("authority_request") or {})
+    return replace(
+        controller,
+        continuous_mission_state="learning_strategy_resource_revision_awaiting_authority" if request else "learning_strategy_resource_revision_ready",
+        active_work_item="learning_strategy_resource_revision_authority_request" if request else "learning_strategy_resource_revision_ready",
+        continuous_active_subgoal={},
+        continuous_developmental_insight_requests=tuple(controller.continuous_developmental_insight_requests) + ((request,) if request else ()),
+        continuous_learning_state={
+            **state,
+            "governed_learning_strategy_resource_revision": stored,
+            "governed_learning_strategy_revision_history": history,
+        },
+        journal=controller.journal + (_journal_entry(
+            "developmental_learning", "partial_source_evidence_compiled_to_immutable_resource_revision",
+            (str(stored.get("revision_id") or ""), str(validation["accepted"])),
+        ),),
+    )
+
+
+def compile_governed_learning_strategy_single_question_revision(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController:
+    """Classify a single retained question before any further acquisition."""
+
+    state = dict(controller.continuous_learning_state or {})
+    strategy = dict(state.get("governed_learning_strategy") or {})
+    retrieval = dict(state.get("governed_learning_strategy_discovered_source_retrieval") or {})
+    acquisition = dict(retrieval.get("result") or {})
+    discovery = dict((state.get("governed_learning_strategy_source_discovery") or {}).get("result") or {})
+    if retrieval.get("status") != "completed" or acquisition.get("outcome") != "learning_strategy_source_partially_sufficient" or not discovery:
+        return replace(controller, journal=controller.journal + (_journal_entry(
+            "developmental_learning", "single_question_revision_not_eligible", (),
+        ),))
+    existing = dict(state.get("governed_learning_strategy_single_question_revision") or {})
+    if (
+        existing.get("prior_acquisition_result_digest") == acquisition.get("result_digest")
+        and int(existing.get("revision_version") or 0) >= 3
+    ):
+        return replace(controller, journal=controller.journal + (_journal_entry(
+            "developmental_learning", "duplicate_single_question_revision_suppressed", (str(existing.get("revision_id") or ""),),
+        ),))
+    try:
+        revision = compile_single_question_revision_record(
+            strategy=strategy, acquisition_result=acquisition, discovery_result=discovery,
+        )
+        validation = validate_single_question_learning_strategy_revision(
+            revision, strategy=strategy, acquisition_result=acquisition, discovery_result=discovery,
+        )
+    except Exception as exc:  # noqa: BLE001
+        return replace(controller, continuous_mission_state="learning_strategy_single_question_revision_failed", active_work_item="single_question_revision_compilation_failed", journal=controller.journal + (_journal_entry(
+            "developmental_learning", "single_question_revision_compilation_failed", (f"{type(exc).__name__}:{exc}",),
+        ),))
+    history = tuple(state.get("governed_learning_strategy_single_question_revision_history") or ())
+    if existing and existing.get("revision_id") != revision.get("revision_id"):
+        history = history + ({
+            **existing,
+            "superseded_by_revision_id": revision["revision_id"],
+            "superseded_at": utc_now(),
+        },)
+    stored = {**revision, "validation": validation}
+    if not validation["accepted"]:
+        return replace(controller, continuous_mission_state="learning_strategy_single_question_revision_failed", active_work_item="single_question_revision_validation_failed", continuous_learning_state={**state, "governed_learning_strategy_single_question_revision": stored})
+    return replace(
+        controller,
+        continuous_mission_state=revision["outcome"],
+        active_work_item="single_question_linkage_repair_required" if revision["outcome"] == "finite_dimensional_evidence_linkage_repair_required" else "single_question_revised_without_retrieval",
+        continuous_active_subgoal={},
+        continuous_learning_state={
+            **state,
+            "governed_learning_strategy_single_question_revision": stored,
+            "governed_learning_strategy_single_question_revision_history": history,
+        },
+        journal=controller.journal + (_journal_entry(
+            "developmental_learning", "single_question_revision_compiled_without_retrieval", (revision["revision_id"], revision["outcome"]),
+        ),),
+    )
+
+
+def compile_governed_learning_strategy_evidence_linkage_reassessment(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController:
+    """Re-evaluate retained source excerpts without retrieval or capability change."""
+
+    state = dict(controller.continuous_learning_state or {})
+    strategy = dict(state.get("governed_learning_strategy") or {})
+    retrieval = dict(state.get("governed_learning_strategy_discovered_source_retrieval") or {})
+    result = dict(retrieval.get("result") or {})
+    revision = dict(state.get("governed_learning_strategy_single_question_revision") or {})
+    if revision.get("outcome") != "finite_dimensional_evidence_linkage_repair_required" or retrieval.get("status") != "completed":
+        return replace(controller, journal=controller.journal + (_journal_entry(
+            "developmental_learning", "evidence_linkage_reassessment_not_eligible", (),
+        ),))
+    existing = dict(state.get("governed_learning_strategy_evidence_linkage_reassessment") or {})
+    if existing.get("acquisition_result_digest") == result.get("result_digest"):
+        return replace(controller, journal=controller.journal + (_journal_entry(
+            "developmental_learning", "duplicate_evidence_linkage_reassessment_suppressed", (str(existing.get("reassessment_id") or ""),),
+        ),))
+    reassessment = compile_strategy_acquisition_evidence_linkage_reassessment(strategy=strategy, acquisition_result=result)
+    return replace(
+        controller,
+        continuous_mission_state="learning_strategy_evidence_linkage_reassessed",
+        active_work_item="finite_dimensional_contextual_evidence_requires_sufficiency_review",
+        continuous_active_subgoal={},
+        continuous_learning_state={**state, "governed_learning_strategy_evidence_linkage_reassessment": reassessment},
+        journal=controller.journal + (_journal_entry(
+            "developmental_learning", "retained_evidence_relinked_without_retrieval_or_promotion", (reassessment["reassessment_id"], reassessment["outcome"]),
+        ),),
+    )
+
+
+def compile_governed_constructive_grounding(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController:
+    """Compile one bounded prerequisite-grounding decision from retained evidence."""
+
+    state = dict(controller.continuous_learning_state or {})
+    strategy = dict(state.get("governed_learning_strategy") or {})
+    latest_revision = dict(state.get("governed_learning_strategy_resource_revision") or {})
+    retrieval = dict(state.get("governed_learning_strategy_discovered_source_retrieval") or {})
+    acquisition = dict(retrieval.get("result") or {})
+    linkage = dict(state.get("governed_learning_strategy_evidence_linkage_reassessment") or {})
+    discovery = dict((state.get("governed_learning_strategy_source_discovery") or {}).get("result") or {})
+    if controller.continuous_mission_state != "learning_strategy_evidence_linkage_reassessed" or not linkage:
+        return replace(controller, journal=controller.journal + (_journal_entry(
+            "developmental_learning", "constructive_grounding_not_eligible", (),
+        ),))
+    existing = dict(state.get("governed_constructive_grounding") or {})
+    if existing.get("assessment_digest"):
+        return replace(controller, journal=controller.journal + (_journal_entry(
+            "developmental_learning", "duplicate_constructive_grounding_suppressed", (str(existing.get("assessment_id") or ""),),
+        ),))
+    try:
+        assessment = compile_constructive_grounding_assessment(
+            strategy=strategy, latest_revision=latest_revision, acquisition_result=acquisition,
+            linkage_reassessment=linkage, discovery_result=discovery,
+        )
+        validation = validate_constructive_grounding_assessment(
+            assessment, strategy=strategy, acquisition_result=acquisition, linkage_reassessment=linkage,
+        )
+    except Exception as exc:  # noqa: BLE001
+        return replace(controller, continuous_mission_state="constructive_grounding_failed", active_work_item="constructive_grounding_compilation_failed", journal=controller.journal + (_journal_entry(
+            "developmental_learning", "constructive_grounding_compilation_failed", (f"{type(exc).__name__}:{exc}",),
+        ),))
+    stored = {**assessment, "validation": validation}
+    if not validation["accepted"]:
+        return replace(controller, continuous_mission_state="constructive_grounding_failed", active_work_item="constructive_grounding_validation_failed", continuous_learning_state={**state, "governed_constructive_grounding": stored})
+    request = dict(stored.get("authority_request") or {})
+    return replace(
+        controller,
+        continuous_mission_state=stored["outcome"],
+        active_work_item="constructive_grounding_exact_source_authority_request" if request else "constructive_grounding_unresolved",
+        continuous_active_subgoal={},
+        continuous_developmental_insight_requests=tuple(controller.continuous_developmental_insight_requests) + ((request,) if request else ()),
+        continuous_learning_state={**state, "governed_constructive_grounding": stored},
+        journal=controller.journal + (_journal_entry(
+            "developmental_learning", "constructive_grounding_compiled_without_retrieval", (stored["assessment_id"], stored["selected_path"]),
+        ),),
+    )
+
+
+def consume_governed_learning_strategy_authority_response(
+    controller: ContinuousRuntimeController,
+    *,
+    request_id: str,
+    selected_option: str,
+    operator_text: str = "",
+    approved_scope: str = "",
+) -> ContinuousRuntimeController:
+    """Consume one strategy-owned authority decision without performing work."""
+
+    requests = tuple(dict(item) for item in controller.continuous_developmental_insight_requests)
+    index = next((
+        position for position, item in enumerate(requests)
+        if item.get("request_id") == request_id
+        and item.get("request_kind") == "governed_learning_strategy_authority"
+        and item.get("status") == "pending"
+    ), -1)
+    if index < 0:
+        return replace(controller, journal=controller.journal + (_journal_entry(
+            "developmental_learning", "duplicate_or_unknown_learning_strategy_authority_response_suppressed", (request_id,),
+        ),))
+    request = requests[index]
+    permitted = tuple(request.get("permitted_responses") or ())
+    if selected_option not in permitted:
+        return replace(controller, journal=controller.journal + (_journal_entry(
+            "developmental_learning", "invalid_learning_strategy_authority_response_rejected", (request_id, selected_option),
+        ),))
+    state = dict(controller.continuous_learning_state or {})
+    strategy = dict(state.get("governed_learning_strategy") or {})
+    stored_request = dict(state.get("governed_learning_strategy_authority_request") or {})
+    binding_matches = (
+        str(strategy.get("strategy_id") or "") == str(request.get("strategy_id") or "")
+        and str(strategy.get("evidence_digest") or "") == str(request.get("evidence_digest") or "")
+        and str(stored_request.get("request_id") or "") == request_id
+        and str(stored_request.get("source_locator") or "") == str(request.get("source_locator") or "")
+        and int(stored_request.get("maximum_calls_or_retrievals") or 0) == int(request.get("maximum_calls_or_retrievals") or 0)
+    )
+    if not binding_matches or strategy.get("status") != "learning_strategy_awaiting_authority":
+        return replace(controller, journal=controller.journal + (_journal_entry(
+            "developmental_learning", "learning_strategy_authority_response_rejected_binding_mismatch", (request_id,),
+        ),))
+    approved = selected_option == "approve_learning_strategy_authority"
+    expected_scope = str(request.get("authority_scope") or "")
+    if approved and approved_scope != expected_scope:
+        return replace(controller, journal=controller.journal + (_journal_entry(
+            "developmental_learning", "learning_strategy_authority_response_rejected_scope_mismatch", (request_id,),
+        ),))
+    consumed_at = utc_now()
+    resolved = {
+        **request,
+        "status": "consumed",
+        "resolution": selected_option,
+        "authority_granted": approved,
+        "consumed_at": consumed_at,
+    }
+    response = {
+        "request_id": request_id,
+        "response_kind": "governed_learning_strategy_authority",
+        "selected_option": selected_option,
+        "operator_text": operator_text,
+        "approved_scope": expected_scope if approved else "",
+        "authority_granted": approved,
+        "created_at": consumed_at,
+        "consumed_at": consumed_at,
+    }
+    next_strategy = {
+        **strategy,
+        "status": (
+            "learning_strategy_acquisition_ready" if approved
+            else "learning_strategy_deferred" if selected_option == "defer_learning_strategy_authority"
+            else "learning_strategy_clarification_requested" if selected_option == "ask_for_clarification"
+            else "learning_strategy_rejected"
+        ),
+        "authority_resolution": selected_option,
+        "authority_resolved_at": consumed_at,
+    }
+    next_request = {**stored_request, **resolved}
+    next_state = {
+        **state,
+        "governed_learning_strategy": next_strategy,
+        "governed_learning_strategy_authority_request": next_request,
+    }
+    updated_requests = requests[:index] + (resolved,) + requests[index + 1:]
+    if selected_option == "ask_for_clarification":
+        clarification_id = stable_id("learning-strategy-authority-clarification", request_id)
+        if not any(item.get("request_id") == clarification_id for item in updated_requests):
+            updated_requests = updated_requests + ({
+                "request_id": clarification_id,
+                "request_kind": "clarification",
+                "status": "pending",
+                "strategy_authority_request_id": request_id,
+                "exact_question": "What aspect of the already bounded strategy authority scope needs clarification?",
+                "authority_scope": "none; clarification grants no authority",
+                "permitted_responses": ("provide_clarification", "defer"),
+                "authority_granted": False,
+                "created_at": consumed_at,
+            },)
+        return replace(
+            controller,
+            continuous_mission_state="learning_strategy_awaiting_clarification",
+            active_work_item="learning_strategy_authority_clarification",
+            continuous_developmental_insight_requests=updated_requests,
+            continuous_operator_interaction_responses=tuple(controller.continuous_operator_interaction_responses) + (response,),
+            continuous_learning_state=next_state,
+            journal=controller.journal + (_journal_entry(
+                "developmental_learning", "learning_strategy_authority_clarification_requested_without_authority", (request_id,),
+            ),),
+        )
+    mission_state = "learning_strategy_acquisition_ready" if approved else "learning_strategy_blocked"
+    work_item = "approved_learning_strategy_exact_source_retrieval" if approved else "learning_strategy_authority_not_approved"
+    return replace(
+        controller,
+        continuous_mission_state=mission_state,
+        active_work_item=work_item,
+        continuous_developmental_insight_requests=updated_requests,
+        continuous_operator_interaction_responses=tuple(controller.continuous_operator_interaction_responses) + (response,),
+        continuous_learning_state=next_state,
+        journal=controller.journal + (_journal_entry(
+            "developmental_learning", "learning_strategy_authority_response_consumed_once", (request_id, selected_option),
+        ),),
+    )
+
+
+def consume_governed_learning_strategy_resource_revision_authority_response(
+    controller: ContinuousRuntimeController,
+    *,
+    request_id: str,
+    selected_option: str,
+    operator_text: str = "",
+    approved_scope: str = "",
+) -> ContinuousRuntimeController:
+    """Consume one revision-owned discovery authority without discovering sources."""
+
+    requests = tuple(dict(item) for item in controller.continuous_developmental_insight_requests)
+    index = next((
+        position for position, item in enumerate(requests)
+        if item.get("request_id") == request_id
+        and item.get("request_kind") == "governed_learning_strategy_resource_revision_authority"
+        and item.get("status") == "pending"
+    ), -1)
+    if index < 0:
+        return replace(controller, journal=controller.journal + (_journal_entry(
+            "developmental_learning", "duplicate_or_unknown_learning_strategy_resource_revision_response_suppressed", (request_id,),
+        ),))
+    request = requests[index]
+    if selected_option not in tuple(request.get("permitted_responses") or ()):
+        return replace(controller, journal=controller.journal + (_journal_entry(
+            "developmental_learning", "invalid_learning_strategy_resource_revision_response_rejected", (request_id, selected_option),
+        ),))
+    state = dict(controller.continuous_learning_state or {})
+    revision = dict(state.get("governed_learning_strategy_resource_revision") or {})
+    stored = dict(revision.get("authority_request") or {})
+    if (
+        stored.get("request_id") != request_id
+        or stored.get("revision_id") != request.get("revision_id")
+        or stored.get("acquisition_result_digest") != request.get("acquisition_result_digest")
+    ):
+        return replace(controller, journal=controller.journal + (_journal_entry(
+            "developmental_learning", "learning_strategy_resource_revision_response_rejected_binding_mismatch", (request_id,),
+        ),))
+    approved = selected_option == "approve_learning_strategy_resource_revision_authority"
+    expected_scope = str(request.get("authority_scope") or request.get("scope") or "")
+    if approved and approved_scope != expected_scope:
+        return replace(controller, journal=controller.journal + (_journal_entry(
+            "developmental_learning", "learning_strategy_resource_revision_response_rejected_scope_mismatch", (request_id,),
+        ),))
+    resolved = {
+        **request,
+        "status": "consumed",
+        "authority_granted": approved,
+        "resolution": selected_option,
+        "resolved_at": utc_now(),
+    }
+    response = {
+        "request_id": request_id,
+        "response_kind": "governed_learning_strategy_resource_revision_authority",
+        "selected_option": selected_option,
+        "operator_text": operator_text,
+        "approved_scope": expected_scope if approved else "",
+        "authority_granted": approved,
+        "created_at": utc_now(),
+    }
+    updated_requests = requests[:index] + (resolved,) + requests[index + 1:]
+    updated_revision = {
+        **revision,
+        "authority_request": resolved,
+        "status": "source_discovery_authority_granted" if approved else "source_discovery_authority_not_granted",
+    }
+    return replace(
+        controller,
+        continuous_mission_state="learning_strategy_resource_discovery_ready" if approved else "learning_strategy_resource_revision_blocked",
+        active_work_item="approved_learning_strategy_narrow_source_discovery" if approved else "learning_strategy_resource_revision_authority_not_approved",
+        continuous_developmental_insight_requests=updated_requests,
+        continuous_operator_interaction_responses=tuple(controller.continuous_operator_interaction_responses) + (response,),
+        continuous_learning_state={**state, "governed_learning_strategy_resource_revision": updated_revision},
+        journal=controller.journal + (_journal_entry(
+            "developmental_learning", "learning_strategy_resource_revision_authority_response_consumed_once", (request_id, selected_option),
+        ),),
+    )
+
+
+def claim_governed_learning_strategy_narrow_source_discovery(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController:
+    """Persist one metadata-discovery claim before any discovery adapter runs."""
+
+    state = dict(controller.continuous_learning_state or {})
+    revision = dict(state.get("governed_learning_strategy_resource_revision") or {})
+    request = dict(revision.get("authority_request") or {})
+    existing = dict(state.get("governed_learning_strategy_source_discovery") or {})
+    if existing.get("status") in {"claimed", "completed", "insufficient", "failed"}:
+        return replace(controller, journal=controller.journal + (_journal_entry(
+            "developmental_learning", "duplicate_learning_strategy_source_discovery_suppressed", (str(existing.get("claim", {}).get("claim_id") or ""),),
+        ),))
+    if (
+        controller.continuous_mission_state != "learning_strategy_resource_discovery_ready"
+        or revision.get("status") != "source_discovery_authority_granted"
+        or request.get("status") != "consumed"
+        or not request.get("authority_granted")
+        or request.get("action_type") != "narrow_source_discovery"
+    ):
+        return replace(controller, continuous_mission_state="learning_strategy_source_discovery_blocked", active_work_item="learning_strategy_source_discovery_authority_invalid")
+    claim = {
+        "claim_id": stable_id("learning-strategy-source-discovery-claim", request.get("request_id"), revision.get("revision_id")),
+        "request_id": request.get("request_id"),
+        "revision_id": revision.get("revision_id"),
+        "claim_state": "metadata_discovery_claimed",
+        "execution_attempt_count": 1,
+        "maximum_result_count": int(request.get("discovery_constraints", {}).get("maximum_result_count") or 0),
+        "claimed_at": utc_now(),
+    }
+    return replace(
+        controller,
+        continuous_mission_state="learning_strategy_source_discovery_claimed",
+        active_work_item="learning_strategy_metadata_discovery_claimed",
+        continuous_learning_state={**state, "governed_learning_strategy_source_discovery": {"status": "claimed", "claim": claim}},
+        journal=controller.journal + (_journal_entry(
+            "developmental_learning", "learning_strategy_metadata_discovery_claimed_once", (claim["claim_id"],),
+        ),),
+    )
+
+
+def record_governed_learning_strategy_metadata_source_discovery(
+    controller: ContinuousRuntimeController,
+    *,
+    metadata_candidates: Sequence[Mapping[str, Any]],
+) -> ContinuousRuntimeController:
+    """Record bounded public metadata after an already-persisted discovery claim."""
+
+    state = dict(controller.continuous_learning_state or {})
+    revision = dict(state.get("governed_learning_strategy_resource_revision") or {})
+    discovery = dict(state.get("governed_learning_strategy_source_discovery") or {})
+    if controller.continuous_mission_state != "learning_strategy_source_discovery_claimed" or discovery.get("status") != "claimed":
+        return replace(controller, journal=controller.journal + (_journal_entry(
+            "developmental_learning", "learning_strategy_metadata_discovery_result_rejected_without_claim", (),
+        ),))
+    try:
+        result = compile_metadata_only_source_discovery_result(revision=revision, metadata_candidates=metadata_candidates)
+        validation = validate_metadata_only_source_discovery_result(result, revision=revision)
+        if not validation["accepted"]:
+            raise ValueError(";".join(validation["errors"]))
+    except Exception as exc:  # noqa: BLE001
+        return replace(
+            controller,
+            continuous_mission_state="learning_strategy_source_discovery_insufficient",
+            active_work_item="learning_strategy_metadata_discovery_validation_failed",
+            continuous_learning_state={
+                **state,
+                "governed_learning_strategy_source_discovery": {
+                    **discovery,
+                    "status": "failed",
+                    "claim": {**dict(discovery.get("claim") or {}), "claim_state": "failed"},
+                    "failure_reason": f"{type(exc).__name__}:{exc}",
+                },
+            },
+        )
+    status = "completed" if result["status"] == "learning_strategy_source_discovery_completed" else "insufficient"
+    return replace(
+        controller,
+        continuous_mission_state=result["status"],
+        active_work_item="learning_strategy_discovery_result_ready" if status == "completed" else "learning_strategy_source_discovery_insufficient",
+        continuous_active_subgoal={},
+        continuous_learning_state={
+            **state,
+            "governed_learning_strategy_source_discovery": {
+                "status": status,
+                "claim": {**dict(discovery.get("claim") or {}), "claim_state": "completed"},
+                "result": result,
+                "validation": validation,
+            },
+        },
+        journal=controller.journal + (_journal_entry(
+            "developmental_learning", "learning_strategy_metadata_discovery_completed_without_retrieval",
+            (str(result["discovery_result_id"]), result["status"]),
+        ),),
+    )
+
+
+def compile_governed_learning_strategy_discovered_source_retrieval_authority(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController:
+    """Create one approval boundary for the discovery-ranked candidate only."""
+
+    state = dict(controller.continuous_learning_state or {})
+    strategy = dict(state.get("governed_learning_strategy") or {})
+    revision = dict(state.get("governed_learning_strategy_resource_revision") or {})
+    discovery = dict(state.get("governed_learning_strategy_source_discovery") or {})
+    result = dict(discovery.get("result") or {})
+    existing = dict(state.get("governed_learning_strategy_discovered_source_retrieval_authority_request") or {})
+    if existing:
+        validation = validate_discovered_source_retrieval_authority_request(
+            existing, strategy=strategy, revision=revision, discovery_result=result,
+        )
+        if validation["accepted"]:
+            requests = tuple(controller.continuous_developmental_insight_requests)
+            if not any(item.get("request_id") == existing.get("request_id") for item in requests):
+                return replace(controller, continuous_developmental_insight_requests=requests + (existing,))
+            return replace(controller, journal=controller.journal + (_journal_entry(
+                "developmental_learning", "duplicate_discovered_source_retrieval_authority_suppressed", (str(existing.get("request_id") or ""),),
+            ),))
+        return replace(controller, continuous_mission_state="learning_strategy_discovered_source_retrieval_authority_invalid", active_work_item="discovered_source_retrieval_authority_binding_invalid")
+    if (
+        controller.continuous_mission_state != "learning_strategy_source_discovery_completed"
+        or discovery.get("status") != "completed"
+        or result.get("status") != "learning_strategy_source_discovery_completed"
+        or not result.get("recommended_candidate_id")
+    ):
+        return replace(controller, continuous_mission_state="learning_strategy_discovered_source_retrieval_authority_blocked", active_work_item="discovered_source_retrieval_authority_prerequisites_missing")
+    try:
+        request = compile_discovered_source_retrieval_authority_request(
+            strategy=strategy, revision=revision, discovery_result=result,
+        )
+        validation = validate_discovered_source_retrieval_authority_request(
+            request, strategy=strategy, revision=revision, discovery_result=result,
+        )
+        if not validation["accepted"]:
+            raise ValueError(";".join(validation["errors"]))
+    except Exception as exc:  # noqa: BLE001
+        return replace(controller, continuous_mission_state="learning_strategy_discovered_source_retrieval_authority_invalid", active_work_item="discovered_source_retrieval_authority_validation_failed", journal=controller.journal + (_journal_entry(
+            "developmental_learning", "discovered_source_retrieval_authority_compilation_failed", (f"{type(exc).__name__}:{exc}",),
+        ),))
+    return replace(
+        controller,
+        continuous_mission_state="learning_strategy_discovered_source_retrieval_awaiting_authority",
+        active_work_item="learning_strategy_discovered_source_retrieval_authority_request",
+        continuous_active_subgoal={},
+        continuous_developmental_insight_requests=tuple(controller.continuous_developmental_insight_requests) + (request,),
+        continuous_learning_state={
+            **state,
+            "governed_learning_strategy_discovered_source_retrieval_authority_request": request,
+        },
+        journal=controller.journal + (_journal_entry(
+            "developmental_learning", "discovered_source_retrieval_authority_compiled_without_retrieval", (request["request_id"],),
+        ),),
+    )
+
+
+def archive_failed_governed_learning_strategy_discovered_source_retrieval(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController:
+    """Retire one terminal failed retrieval before a separately approved replacement."""
+
+    state = dict(controller.continuous_learning_state or {})
+    retrieval = dict(state.get("governed_learning_strategy_discovered_source_retrieval") or {})
+    authority = dict(state.get("governed_learning_strategy_discovered_source_retrieval_authority_request") or {})
+    if retrieval.get("status") != "failed" or not retrieval.get("claim", {}).get("claim_id") or not authority.get("request_id"):
+        return controller
+    retrieval_history = tuple(state.get("governed_learning_strategy_discovered_source_retrieval_history") or ())
+    if not any(item.get("claim", {}).get("claim_id") == retrieval["claim"]["claim_id"] for item in retrieval_history if isinstance(item, Mapping)):
+        retrieval_history = retrieval_history + ({**retrieval, "archived_at": utc_now(), "terminal_history": True},)
+    authority_history = tuple(state.get("governed_learning_strategy_discovered_source_retrieval_authority_history") or ())
+    if not any(item.get("request_id") == authority.get("request_id") for item in authority_history if isinstance(item, Mapping)):
+        authority_history = authority_history + ({**authority, "archived_at": utc_now(), "terminal_history": True},)
+    return replace(
+        controller,
+        continuous_mission_state="learning_strategy_source_discovery_completed",
+        active_work_item="archived_discovered_source_retrieval_failure",
+        continuous_learning_state={
+            **state,
+            "governed_learning_strategy_discovered_source_retrieval": {},
+            "governed_learning_strategy_discovered_source_retrieval_authority_request": {},
+            "governed_learning_strategy_discovered_source_retrieval_history": retrieval_history,
+            "governed_learning_strategy_discovered_source_retrieval_authority_history": authority_history,
+        },
+        journal=controller.journal + (_journal_entry(
+            "developmental_learning", "terminal_discovered_source_retrieval_archived", (str(retrieval["claim"]["claim_id"]),),
+        ),),
+    )
+
+
+def compile_replacement_governed_learning_strategy_discovered_source_retrieval_authority(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController:
+    """Compile a fresh one-use authority after an archived terminal parser failure."""
+
+    state = dict(controller.continuous_learning_state or {})
+    strategy = dict(state.get("governed_learning_strategy") or {})
+    revision = dict(state.get("governed_learning_strategy_resource_revision") or {})
+    discovery = dict(state.get("governed_learning_strategy_source_discovery") or {})
+    result = dict(discovery.get("result") or {})
+    history = tuple(state.get("governed_learning_strategy_discovered_source_retrieval_history") or ())
+    authority_history = tuple(state.get("governed_learning_strategy_discovered_source_retrieval_authority_history") or ())
+    prior = dict(history[-1] or {}) if history else {}
+    prior_authority = dict(authority_history[-1] or {}) if authority_history else {}
+    if (
+        controller.continuous_mission_state != "learning_strategy_source_discovery_completed"
+        or prior.get("status") != "failed"
+        or not prior.get("claim", {}).get("claim_id")
+        or not prior_authority.get("request_id")
+        or state.get("governed_learning_strategy_discovered_source_retrieval_authority_request")
+    ):
+        return replace(controller, continuous_mission_state="learning_strategy_discovered_source_retrieval_replacement_blocked", active_work_item="replacement_retrieval_prerequisites_missing")
+    nonce = stable_id("discovered-source-retrieval-replacement-nonce", prior["claim"]["claim_id"], prior.get("failure_reason"), result.get("result_digest"))
+    request = compile_discovered_source_retrieval_authority_request(
+        strategy=strategy, revision=revision, discovery_result=result, replacement_nonce=nonce,
+    )
+    request = {**request, "replacement_for_request_id": prior_authority.get("request_id"), "replacement_for_claim_id": prior["claim"]["claim_id"]}
+    validation = validate_discovered_source_retrieval_authority_request(request, strategy=strategy, revision=revision, discovery_result=result)
+    if not validation["accepted"]:
+        return replace(controller, continuous_mission_state="learning_strategy_discovered_source_retrieval_replacement_blocked", active_work_item="replacement_retrieval_binding_invalid")
+    return replace(
+        controller,
+        continuous_mission_state="learning_strategy_discovered_source_retrieval_awaiting_authority",
+        active_work_item="learning_strategy_discovered_source_retrieval_replacement_authority_request",
+        continuous_developmental_insight_requests=tuple(controller.continuous_developmental_insight_requests) + (request,),
+        continuous_learning_state={**state, "governed_learning_strategy_discovered_source_retrieval_authority_request": request},
+        journal=controller.journal + (_journal_entry(
+            "developmental_learning", "replacement_discovered_source_retrieval_authority_compiled", (request["request_id"], str(prior["claim"]["claim_id"])),
+        ),),
+    )
+
+
+def consume_governed_learning_strategy_discovered_source_retrieval_authority_response(
+    controller: ContinuousRuntimeController,
+    *,
+    request_id: str,
+    selected_option: str,
+    operator_text: str = "",
+    approved_scope: str = "",
+) -> ContinuousRuntimeController:
+    """Consume one discovered-source retrieval authority without retrieving it."""
+
+    requests = tuple(dict(item) for item in controller.continuous_developmental_insight_requests)
+    index = next((
+        position for position, item in enumerate(requests)
+        if item.get("request_id") == request_id
+        and item.get("request_kind") == "governed_learning_strategy_discovered_source_retrieval_authority"
+        and item.get("status") == "pending"
+    ), -1)
+    if index < 0:
+        return replace(controller, journal=controller.journal + (_journal_entry(
+            "developmental_learning", "duplicate_or_unknown_discovered_source_retrieval_response_suppressed", (request_id,),
+        ),))
+    request = requests[index]
+    if selected_option not in tuple(request.get("permitted_responses") or ()):
+        return replace(controller, journal=controller.journal + (_journal_entry(
+            "developmental_learning", "invalid_discovered_source_retrieval_response_rejected", (request_id, selected_option),
+        ),))
+    state = dict(controller.continuous_learning_state or {})
+    stored = dict(state.get("governed_learning_strategy_discovered_source_retrieval_authority_request") or {})
+    if stored.get("request_id") != request_id or stored.get("discovery_result_digest") != request.get("discovery_result_digest"):
+        return replace(controller, journal=controller.journal + (_journal_entry(
+            "developmental_learning", "discovered_source_retrieval_response_rejected_binding_mismatch", (request_id,),
+        ),))
+    approved = selected_option == "approve_learning_strategy_discovered_source_retrieval_authority"
+    expected_scope = str(request.get("authority_scope") or request.get("scope") or "")
+    if approved and approved_scope != expected_scope:
+        return replace(controller, journal=controller.journal + (_journal_entry(
+            "developmental_learning", "discovered_source_retrieval_response_rejected_scope_mismatch", (request_id,),
+        ),))
+    resolved = {**request, "status": "consumed", "authority_granted": approved, "resolution": selected_option, "resolved_at": utc_now()}
+    response = {
+        "request_id": request_id, "response_kind": request["request_kind"], "selected_option": selected_option,
+        "operator_text": operator_text, "approved_scope": expected_scope if approved else "", "authority_granted": approved, "created_at": utc_now(),
+    }
+    return replace(
+        controller,
+        continuous_mission_state="learning_strategy_discovered_source_retrieval_ready" if approved else "learning_strategy_discovered_source_retrieval_blocked",
+        active_work_item="approved_learning_strategy_discovered_source_retrieval" if approved else "discovered_source_retrieval_not_approved",
+        continuous_developmental_insight_requests=requests[:index] + (resolved,) + requests[index + 1:],
+        continuous_operator_interaction_responses=tuple(controller.continuous_operator_interaction_responses) + (response,),
+        continuous_learning_state={**state, "governed_learning_strategy_discovered_source_retrieval_authority_request": resolved},
+        journal=controller.journal + (_journal_entry(
+            "developmental_learning", "discovered_source_retrieval_authority_response_consumed_once", (request_id, selected_option),
+        ),),
+    )
+
+
+def claim_governed_learning_strategy_discovered_source_retrieval(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController:
+    """Persist one exact retrieval claim before the approved adapter can run."""
+
+    state = dict(controller.continuous_learning_state or {})
+    request = dict(state.get("governed_learning_strategy_discovered_source_retrieval_authority_request") or {})
+    existing = dict(state.get("governed_learning_strategy_discovered_source_retrieval") or {})
+    if existing.get("status") in {"claimed", "completed", "failed"}:
+        return replace(controller, journal=controller.journal + (_journal_entry(
+            "developmental_learning", "duplicate_discovered_source_retrieval_suppressed", (str(existing.get("claim", {}).get("claim_id") or ""),),
+        ),))
+    if (
+        controller.continuous_mission_state != "learning_strategy_discovered_source_retrieval_ready"
+        or request.get("status") != "consumed" or not request.get("authority_granted")
+        or int(request.get("maximum_retrieval_count") or 0) != 1
+    ):
+        return replace(controller, continuous_mission_state="learning_strategy_discovered_source_retrieval_blocked", active_work_item="discovered_source_retrieval_authority_invalid")
+    claim = {
+        "claim_id": stable_id("learning-strategy-discovered-source-retrieval-claim", request.get("request_id"), request.get("discovery_result_digest")),
+        "request_id": request.get("request_id"), "candidate_id": request.get("candidate_id"), "canonical_locator": request.get("canonical_locator"),
+        "claim_state": "approved_pending_exact_retrieval", "execution_attempt_count": 0, "claimed_at": utc_now(),
+    }
+    return replace(
+        controller,
+        continuous_mission_state="learning_strategy_discovered_source_retrieval_claimed",
+        active_work_item="discovered_source_retrieval_claimed",
+        continuous_learning_state={**state, "governed_learning_strategy_discovered_source_retrieval": {"status": "claimed", "claim": claim}},
+    )
+
+
+def execute_claimed_governed_learning_strategy_discovered_source_retrieval(
+    controller: ContinuousRuntimeController,
+    *,
+    retrieval_adapter=retrieve_exact_source,
+) -> ContinuousRuntimeController:
+    """Retrieve exactly one claimed discovered source and retain only question-bound claims."""
+
+    state = dict(controller.continuous_learning_state or {})
+    strategy = dict(state.get("governed_learning_strategy") or {})
+    authority = dict(state.get("governed_learning_strategy_discovered_source_retrieval_authority_request") or {})
+    retrieval_state = dict(state.get("governed_learning_strategy_discovered_source_retrieval") or {})
+    claim = dict(retrieval_state.get("claim") or {})
+    if (
+        controller.continuous_mission_state != "learning_strategy_discovered_source_retrieval_claimed"
+        or retrieval_state.get("status") != "claimed"
+        or claim.get("claim_state") != "approved_pending_exact_retrieval"
+    ):
+        return controller
+    source_locator = str(authority.get("canonical_locator") or "")
+    try:
+        retrieval = dict(retrieval_adapter(source_locator))
+        if not is_same_exact_resource_chain(source_locator, str(retrieval.get("canonical_locator") or "")):
+            raise ValueError("discovered_source_canonical_locator_mismatch")
+        acquisition_authority = {
+            "request_id": authority.get("request_id"), "source_identity": authority.get("candidate_id"),
+            "source_locator": source_locator, "source_digest": authority.get("discovery_result_digest"),
+        }
+        result = compile_strategy_acquisition_result(strategy=strategy, authority_request=acquisition_authority, retrieval=retrieval)
+    except Exception as exc:  # noqa: BLE001
+        return replace(
+            controller,
+            continuous_mission_state="learning_strategy_discovered_source_retrieval_failed",
+            active_work_item="discovered_source_retrieval_failed",
+            continuous_learning_state={**state, "governed_learning_strategy_discovered_source_retrieval": {
+                "status": "failed", "claim": {**claim, "claim_state": "failed", "execution_attempt_count": 1}, "failure_reason": f"{type(exc).__name__}:{exc}",
+            }},
+        )
+    return replace(
+        controller,
+        continuous_mission_state="learning_strategy_discovered_source_retrieval_completed",
+        active_work_item="discovered_source_sufficiency_evaluated",
+        continuous_active_subgoal={},
+        continuous_learning_state={**state, "governed_learning_strategy_discovered_source_retrieval": {
+            "status": "completed", "claim": {**claim, "claim_state": "completed", "execution_attempt_count": 1}, "result": result,
+        }},
+        journal=controller.journal + (_journal_entry(
+            "developmental_learning", "discovered_source_retrieval_completed_without_learner_retry", (result["acquisition_result_id"], result["outcome"]),
+        ),),
+    )
+
+
+def consume_governed_constructive_grounding_exact_source_authority_response(
+    controller: ContinuousRuntimeController, *, request_id: str, selected_option: str, operator_text: str = "", approved_scope: str = "",
+) -> ContinuousRuntimeController:
+    """Consume one constructive-grounding retrieval approval without dispatching it."""
+
+    requests = tuple(dict(item) for item in controller.continuous_developmental_insight_requests)
+    index = next((i for i, item in enumerate(requests) if item.get("request_id") == request_id and item.get("request_kind") == "governed_constructive_grounding_exact_source_authority" and item.get("status") == "pending"), -1)
+    if index < 0:
+        return replace(controller, journal=controller.journal + (_journal_entry("developmental_learning", "duplicate_or_unknown_constructive_grounding_response_suppressed", (request_id,)),))
+    request = requests[index]
+    if selected_option not in tuple(request.get("permitted_responses") or ()):
+        return replace(controller, journal=controller.journal + (_journal_entry("developmental_learning", "invalid_constructive_grounding_response_rejected", (request_id, selected_option)),))
+    state = dict(controller.continuous_learning_state or {})
+    assessment = dict(state.get("governed_constructive_grounding") or {})
+    request_field = "authority_request" if dict(assessment.get("authority_request") or {}).get("request_id") == request_id else "followup_authority_request"
+    if dict(assessment.get(request_field) or {}).get("request_id") != request_id:
+        return replace(controller, journal=controller.journal + (_journal_entry("developmental_learning", "constructive_grounding_response_binding_mismatch", (request_id,)),))
+    approved = selected_option == "approve_constructive_grounding_exact_source_authority"
+    scope = str(request.get("authority_scope") or "")
+    if approved and approved_scope != scope:
+        return replace(controller, journal=controller.journal + (_journal_entry("developmental_learning", "constructive_grounding_response_scope_mismatch", (request_id,),),))
+    resolved = {**request, "status": "consumed", "resolution": selected_option, "authority_granted": approved, "resolved_at": utc_now()}
+    response = {"request_id": request_id, "response_kind": request["request_kind"], "selected_option": selected_option, "operator_text": operator_text, "approved_scope": scope if approved else "", "authority_granted": approved, "created_at": utc_now()}
+    return replace(
+        controller,
+        continuous_mission_state="constructive_grounding_exact_source_ready" if approved else "constructive_grounding_exact_source_not_approved",
+        active_work_item="approved_constructive_grounding_exact_source_retrieval" if approved else "constructive_grounding_authority_not_approved",
+        continuous_developmental_insight_requests=requests[:index] + (resolved,) + requests[index + 1:],
+        continuous_operator_interaction_responses=tuple(controller.continuous_operator_interaction_responses) + (response,),
+        continuous_learning_state={**state, "governed_constructive_grounding": {**assessment, request_field: resolved}},
+    )
+
+
+def claim_governed_constructive_grounding_exact_source_retrieval(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
+    """Persist an exact-once claim for the approved constructive source."""
+
+    state = dict(controller.continuous_learning_state or {})
+    assessment = dict(state.get("governed_constructive_grounding") or {})
+    request = dict(assessment.get("authority_request") or {})
+    existing = dict(assessment.get("retrieval") or {})
+    if existing.get("status") in {"claimed", "completed", "failed"}:
+        return replace(controller, journal=controller.journal + (_journal_entry("developmental_learning", "duplicate_constructive_grounding_retrieval_suppressed", (str(existing.get("claim", {}).get("claim_id") or ""),),)))
+    if controller.continuous_mission_state != "constructive_grounding_exact_source_ready" or not request.get("authority_granted") or request.get("status") != "consumed":
+        return replace(controller, continuous_mission_state="constructive_grounding_exact_source_blocked", active_work_item="constructive_grounding_authority_invalid")
+    claim = {
+        "claim_id": stable_id("constructive-grounding-exact-source-claim", request.get("request_id"), request.get("canonical_locator")),
+        "request_id": request.get("request_id"), "candidate_id": request.get("candidate_id"), "canonical_locator": request.get("canonical_locator"),
+        "claim_state": "approved_pending_exact_retrieval", "execution_attempt_count": 0, "claimed_at": utc_now(),
+    }
+    return replace(controller, continuous_mission_state="constructive_grounding_exact_source_claimed", active_work_item="constructive_grounding_exact_source_claimed", continuous_learning_state={**state, "governed_constructive_grounding": {**assessment, "retrieval": {"status": "claimed", "claim": claim}}})
+
+
+def claim_followup_governed_constructive_grounding_exact_source_retrieval(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
+    state = dict(controller.continuous_learning_state or {})
+    assessment = dict(state.get("governed_constructive_grounding") or {})
+    request = dict(assessment.get("followup_authority_request") or {})
+    existing = dict(assessment.get("followup_retrieval") or {})
+    if existing.get("status") in {"claimed", "completed", "failed"}:
+        return controller
+    if controller.continuous_mission_state != "constructive_grounding_exact_source_ready" or request.get("status") != "consumed" or not request.get("authority_granted"):
+        return replace(controller, continuous_mission_state="constructive_grounding_followup_blocked", active_work_item="constructive_grounding_followup_authority_invalid")
+    claim = {"claim_id": stable_id("constructive-grounding-followup-source-claim", request.get("request_id"), request.get("canonical_locator")), "request_id": request.get("request_id"), "candidate_id": request.get("candidate_id"), "canonical_locator": request.get("canonical_locator"), "claim_state": "approved_pending_exact_retrieval", "execution_attempt_count": 0, "claimed_at": utc_now()}
+    return replace(controller, continuous_mission_state="constructive_grounding_followup_claimed", active_work_item="constructive_grounding_followup_claimed", continuous_learning_state={**state, "governed_constructive_grounding": {**assessment, "followup_retrieval": {"status": "claimed", "claim": claim}}})
+
+
+def execute_claimed_governed_constructive_grounding_exact_source_retrieval(
+    controller: ContinuousRuntimeController, *, retrieval_adapter=retrieve_exact_source,
+) -> ContinuousRuntimeController:
+    """Retrieve and retain one source only for the approved prerequisite question."""
+
+    state = dict(controller.continuous_learning_state or {})
+    assessment = dict(state.get("governed_constructive_grounding") or {})
+    request = dict(assessment.get("authority_request") or {})
+    retrieval_state = dict(assessment.get("retrieval") or {})
+    claim = dict(retrieval_state.get("claim") or {})
+    strategy = dict(state.get("governed_learning_strategy") or {})
+    if controller.continuous_mission_state != "constructive_grounding_exact_source_claimed" or claim.get("claim_state") != "approved_pending_exact_retrieval":
+        return controller
+    source_locator = str(request.get("canonical_locator") or "")
+    question_id = str(assessment.get("relation_proposal", {}).get("target_question_id") or "")
+    scoped_question = next((dict(item) for item in (strategy.get("learning_questions") or ()) if isinstance(item, Mapping) and item.get("question_id") == question_id), {})
+    try:
+        if not scoped_question:
+            raise ValueError("constructive_grounding_question_missing")
+        retrieval = dict(retrieval_adapter(source_locator))
+        if not is_same_exact_resource_chain(source_locator, str(retrieval.get("canonical_locator") or "")):
+            raise ValueError("constructive_grounding_canonical_locator_mismatch")
+        scoped_strategy = {"strategy_id": strategy.get("strategy_id"), "evidence_digest": strategy.get("evidence_digest"), "learning_questions": (scoped_question,)}
+        authority = {"request_id": request.get("request_id"), "source_identity": request.get("candidate_id"), "source_locator": source_locator, "source_digest": assessment.get("assessment_digest")}
+        result = compile_strategy_acquisition_result(strategy=scoped_strategy, authority_request=authority, retrieval=retrieval)
+    except Exception as exc:  # noqa: BLE001
+        failed = {"status": "failed", "claim": {**claim, "claim_state": "failed", "execution_attempt_count": 1}, "failure_reason": f"{type(exc).__name__}:{exc}"}
+        return replace(controller, continuous_mission_state="constructive_grounding_exact_source_failed", active_work_item="constructive_grounding_exact_source_failed", continuous_learning_state={**state, "governed_constructive_grounding": {**assessment, "retrieval": failed}})
+    completed = {"status": "completed", "claim": {**claim, "claim_state": "completed", "execution_attempt_count": 1}, "result": result}
+    return replace(
+        controller,
+        continuous_mission_state="constructive_grounding_exact_source_completed",
+        active_work_item="constructive_grounding_source_sufficiency_evaluated",
+        continuous_active_subgoal={},
+        continuous_learning_state={**state, "governed_constructive_grounding": {**assessment, "retrieval": completed}},
+        journal=controller.journal + (_journal_entry("developmental_learning", "constructive_grounding_source_retrieved_without_learner_or_promotion", (result["acquisition_result_id"], result["outcome"]),),),
+    )
+
+
+def execute_claimed_followup_governed_constructive_grounding_exact_source_retrieval(controller: ContinuousRuntimeController, *, retrieval_adapter=retrieve_exact_source) -> ContinuousRuntimeController:
+    state = dict(controller.continuous_learning_state or {})
+    assessment = dict(state.get("governed_constructive_grounding") or {})
+    request = dict(assessment.get("followup_authority_request") or {})
+    retrieval_state = dict(assessment.get("followup_retrieval") or {})
+    claim = dict(retrieval_state.get("claim") or {})
+    strategy = dict(state.get("governed_learning_strategy") or {})
+    if controller.continuous_mission_state != "constructive_grounding_followup_claimed" or claim.get("claim_state") != "approved_pending_exact_retrieval":
+        return controller
+    question_id = str(assessment.get("relation_proposal", {}).get("target_question_id") or "")
+    question = next((dict(item) for item in (strategy.get("learning_questions") or ()) if isinstance(item, Mapping) and item.get("question_id") == question_id), {})
+    try:
+        if not question:
+            raise ValueError("constructive_grounding_question_missing")
+        locator = str(request.get("canonical_locator") or "")
+        raw = dict(retrieval_adapter(locator))
+        if not is_same_exact_resource_chain(locator, str(raw.get("canonical_locator") or "")):
+            raise ValueError("constructive_grounding_canonical_locator_mismatch")
+        scoped = {"strategy_id": strategy.get("strategy_id"), "evidence_digest": strategy.get("evidence_digest"), "learning_questions": (question,)}
+        authority = {"request_id": request.get("request_id"), "source_identity": request.get("candidate_id"), "source_locator": locator, "source_digest": assessment.get("assessment_digest")}
+        result = compile_strategy_acquisition_result(strategy=scoped, authority_request=authority, retrieval=raw)
+    except Exception as exc:  # noqa: BLE001
+        return replace(controller, continuous_mission_state="constructive_grounding_followup_failed", active_work_item="constructive_grounding_followup_failed", continuous_learning_state={**state, "governed_constructive_grounding": {**assessment, "followup_retrieval": {"status": "failed", "claim": {**claim, "claim_state": "failed", "execution_attempt_count": 1}, "failure_reason": f"{type(exc).__name__}:{exc}"}}})
+    return replace(controller, continuous_mission_state="constructive_grounding_followup_completed", active_work_item="constructive_grounding_followup_source_sufficiency_evaluated", continuous_active_subgoal={}, continuous_learning_state={**state, "governed_constructive_grounding": {**assessment, "followup_retrieval": {"status": "completed", "claim": {**claim, "claim_state": "completed", "execution_attempt_count": 1}, "result": result}}})
+
+
+def review_governed_constructive_grounding_source_result(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
+    """Classify one acquired source at the constructive, not term-match, level."""
+
+    state = dict(controller.continuous_learning_state or {})
+    assessment = dict(state.get("governed_constructive_grounding") or {})
+    retrieval = dict(assessment.get("retrieval") or {})
+    result = dict(retrieval.get("result") or {})
+    if controller.continuous_mission_state != "constructive_grounding_exact_source_completed" or retrieval.get("status") != "completed":
+        return controller
+    existing = dict(assessment.get("source_review") or {})
+    if existing.get("acquisition_result_digest") == result.get("result_digest"):
+        return controller
+    review = compile_constructive_grounding_source_review(assessment=assessment, acquisition_result=result)
+    return replace(
+        controller,
+        continuous_mission_state="constructive_grounding_partial",
+        active_work_item="constructive_relation_still_requires_grounded_derivation",
+        continuous_active_subgoal={},
+        continuous_learning_state={**state, "governed_constructive_grounding": {**assessment, "source_review": review}},
+        journal=controller.journal + (_journal_entry("developmental_learning", "constructive_source_review_preserved_term_coverage_but_rejected_false_sufficiency", (review["review_id"],),),),
+    )
+
+
+def review_followup_governed_constructive_grounding_source_result(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
+    """Review a second retained source at constructive-relation scope only."""
+
+    state = dict(controller.continuous_learning_state or {})
+    assessment = dict(state.get("governed_constructive_grounding") or {})
+    retrieval = dict(assessment.get("followup_retrieval") or {})
+    result = dict(retrieval.get("result") or {})
+    if controller.continuous_mission_state != "constructive_grounding_followup_completed" or retrieval.get("status") != "completed":
+        return controller
+    existing = dict(assessment.get("followup_source_review") or {})
+    if existing.get("acquisition_result_digest") == result.get("result_digest"):
+        return controller
+    review = compile_constructive_grounding_source_review(assessment=assessment, acquisition_result=result)
+    return replace(
+        controller,
+        continuous_mission_state="constructive_grounding_partial",
+        active_work_item="constructive_relation_still_requires_grounded_derivation",
+        continuous_active_subgoal={},
+        continuous_learning_state={**state, "governed_constructive_grounding": {**assessment, "followup_source_review": review}},
+        journal=controller.journal + (_journal_entry("developmental_learning", "followup_constructive_source_review_preserved_term_coverage_but_rejected_false_sufficiency", (review["review_id"],),),),
+    )
+
+
+def compile_governed_constructive_grounding_failure_synthesis(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
+    state = dict(controller.continuous_learning_state or {})
+    assessment = dict(state.get("governed_constructive_grounding") or {})
+    if controller.continuous_mission_state != "constructive_grounding_partial" or assessment.get("failure_synthesis"):
+        return controller
+    attempts = (
+        dict(state.get("governed_learning_strategy_discovered_source_retrieval") or {}),
+        dict(assessment.get("retrieval") or {}),
+        *tuple(dict(item) for item in (assessment.get("followup_retrieval_history") or ()) if isinstance(item, Mapping)),
+        dict(assessment.get("followup_retrieval") or {}),
+    )
+    synthesis = compile_constructive_failure_synthesis(assessment=assessment, source_attempts=attempts)
+    request = dict(synthesis.get("authority_request") or {})
+    return replace(controller, continuous_mission_state=synthesis["outcome"], active_work_item="constructive_teaching_provider_authority_request" if request else "constructive_grounding_escalation_unresolved", continuous_developmental_insight_requests=tuple(controller.continuous_developmental_insight_requests) + ((request,) if request else ()), continuous_learning_state={**state, "governed_constructive_grounding": {**assessment, "failure_synthesis": synthesis}})
+
+
+def compile_constructive_teaching_provider_replacement_authority(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
+    """Compile one replacement only after a prior provider claim is terminal."""
+    state = dict(controller.continuous_learning_state or {})
+    assessment = dict(state.get("governed_constructive_grounding") or {})
+    synthesis = dict(assessment.get("failure_synthesis") or {})
+    prior_execution = dict(assessment.get("constructive_teaching_provider") or {})
+    prior_claim = dict(prior_execution.get("execution_claim") or {})
+    base = dict(synthesis.get("authority_request") or {})
+    if not base or prior_claim.get("claim_state") not in {"invalid", "failed"}:
+        return controller
+    existing = dict(synthesis.get("replacement_authority_request") or {})
+    if existing:
+        return controller
+    request = {**base, "request_id": stable_id("constructive-teaching-provider-replacement-authority", base.get("request_id"), prior_claim.get("claim_id"), prior_execution.get("result", {}).get("response_digest")), "status": "pending", "authority_granted": False, "replacement_for_request_id": base.get("request_id"), "replacement_for_claim_id": prior_claim.get("claim_id"), "replacement_reason": "prior provider output omitted required controller boundary constants; raw historical output unavailable", "created_at": utc_now()}
+    updated_synthesis = {**synthesis, "replacement_authority_request": request, "prior_provider_claims": tuple(synthesis.get("prior_provider_claims") or ()) + ({"claim": prior_claim, "result": dict(prior_execution.get("result") or {})},)}
+    return replace(controller, continuous_mission_state="constructive_teaching_provider_replacement_authority_pending", active_work_item="constructive_teaching_provider_replacement_authority_request", continuous_developmental_insight_requests=tuple(controller.continuous_developmental_insight_requests) + (request,), continuous_learning_state={**state, "governed_constructive_grounding": {**assessment, "failure_synthesis": updated_synthesis}})
+
+
+def consume_constructive_teaching_provider_authority_response(
+    controller: ContinuousRuntimeController, *, request_id: str, selected_option: str, operator_text: str = "", approved_scope: str = "",
+) -> ContinuousRuntimeController:
+    """Consume the one-use advisory-teaching authority without dispatching it."""
+    requests = tuple(dict(item) for item in controller.continuous_developmental_insight_requests)
+    index = next((i for i, item in enumerate(requests) if item.get("request_id") == request_id and item.get("request_kind") == "governed_constructive_teaching_provider_authority" and item.get("status") == "pending"), -1)
+    if index < 0:
+        return replace(controller, journal=controller.journal + (_journal_entry("constructive_grounding", "constructive_teaching_authority_duplicate_or_unknown_response", (request_id,)),))
+    request = requests[index]
+    if selected_option not in tuple(request.get("permitted_responses") or ()):
+        return replace(controller, journal=controller.journal + (_journal_entry("constructive_grounding", "constructive_teaching_authority_invalid_response", (request_id, selected_option)),))
+    state = dict(controller.continuous_learning_state or {})
+    assessment = dict(state.get("governed_constructive_grounding") or {})
+    synthesis = dict(assessment.get("failure_synthesis") or {})
+    known_requests = (dict(synthesis.get("authority_request") or {}), dict(synthesis.get("replacement_authority_request") or {}))
+    if request_id not in {item.get("request_id") for item in known_requests}:
+        return replace(controller, journal=controller.journal + (_journal_entry("constructive_grounding", "constructive_teaching_authority_identity_mismatch", (request_id,)),))
+    consumed_at = utc_now()
+    granted = selected_option == "approve_constructive_teaching_provider_authority"
+    resolved = {**request, "status": "consumed", "resolution": selected_option, "authority_granted": granted, "consumed_at": consumed_at}
+    response = {"request_id": request_id, "response_kind": "governed_constructive_teaching_provider_authority", "selected_option": selected_option, "operator_text": operator_text, "approved_scope": approved_scope, "authority_granted": granted, "created_at": consumed_at, "consumed_at": consumed_at}
+    updated_requests = requests[:index] + (resolved,) + requests[index + 1 :]
+    if not granted:
+        return replace(controller, continuous_developmental_insight_requests=updated_requests, continuous_operator_interaction_responses=tuple(controller.continuous_operator_interaction_responses) + (response,), continuous_mission_state="constructive_teaching_provider_authority_deferred", active_work_item="constructive_grounding_escalation_unresolved", continuous_learning_state={**state, "governed_constructive_grounding": {**assessment, "constructive_teaching_provider": {"status": "deferred" if selected_option == "defer_constructive_teaching_provider_authority" else "rejected", "operator_response": response}}})
+    if approved_scope and approved_scope != request.get("authority_scope"):
+        return replace(controller, journal=controller.journal + (_journal_entry("constructive_grounding", "constructive_teaching_authority_scope_mismatch", (request_id,)),))
+    provider_packet = compile_constructive_teaching_provider_packet(authority_request=request)
+    system_prompt, user_prompt = constructive_teaching_provider_prompts(packet=provider_packet)
+    claim = {"claim_id": stable_id("constructive-teaching-provider-execution-claim", request_id, provider_packet["packet_digest"]), "request_id": request_id, "claim_state": "approved_pending_execution", "execution_attempt_count": 0, "provider": request.get("provider"), "model": request.get("model"), "packet_digest": provider_packet["packet_digest"], "approved_at": consumed_at}
+    api = dict(controller.continuous_api_authority or {})
+    api = {**api, "enabled": True, "allowed_providers": (request.get("provider"),), "allowed_models": (request.get("model"),), "call_allowance": 1, "pending_provider_tasks": tuple(dict.fromkeys(tuple(api.get("pending_provider_tasks") or ()) + (request_id,))), "unavailability_reason": "one_operator_approved_constructive_teaching_call_pending"}
+    execution = {"status": "approved_pending_execution", "authority_request": request, "provider_packet": provider_packet, "system_prompt": system_prompt, "user_prompt": user_prompt, "execution_claim": claim, "operator_response": response}
+    return replace(controller, continuous_developmental_insight_requests=updated_requests, continuous_operator_interaction_responses=tuple(controller.continuous_operator_interaction_responses) + (response,), continuous_api_authority=api, continuous_mission_state="constructive_teaching_provider_execution_pending", active_work_item="persisted_constructive_teaching_provider_execution_claim", continuous_learning_state={**state, "governed_constructive_grounding": {**assessment, "constructive_teaching_provider": execution}}, journal=controller.journal + (_journal_entry("constructive_grounding", "operator_approved_one_use_constructive_teaching_provider_claim", (request_id, claim["claim_id"])),))
+
+
+def begin_constructive_teaching_provider_execution(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
+    """Persist the one permitted provider attempt before network I/O."""
+    state = dict(controller.continuous_learning_state or {})
+    assessment = dict(state.get("governed_constructive_grounding") or {})
+    execution = dict(assessment.get("constructive_teaching_provider") or {})
+    claim = dict(execution.get("execution_claim") or {})
+    if controller.continuous_mission_state != "constructive_teaching_provider_execution_pending" or claim.get("claim_state") != "approved_pending_execution" or int(claim.get("execution_attempt_count") or 0) != 0:
+        return controller
+    updated_claim = {**claim, "claim_state": "dispatching", "execution_attempt_count": 1, "dispatch_started_at": utc_now()}
+    api = dict(controller.continuous_api_authority or {})
+    return replace(controller, continuous_mission_state="constructive_teaching_provider_dispatching", active_work_item="one_use_constructive_teaching_provider_dispatch", continuous_api_authority={**api, "calls_consumed": int(api.get("calls_consumed") or 0) + 1}, continuous_learning_state={**state, "governed_constructive_grounding": {**assessment, "constructive_teaching_provider": {**execution, "status": "dispatching", "execution_claim": updated_claim}}}, journal=controller.journal + (_journal_entry("constructive_grounding", "constructive_teaching_provider_dispatch_persisted_before_network", (claim.get("claim_id", ""),)),))
+
+
+def record_constructive_teaching_provider_result(controller: ContinuousRuntimeController, *, raw_response: Mapping[str, Any] | str | None, provider_error: str = "", provider_usage: Mapping[str, Any] | None = None) -> ContinuousRuntimeController:
+    """Seal one advisory packet; it can never activate learning or promote capability."""
+    state = dict(controller.continuous_learning_state or {})
+    assessment = dict(state.get("governed_constructive_grounding") or {})
+    execution = dict(assessment.get("constructive_teaching_provider") or {})
+    claim = dict(execution.get("execution_claim") or {})
+    packet = dict(execution.get("provider_packet") or {})
+    if claim.get("claim_state") != "dispatching" or not packet:
+        return controller
+    api = dict(controller.continuous_api_authority or {})
+    request_id = str(claim.get("request_id") or "")
+    pending = tuple(item for item in (api.get("pending_provider_tasks") or ()) if item != request_id)
+    if provider_error:
+        result = {"status": "failed", "error": provider_error, "provider_usage": dict(provider_usage or {}), "completed_at": utc_now(), "capability_eligible": False}
+        return replace(controller, continuous_mission_state="constructive_teaching_provider_failed", active_work_item="constructive_grounding_escalation_unresolved", continuous_api_authority={**api, "enabled": False, "pending_provider_tasks": pending, "failures": int(api.get("failures") or 0) + 1, "unavailability_reason": "constructive_teaching_provider_failed"}, continuous_learning_state={**state, "governed_constructive_grounding": {**assessment, "constructive_teaching_provider": {**execution, "status": "provider_failed", "execution_claim": {**claim, "claim_state": "failed"}, "result": result}}})
+    validation = validate_constructive_teaching_provider_response(packet=packet, raw_response=raw_response)
+    result = {"status": "validated" if validation["accepted"] else "invalid", "response_digest": validation["response_digest"], "validation_errors": validation["errors"], "sealed_advisory_packet": validation["sealed_packet"], "provider_usage": dict(provider_usage or {}), "completed_at": utc_now(), "capability_eligible": False, "operator_only_forensic_response": {"raw_response": raw_response, "raw_response_digest": validation["response_digest"], "learner_visible": False, "capability_eligible": False}}
+    return replace(controller, continuous_mission_state="constructive_teaching_packet_validated" if validation["accepted"] else "constructive_teaching_packet_invalid", active_work_item="independent_constructive_grounding_verification_required" if validation["accepted"] else "constructive_grounding_escalation_unresolved", continuous_api_authority={**api, "enabled": False, "pending_provider_tasks": pending, "last_provider_result": validation["response_digest"], "unavailability_reason": "constructive_teaching_packet_requires_independent_verification" if validation["accepted"] else "constructive_teaching_provider_schema_rejected"}, continuous_learning_state={**state, "governed_constructive_grounding": {**assessment, "constructive_teaching_provider": {**execution, "status": "packet_validated" if validation["accepted"] else "packet_invalid", "execution_claim": {**claim, "claim_state": "completed" if validation["accepted"] else "invalid"}, "result": result}}}, journal=controller.journal + (_journal_entry("constructive_grounding", "constructive_teaching_provider_result_sealed_without_learning_or_capability_promotion", (request_id, result["status"])),))
+
+
+def record_constructive_teaching_response_adaptation_unavailable(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
+    """Persist the provenance blocker for legacy invalid responses that retained no bytes."""
+    state = dict(controller.continuous_learning_state or {})
+    assessment = dict(state.get("governed_constructive_grounding") or {})
+    execution = dict(assessment.get("constructive_teaching_provider") or {})
+    result = dict(execution.get("result") or {})
+    claim = dict(execution.get("execution_claim") or {})
+    if claim.get("claim_state") != "invalid" or result.get("status") != "invalid" or execution.get("adaptation"):
+        return controller
+    adaptation = adapt_constructive_teaching_response(raw_response=None, source_claim_id=str(claim.get("claim_id") or ""), original_response_digest=str(result.get("response_digest") or ""))
+    return replace(controller, continuous_mission_state="constructive_teaching_response_adaptation_unavailable", active_work_item="raw_provider_response_required_for_provenance_safe_adaptation", continuous_learning_state={**state, "governed_constructive_grounding": {**assessment, "constructive_teaching_provider": {**execution, "adaptation": adaptation}}}, journal=controller.journal + (_journal_entry("constructive_grounding", "legacy_invalid_constructive_response_cannot_be_adapted_without_raw_bytes", (str(claim.get("claim_id") or ""),)),))
+
+
+def verify_independent_constructive_grounding(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
+    """Persist one non-promoting verification result for a sealed advisory packet."""
+    state = dict(controller.continuous_learning_state or {})
+    assessment = dict(state.get("governed_constructive_grounding") or {})
+    execution = dict(assessment.get("constructive_teaching_provider") or {})
+    result = dict(execution.get("result") or {})
+    if controller.continuous_mission_state != "constructive_teaching_packet_validated" or result.get("status") != "validated" or assessment.get("independent_verification"):
+        return controller
+    verification = compile_independent_constructive_grounding_verification(assessment=assessment, provider_result=result)
+    return replace(controller, continuous_mission_state=verification["outcome"], active_work_item="constructive_relation_facets_remain_independently_unverified", continuous_learning_state={**state, "governed_constructive_grounding": {**assessment, "independent_verification": verification}}, journal=controller.journal + (_journal_entry("constructive_grounding", "advisory_constructive_teaching_packet_independently_checked_without_capability_promotion", (verification["verification_id"],)),))
+
+
+def compile_advisory_claim_verification_targets(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
+    state = dict(controller.continuous_learning_state or {})
+    assessment = dict(state.get("governed_constructive_grounding") or {})
+    execution = dict(assessment.get("constructive_teaching_provider") or {})
+    result = dict(execution.get("result") or {})
+    if controller.continuous_mission_state != "finite_dimensional_constructive_grounding_partial" or assessment.get("atomic_verification_targets"):
+        return controller
+    targets = compile_advisory_claim_verification_target_record(assessment=assessment, provider_result=result)
+    state_name = "atomic_verification_source_authority_pending" if targets["targets"] else "finite_dimensional_constructive_grounding_partial"
+    work = "atomic_verification_target_routing" if targets["targets"] else "advisory_packet_lacks_relation_specific_verification_targets"
+    return replace(controller, continuous_mission_state=state_name, active_work_item=work, continuous_learning_state={**state, "governed_constructive_grounding": {**assessment, "atomic_verification_targets": targets}}, journal=controller.journal + (_journal_entry("constructive_grounding", "advisory_claims_compiled_to_verification_targets_without_controller_authored_mathematics", (targets["target_compilation_id"],)),))
+
+
+def compile_followup_governed_constructive_grounding_authority(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
+    """Offer one remaining discovered candidate after a partial source review."""
+
+    state = dict(controller.continuous_learning_state or {})
+    assessment = dict(state.get("governed_constructive_grounding") or {})
+    prior = dict(assessment.get("retrieval") or {})
+    review = dict(assessment.get("source_review") or {})
+    if controller.continuous_mission_state != "constructive_grounding_partial" or review.get("outcome") != "constructive_grounding_partial":
+        return controller
+    existing = dict(assessment.get("followup_authority_request") or {})
+    if existing:
+        return controller
+    prior_candidate = str(prior.get("claim", {}).get("candidate_id") or "")
+    candidate = next((dict(item) for item in (assessment.get("candidate_ranking") or ()) if isinstance(item, Mapping) and item.get("candidate_id") != prior_candidate), {})
+    if not candidate:
+        return replace(controller, continuous_mission_state="constructive_grounding_unresolved", active_work_item="constructive_grounding_candidates_exhausted")
+    request = {
+        "request_id": stable_id("constructive-grounding-followup-source-authority", assessment.get("relation_id"), candidate.get("candidate_id"), prior.get("claim", {}).get("claim_id")),
+        "request_kind": "governed_constructive_grounding_exact_source_authority", "status": "pending",
+        "relation_id": assessment.get("relation_id"), "question_id": assessment.get("relation_proposal", {}).get("target_question_id"),
+        "candidate_id": candidate.get("candidate_id"), "canonical_locator": candidate.get("canonical_locator"), "maximum_retrieval_count": 1,
+        "authority_scope": "retrieve one exact previously discovered source only to ground one unresolved constructive prerequisite relation",
+        "scope": "retrieve one exact previously discovered source only to ground one unresolved constructive prerequisite relation",
+        "permitted_responses": ("approve_constructive_grounding_exact_source_authority", "reject_constructive_grounding_exact_source_authority", "defer_constructive_grounding_exact_source_authority", "ask_for_clarification"),
+        "authority_granted": False,
+        "prohibited_actions": ("additional_source_retrieval", "new_discovery", "broad_research", "provider_call", "learner_retry", "evaluator_run", "capability_update", "pcm_action", "git_action", "deployment"),
+        "created_at": utc_now(), "prior_claim_id": prior.get("claim", {}).get("claim_id"),
+    }
+    return replace(controller, continuous_mission_state="constructive_grounding_followup_authority_pending", active_work_item="constructive_grounding_followup_authority_request", continuous_developmental_insight_requests=tuple(controller.continuous_developmental_insight_requests) + (request,), continuous_learning_state={**state, "governed_constructive_grounding": {**assessment, "followup_authority_request": request}})
+
+
+def compile_case_preserving_constructive_grounding_replacement_authority(
+    controller: ContinuousRuntimeController, *, corrected_locator: str,
+) -> ContinuousRuntimeController:
+    """Compile a replacement after a terminal case-corrupted locator failure."""
+
+    state = dict(controller.continuous_learning_state or {})
+    assessment = dict(state.get("governed_constructive_grounding") or {})
+    failed = dict(assessment.get("followup_retrieval") or {})
+    prior_request = dict(assessment.get("followup_authority_request") or {})
+    if failed.get("status") != "failed" or "HTTP Error 404" not in str(failed.get("failure_reason") or "") or not prior_request.get("request_id"):
+        return replace(controller, continuous_mission_state="constructive_grounding_replacement_blocked", active_work_item="constructive_grounding_replacement_prerequisites_missing")
+    from urllib.parse import urlsplit
+
+    old, new = urlsplit(str(prior_request.get("canonical_locator") or "")), urlsplit(corrected_locator)
+    same_except_path_case = (
+        old.scheme.lower() == new.scheme.lower() == "https"
+        and (old.hostname or "").lower() == (new.hostname or "").lower()
+        and old.port == new.port
+        and old.path.lower() == new.path.lower()
+        and old.query == new.query and old.fragment == new.fragment
+    )
+    if not same_except_path_case or old.path == new.path:
+        return replace(controller, continuous_mission_state="constructive_grounding_replacement_blocked", active_work_item="constructive_grounding_corrected_locator_invalid")
+    history = tuple(assessment.get("followup_retrieval_history") or ())
+    if not any(dict(item).get("claim", {}).get("claim_id") == failed.get("claim", {}).get("claim_id") for item in history if isinstance(item, Mapping)):
+        history = history + ({**failed, "terminal_history": True, "archived_at": utc_now()},)
+    nonce = stable_id("case-preserving-locator-replacement", failed.get("claim", {}).get("claim_id"), corrected_locator)
+    request = {
+        **prior_request,
+        "request_id": stable_id("constructive-grounding-case-preserving-source-authority", assessment.get("relation_id"), corrected_locator, nonce),
+        "canonical_locator": corrected_locator,
+        "status": "pending", "authority_granted": False, "resolution": "",
+        "replacement_for_request_id": prior_request.get("request_id"), "replacement_for_claim_id": failed.get("claim", {}).get("claim_id"), "replacement_nonce": nonce,
+        "created_at": utc_now(),
+    }
+    return replace(
+        controller,
+        continuous_mission_state="constructive_grounding_followup_authority_pending",
+        active_work_item="constructive_grounding_case_preserving_replacement_authority_request",
+        continuous_developmental_insight_requests=tuple(controller.continuous_developmental_insight_requests) + (request,),
+        continuous_learning_state={**state, "governed_constructive_grounding": {**assessment, "followup_authority_request": request, "followup_retrieval": {}, "followup_retrieval_history": history}},
+    )
 def consume_continuous_operator_interaction_response(
     controller: ContinuousRuntimeController,
     *,
@@ -4606,6 +6162,38 @@ def consume_continuous_operator_interaction_response(
             selected_option=selected_option,
             operator_text=operator_text,
             approved_scope=approved_scope,
+        )
+    if request.get("request_kind") == "governed_learning_strategy_authority":
+        return consume_governed_learning_strategy_authority_response(
+            controller,
+            request_id=request_id,
+            selected_option=selected_option,
+            operator_text=operator_text,
+            approved_scope=approved_scope,
+        )
+    if request.get("request_kind") == "governed_learning_strategy_resource_revision_authority":
+        return consume_governed_learning_strategy_resource_revision_authority_response(
+            controller,
+            request_id=request_id,
+            selected_option=selected_option,
+            operator_text=operator_text,
+            approved_scope=approved_scope,
+        )
+    if request.get("request_kind") == "governed_learning_strategy_discovered_source_retrieval_authority":
+        return consume_governed_learning_strategy_discovered_source_retrieval_authority_response(
+            controller,
+            request_id=request_id,
+            selected_option=selected_option,
+            operator_text=operator_text,
+            approved_scope=approved_scope,
+        )
+    if request.get("request_kind") == "governed_constructive_grounding_exact_source_authority":
+        return consume_governed_constructive_grounding_exact_source_authority_response(
+            controller, request_id=request_id, selected_option=selected_option, operator_text=operator_text, approved_scope=approved_scope,
+        )
+    if request.get("request_kind") == "governed_constructive_teaching_provider_authority":
+        return consume_constructive_teaching_provider_authority_response(
+            controller, request_id=request_id, selected_option=selected_option, operator_text=operator_text, approved_scope=approved_scope,
         )
     if selected_option == "provide exact target and case" and not operator_text.strip():
         return replace(

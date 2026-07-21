@@ -26,10 +26,13 @@ from orchestration.runtime.continuous_runtime_controller import (
     consume_continuous_capability_reassessment,
     consume_continuous_mission_application_decision,
     consume_continuous_operator_interaction_response,
+    execute_governed_learning_strategy_exact_source_acquisition,
     compile_governed_isolated_evaluator_authoring_api_request,
     begin_isolated_evaluator_authoring_execution,
+    begin_constructive_teaching_provider_execution,
     handoff_sealed_isolated_evaluator_to_resource_fulfillment,
     record_isolated_evaluator_authoring_provider_result,
+    record_constructive_teaching_provider_result,
     controller_snapshot,
     exit_observation_with_action_derivation,
     export_continuous_mission_restart_state,
@@ -89,6 +92,7 @@ _OPERATOR_INTERACTION_KINDS = frozenset(
         "developmental_resource_authority",
         "developmental_resource_fulfillment",
         "developmental_evaluator_authoring_api",
+        "governed_learning_strategy_authority",
     }
 )
 
@@ -397,6 +401,18 @@ def worker_main(argv: list[str] | None = None) -> int:
                 _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(controller))
                 controller = _execute_isolated_evaluator_authoring_provider_call(root, controller)
                 _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(controller))
+            elif args.execute_active_subgoal and controller.continuous_mission_state == "constructive_teaching_provider_execution_pending":
+                controller = begin_constructive_teaching_provider_execution(controller)
+                _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(controller))
+                controller = _execute_constructive_teaching_provider_call(root, controller)
+                _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(controller))
+                _write_worker_status(root, controller, "constructive_teaching_provider_terminal")
+                return 0
+            elif args.execute_active_subgoal and controller.continuous_mission_state == "constructive_teaching_provider_dispatching":
+                controller = record_constructive_teaching_provider_result(controller, raw_response=None, provider_error="provider_dispatch_outcome_indeterminate_after_restart_no_retry")
+                _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(controller))
+                _write_worker_status(root, controller, "constructive_teaching_provider_indeterminate_terminal")
+                return 0
             elif args.execute_active_subgoal and controller.continuous_mission_state == "isolated_evaluator_authoring_dispatching":
                 controller = record_isolated_evaluator_authoring_provider_result(
                     controller,
@@ -407,6 +423,11 @@ def worker_main(argv: list[str] | None = None) -> int:
             elif args.execute_active_subgoal and controller.continuous_mission_state == "isolated_evaluator_authoring_result_sealed":
                 controller = handoff_sealed_isolated_evaluator_to_resource_fulfillment(controller)
                 _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(controller))
+            elif args.execute_active_subgoal and controller.continuous_mission_state == "learning_strategy_acquisition_ready":
+                controller = execute_governed_learning_strategy_exact_source_acquisition(controller)
+                _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(controller))
+                _write_worker_status(root, controller, "learning_strategy_acquisition_completed")
+                return 0
             elif args.execute_active_subgoal and controller.continuous_active_subgoal:
                 _write_worker_status(root, controller, "executing_active_subgoal")
                 controller = _execute_next_worker_subgoal(
@@ -509,6 +530,36 @@ def _execute_isolated_evaluator_authoring_provider_call(supervisor_root: Path, c
             raw_response=None,
             provider_error=f"{type(exc).__name__}: {str(exc)[:240]}",
         )
+
+
+def _execute_constructive_teaching_provider_call(supervisor_root: Path, controller: Any) -> Any:
+    """Dispatch one controller-claimed advisory packet through the established transport."""
+    state = dict(controller.continuous_learning_state or {})
+    assessment = dict(state.get("governed_constructive_grounding") or {})
+    execution = dict(assessment.get("constructive_teaching_provider") or {})
+    packet = dict(execution.get("provider_packet") or {})
+    claim = dict(execution.get("execution_claim") or {})
+    if claim.get("claim_state") != "dispatching" or not packet:
+        return controller
+    try:
+        from orchestration.runtime.v16_env import load_delta_evaluator_env, parse_env_file
+        from orchestration.runtime.v16_external_consolidation_evaluator_api_trial import _default_transport
+
+        repository_root = _repository_root_from_supervisor_root(supervisor_root)
+        config = load_delta_evaluator_env(repository_root / ".env.local")
+        request = dict(execution.get("authority_request") or {})
+        if not config.live_call_permitted or str(config.provider).lower() != str(request.get("provider") or "").lower() or str(config.model) != str(request.get("model") or ""):
+            return record_constructive_teaching_provider_result(controller, raw_response=None, provider_error="provider_configuration_not_permitted_or_does_not_match_approved_packet")
+        import json
+        api_key = os.environ.get("DELTA_EVALUATOR_API_KEY") or parse_env_file(repository_root / ".env.local").get("DELTA_EVALUATOR_API_KEY", "")
+        body = {"model": request["model"], "temperature": 0, "max_tokens": int(request.get("maximum_tokens") or 1800), "response_format": {"type": "json_schema", "json_schema": {"name": "constructive_teaching_response", "strict": True, "schema": packet["native_json_schema"]}}, "messages": ({"role": "system", "content": execution["system_prompt"]}, {"role": "user", "content": execution["user_prompt"]})}
+        response = _default_transport(config.endpoint or "https://api.openai.com/v1/chat/completions", {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}, body, 45)
+        choices = response.get("choices") if isinstance(response, Mapping) else ()
+        message = choices[0].get("message") if isinstance(choices, list) and choices and isinstance(choices[0], Mapping) else {}
+        raw = json.loads(str(message.get("content") or "{}")) if isinstance(message, Mapping) else {}
+        return record_constructive_teaching_provider_result(controller, raw_response=raw, provider_usage=dict(response.get("usage") or {}) if isinstance(response, Mapping) else {})
+    except Exception as exc:  # noqa: BLE001 - a one-use claim must remain terminal.
+        return record_constructive_teaching_provider_result(controller, raw_response=None, provider_error=f"{type(exc).__name__}: {str(exc)[:240]}")
 
 
 def _execute_next_worker_subgoal(root: Path, controller: Any, *, allow_local_model_execution: bool = False) -> Any:

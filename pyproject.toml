@@ -1,3 +1,10 @@
+[project]
+name = "delta-dev"
+version = "0.0.0"
+dependencies = [
+    "pypdf==5.7.0",
+]
+
 [tool.pytest.ini_options]
 testpaths = [
     "engine/execution_dry_run/tests",

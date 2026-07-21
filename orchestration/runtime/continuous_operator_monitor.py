@@ -392,7 +392,11 @@ def build_operator_interaction_requests(snapshot: ContinuousMonitorSnapshot) -> 
                 permitted_responses=("Approve Once", "Reject", "Request Revision", "Defer", "Inspect Evidence"),
             ),
         )
-    if snapshot.mission_state != "awaiting_operator_insight":
+    if snapshot.mission_state not in {
+        "awaiting_operator_insight",
+        "learning_strategy_awaiting_authority",
+        "learning_strategy_awaiting_clarification",
+    }:
         return ()
     requests: list[OperatorInteractionRequest] = []
     for item in snapshot.operator_interaction_requests:
