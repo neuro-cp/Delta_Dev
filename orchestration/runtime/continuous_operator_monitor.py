@@ -38,6 +38,7 @@ class ContinuousMonitorSnapshot:
     next_candidates: tuple[str, ...]
     operator_interaction_requests: tuple[dict[str, Any], ...]
     observation_timestamp: str
+    runtime_trace: tuple[str, ...] = ()
     process_hint: str = "artifact_read_only"
 
     def as_dict(self) -> dict[str, Any]:
@@ -201,6 +202,49 @@ def _signature(*parts: Any) -> str:
     return hashlib.sha256(body.encode("utf-8")).hexdigest()[:16]
 
 
+def _runtime_trace(restart: dict[str, Any]) -> tuple[str, ...]:
+    """Return a compact, read-only explanation of the active learning lifecycle."""
+    learning = restart.get("continuous_learning_state") or {}
+    if not isinstance(learning, dict):
+        return ()
+    mission = learning.get("mission") or {}
+    bundle = learning.get("retained_bundle") or {}
+    authoring = learning.get("isolated_evaluator_authoring") or {}
+    pending = authoring.get("pending_request") or {}
+    trace: list[str] = []
+    if mission:
+        trace.append(
+            "MISSION: "
+            + str(mission.get("topic") or mission.get("primary_capability_target") or "unknown")
+            + " | target="
+            + str(mission.get("mission_id") or "unrecorded")
+        )
+    if bundle:
+        trace.append(
+            "LEARNING EVIDENCE: "
+            + str(bundle.get("source_type") or "retained")
+            + " | status="
+            + str(bundle.get("resource_status") or "unknown")
+        )
+    if pending:
+        trace.append(
+            "EVALUATOR GATE: "
+            + str(pending.get("status") or "unknown")
+            + " | request="
+            + str(pending.get("request_id") or "unrecorded")
+            + " | provider="
+            + str(pending.get("provider") or "unrecorded")
+        )
+        trace.append(
+            "BOUNDARY: evaluator authoring is isolated; no learner answer, tracked-source action, or capability promotion is permitted."
+        )
+    policy = learning.get("developmental_resource_policy") or {}
+    if policy:
+        trace.append(
+            "RESOURCE POLICY: " + str(policy.get("policy_state") or policy.get("status") or "recorded"))
+    return tuple(trace)
+
+
 def load_monitor_snapshot(supervisor_root: str | Path) -> ContinuousMonitorSnapshot:
     root = Path(supervisor_root)
     worker = _read_json(root / WORKER_STATUS)
@@ -238,6 +282,7 @@ def load_monitor_snapshot(supervisor_root: str | Path) -> ContinuousMonitorSnaps
             if dict(item).get("status") == "pending"
         ),
         observation_timestamp=str(observation.get("timestamp") or ""),
+        runtime_trace=_runtime_trace(restart),
     )
 
 
@@ -421,10 +466,12 @@ def render_monitor_summary(snapshot: ContinuousMonitorSnapshot, event: Continuou
             f"Needs insight: {snapshot.needs_additional_insight}",
             f"Gaps: {', '.join(snapshot.developmental_gaps) if snapshot.developmental_gaps else 'none'}",
             f"Next candidates: {', '.join(snapshot.next_candidates) if snapshot.next_candidates else 'none'}",
-            "",
-            f"Supervisor root: {snapshot.supervisor_root}",
         )
     )
+    if snapshot.runtime_trace:
+        lines.extend(("", "Live Runtime Trace"))
+        lines.extend(snapshot.runtime_trace)
+    lines.extend(("", f"Supervisor root: {snapshot.supervisor_root}"))
     return "\n".join(lines)
 
 

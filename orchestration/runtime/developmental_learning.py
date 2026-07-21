@@ -23,6 +23,7 @@ from orchestration.runtime.deterministic_linear_algebra_evaluator import (
     revise_spectral_bundle,
     solve_spectral_task,
 )
+from orchestration.runtime.isolated_evaluator_authoring import EXECUTION_CONTRACT_VERSION
 
 
 def _digest(value: Any) -> str:
@@ -943,9 +944,17 @@ def _task_output(task: Mapping[str, Any], resources: Sequence[Mapping[str, Any]]
 
     kind = str(task.get("task_type") or "")
     data = dict(task.get("input_data") or {})
+    if bool(task.get("learner_prompt_conditioning")):
+        return _prompt_conditioned_task_output(task, resources)
     if is_supported_spectral_task(task):
         return solve_spectral_task(task, resources)
     facts = tuple(str(value) for resource in resources for value in (resource.get("study_facts") or ()))
+    if kind == "concept_coverage":
+        return {
+            "final_answer": " ".join(facts),
+            "intermediate_steps": ("extract_retained_study_facts", "compose_bounded_response"),
+            "explanation": " ".join(facts),
+        }
     if kind == "solve_equation":
         a, b, c, d = (float(data[key]) for key in ("left_coefficient", "left_constant", "right_coefficient", "right_constant"))
         coefficient, constant = a - c, d - b
@@ -974,6 +983,96 @@ def _task_output(task: Mapping[str, Any], resources: Sequence[Mapping[str, Any]]
     return {"final_answer": None, "intermediate_steps": (), "explanation": "unsupported task type"}
 
 
+_PROMPT_STOP_TERMS = frozenset({
+    "about", "also", "brief", "clear", "complex", "concise", "consider", "describe",
+    "diagonal", "dimensional", "each", "explain", "finite", "focus", "given", "include",
+    "inner", "matrix", "nature", "operator", "properties", "provide", "should", "space",
+    "spectral", "statement", "theorem", "their", "this", "what", "with", "without", "would",
+})
+
+
+def _normalized_terms(value: Any) -> set[str]:
+    terms = set()
+    for raw in re.findall(r"[A-Za-z][A-Za-z-]{2,}", str(value or "").lower()):
+        term = raw.strip("-")
+        if term.endswith("ies"):
+            term = term[:-3] + "y"
+        elif term.endswith("s") and len(term) > 4:
+            term = term[:-1]
+        if term.endswith("ily") and len(term) > 5:
+            term = term[:-3] + "y"
+        if term and term not in _PROMPT_STOP_TERMS:
+            terms.add(term)
+    return terms
+
+
+def _prompt_operation(task: Mapping[str, Any]) -> str:
+    prompt = _text(f"{task.get('instruction') or ''} {task.get('visible_prompt') or ''}")
+    if "proof" in prompt or "prove" in prompt:
+        return "proof_sketch"
+    if "error" in prompt or "misconception" in prompt or "false" in prompt:
+        return "misconception_correction"
+    if "given" in prompt or "application" in prompt or "suppose" in prompt:
+        return "case_application"
+    if "specialization" in prompt or "specializes" in prompt:
+        return "specialization"
+    return "concept_explanation"
+
+
+def _prompt_conditioned_task_output(
+    task: Mapping[str, Any],
+    resources: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    """Use only learner-visible evidence to plan one case-specific response."""
+
+    facts = tuple(
+        str(fact)
+        for resource in resources
+        for fact in (resource.get("study_facts") or ())
+        if str(fact).strip()
+    )
+    components = tuple(
+        str(component)
+        for resource in resources
+        for component in (resource.get("study_components") or ())
+        if str(component).strip()
+    )
+    prompt_text = " ".join(str(task.get(key) or "") for key in ("instruction", "visible_prompt", "constraints"))
+    prompt_terms = _normalized_terms(prompt_text)
+    evidence_terms = _normalized_terms(" ".join(facts + components))
+    fact_matches = tuple(
+        (fact, len(_normalized_terms(fact) & prompt_terms))
+        for fact in facts
+    )
+    strongest_overlap = max((overlap for _fact, overlap in fact_matches), default=0)
+    selected = tuple(
+        fact for fact, overlap in fact_matches
+        if strongest_overlap and overlap == strongest_overlap
+    )
+    missing_terms = tuple(sorted(term for term in prompt_terms - evidence_terms if len(term) >= 5))
+    operation = _prompt_operation(task)
+    sufficient = bool(selected) and not missing_terms
+    if sufficient:
+        explanation = " ".join(selected)
+        disposition = "sufficient_retained_teaching_evidence"
+    else:
+        explanation = (
+            "Insufficient retained teaching evidence for this prompt: "
+            + (", ".join(missing_terms) if missing_terms else "no prompt-relevant retained fact")
+            + "."
+        )
+        disposition = "insufficient_retained_teaching_evidence"
+    return {
+        "final_answer": explanation,
+        "explanation": explanation,
+        "intermediate_steps": ("classify_prompt_operation", "select_prompt_relevant_retained_facts"),
+        "response_plan": operation,
+        "selected_retained_facts": selected,
+        "missing_retained_evidence_terms": missing_terms,
+        "evidence_sufficiency": disposition,
+    }
+
+
 def _content_case_result(task: Mapping[str, Any], output: Mapping[str, Any]) -> dict[str, Any]:
     expected = task.get("deterministic_answer")
     answer = output.get("final_answer", output.get("selected_option", output.get("identified_error")))
@@ -999,6 +1098,59 @@ def _content_case_result(task: Mapping[str, Any], output: Mapping[str, Any]) -> 
     }
 
 
+def _response_schema_errors(output: Mapping[str, Any], response_schema: Mapping[str, Any]) -> tuple[str, ...]:
+    """Validate a learner output against the public, bounded V3 response shape."""
+
+    errors: list[str] = []
+    if not str(response_schema.get("response_kind") or "").strip():
+        errors.append("response_kind_missing")
+    required_fields = tuple(dict(field) for field in (response_schema.get("required_fields") or ()))
+    response_values: list[str] = []
+    for descriptor in required_fields:
+        name = str(descriptor.get("field_name") or "")
+        value = output.get(name)
+        if not name or value in (None, ""):
+            errors.append(f"required_field_missing:{name or 'unnamed'}")
+            continue
+        field_type = str(descriptor.get("field_type") or "")
+        if field_type == "text" and not isinstance(value, str):
+            errors.append(f"required_field_wrong_type:{name}")
+        if field_type == "concept_list" and not isinstance(value, (list, tuple)):
+            errors.append(f"required_field_wrong_type:{name}")
+        if isinstance(value, str):
+            response_values.append(value)
+        elif isinstance(value, (list, tuple)):
+            response_values.extend(str(item) for item in value)
+    max_words = response_schema.get("max_response_words")
+    if isinstance(max_words, int) and max_words >= 0:
+        response_text = " ".join(response_values) if required_fields else " ".join(
+            str(value) for value in output.values() if isinstance(value, str)
+        )
+        if len(response_text.split()) > max_words:
+            errors.append("max_response_words_exceeded")
+    return tuple(sorted(set(errors)))
+
+
+def _conform_output_to_response_schema(
+    output: Mapping[str, Any],
+    response_schema: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Render a local learner response into its public declared field shape."""
+
+    rendered = dict(output)
+    explanation = str(rendered.get("explanation") or rendered.get("final_answer") or "")
+    for field in response_schema.get("required_fields") or ():
+        descriptor = dict(field)
+        name = str(descriptor.get("field_name") or "")
+        if not name or name in rendered:
+            continue
+        if str(descriptor.get("field_type") or "") == "concept_list":
+            rendered[name] = tuple(item for item in explanation.split(".") if item.strip())
+        else:
+            rendered[name] = explanation
+    return rendered
+
+
 def execute_learning_attempt(subgoal: LearningSubgoal, retained_bundle: Mapping[str, Any]) -> DevelopmentalAttemptRecord:
     resources = [dict(item) for item in retained_bundle.get("study_resources") or () if str(item.get("resource_id") or "") in subgoal.study_resource_ids]
     components: list[str] = []
@@ -1006,24 +1158,65 @@ def execute_learning_attempt(subgoal: LearningSubgoal, retained_bundle: Mapping[
     for item in resources:
         components.extend(str(value) for value in (item.get("study_components") or ()))
         refs.append(str(item.get("resource_id") or ""))
-    visible_revision = max((int(resource.get("revision_count") or 0) for resource in resources if resource.get("visible_practice_cases")), default=0)
-    visible_tasks = [
-        dict(task)
-        for resource in resources
-        if int(resource.get("revision_count") or 0) == visible_revision
-        for task in resource.get("visible_practice_cases") or ()
-        if _text(task.get("capability_dimension")) == _text(subgoal.capability_target)
-    ]
+    sealed_cases = tuple(
+        dict(case)
+        for case in retained_bundle.get("sealed_evaluation_cases") or ()
+        if _text(case.get("capability_dimension")) == _text(subgoal.capability_target)
+    )
+    v3_cases = (
+        str(retained_bundle.get("execution_contract_version") or "") == EXECUTION_CONTRACT_VERSION
+        and sealed_cases
+        and all(isinstance(case.get("learner_view"), Mapping) for case in sealed_cases)
+    )
+    if v3_cases:
+        visible_tasks = [
+            {
+                "task_id": str(case.get("case_id") or ""),
+                "case_id": str(case.get("case_id") or ""),
+                "case_kind": str(case.get("case_kind") or ""),
+                "task_type": str(case.get("task_type") or ""),
+                "capability_dimension": str(case.get("capability_dimension") or ""),
+                "instruction": str(dict(case.get("learner_view") or {}).get("instruction") or ""),
+                "visible_prompt": str(dict(case.get("learner_view") or {}).get("prompt") or dict(case.get("learner_view") or {}).get("instruction") or ""),
+                "input_data": dict(dict(case.get("learner_view") or {}).get("input_data") or {}),
+                "response_schema": dict(dict(case.get("learner_view") or {}).get("response_schema") or {}),
+                "constraints": tuple(str(item) for item in (dict(case.get("learner_view") or {}).get("constraints") or ())),
+                "learner_prompt_conditioning": True,
+            }
+            for case in sealed_cases
+        ]
+    else:
+        visible_revision = max((int(resource.get("revision_count") or 0) for resource in resources if resource.get("visible_practice_cases")), default=0)
+        visible_tasks = [
+            dict(task)
+            for resource in resources
+            if int(resource.get("revision_count") or 0) == visible_revision
+            for task in resource.get("visible_practice_cases") or ()
+            if _text(task.get("capability_dimension")) == _text(subgoal.capability_target)
+        ]
     revision_count = max((int(item.get("revision_count") or 0) for item in resources), default=0)
     task_records = []
     for item in visible_tasks:
         task_output = _task_output(item, resources)
+        response_schema = dict(item.get("response_schema") or {})
+        task_output = _conform_output_to_response_schema(task_output, response_schema)
+        schema_errors = _response_schema_errors(task_output, response_schema) if response_schema else ()
         task_records.append({
             "task_id": str(item.get("task_id") or item.get("case_id") or stable_id("learning-visible-task", item)),
+            "case_id": str(item.get("case_id") or item.get("task_id") or ""),
+            "case_kind": str(item.get("case_kind") or ""),
             "task_type": str(item.get("task_type") or ""),
             "visible_prompt": str(item.get("visible_prompt") or ""),
             "visible_input_data": dict(item.get("input_data") or {}),
+            "response_schema": response_schema,
+            "response_schema_errors": schema_errors,
             "candidate_final_answer": task_output.get("final_answer"),
+            "candidate_explanation": task_output.get("explanation"),
+            "candidate_response": task_output,
+            "response_plan": task_output.get("response_plan"),
+            "selected_retained_facts": tuple(task_output.get("selected_retained_facts") or ()),
+            "missing_retained_evidence_terms": tuple(task_output.get("missing_retained_evidence_terms") or ()),
+            "evidence_sufficiency": task_output.get("evidence_sufficiency"),
             "intermediate_reasoning_steps": tuple(task_output.get("intermediate_steps") or ()),
             "explicit_assumptions": tuple(task_output.get("assumptions") or ()),
             "calculations": tuple(task_output.get("calculations") or ()),
@@ -1034,8 +1227,15 @@ def execute_learning_attempt(subgoal: LearningSubgoal, retained_bundle: Mapping[
             "resource_references": tuple(refs),
             "output_digest": _digest(task_output),
         })
-    task_outputs = tuple({"case_id": item["task_id"], "output": {"final_answer": item["candidate_final_answer"], "intermediate_steps": item["intermediate_reasoning_steps"]}} for item in task_records)
-    output = {"components": tuple(dict.fromkeys(components)), "method": "retained_resource_grounded_study", "task_outputs": task_outputs, "task_records": tuple(task_records), "revision_count": revision_count}
+    task_outputs = tuple({"case_id": item["case_id"] or item["task_id"], "output": dict(item["candidate_response"])} for item in task_records)
+    output = {
+        "components": tuple(dict.fromkeys(components)),
+        "method": "retained_resource_grounded_study",
+        "task_outputs": task_outputs,
+        "task_records": tuple(task_records),
+        "v3_learner_case_execution": v3_cases,
+        "revision_count": revision_count,
+    }
     return DevelopmentalAttemptRecord(
         attempt_id=stable_id("learning-attempt", subgoal.subgoal_id, _digest(output)),
         mission_id=subgoal.mission_id,
@@ -1062,18 +1262,48 @@ def evaluate_learning_attempt(
     content_tasks = [dict(item) for item in retained_bundle.get("sealed_evaluation_cases") or () if _text(item.get("capability_dimension")) == _text(subgoal.capability_target) and item.get("task_type") and (not active_case_ids or str(item.get("case_id") or "") in active_case_ids)]
     if content_tasks:
         resources = [dict(item) for item in retained_bundle.get("study_resources") or () if str(item.get("resource_id") or "") in attempt.selected_resource_ids]
-        results = tuple(
-            _content_case_result(task, {} if str(task.get("case_kind")) == "baseline" else _task_output(task, resources))
-            for task in content_tasks
-        )
+        if bool(attempt.candidate_output.get("v3_learner_case_execution")):
+            attempt_records = {
+                str(item.get("case_id") or item.get("task_id") or ""): dict(item)
+                for item in attempt.task_records
+            }
+            results_list: list[dict[str, Any]] = []
+            for task in content_tasks:
+                record = attempt_records.get(str(task.get("case_id") or ""))
+                output = dict(record.get("candidate_response") or {}) if record else {}
+                result = _content_case_result(task, output)
+                schema_errors = tuple(record.get("response_schema_errors") or ()) if record else ("learner_case_output_missing",)
+                evidence_sufficiency = str(record.get("evidence_sufficiency") or "") if record else ""
+                if evidence_sufficiency == "insufficient_retained_teaching_evidence":
+                    result = {
+                        **result,
+                        "score": 0.0,
+                        "failure_reason": "insufficient_retained_teaching_evidence",
+                        "failed_predicates": tuple(record.get("missing_retained_evidence_terms") or ("prompt_relevant_evidence_missing",)),
+                    }
+                elif schema_errors:
+                    result = {
+                        **result,
+                        "score": 0.0,
+                        "failure_reason": "response_schema_invalid",
+                        "failed_predicates": schema_errors,
+                    }
+                results_list.append(result)
+            results = tuple(results_list)
+        else:
+            results = tuple(
+                _content_case_result(task, {} if str(task.get("case_kind")) == "baseline" else _task_output(task, resources))
+                for task in content_tasks
+            )
         buckets = {kind: [item["score"] for item in results if item["kind"] == kind] for kind in ("baseline", "control", "held_out", "adversarial", "transfer")}
         average = lambda kind: sum(buckets[kind]) / len(buckets[kind]) if buckets[kind] else 0.0
         required = all(buckets[kind] for kind in ("control", "held_out", "adversarial"))
         passed = required and average("held_out") >= subgoal.success_threshold and average("control") == 1.0 and average("adversarial") == 1.0
+        evidence_insufficient = any(item.get("failure_reason") == "insufficient_retained_teaching_evidence" for item in results)
         payload = {"attempt": attempt.attempt_id, "content_results": results}
         return DevelopmentalEvaluationRecord(
             evaluation_id=stable_id("learning-content-evaluation", subgoal.subgoal_id, attempt.attempt_id, _digest(payload)), mission_id=subgoal.mission_id, subgoal_id=subgoal.subgoal_id, attempt_id=attempt.attempt_id, capability_dimension=subgoal.capability_target,
-            baseline_metrics={"target": average("baseline")}, candidate_metrics={"target": average("held_out")}, control_metrics={"target": average("control")}, held_out_metrics={"target": average("held_out")}, adversarial_metrics={"target": average("adversarial")}, transfer_metrics={"target": average("transfer")}, case_ids=tuple(item["case_id"] for item in results), evaluator_identity=str((retained_bundle.get("independent_evaluator") or {}).get("evaluator_identity") or "deterministic_content_task_evaluator_v1"), independence_proof={"sealed_cases_excluded_from_attempt": True, "candidate_self_report_not_scored": True, "teaching_source_isolated": bool((retained_bundle.get("independent_evaluator") or {}).get("teaching_source_isolated")), "evaluation_authority_digest": str((retained_bundle.get("independent_evaluator") or {}).get("authority_digest") or ""), "provider_calls": 0, "web_calls": 0, "content_outputs_scored": True}, disposition="behaviorally_demonstrated" if passed else "behaviorally_failed", promotion_eligible=passed, evaluation_digest=_digest(payload), content_case_results=results,
+            baseline_metrics={"target": average("baseline")}, candidate_metrics={"target": average("held_out")}, control_metrics={"target": average("control")}, held_out_metrics={"target": average("held_out")}, adversarial_metrics={"target": average("adversarial")}, transfer_metrics={"target": average("transfer")}, case_ids=tuple(item["case_id"] for item in results), evaluator_identity=str((retained_bundle.get("independent_evaluator") or {}).get("evaluator_identity") or "deterministic_content_task_evaluator_v1"), independence_proof={"sealed_cases_excluded_from_attempt": True, "candidate_self_report_not_scored": True, "teaching_source_isolated": bool((retained_bundle.get("independent_evaluator") or {}).get("teaching_source_isolated")), "evaluation_authority_digest": str((retained_bundle.get("independent_evaluator") or {}).get("authority_digest") or ""), "provider_calls": 0, "web_calls": 0, "content_outputs_scored": True}, disposition="behaviorally_demonstrated" if passed else "insufficient_retained_teaching_evidence" if evidence_insufficient else "behaviorally_failed", promotion_eligible=passed, evaluation_digest=_digest(payload), content_case_results=results,
         )
     candidate_components = set(str(value) for value in (attempt.candidate_output.get("components") or ()))
     metrics: dict[str, dict[str, float]] = {"baseline": {}, "candidate": {}, "control": {}, "held_out": {}, "adversarial": {}, "transfer": {}}

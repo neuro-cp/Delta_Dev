@@ -6,6 +6,7 @@ from orchestration.runtime.continuous_runtime_controller import (
     compile_governed_developmental_resource_policy,
     consume_continuous_operator_interaction_response,
     export_continuous_mission_restart_state,
+    recover_developmental_resource_fulfillment_clarification,
     restore_continuous_mission_restart_state,
     start_continuous_runtime_controller,
     start_persistent_developmental_agenda,
@@ -74,7 +75,7 @@ def _policy_request(controller):
 
 def test_requirement_identity_inventory_and_policy_ranking_are_deterministic():
     state = {
-        "retained_bundle": {"resource_bundle_id": "retained-spectral", "topic": "spectral_theorem", "study_resources": ({"resource_id": "study", "topic": "spectral_theorem"},), "resource_provenance": ("retained-source",)},
+        "retained_bundle": {"resource_bundle_id": "retained-spectral", "topic": "spectral_theorem", "study_resources": ({"resource_id": "study", "topic": "spectral_theorem"},), "resource_provenance": ("retained-source",), "independent_evaluator": {"evaluator_identity": "sealed-spectral"}},
         "evaluation_strategy": {"selected_plan": {"plan_id": "sealed-evaluator", "status": "evaluation_plan_ready", "selected_strategy": "deterministic_predicate"}},
     }
     first = _requirement(state)
@@ -86,6 +87,24 @@ def test_requirement_identity_inventory_and_policy_ranking_are_deterministic():
     assert observations[0].source_type == "validated_retained_resource"
     assert decision.action_type == "reuse_validated_retained_resource"
     assert len(candidates) <= 11
+
+
+def test_retained_teaching_resource_without_independent_evaluator_requests_evaluator_authority():
+    state = {
+        "retained_bundle": {
+            "resource_bundle_id": "external-teaching-evidence",
+            "topic": "spectral_theorem",
+            "study_resources": ({"resource_id": "source", "topic": "spectral_theorem"},),
+            "resource_provenance": ("external-source",),
+        },
+    }
+    requirement = _requirement(state)
+    candidates = compile_resource_policy_candidates(requirement, observe_developmental_resources(requirement, learning_state=state), has_alternative=False)
+    reuse = next(item for item in candidates if item.action_type == "reuse_validated_retained_resource")
+    decision = compile_resource_authority_decision(requirement, candidates)
+    assert reuse.availability is False
+    assert "independent_evaluator_not_preserved" in reuse.rejection_reasons
+    assert decision.action_type == "request_operator_sealed_evaluator"
 
 
 def test_provisional_and_completed_local_model_results_are_reused_without_promotion():
@@ -152,6 +171,38 @@ def test_agenda_evaluator_blocker_creates_one_scoped_request_and_rejection_selec
     assert rejected.continuous_learning_state["developmental_resource_policy"]["status"] == "rejected"
 
 
+def test_approved_goal_reuses_retained_teaching_evidence_and_requests_only_sealed_evaluator():
+    spectral = _source("spectral_theorem", "complex_inner_product_space_scope", "spectral-gap", 0.95, evaluator=True)
+    retained_teaching = {
+        "resource_bundle_id": "gate-1-spectral-teaching",
+        "domain": "mathematics",
+        "topic": "spectral_theorem",
+        "study_resources": ({"resource_id": "gate-1-source", "topic": "spectral_theorem"},),
+        "resource_provenance": ({"source_record_id": "gate-1-accepted-source", "content_digest": "source-digest"},),
+    }
+    controller = replace(
+        start_continuous_runtime_controller(session_id="policy-preserved-teaching"),
+        continuous_learning_state={"interest_sources": (spectral,), "retained_bundle": retained_teaching},
+    )
+    proposed = start_persistent_developmental_agenda(controller, INSTRUCTION)
+    goal = next(item for item in proposed.continuous_developmental_insight_requests if item.get("request_kind") == "developmental_goal_approval")
+    policy = consume_continuous_operator_interaction_response(
+        proposed,
+        request_id=goal["request_id"],
+        response_kind="developmental_goal_approval",
+        selected_option="approve_developmental_goal",
+        operator_text="Assess with the retained Gate 1 teaching evidence.",
+        approved_scope=goal["authority_scope"],
+    )
+    request = _policy_request(policy)
+    assert request["action_type"] == "request_operator_sealed_evaluator"
+    assert policy.continuous_learning_state["retained_bundle"]["resource_bundle_id"] == "gate-1-spectral-teaching"
+    assert not any(
+        item.get("action_type") == "request_external_research_authority" and item.get("status") == "pending"
+        for item in policy.continuous_developmental_insight_requests
+    )
+
+
 def test_authority_approval_is_scoped_and_restart_does_not_duplicate_request():
     spectral = _source("spectral_theorem", "complex_inner_product_space_scope", "spectral-gap", 0.95, evaluator=False)
     controller = replace(start_continuous_runtime_controller(session_id="policy-restart"), continuous_learning_state={"interest_sources": (spectral,)})
@@ -170,6 +221,82 @@ def test_authority_approval_is_scoped_and_restart_does_not_duplicate_request():
     assert authority["scope"] == request["authority_scope"]
     assert approved.continuous_mission_state == "developmental_resource_authority_granted_pending_material"
     assert not approved.continuous_active_subgoal
+
+
+def test_fulfillment_clarification_preserves_authority_and_names_sealed_evaluator_schema():
+    spectral = _source("spectral_theorem", "complex_inner_product_space_scope", "spectral-gap", 0.95, evaluator=False)
+    controller = replace(start_continuous_runtime_controller(session_id="policy-fulfillment-clarification"), continuous_learning_state={"interest_sources": (spectral,)})
+    proposed = start_persistent_developmental_agenda(controller, INSTRUCTION)
+    goal = next(item for item in proposed.continuous_developmental_insight_requests if item.get("request_kind") == "developmental_goal_approval")
+    policy = consume_continuous_operator_interaction_response(
+        proposed, request_id=goal["request_id"], response_kind="developmental_goal_approval",
+        selected_option="approve_developmental_goal", operator_text="Assess.", approved_scope=goal["authority_scope"],
+    )
+    authority = _policy_request(policy)
+    approved = consume_continuous_operator_interaction_response(
+        policy, request_id=authority["request_id"], response_kind="developmental_resource_authority",
+        selected_option="approve_scoped_authority", operator_text="Evaluator authority only.", approved_scope=authority["authority_scope"],
+    )
+    fulfillment = next(item for item in approved.continuous_developmental_insight_requests if item.get("request_kind") == "developmental_resource_fulfillment" and item.get("status") == "pending")
+    clarified = consume_continuous_operator_interaction_response(
+        approved, request_id=fulfillment["request_id"], response_kind="developmental_resource_fulfillment",
+        selected_option="ask_for_clarification", operator_text="Specify the required fields.", approved_scope="",
+    )
+    pending = [item for item in clarified.continuous_developmental_insight_requests if item.get("status") == "pending"]
+    assert len(pending) == 1
+    assert pending[0]["request_id"] != fulfillment["request_id"]
+    assert "operator_sealed_evaluator_fulfillment" in pending[0]["exact_question"]
+    assert "baseline, control, held_out, adversarial, and transfer" in pending[0]["exact_question"]
+    assert clarified.continuous_mission_state == "developmental_resource_authority_granted_pending_material"
+    assert not clarified.continuous_learning_state.get("developmental_resource_fulfillments")
+
+
+def test_legacy_fulfillment_clarification_recovery_preserves_history_and_reopens_once():
+    spectral = _source("spectral_theorem", "complex_inner_product_space_scope", "spectral-gap", 0.95, evaluator=False)
+    controller = replace(start_continuous_runtime_controller(session_id="policy-legacy-clarification"), continuous_learning_state={"interest_sources": (spectral,)})
+    proposed = start_persistent_developmental_agenda(controller, INSTRUCTION)
+    goal = next(item for item in proposed.continuous_developmental_insight_requests if item.get("request_kind") == "developmental_goal_approval")
+    policy = consume_continuous_operator_interaction_response(
+        proposed, request_id=goal["request_id"], response_kind="developmental_goal_approval",
+        selected_option="approve_developmental_goal", operator_text="Assess.", approved_scope=goal["authority_scope"],
+    )
+    authority = _policy_request(policy)
+    approved = consume_continuous_operator_interaction_response(
+        policy, request_id=authority["request_id"], response_kind="developmental_resource_authority",
+        selected_option="approve_scoped_authority", operator_text="Evaluator authority only.", approved_scope=authority["authority_scope"],
+    )
+    fulfillment = next(item for item in approved.continuous_developmental_insight_requests if item.get("request_kind") == "developmental_resource_fulfillment" and item.get("status") == "pending")
+    legacy_request = {**fulfillment, "status": "consumed", "resolution": "ask_for_clarification"}
+    legacy_partial = {
+        "operator_interaction_id": fulfillment["request_id"],
+        "fulfillment_type": "partial_fulfillment",
+        "partial_sections": ("operator_clarification_required",),
+    }
+    legacy = replace(
+        approved,
+        continuous_mission_state="developmental_resource_fulfillment_invalid",
+        continuous_developmental_insight_requests=tuple(
+            legacy_request if item.get("request_id") == fulfillment["request_id"] else item
+            for item in approved.continuous_developmental_insight_requests
+        ),
+        continuous_operator_interaction_responses=approved.continuous_operator_interaction_responses + ({
+            "request_id": fulfillment["request_id"], "response_kind": "developmental_resource_fulfillment", "selected_option": "ask_for_clarification",
+        },),
+        continuous_learning_state={
+            **approved.continuous_learning_state,
+            "developmental_resource_fulfillments": (legacy_partial,),
+        },
+    )
+    restored = restore_continuous_mission_restart_state(
+        start_continuous_runtime_controller(session_id="policy-legacy-clarification"),
+        export_continuous_mission_restart_state(legacy),
+    )
+    recovered = recover_developmental_resource_fulfillment_clarification(restored)
+    pending = [item for item in recovered.continuous_developmental_insight_requests if item.get("status") == "pending"]
+    assert len(pending) == 1
+    assert pending[0]["request_id"] != fulfillment["request_id"]
+    assert recovered.continuous_learning_state["developmental_resource_fulfillments"] == (legacy_partial,)
+    assert recover_developmental_resource_fulfillment_clarification(recovered) == recovered
 
 
 def test_policy_clarification_creates_one_scoped_follow_up_without_authority():

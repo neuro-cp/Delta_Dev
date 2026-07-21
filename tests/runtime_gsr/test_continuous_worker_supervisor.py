@@ -7,6 +7,7 @@ import sys
 import time
 from dataclasses import replace
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -23,8 +24,13 @@ from orchestration.runtime.continuous_runtime_controller import (
     select_continuous_mission_subgoal,
     start_continuous_runtime_controller,
 )
+from orchestration.runtime.isolated_evaluator_authoring import compile_isolated_evaluator_authoring_request
 from orchestration.runtime.continuous_worker_supervisor import (
     _capability_id_from_subgoal,
+    _execute_isolated_evaluator_authoring_provider_call,
+    _repository_root_from_supervisor_root,
+    ISOLATED_EVALUATOR_AUTHORING_MAX_TOKENS,
+    _restart_contract_kind,
     initialize_supervisor_state,
     poll_supervisor_once,
     request_intentional_worker_stop,
@@ -75,6 +81,157 @@ def _controller_with_subgoal(session_id: str = "continuous-worker-supervisor"):
     return queue_continuous_mission_sandbox_work(controller)
 
 
+def _developmental_learning_waiting_for_evaluator(session_id: str = "worker-learning-recovery"):
+    contract = {
+        "mission_id": "developmental-learning-mission-recovery",
+        "mission_type": "developmental_learning",
+        "protocol": "developmental_learning_mission_v1",
+        "operator_instruction": "Learn spectral theorem.",
+        "topic": "spectral_theorem",
+    }
+    return replace(
+        start_continuous_runtime_controller(session_id=session_id),
+        continuous_mission_state="awaiting_operator_insight",
+        continuous_mission_contract=contract,
+        continuous_learning_state={"mission": contract},
+        active_work_item="awaiting_developmental_resource_authority",
+        continuous_developmental_insight_requests=(
+            {
+                "request_id": "developmental-resource-authority-recovery",
+                "request_kind": "developmental_resource_authority",
+                "status": "pending",
+                "permitted_responses": ("approve_scoped_authority", "reject_scoped_authority"),
+            },
+        ),
+    )
+
+
+def _dispatching_evaluator_controller():
+    packet = compile_isolated_evaluator_authoring_request(
+        mission_id="worker-root-mission",
+        requirement={
+            "semantic_identity": "worker-root-requirement",
+            "topic": "spectral_theorem",
+            "target_capability": "complex_inner_product_space_scope",
+            "target_behavior": "answer independently authored spectral-theorem cases",
+        },
+        provider="openai",
+        model="gpt-4.1-mini",
+    )
+    return replace(
+        start_continuous_runtime_controller(session_id="worker-root-dispatch"),
+        continuous_mission_state="isolated_evaluator_authoring_dispatching",
+        continuous_learning_state={
+            "isolated_evaluator_authoring": {
+                "request": packet,
+                "execution_claim": {"claim_id": "claim-root", "claim_state": "dispatching", "execution_attempt_count": 1},
+            },
+        },
+        continuous_api_authority={"calls_consumed": 1},
+    )
+
+
+def _write_supervisor_status(root: Path, repository_root: Path) -> None:
+    root.mkdir(parents=True, exist_ok=True)
+    (root / "supervisor_status.json").write_text(
+        json.dumps({"repository_root": str(repository_root)}), encoding="utf-8"
+    )
+
+
+def test_evaluator_dispatch_uses_supplied_supervisor_root_when_cwd_is_unrelated(tmp_path: Path, monkeypatch):
+    supervisor_root = tmp_path / "supervisor"
+    repository_root = tmp_path / "repository"
+    unrelated_cwd = tmp_path / "unrelated"
+    repository_root.mkdir()
+    unrelated_cwd.mkdir()
+    _write_supervisor_status(supervisor_root, repository_root)
+    (unrelated_cwd / "supervisor_status.json").write_text(
+        json.dumps({"repository_root": str(unrelated_cwd / "wrong-repository")}), encoding="utf-8"
+    )
+    controller = _dispatching_evaluator_controller()
+    captured: dict[str, object] = {}
+
+    import orchestration.runtime.continuous_worker_supervisor as worker
+    import orchestration.runtime.v16_env as evaluator_env
+    import orchestration.runtime.v16_external_consolidation_evaluator_api_trial as evaluator_api
+
+    def fake_config(path: Path):
+        captured["env_path"] = path
+        return SimpleNamespace(live_call_permitted=True, provider="openai", model="gpt-4.1-mini", endpoint="https://example.invalid")
+
+    def fake_transport(endpoint, headers, body, timeout):
+        captured["endpoint"] = endpoint
+        captured["body"] = body
+        return {"choices": [{"message": {"content": "{}"}}], "usage": {"total_tokens": 1}}
+
+    def fake_record(received, *, raw_response, provider_error="", provider_usage=None):
+        captured["raw_response"] = raw_response
+        captured["provider_error"] = provider_error
+        captured["provider_usage"] = provider_usage
+        return received
+
+    monkeypatch.setattr(evaluator_env, "load_delta_evaluator_env", fake_config)
+    monkeypatch.setattr(evaluator_env, "parse_env_file", lambda path: {"DELTA_EVALUATOR_API_KEY": "test-key"})
+    monkeypatch.setattr(evaluator_api, "_default_transport", fake_transport)
+    monkeypatch.setattr(worker, "record_isolated_evaluator_authoring_provider_result", fake_record)
+    monkeypatch.chdir(unrelated_cwd)
+
+    assert _execute_isolated_evaluator_authoring_provider_call(supervisor_root, controller) == controller
+    assert captured["env_path"] == repository_root / ".env.local"
+    assert captured["endpoint"] == "https://example.invalid"
+    assert captured["body"]["max_tokens"] == ISOLATED_EVALUATOR_AUTHORING_MAX_TOKENS == 6000
+    assert captured["raw_response"] == {}
+    assert captured["provider_error"] == ""
+
+
+def test_evaluator_dispatch_fails_closed_when_supplied_root_lacks_status_and_never_uses_cwd(tmp_path: Path, monkeypatch):
+    supervisor_root = tmp_path / "missing-supervisor-status"
+    unrelated_cwd = tmp_path / "unrelated"
+    unrelated_cwd.mkdir()
+    (unrelated_cwd / "supervisor_status.json").write_text(
+        json.dumps({"repository_root": str(tmp_path / "wrong-repository")}), encoding="utf-8"
+    )
+    controller = _dispatching_evaluator_controller()
+    captured: dict[str, object] = {}
+
+    import orchestration.runtime.continuous_worker_supervisor as worker
+
+    def fake_record(received, *, raw_response, provider_error="", provider_usage=None):
+        captured["provider_error"] = provider_error
+        return received
+
+    monkeypatch.setattr(worker, "record_isolated_evaluator_authoring_provider_result", fake_record)
+    monkeypatch.chdir(unrelated_cwd)
+
+    assert _execute_isolated_evaluator_authoring_provider_call(supervisor_root, controller) == controller
+    assert "FileNotFoundError" in str(captured["provider_error"])
+    assert "missing-supervisor-status" in str(captured["provider_error"])
+    assert "wrong-repository" not in str(captured["provider_error"])
+    with pytest.raises(FileNotFoundError):
+        _repository_root_from_supervisor_root(supervisor_root)
+
+
+def test_terminal_evaluator_claim_never_replays_even_with_valid_supervisor_root(tmp_path: Path, monkeypatch):
+    supervisor_root = tmp_path / "supervisor"
+    _write_supervisor_status(supervisor_root, tmp_path / "repository")
+    controller = _dispatching_evaluator_controller()
+    state = dict(controller.continuous_learning_state)
+    authoring = dict(state["isolated_evaluator_authoring"])
+    terminal = replace(
+        controller,
+        continuous_learning_state={
+            **state,
+            "isolated_evaluator_authoring": {
+                **authoring,
+                "execution_claim": {**authoring["execution_claim"], "claim_state": "failed"},
+            },
+        },
+    )
+    import orchestration.runtime.continuous_worker_supervisor as worker
+    monkeypatch.setattr(worker, "record_isolated_evaluator_authoring_provider_result", lambda *_args, **_kwargs: pytest.fail("terminal claim replayed"))
+    assert _execute_isolated_evaluator_authoring_provider_call(supervisor_root, terminal) == terminal
+
+
 def _start_supervisor(tmp_path: Path, *, restart_state: dict, complete_transition_once: bool = False):
     supervisor = initialize_supervisor_state(
         supervisor_root=tmp_path,
@@ -115,6 +272,81 @@ def test_worker_launch_restores_same_mission_without_manual_pythonpath(tmp_path:
         assert status["active_subgoal"] == _json_shape(controller.continuous_active_subgoal)
         assert status["tracked_source_mutation_authorized"] is False
         assert "PYTHONPATH" not in os.environ
+    finally:
+        _cleanup(supervisor)
+
+
+def test_restart_contract_discriminator_prefers_explicit_learning_type_and_fails_closed():
+    learning = _developmental_learning_waiting_for_evaluator().continuous_mission_contract
+    assert _restart_contract_kind({**learning, "normalized_goal": "must_not_select_broad_recovery"}) == "developmental_learning"
+
+    broad = _controller_with_subgoal("worker-broad-discriminator").continuous_mission_contract
+    assert _restart_contract_kind(broad) == "broad_mission"
+
+    with pytest.raises(ValueError, match="recovery_contract_unknown"):
+        _restart_contract_kind({"mission_id": "unknown", "mission_type": "other"})
+    with pytest.raises(ValueError, match="recovery_contract_ambiguous_or_unknown"):
+        _restart_contract_kind({"mission_id": "ambiguous"})
+
+
+def test_learning_restart_preserves_pending_evaluator_authority_without_broad_recovery(tmp_path: Path):
+    controller = _developmental_learning_waiting_for_evaluator()
+    supervisor = initialize_supervisor_state(
+        supervisor_root=tmp_path,
+        repository_root=Path.cwd(),
+        restart_state=export_continuous_mission_restart_state(controller),
+        python_executable=sys.executable,
+        heartbeat_interval_seconds=0.05,
+        backoff_seconds=0.01,
+        max_relaunches=1,
+        execute_active_subgoal=True,
+    )
+    supervisor = start_supervised_worker(supervisor)
+    try:
+        status = wait_for_worker_status(tmp_path)
+        assert status["worker_state"] == "running"
+        assert status["continuous_mission_state"] == "awaiting_operator_insight"
+        assert status["active_subgoal"] is None
+        restart = json.loads((tmp_path / "restart_state.json").read_text(encoding="utf-8"))
+        assert restart["continuous_mission_contract"]["mission_type"] == "developmental_learning"
+        pending = [item for item in restart["continuous_developmental_insight_requests"] if item.get("status") == "pending"]
+        assert [item["request_id"] for item in pending] == ["developmental-resource-authority-recovery"]
+        assert "normalized_goal" not in restart["continuous_mission_contract"]
+        assert not (tmp_path / "operator_interaction_wait_recovered.json").exists()
+    finally:
+        _cleanup(supervisor)
+
+
+def test_pending_resource_fulfillment_waits_outside_legacy_insight_state(tmp_path: Path):
+    controller = replace(
+        _developmental_learning_waiting_for_evaluator("worker-fulfillment-recovery"),
+        continuous_mission_state="developmental_resource_authority_granted_pending_material",
+        active_work_item="awaiting_authorized_resource_or_evaluator_material",
+        continuous_developmental_insight_requests=(
+            {
+                "request_id": "developmental-resource-fulfillment-recovery",
+                "request_kind": "developmental_resource_fulfillment",
+                "status": "pending",
+                "permitted_responses": ("supply_fulfillment", "defer_fulfillment"),
+            },
+        ),
+    )
+    supervisor = initialize_supervisor_state(
+        supervisor_root=tmp_path,
+        repository_root=Path.cwd(),
+        restart_state=export_continuous_mission_restart_state(controller),
+        python_executable=sys.executable,
+        heartbeat_interval_seconds=0.05,
+        backoff_seconds=0.01,
+        max_relaunches=1,
+        execute_active_subgoal=True,
+    )
+    supervisor = start_supervised_worker(supervisor)
+    try:
+        status = wait_for_worker_status(tmp_path)
+        assert status["worker_state"] == "running"
+        assert status["continuous_mission_state"] == "developmental_resource_authority_granted_pending_material"
+        assert not (tmp_path / "operator_interaction_wait_recovered.json").exists()
     finally:
         _cleanup(supervisor)
 

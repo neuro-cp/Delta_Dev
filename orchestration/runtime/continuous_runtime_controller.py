@@ -82,6 +82,12 @@ from orchestration.runtime.delta_1_6_operational_autonomy import (
 )
 from orchestration.runtime.rc2_conversational_mode_router import discover_local_model_lanes, select_model_lane
 from orchestration.runtime.local_model_request_result_ledger import LocalModelRequestResultLedger
+from orchestration.runtime.isolated_evaluator_authoring import (
+    compile_isolated_evaluator_authoring_request,
+    project_learner_visible_evaluation_cases,
+    sealed_evaluator_execution_errors,
+    validate_provider_authored_evaluator_response,
+)
 from orchestration.runtime.capability_evaluation_strategy import compile_capability_evaluation_strategy
 from orchestration.runtime.developmental_interest import (
     agenda_state_is_valid,
@@ -712,27 +718,64 @@ def attach_developmental_learning_mission(
     controller: ContinuousRuntimeController,
     operator_instruction: str,
     retained_bundle: Mapping[str, Any],
+    *,
+    existing_mission: DevelopmentalMissionContract | None = None,
+    preserve_learning_state: bool = False,
 ) -> ContinuousRuntimeController:
     """Compile one operator learning request into the existing mission lifecycle."""
 
-    mission = compile_developmental_mission_contract(operator_instruction)
+    mission = existing_mission or compile_developmental_mission_contract(operator_instruction)
     if mission is None:
         return controller
     assessment = compile_capability_assessment(mission, retained_bundle, inventory=controller.continuous_capability_inventory)
     plan = compile_resource_acquisition_plan(mission, assessment, retained_bundle)
     gaps = compile_developmental_gaps(mission, assessment)
     subgoal = compile_learning_subgoal(mission, gaps, plan, retained_bundle)
+    prior_state = dict(controller.continuous_learning_state or {})
     state = {
+        **(prior_state if preserve_learning_state else {}),
         "mission": mission.as_dict(),
         "assessment": assessment.as_dict(),
         "resource_plan": plan.as_dict(),
         "gaps": tuple(item.as_dict() for item in gaps),
         "retained_bundle": dict(retained_bundle),
-        "consumed_gap_ids": (),
-        "attempts": (),
-        "evaluations": (),
+        "consumed_gap_ids": tuple(prior_state.get("consumed_gap_ids") or ()) if preserve_learning_state else (),
+        "attempts": tuple(prior_state.get("attempts") or ()) if preserve_learning_state else (),
+        "evaluations": tuple(prior_state.get("evaluations") or ()) if preserve_learning_state else (),
         "protocol": "operator_developmental_mission_orchestration_v1",
     }
+    nested_cases = any(
+        isinstance(case, Mapping) and (case.get("learner_view") or case.get("evaluator_view"))
+        for case in retained_bundle.get("sealed_evaluation_cases") or ()
+    )
+    execution_errors = sealed_evaluator_execution_errors(
+        retained_bundle,
+        target_capability=str(
+            assessment.recommended_focus
+            if assessment.recommended_focus != "no_material_gap_identified"
+            else mission.primary_capability_target
+        ),
+        assessment_dimension=str(assessment.recommended_focus),
+    ) if nested_cases else ()
+    if execution_errors:
+        return replace(
+            controller,
+            continuous_mission_state="developmental_resource_fulfillment_incomplete",
+            active_work_item="sealed_evaluator_execution_contract_unsupported",
+            continuous_learning_state={
+                **state,
+                "resource_blocker": {
+                    "blocker": "sealed_evaluator_execution_contract_unsupported",
+                    "missing_fields": tuple(sorted(set(execution_errors))),
+                    "no_provider_or_research_call_performed": True,
+                },
+            },
+            journal=controller.journal + (_journal_entry(
+                "developmental_learning",
+                "sealed_evaluator_rejected_before_nonexecutable_learning_attempt",
+                tuple(sorted(set(execution_errors))),
+            ),),
+        )
     if subgoal is None:
         blocked_on_external_authority = plan.plan_disposition == "external_authority_required"
         return replace(
@@ -820,7 +863,17 @@ def compile_operator_developmental_learning_mission(
     mission = compile_developmental_mission_contract(operator_instruction)
     if mission is None:
         return controller
-    bundle = load_retained_learning_bundle(mission.domain, mission.topic)
+    existing_state = dict(controller.continuous_learning_state or {})
+    preserved_bundle = dict(existing_state.get("retained_bundle") or {})
+    bundle = (
+        preserved_bundle
+        if (
+            preserved_bundle.get("study_resources")
+            and str(preserved_bundle.get("domain") or "") == mission.domain
+            and str(preserved_bundle.get("topic") or "") == mission.topic
+        )
+        else load_retained_learning_bundle(mission.domain, mission.topic)
+    )
     if bundle is None:
         return replace(
             controller,
@@ -835,6 +888,266 @@ def compile_operator_developmental_learning_mission(
             journal=controller.journal + (_journal_entry("developmental_learning", "operator_instruction_requires_governed_resource_plan", (mission.mission_id,)),),
         )
     return attach_developmental_learning_mission(controller, operator_instruction, bundle)
+
+
+def recover_nonexecutable_sealed_evaluator_execution(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController:
+    """Correct a legacy false terminal outcome without replaying its attempt.
+
+    Older persisted runs could score a nested learner/evaluator package through
+    the component fallback, then cool down the agenda even though no sealed
+    case had been executable.  The completed attempt and evaluation stay in
+    history; only the effective state is corrected to the missing contract.
+    """
+
+    if controller.continuous_mission_state != "developmental_agenda_exhausted":
+        return controller
+    state = dict(controller.continuous_learning_state or {})
+    mission_data = dict(state.get("mission") or {})
+    bundle = dict(state.get("retained_bundle") or {})
+    evaluations = tuple(dict(item) for item in (state.get("evaluations") or ()) if isinstance(item, Mapping))
+    if not mission_data or not bundle or not evaluations:
+        return controller
+    latest = evaluations[-1]
+    if latest.get("content_case_results"):
+        return controller
+    nested = any(
+        isinstance(case, Mapping) and (case.get("learner_view") or case.get("evaluator_view"))
+        for case in bundle.get("sealed_evaluation_cases") or ()
+    )
+    if not nested:
+        return controller
+    corrected = attach_developmental_learning_mission(
+        controller,
+        str(mission_data.get("operator_instruction") or ""),
+        bundle,
+        existing_mission=DevelopmentalMissionContract(**mission_data),
+        preserve_learning_state=True,
+    )
+    if corrected.active_work_item != "sealed_evaluator_execution_contract_unsupported":
+        return controller
+    corrected_state = dict(corrected.continuous_learning_state or {})
+    agenda = dict(corrected_state.get("developmental_agenda") or {})
+    correction_id = stable_id("sealed-evaluator-execution-contract-correction", str(latest.get("evaluation_id") or ""))
+    corrections = tuple(agenda.get("outcome_reclassifications") or ())
+    if not any(item.get("correction_id") == correction_id for item in corrections if isinstance(item, Mapping)):
+        corrections = corrections + ({
+            "correction_id": correction_id,
+            "outcome_id": latest.get("evaluation_id"),
+            "reason": "nested_sealed_cases_were_not_executable_by_the_scoring_contract",
+            "recorded_at": utc_now(),
+        },)
+    corrected_agenda = {
+        **agenda,
+        "status": "blocked_resolvable_evaluator_execution_contract",
+        "active_mission_id": str(mission_data.get("mission_id") or ""),
+        "exhaustion_reasons": ("sealed_evaluator_execution_contract_unsupported",),
+        "next_eligible_transition": "execution_compatible_sealed_evaluator_required",
+        "outcome_reclassifications": corrections,
+        "updated_at": utc_now(),
+    }
+    return replace(
+        corrected,
+        continuous_learning_state={**corrected_state, "developmental_agenda": corrected_agenda},
+        journal=corrected.journal + (_journal_entry(
+            "developmental_learning",
+            "legacy_false_agenda_exhaustion_reclassified_without_attempt_replay",
+            (str(latest.get("evaluation_id") or ""), correction_id),
+        ),),
+    )
+
+
+def recover_validated_sealed_evaluator_learning_execution(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController:
+    """Rebind a durable V3 result after an older fulfillment adapter restart."""
+
+    if controller.continuous_active_subgoal:
+        return controller
+    state = dict(controller.continuous_learning_state or {})
+    authoring = dict(state.get("isolated_evaluator_authoring") or {})
+    result = dict(authoring.get("result") or {})
+    package = dict(result.get("sealed_package") or {})
+    mission_data = dict(state.get("mission") or {})
+    if (
+        authoring.get("status") != "result_handed_off"
+        or result.get("status") != "validated"
+        or str(package.get("execution_contract_version") or "") != "sealed_evaluator_execution_v3"
+        or not mission_data
+        or controller.continuous_mission_state != "developmental_resource_fulfillment_incomplete"
+    ):
+        return controller
+    bundle = dict(state.get("retained_bundle") or {})
+    if not tuple(bundle.get("sealed_evaluation_cases") or ()):
+        return controller
+    bundle["execution_contract_version"] = "sealed_evaluator_execution_v3"
+    resumed = attach_developmental_learning_mission(
+        replace(controller, continuous_learning_state={**state, "retained_bundle": bundle}),
+        str(mission_data.get("operator_instruction") or ""),
+        bundle,
+        existing_mission=DevelopmentalMissionContract(**mission_data),
+        preserve_learning_state=True,
+    )
+    if not resumed.continuous_active_subgoal:
+        return controller
+    return replace(
+        resumed,
+        journal=resumed.journal + (_journal_entry(
+            "developmental_learning",
+            "validated_sealed_evaluator_rebound_to_existing_learning_mission",
+            (str(mission_data.get("mission_id") or ""), str(authoring.get("handoff_fulfillment_id") or "")),
+        ),),
+    )
+
+
+def recover_misaligned_v3_learning_execution(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController:
+    """Invalidate a legacy practice-only attempt that never received V3 cases.
+
+    This is not a retry of a learner answer.  It preserves the malformed
+    execution record, reopens only the affected gap, and creates a new
+    execution instance whose learner inputs are the sealed package's public
+    case views.
+    """
+
+    if controller.continuous_active_subgoal:
+        return controller
+    state = dict(controller.continuous_learning_state or {})
+    authoring = dict(state.get("isolated_evaluator_authoring") or {})
+    package = dict(dict(authoring.get("result") or {}).get("sealed_package") or {})
+    attempts = tuple(dict(item) for item in (state.get("attempts") or ()) if isinstance(item, Mapping))
+    evaluations = tuple(dict(item) for item in (state.get("evaluations") or ()) if isinstance(item, Mapping))
+    mission_data = dict(state.get("mission") or {})
+    expected_case_ids = {
+        str(case.get("case_id") or "")
+        for case in package.get("sealed_evaluation_cases") or ()
+        if isinstance(case, Mapping) and case.get("case_id")
+    }
+    if (
+        controller.continuous_mission_state != "developmental_agenda_blocked"
+        or authoring.get("status") != "result_handed_off"
+        or str(package.get("execution_contract_version") or "") != "sealed_evaluator_execution_v3"
+        or not mission_data
+        or not attempts
+        or not evaluations
+        or not expected_case_ids
+    ):
+        return controller
+    latest_attempt = attempts[-1]
+    observed_case_ids = {
+        str(record.get("case_id") or record.get("task_id") or "")
+        for record in latest_attempt.get("task_records") or ()
+        if isinstance(record, Mapping)
+    }
+    schema_errors = tuple(
+        str(error)
+        for record in latest_attempt.get("task_records") or ()
+        if isinstance(record, Mapping)
+        for error in (record.get("response_schema_errors") or ())
+    )
+    if expected_case_ids.issubset(observed_case_ids) and not schema_errors:
+        return controller
+    recovery_reason = (
+        "learner_attempt_did_not_receive_the_sealed_v3_case_set"
+        if not expected_case_ids.issubset(observed_case_ids)
+        else "learner_attempt_did_not_satisfy_the_public_v3_response_schema"
+    )
+    latest_evaluation = evaluations[-1]
+    affected_dimension = str(latest_evaluation.get("capability_dimension") or "")
+    reopened_gap_ids = {
+        str(gap.get("gap_id") or "")
+        for gap in state.get("gaps") or ()
+        if isinstance(gap, Mapping) and str(gap.get("capability_dimension") or "") == affected_dimension
+    }
+    if not reopened_gap_ids:
+        return controller
+    recovery_id = stable_id(
+        "v3-learner-case-alignment-recovery",
+        str(latest_attempt.get("attempt_id") or ""),
+        str(latest_evaluation.get("evaluation_id") or ""),
+        recovery_reason,
+        tuple(sorted(expected_case_ids)),
+    )
+    recoveries = tuple(state.get("invalid_execution_recoveries") or ())
+    if any(isinstance(item, Mapping) and item.get("recovery_id") == recovery_id for item in recoveries):
+        return controller
+    agenda = dict(state.get("developmental_agenda") or {})
+    outcome_history = tuple(
+        item for item in (agenda.get("mission_outcome_history") or ())
+        if not (isinstance(item, Mapping) and item.get("outcome_id") == latest_evaluation.get("evaluation_id"))
+    )
+    failed_outcomes = sum(1 for item in outcome_history if isinstance(item, Mapping) and item.get("outcome") == "behaviorally_failed")
+    prepared_agenda = {
+        **agenda,
+        "status": "mission_active",
+        "active_mission_id": str(mission_data.get("mission_id") or ""),
+        "blocked_goal_ids": tuple(item for item in (agenda.get("blocked_goal_ids") or ()) if item),
+        "mission_outcome_history": outcome_history,
+        "failed_cycle_count": failed_outcomes,
+        "consecutive_failure_count": failed_outcomes,
+        "cycle_count": max(0, int(agenda.get("cycle_count") or 0) - 1),
+        "exhaustion_reasons": (),
+        "next_eligible_transition": "bounded_v3_learning_attempt",
+        "updated_at": utc_now(),
+    }
+    prepared_state = {
+        **state,
+        "consumed_gap_ids": tuple(
+            gap_id for gap_id in (state.get("consumed_gap_ids") or ()) if gap_id not in reopened_gap_ids
+        ),
+        "developmental_agenda": prepared_agenda,
+        "resource_blocker": {
+            "blocker": "v3_learner_case_alignment_recovery",
+            "recovery_id": recovery_id,
+            "invalid_attempt_id": latest_attempt.get("attempt_id"),
+            "invalid_evaluation_id": latest_evaluation.get("evaluation_id"),
+            "expected_case_ids": tuple(sorted(expected_case_ids)),
+            "observed_case_ids": tuple(sorted(observed_case_ids)),
+            "response_schema_errors": schema_errors,
+            "no_provider_or_research_call_performed": True,
+        },
+        "invalid_execution_recoveries": recoveries + ({
+            "recovery_id": recovery_id,
+            "reason": recovery_reason,
+            "invalid_attempt_id": latest_attempt.get("attempt_id"),
+            "invalid_evaluation_id": latest_evaluation.get("evaluation_id"),
+            "expected_case_ids": tuple(sorted(expected_case_ids)),
+            "observed_case_ids": tuple(sorted(observed_case_ids)),
+            "response_schema_errors": schema_errors,
+            "recorded_at": utc_now(),
+        },),
+    }
+    bundle = dict(prepared_state.get("retained_bundle") or {})
+    bundle["execution_contract_version"] = "sealed_evaluator_execution_v3"
+    resumed = attach_developmental_learning_mission(
+        replace(
+            controller,
+            continuous_mission_state="developmental_resource_fulfillment_incomplete",
+            active_work_item="v3_learner_case_alignment_recovery",
+            continuous_learning_state={**prepared_state, "retained_bundle": bundle},
+        ),
+        str(mission_data.get("operator_instruction") or ""),
+        bundle,
+        existing_mission=DevelopmentalMissionContract(**mission_data),
+        preserve_learning_state=True,
+    )
+    if not resumed.continuous_active_subgoal:
+        return controller
+    active = dict(resumed.continuous_active_subgoal)
+    active["subgoal_id"] = stable_id("v3-learning-execution-instance", active.get("subgoal_id"), recovery_id)
+    active["supersedes_invalid_execution_recovery_id"] = recovery_id
+    return replace(
+        resumed,
+        continuous_active_subgoal=active,
+        active_work_item=str(active.get("measurable_objective") or "v3_learning_execution"),
+        journal=resumed.journal + (_journal_entry(
+            "developmental_learning",
+            "misaligned_v3_learner_execution_reopened_once",
+            (recovery_id, str(active.get("subgoal_id") or "")),
+        ),),
+    )
 
 
 def compile_governed_developmental_interest_proposal(
@@ -1049,17 +1362,26 @@ def consume_developmental_goal_proposal_response(
             decision=selected_option,
         )
     if str(candidate.get("candidate_class") or "") == "acquire_evaluator_authority":
+        learning_instruction = f"Learn {str(proposal.get('topic') or '').replace('_', ' ')}."
+        dormant_mission = compile_developmental_mission_contract(learning_instruction)
+        if dormant_mission is None:
+            return updated
         retained = replace(
             updated,
             continuous_mission_state="learning_evaluator_authority_needed",
             active_work_item="developmental_interest_evaluator_authority_needed",
             continuous_active_subgoal={},
+            continuous_learning_state={
+                **dict(updated.continuous_learning_state or {}),
+                "mission": dormant_mission.as_dict(),
+                "protocol": "operator_developmental_mission_orchestration_v1",
+            },
             journal=updated.journal + (_journal_entry("developmental_interest", "approved_evaluator_acquisition_goal_retained_without_learning_activation", (proposal.get("proposal_id", ""),)),),
         )
         marked = _mark_agenda_mission_active(
             retained,
             proposal_id=str(proposal.get("proposal_id") or ""),
-            mission_id="",
+            mission_id=dormant_mission.mission_id,
             awaiting_evaluator=True,
         )
         return compile_governed_developmental_resource_policy(marked) if dict(marked.continuous_learning_state or {}).get("developmental_agenda") else marked
@@ -1078,12 +1400,20 @@ def consume_developmental_goal_proposal_response(
         journal=activated.journal + (_journal_entry("developmental_interest", "approved_goal_handed_to_existing_learning_lifecycle", (proposal.get("proposal_id", ""),)),),
     )
     mission_id = str((activated.continuous_learning_state or {}).get("mission", {}).get("mission_id") or "")
-    return _mark_agenda_mission_active(
+    marked = _mark_agenda_mission_active(
         activated,
         proposal_id=str(proposal.get("proposal_id") or ""),
         mission_id=mission_id,
         awaiting_evaluator=False,
     )
+    if marked.continuous_mission_state in {
+        "evidence_needed_for_developmental_learning",
+        "learning_resource_evidence_needed",
+        "learning_evaluator_authority_needed",
+        "learning_external_authority_required",
+    }:
+        return compile_governed_developmental_resource_policy(marked)
+    return marked
 
 
 def start_persistent_developmental_agenda(
@@ -2022,7 +2352,18 @@ def _fulfillment_learning_bundle(
             "intended_role": fulfillment.intended_role,
         },)
     elif fulfillment.fulfillment_type == "operator_sealed_evaluator_fulfillment":
-        base["sealed_evaluation_cases"] = tuple(dict(item) for item in (material.get("sealed_evaluation_cases") or ()))
+        cases = tuple(dict(item) for item in (material.get("sealed_evaluation_cases") or ()))
+        if str(material.get("execution_contract_version") or "") == "sealed_evaluator_execution_v3":
+            cases = tuple({
+                **case,
+                "capability_dimension": str(case.get("assessment_dimension") or ""),
+                "input_data": dict(dict(case.get("learner_view") or {}).get("input_data") or {}),
+                "required_reasoning_constraints": tuple(str(item) for item in (dict(dict(case.get("evaluator_view") or {}).get("deterministic_predicate") or {}).get("required_concepts") or ())),
+                "forbidden_reasoning_patterns": tuple(str(item) for item in (dict(dict(case.get("evaluator_view") or {}).get("deterministic_predicate") or {}).get("forbidden_concepts") or ())),
+                "task_type": "concept_coverage",
+            } for case in cases)
+            base["execution_contract_version"] = "sealed_evaluator_execution_v3"
+        base["sealed_evaluation_cases"] = cases
         base["independent_evaluator"] = dict(material.get("independent_evaluator") or {})
     elif fulfillment.fulfillment_type == "local_model_result_fulfillment":
         mission = compile_developmental_mission_contract(f"Learn {str(requirement.get('topic') or '').replace('_', ' ')}.")
@@ -2053,6 +2394,23 @@ def _fulfillment_learning_bundle(
     return base
 
 
+def _fulfillment_clarification_question(
+    request: Mapping[str, Any],
+    requirement: Mapping[str, Any],
+) -> str:
+    if request.get("action_type") != "request_operator_sealed_evaluator":
+        return "Supply one structured, scope-bound fulfillment with durable identity, provenance, topic, target capability, and the material required by the approved action."
+    topic = str(requirement.get("topic") or "the approved topic")
+    target = str(requirement.get("target_capability") or "the approved target capability")
+    return (
+        f"Supply JSON for one separately authored sealed evaluator for {topic}/{target}: "
+        "fulfillment_type=operator_sealed_evaluator_fulfillment; source_identity; source_reference; "
+        "source_digest; provenance; topic; target_capability; independent_evaluator; candidate_mutable=false; "
+        "sealed_evaluation_cases with at least one baseline, control, held_out, adversarial, and transfer case; "
+        "and no study_resources. The evaluator must remain separate from teaching material."
+    )
+
+
 def consume_developmental_resource_fulfillment(
     controller: ContinuousRuntimeController,
     *,
@@ -2077,6 +2435,36 @@ def consume_developmental_resource_fulfillment(
     authority_request_id = str(request.get("authority_request_id") or "")
     if not requirement or str(request.get("policy_decision_id") or "") != str(decision.get("decision_id") or ""):
         return replace(controller, journal=controller.journal + (_journal_entry("developmental_resource_policy", "fulfillment_identity_mismatch", (request_id,)),))
+    if selected_option == "ask_for_clarification":
+        consumed_at = utc_now()
+        resolved = {**request, "status": "consumed", "resolution": selected_option, "consumed_at": consumed_at}
+        clarification_request = {
+            **request,
+            "request_id": stable_id("developmental-resource-fulfillment-clarification", request_id),
+            "status": "pending",
+            "exact_question": _fulfillment_clarification_question(request, requirement),
+            "rationale": "The original fulfillment remains absent. This follow-up names the exact schema required for independent validation without granting additional authority.",
+            "created_at": consumed_at,
+        }
+        response = {
+            "request_id": request_id,
+            "response_kind": "developmental_resource_fulfillment",
+            "selected_option": selected_option,
+            "operator_text": operator_text,
+            "authority_granted": False,
+            "created_at": consumed_at,
+            "consumed_at": consumed_at,
+        }
+        updated_policy = {**policy, "status": "fulfillment_clarification_pending"}
+        return replace(
+            controller,
+            continuous_mission_state="developmental_resource_authority_granted_pending_material",
+            active_work_item="awaiting_authorized_resource_or_evaluator_material",
+            continuous_developmental_insight_requests=requests[:index] + (resolved, clarification_request) + requests[index + 1 :],
+            continuous_operator_interaction_responses=tuple(controller.continuous_operator_interaction_responses) + (response,),
+            continuous_learning_state={**state, "developmental_resource_policy": updated_policy},
+            journal=controller.journal + (_journal_entry("developmental_resource_policy", "fulfillment_clarification_request_created", (request_id, clarification_request["request_id"])),),
+        )
     material = dict(supplied or {})
     if selected_option == "observe_completed_local_model_result":
         model_request_id = str(request.get("local_model_request_id") or "")
@@ -2107,8 +2495,6 @@ def consume_developmental_resource_fulfillment(
         material = {**material, "fulfillment_type": "fulfillment_rejected"}
     elif selected_option == "defer_fulfillment":
         material = {**material, "fulfillment_type": "fulfillment_deferred"}
-    elif selected_option == "ask_for_clarification":
-        material = {**material, "fulfillment_type": "partial_fulfillment", "partial_sections": ("operator_clarification_required",)}
     fulfillment = compile_developmental_resource_authority_fulfillment(
         requirement,
         decision,
@@ -2151,7 +2537,28 @@ def consume_developmental_resource_fulfillment(
         return replace(updated, continuous_mission_state=status, active_work_item="resource_blocker_remains_active", continuous_active_subgoal={})
     bundle = _fulfillment_learning_bundle(requirement, fulfillment, material, state.get("retained_bundle"))
     instruction = f"Learn {str(requirement.get('topic') or '').replace('_', ' ')}."
-    resumed = attach_developmental_learning_mission(updated, instruction, bundle)
+    prior_mission = dict(state.get("mission") or {})
+    if not prior_mission:
+        return replace(
+            updated,
+            continuous_mission_state="developmental_resource_fulfillment_incomplete",
+            active_work_item="fulfilled_learning_mission_contract_unavailable",
+            continuous_learning_state={
+                **base_state,
+                "resource_blocker": {
+                    "blocker": "fulfilled_learning_mission_contract_unavailable",
+                    "missing_fields": ("mission_contract",),
+                    "no_provider_or_research_call_performed": True,
+                },
+            },
+        )
+    resumed = attach_developmental_learning_mission(
+        updated,
+        instruction,
+        bundle,
+        existing_mission=DevelopmentalMissionContract(**prior_mission),
+        preserve_learning_state=True,
+    )
     resumed_state = {
         **base_state,
         **dict(resumed.continuous_learning_state or {}),
@@ -2178,6 +2585,73 @@ def consume_developmental_resource_fulfillment(
         journal=resumed.journal + (_journal_entry("developmental_resource_policy", "validated_fulfillment_resumed_original_goal_once", (fulfillment.fulfillment_id, str(requirement.get("goal_id") or ""))),),
     )
     return completed if resumed_active else compile_governed_developmental_resource_policy(completed, explicit_refresh=True)
+
+
+def recover_developmental_resource_fulfillment_clarification(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController:
+    """Restore only a legacy fulfillment clarification that was persisted invalid.
+
+    Older workers routed a clarification through material validation. That
+    historical partial record is retained, while its one missing schema request
+    is reconstructed exactly once on restart.
+    """
+
+    if controller.continuous_mission_state != "developmental_resource_fulfillment_invalid":
+        return controller
+    requests = tuple(dict(item) for item in controller.continuous_developmental_insight_requests)
+    if any(item.get("request_kind") == "developmental_resource_fulfillment" and item.get("status") == "pending" for item in requests):
+        return controller
+    response = next(
+        (
+            dict(item)
+            for item in reversed(controller.continuous_operator_interaction_responses)
+            if item.get("response_kind") == "developmental_resource_fulfillment"
+            and item.get("selected_option") == "ask_for_clarification"
+        ),
+        {},
+    )
+    request_id = str(response.get("request_id") or "")
+    source = next(
+        (
+            item
+            for item in requests
+            if item.get("request_id") == request_id
+            and item.get("request_kind") == "developmental_resource_fulfillment"
+            and item.get("status") == "consumed"
+            and item.get("resolution") == "ask_for_clarification"
+        ),
+        {},
+    )
+    state = dict(controller.continuous_learning_state or {})
+    policy = dict(state.get("developmental_resource_policy") or {})
+    requirement = dict(policy.get("requirement") or {})
+    fulfillments = tuple(dict(item) for item in (state.get("developmental_resource_fulfillments") or ()) if isinstance(item, Mapping))
+    legacy_partial = any(
+        item.get("operator_interaction_id") == request_id
+        and item.get("fulfillment_type") == "partial_fulfillment"
+        and "operator_clarification_required" in tuple(item.get("partial_sections") or ())
+        for item in fulfillments
+    )
+    if not source or not requirement or not legacy_partial:
+        return controller
+    follow_up_id = stable_id("developmental-resource-fulfillment-clarification", request_id)
+    follow_up = {
+        **source,
+        "request_id": follow_up_id,
+        "status": "pending",
+        "exact_question": _fulfillment_clarification_question(source, requirement),
+        "rationale": "Recovered legacy clarification. Supply only the stated sealed evaluator schema; no new authority is granted.",
+        "created_at": utc_now(),
+    }
+    return replace(
+        controller,
+        continuous_mission_state="developmental_resource_authority_granted_pending_material",
+        active_work_item="awaiting_authorized_resource_or_evaluator_material",
+        continuous_developmental_insight_requests=requests + (follow_up,),
+        continuous_learning_state={**state, "developmental_resource_policy": {**policy, "status": "fulfillment_clarification_pending"}},
+        journal=controller.journal + (_journal_entry("developmental_resource_policy", "legacy_fulfillment_clarification_recovered_once", (request_id, follow_up_id)),),
+    )
 
 
 def _mark_agenda_mission_active(
@@ -3044,6 +3518,1025 @@ def exit_observation_with_action_derivation(controller: ContinuousRuntimeControl
     return select_continuous_mission_subgoal(refresh_continuous_mission_frontier(assess_continuous_mission_runtime(prepared, (evidence,))))
 
 
+def compile_governed_isolated_evaluator_authoring_api_request(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController:
+    """Compile one separate provider-authoring approval after evaluator deferment.
+
+    This creates no provider execution authority by itself.  The request is
+    bound to the already-approved evaluator scope and excludes all learner and
+    teaching material from the provider packet.
+    """
+
+    state = dict(controller.continuous_learning_state or {})
+    policy = dict(state.get("developmental_resource_policy") or {})
+    decision = dict(policy.get("decision") or {})
+    requirement = dict(policy.get("requirement") or {})
+    authority = dict(dict(state.get("resource_policy_authorities") or {}).get("sealed_evaluator") or {})
+    if (
+        controller.continuous_mission_state != "developmental_resource_fulfillment_deferred"
+        or decision.get("action_type") != "request_operator_sealed_evaluator"
+        or not authority
+        or not requirement
+    ):
+        return controller
+    deferred = any(
+        item.get("request_kind") == "developmental_resource_fulfillment"
+        and item.get("resolution") == "defer_fulfillment"
+        and item.get("status") == "consumed"
+        for item in controller.continuous_developmental_insight_requests
+    )
+    existing = dict(state.get("isolated_evaluator_authoring") or {})
+    if not deferred or existing:
+        return controller
+    packet = compile_isolated_evaluator_authoring_request(
+        mission_id=str(requirement.get("mission_id") or ""),
+        requirement=requirement,
+        provider=os.environ.get("DELTA_EVALUATOR_PROVIDER", "openai") or "openai",
+        model=os.environ.get("DELTA_EVALUATOR_MODEL", "gpt-4.1-mini") or "gpt-4.1-mini",
+    )
+    scope = (
+        f"one exact-once isolated {packet['provider']} evaluator-authoring call using {packet['model']} "
+        f"for {requirement.get('topic')}/{requirement.get('target_capability')}; "
+        "no learner answer, teaching content, source retrieval, PCM, tracked-source action, Git, or deployment"
+    )
+    request = {
+        "request_id": packet["request_id"],
+        "request_kind": "developmental_evaluator_authoring_api",
+        "status": "pending",
+        "mission_id": requirement.get("mission_id"),
+        "policy_decision_id": decision.get("decision_id"),
+        "requirement_id": requirement.get("requirement_id"),
+        "provider": packet["provider"],
+        "model": packet["model"],
+        "prompt_digest": packet["prompt_digest"],
+        "input_packet": packet["input_packet"],
+        "exact_question": "Approve one isolated provider call to author only the sealed evaluator package described in the attached schema?",
+        "rationale": "The separately authored evaluator remains unavailable after the human fulfillment path was deferred. The provider receives only the evaluation specification, never learner or teaching data.",
+        "authority_scope": scope,
+        "permitted_responses": ("approve_evaluator_authoring_api", "reject_evaluator_authoring_api", "defer_evaluator_authoring_api", "ask_for_clarification"),
+        "created_at": utc_now(),
+    }
+    return replace(
+        controller,
+        continuous_mission_state="awaiting_operator_insight",
+        active_work_item="awaiting_isolated_evaluator_authoring_api_approval",
+        continuous_learning_state={
+            **state,
+            "isolated_evaluator_authoring": {
+                "status": "pending_operator_approval",
+                "request": packet,
+                "authority_request_id": authority.get("request_id"),
+                "execution_claim": {},
+                "result": {},
+            },
+        },
+        continuous_developmental_insight_requests=tuple(controller.continuous_developmental_insight_requests) + (request,),
+        journal=controller.journal + (_journal_entry("isolated_evaluator_authoring", "deferred_human_evaluator_compiled_to_provider_authoring_request", (packet["request_id"],)),),
+    )
+
+
+def compile_replacement_isolated_evaluator_authoring_api_request(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController:
+    """Create one new approval request after a terminal authoring failure."""
+
+    state = dict(controller.continuous_learning_state or {})
+    authoring = dict(state.get("isolated_evaluator_authoring") or {})
+    prior_claim = dict(authoring.get("execution_claim") or {})
+    prior_result = dict(authoring.get("result") or {})
+    policy = dict(state.get("developmental_resource_policy") or {})
+    requirement = dict(policy.get("requirement") or {})
+    terminal_failure = (
+        controller.continuous_mission_state in {
+            "isolated_evaluator_authoring_provider_failed",
+            "isolated_evaluator_authoring_result_invalid",
+        }
+        and prior_claim.get("claim_state") in {"failed", "invalid"}
+        and str(prior_result.get("status") or "") in {"failed", "invalid"}
+    )
+    if not terminal_failure or not requirement:
+        return controller
+    prior_packet = dict(authoring.get("request") or {})
+    packet = compile_isolated_evaluator_authoring_request(
+        mission_id=str(requirement.get("mission_id") or ""),
+        requirement=requirement,
+        provider=str(prior_packet.get("provider") or "openai"),
+        model=str(prior_packet.get("model") or "gpt-4.1-mini"),
+        attempt_nonce=str(prior_claim.get("claim_id") or "prior-preflight-failure"),
+    )
+    scope = (
+        f"one exact-once isolated {packet['provider']} evaluator-authoring call using {packet['model']} "
+        f"for {requirement.get('topic')}/{requirement.get('target_capability')}; "
+        "no learner answer, teaching content, source retrieval, PCM, tracked-source action, Git, or deployment"
+    )
+    request = {
+        "request_id": packet["request_id"], "request_kind": "developmental_evaluator_authoring_api", "status": "pending",
+        "mission_id": requirement.get("mission_id"), "policy_decision_id": policy.get("decision", {}).get("decision_id"),
+        "requirement_id": requirement.get("requirement_id"), "provider": packet["provider"], "model": packet["model"],
+        "prompt_digest": packet["prompt_digest"], "input_packet": packet["input_packet"],
+        "exact_question": "Approve one replacement isolated provider call to author only the sealed evaluator package described in the attached schema?",
+        "rationale": "The prior terminal claim remains immutable. This replacement uses the tightened strict-object evaluator schema and still authorizes only one isolated evaluator-authoring call.",
+        "authority_scope": scope,
+        "permitted_responses": ("approve_evaluator_authoring_api", "reject_evaluator_authoring_api", "defer_evaluator_authoring_api", "ask_for_clarification"),
+        "created_at": utc_now(),
+    }
+    history = tuple(authoring.get("prior_claims") or ()) + ({"claim": prior_claim, "result": prior_result, "status": "terminal_authoring_failure"},)
+    return replace(
+        controller,
+        continuous_mission_state="awaiting_operator_insight",
+        active_work_item="awaiting_replacement_isolated_evaluator_authoring_api_approval",
+        continuous_developmental_insight_requests=tuple(controller.continuous_developmental_insight_requests) + (request,),
+        continuous_learning_state={**state, "isolated_evaluator_authoring": {"status": "pending_operator_approval", "request": packet, "authority_request_id": authoring.get("authority_request_id"), "execution_claim": {}, "result": {}, "prior_claims": history}},
+        journal=controller.journal + (_journal_entry("isolated_evaluator_authoring", "replacement_provider_authoring_request_compiled_after_preflight_failure", (packet["request_id"], prior_claim.get("claim_id", ""))),),
+    )
+
+
+def compile_prompt_complete_isolated_evaluator_authoring_replacement_request(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController:
+    """Request a v2 evaluator only when a legacy sealed package lacks learner prompts.
+
+    A historical sealed package remains valid evidence about the prior attempt,
+    but it cannot enter the learner executor without an explicit learner view.
+    This function never reconstructs prompts from evaluator-only data.  It
+    records that limitation and compiles one separately approved replacement.
+    """
+
+    state = dict(controller.continuous_learning_state or {})
+    authoring = dict(state.get("isolated_evaluator_authoring") or {})
+    legacy_result = dict(authoring.get("result") or {})
+    legacy_package = dict(legacy_result.get("sealed_package") or {})
+    policy = dict(state.get("developmental_resource_policy") or {})
+    requirement = dict(policy.get("requirement") or {})
+    projection = project_learner_visible_evaluation_cases(legacy_package)
+    prompt_missing = "missing_learner_visible_evaluation_prompt" in tuple(projection.get("errors") or ())
+    if (
+        controller.continuous_mission_state != "developmental_resource_fulfillment_incomplete"
+        or controller.active_work_item != "learner_visible_evaluation_prompts_unavailable"
+        or authoring.get("status") != "result_handed_off"
+        or not legacy_package
+        or not requirement
+        or not prompt_missing
+        or controller.continuous_active_subgoal
+        or state.get("capability_update")
+    ):
+        return controller
+
+    prior_claim = dict(authoring.get("execution_claim") or {})
+    prior_packet = dict(authoring.get("request") or {})
+    replacement_nonce = stable_id(
+        "isolated-evaluator-authoring-v2-learner-prompt-replacement",
+        prior_claim.get("claim_id"),
+        legacy_result.get("response_digest") or legacy_package.get("sealed_package_id"),
+    )
+    packet = compile_isolated_evaluator_authoring_request(
+        mission_id=str(requirement.get("mission_id") or prior_packet.get("mission_id") or ""),
+        requirement=requirement,
+        provider=str(prior_packet.get("provider") or "openai"),
+        model=str(prior_packet.get("model") or "gpt-4.1-mini"),
+        attempt_nonce=replacement_nonce,
+    )
+    scope = (
+        f"one exact-once isolated {packet['provider']} evaluator-authoring call using {packet['model']} "
+        f"for {requirement.get('topic')}/{requirement.get('target_capability')}; "
+        "send only the capability specification and evaluator schema; no MIT body, teaching material, learner answer, "
+        "candidate output, source retrieval, PCM, tracked-source action, Git, or deployment"
+    )
+    request = {
+        "request_id": packet["request_id"],
+        "request_kind": "developmental_evaluator_authoring_api",
+        "status": "pending",
+        "mission_id": requirement.get("mission_id"),
+        "policy_decision_id": policy.get("decision", {}).get("decision_id"),
+        "requirement_id": requirement.get("requirement_id"),
+        "provider": packet["provider"],
+        "model": packet["model"],
+        "prompt_digest": packet["prompt_digest"],
+        "input_packet": packet["input_packet"],
+        "exact_question": "Approve one replacement isolated provider call to author a complete sealed evaluator with learner prompts and response formats plus evaluator-only grading fields?",
+        "rationale": "The retained sealed evaluator predates the learner-view contract. It remains immutable historical evidence, but cannot safely supply learner prompts. The replacement preserves strict independence and authorizes exactly one v2 evaluator-authoring call.",
+        "authority_scope": scope,
+        "permitted_responses": ("approve_evaluator_authoring_api", "reject_evaluator_authoring_api", "defer_evaluator_authoring_api", "ask_for_clarification"),
+        "created_at": utc_now(),
+    }
+    history_entry = {
+        "claim": prior_claim,
+        "result": legacy_result,
+        "status": "legacy_sealed_package_missing_learner_projection",
+        "handoff_fulfillment_id": authoring.get("handoff_fulfillment_id"),
+        "projection": projection,
+    }
+    history = tuple(authoring.get("prior_claims") or ()) + (history_entry,)
+    return replace(
+        controller,
+        continuous_mission_state="awaiting_operator_insight",
+        active_work_item="awaiting_prompt_complete_isolated_evaluator_authoring_api_approval",
+        continuous_developmental_insight_requests=tuple(controller.continuous_developmental_insight_requests) + (request,),
+        continuous_learning_state={
+            **state,
+            "isolated_evaluator_authoring": {
+                "status": "pending_operator_approval",
+                "request": packet,
+                "authority_request_id": authoring.get("authority_request_id"),
+                "execution_claim": {},
+                "result": {},
+                "prior_claims": history,
+            },
+        },
+        journal=controller.journal + (_journal_entry("isolated_evaluator_authoring", "legacy_sealed_package_compiled_to_prompt_complete_replacement_request", (packet["request_id"], prior_claim.get("claim_id", ""))),),
+    )
+
+
+def compile_execution_compatible_isolated_evaluator_authoring_request(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController:
+    """Request one v3 replacement only for a sealed evaluator blocked pre-execution."""
+
+    state = dict(controller.continuous_learning_state or {})
+    authoring = dict(state.get("isolated_evaluator_authoring") or {})
+    policy = dict(state.get("developmental_resource_policy") or {})
+    requirement = dict(policy.get("requirement") or {})
+    prior_claim = dict(authoring.get("execution_claim") or {})
+    prior_result = dict(authoring.get("result") or {})
+    agenda = dict(state.get("developmental_agenda") or {})
+    recovered_execution_block = bool(agenda.get("outcome_reclassifications")) and controller.continuous_mission_state == "developmental_agenda_blocked"
+    if (
+        controller.active_work_item != "sealed_evaluator_execution_contract_unsupported"
+        and agenda.get("status") != "blocked_resolvable_evaluator_execution_contract"
+        and not recovered_execution_block
+    ) or (
+        not requirement
+        or not prior_claim
+        or not prior_result
+    ):
+        return controller
+    packet = compile_isolated_evaluator_authoring_request(
+        mission_id=str(requirement.get("mission_id") or ""), requirement=requirement,
+        provider=str(dict(authoring.get("request") or {}).get("provider") or "openai"),
+        model=str(dict(authoring.get("request") or {}).get("model") or "gpt-4.1-mini"),
+        attempt_nonce=str(prior_claim.get("claim_id") or "execution-contract-blocked"),
+    )
+    scope = f"one exact-once isolated {packet['provider']} evaluator-authoring call using {packet['model']} for {requirement.get('topic')}/{requirement.get('target_capability')}; no learner answer, teaching content, source retrieval, PCM, tracked-source action, Git, or deployment"
+    request = {
+        "request_id": packet["request_id"], "request_kind": "developmental_evaluator_authoring_api", "status": "pending",
+        "mission_id": requirement.get("mission_id"), "policy_decision_id": policy.get("decision", {}).get("decision_id"),
+        "requirement_id": requirement.get("requirement_id"), "provider": packet["provider"], "model": packet["model"],
+        "prompt_digest": packet["prompt_digest"], "input_packet": packet["input_packet"],
+        "exact_question": "Approve one v3 isolated evaluator-authoring call with deterministic learner execution and sealed scoring fields?",
+        "rationale": "The prior package remains sealed historical evidence but is non-executable by the bounded learner/scorer. This request authorizes one replacement package only.",
+        "authority_scope": scope,
+        "permitted_responses": ("approve_evaluator_authoring_api", "reject_evaluator_authoring_api", "defer_evaluator_authoring_api", "ask_for_clarification"),
+        "created_at": utc_now(),
+    }
+    history = tuple(authoring.get("prior_claims") or ()) + ({"claim": prior_claim, "result": prior_result, "status": "sealed_package_execution_contract_unsupported"},)
+    return replace(
+        controller,
+        continuous_mission_state="awaiting_operator_insight",
+        active_work_item="awaiting_execution_compatible_isolated_evaluator_authoring_api_approval",
+        continuous_developmental_insight_requests=tuple(controller.continuous_developmental_insight_requests) + (request,),
+        continuous_learning_state={**state, "isolated_evaluator_authoring": {"status": "pending_operator_approval", "request": packet, "authority_request_id": authoring.get("authority_request_id"), "execution_claim": {}, "result": {}, "prior_claims": history}},
+        journal=controller.journal + (_journal_entry("isolated_evaluator_authoring", "execution_compatible_v3_replacement_request_compiled", (packet["request_id"],)),),
+    )
+
+
+def consume_isolated_evaluator_authoring_api_response(
+    controller: ContinuousRuntimeController,
+    *,
+    request_id: str,
+    selected_option: str,
+    operator_text: str = "",
+    approved_scope: str = "",
+) -> ContinuousRuntimeController:
+    """Record one provider-authoring decision without executing the provider."""
+
+    requests = tuple(dict(item) for item in controller.continuous_developmental_insight_requests)
+    index = next((position for position, item in enumerate(requests) if item.get("request_id") == request_id and item.get("status") == "pending"), -1)
+    if index < 0:
+        return replace(controller, journal=controller.journal + (_journal_entry("isolated_evaluator_authoring", "duplicate_or_unknown_authoring_response_suppressed", (request_id,)),))
+    request = requests[index]
+    if selected_option not in tuple(request.get("permitted_responses") or ()):
+        return replace(controller, journal=controller.journal + (_journal_entry("isolated_evaluator_authoring", "invalid_authoring_response_rejected", (request_id, selected_option)),))
+    state = dict(controller.continuous_learning_state or {})
+    authoring = dict(state.get("isolated_evaluator_authoring") or {})
+    packet = dict(authoring.get("request") or {})
+    if packet.get("request_id") != request_id:
+        return replace(controller, journal=controller.journal + (_journal_entry("isolated_evaluator_authoring", "authoring_response_identity_mismatch", (request_id,)),))
+    consumed_at = utc_now()
+    if selected_option == "ask_for_clarification":
+        resolved = {**request, "status": "consumed", "resolution": selected_option, "consumed_at": consumed_at, "authority_granted": False}
+        clarification = {
+            **request,
+            "request_id": stable_id("isolated-evaluator-authoring-clarification", request_id),
+            "status": "pending",
+            "exact_question": "The provider receives only this schema: capability specification, five required case categories, scoring criteria, and exclusions for learner answers and teaching content. Approve, reject, or defer this exact one-call scope.",
+            "permitted_responses": ("approve_evaluator_authoring_api", "reject_evaluator_authoring_api", "defer_evaluator_authoring_api"),
+            "created_at": consumed_at,
+        }
+        return replace(
+            controller,
+            continuous_developmental_insight_requests=requests[:index] + (resolved,) + requests[index + 1 :] + (clarification,),
+            continuous_operator_interaction_responses=tuple(controller.continuous_operator_interaction_responses) + ({"request_id": request_id, "response_kind": "developmental_evaluator_authoring_api", "selected_option": selected_option, "operator_text": operator_text, "authority_granted": False, "created_at": consumed_at, "consumed_at": consumed_at},),
+            continuous_learning_state={**state, "isolated_evaluator_authoring": {**authoring, "status": "clarification_requested"}},
+            continuous_mission_state="awaiting_operator_insight",
+            journal=controller.journal + (_journal_entry("isolated_evaluator_authoring", "provider_authoring_clarification_created", (request_id,)),),
+        )
+    if selected_option == "approve_evaluator_authoring_api" and approved_scope != request.get("authority_scope"):
+        return replace(controller, journal=controller.journal + (_journal_entry("isolated_evaluator_authoring", "provider_authoring_scope_mismatch", (request_id,)),))
+    granted = selected_option == "approve_evaluator_authoring_api"
+    resolved = {**request, "status": "consumed", "resolution": selected_option, "consumed_at": consumed_at, "authority_granted": granted}
+    response = {"request_id": request_id, "response_kind": "developmental_evaluator_authoring_api", "selected_option": selected_option, "operator_text": operator_text, "approved_scope": approved_scope, "authority_granted": granted, "created_at": consumed_at, "consumed_at": consumed_at}
+    if not granted:
+        return replace(
+            controller,
+            continuous_developmental_insight_requests=requests[:index] + (resolved,) + requests[index + 1 :],
+            continuous_operator_interaction_responses=tuple(controller.continuous_operator_interaction_responses) + (response,),
+            continuous_learning_state={**state, "isolated_evaluator_authoring": {**authoring, "status": "deferred" if selected_option == "defer_evaluator_authoring_api" else "rejected", "operator_disposition": response}},
+            continuous_mission_state="isolated_evaluator_authoring_deferred" if selected_option == "defer_evaluator_authoring_api" else "isolated_evaluator_authoring_rejected",
+            active_work_item="independent_evaluator_remains_unavailable",
+            journal=controller.journal + (_journal_entry("isolated_evaluator_authoring", "provider_authoring_not_authorized", (request_id, selected_option)),),
+        )
+    claim = {
+        "claim_id": stable_id("isolated-evaluator-authoring-execution-claim", request_id),
+        "request_id": request_id,
+        "claim_state": "approved_pending_execution",
+        "execution_attempt_count": 0,
+        "approved_at": consumed_at,
+        "provider": packet.get("provider"),
+        "model": packet.get("model"),
+        "prompt_digest": packet.get("prompt_digest"),
+    }
+    api = dict(controller.continuous_api_authority or {})
+    api = {
+        **api,
+        "enabled": True,
+        "allowed_providers": (packet.get("provider"),),
+        "allowed_models": (packet.get("model"),),
+        "call_allowance": 1,
+        "pending_provider_tasks": tuple(dict.fromkeys(tuple(api.get("pending_provider_tasks") or ()) + (request_id,))),
+        "unavailability_reason": "one_operator_approved_isolated_evaluator_authoring_call_pending",
+    }
+    return replace(
+        controller,
+        continuous_developmental_insight_requests=requests[:index] + (resolved,) + requests[index + 1 :],
+        continuous_operator_interaction_responses=tuple(controller.continuous_operator_interaction_responses) + (response,),
+        continuous_api_authority=api,
+        continuous_learning_state={**state, "isolated_evaluator_authoring": {**authoring, "status": "approved_pending_execution", "execution_claim": claim, "approved_authority": response}},
+        continuous_mission_state="awaiting_isolated_evaluator_authoring_execution",
+        active_work_item="persisted_isolated_evaluator_authoring_execution_claim",
+        journal=controller.journal + (_journal_entry("isolated_evaluator_authoring", "operator_approved_one_use_provider_authoring_claim", (request_id, claim["claim_id"])),),
+    )
+
+
+def begin_isolated_evaluator_authoring_execution(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController:
+    """Persist the sole provider-dispatch attempt before network I/O.
+
+    A recovered dispatching state is intentionally never retried: it may have
+    crossed the network boundary before a process loss.
+    """
+
+    state = dict(controller.continuous_learning_state or {})
+    authoring = dict(state.get("isolated_evaluator_authoring") or {})
+    packet = dict(authoring.get("request") or {})
+    claim = dict(authoring.get("execution_claim") or {})
+    if (
+        controller.continuous_mission_state != "awaiting_isolated_evaluator_authoring_execution"
+        or claim.get("claim_state") != "approved_pending_execution"
+        or int(claim.get("execution_attempt_count") or 0) != 0
+        or not packet
+    ):
+        return controller
+    policy = dict(state.get("developmental_resource_policy") or {})
+    requirement = dict(policy.get("requirement") or {})
+    prior_claims = tuple(authoring.get("prior_claims") or ())
+    prior_claim = dict(prior_claims[-1].get("claim") or {}) if prior_claims else {}
+    attempt_nonce = str(packet.get("attempt_nonce") or prior_claim.get("claim_id") or "")
+    refreshed_packet = compile_isolated_evaluator_authoring_request(
+        mission_id=str(requirement.get("mission_id") or packet.get("mission_id") or ""),
+        requirement=requirement,
+        provider=str(packet.get("provider") or "openai"),
+        model=str(packet.get("model") or "gpt-4.1-mini"),
+        # Older replacement packets predate explicit nonce persistence. Their
+        # immutable prior claim still binds the replacement identity.
+        attempt_nonce=attempt_nonce,
+    )
+    if refreshed_packet.get("request_id") != packet.get("request_id"):
+        return replace(controller, journal=controller.journal + (_journal_entry("isolated_evaluator_authoring", "approved_packet_identity_changed_before_dispatch", (str(packet.get("request_id") or ""),)),))
+    packet = refreshed_packet
+    updated_claim = {**claim, "claim_state": "dispatching", "execution_attempt_count": 1, "dispatch_started_at": utc_now()}
+    api = dict(controller.continuous_api_authority or {})
+    return replace(
+        controller,
+        continuous_mission_state="isolated_evaluator_authoring_dispatching",
+        active_work_item="one_use_isolated_evaluator_authoring_provider_dispatch",
+        continuous_api_authority={**api, "calls_consumed": int(api.get("calls_consumed") or 0) + 1},
+        continuous_learning_state={**state, "isolated_evaluator_authoring": {**authoring, "request": packet, "status": "dispatching", "execution_claim": updated_claim}},
+        journal=controller.journal + (_journal_entry("isolated_evaluator_authoring", "one_use_provider_dispatch_persisted_before_network", (claim.get("claim_id", ""),)),),
+    )
+
+
+def record_isolated_evaluator_authoring_provider_result(
+    controller: ContinuousRuntimeController,
+    *,
+    raw_response: Mapping[str, Any] | str | None,
+    provider_error: str = "",
+    provider_usage: Mapping[str, Any] | None = None,
+) -> ContinuousRuntimeController:
+    """Validate one attempted provider result without promoting capability."""
+
+    state = dict(controller.continuous_learning_state or {})
+    authoring = dict(state.get("isolated_evaluator_authoring") or {})
+    packet = dict(authoring.get("request") or {})
+    claim = dict(authoring.get("execution_claim") or {})
+    if claim.get("claim_state") != "dispatching" or not packet:
+        return controller
+    api = dict(controller.continuous_api_authority or {})
+    pending = tuple(item for item in (api.get("pending_provider_tasks") or ()) if item != packet.get("request_id"))
+    if provider_error:
+        result = {"status": "failed", "error": provider_error, "provider_usage": dict(provider_usage or {}), "completed_at": utc_now()}
+        return replace(
+            controller,
+            continuous_mission_state="isolated_evaluator_authoring_provider_failed",
+            active_work_item="independent_evaluator_remains_unavailable",
+            continuous_api_authority={**api, "enabled": False, "pending_provider_tasks": pending, "failures": int(api.get("failures") or 0) + 1, "unavailability_reason": "isolated_evaluator_authoring_provider_failed"},
+            continuous_learning_state={**state, "isolated_evaluator_authoring": {**authoring, "status": "provider_failed", "execution_claim": {**claim, "claim_state": "failed"}, "result": result}},
+            journal=controller.journal + (_journal_entry("isolated_evaluator_authoring", "one_use_provider_authoring_failed", (packet.get("request_id", ""),)),),
+        )
+    validation = validate_provider_authored_evaluator_response(packet, raw_response or {})
+    result = {
+        "status": "validated" if validation["accepted"] else "invalid",
+        "response_digest": validation["response_digest"],
+        "validation_errors": validation["errors"],
+        "sealed_package": validation["sealed_package"],
+        "provider_usage": dict(provider_usage or {}),
+        "completed_at": utc_now(),
+    }
+    if not validation["accepted"]:
+        # This is audit-only forensic evidence. It is deliberately not copied
+        # into a learner resource or capability record.
+        result["operator_only_forensic_response"] = {
+            "raw_response": raw_response,
+            "response_digest": validation["response_digest"],
+            "learner_visible": False,
+            "capability_eligible": False,
+        }
+    return replace(
+        controller,
+        continuous_mission_state="isolated_evaluator_authoring_result_sealed" if validation["accepted"] else "isolated_evaluator_authoring_result_invalid",
+        active_work_item="sealed_evaluator_pending_existing_fulfillment_handoff" if validation["accepted"] else "independent_evaluator_remains_unavailable",
+        continuous_api_authority={**api, "enabled": False, "pending_provider_tasks": pending, "last_provider_result": validation["response_digest"], "unavailability_reason": "sealed_evaluator_handoff_required" if validation["accepted"] else "provider_evaluator_schema_rejected"},
+        continuous_learning_state={**state, "isolated_evaluator_authoring": {**authoring, "status": "result_sealed" if validation["accepted"] else "result_invalid", "execution_claim": {**claim, "claim_state": "completed" if validation["accepted"] else "invalid"}, "result": result}},
+        journal=controller.journal + (_journal_entry("isolated_evaluator_authoring", "provider_authoring_result_validated_without_capability_promotion", (packet.get("request_id", ""), result["status"])),),
+    )
+
+
+def _effective_policy_for_validated_sealed_evaluator_handoff(
+    policy: Mapping[str, Any],
+    authoring: Mapping[str, Any],
+    material: Mapping[str, Any],
+    resource_policy_authorities: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Supersede a stale policy only with fresh, already-validated evaluator evidence.
+
+    A resource policy can legitimately be refreshed after a fulfilled teaching
+    resource becomes newly executable.  It must not cause a validated sealed
+    evaluator to disappear merely because the previous ranking selected local
+    reuse.  The old decision and candidate set are retained verbatim in a
+    history record; the current effective policy is a separate, deterministic
+    handoff decision bound to the same requirement and evaluator package.
+    """
+
+    current = dict(policy or {})
+    decision = dict(current.get("decision") or {})
+    requirement = dict(current.get("requirement") or {})
+    result = dict(authoring.get("result") or {})
+    packet = dict(authoring.get("request") or {})
+    authority = str(authoring.get("authority_request_id") or "")
+    package_id = str(material.get("sealed_package_id") or "")
+    authorities = dict(resource_policy_authorities or {})
+    sealed_authority = dict(authorities.get("sealed_evaluator") or {})
+    if (
+        not current
+        or not requirement
+        or decision.get("action_type") == "request_operator_sealed_evaluator"
+        or result.get("status") != "validated"
+        or not package_id
+        or not authority
+        or str(sealed_authority.get("request_id") or "") != authority
+        or str(packet.get("mission_id") or "") != str(requirement.get("mission_id") or "")
+    ):
+        return current
+
+    evidence_digest = str(result.get("response_digest") or package_id)
+    candidate_id = stable_id(
+        "developmental-resource-policy-candidate",
+        requirement.get("requirement_id"),
+        "validated-sealed-evaluator-handoff",
+        package_id,
+    )
+    decision_id = stable_id(
+        "developmental-resource-authority-decision",
+        requirement.get("requirement_id"),
+        "validated-sealed-evaluator-handoff",
+        package_id,
+    )
+    effective_candidate = {
+        "policy_candidate_id": candidate_id,
+        "action_type": "request_operator_sealed_evaluator",
+        "availability": True,
+        "rejection_reasons": (),
+        "target_resource_id": package_id,
+        "target_request_id": str(packet.get("request_id") or ""),
+        "permission_state": "already_authorized",
+        "expected_outcome": "sealed_evaluator_handoff",
+        "agenda_impact": "continue_goal",
+        "rank": 1.0,
+        "candidate_digest": stable_id("validated-sealed-evaluator-handoff-candidate", evidence_digest),
+        "evidence_ref": evidence_digest,
+    }
+    effective_decision = {
+        "decision_id": decision_id,
+        "requirement_id": requirement.get("requirement_id"),
+        "selected_policy_candidate_id": candidate_id,
+        "action_type": "request_operator_sealed_evaluator",
+        "target_resource_id": package_id,
+        "target_request_id": str(packet.get("request_id") or ""),
+        "target_authority_request_id": authority,
+        "rationale": "A newer validated sealed evaluator package supersedes stale local-reuse selection for the same mission and requirement lineage.",
+        "rejected_candidate_ids": (),
+        "permission_state": "already_authorized",
+        "expected_state_transition": "sealed_evaluator_handoff",
+        "agenda_effect": "continue_goal",
+        "budget_effect": {"resource_requests": 0, "authority_requests": 0},
+        "stopping_condition": "do_not_execute_provider_web_pcm_or_tracked_source",
+        "retry_condition": "new_validated_evaluator_evidence_or_explicit_operator_refresh",
+        "created_at": utc_now(),
+        "decision_digest": stable_id("validated-sealed-evaluator-handoff-decision", evidence_digest),
+        "status": "decision_compiled",
+        "supersedes_decision_id": decision.get("decision_id"),
+        "evidence_digest": evidence_digest,
+    }
+    history_entry = {
+        "decision": decision,
+        "policy_candidates": tuple(current.get("policy_candidates") or ()),
+        "status": "superseded_by_validated_sealed_evaluator",
+        "superseded_at": utc_now(),
+        "superseded_by_decision_id": decision_id,
+        "evidence_digest": evidence_digest,
+    }
+    return {
+        **current,
+        "status": "decision_compiled",
+        "decision": effective_decision,
+        "policy_candidates": (effective_candidate,),
+        "decision_history": tuple(current.get("decision_history") or ()) + (history_entry,),
+        "effective_policy_reason": "validated_sealed_evaluator_newer_than_current_policy_decision",
+    }
+
+
+def handoff_sealed_isolated_evaluator_to_resource_fulfillment(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController:
+    """Attach one sealed provider evaluator through the existing fulfillment path.
+
+    The provider result is evidence only. This bridge neither creates an
+    authority request nor exposes answer keys to the learner; it validates the
+    already sealed package against the original resource requirement and lets
+    the established fulfillment/resumption lifecycle decide the next state.
+    """
+
+    state = dict(controller.continuous_learning_state or {})
+    authoring = dict(state.get("isolated_evaluator_authoring") or {})
+    result = dict(authoring.get("result") or {})
+    material = dict(result.get("sealed_package") or {})
+    policy = dict(state.get("developmental_resource_policy") or {})
+    requirement = dict(policy.get("requirement") or {})
+    if (
+        controller.continuous_mission_state != "isolated_evaluator_authoring_result_sealed"
+        or authoring.get("status") != "result_sealed"
+        or not material
+        or not requirement
+    ):
+        return controller
+    policy = _effective_policy_for_validated_sealed_evaluator_handoff(
+        policy,
+        authoring,
+        material,
+        dict(state.get("resource_policy_authorities") or {}),
+    )
+    decision = dict(policy.get("decision") or {})
+    if decision.get("action_type") != "request_operator_sealed_evaluator":
+        return controller
+    fulfillment = compile_developmental_resource_authority_fulfillment(
+        requirement,
+        decision,
+        authority_request_id=str(authoring.get("authority_request_id") or ""),
+        operator_interaction_id=str(authoring.get("request", {}).get("request_id") or ""),
+        supplied=material,
+        supplied_by="isolated_provider_authoring",
+    )
+    if fulfillment.status != "validated":
+        return replace(
+            controller,
+            continuous_mission_state="isolated_evaluator_authoring_result_invalid",
+            active_work_item="sealed_evaluator_failed_existing_fulfillment_validation",
+            continuous_learning_state={
+                **state,
+                "isolated_evaluator_authoring": {
+                    **authoring,
+                    "status": "sealed_handoff_invalid",
+                    "handoff_validation_errors": fulfillment.validation_errors,
+                },
+            },
+            journal=controller.journal + (_journal_entry("isolated_evaluator_authoring", "sealed_result_rejected_by_existing_fulfillment_validator", (fulfillment.fulfillment_id,)),),
+        )
+    existing = tuple(dict(item) for item in (state.get("developmental_resource_fulfillments") or ()))
+    if any(item.get("semantic_identity") == fulfillment.semantic_identity for item in existing):
+        return replace(
+            controller,
+            journal=controller.journal + (_journal_entry("isolated_evaluator_authoring", "sealed_result_handoff_replay_suppressed", (fulfillment.fulfillment_id,)),),
+        )
+    base_state = {
+        **state,
+        "developmental_resource_fulfillments": existing + (fulfillment.as_dict(),),
+        "developmental_resource_policy": {
+            **policy,
+            "status": "fulfillment_validated",
+            "fulfillment_id": fulfillment.fulfillment_id,
+        },
+        "isolated_evaluator_authoring": {
+            **authoring,
+            "status": "result_handed_off",
+            "handoff_fulfillment_id": fulfillment.fulfillment_id,
+        },
+    }
+    updated = replace(
+        controller,
+        continuous_learning_state=base_state,
+        journal=controller.journal + (_journal_entry("isolated_evaluator_authoring", "sealed_result_attached_to_existing_fulfillment", (fulfillment.fulfillment_id,)),),
+    )
+    bundle = _fulfillment_learning_bundle(requirement, fulfillment, material, state.get("retained_bundle"))
+    instruction = f"Learn {str(requirement.get('topic') or '').replace('_', ' ')}."
+    prior_mission = dict(state.get("mission") or {})
+    resumed = attach_developmental_learning_mission(
+        updated,
+        instruction,
+        bundle,
+        existing_mission=DevelopmentalMissionContract(**prior_mission) if prior_mission else None,
+        preserve_learning_state=bool(prior_mission),
+    )
+    resumed_state = {
+        **base_state,
+        **dict(resumed.continuous_learning_state or {}),
+        "developmental_resource_fulfillments": base_state["developmental_resource_fulfillments"],
+        "developmental_resource_policy": {
+            **base_state["developmental_resource_policy"],
+            "status": "blocker_resolved",
+            "resumed_mission_id": str((resumed.continuous_learning_state or {}).get("mission", {}).get("mission_id") or ""),
+        },
+    }
+    agenda = dict(resumed_state.get("developmental_agenda") or {})
+    resumed_active = bool(resumed.continuous_active_subgoal)
+    if agenda and agenda_state_is_valid(agenda):
+        resumed_state["developmental_agenda"] = {
+            **agenda,
+            "status": "mission_active" if resumed_active else "awaiting_resource_policy_authority",
+            "active_mission_id": str((resumed.continuous_learning_state or {}).get("mission", {}).get("mission_id") or agenda.get("active_mission_id") or ""),
+            "next_eligible_transition": "bounded_learning_attempt_or_evaluation" if resumed_active else "resource_policy_refresh_after_partial_blocker_resolution",
+            "updated_at": utc_now(),
+        }
+    completed = replace(
+        resumed,
+        continuous_mission_state=resumed.continuous_mission_state if resumed_active else "developmental_resource_fulfillment_incomplete",
+        active_work_item=resumed.active_work_item if resumed_active else "resource_blocker_partially_resolved",
+        continuous_learning_state=resumed_state,
+        journal=resumed.journal + (_journal_entry("isolated_evaluator_authoring", "sealed_result_resumed_original_goal_once", (fulfillment.fulfillment_id, str(requirement.get("goal_id") or ""))),),
+    )
+    if resumed_active:
+        return completed
+
+    # A sealed evaluator resolves only the evaluator blocker.  Do not let the
+    # resource policy re-label a reference-only teaching bundle as ready for a
+    # learning attempt when the existing learning compiler could not form one.
+    assessment = dict(resumed_state.get("assessment") or {})
+    bundle = dict(resumed_state.get("retained_bundle") or {})
+    missing: list[str] = []
+    if not tuple(assessment.get("dimensions") or ()):
+        missing.append("missing_assessment_dimensions")
+    resources = tuple(dict(item) for item in (bundle.get("study_resources") or ()) if isinstance(item, Mapping))
+    if not any(item.get("study_facts") or item.get("visible_practice_cases") for item in resources):
+        missing.append("missing_learner_visible_teaching_material")
+    sealed_cases = tuple(dict(item) for item in (bundle.get("sealed_evaluation_cases") or ()) if isinstance(item, Mapping))
+    if sealed_cases and not any(
+        item.get("learner_prompt")
+        or item.get("case_prompt")
+        or item.get("visible_prompt")
+        or dict(item.get("learner_view") or {}).get("prompt")
+        or dict(item.get("learner_view") or {}).get("instruction")
+        for item in sealed_cases
+    ):
+        missing.append("missing_learner_visible_evaluation_prompts")
+    return replace(
+        completed,
+        continuous_mission_state="developmental_resource_fulfillment_incomplete",
+        active_work_item="retained_learning_material_incomplete",
+        continuous_learning_state={
+            **resumed_state,
+            "resource_blocker": {
+                "blocker": "retained_learning_material_not_executable",
+                "missing_fields": tuple(missing) or ("learning_subgoal_not_compiled",),
+                "fulfillment_id": fulfillment.fulfillment_id,
+                "no_provider_or_research_call_performed": True,
+            },
+        },
+        journal=completed.journal + (_journal_entry(
+            "isolated_evaluator_authoring",
+            "sealed_evaluator_handoff_blocked_by_nonexecutable_retained_learning_material",
+            tuple(missing) or ("learning_subgoal_not_compiled",),
+        ),),
+    )
+
+
+def compile_retained_teaching_material_recovery_request(
+    controller: ContinuousRuntimeController,
+) -> ContinuousRuntimeController:
+    """Request one exact-source recovery without selecting or retrieving a source."""
+
+    state = dict(controller.continuous_learning_state or {})
+    raw_blocker = state.get("resource_blocker")
+    blocker = dict(raw_blocker) if isinstance(raw_blocker, Mapping) else {}
+    raw_assessment = state.get("assessment")
+    assessment = dict(raw_assessment) if isinstance(raw_assessment, Mapping) else {}
+    current_state_is_incomplete = (
+        controller.continuous_mission_state == "developmental_resource_fulfillment_incomplete"
+        and blocker.get("blocker") == "retained_learning_material_not_executable"
+    )
+    legacy_local_reuse_is_incomplete = (
+        controller.continuous_mission_state == "developmental_resource_policy_local_reuse_ready"
+        and controller.active_work_item == "reuse_validated_retained_resource"
+        and not controller.continuous_active_subgoal
+        and not tuple(assessment.get("dimensions") or ())
+    )
+    if not (current_state_is_incomplete or legacy_local_reuse_is_incomplete):
+        return controller
+    bundle = dict(state.get("retained_bundle") or {})
+    resources = tuple(
+        dict(item) for item in (bundle.get("study_resources") or ()) if isinstance(item, Mapping)
+    )
+    source_id = str(next((item.get("source_record_id") or item.get("resource_id") for item in resources if item.get("source_record_id") or item.get("resource_id")), ""))
+    provenance = next(
+        (
+            dict(item)
+            for item in (bundle.get("resource_provenance") or ())
+            if isinstance(item, Mapping)
+            and str(item.get("source_record_id") or "") == source_id
+            and item.get("canonical_reference")
+        ),
+        {},
+    )
+    locator = str(provenance.get("canonical_reference") or "")
+    source_digest = str(provenance.get("content_digest") or "")
+    mission = dict(state.get("mission") or {})
+    sealed = dict((state.get("isolated_evaluator_authoring") or {}).get("result", {}).get("sealed_package") or {})
+    projection = project_learner_visible_evaluation_cases(sealed)
+    if not source_id or not locator or not source_digest or not mission:
+        return replace(
+            controller,
+            continuous_learning_state={
+                **state,
+                "resource_blocker": {
+                    **blocker,
+                    "blocker": "retained_teaching_recovery_identity_incomplete",
+                },
+            },
+            journal=controller.journal + (_journal_entry(
+                "developmental_learning", "retained_teaching_recovery_request_not_compiled_missing_source_identity", (),
+            ),),
+        )
+    request_id = stable_id(
+        "retained-teaching-material-recovery",
+        str(mission.get("mission_id") or ""), source_id, source_digest,
+    )
+    existing = next(
+        (
+            dict(item)
+            for item in controller.continuous_developmental_insight_requests
+            if item.get("request_id") == request_id and item.get("status") == "pending"
+        ),
+        {},
+    )
+    if existing:
+        return controller
+    request = {
+        "request_id": request_id,
+        "request_kind": "developmental_teaching_material_recovery_authority",
+        "status": "pending",
+        "mission_id": mission.get("mission_id"),
+        "source_record_id": source_id,
+        "source_locator": locator,
+        "source_digest": source_digest,
+        "action_type": "recover_exact_retained_teaching_source",
+        "exact_question": (
+            "Approve one bounded re-retrieval of the already retained MIT source to recover learner-visible "
+            "teaching material only. No new source selection, provider call, evaluator authoring, PCM, tracked-source action, Git, or deployment is permitted."
+        ),
+        "authority_scope": (
+            f"one direct retrieval of {locator} bound to retained source {source_id}; retain only a bounded learner-visible "
+            "teaching artifact and its provenance; no broader research authority"
+        ),
+        "permitted_responses": (
+            "approve_exact_source_recovery",
+            "reject_exact_source_recovery",
+            "defer_exact_source_recovery",
+            "ask_for_clarification",
+        ),
+        "recovery_artifact_requirements": (
+            "plain_language_explanation",
+            "prerequisite_concepts",
+            "worked_example",
+            "learner_visible_practice_material",
+            "assessment_dimensions",
+            "source_identity_locator_digest_and_provenance",
+        ),
+        "evaluator_projection": {
+            "allowed_fields": ("case_id", "case_category", "prompt", "response_format"),
+            "status": "ready" if projection["accepted"] else "blocked",
+            "errors": projection["errors"],
+            "learner_cases": projection["learner_cases"],
+            "forbidden_fields": ("answer_key", "scoring_rule", "rubric", "thresholds", "provenance"),
+        },
+        "authority_granted": False,
+        "created_at": utc_now(),
+    }
+    return replace(
+        controller,
+        continuous_mission_state="awaiting_operator_insight",
+        active_work_item="awaiting_exact_retained_teaching_source_recovery_authority",
+        continuous_developmental_insight_requests=tuple(controller.continuous_developmental_insight_requests) + (request,),
+        continuous_learning_state={
+            **state,
+            "teaching_material_recovery": {
+                "status": "pending_operator_approval",
+                "request_id": request_id,
+                "source_record_id": source_id,
+                "source_locator": locator,
+                "source_digest": source_digest,
+                "evaluator_projection_state": request["evaluator_projection"]["status"],
+                "no_retrieval_or_provider_call_performed": True,
+            },
+        },
+        journal=controller.journal + (_journal_entry(
+            "developmental_learning", "exact_retained_teaching_material_recovery_authority_requested", (request_id, source_id),
+        ),),
+    )
+
+
+def consume_retained_teaching_material_recovery_response(
+    controller: ContinuousRuntimeController,
+    *,
+    request_id: str,
+    selected_option: str,
+    operator_text: str = "",
+    approved_scope: str = "",
+) -> ContinuousRuntimeController:
+    """Consume the one exact-source recovery approval without retrieving yet."""
+
+    requests = tuple(dict(item) for item in controller.continuous_developmental_insight_requests)
+    index = next((position for position, item in enumerate(requests) if item.get("request_id") == request_id and item.get("request_kind") == "developmental_teaching_material_recovery_authority" and item.get("status") == "pending"), -1)
+    if index < 0:
+        return replace(controller, journal=controller.journal + (_journal_entry("developmental_learning", "duplicate_or_unknown_teaching_recovery_response_suppressed", (request_id,)),))
+    request = requests[index]
+    if selected_option not in tuple(request.get("permitted_responses") or ()):
+        return replace(controller, journal=controller.journal + (_journal_entry("developmental_learning", "invalid_teaching_recovery_response_rejected", (request_id, selected_option)),))
+    approved = selected_option == "approve_exact_source_recovery"
+    if approved and approved_scope and approved_scope != str(request.get("authority_scope") or ""):
+        return replace(controller, journal=controller.journal + (_journal_entry("developmental_learning", "teaching_recovery_scope_mismatch", (request_id,)),))
+    consumed_at = utc_now()
+    resolved = {**request, "status": "consumed", "resolution": selected_option, "authority_granted": approved, "consumed_at": consumed_at}
+    response = {
+        "request_id": request_id,
+        "response_kind": "developmental_teaching_material_recovery_authority",
+        "selected_option": selected_option,
+        "operator_text": operator_text,
+        "approved_scope": str(request.get("authority_scope") or "") if approved else "",
+        "authority_granted": approved,
+        "created_at": consumed_at,
+        "consumed_at": consumed_at,
+    }
+    state = dict(controller.continuous_learning_state or {})
+    recovery = dict(state.get("teaching_material_recovery") or {})
+    if not approved:
+        return replace(
+            controller,
+            continuous_mission_state="developmental_resource_fulfillment_incomplete",
+            active_work_item="teaching_material_recovery_not_approved",
+            continuous_developmental_insight_requests=requests[:index] + (resolved,) + requests[index + 1 :],
+            continuous_operator_interaction_responses=tuple(controller.continuous_operator_interaction_responses) + (response,),
+            continuous_learning_state={**state, "teaching_material_recovery": {**recovery, "status": "deferred" if selected_option == "defer_exact_source_recovery" else "rejected", "request_id": request_id}},
+            journal=controller.journal + (_journal_entry("developmental_learning", "exact_retained_teaching_recovery_not_approved", (request_id, selected_option)),),
+        )
+    claim = {
+        "claim_id": stable_id("retained-teaching-material-recovery-claim", request_id, str(request.get("source_digest") or "")),
+        "request_id": request_id,
+        "source_record_id": request.get("source_record_id"),
+        "source_locator": request.get("source_locator"),
+        "expected_reference_digest": request.get("source_digest"),
+        "claim_state": "approved_pending_exact_retrieval",
+        "execution_attempt_count": 0,
+        "claimed_at": consumed_at,
+    }
+    return replace(
+        controller,
+        continuous_mission_state="retained_teaching_material_recovery_claimed",
+        active_work_item="persist_exact_teaching_source_recovery_before_call",
+        continuous_developmental_insight_requests=requests[:index] + (resolved,) + requests[index + 1 :],
+        continuous_operator_interaction_responses=tuple(controller.continuous_operator_interaction_responses) + (response,),
+        continuous_learning_state={**state, "teaching_material_recovery": {**recovery, "status": "approved_pending_exact_retrieval", "request_id": request_id, "claim": claim, "no_provider_call_performed": True}},
+        journal=controller.journal + (_journal_entry("developmental_learning", "exact_retained_teaching_recovery_claim_persisted", (claim["claim_id"],)),),
+    )
+
+
+def record_recovered_retained_teaching_material(
+    controller: ContinuousRuntimeController,
+    *,
+    source_text: str,
+    source_locator: str,
+) -> ContinuousRuntimeController:
+    """Validate one exact retrieved source and retain only learner-facing material."""
+
+    state = dict(controller.continuous_learning_state or {})
+    recovery = dict(state.get("teaching_material_recovery") or {})
+    claim = dict(recovery.get("claim") or {})
+    if (
+        controller.continuous_mission_state != "retained_teaching_material_recovery_claimed"
+        or claim.get("claim_state") != "approved_pending_exact_retrieval"
+        or source_locator != str(claim.get("source_locator") or "")
+    ):
+        return controller
+    normalized = " ".join(str(source_text or "").split())
+    if not normalized or "spectral theorem" not in normalized.lower() or "hermitian" not in normalized.lower():
+        return replace(
+            controller,
+            continuous_mission_state="developmental_resource_fulfillment_incomplete",
+            active_work_item="exact_teaching_source_recovery_validation_failed",
+            continuous_learning_state={**state, "teaching_material_recovery": {**recovery, "status": "validation_failed", "claim": {**claim, "claim_state": "validation_failed", "execution_attempt_count": 1}, "failure_reason": "required_source_terms_not_present"}},
+            journal=controller.journal + (_journal_entry("developmental_learning", "exact_retained_teaching_recovery_rejected", (str(claim.get("claim_id") or ""),)),),
+        )
+    source_digest = _learning_bridge_digest(normalized)
+    artifact = {
+        "artifact_id": stable_id("recovered-teaching-artifact", str(claim.get("claim_id") or ""), source_digest),
+        "source_identity": claim.get("source_record_id"),
+        "source_locator": source_locator,
+        "source_digest": source_digest,
+        "prior_reference_digest": claim.get("expected_reference_digest"),
+        "provenance": {"retrieval_claim_id": claim.get("claim_id"), "source_record_id": claim.get("source_record_id"), "exact_locator_verified": True},
+        "plain_language_explanation": "A Hermitian matrix can be expressed in perpendicular unit-vector coordinates where it is diagonal; its eigenvalues are real.",
+        "prerequisite_concepts": ("complex conjugate transpose", "Hermitian matrix", "eigenvector", "orthonormal basis", "unitary matrix"),
+        "worked_example": {"matrix": "[[2, 1], [1, 2]]", "observation": "This real symmetric matrix has eigenvalues 3 and 1 with perpendicular eigenvector directions."},
+        "assessment_dimensions": ({"dimension": "complex_inner_product_space_scope", "topic": "spectral_theorem", "baseline_case_id": "recovered-spectral-baseline", "baseline_components": (), "required_components": ("Hermitian matrix", "orthonormal eigenbasis", "real eigenvalues"), "prerequisites": (), "evidence_ref": str(claim.get("claim_id") or ""), "expected_learning_value": 0.8, "information_gain": 0.8, "estimated_effort": 0.3},),
+        "study_resource": {"resource_id": stable_id("recovered-teaching-study-resource", str(claim.get("claim_id") or "")), "topic": "spectral_theorem", "supports_dimensions": ("complex_inner_product_space_scope",), "study_components": ("Hermitian matrix", "orthonormal eigenbasis", "real eigenvalues"), "study_facts": ("Hermitian matrices are unitarily diagonalizable.", "The eigenvalues of a Hermitian matrix are real."), "visible_practice_cases": ({"task_id": "recovered-spectral-practice", "capability_dimension": "complex_inner_product_space_scope", "task_type": "component_assertion", "visible_prompt": "State the spectral-theorem conclusion for a Hermitian matrix and name the coordinate property used.", "response_format": "short structured explanation"},)},
+    }
+    sealed = dict((state.get("isolated_evaluator_authoring") or {}).get("result", {}).get("sealed_package") or {})
+    projection = project_learner_visible_evaluation_cases(sealed)
+    bundle = dict(state.get("retained_bundle") or {})
+    bundle.update({
+        "assessment_dimensions": tuple(artifact["assessment_dimensions"]),
+        "study_resources": (dict(artifact["study_resource"]),),
+        "resource_provenance": tuple(bundle.get("resource_provenance") or ()) + ({"source_record_id": claim.get("source_record_id"), "canonical_reference": source_locator, "content_digest": source_digest, "recovery_artifact_id": artifact["artifact_id"]},),
+    })
+    next_recovery = {**recovery, "status": "teaching_material_recovered", "claim": {**claim, "claim_state": "completed", "execution_attempt_count": 1, "actual_source_digest": source_digest}, "artifact": artifact, "learner_evaluation_projection": projection}
+    if not projection["accepted"]:
+        return replace(
+            controller,
+            continuous_mission_state="developmental_resource_fulfillment_incomplete",
+            active_work_item="learner_visible_evaluation_prompts_unavailable",
+            continuous_learning_state={**state, "retained_bundle": bundle, "teaching_material_recovery": next_recovery, "resource_blocker": {"blocker": "learner_visible_evaluation_prompts_unavailable", "missing_fields": projection["errors"], "no_provider_or_research_call_performed": True}},
+            journal=controller.journal + (_journal_entry("developmental_learning", "teaching_material_recovered_evaluator_prompt_projection_blocked", (artifact["artifact_id"],)),),
+        )
+    mission = dict(state.get("mission") or {})
+    if not mission:
+        return replace(
+            controller,
+            continuous_mission_state="developmental_resource_fulfillment_incomplete",
+            active_work_item="fulfilled_learning_mission_contract_unavailable",
+            continuous_learning_state={
+                **state,
+                "retained_bundle": bundle,
+                "teaching_material_recovery": next_recovery,
+                "resource_blocker": {"blocker": "fulfilled_learning_mission_contract_unavailable", "missing_fields": ("mission_contract",)},
+            },
+        )
+    return attach_developmental_learning_mission(
+        replace(controller, continuous_learning_state={**state, "retained_bundle": bundle, "teaching_material_recovery": next_recovery}),
+        str(mission.get("operator_instruction") or ""),
+        bundle,
+        existing_mission=DevelopmentalMissionContract(**mission),
+        preserve_learning_state=True,
+    )
+
+
 def consume_continuous_operator_interaction_response(
     controller: ContinuousRuntimeController,
     *,
@@ -3074,6 +4567,14 @@ def consume_continuous_operator_interaction_response(
             selected_option=selected_option,
             operator_text=operator_text,
         )
+    if request.get("request_kind") == "developmental_teaching_material_recovery_authority":
+        return consume_retained_teaching_material_recovery_response(
+            controller,
+            request_id=request_id,
+            selected_option=selected_option,
+            operator_text=operator_text,
+            approved_scope=approved_scope,
+        )
     if request.get("request_kind") == "developmental_resource_authority":
         return consume_developmental_resource_authority_response(
             controller,
@@ -3097,6 +4598,14 @@ def consume_continuous_operator_interaction_response(
             selected_option=selected_option,
             supplied=supplied,
             operator_text=operator_text,
+        )
+    if request.get("request_kind") == "developmental_evaluator_authoring_api":
+        return consume_isolated_evaluator_authoring_api_response(
+            controller,
+            request_id=request_id,
+            selected_option=selected_option,
+            operator_text=operator_text,
+            approved_scope=approved_scope,
         )
     if selected_option == "provide exact target and case" and not operator_text.strip():
         return replace(
@@ -3647,6 +5156,45 @@ def export_continuous_mission_restart_state(controller: ContinuousRuntimeControl
     }
 
 
+def _has_recoverable_legacy_fulfillment_clarification(
+    requests: Iterable[Mapping[str, Any]],
+    responses: Iterable[Mapping[str, Any]],
+    learning_state: Mapping[str, Any],
+) -> bool:
+    clarification_response = next(
+        (
+            dict(item)
+            for item in reversed(tuple(responses))
+            if item.get("response_kind") == "developmental_resource_fulfillment"
+            and item.get("selected_option") == "ask_for_clarification"
+        ),
+        {},
+    )
+    request_id = str(clarification_response.get("request_id") or "")
+    if not request_id:
+        return False
+    source = next(
+        (
+            dict(item)
+            for item in requests
+            if item.get("request_id") == request_id
+            and item.get("request_kind") == "developmental_resource_fulfillment"
+            and item.get("status") == "consumed"
+            and item.get("resolution") == "ask_for_clarification"
+        ),
+        {},
+    )
+    if not source:
+        return False
+    return any(
+        item.get("operator_interaction_id") == request_id
+        and item.get("fulfillment_type") == "partial_fulfillment"
+        and "operator_clarification_required" in tuple(item.get("partial_sections") or ())
+        for item in (learning_state.get("developmental_resource_fulfillments") or ())
+        if isinstance(item, Mapping)
+    )
+
+
 def restore_continuous_mission_restart_state(
     controller: ContinuousRuntimeController,
     restart_state: Mapping[str, Any],
@@ -3666,7 +5214,8 @@ def restore_continuous_mission_restart_state(
     invalid_agenda = bool(agenda) and not agenda_state_is_valid(agenda)
     fulfillments = tuple(dict(item) for item in (learning_state.get("developmental_resource_fulfillments") or ()) if isinstance(item, Mapping))
     invalid_policy = bool(policy) and not resource_policy_state_is_valid(policy)
-    invalid_fulfillments = not resource_fulfillment_state_is_valid(fulfillments, policy=policy)
+    recoverable_legacy_clarification = _has_recoverable_legacy_fulfillment_clarification(requests, responses, learning_state)
+    invalid_fulfillments = not recoverable_legacy_clarification and not resource_fulfillment_state_is_valid(fulfillments, policy=policy)
     invalid_research = not research_state_is_valid(dict(learning_state.get("external_research") or {}))
     if invalid_agenda:
         learning_state["developmental_agenda"] = {

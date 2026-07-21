@@ -383,14 +383,19 @@ def compile_developmental_resource_authority_requirement(
     result = dict(state.get("local_model_result_reference") or {})
     strategy = dict(state.get("evaluation_strategy") or {})
     selected_plan = dict(strategy.get("selected_plan") or {})
+    selected_strategy = str(selected_plan.get("selected_strategy") or "")
+    selected_evaluator_available = (
+        str(selected_plan.get("status") or "") == "evaluation_plan_ready"
+        and bool(selected_strategy)
+    )
     topic = str(proposal.get("topic") or candidate.get("topic") or mission.get("topic") or "")
     target = str(proposal.get("target_capability") or candidate.get("target_capability") or mission.get("primary_capability_target") or "")
     behavior = str(proposal.get("measurable_outcome") or candidate.get("target_behavior") or "")
     retained_state = "available_validated" if retained.get("study_resources") or fulfilled_teaching else "unavailable"
     provisional_state = "available_advisory" if provisional else "unavailable"
     model_state = str(local_request.get("lifecycle_state") or "unavailable")
-    evaluator_state = "evaluation_plan_ready" if fulfilled_evaluator else str(selected_plan.get("status") or candidate.get("evaluator_state") or "evaluation_unavailable")
-    evaluator_independence = "independent" if fulfilled_evaluator or str(selected_plan.get("selected_strategy") or "") not in {"", "evaluation_unavailable"} else "unavailable"
+    evaluator_state = "evaluation_plan_ready" if fulfilled_evaluator or selected_evaluator_available else "evaluation_unavailable"
+    evaluator_independence = "independent" if fulfilled_evaluator or selected_evaluator_available else "unavailable"
     blockers: list[str] = []
     if retained_state == "unavailable" and provisional_state == "unavailable" and model_state != "completed":
         blockers.append("teaching_resource_unavailable")
@@ -451,7 +456,8 @@ def observe_developmental_resources(
         ))
     retained = dict(state.get("retained_bundle") or {})
     if retained:
-        add(str(retained.get("resource_bundle_id") or "retained_bundle"), "validated_retained_resource", retained, "validated" if retained.get("study_resources") else "insufficient", "declared retained scope", True, bool(retained.get("study_resources")), bool(retained.get("study_resources")))
+        has_independent_evaluator = bool(retained.get("independent_evaluator") or retained.get("sealed_evaluation_cases"))
+        add(str(retained.get("resource_bundle_id") or "retained_bundle"), "validated_retained_resource", retained, "validated" if retained.get("study_resources") else "insufficient", "declared retained scope", has_independent_evaluator, bool(retained.get("study_resources")), bool(retained.get("study_resources")))
     provisional = dict(state.get("provisional_resource_bundle") or {})
     if provisional:
         add(str(provisional.get("resource_bundle_id") or "provisional_bundle"), "provisional_resource", provisional, "advisory", "model-derived provisional evidence", bool(provisional.get("independent_evaluator")), True, True)
@@ -506,6 +512,7 @@ def compile_resource_policy_candidates(
             if not available:
                 reasons.append("matching_resource_unavailable_or_scope_mismatched")
             if action == "reuse_validated_retained_resource" and not compatible:
+                available = False
                 reasons.append("independent_evaluator_not_preserved")
             if action == "reuse_provisional_resource" and resource and resource.validation_state != "advisory":
                 reasons.append("provisional_state_invalid")

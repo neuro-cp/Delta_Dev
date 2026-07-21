@@ -214,10 +214,25 @@ def _execute_developmental_learning_subgoal(
     if not bundle:
         raise ValueError("developmental learning subgoal requires retained resource and evaluation bundle")
     typed = LearningSubgoal(**{key: value for key, value in dict(subgoal).items() if key in LearningSubgoal.__dataclass_fields__})
-    # The candidate-facing attempt receives study material only.  The sealed
-    # evaluator stays controller-owned and is passed only after the attempt is
-    # immutable on disk.
-    attempt = execute_learning_attempt(typed, {"study_resources": bundle.get("study_resources") or ()})
+    # The learner receives teaching evidence plus the public V3 case view. The
+    # full evaluator package remains controller-owned for scoring below.
+    learner_cases = tuple(
+        {
+            "case_id": str(case.get("case_id") or ""),
+            "case_kind": str(case.get("case_kind") or ""),
+            "task_type": str(case.get("task_type") or ""),
+            "capability_dimension": str(case.get("capability_dimension") or ""),
+            "learner_view": dict(case.get("learner_view") or {}),
+        }
+        for case in bundle.get("sealed_evaluation_cases") or ()
+        if isinstance(case, Mapping)
+    )
+    learner_bundle = {
+        "study_resources": bundle.get("study_resources") or (),
+        "execution_contract_version": bundle.get("execution_contract_version"),
+        "sealed_evaluation_cases": learner_cases,
+    }
+    attempt = execute_learning_attempt(typed, learner_bundle)
     evaluation = evaluate_learning_attempt(typed, attempt, bundle)
     root.mkdir(parents=True, exist_ok=True)
     _write_json(root / "learning_attempt.json", attempt.as_dict())

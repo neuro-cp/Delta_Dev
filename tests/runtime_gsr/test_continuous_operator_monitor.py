@@ -273,6 +273,32 @@ def test_monitor_renders_copyable_summary_with_grounded_state(tmp_path: Path) ->
     assert "Supervisor root:" in summary
 
 
+def test_monitor_renders_read_only_learning_trace_without_provider_payloads(tmp_path: Path) -> None:
+    root = _supervisor_root(tmp_path)
+    state_path = root / "restart_state.json"
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    state["continuous_learning_state"] = {
+        "mission": {"mission_id": "mission-001", "topic": "spectral_theorem"},
+        "retained_bundle": {"source_type": "authorized_external_research", "resource_status": "provisional"},
+        "isolated_evaluator_authoring": {
+            "pending_request": {
+                "request_id": "evaluator-001",
+                "status": "pending_operator_approval",
+                "provider": "openai",
+                "user_prompt": "must never be rendered",
+            }
+        },
+    }
+    _write_json(state_path, state)
+
+    summary = render_monitor_summary(load_monitor_snapshot(root), classify_monitor_event(load_monitor_snapshot(root)))
+
+    assert "Live Runtime Trace" in summary
+    assert "MISSION: spectral_theorem | target=mission-001" in summary
+    assert "EVALUATOR GATE: pending_operator_approval | request=evaluator-001 | provider=openai" in summary
+    assert "must never be rendered" not in summary
+
+
 def test_monitor_reads_do_not_mutate_runtime_artifacts(tmp_path: Path) -> None:
     root = _supervisor_root(tmp_path)
     before = {path.name: path.read_text(encoding="utf-8") for path in root.iterdir()}

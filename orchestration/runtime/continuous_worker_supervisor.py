@@ -26,9 +26,17 @@ from orchestration.runtime.continuous_runtime_controller import (
     consume_continuous_capability_reassessment,
     consume_continuous_mission_application_decision,
     consume_continuous_operator_interaction_response,
+    compile_governed_isolated_evaluator_authoring_api_request,
+    begin_isolated_evaluator_authoring_execution,
+    handoff_sealed_isolated_evaluator_to_resource_fulfillment,
+    record_isolated_evaluator_authoring_provider_result,
     controller_snapshot,
     exit_observation_with_action_derivation,
     export_continuous_mission_restart_state,
+    recover_developmental_resource_fulfillment_clarification,
+    recover_nonexecutable_sealed_evaluator_execution,
+    recover_validated_sealed_evaluator_learning_execution,
+    recover_misaligned_v3_learning_execution,
     recover_accepted_boundary_operator_requests,
     recover_missing_continuous_application_review_request,
     restore_continuous_mission_restart_state,
@@ -50,6 +58,39 @@ OPERATOR_APPLICATION_DECISION = "operator_application_decision.json"
 OPERATOR_APPLICATION_DECISION_LEDGER = "operator_application_decision_ledger.json"
 OPERATOR_INTERACTION_RESPONSE = "operator_interaction_response.json"
 OPERATOR_INTERACTION_RESPONSE_LEDGER = "operator_interaction_response_ledger.json"
+ISOLATED_EVALUATOR_AUTHORING_MAX_TOKENS = 6000
+
+_BROAD_MISSION_REQUIRED_FIELDS = frozenset(
+    {
+        "mission_id",
+        "original_operator_goal",
+        "normalized_goal",
+        "accepted_at",
+        "local_authority",
+        "api_authority",
+    }
+)
+_DEVELOPMENTAL_LEARNING_REQUIRED_FIELDS = frozenset(
+    {
+        "mission_id",
+        "mission_type",
+        "protocol",
+        "operator_instruction",
+        "topic",
+    }
+)
+_OPERATOR_INTERACTION_KINDS = frozenset(
+    {
+        "insight",
+        "clarification",
+        "priority_choice",
+        "tracked_application_authority",
+        "developmental_goal_approval",
+        "developmental_resource_authority",
+        "developmental_resource_fulfillment",
+        "developmental_evaluator_authoring_api",
+    }
+)
 
 
 @dataclass
@@ -306,10 +347,17 @@ def worker_main(argv: list[str] | None = None) -> int:
         restart_state = _read_json(root / RESTART_STATE)
         _validate_restart_state(restart_state)
         session_id = str(restart_state.get("session_id") or "")
+        contract_kind = _restart_contract_kind(dict(restart_state.get("continuous_mission_contract") or {}))
         controller = start_continuous_runtime_controller(session_id=session_id)
         controller = restore_continuous_mission_restart_state(controller, restart_state)
-        controller = recover_missing_continuous_application_review_request(controller)
-        controller = recover_accepted_boundary_operator_requests(controller)
+        if contract_kind == "broad_mission":
+            controller = recover_missing_continuous_application_review_request(controller)
+            controller = recover_accepted_boundary_operator_requests(controller)
+        else:
+            controller = recover_developmental_resource_fulfillment_clarification(controller)
+            controller = recover_nonexecutable_sealed_evaluator_execution(controller)
+            controller = recover_validated_sealed_evaluator_learning_execution(controller)
+            controller = recover_misaligned_v3_learning_execution(controller)
         _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(controller))
         if args.complete_transition_once and controller.continuous_active_subgoal and not (root / TRANSITION_MARKER).exists():
             record = _worker_reassessment_record(controller)
@@ -333,10 +381,32 @@ def worker_main(argv: list[str] | None = None) -> int:
                 controller = recover_missing_continuous_application_review_request(controller)
                 _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(controller))
                 controller = _consume_operator_application_decision_if_present(root, controller)
-            elif args.execute_active_subgoal and controller.continuous_mission_state == "awaiting_operator_insight":
-                controller = recover_accepted_boundary_operator_requests(controller)
+            elif args.execute_active_subgoal and (
+                controller.continuous_mission_state == "awaiting_operator_insight"
+                or _has_pending_operator_interaction(controller)
+            ):
+                if contract_kind == "broad_mission" and controller.continuous_mission_state == "awaiting_operator_insight":
+                    controller = recover_accepted_boundary_operator_requests(controller)
                 _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(controller))
                 controller = _consume_operator_interaction_response_if_present(root, controller)
+            elif args.execute_active_subgoal and controller.continuous_mission_state == "developmental_resource_fulfillment_deferred":
+                controller = compile_governed_isolated_evaluator_authoring_api_request(controller)
+                _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(controller))
+            elif args.execute_active_subgoal and controller.continuous_mission_state == "awaiting_isolated_evaluator_authoring_execution":
+                controller = begin_isolated_evaluator_authoring_execution(controller)
+                _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(controller))
+                controller = _execute_isolated_evaluator_authoring_provider_call(root, controller)
+                _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(controller))
+            elif args.execute_active_subgoal and controller.continuous_mission_state == "isolated_evaluator_authoring_dispatching":
+                controller = record_isolated_evaluator_authoring_provider_result(
+                    controller,
+                    raw_response=None,
+                    provider_error="provider_dispatch_outcome_indeterminate_after_restart_no_retry",
+                )
+                _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(controller))
+            elif args.execute_active_subgoal and controller.continuous_mission_state == "isolated_evaluator_authoring_result_sealed":
+                controller = handoff_sealed_isolated_evaluator_to_resource_fulfillment(controller)
+                _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(controller))
             elif args.execute_active_subgoal and controller.continuous_active_subgoal:
                 _write_worker_status(root, controller, "executing_active_subgoal")
                 controller = _execute_next_worker_subgoal(
@@ -359,6 +429,86 @@ def worker_main(argv: list[str] | None = None) -> int:
             },
         )
         return 2
+
+
+def _repository_root_from_supervisor_root(supervisor_root: Path) -> Path:
+    """Resolve the repository only from the worker's persisted supervisor root."""
+
+    status_path = Path(supervisor_root) / SUPERVISOR_STATUS
+    supervisor = _read_json(status_path)
+    repository_root = str(supervisor.get("repository_root") or "").strip()
+    if not repository_root:
+        raise ValueError("supervisor_status_missing_repository_root")
+    return Path(repository_root).resolve()
+
+
+def _execute_isolated_evaluator_authoring_provider_call(supervisor_root: Path, controller: Any) -> Any:
+    """Use the existing OpenAI transport for one already-persisted claim."""
+
+    state = dict(controller.continuous_learning_state or {})
+    authoring = dict(state.get("isolated_evaluator_authoring") or {})
+    packet = dict(authoring.get("request") or {})
+    claim = dict(authoring.get("execution_claim") or {})
+    if claim.get("claim_state") != "dispatching" or not packet:
+        return controller
+    try:
+        from orchestration.runtime.v16_env import load_delta_evaluator_env
+        from orchestration.runtime.v16_external_consolidation_evaluator_api_trial import _default_transport
+
+        repository_root = _repository_root_from_supervisor_root(supervisor_root)
+        config = load_delta_evaluator_env(repository_root / ".env.local")
+        if (
+            not config.live_call_permitted
+            or str(config.provider).lower() != str(packet.get("provider") or "").lower()
+            or str(config.model) != str(packet.get("model") or "")
+        ):
+            return record_isolated_evaluator_authoring_provider_result(
+                controller,
+                raw_response=None,
+                provider_error="provider_configuration_not_permitted_or_does_not_match_approved_packet",
+            )
+        import json
+        import os
+        from orchestration.runtime.v16_env import parse_env_file
+
+        api_key = os.environ.get("DELTA_EVALUATOR_API_KEY") or parse_env_file(repository_root / ".env.local").get("DELTA_EVALUATOR_API_KEY", "")
+        body = {
+            "model": packet["model"],
+            "temperature": 0,
+            # Five fully bound learner/evaluator cases exceed the former
+            # completion budget before the strict JSON object can close.
+            "max_tokens": ISOLATED_EVALUATOR_AUTHORING_MAX_TOKENS,
+            "response_format": {
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "isolated_evaluator_authoring_response",
+                    "strict": True,
+                    "schema": packet["output_contract"]["native_json_schema"],
+                },
+            },
+            "messages": (
+                {"role": "system", "content": packet["system_prompt"]},
+                {"role": "user", "content": packet["user_prompt"]},
+            ),
+        }
+        response = _default_transport(
+            config.endpoint or "https://api.openai.com/v1/chat/completions",
+            {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"},
+            body,
+            45,
+        )
+        choices = response.get("choices") if isinstance(response, Mapping) else ()
+        message = choices[0].get("message") if isinstance(choices, list) and choices and isinstance(choices[0], Mapping) else {}
+        content = str(message.get("content") or "") if isinstance(message, Mapping) else ""
+        raw = json.loads(content)
+        usage = dict(response.get("usage") or {}) if isinstance(response, Mapping) else {}
+        return record_isolated_evaluator_authoring_provider_result(controller, raw_response=raw, provider_usage=usage)
+    except Exception as exc:  # noqa: BLE001 - a one-use claim must fail closed.
+        return record_isolated_evaluator_authoring_provider_result(
+            controller,
+            raw_response=None,
+            provider_error=f"{type(exc).__name__}: {str(exc)[:240]}",
+        )
 
 
 def _execute_next_worker_subgoal(root: Path, controller: Any, *, allow_local_model_execution: bool = False) -> Any:
@@ -462,7 +612,7 @@ def _consume_operator_interaction_response_if_present(root: Path, controller: An
     pending_runtime_requests = tuple(
         item
         for item in (controller.continuous_developmental_insight_requests or ())
-        if item.get("status") == "pending" and item.get("request_kind") in {"insight", "clarification", "priority_choice", "tracked_application_authority", "developmental_goal_approval"}
+        if item.get("status") == "pending" and item.get("request_kind") in _OPERATOR_INTERACTION_KINDS
     )
     if not response_path.exists() and not pending_runtime_requests:
         recovered = exit_observation_with_action_derivation(
@@ -531,6 +681,13 @@ def _consume_operator_interaction_response_if_present(root: Path, controller: An
         pass
     _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(consumed))
     return consumed
+
+
+def _has_pending_operator_interaction(controller: Any) -> bool:
+    return any(
+        item.get("status") == "pending" and item.get("request_kind") in _OPERATOR_INTERACTION_KINDS
+        for item in (controller.continuous_developmental_insight_requests or ())
+    )
 
 
 def _operator_application_reassessment_record(controller: Any, action: str, decision_id: str) -> CapabilityKnowledgeRecord:
@@ -615,6 +772,31 @@ def _validate_restart_state(restart_state: Mapping[str, Any]) -> None:
     contract = restart_state.get("continuous_mission_contract") or {}
     if not isinstance(contract, Mapping) or not contract.get("mission_id"):
         raise ValueError("restart state missing continuous mission contract")
+
+
+def _restart_contract_kind(contract: Mapping[str, Any]) -> str:
+    """Classify a persisted contract before selecting its recovery owner.
+
+    Broad missions predate an explicit type field, so their bounded legacy
+    signature is accepted only when every required field is present. The
+    developmental-learning discriminator always takes precedence.
+    """
+
+    declared_type = str(contract.get("mission_type") or "")
+    if declared_type:
+        if declared_type != "developmental_learning":
+            raise ValueError(f"recovery_contract_unknown:{declared_type}")
+        missing = sorted(_DEVELOPMENTAL_LEARNING_REQUIRED_FIELDS - set(contract))
+        if missing:
+            raise ValueError(f"recovery_required_field_missing:developmental_learning:{','.join(missing)}")
+        if str(contract.get("protocol") or "") != "developmental_learning_mission_v1":
+            raise ValueError("recovery_schema_unsupported:developmental_learning")
+        return "developmental_learning"
+
+    missing = sorted(_BROAD_MISSION_REQUIRED_FIELDS - set(contract))
+    if not missing:
+        return "broad_mission"
+    raise ValueError(f"recovery_contract_ambiguous_or_unknown:missing:{','.join(missing)}")
 
 
 def _write_worker_status(root: Path, controller: Any, worker_state: str) -> None:
