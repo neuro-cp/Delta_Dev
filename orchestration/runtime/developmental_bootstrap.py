@@ -592,7 +592,12 @@ def _final_path(root: Path, directory: str, artifact_id: str) -> Path:
 
 
 def _assert_no_drift(path: Path, payload: Mapping[str, Any], reason: str) -> None:
-    if path.exists() and _canonical(json.loads(path.read_text(encoding="utf-8"))) != _canonical(payload):
+    if not path.exists():
+        return
+    existing = json.loads(path.read_text(encoding="utf-8"))
+    if str(existing.get("artifact_digest") or "") != str(payload.get("artifact_digest") or ""):
+        raise BootstrapContractError(reason)
+    if _canonical(_without_digest(existing)) != _canonical(_without_digest(payload)):
         raise BootstrapContractError(reason)
 
 
