@@ -7,6 +7,7 @@ import pytest
 
 from orchestration.runtime.persistent_autonomous_development_runtime import (
     DEFAULT_PROVIDER_POLICY,
+    EVIDENCE_REVISION_OWNERSHIP_DIRECTORY,
     MAPPING_ARTIFACT_DIRECTORY,
     SOURCE_ARTIFACT_DIRECTORY,
     compile_persistent_generic_evaluator_authority,
@@ -17,6 +18,7 @@ from orchestration.runtime.persistent_autonomous_development_runtime import (
     recover_historical_retrieval_with_persistence,
     run_persistent_evidence_revision_cycle,
     _target_is_satisfied,
+    _exclusive_transition,
     _write_immutable_artifact,
     export_runtime_report,
     initialize_runtime,
@@ -727,6 +729,21 @@ def test_evidence_revision_execution_concurrent_callers_acquire_one_owner(tmp_pa
     assert execute_persistent_evidence_revision_consumer(runtime_root=tmp_path, authority_id=authority["request_id"])["status"] == "execution_replay_suppressed"
 
 
+def test_exclusive_transition_loser_does_not_parse_pending_metadata(tmp_path):
+    execution_id = "execution-under-publication"
+    sequence = "000-acquired"
+    root = tmp_path / EVIDENCE_REVISION_OWNERSHIP_DIRECTORY / execution_id
+    (root / f"{sequence}.lock").mkdir(parents=True)
+    status, ownership = _exclusive_transition(
+        runtime_root=tmp_path,
+        execution_id=execution_id,
+        sequence=sequence,
+        payload={"schema": "persistent_evidence_revision_execution_ownership_v1", "state": "acquired_not_started"},
+    )
+    assert status == "already_exists"
+    assert ownership["state"] == "owned_metadata_pending"
+
+
 class _InjectedCrash(RuntimeError):
     pass
 
@@ -740,6 +757,7 @@ class _InjectedCrash(RuntimeError):
         ("after_attempt_persisted", "recovery_resumed_evaluation_from_persisted_attempt", {"learner": 1, "evaluator": 1}),
         ("after_evaluator_dispatching", "evaluation_outcome_unknown_integrity_stop", {"learner": 1, "evaluator": 0}),
         ("after_evaluation_persisted", "recovery_finalized_from_persisted_evaluation", {"learner": 1, "evaluator": 1}),
+        ("after_terminal_result_persisted", "terminal_result_reconciled", {"learner": 1, "evaluator": 1}),
     ),
 )
 def test_evidence_revision_execution_recovery_classifies_crash_windows(tmp_path, monkeypatch, boundary, expected_status, expected_counts):
@@ -774,6 +792,14 @@ def test_evidence_revision_execution_recovery_classifies_crash_windows(tmp_path,
     if boundary == "after_evaluation_persisted":
         assert counts == before_recovery_counts
         assert recovered["execution_result"]["evaluation_artifact_id"]
+    if boundary == "after_terminal_result_persisted":
+        assert counts == before_recovery_counts
+        final = initialize_runtime(runtime_root=tmp_path)
+        pending = final["goals"][0]["pending_evidence_revision_authority"]
+        assert pending["status"] == "consumed_completed"
+        assert pending["execution_result_id"] == recovered["execution_result"]["artifact_id"]
+        assert len(final["goals"][0]["learning_attempts"]) == 2
+        assert len(final["goals"][0]["behavioral_evaluations"]) == 2
     if expected_status.endswith("integrity_stop") or expected_status.endswith("manual_recovery_required"):
         assert execute_persistent_evidence_revision_consumer(runtime_root=tmp_path, authority_id=authority["request_id"])["status"] == "execution_recovery_classified_replay_suppressed"
 

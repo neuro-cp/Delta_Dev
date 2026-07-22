@@ -83,18 +83,24 @@ def _atomic_write(path: Path, payload: Mapping[str, Any]) -> None:
 
 
 def _exclusive_transition(*, runtime_root: Path, execution_id: str, sequence: str, payload: Mapping[str, Any]) -> tuple[str, dict[str, Any]]:
-    """Create one durable ownership transition using the filesystem's create-new primitive."""
-    path = Path(runtime_root) / EVIDENCE_REVISION_OWNERSHIP_DIRECTORY / execution_id / f"{sequence}.json"
-    path.parent.mkdir(parents=True, exist_ok=True)
+    """Create one durable ownership transition without exposing partial JSON."""
+    root = Path(runtime_root) / EVIDENCE_REVISION_OWNERSHIP_DIRECTORY / execution_id
+    lock = root / f"{sequence}.lock"
+    path = root / f"{sequence}.json"
+    root.mkdir(parents=True, exist_ok=True)
     body = dict(payload)
     body["transition_digest"] = _digest(body)
     try:
-        descriptor = os.open(str(path), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+        lock.mkdir()
     except FileExistsError:
-        return ("already_exists", _read(path))
-    with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+        return ("already_exists", _read(path) if path.exists() else {"schema": str(payload.get("schema") or ""), "execution_claim_id": execution_id, "state": "owned_metadata_pending", "sequence": sequence})
+    temporary = root / f".{sequence}.{os.getpid()}.tmp"
+    with temporary.open("w", encoding="utf-8") as handle:
         json.dump(body, handle, indent=2, sort_keys=True)
         handle.write("\n")
+        handle.flush()
+        os.fsync(handle.fileno())
+    os.replace(temporary, path)
     return ("acquired", body)
 
 
@@ -1452,6 +1458,7 @@ def _finalize_persistent_evidence_revision_execution(
     attempt_artifact: Mapping[str, Any],
     evaluation_artifact: Mapping[str, Any],
     ownership_payload: Mapping[str, Any],
+    boundary_hook: Callable[[str], None] | None = None,
 ) -> dict[str, Any]:
     """Persist the terminal result from durable attempt/evaluation artifacts."""
     attempt = dict(attempt_artifact.get("attempt") or {})
@@ -1475,6 +1482,8 @@ def _finalize_persistent_evidence_revision_execution(
             "completed_at": utc_now(),
         },
     )
+    if boundary_hook:
+        boundary_hook("after_terminal_result_persisted")
     current = _read(Path(runtime_root) / STATE_FILE)
     goal_index, goal = next(
         ((index, dict(item)) for index, item in enumerate(current.get("goals") or ()) if str(dict(item.get("pending_evidence_revision_authority") or {}).get("request_id") or "") == authority_id),
@@ -1500,6 +1509,50 @@ def _finalize_persistent_evidence_revision_execution(
     _checkpoint(state={**current, "goals": tuple(goals), "active_goal_id": "", "active_work_item": {}, "lifecycle_state": "ready"}, runtime_root=runtime_root, reason="evidence_revision_execution_completed_without_trust_or_promotion")
     _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="050-terminal", payload={**ownership_payload, "state": "terminal", "execution_result_id": result["artifact_id"], "at": utc_now()})
     return {"status": "execution_completed", "execution_claim": dict(claim), "execution_result": result, "attempt": attempt, "evaluation": evaluation, "disposition": disposition}
+
+
+def _reconcile_persistent_evidence_revision_terminal_result(
+    *,
+    runtime_root: Path,
+    authority_id: str,
+    authority: Mapping[str, Any],
+    execution_id: str,
+    result: Mapping[str, Any],
+) -> dict[str, Any]:
+    claim = _read(Path(runtime_root) / EVIDENCE_REVISION_EXECUTION_CLAIM_DIRECTORY / f"{execution_id}.json")
+    if str(result.get("execution_claim_id") or "") != execution_id or str(result.get("execution_claim_digest") or "") != str(claim.get("artifact_digest") or ""):
+        raise ValueError("persistent_runtime_revision_terminal_result_binding_invalid")
+    attempt_artifact = _read(Path(runtime_root) / "learning_attempts" / f"{result['attempt_artifact_id']}.json")
+    evaluation_artifact = _read(Path(runtime_root) / "learning_evaluations" / f"{result['evaluation_artifact_id']}.json")
+    state = initialize_runtime(runtime_root=runtime_root)
+    goal_index, goal = next(
+        ((index, dict(item)) for index, item in enumerate(state.get("goals") or ()) if str(dict(item.get("pending_evidence_revision_authority") or {}).get("request_id") or "") == authority_id),
+        (-1, {}),
+    )
+    if goal_index < 0:
+        raise ValueError("persistent_runtime_revision_terminal_reconcile_goal_missing")
+    candidate = next((dict(item) for item in goal.get("candidate_versions") or () if str(item.get("candidate_id") or "") == str(authority.get("candidate_id") or "")), None)
+    if not candidate or str(candidate.get("candidate_digest") or "") != str(authority.get("candidate_digest") or ""):
+        raise ValueError("persistent_runtime_revision_terminal_reconcile_candidate_invalid")
+    ownership_path = Path(runtime_root) / EVIDENCE_REVISION_OWNERSHIP_DIRECTORY / execution_id / "000-acquired.json"
+    ownership_payload = _read(ownership_path) if ownership_path.exists() else {
+        "schema": "persistent_evidence_revision_execution_ownership_v1",
+        "execution_claim_id": execution_id,
+        "authority_id": authority_id,
+        "authority_digest": authority["artifact_digest"],
+        "state": "terminal_reconcile_without_acquired_metadata",
+    }
+    reconciled = _finalize_persistent_evidence_revision_execution(
+        runtime_root=runtime_root,
+        authority_id=authority_id,
+        authority=authority,
+        candidate=candidate,
+        claim=claim,
+        attempt_artifact=attempt_artifact,
+        evaluation_artifact=evaluation_artifact,
+        ownership_payload=ownership_payload,
+    )
+    return {**reconciled, "status": "terminal_result_reconciled"}
 
 
 def _prepare_persistent_evidence_revision_execution_materials(*, runtime_root: Path, authority: Mapping[str, Any], goal: Mapping[str, Any]) -> dict[str, Any]:
@@ -1550,7 +1603,8 @@ def execute_persistent_evidence_revision_consumer(
         execution_id = stable_id("persistent-evidence-revision-consumer-claim", authority_id, prior_claim["artifact_digest"])
         result_path = Path(runtime_root) / "evidence_revision_execution_results" / f"{execution_id}.json"
         if result_path.exists():
-            return {"status": "execution_replay_suppressed", "execution_result": _read(result_path)}
+            reconciled = _reconcile_persistent_evidence_revision_terminal_result(runtime_root=runtime_root, authority_id=authority_id, authority=authority, execution_id=execution_id, result=_read(result_path))
+            return {"status": "execution_replay_suppressed", "execution_result": reconciled["execution_result"], "reconciliation_status": reconciled["status"]}
         recovery_path = Path(runtime_root) / EVIDENCE_REVISION_OWNERSHIP_DIRECTORY / execution_id / "060-recovery-classified.json"
         if recovery_path.exists() and not recovery_resume:
             return {"status": "execution_recovery_classified_replay_suppressed", "recovery": _read(recovery_path)}
@@ -1563,7 +1617,8 @@ def execute_persistent_evidence_revision_consumer(
     execution_id = stable_id("persistent-evidence-revision-consumer-claim", authority_id, preflight["artifact_digest"])
     result_path = Path(runtime_root) / "evidence_revision_execution_results" / f"{execution_id}.json"
     if result_path.exists():
-        return {"status": "execution_replay_suppressed", "execution_result": _read(result_path)}
+        reconciled = _reconcile_persistent_evidence_revision_terminal_result(runtime_root=runtime_root, authority_id=authority_id, authority=authority, execution_id=execution_id, result=_read(result_path))
+        return {"status": "execution_replay_suppressed", "execution_result": reconciled["execution_result"], "reconciliation_status": reconciled["status"]}
     execution_path = Path(runtime_root) / EVIDENCE_REVISION_EXECUTION_CLAIM_DIRECTORY / f"{execution_id}.json"
     if execution_path.exists() and not recovery_resume:
         raise ValueError("persistent_runtime_revision_execution_claim_incomplete_integrity_stop")
@@ -1631,7 +1686,7 @@ def execute_persistent_evidence_revision_consumer(
     _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="040-evaluation-persisted", payload={**ownership_payload, "state": "evaluation_persisted", "evaluation_artifact_id": evaluation_artifact["artifact_id"], "at": utc_now()})
     if boundary_hook:
         boundary_hook("after_evaluation_persisted")
-    return _finalize_persistent_evidence_revision_execution(runtime_root=runtime_root, authority_id=authority_id, authority=authority, candidate=candidate, claim=claim, attempt_artifact=attempt_artifact, evaluation_artifact=evaluation_artifact, ownership_payload=ownership_payload)
+    return _finalize_persistent_evidence_revision_execution(runtime_root=runtime_root, authority_id=authority_id, authority=authority, candidate=candidate, claim=claim, attempt_artifact=attempt_artifact, evaluation_artifact=evaluation_artifact, ownership_payload=ownership_payload, boundary_hook=boundary_hook)
 
 
 def recover_persistent_evidence_revision_execution(*, runtime_root: Path, authority_id: str) -> dict[str, Any]:
@@ -1646,7 +1701,8 @@ def recover_persistent_evidence_revision_execution(*, runtime_root: Path, author
     execution_id = stable_id("persistent-evidence-revision-consumer-claim", authority_id, preflight["artifact_digest"])
     result_path = Path(runtime_root) / "evidence_revision_execution_results" / f"{execution_id}.json"
     if result_path.exists():
-        return {"status": "terminal_result_reused", "execution_result": _read(result_path)}
+        reconciled = _reconcile_persistent_evidence_revision_terminal_result(runtime_root=runtime_root, authority_id=authority_id, authority=authority, execution_id=execution_id, result=_read(result_path))
+        return {"status": "terminal_result_reconciled", "execution_result": reconciled["execution_result"]}
     root = Path(runtime_root) / EVIDENCE_REVISION_OWNERSHIP_DIRECTORY / execution_id
     transitions = {path.name: _read(path) for path in root.glob("*.json")} if root.exists() else {}
     acquired = dict(transitions.get("000-acquired.json") or {})
