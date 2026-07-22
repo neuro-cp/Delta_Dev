@@ -17,6 +17,12 @@ ROOT = Path(__file__).resolve().parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 OAR_LIVE_DEVELOPMENT_STATE_PATH = ROOT / "data" / "runtime" / "oar_live_development_state.json"
+LIVE_RUNTIME_1B_ROOT = ROOT / ".tmp" / "live-runtime-1b-tk-attended-v2"
+LIVE_RUNTIME_1B_ACCEPTED_ROOT = ROOT / ".tmp" / "live-general-3-approved-learning-v1"
+LIVE_RUNTIME_1B_MISSION_TEXT = (
+    "Validate a disposable mixed CSV and JSON dataset, reconcile equivalent records using accepted developmental "
+    "competence, and produce a grounded final report with capability provenance and input-preservation evidence."
+)
 
 from orchestration.runtime.rc1_operator_console import (  # noqa: E402
     append_observation,
@@ -101,10 +107,14 @@ from orchestration.runtime.delta_1_4_live_wikipedia_runtime import (  # noqa: E4
     suspend_live_runtime_initiative,
 )
 from orchestration.runtime.continuous_runtime_controller import (  # noqa: E402
+    advance_live_runtime_1_attended_mission,
+    attach_live_runtime_1_attended_mission,
     compile_mission_bound_local_model_learning_request,
     compile_operator_developmental_learning_mission,
     consume_mission_bound_local_model_learning_approval,
     controller_snapshot,
+    export_continuous_mission_restart_state,
+    restore_continuous_mission_restart_state,
     start_continuous_runtime_controller,
 )
 from orchestration.runtime.local_model_request_result_ledger import LocalModelRequestResultLedger  # noqa: E402
@@ -1482,6 +1492,7 @@ class DeltaApp:
         self.evaluation_dispositions: list[dict[str, object]] = []
         self.oar_live_state_persistence_enabled = True
         self._load_oar_live_development_state()
+        self.live_runtime_1b_controller = None
         self.provider_manager = ProviderManager(keep_loaded=True)
         self.resident_model_id: str | None = None
         self.resident_lane: str | None = None
@@ -1490,6 +1501,7 @@ class DeltaApp:
         if not validate_console_safe(self.snapshot):
             raise RuntimeError("DELTA console safety validation failed")
         self._build()
+        self._load_live_runtime_1b_state()
         self.root.after(50, self._poll_live_runtime_worker_results)
         self._refresh_state_cards()
         self._warm_default_model()
@@ -2093,6 +2105,127 @@ class DeltaApp:
         tmp = OAR_LIVE_DEVELOPMENT_STATE_PATH.with_suffix(".json.tmp")
         tmp.write_text(json.dumps(payload, indent=2, sort_keys=True, default=str), encoding="utf-8")
         tmp.replace(OAR_LIVE_DEVELOPMENT_STATE_PATH)
+
+    def _live_runtime_1b_restart_path(self) -> Path:
+        return LIVE_RUNTIME_1B_ROOT / "restart_state.json"
+
+    def _load_live_runtime_1b_state(self) -> None:
+        restart_path = self._live_runtime_1b_restart_path()
+        if not restart_path.exists():
+            return
+        try:
+            restart_state = json.loads(restart_path.read_text(encoding="utf-8"))
+            session_id = str(restart_state.get("session_id") or "tk-live-runtime-1b")
+            controller = start_continuous_runtime_controller(session_id=session_id, wake_mode="MANUAL")
+            self.live_runtime_1b_controller = restore_continuous_mission_restart_state(controller, restart_state)
+            self._sync_live_runtime_1b_evaluation_items()
+            if self.live_runtime_1b_controller.continuous_mission_state == "live_runtime_1_terminal":
+                self.live_runtime_status.set("LIVE-RUNTIME-1B: stopped terminal")
+            else:
+                self.live_runtime_status.set(f"LIVE-RUNTIME-1B: {self.live_runtime_1b_controller.continuous_mission_state}")
+        except Exception as exc:  # noqa: BLE001 - UI recovery must fail closed.
+            self.live_runtime_1b_controller = None
+            self.live_runtime_status.set(f"LIVE-RUNTIME-1B recovery blocked: {type(exc).__name__}: {str(exc)[:160]}")
+
+    def _persist_live_runtime_1b_state(self) -> None:
+        controller = getattr(self, "live_runtime_1b_controller", None)
+        if controller is None:
+            return
+        LIVE_RUNTIME_1B_ROOT.mkdir(parents=True, exist_ok=True)
+        restart = export_continuous_mission_restart_state(controller)
+        worker = {
+            "worker_state": "stopped" if controller.continuous_mission_state == "live_runtime_1_terminal" else "attended_manual",
+            "timestamp": "2026-07-22T00:00:00+00:00",
+            "session_id": controller.session_id,
+            "continuous_mission_state": controller.continuous_mission_state,
+            "pending_application_decision_id": "",
+        }
+        observation = {"timestamp": "2026-07-22T00:00:00+00:00", "source": "tk_live_runtime_1b"}
+        for name, payload in (("restart_state.json", restart), ("worker_status.json", worker), ("observation_requeue.json", observation)):
+            path = LIVE_RUNTIME_1B_ROOT / name
+            tmp = path.with_suffix(path.suffix + ".tmp")
+            tmp.write_text(json.dumps(payload, indent=2, sort_keys=True, default=str), encoding="utf-8")
+            tmp.replace(path)
+
+    def _sync_live_runtime_1b_evaluation_items(self) -> None:
+        eval_dir = LIVE_RUNTIME_1B_ROOT / "evaluation_ui"
+        runtime_items: list[dict[str, object]] = []
+        if eval_dir.exists():
+            for path in sorted(eval_dir.glob("*.json")):
+                record = json.loads(path.read_text(encoding="utf-8"))
+                runtime_items.append({
+                    "item_type": "live_runtime_1b_evaluation",
+                    "title": f"LIVE-RUNTIME-1B {record.get('task_class')}",
+                    "status": str(record.get("terminal_state") or record.get("aggregate_disposition") or "available"),
+                    "boundary": "Persistent controller Evaluation artifact rendered through the Tk Evaluation tab.",
+                    "operator_action": "Review only. This display does not authorize source mutation, promotion, deployment, provider access, or another mission.",
+                    "details": record,
+                })
+        self.evaluation_review_items = runtime_items
+        self._refresh_evaluation_snapshot()
+
+    def _live_runtime_1b_summary(self) -> str:
+        controller = getattr(self, "live_runtime_1b_controller", None)
+        if controller is None:
+            return "LIVE-RUNTIME-1B is not attached."
+        state = dict((controller.continuous_learning_state or {}).get("live_runtime_1") or {})
+        work_status = dict(state.get("work_item_status") or {})
+        counts = dict(state.get("counts") or {})
+        return (
+            f"State: {controller.continuous_mission_state}\n"
+            f"Root: {LIVE_RUNTIME_1B_ROOT}\n"
+            f"Cycles: {state.get('scheduler_cycles')}\n"
+            f"Mission: {(state.get('mission') or {}).get('mission_id') or 'pending'}\n"
+            f"Work items: {json.dumps(work_status, sort_keys=True)}\n"
+            f"Evaluation entries: {len(tuple((LIVE_RUNTIME_1B_ROOT / 'evaluation_ui').glob('*.json'))) if (LIVE_RUNTIME_1B_ROOT / 'evaluation_ui').exists() else 0}\n"
+            f"Counts: {json.dumps(counts, sort_keys=True, default=str)}"
+        )
+
+    def _is_live_runtime_1b_mission(self, message: str) -> bool:
+        normalized = " ".join(message.lower().split())
+        return all(token in normalized for token in ("mixed csv", "json", "reconcile", "capability provenance", "input-preservation"))
+
+    def _handle_live_runtime_1b_mission(self, reset: bool = True) -> str:
+        if reset and LIVE_RUNTIME_1B_ROOT.exists():
+            if self._live_runtime_1b_restart_path().exists():
+                return "LIVE-RUNTIME-1B already has persisted state. Use `advance live runtime 1b` or `live runtime 1b status`; no second mission was started."
+        controller = start_continuous_runtime_controller(session_id="tk-live-runtime-1b", wake_mode="MANUAL")
+        self.live_runtime_1b_controller = attach_live_runtime_1_attended_mission(
+            controller,
+            runtime_root=LIVE_RUNTIME_1B_ROOT,
+            accepted_competence_root=LIVE_RUNTIME_1B_ACCEPTED_ROOT,
+            reset=reset,
+        )
+        self._persist_live_runtime_1b_state()
+        self._sync_live_runtime_1b_evaluation_items()
+        self.live_runtime_status.set("LIVE-RUNTIME-1B: mission attached")
+        return (
+            "LIVE-RUNTIME-1B mission entered through the Tk operator chat path and attached to the persistent controller.\n\n"
+            f"{self._live_runtime_1b_summary()}\n\n"
+            "Next operator action: `advance live runtime 1b`. No work item executed yet."
+        )
+
+    def _advance_live_runtime_1b_from_ui(self) -> str:
+        controller = getattr(self, "live_runtime_1b_controller", None)
+        if controller is None:
+            self._load_live_runtime_1b_state()
+            controller = getattr(self, "live_runtime_1b_controller", None)
+        if controller is None:
+            return "LIVE-RUNTIME-1B cannot advance: no mission is attached."
+        before_state = controller.continuous_mission_state
+        self.live_runtime_1b_controller = advance_live_runtime_1_attended_mission(controller)
+        self._persist_live_runtime_1b_state()
+        self._sync_live_runtime_1b_evaluation_items()
+        after_state = self.live_runtime_1b_controller.continuous_mission_state
+        if after_state == "live_runtime_1_terminal":
+            self.live_runtime_status.set("LIVE-RUNTIME-1B: stopped terminal")
+        else:
+            self.live_runtime_status.set(f"LIVE-RUNTIME-1B: {after_state}")
+        return (
+            f"LIVE-RUNTIME-1B advanced: {before_state or 'attached'} -> {after_state}.\n\n"
+            f"{self._live_runtime_1b_summary()}\n\n"
+            "No provider call, trusted admission, capability promotion, deployment, network expansion, or tracked-source mutation occurred."
+        )
 
     def _selected_evaluation_review_item(self) -> tuple[str, dict[str, object]] | tuple[None, None]:
         selected = self.evaluation_items.selection()
@@ -3098,6 +3231,27 @@ class DeltaApp:
         if lower in {"learning runtime status", "developmental runtime status", "show blocked learning goals", "show learning budget", "export learning report"}:
             self._append_session("user", message)
             reply = self._handle_persistent_development_status()
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            self._refresh_state_cards()
+            return
+        if lower in {"advance live runtime 1b", "start live runtime 1b", "continue live runtime 1b"}:
+            self._append_session("user", message)
+            reply = self._advance_live_runtime_1b_from_ui()
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            self._refresh_state_cards()
+            return
+        if lower == "live runtime 1b status":
+            self._append_session("user", message)
+            reply = self._live_runtime_1b_summary()
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            self._refresh_state_cards()
+            return
+        if self._is_live_runtime_1b_mission(message):
+            self._append_session("user", message)
+            reply = self._handle_live_runtime_1b_mission(reset=True)
             self._append_chat("DELTA", reply)
             self._append_session("assistant", reply)
             self._refresh_state_cards()
