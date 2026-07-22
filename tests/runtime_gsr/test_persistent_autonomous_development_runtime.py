@@ -9,7 +9,11 @@ from orchestration.runtime.persistent_autonomous_development_runtime import (
     MAPPING_ARTIFACT_DIRECTORY,
     SOURCE_ARTIFACT_DIRECTORY,
     compile_persistent_generic_evaluator_authority,
+    compile_persistent_evidence_revision_plan,
+    preflight_persistent_evidence_revision_execution,
     recover_historical_retrieval_with_persistence,
+    run_persistent_evidence_revision_cycle,
+    _target_is_satisfied,
     _write_immutable_artifact,
     export_runtime_report,
     initialize_runtime,
@@ -67,6 +71,126 @@ def _advisory(request):
             "search_queries": ["fixture public query"],
             "source_suggestions": [], "counterexamples": [], "uncertainty": "requires verification",
         },
+    }
+
+
+def _seed_goal_setting_failure(tmp_path, *, topic="Goal setting", target_behavior="explain and apply goal setting using retained excerpts"):
+    state = initialize_runtime(runtime_root=tmp_path, goals=(f"learn {topic}",))
+    goal = dict(state["goals"][0])
+    candidate = {
+        "candidate_id": "persistent-development-candidate-9fa516d6a2d2e29e",
+        "candidate_version": 1,
+        "topic": topic,
+        "parent_goal_topic": goal["topic"],
+        "scoped_claim": f"source-grounded scoped claim about {topic}",
+        "target_behavior": target_behavior,
+        "direct_provenance": {
+            "source_artifact_id": "persistent-development-source-artifact-257ccd8d514f07e8",
+            "source_artifact_digest": "source-digest",
+            "excerpt_mapping_id": "persistent-development-excerpt-mapping-bc8bf28e6877c5f3",
+            "excerpt_mapping_digest": "mapping-digest",
+        },
+        "trusted_admission": False,
+        "capability_promotion": False,
+    }
+    candidate["candidate_digest"] = "c9fa7f19c7994aad9636324992ce5c60290737812b00ee82a3eb4b673464f913"
+    claim = _write_immutable_artifact(runtime_root=tmp_path, directory="learning_attempt_claims", artifact_id="persistent-learning-attempt-claim-6ae38b13992d2ef0", payload={
+        "schema": "persistent_learning_attempt_claim_v1",
+        "claim_id": "persistent-learning-attempt-claim-6ae38b13992d2ef0",
+        "candidate_id": candidate["candidate_id"],
+        "candidate_digest": candidate["candidate_digest"],
+        "work_node_id": goal["work_nodes"][0]["node_id"],
+        "sealed_package_digest": "sealed-digest",
+        "learner_visible_bundle_digest": "old-bundle",
+        "claim_state": "completed",
+    })
+    cases = (
+        {"case_id": "goalsetting-baseline-001", "kind": "baseline", "task_type": "explanation_and_application", "score": 0.0, "failure_reason": "insufficient_retained_teaching_evidence", "failed_predicates": ("purpose", "specific", "measurable", "achievable", "relevant", "time-bound", "example")},
+        {"case_id": "goalsetting-control-001", "kind": "control", "task_type": "application_task", "score": 0.0, "failure_reason": "insufficient_retained_teaching_evidence", "failed_predicates": ("effective", "monthly", "within", "measurable")},
+        {"case_id": "goalsetting-held_out-001", "kind": "held_out", "task_type": "explanation_task", "score": 0.0, "failure_reason": "insufficient_retained_teaching_evidence", "failed_predicates": ("motivation", "performance", "feedback", "outcome")},
+        {"case_id": "goalsetting-adversarial-001", "kind": "adversarial", "task_type": "application_task", "score": 0.0, "failure_reason": "insufficient_retained_teaching_evidence", "failed_predicates": ("vague", "specific", "measurable", "revised", "successful")},
+        {"case_id": "goalsetting-transfer-001", "kind": "transfer", "task_type": "application_task", "score": 0.0, "failure_reason": "insufficient_retained_teaching_evidence", "failed_predicates": ("specific", "measurable", "achievable", "relevant", "time-bound", "monitoring", "adjust", "progress")},
+    )
+    evaluation = {
+        "evaluation_id": "learning-content-evaluation-5b68bd42e4bdc52d",
+        "attempt_id": "learning-attempt-02a6c554fa90156d",
+        "disposition": "insufficient_retained_teaching_evidence",
+        "promotion_eligible": False,
+        "evaluation_digest": "81f50313055c18e6dc3188c810f24b5193fe661c23750e4852b3de43046a6086",
+        "content_case_results": cases,
+        "capability_dimension": "explain_and_apply_goal_setting",
+    }
+    eval_artifact = _write_immutable_artifact(runtime_root=tmp_path, directory="learning_evaluations", artifact_id=evaluation["evaluation_id"], payload={
+        "schema": "persistent_learning_evaluation_v1",
+        "claim_id": claim["claim_id"],
+        "sealed_package_digest": "751091204dde7718297a320ce845c2dad8f38c27e81652cfb7af56112ad00af5",
+        "learner_response_digest": "learner-digest",
+        "evaluation": evaluation,
+    })
+    sealed_cases = tuple({
+        "case_id": item["case_id"],
+        "case_kind": item["kind"],
+        "target_capability": "explain_and_apply_goal_setting",
+        "assessment_dimension": "explain_and_apply_goal_setting",
+        "learner_view": {"prompt": "fixture"},
+        "evaluator_view": {"rubric": ("secret",), "scoring_rule": {"pass_condition": "secret"}},
+    } for item in cases)
+    result = _write_immutable_artifact(runtime_root=tmp_path, directory="evaluator_authority_requests/execution_results", artifact_id="persistent-isolated-evaluator-execution-result-8230a067c232cd2e", payload={
+        "schema": "persistent_isolated_evaluator_execution_result_v1",
+        "request_id": "isolated-evaluator-authoring-request-a0aaecef5425615c",
+        "claim_state": "completed",
+        "sealed_package": {
+            "sealed_package_id": "provider-authored-sealed-evaluator-3d1e4cab56e2fa0b",
+            "execution_contract_version": "sealed_evaluator_execution_v3",
+            "target_capability": "explain_and_apply_goal_setting",
+            "sealed_evaluation_cases": sealed_cases,
+        },
+    })
+    view = _write_immutable_artifact(runtime_root=tmp_path, directory="sealed_case_execution_views", artifact_id="sealed-case-execution-view-81606e801addb731", payload={
+        "schema": "sealed_case_execution_view_v1",
+        "sealed_package_id": "provider-authored-sealed-evaluator-3d1e4cab56e2fa0b",
+        "sealed_package_digest": result["artifact_digest"],
+        "sealed_evaluation_cases": sealed_cases,
+    })
+    authority = _write_immutable_artifact(runtime_root=tmp_path, directory="evaluator_authority_requests", artifact_id="isolated-evaluator-authoring-request-a0aaecef5425615c", payload={
+        "schema": "persistent_generic_isolated_evaluator_authoring",
+        "request_id": "isolated-evaluator-authoring-request-a0aaecef5425615c",
+        "status": "sealed_package_ready",
+        "candidate_id": candidate["candidate_id"],
+        "candidate_digest": candidate["candidate_digest"],
+        "learner_visible_bundle": {"bundle_digest": "old-bundle", "study_resources": ()},
+    })
+    goal["candidate_versions"] = (candidate,)
+    goal["learning_attempts"] = ({"claim_id": claim["claim_id"], "attempt_id": evaluation["attempt_id"], "status": "completed"},)
+    goal["behavioral_evaluations"] = ({"evaluation_id": evaluation["evaluation_id"], "artifact_id": eval_artifact["artifact_id"], "disposition": evaluation["disposition"]},)
+    goal["post_evaluation_disposition"] = {"tier": "candidate_revision_required", "evaluation_id": evaluation["evaluation_id"]}
+    goal["pending_evaluator_authority"] = {
+        "request_id": authority["request_id"],
+        "status": "behavioral_evaluation_complete",
+        "result_artifact_id": result["artifact_id"],
+        "execution_view_digest": view["artifact_digest"],
+        "learning_attempt_claim_id": claim["claim_id"],
+        "learning_attempt_id": evaluation["attempt_id"],
+        "evaluation_id": evaluation["evaluation_id"],
+    }
+    from orchestration.runtime.persistent_autonomous_development_runtime import _checkpoint
+    _checkpoint(state={**state, "goals": (goal,), "lifecycle_state": "ready"}, runtime_root=tmp_path, reason="fixture_goal_setting_failure")
+    return initialize_runtime(runtime_root=tmp_path)
+
+
+def _revision_retrieval(candidate):
+    target = candidate["revision_plan_id"] + candidate["evidence_target"]
+    if "SMART" in candidate["evidence_target"]:
+        text = "SMART goals are specific, measurable, achievable, relevant, and time-bound. For example, a goal can state what will be done, how success will be measured, and when it will be finished."
+    elif "monitoring" in candidate["evidence_target"]:
+        text = "Progress monitoring means tracking progress and using feedback about performance. Feedback helps show whether the goal is being reached."
+    else:
+        text = "A person should adjust or revise a goal based on observed progress and feedback. If progress shows the goal is unrealistic, the goal can be modified."
+    return {
+        "canonical_locator": candidate["canonical_locator"],
+        "content_digest": f"source-{json.dumps(target, sort_keys=True)}",
+        "extraction_digest": f"extract-{json.dumps(target, sort_keys=True)}",
+        "content_text": text,
     }
 
 
@@ -403,3 +527,144 @@ def test_restart_preserves_completed_retrieval_and_evaluation_without_duplicatio
     restored = initialize_runtime(runtime_root=tmp_path)
     assert restored["goals"][0]["retrieval_claims"][0]["claim_state"] == "completed"
     assert len(restored["goals"][0]["sealed_evaluations"]) == len(first["goals"][0]["sealed_evaluations"]) == 1
+
+
+def test_evidence_revision_plan_derives_from_failed_dimensions_and_is_idempotent(tmp_path):
+    _seed_goal_setting_failure(tmp_path)
+    first = compile_persistent_evidence_revision_plan(runtime_root=tmp_path, failed_evaluation_id="learning-content-evaluation-5b68bd42e4bdc52d")
+    second = compile_persistent_evidence_revision_plan(runtime_root=tmp_path, failed_evaluation_id="learning-content-evaluation-5b68bd42e4bdc52d")
+    assert first["revision_plan_id"] == second["revision_plan_id"]
+    assert first["plan_digest"] == second["plan_digest"]
+    assert tuple(first["failed_case_ids"]) == (
+        "goalsetting-baseline-001",
+        "goalsetting-control-001",
+        "goalsetting-held_out-001",
+        "goalsetting-adversarial-001",
+        "goalsetting-transfer-001",
+    )
+    assert [target["target_id"] for target in first["missing_evidence_targets"]][:3] == [
+        "smart_components",
+        "progress_monitoring_feedback",
+        "progress_based_adjustment",
+    ]
+    assert first["maximum_retrieval_count"] == 3
+    assert first["provider_budget"] == 0
+
+
+def test_evidence_revision_cycle_creates_revised_candidate_bundle_and_pending_authority(tmp_path):
+    seeded = _seed_goal_setting_failure(tmp_path)
+    parent = seeded["goals"][0]["candidate_versions"][0]
+    result = run_persistent_evidence_revision_cycle(
+        runtime_root=tmp_path,
+        failed_evaluation_id="learning-content-evaluation-5b68bd42e4bdc52d",
+        retrieval_executor=_revision_retrieval,
+    )
+    assert result["status"] == "reevaluation_pending"
+    assert len(result["retrieval_claims"]) == 3
+    assert {claim["evidence_revision_target_id"] for claim in result["retrieval_claims"]} == {
+        "smart_components",
+        "progress_monitoring_feedback",
+        "progress_based_adjustment",
+    }
+    assert result["sufficiency_decision"]["evidence_sufficient"] is True
+    revised = result["revised_candidate"]
+    assert revised["candidate_id"] != parent["candidate_id"]
+    assert revised["candidate_digest"] != parent["candidate_digest"]
+    assert revised["parent_candidate_digest"] == parent["candidate_digest"]
+    bundle = result["learner_visible_bundle"]
+    bundle_text = json.dumps(bundle)
+    assert "specific, measurable, achievable, relevant, and time-bound" in bundle_text
+    assert "tracking progress and using feedback" in bundle_text
+    assert "adjust or revise a goal based on observed progress" in bundle_text
+    assert "answer_key" not in bundle_text
+    assert "scoring_rule" not in bundle_text
+    assert result["evaluator_reuse_decision"]["reuse_valid"] is True
+    authority = result["pending_authority"]
+    assert authority["recommended_approval_token"].startswith("approve_persistent_evidence_revision_retry_")
+    assert authority["maximum_learner_attempts"] == 1
+    assert "evaluator_authoring_provider_call" in authority["prohibited_actions"]
+    final = initialize_runtime(runtime_root=tmp_path)
+    assert len(final["goals"][0]["learning_attempts"]) == 1
+    assert final["trusted_admissions"] == final["capability_promotions"] == 0
+
+
+def test_evidence_revision_preflight_binds_revised_candidate_without_execution_and_is_exact_once(tmp_path):
+    _seed_goal_setting_failure(tmp_path, topic="Evidence-based study planning", target_behavior="explain and apply study planning using retained excerpts")
+    result = run_persistent_evidence_revision_cycle(
+        runtime_root=tmp_path,
+        failed_evaluation_id="learning-content-evaluation-5b68bd42e4bdc52d",
+        retrieval_executor=_revision_retrieval,
+    )
+    assert result["status"] == "reevaluation_pending"
+    assert "Goal_setting" not in " ".join(claim["canonical_locator"] for claim in result["retrieval_claims"])
+    authority = result["pending_authority"]
+    preflight = preflight_persistent_evidence_revision_execution(
+        runtime_root=tmp_path,
+        authority_id=authority["request_id"],
+        approval_token=authority["recommended_approval_token"],
+    )
+    assert preflight["status"] == "preflight_accepted_no_execution"
+    assert preflight["binding"]["candidate_digest"] == result["revised_candidate"]["candidate_digest"]
+    assert preflight["binding"]["sealed_package_digest"] == authority["sealed_package_digest"]
+    replay = preflight_persistent_evidence_revision_execution(
+        runtime_root=tmp_path,
+        authority_id=authority["request_id"],
+        approval_token=authority["recommended_approval_token"],
+    )
+    assert replay["status"] == "preflight_replay_suppressed"
+    final = initialize_runtime(runtime_root=tmp_path)
+    assert len(final["goals"][0]["learning_attempts"]) == 1
+    assert len(final["goals"][0]["behavioral_evaluations"]) == 1
+    assert final["provider_calls"] == final["trusted_admissions"] == final["capability_promotions"] == 0
+
+
+def test_monitoring_sufficiency_requires_explicit_relation():
+    assert not _target_is_satisfied("progress_monitoring_feedback", ({"text": "Progress was mentioned."},))
+    assert _target_is_satisfied("progress_monitoring_feedback", ({"text": "Progress toward the target should be measured regularly."},))
+    assert _target_is_satisfied("progress_monitoring_feedback", ({"text": "Feedback is used to compare current performance with the intended goal."},))
+
+
+def test_evidence_revision_replay_reuses_pending_authority_without_new_retrieval(tmp_path):
+    _seed_goal_setting_failure(tmp_path)
+    first = run_persistent_evidence_revision_cycle(
+        runtime_root=tmp_path,
+        failed_evaluation_id="learning-content-evaluation-5b68bd42e4bdc52d",
+        retrieval_executor=_revision_retrieval,
+    )
+    second = run_persistent_evidence_revision_cycle(
+        runtime_root=tmp_path,
+        failed_evaluation_id="learning-content-evaluation-5b68bd42e4bdc52d",
+        retrieval_executor=lambda _candidate: (_ for _ in ()).throw(AssertionError("revision retrieval replay")),
+    )
+    assert second["status"] == "reevaluation_pending"
+    assert second["revision_plan"]["revision_plan_id"] == first["revision_plan"]["revision_plan_id"]
+    assert second["revision_plan"]["pending_authority_id"] == first["pending_authority"]["request_id"]
+
+
+def test_evidence_revision_keyword_only_or_missing_adjustment_stops_insufficient(tmp_path):
+    _seed_goal_setting_failure(tmp_path)
+
+    def weak_retrieval(candidate):
+        if "SMART" in candidate["evidence_target"]:
+            text = "SMART goals are popular in planning."
+        elif "monitoring" in candidate["evidence_target"]:
+            text = "Tracking is sometimes mentioned."
+        else:
+            text = "Adjustment is a word in goal-setting discussions."
+        return {
+            "canonical_locator": candidate["canonical_locator"],
+            "content_digest": f"weak-{candidate['evidence_target']}",
+            "extraction_digest": f"weak-extract-{candidate['evidence_target']}",
+            "content_text": text,
+        }
+
+    result = run_persistent_evidence_revision_cycle(
+        runtime_root=tmp_path,
+        failed_evaluation_id="learning-content-evaluation-5b68bd42e4bdc52d",
+        retrieval_executor=weak_retrieval,
+    )
+    assert result["status"] == "evidence_insufficient"
+    assert result["sufficiency_decision"]["unresolved_targets"]
+    final = initialize_runtime(runtime_root=tmp_path)
+    assert len(final["goals"][0]["candidate_versions"]) == 1
+    assert not final["goals"][0].get("pending_evidence_revision_authority")
