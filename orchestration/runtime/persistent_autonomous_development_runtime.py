@@ -1025,7 +1025,7 @@ def _load_failed_revision_context(*, runtime_root: Path, failed_evaluation_id: s
     candidates = []
     for artifact in evaluations:
         evaluation = dict(artifact.get("evaluation") or {})
-        if str(evaluation.get("disposition") or "") != "insufficient_retained_teaching_evidence":
+        if str(evaluation.get("disposition") or "") not in {"insufficient_retained_teaching_evidence", "behaviorally_improved_but_incomplete"}:
             continue
         if bool(evaluation.get("promotion_eligible")):
             continue
@@ -1066,7 +1066,30 @@ def _load_failed_revision_context(*, runtime_root: Path, failed_evaluation_id: s
     }
 
 
-def _normalize_failed_revision_targets(evaluation: Mapping[str, Any]) -> tuple[dict[str, Any], ...]:
+def _failed_revision_cases_from_context(*, evaluation: Mapping[str, Any], sealed_package: Mapping[str, Any]) -> tuple[dict[str, Any], ...]:
+    content_cases = tuple(dict(item) for item in evaluation.get("content_case_results") or () if float(item.get("score") or 0.0) < 1.0)
+    if content_cases:
+        return content_cases
+    failed: list[dict[str, Any]] = []
+    for raw_case in sealed_package.get("sealed_evaluation_cases") or ():
+        case = dict(raw_case)
+        kind = str(case.get("case_kind") or case.get("kind") or "")
+        metrics = dict(evaluation.get(f"{kind}_metrics") or {})
+        if not metrics or float(metrics.get("target") or 0.0) >= 1.0:
+            continue
+        predicate = dict(dict(case.get("evaluator_view") or {}).get("deterministic_predicate") or {})
+        failed.append({
+            "case_id": str(case.get("case_id") or ""),
+            "kind": kind,
+            "task_type": str(case.get("task_type") or ""),
+            "score": float(metrics.get("target") or 0.0),
+            "failed_predicates": tuple(str(term) for term in predicate.get("required_concepts") or () if str(term).strip()),
+            "failure_reason": "sealed_case_metric_below_promotion_threshold",
+        })
+    return tuple(failed)
+
+
+def _normalize_failed_revision_targets(evaluation: Mapping[str, Any], failed_cases: Sequence[Mapping[str, Any]] | None = None) -> tuple[dict[str, Any], ...]:
     buckets: dict[str, dict[str, Any]] = {}
 
     def add(target_id: str, label: str, facets: Sequence[str], case: Mapping[str, Any], evidence_terms: Sequence[str]) -> None:
@@ -1080,7 +1103,7 @@ def _normalize_failed_revision_targets(evaluation: Mapping[str, Any]) -> tuple[d
         current["original_failed_dimensions"] = tuple(sorted({*tuple(current["original_failed_dimensions"]), *tuple(evidence_terms)} - {""}))
         current["evidence_terms"] = tuple(sorted({*tuple(current["evidence_terms"]), *tuple(evidence_terms)} - {""}))
 
-    for case in evaluation.get("content_case_results") or ():
+    for case in failed_cases if failed_cases is not None else evaluation.get("content_case_results") or ():
         raw_case = dict(case)
         terms = tuple(str(term).lower() for term in (raw_case.get("failed_predicates") or ()) if str(term).strip())
         joined = " ".join(terms)
@@ -1098,6 +1121,69 @@ def _normalize_failed_revision_targets(evaluation: Mapping[str, Any]) -> tuple[d
             add("generic_failed_dimension_" + _digest(terms)[:12], "direct evidence for " + ", ".join(terms), ("direct_support",), raw_case, terms)
     priority = ("smart_components", "progress_monitoring_feedback", "progress_based_adjustment", "motivation_performance_effects", "definition_purpose") + tuple(sorted(key for key in buckets if key.startswith("generic_failed_dimension_")))
     return tuple({**buckets[key], "priority": index + 1} for index, key in enumerate(priority) if key in buckets)
+
+
+def _goal_setting_mandatory_revision_targets(plan: Mapping[str, Any]) -> tuple[dict[str, Any], ...]:
+    plan_targets = {str(target.get("target_id") or ""): dict(target) for target in plan.get("missing_evidence_targets") or ()}
+
+    def target(target_id: str, label: str, facets: Sequence[str], terms: Sequence[str]) -> dict[str, Any]:
+        existing = dict(plan_targets.get(target_id) or {})
+        return {
+            "target_id": target_id,
+            "label": str(existing.get("label") or label),
+            "normalized_facets": tuple(existing.get("normalized_facets") or facets),
+            "source_case_ids": tuple(existing.get("source_case_ids") or ()),
+            "source_case_kinds": tuple(existing.get("source_case_kinds") or ()),
+            "original_failed_dimensions": tuple(existing.get("original_failed_dimensions") or terms),
+            "evidence_terms": tuple(existing.get("evidence_terms") or terms),
+            "priority": int(existing.get("priority") or len(plan_targets) + 1),
+            "normalization_reason": "mandatory_goal_setting_revision_relationship",
+        }
+
+    return (
+        target("smart_components", "SMART or measurable goal construction", ("component", "example"), ("specific", "measurable", "achievable", "relevant", "time-bound")),
+        target("progress_monitoring_feedback", "progress monitoring or feedback interpretation", ("monitoring", "feedback"), ("progress", "monitoring", "feedback", "measure", "review")),
+        target("progress_based_adjustment", "adjustment or revision based on observed progress", ("adjustment", "revision"), ("adjust", "revise", "progress", "feedback", "observed")),
+    )
+
+
+def _revision_execution_targets(plan: Mapping[str, Any]) -> tuple[dict[str, Any], ...]:
+    topic = str(plan.get("topic") or "").lower()
+    target_ids = {str(target.get("target_id") or "") for target in plan.get("missing_evidence_targets") or ()}
+    if "goal setting" in topic and (
+        any(target_id.startswith("generic_failed_dimension_") for target_id in target_ids)
+        or "progress_monitoring_feedback" not in target_ids
+        or "progress_based_adjustment" not in target_ids
+    ):
+        return _goal_setting_mandatory_revision_targets(plan)
+    return tuple(dict(target) for target in plan.get("missing_evidence_targets") or ())
+
+
+def _revision_work_nodes_from_plan(goal: Mapping[str, Any], plan: Mapping[str, Any]) -> tuple[dict[str, Any], ...]:
+    nodes: list[dict[str, Any]] = []
+    for index, target in enumerate(plan.get("missing_evidence_targets") or (), start=1):
+        target_id = str(target.get("target_id") or "")
+        nodes.append({
+            "node_id": stable_id("persistent-development-revision-target", plan["revision_plan_id"], target_id),
+            "label": str(target.get("label") or target_id),
+            "operation": "candidate_revision",
+            "state": "queued",
+            "parent_goal": goal["operator_goal"],
+            "depth": 2,
+            "attempts": 0,
+            "origin": "failed_behavioral_evaluation",
+            "revision_plan_id": plan["revision_plan_id"],
+            "revision_plan_digest": plan["plan_digest"],
+            "failed_evaluation_id": plan["failed_evaluation_id"],
+            "failed_evaluation_digest": plan["failed_evaluation_digest"],
+            "parent_candidate_id": plan["parent_candidate_id"],
+            "parent_candidate_digest": plan["parent_candidate_digest"],
+            "evidence_revision_target_id": target_id,
+            "failed_case_ids": tuple(target.get("source_case_ids") or ()),
+            "failed_dimensions": tuple(target.get("original_failed_dimensions") or ()),
+            "priority": index,
+        })
+    return tuple(nodes)
 
 
 def _plan_digest_payload(plan: Mapping[str, Any]) -> dict[str, Any]:
@@ -1129,8 +1215,8 @@ def compile_persistent_evidence_revision_plan(*, runtime_root: Path, failed_eval
     state, goal, candidate = context["state"], context["goal"], context["parent_candidate"]
     failed_artifact = context["failed_evaluation_artifact"]
     failed_evaluation = context["failed_evaluation"]
-    failed_cases = tuple(dict(item) for item in failed_evaluation.get("content_case_results") or () if float(item.get("score") or 0.0) < 1.0)
-    targets = _normalize_failed_revision_targets(failed_evaluation)
+    failed_cases = _failed_revision_cases_from_context(evaluation=failed_evaluation, sealed_package=context["sealed_package"])
+    targets = _normalize_failed_revision_targets(failed_evaluation, failed_cases=failed_cases)
     node = dict(context.get("selected_node") or {})
     work_node_id = str(node.get("node_id") or stable_id("persistent-development-evidence-revision-node", goal["goal_id"], candidate["candidate_digest"], failed_evaluation["evaluation_id"]))
     plan_id = stable_id("persistent-evidence-revision-plan", state["runtime_id"], candidate["candidate_digest"], failed_evaluation["evaluation_id"], str(failed_artifact.get("artifact_digest") or ""))
@@ -1270,8 +1356,9 @@ def _target_is_satisfied(target_id: str | Mapping[str, Any], excerpts: Sequence[
     return any(_accept_revision_excerpt(target, str(item.get("text") or "")) for item in excerpts)
 
 
-def _evaluate_revision_evidence(*, runtime_root: Path, plan: Mapping[str, Any], claims: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
-    support: dict[str, list[dict[str, Any]]] = {str(target["target_id"]): [] for target in plan.get("missing_evidence_targets") or ()}
+def _evaluate_revision_evidence(*, runtime_root: Path, plan: Mapping[str, Any], claims: Sequence[Mapping[str, Any]], evidence_targets: Sequence[Mapping[str, Any]] | None = None) -> dict[str, Any]:
+    targets = tuple(dict(target) for target in (evidence_targets if evidence_targets is not None else plan.get("missing_evidence_targets") or ()))
+    support: dict[str, list[dict[str, Any]]] = {str(target["target_id"]): [] for target in targets}
     rejected: list[dict[str, Any]] = []
     for claim in claims:
         if str(claim.get("claim_state") or "") != "completed" or not claim.get("source_artifact_id") or not claim.get("excerpt_mapping_id"):
@@ -1279,13 +1366,13 @@ def _evaluate_revision_evidence(*, runtime_root: Path, plan: Mapping[str, Any], 
             continue
         mapping = _read(Path(runtime_root) / MAPPING_ARTIFACT_DIRECTORY / f"{claim['excerpt_mapping_id']}.json")
         target_id = str(claim.get("evidence_revision_target_id") or mapping.get("target_id") or "")
-        target = next((dict(item) for item in plan.get("missing_evidence_targets") or () if str(item.get("target_id") or "") == target_id), {"target_id": target_id})
+        target = next((dict(item) for item in targets if str(item.get("target_id") or "") == target_id), {"target_id": target_id})
         excerpts = tuple(dict(item) for item in mapping.get("accepted_excerpts") or () if _accept_revision_excerpt(target, str(item.get("text") or "")))
         if not excerpts:
             rejected.append({"claim_id": claim.get("claim_id"), "target_id": target_id, "reason": "no_exact_accepted_excerpts"})
         support.setdefault(target_id, []).extend(excerpts)
-    required = tuple(str(target.get("target_id") or "") for target in plan.get("missing_evidence_targets") or ())[:int(plan.get("maximum_retrieval_count") or 3)]
-    target_specs = {str(target.get("target_id") or ""): dict(target) for target in plan.get("missing_evidence_targets") or ()}
+    required = tuple(str(target.get("target_id") or "") for target in targets)[:int(plan.get("maximum_retrieval_count") or 3)]
+    target_specs = {str(target.get("target_id") or ""): dict(target) for target in targets}
     resolved = tuple(target_id for target_id, excerpts in support.items() if _target_is_satisfied(target_specs.get(target_id, {"target_id": target_id}), excerpts))
     unresolved = tuple(target_id for target_id in required if target_id not in resolved)
     decision = {
@@ -1859,7 +1946,8 @@ def run_persistent_evidence_revision_cycle(
         return {"status": str(plan["lifecycle_state"]), "revision_plan": plan, "retrieval_claims": tuple(plan.get("retrieval_claims") or ())}
     claims = [dict(item) for item in plan.get("retrieval_claims") or ()]
     existing_targets = {str(item.get("evidence_revision_target_id") or "") for item in claims}
-    targets = tuple(dict(item) for item in plan.get("missing_evidence_targets") or () if str(item.get("target_id") or "") not in existing_targets)[: max(0, int(plan.get("maximum_retrieval_count") or 3) - len(claims))]
+    execution_targets = _revision_execution_targets(plan)
+    targets = tuple(dict(item) for item in execution_targets if str(item.get("target_id") or "") not in existing_targets)[: max(0, int(plan.get("maximum_retrieval_count") or 3) - len(claims))]
     executor = retrieval_executor or _default_retrieval_executor
     for target in targets:
         selected = _revision_candidate_for_target(plan=plan, target=target)
@@ -1905,7 +1993,7 @@ def run_persistent_evidence_revision_cycle(
         _checkpoint(state=state, runtime_root=runtime_root, reason="evidence_revision_retrieval_completed")
         state = _read(Path(runtime_root) / STATE_FILE)
         plan = _write_revision_plan(Path(runtime_root), {**plan, "retrieval_claims": tuple(claims)})
-    decision = _evaluate_revision_evidence(runtime_root=Path(runtime_root), plan=plan, claims=claims)
+    decision = _evaluate_revision_evidence(runtime_root=Path(runtime_root), plan=plan, claims=claims, evidence_targets=execution_targets)
     if not decision["evidence_sufficient"]:
         plan = _write_revision_plan(Path(runtime_root), {**plan, "lifecycle_state": "evidence_insufficient", "sufficiency_decision": decision})
         return {"status": "evidence_insufficient", "revision_plan": plan, "retrieval_claims": tuple(claims), "sufficiency_decision": decision}
@@ -1982,7 +2070,17 @@ def execute_persistent_sealed_evaluation(*, runtime_root: Path, request_id: str,
     if disposition == "conceptual_knowledge_update":
         updated_goal["scoped_developmental_competence"] = {"candidate_id": candidate["candidate_id"], "evaluation_id": evaluation.evaluation_id, "scope_limits": candidate.get("unresolved_limits") or (), "capability_promotion": False, "trusted_admission": False}
     elif disposition == "candidate_revision_required":
-        updated_goal["work_nodes"] = _expand_work_nodes({**updated_goal, "work_nodes": tuple({**dict(node), "state": "exhausted" if str(node.get("node_id")) == claim.get("work_node_id") else node.get("state")} for node in updated_goal.get("work_nodes") or ())})
+        updated_goal["work_nodes"] = tuple({**dict(node), "state": "exhausted" if str(node.get("node_id")) == claim.get("work_node_id") else node.get("state")} for node in updated_goal.get("work_nodes") or ())
+        revision_plan = compile_persistent_evidence_revision_plan(runtime_root=runtime_root, failed_evaluation_id=evaluation.evaluation_id)
+        if str(revision_plan.get("lifecycle_state") or "") == "planned":
+            updated_goal["pending_evidence_revision_plan"] = {
+                "revision_plan_id": revision_plan["revision_plan_id"],
+                "plan_digest": revision_plan["plan_digest"],
+                "failed_evaluation_id": revision_plan["failed_evaluation_id"],
+                "parent_candidate_id": revision_plan["parent_candidate_id"],
+                "status": revision_plan["lifecycle_state"],
+            }
+            updated_goal["work_nodes"] = _revision_work_nodes_from_plan(updated_goal, revision_plan)
     updated_goal = _apply_post_behavioral_evaluation_goal_state(updated_goal, disposition)
     goals = [updated_goal if item.get("goal_id") == goal["goal_id"] else item for item in state.get("goals") or ()]
     _checkpoint(state={**state, "goals": tuple(goals), "active_goal_id": "", "active_work_item": {}, "lifecycle_state": "ready"}, runtime_root=runtime_root, reason="persistent_sealed_evaluation_and_disposition_completed")

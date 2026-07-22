@@ -9,6 +9,7 @@ import pytest
 from orchestration.runtime.persistent_autonomous_development_runtime import (
     DEFAULT_PROVIDER_POLICY,
     EVIDENCE_REVISION_OWNERSHIP_DIRECTORY,
+    EVIDENCE_REVISION_PLAN_DIRECTORY,
     MAPPING_ARTIFACT_DIRECTORY,
     SOURCE_ARTIFACT_DIRECTORY,
     compile_persistent_generic_evaluator_authority,
@@ -19,6 +20,7 @@ from orchestration.runtime.persistent_autonomous_development_runtime import (
     recover_persistent_evidence_revision_execution,
     recover_historical_retrieval_with_persistence,
     run_persistent_evidence_revision_cycle,
+    _revision_execution_targets,
     _target_is_satisfied,
     _checkpoint,
     _exclusive_transition,
@@ -554,6 +556,11 @@ def test_generic_sealed_evaluation_candidate_revision_clears_operator_blocker(tm
                     "case_kind": "held_out",
                     "task_type": "concept_coverage",
                     "capability_dimension": "grammar_scope",
+                    "evaluator_view": {
+                        "deterministic_predicate": {
+                            "required_concepts": ("definition", "usage", "context"),
+                        },
+                    },
                     "learner_view": {
                         "instruction": "Explain the scoped grammar concept.",
                         "prompt": "Explain the concept using retained facts.",
@@ -586,6 +593,7 @@ def test_generic_sealed_evaluation_candidate_revision_clears_operator_blocker(tm
                 "disposition": self.disposition,
                 "promotion_eligible": False,
                 "case_ids": ("grammar-held-out",),
+                "held_out_metrics": {"target": 0.0},
                 "content_case_results": (),
             }
 
@@ -615,6 +623,41 @@ def test_generic_sealed_evaluation_candidate_revision_clears_operator_blocker(tm
     assert final_goal["blocker"] == ""
     assert len(final_goal["learning_attempts"]) == 1
     assert len(final_goal["behavioral_evaluations"]) == 1
+    plans = list((tmp_path / EVIDENCE_REVISION_PLAN_DIRECTORY).glob("*.json"))
+    assert len(plans) == 1
+    plan = json.loads(plans[0].read_text(encoding="utf-8"))
+    assert plan["failed_evaluation_id"] == "fixture-evaluation"
+    assert plan["parent_candidate_id"] == goal["candidate_versions"][0]["candidate_id"]
+    assert plan["failed_case_ids"] == ["grammar-held-out"]
+    assert final_goal["pending_evidence_revision_plan"]["revision_plan_id"] == plan["revision_plan_id"]
+    assert all(node["origin"] == "failed_behavioral_evaluation" for node in final_goal["work_nodes"])
+    assert {node["failed_case_ids"][0] for node in final_goal["work_nodes"]} == {"grammar-held-out"}
+
+    replay = compile_persistent_evidence_revision_plan(runtime_root=tmp_path, failed_evaluation_id="fixture-evaluation")
+    assert replay["revision_plan_id"] == plan["revision_plan_id"]
+    assert len(list((tmp_path / EVIDENCE_REVISION_PLAN_DIRECTORY).glob("*.json"))) == 1
+
+
+def test_goal_setting_revision_execution_targets_normalize_generic_failed_dimension():
+    plan = {
+        "topic": "Goal setting",
+        "maximum_retrieval_count": 3,
+        "missing_evidence_targets": (
+            {"target_id": "smart_components", "label": "SMART components", "normalized_facets": ("component",), "evidence_terms": ("measurable",)},
+            {"target_id": "motivation_performance_effects", "label": "motivation", "normalized_facets": ("outcome_relation",), "evidence_terms": ("motivation",)},
+            {"target_id": "definition_purpose", "label": "definition", "normalized_facets": ("definition",), "evidence_terms": ("definition",)},
+            {"target_id": "generic_failed_dimension_df4101f72a47", "label": "direct evidence", "normalized_facets": ("direct_support",), "evidence_terms": ("goal", "skill", "habit", "plan", "achievement")},
+        ),
+    }
+
+    targets = _revision_execution_targets(plan)
+
+    assert [target["target_id"] for target in targets] == [
+        "smart_components",
+        "progress_monitoring_feedback",
+        "progress_based_adjustment",
+    ]
+    assert all(not target["target_id"].startswith("generic_failed_dimension_") for target in targets)
 
 
 def test_explicit_persistence_recovery_preserves_digest_only_history_and_creates_new_authority(tmp_path):
