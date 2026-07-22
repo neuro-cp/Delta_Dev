@@ -27,6 +27,7 @@ def _public_unresolved(goal, advisory):
 def _public_candidate(goal, _advisory):
     candidate = {
         "candidate_id": f"candidate-{goal['goal_id']}", "title": "Grammar fixture",
+        "evidence_target": "Grammar",
         "canonical_locator": "https://example.edu/grammar", "source_class": "university_educational_material",
         "supports_labels": (goal["topic"].replace(" ", "_"),), "provenance": "fixture",
     }
@@ -222,6 +223,24 @@ def test_source_body_candidate_has_exact_excerpts_and_sealed_evaluation_before_p
     assert goal["sealed_evaluations"][0]["specifications"]["criteria_digest"]
     assert result["competence_map"]["grammar"]["status"] == "developmentally_validated"
     assert result["trusted_admissions"] == result["capability_promotions"] == 0
+
+
+def test_source_facet_mapping_uses_selected_evidence_target_not_parent_goal_label(tmp_path):
+    state = initialize_runtime(runtime_root=tmp_path, goals=("learn foundational grammar for conversational clarity",))
+    candidate = {
+        "candidate_id": "grammar", "title": "Grammar", "evidence_target": "Grammar",
+        "canonical_locator": "https://example.edu/grammar", "source_class": "university_educational_material",
+        "supports_labels": ("grammar",), "provenance": "fixture",
+    }
+    result = run_until_idle(
+        state=state, runtime_root=tmp_path, maximum_cycles=1, evidence_resolver=_local_miss,
+        public_evidence_resolver=lambda goal, _advice: {"status": "public_evidence_unresolved", "fingerprint": "grammar-target", "evidence": {"candidates": (candidate,)}},
+        retrieval_executor=lambda _selected: {"canonical_locator": "https://example.edu/grammar", "content_digest": "grammar-digest", "extraction_digest": "grammar-extract", "content_text": "Grammar is a language system. Grammar may vary by context."},
+    )
+    grounded = result["goals"][0]["candidate_versions"][0]
+    assert grounded["topic"] == "Grammar"
+    assert grounded["parent_goal_topic"] == "foundational grammar for conversational clarity"
+    assert {item["facet"] for item in grounded["direct_provenance"]["excerpts"]} == {"definition", "scope_limit"}
 
 
 def test_budget_failed_full_page_can_compile_one_distinct_same_page_summary_claim(tmp_path):

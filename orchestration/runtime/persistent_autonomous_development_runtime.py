@@ -384,6 +384,11 @@ def _default_public_evidence_resolver(goal: Mapping[str, Any], advisory: Mapping
         {
             "candidate_id": stable_id("persistent-development-source-candidate", goal["goal_id"], item.get("title"), index),
             "title": str(item.get("title") or ""),
+            # Discovery selects a narrow source concept.  It is evidence for a
+            # scoped child candidate, not proof of every word in the parent
+            # operator goal or its current exercise label.
+            "evidence_target": str(item.get("title") or ""),
+            "parent_goal_topic": str(goal["topic"]),
             "canonical_locator": f"https://en.wikipedia.org/wiki/{str(item.get('title') or '').replace(' ', '_')}",
             "source_class": "recognized_reference", "supports_labels": (str(goal["topic"]).replace(" ", "_"),),
             "provenance": "persistent_runtime_wikimedia_metadata", "content_type_hint": "text/html",
@@ -408,19 +413,23 @@ def _default_public_evidence_resolver(goal: Mapping[str, Any], advisory: Mapping
     }
 
 
-def _extract_source_facets(*, text: str, topic: str) -> tuple[dict[str, Any], ...]:
-    """Retain exact sentence boundaries; a word hit never becomes a claim alone."""
-    topic_terms = tuple(re.findall(r"[a-z0-9]+", topic.lower()))
+def _extract_source_facets(*, text: str, evidence_target: str) -> tuple[dict[str, Any], ...]:
+    """Map exact sentences to a narrow selected target, never a whole goal label."""
+    target_terms = tuple(term for term in re.findall(r"[a-z0-9]+", evidence_target.lower()) if len(term) > 1)
+    normalized_target = " ".join(target_terms)
     definitions: dict[str, dict[str, Any]] = {}
     for index, sentence in enumerate(re.split(r"(?<=[.!?])\s+", text)):
         clean = " ".join(sentence.split())
         lowered = clean.lower()
-        if not clean or not topic_terms or not all(term in lowered for term in topic_terms):
+        # The target phrase (or all of its meaningful terms) must occur in the
+        # same retained sentence.  This avoids lexical proximity while keeping
+        # a source-backed child concept feasible for long parent goals.
+        if not clean or not target_terms or not (normalized_target in lowered or all(term in lowered for term in target_terms)):
             continue
         if re.search(r"\b(is|are|means|refers to|defined as)\b", lowered):
-            definitions.setdefault("definition", {"facet": "definition", "text": clean, "boundary": f"sentence:{index + 1}"})
+            definitions.setdefault("definition", {"facet": "definition", "evidence_target": evidence_target, "text": clean, "boundary": f"sentence:{index + 1}"})
         if re.search(r"\b(only|when|if|under|within|unless|not|may|can)\b", lowered):
-            definitions.setdefault("scope_limit", {"facet": "scope_limit", "text": clean, "boundary": f"sentence:{index + 1}"})
+            definitions.setdefault("scope_limit", {"facet": "scope_limit", "evidence_target": evidence_target, "text": clean, "boundary": f"sentence:{index + 1}"})
     return tuple(definitions[key] for key in sorted(definitions))
 
 
@@ -713,10 +722,11 @@ def run_one_cycle(
         try:
             retrieval = dict(retrieval_executor(selected_candidate))
             content = str(retrieval.pop("content_text") or "")
-            facets = _extract_source_facets(text=content, topic=str(updated_goal["topic"]))
+            evidence_target = str(selected_candidate.get("evidence_target") or selected_candidate.get("title") or updated_goal["topic"])
+            facets = _extract_source_facets(text=content, evidence_target=evidence_target)
             completed_retrieval = {**retrieval_claim, "claim_state": "completed", "completed_at": utc_now(), "canonical_locator": str(retrieval.get("canonical_locator") or selected_candidate["canonical_locator"]), "source_digest": str(retrieval.get("content_digest") or _digest(content)), "extraction_digest": str(retrieval.get("extraction_digest") or _digest(content)), "excerpts": facets}
             if {item["facet"] for item in facets} >= {"definition", "scope_limit"}:
-                candidate = {"candidate_id": stable_id("persistent-development-candidate", updated_goal["goal_id"], completed_retrieval["source_digest"]), "topic": updated_goal["topic"], "scoped_claim": f"source-grounded scoped claim about {updated_goal['topic']}", "required_evidence_facets": ("definition", "scope_limit"), "direct_provenance": {"retrieval_claim_id": completed_retrieval["claim_id"], "source_digest": completed_retrieval["source_digest"], "extraction_digest": completed_retrieval["extraction_digest"], "excerpts": facets}, "derived_provenance": (), "unresolved_limits": (), "trusted_admission": False, "capability_promotion": False}
+                candidate = {"candidate_id": stable_id("persistent-development-candidate", updated_goal["goal_id"], evidence_target, completed_retrieval["source_digest"]), "topic": evidence_target, "parent_goal_topic": updated_goal["topic"], "scoped_claim": f"source-grounded scoped claim about {evidence_target}", "required_evidence_facets": ("definition", "scope_limit"), "direct_provenance": {"retrieval_claim_id": completed_retrieval["claim_id"], "source_digest": completed_retrieval["source_digest"], "extraction_digest": completed_retrieval["extraction_digest"], "evidence_target": evidence_target, "excerpts": facets}, "derived_provenance": (), "unresolved_limits": ("supports a scoped source concept; parent-goal transfer remains unassessed",), "trusted_admission": False, "capability_promotion": False}
                 candidate["candidate_digest"] = _digest(candidate)
                 sealed_specs = _sealed_evaluation_specs(candidate)
                 evaluation = dict(evaluator_executor(candidate, sealed_specs))
