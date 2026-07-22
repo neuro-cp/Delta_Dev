@@ -58,6 +58,7 @@ VALIDATION_OUTCOMES = frozenset({
     "bootstrap_validation_passed",
     "bootstrap_validation_incomplete",
     "bootstrap_validation_failed",
+    "bootstrap_validation_blocked",
     "bootstrap_validation_integrity_stop",
 })
 
