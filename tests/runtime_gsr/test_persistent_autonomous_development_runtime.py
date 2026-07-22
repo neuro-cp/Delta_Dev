@@ -1,7 +1,16 @@
 from __future__ import annotations
 
+import json
+
+import pytest
+
 from orchestration.runtime.persistent_autonomous_development_runtime import (
     DEFAULT_PROVIDER_POLICY,
+    MAPPING_ARTIFACT_DIRECTORY,
+    SOURCE_ARTIFACT_DIRECTORY,
+    compile_persistent_generic_evaluator_authority,
+    recover_historical_retrieval_with_persistence,
+    _write_immutable_artifact,
     export_runtime_report,
     initialize_runtime,
     pause_runtime,
@@ -218,7 +227,11 @@ def test_source_body_candidate_has_exact_excerpts_and_sealed_evaluation_before_p
     goal = result["goals"][0]
     claim = goal["retrieval_claims"][0]
     assert claim["claim_state"] == "completed"
-    assert {item["facet"] for item in claim["excerpts"]} == {"definition", "scope_limit"}
+    source = json.loads((tmp_path / SOURCE_ARTIFACT_DIRECTORY / f"{claim['source_artifact_id']}.json").read_text(encoding="utf-8"))
+    mapping = json.loads((tmp_path / MAPPING_ARTIFACT_DIRECTORY / f"{claim['excerpt_mapping_id']}.json").read_text(encoding="utf-8"))
+    assert source["retained_text"] == _retrieval({})["content_text"]
+    assert {item["facet"] for item in mapping["accepted_excerpts"]} == {"definition", "scope_limit"}
+    assert claim["source_artifact_digest"] == source["artifact_digest"]
     assert goal["candidate_versions"][0]["direct_provenance"]["source_digest"] == "source-digest"
     assert goal["sealed_evaluations"][0]["specifications"]["criteria_digest"]
     assert result["competence_map"]["grammar"]["status"] == "developmentally_validated"
@@ -240,7 +253,89 @@ def test_source_facet_mapping_uses_selected_evidence_target_not_parent_goal_labe
     grounded = result["goals"][0]["candidate_versions"][0]
     assert grounded["topic"] == "Grammar"
     assert grounded["parent_goal_topic"] == "foundational grammar for conversational clarity"
-    assert {item["facet"] for item in grounded["direct_provenance"]["excerpts"]} == {"definition", "scope_limit"}
+    mapping = json.loads((tmp_path / MAPPING_ARTIFACT_DIRECTORY / f"{grounded['direct_provenance']['excerpt_mapping_id']}.json").read_text(encoding="utf-8"))
+    assert {item["facet"] for item in mapping["accepted_excerpts"]} == {"definition", "scope_limit"}
+
+
+def test_source_artifacts_are_immutable_and_restart_reuses_them_without_retrieval(tmp_path):
+    state = initialize_runtime(runtime_root=tmp_path, goals=("learn grammar",))
+    first = run_until_idle(
+        state=state, runtime_root=tmp_path, maximum_cycles=1, evidence_resolver=_local_miss,
+        public_evidence_resolver=_public_candidate, retrieval_executor=_retrieval,
+    )
+    claim = first["goals"][0]["retrieval_claims"][0]
+    source_path = tmp_path / SOURCE_ARTIFACT_DIRECTORY / f"{claim['source_artifact_id']}.json"
+    original = source_path.read_text(encoding="utf-8")
+    restored = initialize_runtime(runtime_root=tmp_path)
+    rerun = run_until_idle(
+        state=restored, runtime_root=tmp_path, maximum_cycles=1, evidence_resolver=_local_miss,
+        public_evidence_resolver=_public_candidate,
+        retrieval_executor=lambda _candidate: (_ for _ in ()).throw(AssertionError("retrieval replay")),
+    )
+    assert source_path.read_text(encoding="utf-8") == original
+    assert rerun["goals"][0]["retrieval_claims"][0]["source_artifact_id"] == claim["source_artifact_id"]
+
+
+def test_immutable_artifact_rejects_content_drift(tmp_path):
+    _write_immutable_artifact(runtime_root=tmp_path, directory="artifacts", artifact_id="same", payload={"value": "first"})
+    with pytest.raises(ValueError, match="artifact_digest_drift"):
+        _write_immutable_artifact(runtime_root=tmp_path, directory="artifacts", artifact_id="same", payload={"value": "second"})
+
+
+def test_historical_digest_only_claims_are_nonreviewable_after_restart(tmp_path):
+    state = initialize_runtime(runtime_root=tmp_path, goals=("learn grammar",))
+    state = dict(state); goal = dict(state["goals"][0])
+    goal["retrieval_claims"] = ({"claim_id": "historical", "claim_state": "completed", "source_digest": "only-digest"},)
+    state["goals"] = (goal,)
+    from orchestration.runtime.persistent_autonomous_development_runtime import _checkpoint
+    _checkpoint(state=state, runtime_root=tmp_path, reason="fixture_historical_digest_only")
+    restored = initialize_runtime(runtime_root=tmp_path)
+    claim = restored["goals"][0]["retrieval_claims"][0]
+    assert claim["historical_disposition"] == "historical_retrieval_completed_content_not_persisted_nonreviewable"
+    assert claim["reviewable_for_grounding"] is False
+
+
+def test_grounded_candidate_compiles_pending_generic_evaluator_authority(tmp_path):
+    state = initialize_runtime(runtime_root=tmp_path, goals=("learn grammar",))
+    result = run_until_idle(
+        state=state, runtime_root=tmp_path, maximum_cycles=1, evidence_resolver=_local_miss,
+        public_evidence_resolver=_public_candidate, retrieval_executor=_retrieval,
+    )
+    goal = result["goals"][0]
+    authority = compile_persistent_generic_evaluator_authority(
+        runtime_root=tmp_path, runtime_id=result["runtime_id"], goal=goal, candidate=goal["candidate_versions"][0],
+    )
+    assert authority["status"] == "pending_operator_approval"
+    assert authority["recommended_approval_token"] == "approve_persistent_generic_evaluator_authoring"
+    assert authority["source_artifact_digest"] == goal["retrieval_claims"][0]["source_artifact_digest"]
+    assert "no_capability_promotion" in authority["authority_limits"]
+
+
+def test_explicit_persistence_recovery_preserves_digest_only_history_and_creates_new_authority(tmp_path):
+    state = initialize_runtime(runtime_root=tmp_path, goals=("learn goal setting",))
+    state = dict(state); goal = dict(state["goals"][0])
+    historical = {
+        "claim_id": "historical-goal-setting", "claim_state": "completed",
+        "canonical_locator": "https://en.wikipedia.org/wiki/Goal_setting", "source_digest": "old-digest",
+        "historical_disposition": "historical_retrieval_completed_content_not_persisted_nonreviewable",
+    }
+    goal["retrieval_claims"] = (historical,); state["goals"] = (goal,)
+    from orchestration.runtime.persistent_autonomous_development_runtime import _checkpoint
+    _checkpoint(state=state, runtime_root=tmp_path, reason="fixture_historical_recovery")
+    final, result = recover_historical_retrieval_with_persistence(
+        state=initialize_runtime(runtime_root=tmp_path), runtime_root=tmp_path,
+        historical_claim_id="historical-goal-setting", evidence_target="Goal setting",
+        retrieval_executor=lambda candidate: {
+            "canonical_locator": candidate["canonical_locator"], "content_digest": "fresh-source", "extraction_digest": "fresh-extract",
+            "content_text": "Goal setting is an action plan. Goal setting may guide a person toward a goal.",
+        },
+    )
+    claims = final["goals"][0]["retrieval_claims"]
+    assert claims[0]["historical_disposition"] == "historical_retrieval_completed_content_not_persisted_nonreviewable"
+    assert claims[1]["parent_historical_claim_id"] == "historical-goal-setting"
+    assert claims[1]["source_artifact_id"]
+    assert result["candidate"]["candidate_id"]
+    assert result["authority"]["status"] == "pending_operator_approval"
 
 
 def test_budget_failed_full_page_can_compile_one_distinct_same_page_summary_claim(tmp_path):
