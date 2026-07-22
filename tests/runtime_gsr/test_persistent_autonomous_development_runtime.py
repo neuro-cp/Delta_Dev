@@ -218,7 +218,51 @@ def test_duplicate_evidence_fingerprint_is_suppressed_after_restart(tmp_path):
     result = run_until_idle(state=state, runtime_root=tmp_path, evidence_resolver=lambda _goal: {"status": "blocked_evidence_environment", "fingerprint": "same", "evidence": {"reason": "fixture"}})
     resumed = resume_runtime(state=result, runtime_root=tmp_path)
     rerun = run_until_idle(state=resumed, runtime_root=tmp_path, evidence_resolver=lambda _goal: (_ for _ in ()).throw(AssertionError("duplicate resolver call")))
-    assert rerun["goals"][0]["state"] == "blocked_evidence_environment"
+    assert rerun["goals"][0]["state"] == "development_route_exhausted"
+    assert rerun["goals"][0]["blocker"] == "all_unique_development_routes_exhausted"
+
+
+def test_goal_cycle_budget_exhaustion_wins_over_replenishment(tmp_path):
+    state = initialize_runtime(runtime_root=tmp_path, goals=("learn alpha",))
+    state = dict(state)
+    goal = dict(state["goals"][0])
+    goal["budget"] = {**dict(goal["budget"]), "cycles_used": 0, "maximum_cycles": 1}
+    state["goals"] = (goal,)
+    result = run_until_idle(
+        state=state,
+        runtime_root=tmp_path,
+        maximum_cycles=3,
+        evidence_resolver=lambda _goal: {"status": "blocked_evidence_environment", "fingerprint": "route-one", "evidence": {"reason": "fixture_exhausted"}},
+    )
+    goal = result["goals"][0]
+    assert goal["budget"]["cycles_used"] == 1
+    assert goal["state"] == "paused_budget"
+    assert goal["blocker"] == "cycle_budget_exhausted_with_remaining_distinct_work"
+    assert result["lifecycle_state"] == "waiting"
+
+
+def test_duplicate_public_evidence_route_without_distinct_strategy_stops_cleanly(tmp_path):
+    state = initialize_runtime(runtime_root=tmp_path, goals=("learn alpha",))
+    first = run_until_idle(
+        state=state,
+        runtime_root=tmp_path,
+        maximum_cycles=1,
+        evidence_resolver=_local_miss,
+        public_evidence_resolver=lambda _goal, _advice: {"status": "public_evidence_unresolved", "fingerprint": "same-public", "evidence": {"candidates": ()}},
+        provider_executor=_advisory,
+    )
+    rerun = run_until_idle(
+        state=first,
+        runtime_root=tmp_path,
+        maximum_cycles=2,
+        evidence_resolver=_local_miss,
+        public_evidence_resolver=lambda _goal, _advice: {"status": "public_evidence_unresolved", "fingerprint": "same-public", "evidence": {"candidates": ()}},
+        provider_executor=lambda _request: (_ for _ in ()).throw(AssertionError("provider replay")),
+    )
+    goal = rerun["goals"][0]
+    assert goal["state"] == "blocked_evidence_environment"
+    assert goal["blocker"] == "duplicate_public_evidence_route_without_distinct_retrieval_strategy"
+    assert len(goal["work_history"]) == 3
 
 
 def test_pause_resume_stop_and_report_are_durable(tmp_path):
@@ -365,6 +409,47 @@ def test_source_body_candidate_has_exact_excerpts_and_sealed_evaluation_before_p
     assert goal["candidate_versions"][0]["direct_provenance"]["source_digest"] == "source-digest"
     assert goal["sealed_evaluations"][0]["specifications"]["criteria_digest"]
     assert result["competence_map"]["grammar"]["status"] == "developmentally_validated"
+    assert result["trusted_admissions"] == result["capability_promotions"] == 0
+
+
+def test_grounded_candidate_with_unavailable_evaluator_creates_operator_authority(tmp_path):
+    state = initialize_runtime(runtime_root=tmp_path, goals=("learn grammar",))
+    result = run_until_idle(
+        state=state, runtime_root=tmp_path, maximum_cycles=1,
+        evidence_resolver=_local_miss, public_evidence_resolver=_public_candidate,
+        retrieval_executor=_retrieval,
+    )
+    goal = result["goals"][0]
+    pending = goal["pending_evaluator_authority"]
+    assert goal["state"] == "blocked_operator_authority"
+    assert goal["blocker"] == "pending_isolated_evaluator_authority"
+    assert pending["status"] == "pending_operator_approval"
+    assert pending["request_id"]
+    assert len(goal["candidate_versions"]) == 1
+    assert len(list((tmp_path / "evaluator_authority_requests").glob("*.json"))) == 1
+    assert not (tmp_path / "evidence_revision_plans").exists()
+    assert result["provider_calls"] == 0
+    assert result["trusted_admissions"] == result["capability_promotions"] == 0
+
+
+def test_mapping_insufficient_candidate_does_not_create_evaluator_authority_or_revision(tmp_path):
+    state = initialize_runtime(runtime_root=tmp_path, goals=("learn grammar",), provider_policy={"maximum_runtime_calls": 0, "maximum_calls_per_goal": 0})
+    result = run_until_idle(
+        state=state, runtime_root=tmp_path, maximum_cycles=1,
+        evidence_resolver=_local_miss, public_evidence_resolver=_public_candidate,
+        retrieval_executor=lambda selected: {
+            "canonical_locator": selected["canonical_locator"],
+            "content_digest": "definition-only",
+            "extraction_digest": "definition-only-extract",
+            "content_text": "Grammar is a language system.",
+        },
+    )
+    goal = result["goals"][0]
+    assert "pending_evaluator_authority" not in goal
+    assert len(goal.get("candidate_versions") or ()) == 0
+    assert not (tmp_path / "evaluator_authority_requests").exists()
+    assert not (tmp_path / "evidence_revision_plans").exists()
+    assert result["provider_calls"] == 0
     assert result["trusted_admissions"] == result["capability_promotions"] == 0
 
 

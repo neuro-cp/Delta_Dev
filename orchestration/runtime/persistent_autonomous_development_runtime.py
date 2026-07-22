@@ -47,7 +47,7 @@ EVIDENCE_REVISION_STATES = frozenset({
 TERMINAL_GOAL_STATES = frozenset({
     "completed", "partially_completed", "blocked_evidence_environment",
     "blocked_capability_gap", "blocked_operator_authority", "paused_budget",
-    "integrity_stop", "cancelled",
+    "development_route_exhausted", "integrity_stop", "cancelled",
 })
 
 DEFAULT_PROVIDER_POLICY = {
@@ -511,6 +511,11 @@ def _select_goal(state: Mapping[str, Any]) -> dict[str, Any] | None:
     eligible = []
     for raw_goal in state.get("goals") or ():
         goal = dict(raw_goal)
+        budget = dict(goal.get("budget") or {})
+        if str(goal.get("state") or "") in TERMINAL_GOAL_STATES:
+            continue
+        if int(budget.get("maximum_cycles") or 0) and int(budget.get("cycles_used") or 0) >= int(budget.get("maximum_cycles") or 0):
+            continue
         nodes = _expand_work_nodes(goal)
         node = next((dict(item) for item in nodes if str(item.get("state")) == "queued"), None)
         if node is None:
@@ -521,6 +526,31 @@ def _select_goal(state: Mapping[str, Any]) -> dict[str, Any] | None:
         str(item.get("goal_id") or ""),
     ))
     return eligible[0] if eligible else None
+
+
+def _apply_cycle_budget_dispositions(state: Mapping[str, Any]) -> tuple[dict[str, Any], bool]:
+    current = dict(state)
+    goals = []
+    changed = False
+    for raw_goal in current.get("goals") or ():
+        goal = dict(raw_goal)
+        budget = dict(goal.get("budget") or {})
+        maximum = int(budget.get("maximum_cycles") or 0)
+        used = int(budget.get("cycles_used") or 0)
+        if maximum and used >= maximum and str(goal.get("state") or "") not in TERMINAL_GOAL_STATES:
+            queued = any(str(node.get("state") or "") == "queued" for node in goal.get("work_nodes") or ())
+            goal["state"] = "paused_budget" if queued else "development_route_exhausted"
+            goal["blocker"] = "cycle_budget_exhausted_with_remaining_distinct_work" if queued else "all_unique_development_routes_exhausted"
+            changed = True
+        goals.append(goal)
+    if changed:
+        current["goals"] = tuple(goals)
+        if all(str(item.get("state") or "") in TERMINAL_GOAL_STATES for item in goals):
+            current["lifecycle_state"] = "waiting"
+            current["terminal_reason"] = "all_goals_reached_honest_terminal_disposition"
+        else:
+            current["lifecycle_state"] = "ready"
+    return current, changed
 
 
 def _default_evidence_resolver(goal: Mapping[str, Any]) -> dict[str, Any]:
@@ -1502,23 +1532,27 @@ def _finalize_persistent_evidence_revision_execution(
     evaluation = dict(evaluation_artifact.get("evaluation") or {})
     execution_id = str(claim["artifact_id"])
     disposition, reasons = _persistent_disposition(candidate=candidate, evaluation=evaluation)
-    result = _write_immutable_artifact(
-        runtime_root=runtime_root,
-        directory="evidence_revision_execution_results",
-        artifact_id=execution_id,
-        payload={
-            "schema": "persistent_evidence_revision_execution_result_v1",
-            "execution_claim_id": execution_id,
-            "execution_claim_digest": claim["artifact_digest"],
-            "attempt_id": attempt["attempt_id"],
-            "attempt_artifact_id": attempt_artifact["artifact_id"],
-            "evaluation_id": evaluation["evaluation_id"],
-            "evaluation_artifact_id": evaluation_artifact["artifact_id"],
-            "disposition": disposition,
-            "disposition_reasons": reasons,
-            "completed_at": utc_now(),
-        },
-    )
+    result_path = Path(runtime_root) / "evidence_revision_execution_results" / f"{execution_id}.json"
+    if result_path.exists():
+        result = _read(result_path)
+    else:
+        result = _write_immutable_artifact(
+            runtime_root=runtime_root,
+            directory="evidence_revision_execution_results",
+            artifact_id=execution_id,
+            payload={
+                "schema": "persistent_evidence_revision_execution_result_v1",
+                "execution_claim_id": execution_id,
+                "execution_claim_digest": claim["artifact_digest"],
+                "attempt_id": attempt["attempt_id"],
+                "attempt_artifact_id": attempt_artifact["artifact_id"],
+                "evaluation_id": evaluation["evaluation_id"],
+                "evaluation_artifact_id": evaluation_artifact["artifact_id"],
+                "disposition": disposition,
+                "disposition_reasons": reasons,
+                "completed_at": utc_now(),
+            },
+        )
     if boundary_hook:
         boundary_hook("after_terminal_result_persisted")
     current = _read(Path(runtime_root) / STATE_FILE)
@@ -2143,6 +2177,10 @@ def run_one_cycle(
     current = dict(state)
     if current.get("lifecycle_state") in {"paused_runtime", "stopped"}:
         return current
+    current, budget_changed = _apply_cycle_budget_dispositions(current)
+    if budget_changed:
+        _checkpoint(state=current, runtime_root=runtime_root, reason="cycle_budget_exhaustion_disposition_applied")
+        current = _read(Path(runtime_root) / STATE_FILE)
     if _provider_cooldown_elapsed(current):
         current["consecutive_provider_calls"] = 0
     goal = _select_goal(current)
@@ -2199,6 +2237,10 @@ def run_one_cycle(
     candidates = tuple(dict(item) for item in (dict(outcome.get("evidence") or {}).get("candidates") or ()) if isinstance(item, Mapping))
     prior_retrievals = tuple(updated_goal.get("retrieval_claims") or ())
     selected_candidate = _select_retrieval_candidate(candidates=candidates, prior_claims=prior_retrievals)
+    duplicate_public_route_without_strategy = False
+    if fingerprint in exhausted and outcome.get("status") == "public_evidence_unresolved" and selected_candidate is None:
+        outcome = {"status": "blocked_evidence_environment", "fingerprint": fingerprint, "evidence": {"reason": "duplicate_public_evidence_route_without_distinct_retrieval_strategy"}}
+        duplicate_public_route_without_strategy = True
     if outcome.get("status") == "public_evidence_unresolved" and selected_candidate is not None:
         strategy = str(selected_candidate.get("extraction_strategy") or "full_page_rc8")
         strategy_fingerprint = _digest({
@@ -2249,9 +2291,16 @@ def run_one_cycle(
                 candidate["candidate_digest"] = _digest(candidate)
                 sealed_specs = _sealed_evaluation_specs(candidate)
                 evaluation = dict(evaluator_executor(candidate, sealed_specs))
-                outcome = {"status": "evaluated_candidate" if evaluation.get("status") == "passed" else "candidate_evaluation_blocked", "fingerprint": _digest({"candidate": candidate["candidate_digest"], "evaluation": evaluation}), "evidence": {"route": "source_body_retrieval", "retrieval_claim_id": completed_retrieval["claim_id"], "candidate": candidate, "sealed_evaluation": sealed_specs, "evaluation": evaluation}}
                 updated_goal["candidate_versions"] = tuple(updated_goal.get("candidate_versions") or ()) + (candidate,)
                 updated_goal["sealed_evaluations"] = tuple(updated_goal.get("sealed_evaluations") or ()) + ({"specifications": sealed_specs, "result": evaluation},)
+                if evaluation.get("status") == "passed":
+                    outcome = {"status": "evaluated_candidate", "fingerprint": _digest({"candidate": candidate["candidate_digest"], "evaluation": evaluation}), "evidence": {"route": "source_body_retrieval", "retrieval_claim_id": completed_retrieval["claim_id"], "candidate": candidate, "sealed_evaluation": sealed_specs, "evaluation": evaluation}}
+                elif evaluation.get("status") == "evaluation_unavailable":
+                    authority = compile_persistent_generic_evaluator_authority(runtime_root=runtime_root, runtime_id=str(current["runtime_id"]), goal=updated_goal, candidate=candidate)
+                    updated_goal["pending_evaluator_authority"] = {"request_id": authority["request_id"], "status": authority["status"], "artifact_path": authority["artifact_path"]}
+                    outcome = {"status": "operator_evaluator_authority_pending", "fingerprint": _digest({"candidate": candidate["candidate_digest"], "authority": authority["artifact_digest"]}), "evidence": {"route": "source_body_retrieval", "retrieval_claim_id": completed_retrieval["claim_id"], "candidate": candidate, "sealed_evaluation": sealed_specs, "authority_id": authority["request_id"], "authority_digest": authority["artifact_digest"]}}
+                else:
+                    outcome = {"status": "candidate_evaluation_blocked", "fingerprint": _digest({"candidate": candidate["candidate_digest"], "evaluation": evaluation}), "evidence": {"route": "source_body_retrieval", "retrieval_claim_id": completed_retrieval["claim_id"], "candidate": candidate, "sealed_evaluation": sealed_specs, "evaluation": evaluation}}
             else:
                 outcome = {"status": "public_evidence_unresolved", "fingerprint": fingerprint, "evidence": {"route": "source_body_retrieval", "retrieval_claim_id": completed_retrieval["claim_id"], "reason": "source_body_missing_required_facets", "supported_facets": tuple(item["facet"] for item in facets)}}
         except Exception as exc:  # retrieval failures remain terminal and replay-safe.
@@ -2331,9 +2380,13 @@ def run_one_cycle(
         (*tuple(updated_goal.get("evidence") or ()), dict(outcome.get("evidence") or {}))
     )
     budget = dict(updated_goal["budget"]); budget["cycles_used"] = int(budget.get("cycles_used") or 0) + 1; updated_goal["budget"] = budget
+    cycle_budget_exhausted = bool(int(budget.get("maximum_cycles") or 0) and int(budget.get("cycles_used") or 0) >= int(budget.get("maximum_cycles") or 0))
     if outcome.get("status") == "public_evidence_unresolved" and completed_advice is not None:
         updated_goal["state"] = "blocked_evidence_environment"
         updated_goal["blocker"] = "provider_advisory_public_verification_route_exhausted"
+    elif outcome.get("status") == "operator_evaluator_authority_pending":
+        updated_goal["state"] = "blocked_operator_authority"
+        updated_goal["blocker"] = "pending_isolated_evaluator_authority"
     elif outcome.get("status") not in {"provider_advisory_untrusted_ready", "provider_failed", "paused_budget"}:
         updated_goal["state"] = "blocked_evidence_environment"
         updated_goal["blocker"] = str(dict(outcome.get("evidence") or {}).get("reason") or "no_authorized_evidence_route")
@@ -2360,9 +2413,15 @@ def run_one_cycle(
         # Persist replenishment in the same checkpoint as the exhausted node;
         # a restart must see the new work rather than a transient empty queue.
         updated_goal["work_nodes"] = _expand_work_nodes(updated_goal)
-        if outcome.get("status") != "paused_budget" and any(str(node.get("state")) == "queued" for node in updated_goal["work_nodes"]):
+        if outcome.get("status") not in {"paused_budget", "operator_evaluator_authority_pending"} and not cycle_budget_exhausted and not duplicate_public_route_without_strategy and any(str(node.get("state")) == "queued" for node in updated_goal["work_nodes"]):
             updated_goal["state"] = "queued"
             updated_goal["blocker"] = ""
+    if cycle_budget_exhausted:
+        queued = any(str(node.get("state") or "") == "queued" for node in updated_goal.get("work_nodes") or ())
+        updated_goal["state"] = "paused_budget" if queued else "development_route_exhausted"
+        updated_goal["blocker"] = "cycle_budget_exhausted_with_remaining_distinct_work" if queued else "all_unique_development_routes_exhausted"
+    goals = [updated_goal if item["goal_id"] == updated_goal["goal_id"] else item for item in current.get("goals") or ()]
+    current["goals"] = tuple(goals)
     current["provider_calls"] = sum(int(item.get("budget", {}).get("provider_calls") or 0) for item in current["goals"])
     current["provider_spend_estimated_usd"] = round(sum(
         float(claim.get("estimated_cost_usd") or 0.0)
