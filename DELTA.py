@@ -26,6 +26,8 @@ LIVE_RUNTIME_1B_MISSION_TEXT = (
 )
 LIVE_RUNTIME_2_ROOT = ROOT / ".tmp" / "live-runtime-2-bounded-unattended-v1"
 LIVE_RUNTIME_2_ACCEPTED_ROOT = ROOT / ".tmp" / "live-general-3-approved-learning-v1"
+LIVE_RUNTIME_3_ROOT = ROOT / ".tmp" / "live-runtime-3-interruption-resumption-v1"
+LIVE_RUNTIME_3_ACCEPTED_ROOT = ROOT / ".tmp" / "live-general-3-approved-learning-v1"
 
 from orchestration.runtime.rc1_operator_console import (  # noqa: E402
     append_observation,
@@ -124,6 +126,11 @@ from orchestration.runtime.live_runtime_2_bounded_unattended import (  # noqa: E
     compile_live_runtime_2_unattended_authority,
     prepare_live_runtime_2_mission,
     start_live_runtime_2_process,
+)
+from orchestration.runtime.live_runtime_3_interruption_resumption import (  # noqa: E402
+    compile_live_runtime_3_unattended_authority,
+    prepare_live_runtime_3_mission,
+    start_live_runtime_3_process,
 )
 from orchestration.runtime.local_model_request_result_ledger import LocalModelRequestResultLedger  # noqa: E402
 from orchestration.runtime.continuous_subgoal_executor import execute_continuous_active_subgoal  # noqa: E402
@@ -1503,6 +1510,8 @@ class DeltaApp:
         self.live_runtime_1b_controller = None
         self.live_runtime_2_controller = None
         self.live_runtime_2_process: subprocess.Popen[object] | None = None
+        self.live_runtime_3_controller = None
+        self.live_runtime_3_process: subprocess.Popen[object] | None = None
         self.provider_manager = ProviderManager(keep_loaded=True)
         self.resident_model_id: str | None = None
         self.resident_lane: str | None = None
@@ -1513,6 +1522,7 @@ class DeltaApp:
         self._build()
         self._load_live_runtime_1b_state()
         self._load_live_runtime_2_state()
+        self._load_live_runtime_3_state()
         self.root.after(50, self._poll_live_runtime_worker_results)
         self._refresh_state_cards()
         self._warm_default_model()
@@ -2350,6 +2360,112 @@ class DeltaApp:
             "LIVE-RUNTIME-2 bounded unattended runner started from explicit Tk operator command.\n\n"
             f"Process ID: {self.live_runtime_2_process.pid}\n"
             "Close the Tk window now for the unattended interval. The runner will stop at terminal, cycle limit, expiration, or integrity failure."
+        )
+
+    def _live_runtime_3_restart_path(self) -> Path:
+        return LIVE_RUNTIME_3_ROOT / "restart_state.json"
+
+    def _load_live_runtime_3_state(self) -> None:
+        restart_path = self._live_runtime_3_restart_path()
+        if not restart_path.exists():
+            return
+        try:
+            restart_state = json.loads(restart_path.read_text(encoding="utf-8"))
+            controller = start_continuous_runtime_controller(session_id=str(restart_state.get("session_id") or "tk-live-runtime-3"), wake_mode="MANUAL")
+            self.live_runtime_3_controller = restore_continuous_mission_restart_state(controller, restart_state)
+            self._sync_live_runtime_3_evaluation_items()
+            stop_path = LIVE_RUNTIME_3_ROOT / "unattended_stop" / "stop.json"
+            if stop_path.exists():
+                stop = json.loads(stop_path.read_text(encoding="utf-8"))
+                self.live_runtime_status.set(f"LIVE-RUNTIME-3: stopped {stop.get('stop_reason')}")
+            else:
+                self.live_runtime_status.set(f"LIVE-RUNTIME-3: {self.live_runtime_3_controller.continuous_mission_state}")
+        except Exception as exc:  # noqa: BLE001 - UI recovery must fail closed.
+            self.live_runtime_3_controller = None
+            self.live_runtime_status.set(f"LIVE-RUNTIME-3 recovery blocked: {type(exc).__name__}: {str(exc)[:160]}")
+
+    def _sync_live_runtime_3_evaluation_items(self) -> None:
+        eval_dir = LIVE_RUNTIME_3_ROOT / "evaluation_ui"
+        runtime_items: list[dict[str, object]] = []
+        if eval_dir.exists():
+            for path in sorted(eval_dir.glob("*.json")):
+                record = json.loads(path.read_text(encoding="utf-8"))
+                runtime_items.append({
+                    "item_type": "live_runtime_3_evaluation",
+                    "title": f"LIVE-RUNTIME-3 {record.get('task_class')}",
+                    "status": str(record.get("terminal_state") or record.get("aggregate_disposition") or "available"),
+                    "boundary": "Interrupted/resumed bounded unattended Evaluation artifact rendered through Tk after recovery.",
+                    "operator_action": "Review only. This display does not authorize source mutation, promotion, deployment, provider access, learning, or another mission.",
+                    "details": record,
+                })
+        self.evaluation_review_items = runtime_items
+        self._refresh_evaluation_snapshot()
+
+    def _live_runtime_3_summary(self) -> str:
+        controller = getattr(self, "live_runtime_3_controller", None)
+        if controller is None:
+            return "LIVE-RUNTIME-3 is not attached."
+        state = dict((controller.continuous_learning_state or {}).get("live_runtime_1") or {})
+        stop_text = ""
+        stop_path = LIVE_RUNTIME_3_ROOT / "unattended_stop" / "stop.json"
+        if stop_path.exists():
+            stop = json.loads(stop_path.read_text(encoding="utf-8"))
+            stop_text = f"\nStop: {stop.get('stop_reason')} / {stop.get('result_status')}"
+        return (
+            f"State: {controller.continuous_mission_state}\n"
+            f"Root: {LIVE_RUNTIME_3_ROOT}\n"
+            f"Cycles: {state.get('scheduler_cycles')}\n"
+            f"Mission: {(state.get('mission') or {}).get('mission_id') or 'pending'}\n"
+            f"Work items: {json.dumps(dict(state.get('work_item_status') or {}), sort_keys=True)}\n"
+            f"Evaluation entries: {len(tuple((LIVE_RUNTIME_3_ROOT / 'evaluation_ui').glob('*.json'))) if (LIVE_RUNTIME_3_ROOT / 'evaluation_ui').exists() else 0}\n"
+            f"Counts: {json.dumps(dict(state.get('counts') or {}), sort_keys=True, default=str)}"
+            f"{stop_text}"
+        )
+
+    def _prepare_live_runtime_3_from_ui(self) -> str:
+        if LIVE_RUNTIME_3_ROOT.exists() and self._live_runtime_3_restart_path().exists():
+            self._load_live_runtime_3_state()
+            return "LIVE-RUNTIME-3 already has persisted state. No second mission was started.\n\n" + self._live_runtime_3_summary()
+        self.live_runtime_3_controller = prepare_live_runtime_3_mission(
+            runtime_root=LIVE_RUNTIME_3_ROOT,
+            accepted_competence_root=LIVE_RUNTIME_3_ACCEPTED_ROOT,
+            reset=True,
+        )
+        self._sync_live_runtime_3_evaluation_items()
+        self.live_runtime_status.set("LIVE-RUNTIME-3: graph registered awaiting first authority")
+        return "LIVE-RUNTIME-3 mission approved and graph registered through Tk.\n\n" + self._live_runtime_3_summary()
+
+    def _authorize_live_runtime_3_from_ui(self, generation: int) -> str:
+        controller = getattr(self, "live_runtime_3_controller", None)
+        if controller is None:
+            self._load_live_runtime_3_state()
+            controller = getattr(self, "live_runtime_3_controller", None)
+        if controller is None:
+            return "LIVE-RUNTIME-3 cannot authorize unattended mode: no mission graph is registered."
+        authority = compile_live_runtime_3_unattended_authority(
+            controller,
+            runtime_root=LIVE_RUNTIME_3_ROOT,
+            generation=generation,
+            max_cycles=6,
+        )
+        self.live_runtime_status.set(f"LIVE-RUNTIME-3: authority {generation} accepted")
+        return (
+            f"LIVE-RUNTIME-3 authority {generation} accepted.\n\n"
+            f"Authority: {authority['authority_id']}\n"
+            f"Digest: {authority['artifact_digest']}\n"
+            f"Allowed work items: {json.dumps(tuple(authority['allowed_work_item_ids']))}\n"
+            "Limits: one mission, six controller advances, 10 minutes, provider budget 0, learning disabled, network disabled, mutation disabled, deployment disabled."
+        )
+
+    def _start_live_runtime_3_from_ui(self) -> str:
+        if not (LIVE_RUNTIME_3_ROOT / "unattended_authority").exists():
+            return "LIVE-RUNTIME-3 cannot start unattended mode: authority record is missing."
+        self.live_runtime_3_process = start_live_runtime_3_process(runtime_root=LIVE_RUNTIME_3_ROOT, python_executable=sys.executable)
+        self.live_runtime_status.set("LIVE-RUNTIME-3: bounded unattended runner started")
+        return (
+            "LIVE-RUNTIME-3 bounded unattended runner started from explicit Tk operator command.\n\n"
+            f"Process ID: {self.live_runtime_3_process.pid}\n"
+            "Close the Tk window now for the bounded unattended interval."
         )
 
     def _selected_evaluation_review_item(self) -> tuple[str, dict[str, object]] | tuple[None, None]:
@@ -3399,6 +3515,43 @@ class DeltaApp:
             self._append_session("user", message)
             self._load_live_runtime_2_state()
             reply = self._live_runtime_2_summary()
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            self._refresh_state_cards()
+            return
+        if lower == "prepare live runtime 3 interruption mission":
+            self._append_session("user", message)
+            reply = self._prepare_live_runtime_3_from_ui()
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            self._refresh_state_cards()
+            return
+        if lower == "authorize first bounded unattended live runtime 3":
+            self._append_session("user", message)
+            reply = self._authorize_live_runtime_3_from_ui(1)
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            self._refresh_state_cards()
+            return
+        if lower == "authorize second bounded unattended live runtime 3":
+            self._append_session("user", message)
+            self._load_live_runtime_3_state()
+            reply = self._authorize_live_runtime_3_from_ui(2)
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            self._refresh_state_cards()
+            return
+        if lower == "start bounded unattended live runtime 3":
+            self._append_session("user", message)
+            reply = self._start_live_runtime_3_from_ui()
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            self._refresh_state_cards()
+            return
+        if lower == "live runtime 3 status":
+            self._append_session("user", message)
+            self._load_live_runtime_3_state()
+            reply = self._live_runtime_3_summary()
             self._append_chat("DELTA", reply)
             self._append_session("assistant", reply)
             self._refresh_state_cards()
