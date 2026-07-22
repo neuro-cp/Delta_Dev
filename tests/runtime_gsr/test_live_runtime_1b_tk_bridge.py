@@ -1,10 +1,18 @@
 from __future__ import annotations
 
 import json
+import os
+import sys
 import tkinter as tk
+from pathlib import Path
 
 import DELTA
 from orchestration.runtime.live_general_3_learning_mission import run_live_general_3_approved_learning_mission
+
+if sys.platform == "win32":
+    tcl_root = Path(sys.base_prefix) / "tcl"
+    os.environ.setdefault("TCL_LIBRARY", str(tcl_root / "tcl8.6"))
+    os.environ.setdefault("TK_LIBRARY", str(tcl_root / "tk8.6"))
 
 
 class _DummyProviderManager:
