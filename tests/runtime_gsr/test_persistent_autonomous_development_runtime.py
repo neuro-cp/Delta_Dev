@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import threading
 
 import pytest
 
@@ -10,7 +11,9 @@ from orchestration.runtime.persistent_autonomous_development_runtime import (
     SOURCE_ARTIFACT_DIRECTORY,
     compile_persistent_generic_evaluator_authority,
     compile_persistent_evidence_revision_plan,
+    execute_persistent_evidence_revision_consumer,
     preflight_persistent_evidence_revision_execution,
+    recover_persistent_evidence_revision_execution,
     recover_historical_retrieval_with_persistence,
     run_persistent_evidence_revision_cycle,
     _target_is_satisfied,
@@ -74,7 +77,7 @@ def _advisory(request):
     }
 
 
-def _seed_goal_setting_failure(tmp_path, *, topic="Goal setting", target_behavior="explain and apply goal setting using retained excerpts"):
+def _seed_goal_setting_failure(tmp_path, *, topic="Goal setting", target_behavior="explain and apply goal setting using retained excerpts", capability="explain_and_apply_goal_setting", generic_predicates=()):
     state = initialize_runtime(runtime_root=tmp_path, goals=(f"learn {topic}",))
     goal = dict(state["goals"][0])
     candidate = {
@@ -104,13 +107,13 @@ def _seed_goal_setting_failure(tmp_path, *, topic="Goal setting", target_behavio
         "learner_visible_bundle_digest": "old-bundle",
         "claim_state": "completed",
     })
-    cases = (
+    cases = tuple({**case, "failed_predicates": tuple(generic_predicates) or case["failed_predicates"]} for case in (
         {"case_id": "goalsetting-baseline-001", "kind": "baseline", "task_type": "explanation_and_application", "score": 0.0, "failure_reason": "insufficient_retained_teaching_evidence", "failed_predicates": ("purpose", "specific", "measurable", "achievable", "relevant", "time-bound", "example")},
         {"case_id": "goalsetting-control-001", "kind": "control", "task_type": "application_task", "score": 0.0, "failure_reason": "insufficient_retained_teaching_evidence", "failed_predicates": ("effective", "monthly", "within", "measurable")},
         {"case_id": "goalsetting-held_out-001", "kind": "held_out", "task_type": "explanation_task", "score": 0.0, "failure_reason": "insufficient_retained_teaching_evidence", "failed_predicates": ("motivation", "performance", "feedback", "outcome")},
         {"case_id": "goalsetting-adversarial-001", "kind": "adversarial", "task_type": "application_task", "score": 0.0, "failure_reason": "insufficient_retained_teaching_evidence", "failed_predicates": ("vague", "specific", "measurable", "revised", "successful")},
         {"case_id": "goalsetting-transfer-001", "kind": "transfer", "task_type": "application_task", "score": 0.0, "failure_reason": "insufficient_retained_teaching_evidence", "failed_predicates": ("specific", "measurable", "achievable", "relevant", "time-bound", "monitoring", "adjust", "progress")},
-    )
+    ))
     evaluation = {
         "evaluation_id": "learning-content-evaluation-5b68bd42e4bdc52d",
         "attempt_id": "learning-attempt-02a6c554fa90156d",
@@ -118,7 +121,7 @@ def _seed_goal_setting_failure(tmp_path, *, topic="Goal setting", target_behavio
         "promotion_eligible": False,
         "evaluation_digest": "81f50313055c18e6dc3188c810f24b5193fe661c23750e4852b3de43046a6086",
         "content_case_results": cases,
-        "capability_dimension": "explain_and_apply_goal_setting",
+        "capability_dimension": capability,
     }
     eval_artifact = _write_immutable_artifact(runtime_root=tmp_path, directory="learning_evaluations", artifact_id=evaluation["evaluation_id"], payload={
         "schema": "persistent_learning_evaluation_v1",
@@ -130,8 +133,8 @@ def _seed_goal_setting_failure(tmp_path, *, topic="Goal setting", target_behavio
     sealed_cases = tuple({
         "case_id": item["case_id"],
         "case_kind": item["kind"],
-        "target_capability": "explain_and_apply_goal_setting",
-        "assessment_dimension": "explain_and_apply_goal_setting",
+        "target_capability": capability,
+        "assessment_dimension": capability,
         "learner_view": {"prompt": "fixture"},
         "evaluator_view": {"rubric": ("secret",), "scoring_rule": {"pass_condition": "secret"}},
     } for item in cases)
@@ -142,7 +145,7 @@ def _seed_goal_setting_failure(tmp_path, *, topic="Goal setting", target_behavio
         "sealed_package": {
             "sealed_package_id": "provider-authored-sealed-evaluator-3d1e4cab56e2fa0b",
             "execution_contract_version": "sealed_evaluator_execution_v3",
-            "target_capability": "explain_and_apply_goal_setting",
+            "target_capability": capability,
             "sealed_evaluation_cases": sealed_cases,
         },
     })
@@ -606,15 +609,24 @@ def test_evidence_revision_preflight_binds_revised_candidate_without_execution_a
     assert preflight["status"] == "preflight_accepted_no_execution"
     assert preflight["binding"]["candidate_digest"] == result["revised_candidate"]["candidate_digest"]
     assert preflight["binding"]["sealed_package_digest"] == authority["sealed_package_digest"]
+    executed = execute_persistent_evidence_revision_consumer(
+        runtime_root=tmp_path,
+        authority_id=authority["request_id"],
+    )
+    assert executed["status"] == "execution_completed"
+    assert executed["execution_claim"]["claim_state"] == "dispatching"
+    assert executed["execution_result"]["execution_claim_id"] == executed["execution_claim"]["artifact_id"]
     replay = preflight_persistent_evidence_revision_execution(
         runtime_root=tmp_path,
         authority_id=authority["request_id"],
         approval_token=authority["recommended_approval_token"],
     )
     assert replay["status"] == "preflight_replay_suppressed"
+    execution_replay = execute_persistent_evidence_revision_consumer(runtime_root=tmp_path, authority_id=authority["request_id"])
+    assert execution_replay["status"] == "execution_replay_suppressed"
     final = initialize_runtime(runtime_root=tmp_path)
-    assert len(final["goals"][0]["learning_attempts"]) == 1
-    assert len(final["goals"][0]["behavioral_evaluations"]) == 1
+    assert len(final["goals"][0]["learning_attempts"]) == 2
+    assert len(final["goals"][0]["behavioral_evaluations"]) == 2
     assert final["provider_calls"] == final["trusted_admissions"] == final["capability_promotions"] == 0
 
 
@@ -622,6 +634,148 @@ def test_monitoring_sufficiency_requires_explicit_relation():
     assert not _target_is_satisfied("progress_monitoring_feedback", ({"text": "Progress was mentioned."},))
     assert _target_is_satisfied("progress_monitoring_feedback", ({"text": "Progress toward the target should be measured regularly."},))
     assert _target_is_satisfied("progress_monitoring_feedback", ({"text": "Feedback is used to compare current performance with the intended goal."},))
+
+
+def test_evidence_revision_executes_a_genuine_generic_article_agreement_episode_once(tmp_path):
+    _seed_goal_setting_failure(
+        tmp_path,
+        topic="Basic grammar article agreement",
+        target_behavior="choose articles from retained grammar evidence",
+        capability="apply_article_agreement",
+        generic_predicates=("article", "vowel"),
+    )
+
+    def grammar_retrieval(candidate):
+        return {
+            "canonical_locator": candidate["canonical_locator"],
+            "content_digest": "grammar-article-source",
+            "extraction_digest": "grammar-article-extract",
+            "content_text": "Article choice is determined by the initial vowel sound of the following word.",
+        }
+
+    revised = run_persistent_evidence_revision_cycle(
+        runtime_root=tmp_path,
+        failed_evaluation_id="learning-content-evaluation-5b68bd42e4bdc52d",
+        retrieval_executor=grammar_retrieval,
+    )
+    assert revised["status"] == "reevaluation_pending"
+    assert [target["target_id"] for target in revised["revision_plan"]["missing_evidence_targets"]][0].startswith("generic_failed_dimension_")
+    assert "smart" not in json.dumps(revised["revision_plan"]).lower()
+    authority = revised["pending_authority"]
+    preflight_persistent_evidence_revision_execution(runtime_root=tmp_path, authority_id=authority["request_id"], approval_token=authority["recommended_approval_token"])
+    executed = execute_persistent_evidence_revision_consumer(runtime_root=tmp_path, authority_id=authority["request_id"])
+    assert executed["status"] == "execution_completed"
+    assert execute_persistent_evidence_revision_consumer(runtime_root=tmp_path, authority_id=authority["request_id"])["status"] == "execution_replay_suppressed"
+
+
+def _prepare_revision_execution(tmp_path):
+    _seed_goal_setting_failure(tmp_path, topic="Evidence-based study planning", target_behavior="explain and apply study planning using retained excerpts")
+    revised = run_persistent_evidence_revision_cycle(
+        runtime_root=tmp_path,
+        failed_evaluation_id="learning-content-evaluation-5b68bd42e4bdc52d",
+        retrieval_executor=_revision_retrieval,
+    )
+    authority = revised["pending_authority"]
+    preflight_persistent_evidence_revision_execution(
+        runtime_root=tmp_path,
+        authority_id=authority["request_id"],
+        approval_token=authority["recommended_approval_token"],
+    )
+    return authority
+
+
+def test_evidence_revision_execution_concurrent_callers_acquire_one_owner(tmp_path, monkeypatch):
+    authority = _prepare_revision_execution(tmp_path)
+    import orchestration.runtime.developmental_learning as developmental_learning
+
+    original_execute = developmental_learning.execute_learning_attempt
+    original_evaluate = developmental_learning.evaluate_learning_attempt
+    counts = {"learner": 0, "evaluator": 0}
+    lock = threading.Lock()
+
+    def counted_execute(*args, **kwargs):
+        with lock:
+            counts["learner"] += 1
+        return original_execute(*args, **kwargs)
+
+    def counted_evaluate(*args, **kwargs):
+        with lock:
+            counts["evaluator"] += 1
+        return original_evaluate(*args, **kwargs)
+
+    monkeypatch.setattr(developmental_learning, "execute_learning_attempt", counted_execute)
+    monkeypatch.setattr(developmental_learning, "evaluate_learning_attempt", counted_evaluate)
+    barrier = threading.Barrier(2)
+    results: list[dict[str, object]] = []
+    errors: list[BaseException] = []
+
+    def worker():
+        try:
+            barrier.wait(timeout=5)
+            results.append(execute_persistent_evidence_revision_consumer(runtime_root=tmp_path, authority_id=authority["request_id"]))
+        except BaseException as exc:
+            errors.append(exc)
+
+    threads = [threading.Thread(target=worker) for _ in range(2)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join(timeout=10)
+    assert errors == []
+    assert sorted(result["status"] for result in results) == ["execution_completed", "execution_owned_elsewhere"]
+    assert counts == {"learner": 1, "evaluator": 1}
+    assert execute_persistent_evidence_revision_consumer(runtime_root=tmp_path, authority_id=authority["request_id"])["status"] == "execution_replay_suppressed"
+
+
+class _InjectedCrash(RuntimeError):
+    pass
+
+
+@pytest.mark.parametrize(
+    ("boundary", "expected_status", "expected_counts"),
+    (
+        ("after_ownership_acquired", "recovery_resumed_before_learner", {"learner": 1, "evaluator": 1}),
+        ("after_execution_claim_persisted", "recovery_resumed_before_learner", {"learner": 1, "evaluator": 1}),
+        ("after_learner_dispatching", "execution_outcome_unknown_integrity_stop", {"learner": 0, "evaluator": 0}),
+        ("after_attempt_persisted", "recovery_resumed_evaluation_from_persisted_attempt", {"learner": 1, "evaluator": 1}),
+        ("after_evaluator_dispatching", "evaluation_outcome_unknown_integrity_stop", {"learner": 1, "evaluator": 0}),
+        ("after_evaluation_persisted", "recovery_finalized_from_persisted_evaluation", {"learner": 1, "evaluator": 1}),
+    ),
+)
+def test_evidence_revision_execution_recovery_classifies_crash_windows(tmp_path, monkeypatch, boundary, expected_status, expected_counts):
+    authority = _prepare_revision_execution(tmp_path)
+    import orchestration.runtime.developmental_learning as developmental_learning
+
+    original_execute = developmental_learning.execute_learning_attempt
+    original_evaluate = developmental_learning.evaluate_learning_attempt
+    counts = {"learner": 0, "evaluator": 0}
+
+    def counted_execute(*args, **kwargs):
+        counts["learner"] += 1
+        return original_execute(*args, **kwargs)
+
+    def counted_evaluate(*args, **kwargs):
+        counts["evaluator"] += 1
+        return original_evaluate(*args, **kwargs)
+
+    monkeypatch.setattr(developmental_learning, "execute_learning_attempt", counted_execute)
+    monkeypatch.setattr(developmental_learning, "evaluate_learning_attempt", counted_evaluate)
+
+    def crash_hook(name):
+        if name == boundary:
+            raise _InjectedCrash(name)
+
+    with pytest.raises(_InjectedCrash):
+        execute_persistent_evidence_revision_consumer(runtime_root=tmp_path, authority_id=authority["request_id"], boundary_hook=crash_hook)
+    before_recovery_counts = dict(counts)
+    recovered = recover_persistent_evidence_revision_execution(runtime_root=tmp_path, authority_id=authority["request_id"])
+    assert recovered["status"] == expected_status
+    assert counts == expected_counts
+    if boundary == "after_evaluation_persisted":
+        assert counts == before_recovery_counts
+        assert recovered["execution_result"]["evaluation_artifact_id"]
+    if expected_status.endswith("integrity_stop") or expected_status.endswith("manual_recovery_required"):
+        assert execute_persistent_evidence_revision_consumer(runtime_root=tmp_path, authority_id=authority["request_id"])["status"] == "execution_recovery_classified_replay_suppressed"
 
 
 def test_evidence_revision_replay_reuses_pending_authority_without_new_retrieval(tmp_path):

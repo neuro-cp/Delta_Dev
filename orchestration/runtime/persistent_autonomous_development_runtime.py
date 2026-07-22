@@ -19,7 +19,7 @@ from typing import Any, Callable, Mapping, Sequence
 from urllib.parse import urlparse
 
 from orchestration.runtime.delta_1_0_common import stable_id, utc_now
-from orchestration.runtime.developmental_learning import DevelopmentalMissionContract, LearningSubgoal
+from orchestration.runtime.developmental_learning import DevelopmentalAttemptRecord, DevelopmentalMissionContract, LearningSubgoal
 from orchestration.runtime.isolated_evaluator_authoring import (
     compile_isolated_evaluator_authoring_request,
     validate_provider_authored_evaluator_response,
@@ -38,6 +38,7 @@ LEARNER_BUNDLE_DIRECTORY = "learner_visible_bundles"
 EVALUATOR_REUSE_DECISION_DIRECTORY = "evaluator_reuse_decisions"
 EVIDENCE_REVISION_BINDING_DIRECTORY = "evidence_revision_evaluator_bindings"
 EVIDENCE_REVISION_EXECUTION_CLAIM_DIRECTORY = "evidence_revision_execution_claims"
+EVIDENCE_REVISION_OWNERSHIP_DIRECTORY = "evidence_revision_execution_ownership"
 EVIDENCE_REVISION_STATES = frozenset({
     "planned", "retrieving", "evidence_sufficient", "evidence_insufficient",
     "candidate_revised", "reevaluation_pending", "blocked_integrity",
@@ -81,6 +82,22 @@ def _atomic_write(path: Path, payload: Mapping[str, Any]) -> None:
     os.replace(temporary, path)
 
 
+def _exclusive_transition(*, runtime_root: Path, execution_id: str, sequence: str, payload: Mapping[str, Any]) -> tuple[str, dict[str, Any]]:
+    """Create one durable ownership transition using the filesystem's create-new primitive."""
+    path = Path(runtime_root) / EVIDENCE_REVISION_OWNERSHIP_DIRECTORY / execution_id / f"{sequence}.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    body = dict(payload)
+    body["transition_digest"] = _digest(body)
+    try:
+        descriptor = os.open(str(path), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+    except FileExistsError:
+        return ("already_exists", _read(path))
+    with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+        json.dump(body, handle, indent=2, sort_keys=True)
+        handle.write("\n")
+    return ("acquired", body)
+
+
 def _read(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -99,6 +116,17 @@ def _write_immutable_artifact(*, runtime_root: Path, directory: str, artifact_id
         return {**existing, "artifact_path": str(path)}
     _atomic_write(path, record)
     return {**record, "artifact_path": str(path)}
+
+
+def _find_claim_artifact(*, runtime_root: Path, directory: str, claim_id: str) -> dict[str, Any] | None:
+    root = Path(runtime_root) / directory
+    if not root.exists():
+        return None
+    for path in root.glob("*.json"):
+        record = _read(path)
+        if str(record.get("claim_id") or record.get("revision_execution_claim_id") or "") == claim_id:
+            return record
+    return None
 
 
 def _persist_source_artifact(
@@ -975,7 +1003,9 @@ def _normalize_failed_revision_targets(evaluation: Mapping[str, Any]) -> tuple[d
             add("motivation_performance_effects", "motivation and performance effects", ("outcome_relation",), raw_case, terms)
         if any(term in joined for term in ("purpose", "definition", "concept", "means")):
             add("definition_purpose", "definition and purpose", ("definition", "purpose"), raw_case, terms)
-    priority = ("smart_components", "progress_monitoring_feedback", "progress_based_adjustment", "motivation_performance_effects", "definition_purpose")
+        if not any(term in joined for term in ("specific", "measurable", "achievable", "realistic", "relevant", "time-bound", "effective", "component", "monitor", "monitoring", "feedback", "progress", "progres", "monthly", "effect", "impact", "outcome", "adjust", "revised", "revise", "improve", "vague", "incomplete", "successful", "motivation", "performance", "persistence", "focus", "influence", "purpose", "definition", "concept", "means")) and terms:
+            add("generic_failed_dimension_" + _digest(terms)[:12], "direct evidence for " + ", ".join(terms), ("direct_support",), raw_case, terms)
+    priority = ("smart_components", "progress_monitoring_feedback", "progress_based_adjustment", "motivation_performance_effects", "definition_purpose") + tuple(sorted(key for key in buckets if key.startswith("generic_failed_dimension_")))
     return tuple({**buckets[key], "priority": index + 1} for index, key in enumerate(priority) if key in buckets)
 
 
@@ -1083,42 +1113,18 @@ def _revision_candidate_for_target(*, plan: Mapping[str, Any], target: Mapping[s
 def _revision_mapping_for_source(*, runtime_root: Path, source_artifact: Mapping[str, Any], target: Mapping[str, Any]) -> dict[str, Any]:
     text = str(source_artifact.get("retained_text") or "")
     target_id = str(target.get("target_id") or "")
-    patterns = {
-        "smart_components": (
-            ("component", r"\b(specific|measurable|achievable|attainable|realistic|relevant|time[- ]?bound|timely)\b"),
-            ("example", r"\b(example|for example|such as)\b"),
-        ),
-        "progress_monitoring_feedback": (
-            ("monitoring", r"\b(monitor|monitoring|track|tracking|progress|feedback)\b"),
-            ("outcome_relation", r"\b(feedback|performance|motivation|progress)\b"),
-        ),
-        "progress_based_adjustment": (
-            ("adjustment", r"\b(adjust|adjustment|revise|revision|modify|progress|feedback)\b"),
-            ("scope_limit", r"\b(if|when|based on|depending on|progress|feedback)\b"),
-        ),
-        "motivation_performance_effects": (
-            ("outcome_relation", r"\b(motivation|performance|persistence|focus|feedback|outcome)\b"),
-        ),
-        "definition_purpose": (
-            ("definition", r"\b(goal setting|goals?)\b.*\b(is|means|refers to|involves)\b"),
-            ("purpose", r"\b(purpose|motivate|guide|focus)\b"),
-        ),
-    }
     accepted: list[dict[str, Any]] = []
     examined: list[dict[str, Any]] = []
     for index, sentence in enumerate(re.split(r"(?<=[.!?])\s+", text), start=1):
         clean = " ".join(sentence.split())
         if not clean:
             continue
-        lowered = clean.lower()
-        matched = False
-        for facet, pattern in patterns.get(target_id, ()):
-            if re.search(pattern, lowered):
-                reason = f"target_{target_id}_explicit_{facet}"
-                accepted.append({"facet": facet, "semantic_role": facet, "evidence_target": target["label"], "target_id": target_id, "text": clean, "boundary": f"sentence:{index}", "reason": reason})
-                examined.append({"boundary": f"sentence:{index}", "text": clean, "decision": "accepted", "facet": facet, "reason": reason})
-                matched = True
-        if not matched:
+        accepted_rule = _accept_revision_excerpt(target, clean)
+        if accepted_rule:
+            facet, reason = accepted_rule
+            accepted.append({"facet": facet, "semantic_role": facet, "evidence_target": target["label"], "target_id": target_id, "text": clean, "boundary": f"sentence:{index}", "reason": reason})
+            examined.append({"boundary": f"sentence:{index}", "text": clean, "decision": "accepted", "facet": facet, "reason": reason})
+        else:
             examined.append({"boundary": f"sentence:{index}", "text": clean, "decision": "rejected", "reason": f"no_direct_{target_id}_support"})
     payload = {
         "schema": "persistent_evidence_revision_excerpt_mapping_v1",
@@ -1137,24 +1143,40 @@ def _revision_mapping_for_source(*, runtime_root: Path, source_artifact: Mapping
     return _write_immutable_artifact(runtime_root=runtime_root, directory=MAPPING_ARTIFACT_DIRECTORY, artifact_id=artifact_id, payload=payload)
 
 
-def _target_is_satisfied(target_id: str, excerpts: Sequence[Mapping[str, Any]]) -> bool:
-    text = " ".join(str(item.get("text") or "").lower() for item in excerpts)
+def _accept_revision_excerpt(target: Mapping[str, Any], sentence: str) -> tuple[str, str] | None:
+    """The sole semantic admission rule for mappings, sufficiency, and learner bundles."""
+    target_id, text = str(target.get("target_id") or ""), sentence.lower()
+    if not sentence.strip() or sentence.strip().endswith(":"):
+        return None
     if target_id == "smart_components":
-        return all(term in text for term in ("specific", "measurable")) and any(term in text for term in ("achievable", "attainable", "realistic")) and "relevant" in text and ("time-bound" in text or "time bound" in text or "timely" in text)
+        if all(term in text for term in ("specific", "measurable")) and any(term in text for term in ("achievable", "attainable", "realistic")) and "relevant" in text and ("time-bound" in text or "time bound" in text or "timely" in text):
+            return ("component", "explicit_smart_component_relation")
     if target_id == "progress_monitoring_feedback":
-        return any(
-            re.search(r"\b(progress|performance)\b[^.!?]{0,80}\b(monitor(?:ed|ing)?|measure(?:d|ment)?|review(?:ed|ing)?|check(?:ed|ing)?|track(?:ed|ing)?)\b", sentence)
-            or re.search(r"\b(monitor(?:ed|ing)?|measure(?:d|ment)?|review(?:ed|ing)?|check(?:ed|ing)?|track(?:ed|ing)?)\b[^.!?]{0,80}\b(progress|performance)\b", sentence)
-            or re.search(r"\bfeedback\b[^.!?]{0,80}\b(use[ds]?|assess(?:es|ed|ing)?|compare[ds]?|review(?:s|ed|ing)?)\b[^.!?]{0,80}\b(progress|performance|target|goal|standard)\b", sentence)
-            for sentence in re.split(r"(?<=[.!?])\s+", text)
-        )
+        relation = r"\b(monitor(?:ed|ing)?|measure(?:d|ment)?|review(?:ed|ing)?|check(?:ed|ing)?|track(?:ed|ing)?)\b"
+        if re.search(rf"\b(progress|performance)\b[^.!?]{{0,80}}{relation}|{relation}[^.!?]{{0,80}}\b(progress|performance)\b", text) or re.search(r"\bfeedback\b[^.!?]{0,80}\b(use[ds]?|assess(?:es|ed|ing)?|compare[ds]?|review(?:s|ed|ing)?)\b[^.!?]{0,80}\b(progress|performance|target|goal|standard)\b", text):
+            return ("monitoring", "explicit_monitoring_or_feedback_relation")
     if target_id == "progress_based_adjustment":
-        return any(term in text for term in ("adjust", "revise", "revision", "modify")) and any(term in text for term in ("progress", "feedback", "observed"))
+        if re.search(r"\b(adjust|adjustment|revise|revision|modify|change)\b[^.!?]{0,80}\b(progress|performance|feedback|monitoring|results|observed)\b|\b(progress|performance|feedback|monitoring|results|observed)\b[^.!?]{0,80}\b(adjust|adjustment|revise|revision|modify|change)\b", text):
+            return ("adjustment", "explicit_adjustment_based_on_observation_relation")
     if target_id == "motivation_performance_effects":
-        return any(term in text for term in ("motivation", "persistence", "focus")) and "performance" in text
+        if any(term in text for term in ("motivation", "persistence", "focus")) and "performance" in text:
+            return ("outcome_relation", "explicit_motivation_performance_relation")
     if target_id == "definition_purpose":
-        return any(term in text for term in ("goal setting", "goal")) and any(term in text for term in ("purpose", "motivate", "guide"))
-    return False
+        if re.search(r"\b(is|means|refers to|involves)\b", text) and any(term in text for term in ("purpose", "motivate", "guide", "focus")):
+            return ("definition", "explicit_definition_and_purpose_relation")
+    terms = tuple(str(term).lower() for term in target.get("evidence_terms") or () if str(term).strip())
+    if terms and any(re.search(rf"\b{re.escape(term)}\b", text) for term in terms) and re.search(r"\b(is|are|use|choose|apply|compare|determine|means|when|if)\b", text):
+        return ("direct_support", "explicit_generic_target_relation")
+    return None
+
+
+def _target_is_satisfied(target_id: str | Mapping[str, Any], excerpts: Sequence[Mapping[str, Any]]) -> bool:
+    target = dict(target_id) if isinstance(target_id, Mapping) else {"target_id": target_id}
+    target_name = str(target.get("target_id") or "")
+    text = " ".join(str(item.get("text") or "").lower() for item in excerpts)
+    if target_name == "smart_components":
+        return all(term in text for term in ("specific", "measurable")) and any(term in text for term in ("achievable", "attainable", "realistic")) and "relevant" in text and ("time-bound" in text or "time bound" in text or "timely" in text)
+    return any(_accept_revision_excerpt(target, str(item.get("text") or "")) for item in excerpts)
 
 
 def _evaluate_revision_evidence(*, runtime_root: Path, plan: Mapping[str, Any], claims: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
@@ -1166,12 +1188,14 @@ def _evaluate_revision_evidence(*, runtime_root: Path, plan: Mapping[str, Any], 
             continue
         mapping = _read(Path(runtime_root) / MAPPING_ARTIFACT_DIRECTORY / f"{claim['excerpt_mapping_id']}.json")
         target_id = str(claim.get("evidence_revision_target_id") or mapping.get("target_id") or "")
-        excerpts = tuple(dict(item) for item in mapping.get("accepted_excerpts") or ())
+        target = next((dict(item) for item in plan.get("missing_evidence_targets") or () if str(item.get("target_id") or "") == target_id), {"target_id": target_id})
+        excerpts = tuple(dict(item) for item in mapping.get("accepted_excerpts") or () if _accept_revision_excerpt(target, str(item.get("text") or "")))
         if not excerpts:
             rejected.append({"claim_id": claim.get("claim_id"), "target_id": target_id, "reason": "no_exact_accepted_excerpts"})
         support.setdefault(target_id, []).extend(excerpts)
     required = tuple(str(target.get("target_id") or "") for target in plan.get("missing_evidence_targets") or ())[:int(plan.get("maximum_retrieval_count") or 3)]
-    resolved = tuple(target_id for target_id, excerpts in support.items() if _target_is_satisfied(target_id, excerpts))
+    target_specs = {str(target.get("target_id") or ""): dict(target) for target in plan.get("missing_evidence_targets") or ()}
+    resolved = tuple(target_id for target_id, excerpts in support.items() if _target_is_satisfied(target_specs.get(target_id, {"target_id": target_id}), excerpts))
     unresolved = tuple(target_id for target_id in required if target_id not in resolved)
     decision = {
         "schema": "persistent_evidence_revision_sufficiency_decision_v1",
@@ -1187,14 +1211,15 @@ def _evaluate_revision_evidence(*, runtime_root: Path, plan: Mapping[str, Any], 
     return decision
 
 
-def _compile_revision_learner_bundle(*, runtime_root: Path, plan: Mapping[str, Any], candidate: Mapping[str, Any], claims: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+def _compile_revision_learner_bundle(*, runtime_root: Path, plan: Mapping[str, Any], candidate: Mapping[str, Any], claims: Sequence[Mapping[str, Any]], decision: Mapping[str, Any]) -> dict[str, Any]:
     resources = []
     for claim in claims:
         if str(claim.get("claim_state") or "") != "completed" or not claim.get("source_artifact_id") or not claim.get("excerpt_mapping_id"):
             continue
         source = _read(Path(runtime_root) / SOURCE_ARTIFACT_DIRECTORY / f"{claim['source_artifact_id']}.json")
         mapping = _read(Path(runtime_root) / MAPPING_ARTIFACT_DIRECTORY / f"{claim['excerpt_mapping_id']}.json")
-        excerpts = tuple({"text": item["text"], "boundary": item["boundary"], "facet": item.get("facet"), "target_id": item.get("target_id")} for item in mapping.get("accepted_excerpts") or ())
+        selected = {(str(item.get("target_id") or ""), str(excerpt.get("boundary") or ""), str(excerpt.get("text") or "")) for item in decision.get("supporting_excerpts") or () for excerpt in item.get("excerpts") or ()}
+        excerpts = tuple({"text": item["text"], "boundary": item["boundary"], "facet": item.get("facet"), "target_id": item.get("target_id")} for item in mapping.get("accepted_excerpts") or () if (str(item.get("target_id") or ""), str(item.get("boundary") or ""), str(item.get("text") or "")) in selected)
         if not excerpts:
             continue
         resources.append({
@@ -1362,8 +1387,11 @@ def _validate_evidence_revision_provenance(*, runtime_root: Path, plan: Mapping[
         if not source_path.exists() or not mapping_path.exists():
             raise ValueError("persistent_runtime_revision_provenance_artifact_missing")
         source, mapping = _read(source_path), _read(mapping_path)
+        resource = next((item for item in resources if str(item.get("source_artifact_id") or "") == str(ref.get("source_artifact_id") or "") and str(item.get("excerpt_mapping_id") or "") == str(ref.get("excerpt_mapping_id") or "")), {})
         if str(source.get("artifact_digest") or "") != str(ref.get("source_artifact_digest") or "") or str(mapping.get("artifact_digest") or "") != str(ref.get("excerpt_mapping_digest") or ""):
             raise ValueError("persistent_runtime_revision_provenance_digest_mismatch")
+        if str(resource.get("source_artifact_digest") or "") != str(ref.get("source_artifact_digest") or "") or str(resource.get("excerpt_mapping_digest") or "") != str(ref.get("excerpt_mapping_digest") or ""):
+            raise ValueError("persistent_runtime_revision_bundle_digest_chain_invalid")
         if str(source.get("revision_plan_id") or "") != str(plan["revision_plan_id"]) or str(source.get("failed_evaluation_id") or "") != str(plan["failed_evaluation_id"]):
             raise ValueError("persistent_runtime_revision_source_binding_invalid")
         if str(mapping.get("source_artifact_id") or "") != str(source.get("artifact_id") or "") or str(mapping.get("revision_plan_id") or "") != str(plan["revision_plan_id"]):
@@ -1412,6 +1440,266 @@ def preflight_persistent_evidence_revision_execution(*, runtime_root: Path, auth
     goals[index] = {**goal, "pending_evidence_revision_authority": {**pending, "status": "preflight_accepted", "execution_claim_id": claim_id}}
     _checkpoint(state={**state, "goals": tuple(goals), "active_goal_id": "", "active_work_item": {}, "lifecycle_state": "ready"}, runtime_root=runtime_root, reason="evidence_revision_execution_preflight_accepted_without_learner_execution")
     return {"status": "preflight_accepted_no_execution", "execution_claim": claim, "binding": binding}
+
+
+def _finalize_persistent_evidence_revision_execution(
+    *,
+    runtime_root: Path,
+    authority_id: str,
+    authority: Mapping[str, Any],
+    candidate: Mapping[str, Any],
+    claim: Mapping[str, Any],
+    attempt_artifact: Mapping[str, Any],
+    evaluation_artifact: Mapping[str, Any],
+    ownership_payload: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Persist the terminal result from durable attempt/evaluation artifacts."""
+    attempt = dict(attempt_artifact.get("attempt") or {})
+    evaluation = dict(evaluation_artifact.get("evaluation") or {})
+    execution_id = str(claim["artifact_id"])
+    disposition, reasons = _persistent_disposition(candidate=candidate, evaluation=evaluation)
+    result = _write_immutable_artifact(
+        runtime_root=runtime_root,
+        directory="evidence_revision_execution_results",
+        artifact_id=execution_id,
+        payload={
+            "schema": "persistent_evidence_revision_execution_result_v1",
+            "execution_claim_id": execution_id,
+            "execution_claim_digest": claim["artifact_digest"],
+            "attempt_id": attempt["attempt_id"],
+            "attempt_artifact_id": attempt_artifact["artifact_id"],
+            "evaluation_id": evaluation["evaluation_id"],
+            "evaluation_artifact_id": evaluation_artifact["artifact_id"],
+            "disposition": disposition,
+            "disposition_reasons": reasons,
+            "completed_at": utc_now(),
+        },
+    )
+    current = _read(Path(runtime_root) / STATE_FILE)
+    goal_index, goal = next(
+        ((index, dict(item)) for index, item in enumerate(current.get("goals") or ()) if str(dict(item.get("pending_evidence_revision_authority") or {}).get("request_id") or "") == authority_id),
+        (-1, {}),
+    )
+    if goal_index < 0:
+        raise ValueError("persistent_runtime_revision_finalize_goal_missing")
+    learning_attempts = tuple(goal.get("learning_attempts") or ())
+    if not any(str(item.get("claim_id") or "") == execution_id for item in learning_attempts):
+        learning_attempts = learning_attempts + ({"claim_id": execution_id, "attempt_id": attempt["attempt_id"], "artifact_id": attempt_artifact["artifact_id"], "candidate_id": candidate["candidate_id"], "status": "completed"},)
+    behavioral_evaluations = tuple(goal.get("behavioral_evaluations") or ())
+    if not any(str(item.get("artifact_id") or "") == str(evaluation_artifact["artifact_id"]) for item in behavioral_evaluations):
+        behavioral_evaluations = behavioral_evaluations + ({"evaluation_id": evaluation["evaluation_id"], "artifact_id": evaluation_artifact["artifact_id"], "candidate_id": candidate["candidate_id"], "disposition": evaluation["disposition"]},)
+    updated_goal = {
+        **goal,
+        "learning_attempts": learning_attempts,
+        "behavioral_evaluations": behavioral_evaluations,
+        "pending_evidence_revision_authority": {**dict(goal.get("pending_evidence_revision_authority") or {}), "status": "consumed_completed", "execution_result_id": result["artifact_id"]},
+        "post_evaluation_disposition": {"tier": disposition, "reasons": reasons, "evaluation_id": evaluation["evaluation_id"]},
+    }
+    goals = list(current.get("goals") or ())
+    goals[goal_index] = updated_goal
+    _checkpoint(state={**current, "goals": tuple(goals), "active_goal_id": "", "active_work_item": {}, "lifecycle_state": "ready"}, runtime_root=runtime_root, reason="evidence_revision_execution_completed_without_trust_or_promotion")
+    _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="050-terminal", payload={**ownership_payload, "state": "terminal", "execution_result_id": result["artifact_id"], "at": utc_now()})
+    return {"status": "execution_completed", "execution_claim": dict(claim), "execution_result": result, "attempt": attempt, "evaluation": evaluation, "disposition": disposition}
+
+
+def _prepare_persistent_evidence_revision_execution_materials(*, runtime_root: Path, authority: Mapping[str, Any], goal: Mapping[str, Any]) -> dict[str, Any]:
+    binding = _read(Path(runtime_root) / EVIDENCE_REVISION_BINDING_DIRECTORY / f"{authority.get('evaluator_binding_id')}.json")
+    candidate = next((dict(item) for item in goal.get("candidate_versions") or () if str(item.get("candidate_id") or "") == str(authority.get("candidate_id") or "")), None)
+    plan = _read(Path(runtime_root) / EVIDENCE_REVISION_PLAN_DIRECTORY / f"{authority.get('revision_plan_id')}.json")
+    bundle = _read(Path(runtime_root) / LEARNER_BUNDLE_DIRECTORY / f"{authority.get('learner_visible_bundle_id')}.json")
+    if not candidate or str(binding.get("binding_digest") or "") != str(authority.get("evaluator_binding_digest") or "") or str(candidate.get("candidate_digest") or "") != str(authority.get("candidate_digest") or "") or str(bundle.get("bundle_digest") or "") != str(authority.get("learner_visible_bundle_digest") or ""):
+        raise ValueError("persistent_runtime_revision_execution_external_binding_invalid")
+    _validate_evidence_revision_provenance(runtime_root=Path(runtime_root), plan=plan, candidate=candidate, bundle=bundle)
+    context = _load_failed_revision_context(runtime_root=runtime_root, failed_evaluation_id=str(authority["failed_evaluation_id"]))
+    package, view = context["sealed_package"], context["execution_view"]
+    if str(context["sealed_package_digest"] or "") != str(authority.get("sealed_package_digest") or "") or str(view.get("artifact_digest") or "") != str(authority.get("execution_view_digest") or ""):
+        raise ValueError("persistent_runtime_revision_execution_sealed_binding_invalid")
+    capability = next(iter({str(item.get("capability_dimension") or item.get("target_capability") or "") for item in view.get("sealed_evaluation_cases") or ()} - {""}), "")
+    if not capability:
+        raise ValueError("persistent_runtime_revision_execution_capability_missing")
+    resources = []
+    for raw in bundle.get("study_resources") or ():
+        resource = dict(raw)
+        source = _read(Path(runtime_root) / SOURCE_ARTIFACT_DIRECTORY / f"{resource['source_artifact_id']}.json")
+        resource["study_facts"] = tuple(item.strip() for item in re.split(r"(?<=[.!?])\s+", str(source.get("retained_text") or "")) if item.strip())
+        resource["study_components"] = tuple(str(item.get("text") or "") for item in resource.get("learner_visible_excerpts") or ())
+        resources.append(resource)
+    retained_bundle = {"study_resources": tuple(resources), "sealed_evaluation_cases": tuple(view.get("sealed_evaluation_cases") or ()), "execution_contract_version": package.get("execution_contract_version"), "independent_evaluator": dict(package.get("independent_evaluator") or {}), "active_sealed_case_ids": tuple(binding.get("sealed_case_ids") or ())}
+    if any(any(key in str(case.get("learner_view") or {}) for key in ("answer_key", "scoring_rule", "pass_threshold", "rubric")) for case in retained_bundle["sealed_evaluation_cases"]):
+        raise ValueError("persistent_runtime_revision_execution_evaluator_material_leaked")
+    subgoal = LearningSubgoal(subgoal_id=stable_id("persistent-evidence-revision-subgoal", str(authority["request_id"])), mission_id=stable_id("persistent-evidence-revision-mission", str(authority["request_id"])), source_gap_id=stable_id("persistent-evidence-revision-gap", str(authority["request_id"])), topic=str(candidate.get("topic") or ""), frontier_rank=1.0, selection_reason="accepted external revised-candidate evaluator binding", capability_target=capability, measurable_objective=str(candidate.get("target_behavior") or ""), baseline=0.0, success_threshold=1.0, prerequisites=(), study_resource_ids=tuple(str(item.get("resource_id") or "") for item in resources), attempt_type="guided_study_attempt", practice_specification="Use only revised learner-visible retained excerpts.", control_case_ids=(), held_out_policy="unchanged sealed cases", adversarial_policy="unchanged sealed cases", evaluation_method="existing_independent_sealed_evaluator", attempt_budget=1, resource_budget=len(resources), completion_classification="evaluation_required", next_step_policy="persist_terminal_revision_result", authority_state="preflight_accepted")
+    return {"binding": binding, "candidate": candidate, "plan": plan, "bundle": bundle, "retained_bundle": retained_bundle, "subgoal": subgoal}
+
+
+def execute_persistent_evidence_revision_consumer(
+    *,
+    runtime_root: Path,
+    authority_id: str,
+    boundary_hook: Callable[[str], None] | None = None,
+    recovery_resume: bool = False,
+) -> dict[str, Any]:
+    """Consume one accepted revised preflight through the existing learner/evaluator functions."""
+    authority = _read(Path(runtime_root) / "learning_retry_authorities" / f"{authority_id}.json")
+    state = initialize_runtime(runtime_root=runtime_root)
+    goal_index, goal = next(((index, dict(item)) for index, item in enumerate(state.get("goals") or ()) if str(dict(item.get("pending_evidence_revision_authority") or {}).get("request_id") or "") == authority_id), (-1, {}))
+    pending = dict(goal.get("pending_evidence_revision_authority") or {})
+    prior_claim_id = str(pending.get("execution_claim_id") or "")
+    prior_claim_path = Path(runtime_root) / EVIDENCE_REVISION_EXECUTION_CLAIM_DIRECTORY / f"{prior_claim_id}.json"
+    if prior_claim_path.exists():
+        prior_claim = _read(prior_claim_path)
+        execution_id = stable_id("persistent-evidence-revision-consumer-claim", authority_id, prior_claim["artifact_digest"])
+        result_path = Path(runtime_root) / "evidence_revision_execution_results" / f"{execution_id}.json"
+        if result_path.exists():
+            return {"status": "execution_replay_suppressed", "execution_result": _read(result_path)}
+        recovery_path = Path(runtime_root) / EVIDENCE_REVISION_OWNERSHIP_DIRECTORY / execution_id / "060-recovery-classified.json"
+        if recovery_path.exists() and not recovery_resume:
+            return {"status": "execution_recovery_classified_replay_suppressed", "recovery": _read(recovery_path)}
+    if goal_index < 0 or str(pending.get("status") or "") != "preflight_accepted":
+        raise ValueError("persistent_runtime_revision_execution_not_preflight_accepted")
+    preflight_id = str(pending.get("execution_claim_id") or "")
+    preflight = _read(Path(runtime_root) / EVIDENCE_REVISION_EXECUTION_CLAIM_DIRECTORY / f"{preflight_id}.json")
+    if str(preflight.get("claim_state") or "") != "preflight_accepted_no_execution" or str(preflight.get("authority_id") or "") != authority_id or str(preflight.get("authority_digest") or "") != str(authority.get("artifact_digest") or ""):
+        raise ValueError("persistent_runtime_revision_execution_preflight_binding_invalid")
+    execution_id = stable_id("persistent-evidence-revision-consumer-claim", authority_id, preflight["artifact_digest"])
+    result_path = Path(runtime_root) / "evidence_revision_execution_results" / f"{execution_id}.json"
+    if result_path.exists():
+        return {"status": "execution_replay_suppressed", "execution_result": _read(result_path)}
+    execution_path = Path(runtime_root) / EVIDENCE_REVISION_EXECUTION_CLAIM_DIRECTORY / f"{execution_id}.json"
+    if execution_path.exists() and not recovery_resume:
+        raise ValueError("persistent_runtime_revision_execution_claim_incomplete_integrity_stop")
+    ownership_payload = {"schema": "persistent_evidence_revision_execution_ownership_v1", "execution_claim_id": execution_id, "authority_id": authority_id, "authority_digest": authority["artifact_digest"], "preflight_claim_id": preflight_id, "preflight_claim_digest": preflight["artifact_digest"], "binding_id": authority["evaluator_binding_id"], "binding_digest": authority["evaluator_binding_digest"], "candidate_id": authority["candidate_id"], "candidate_digest": authority["candidate_digest"], "bundle_id": authority["learner_visible_bundle_id"], "bundle_digest": authority["learner_visible_bundle_digest"], "revision_plan_id": authority["revision_plan_id"], "revision_plan_digest": authority["revision_plan_digest"], "sealed_package_digest": authority["sealed_package_digest"], "execution_view_digest": authority["execution_view_digest"], "owner_process_id": os.getpid(), "acquired_at": utc_now(), "state": "acquired_not_started", "generation": 1}
+    ownership_status, ownership = _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="000-acquired", payload=ownership_payload)
+    if ownership_status != "acquired" and not recovery_resume:
+        return {"status": "execution_owned_elsewhere", "ownership": ownership}
+    if ownership_status != "acquired":
+        ownership_payload = dict(ownership)
+        recovery_status, recovery = _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="005-recovery-resume-before-learner", payload={**ownership, "state": "recovery_resume_before_learner", "recovery_process_id": os.getpid(), "at": utc_now()})
+        if recovery_status != "acquired":
+            return {"status": "execution_recovery_owned_elsewhere", "ownership": recovery}
+    if boundary_hook:
+        boundary_hook("after_ownership_acquired")
+    binding = _read(Path(runtime_root) / EVIDENCE_REVISION_BINDING_DIRECTORY / f"{authority.get('evaluator_binding_id')}.json")
+    candidate = next((dict(item) for item in goal.get("candidate_versions") or () if str(item.get("candidate_id") or "") == str(authority.get("candidate_id") or "")), None)
+    plan = _read(Path(runtime_root) / EVIDENCE_REVISION_PLAN_DIRECTORY / f"{authority.get('revision_plan_id')}.json")
+    bundle = _read(Path(runtime_root) / LEARNER_BUNDLE_DIRECTORY / f"{authority.get('learner_visible_bundle_id')}.json")
+    if not candidate or str(binding.get("binding_digest") or "") != str(authority.get("evaluator_binding_digest") or "") or str(candidate.get("candidate_digest") or "") != str(authority.get("candidate_digest") or "") or str(bundle.get("bundle_digest") or "") != str(authority.get("learner_visible_bundle_digest") or ""):
+        raise ValueError("persistent_runtime_revision_execution_external_binding_invalid")
+    _validate_evidence_revision_provenance(runtime_root=Path(runtime_root), plan=plan, candidate=candidate, bundle=bundle)
+    if any(str(item.get("candidate_id") or "") == str(candidate["candidate_id"]) for item in goal.get("learning_attempts") or ()) or any(str(item.get("candidate_id") or "") == str(candidate["candidate_id"]) for item in goal.get("behavioral_evaluations") or ()):
+        raise ValueError("persistent_runtime_revision_execution_budget_already_consumed")
+    context = _load_failed_revision_context(runtime_root=runtime_root, failed_evaluation_id=str(authority["failed_evaluation_id"]))
+    package, view = context["sealed_package"], context["execution_view"]
+    if str(context["sealed_package_digest"] or "") != str(authority.get("sealed_package_digest") or "") or str(view.get("artifact_digest") or "") != str(authority.get("execution_view_digest") or ""):
+        raise ValueError("persistent_runtime_revision_execution_sealed_binding_invalid")
+    capability = next(iter({str(item.get("capability_dimension") or item.get("target_capability") or "") for item in view.get("sealed_evaluation_cases") or ()} - {""}), "")
+    if not capability:
+        raise ValueError("persistent_runtime_revision_execution_capability_missing")
+    resources = []
+    for raw in bundle.get("study_resources") or ():
+        resource = dict(raw)
+        source = _read(Path(runtime_root) / SOURCE_ARTIFACT_DIRECTORY / f"{resource['source_artifact_id']}.json")
+        resource["study_facts"] = tuple(item.strip() for item in re.split(r"(?<=[.!?])\s+", str(source.get("retained_text") or "")) if item.strip())
+        resource["study_components"] = tuple(str(item.get("text") or "") for item in resource.get("learner_visible_excerpts") or ())
+        resources.append(resource)
+    retained_bundle = {"study_resources": tuple(resources), "sealed_evaluation_cases": tuple(view.get("sealed_evaluation_cases") or ()), "execution_contract_version": package.get("execution_contract_version"), "independent_evaluator": dict(package.get("independent_evaluator") or {}), "active_sealed_case_ids": tuple(binding.get("sealed_case_ids") or ())}
+    if any(any(key in str(case.get("learner_view") or {}) for key in ("answer_key", "scoring_rule", "pass_threshold", "rubric")) for case in retained_bundle["sealed_evaluation_cases"]):
+        raise ValueError("persistent_runtime_revision_execution_evaluator_material_leaked")
+    subgoal = LearningSubgoal(subgoal_id=stable_id("persistent-evidence-revision-subgoal", authority_id), mission_id=stable_id("persistent-evidence-revision-mission", authority_id), source_gap_id=stable_id("persistent-evidence-revision-gap", authority_id), topic=str(candidate.get("topic") or ""), frontier_rank=1.0, selection_reason="accepted external revised-candidate evaluator binding", capability_target=capability, measurable_objective=str(candidate.get("target_behavior") or ""), baseline=0.0, success_threshold=1.0, prerequisites=(), study_resource_ids=tuple(str(item.get("resource_id") or "") for item in resources), attempt_type="guided_study_attempt", practice_specification="Use only revised learner-visible retained excerpts.", control_case_ids=(), held_out_policy="unchanged sealed cases", adversarial_policy="unchanged sealed cases", evaluation_method="existing_independent_sealed_evaluator", attempt_budget=1, resource_budget=len(resources), completion_classification="evaluation_required", next_step_policy="persist_terminal_revision_result", authority_state="preflight_accepted")
+    if execution_path.exists():
+        claim = _read(execution_path)
+    else:
+        claim = _write_immutable_artifact(runtime_root=runtime_root, directory=EVIDENCE_REVISION_EXECUTION_CLAIM_DIRECTORY, artifact_id=execution_id, payload={"schema": "persistent_evidence_revision_execution_claim_v1", "authority_id": authority_id, "authority_digest": authority["artifact_digest"], "preflight_claim_id": preflight_id, "preflight_claim_digest": preflight["artifact_digest"], "binding_id": binding["binding_id"], "binding_digest": binding["binding_digest"], "candidate_id": candidate["candidate_id"], "candidate_digest": candidate["candidate_digest"], "bundle_id": bundle["bundle_id"], "bundle_digest": bundle["bundle_digest"], "revision_plan_id": plan["revision_plan_id"], "revision_plan_digest": plan["plan_digest"], "sealed_package_digest": authority["sealed_package_digest"], "execution_view_digest": authority["execution_view_digest"], "claim_state": "dispatching", "maximum_learner_attempts": 1, "maximum_independent_evaluations": 1, "created_at": utc_now()})
+    if boundary_hook:
+        boundary_hook("after_execution_claim_persisted")
+    goals = list(state.get("goals") or ())
+    goals[goal_index] = {**goal, "pending_evidence_revision_authority": {**pending, "status": "execution_dispatching", "revised_execution_claim_id": execution_id}}
+    _checkpoint(state={**state, "goals": tuple(goals), "active_goal_id": goal["goal_id"], "active_work_item": {"goal_id": goal["goal_id"], "state": "evidence_revision_execution_dispatching", "claim_id": execution_id}}, runtime_root=runtime_root, reason="evidence_revision_execution_claim_persisted_before_learner_execution")
+    from orchestration.runtime.developmental_learning import execute_learning_attempt, evaluate_learning_attempt
+    _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="010-learner-dispatching", payload={**ownership_payload, "state": "learner_dispatching", "at": utc_now()})
+    if boundary_hook:
+        boundary_hook("after_learner_dispatching")
+    attempt = execute_learning_attempt(subgoal, retained_bundle)
+    attempt_artifact = _write_immutable_artifact(runtime_root=runtime_root, directory="learning_attempts", artifact_id=attempt.attempt_id, payload={"schema": "persistent_learning_attempt_v1", "claim_id": execution_id, "revision_execution_claim_id": execution_id, "attempt": attempt.as_dict(), "response_digest": attempt.candidate_digest, "completed_at": utc_now()})
+    _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="020-learner-persisted", payload={**ownership_payload, "state": "learner_persisted", "attempt_artifact_id": attempt_artifact["artifact_id"], "at": utc_now()})
+    if boundary_hook:
+        boundary_hook("after_attempt_persisted")
+    _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="030-evaluator-dispatching", payload={**ownership_payload, "state": "evaluator_dispatching", "at": utc_now()})
+    if boundary_hook:
+        boundary_hook("after_evaluator_dispatching")
+    evaluation = evaluate_learning_attempt(subgoal, attempt, retained_bundle)
+    evaluation_artifact = _write_immutable_artifact(runtime_root=runtime_root, directory="learning_evaluations", artifact_id=evaluation.evaluation_id, payload={"schema": "persistent_learning_evaluation_v1", "claim_id": execution_id, "revision_execution_claim_id": execution_id, "sealed_package_digest": authority["sealed_package_digest"], "learner_response_digest": attempt.candidate_digest, "evaluation": evaluation.as_dict(), "completed_at": utc_now()})
+    _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="040-evaluation-persisted", payload={**ownership_payload, "state": "evaluation_persisted", "evaluation_artifact_id": evaluation_artifact["artifact_id"], "at": utc_now()})
+    if boundary_hook:
+        boundary_hook("after_evaluation_persisted")
+    return _finalize_persistent_evidence_revision_execution(runtime_root=runtime_root, authority_id=authority_id, authority=authority, candidate=candidate, claim=claim, attempt_artifact=attempt_artifact, evaluation_artifact=evaluation_artifact, ownership_payload=ownership_payload)
+
+
+def recover_persistent_evidence_revision_execution(*, runtime_root: Path, authority_id: str) -> dict[str, Any]:
+    """Classify interrupted ownership conservatively; uncertain dispatches are never replayed."""
+    authority = _read(Path(runtime_root) / "learning_retry_authorities" / f"{authority_id}.json")
+    state = initialize_runtime(runtime_root=runtime_root)
+    goal = next((dict(item) for item in state.get("goals") or () if str(dict(item.get("pending_evidence_revision_authority") or {}).get("request_id") or "") == authority_id), None)
+    if goal is None:
+        raise ValueError("persistent_runtime_revision_recovery_goal_missing")
+    preflight_id = str(dict(goal.get("pending_evidence_revision_authority") or {}).get("execution_claim_id") or "")
+    preflight = _read(Path(runtime_root) / EVIDENCE_REVISION_EXECUTION_CLAIM_DIRECTORY / f"{preflight_id}.json")
+    execution_id = stable_id("persistent-evidence-revision-consumer-claim", authority_id, preflight["artifact_digest"])
+    result_path = Path(runtime_root) / "evidence_revision_execution_results" / f"{execution_id}.json"
+    if result_path.exists():
+        return {"status": "terminal_result_reused", "execution_result": _read(result_path)}
+    root = Path(runtime_root) / EVIDENCE_REVISION_OWNERSHIP_DIRECTORY / execution_id
+    transitions = {path.name: _read(path) for path in root.glob("*.json")} if root.exists() else {}
+    acquired = dict(transitions.get("000-acquired.json") or {})
+    candidate = next((dict(item) for item in goal.get("candidate_versions") or () if str(item.get("candidate_id") or "") == str(authority.get("candidate_id") or "")), None)
+    if not candidate:
+        raise ValueError("persistent_runtime_revision_recovery_candidate_missing")
+    if "040-evaluation-persisted.json" in transitions:
+        claim_path = Path(runtime_root) / EVIDENCE_REVISION_EXECUTION_CLAIM_DIRECTORY / f"{execution_id}.json"
+        if not claim_path.exists():
+            _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "execution_claim_missing_after_evaluation_integrity_stop", "at": utc_now()})
+            return {"status": "execution_claim_missing_after_evaluation_integrity_stop", "ownership": transitions}
+        attempt_id = str(dict(transitions.get("020-learner-persisted.json") or {}).get("attempt_artifact_id") or "")
+        evaluation_id = str(dict(transitions.get("040-evaluation-persisted.json") or {}).get("evaluation_artifact_id") or "")
+        attempt_artifact = _read(Path(runtime_root) / "learning_attempts" / f"{attempt_id}.json") if attempt_id else _find_claim_artifact(runtime_root=runtime_root, directory="learning_attempts", claim_id=execution_id)
+        evaluation_artifact = _read(Path(runtime_root) / "learning_evaluations" / f"{evaluation_id}.json") if evaluation_id else _find_claim_artifact(runtime_root=runtime_root, directory="learning_evaluations", claim_id=execution_id)
+        if not attempt_artifact or not evaluation_artifact:
+            _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "persisted_evaluation_artifacts_incomplete_integrity_stop", "at": utc_now()})
+            return {"status": "persisted_evaluation_artifacts_incomplete_integrity_stop", "ownership": transitions}
+        _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "finalizing_from_persisted_evaluation", "at": utc_now()})
+        finalized = _finalize_persistent_evidence_revision_execution(runtime_root=runtime_root, authority_id=authority_id, authority=authority, candidate=candidate, claim=_read(claim_path), attempt_artifact=attempt_artifact, evaluation_artifact=evaluation_artifact, ownership_payload=acquired)
+        return {**finalized, "status": "recovery_finalized_from_persisted_evaluation"}
+    if "010-learner-dispatching.json" in transitions and "020-learner-persisted.json" not in transitions:
+        _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "execution_outcome_unknown_integrity_stop", "at": utc_now()})
+        return {"status": "execution_outcome_unknown_integrity_stop", "ownership": transitions}
+    if "030-evaluator-dispatching.json" in transitions and "040-evaluation-persisted.json" not in transitions:
+        _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "evaluation_outcome_unknown_integrity_stop", "at": utc_now()})
+        return {"status": "evaluation_outcome_unknown_integrity_stop", "ownership": transitions}
+    if "020-learner-persisted.json" in transitions and "030-evaluator-dispatching.json" not in transitions:
+        claim_path = Path(runtime_root) / EVIDENCE_REVISION_EXECUTION_CLAIM_DIRECTORY / f"{execution_id}.json"
+        attempt_id = str(dict(transitions.get("020-learner-persisted.json") or {}).get("attempt_artifact_id") or "")
+        attempt_artifact = _read(Path(runtime_root) / "learning_attempts" / f"{attempt_id}.json") if attempt_id else _find_claim_artifact(runtime_root=runtime_root, directory="learning_attempts", claim_id=execution_id)
+        if not claim_path.exists() or not attempt_artifact:
+            _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "persisted_attempt_artifacts_incomplete_integrity_stop", "at": utc_now()})
+            return {"status": "persisted_attempt_artifacts_incomplete_integrity_stop", "ownership": transitions}
+        recovery_status, recovery = _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="025-recovery-resume-evaluator", payload={**acquired, "state": "recovery_resume_evaluator_from_persisted_attempt", "recovery_process_id": os.getpid(), "attempt_artifact_id": attempt_artifact["artifact_id"], "at": utc_now()})
+        if recovery_status != "acquired":
+            return {"status": "evaluation_recovery_owned_elsewhere", "ownership": recovery}
+        materials = _prepare_persistent_evidence_revision_execution_materials(runtime_root=runtime_root, authority=authority, goal=goal)
+        from orchestration.runtime.developmental_learning import evaluate_learning_attempt
+        attempt = DevelopmentalAttemptRecord(**dict(attempt_artifact["attempt"]))
+        _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="030-evaluator-dispatching", payload={**acquired, "state": "evaluator_dispatching", "at": utc_now()})
+        evaluation = evaluate_learning_attempt(materials["subgoal"], attempt, materials["retained_bundle"])
+        evaluation_artifact = _write_immutable_artifact(runtime_root=runtime_root, directory="learning_evaluations", artifact_id=evaluation.evaluation_id, payload={"schema": "persistent_learning_evaluation_v1", "claim_id": execution_id, "revision_execution_claim_id": execution_id, "sealed_package_digest": authority["sealed_package_digest"], "learner_response_digest": attempt.candidate_digest, "evaluation": evaluation.as_dict(), "completed_at": utc_now()})
+        _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="040-evaluation-persisted", payload={**acquired, "state": "evaluation_persisted", "evaluation_artifact_id": evaluation_artifact["artifact_id"], "at": utc_now()})
+        _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "finalizing_after_evaluator_resume", "at": utc_now()})
+        finalized = _finalize_persistent_evidence_revision_execution(runtime_root=runtime_root, authority_id=authority_id, authority=authority, candidate=materials["candidate"], claim=_read(claim_path), attempt_artifact=attempt_artifact, evaluation_artifact=evaluation_artifact, ownership_payload=acquired)
+        return {**finalized, "status": "recovery_resumed_evaluation_from_persisted_attempt"}
+    if "000-acquired.json" in transitions and "010-learner-dispatching.json" not in transitions:
+        _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "safe_resume_before_learner", "at": utc_now()})
+        resumed = execute_persistent_evidence_revision_consumer(runtime_root=runtime_root, authority_id=authority_id, recovery_resume=True)
+        return {**resumed, "status": "recovery_resumed_before_learner"}
+    _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "incomplete_dispatch_recovery_required", "at": utc_now()})
+    return {"status": "incomplete_dispatch_recovery_required", "ownership": transitions}
 
 
 def run_persistent_evidence_revision_cycle(
@@ -1479,7 +1767,7 @@ def run_persistent_evidence_revision_cycle(
     plan = _write_revision_plan(Path(runtime_root), {**plan, "lifecycle_state": "evidence_sufficient", "sufficiency_decision": decision})
     existing = next((dict(item) for item in goal.get("candidate_versions") or () if str(item.get("revision_plan_id") or "") == plan["revision_plan_id"]), None)
     candidate = existing or _compile_revised_candidate(plan=plan, parent_candidate=parent_candidate, decision=decision, claims=claims)
-    bundle = _compile_revision_learner_bundle(runtime_root=Path(runtime_root), plan=plan, candidate=candidate, claims=claims)
+    bundle = _compile_revision_learner_bundle(runtime_root=Path(runtime_root), plan=plan, candidate=candidate, claims=claims, decision=decision)
     reuse = _compile_evaluator_reuse_decision(runtime_root=Path(runtime_root), plan=plan, candidate=candidate, sealed_package=context["sealed_package"])
     if not reuse["reuse_valid"]:
         plan = _write_revision_plan(Path(runtime_root), {**plan, "lifecycle_state": "candidate_revised", "revised_candidate_id": candidate["candidate_id"], "revised_candidate_digest": candidate["candidate_digest"], "revised_teaching_bundle_id": bundle["bundle_id"], "revised_teaching_bundle_digest": bundle["bundle_digest"], "evaluator_reuse_decision": reuse})
