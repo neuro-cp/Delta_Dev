@@ -726,11 +726,13 @@ def _consume_operator_interaction_response_if_present(root: Path, controller: An
     ]
     _atomic_write_json(ledger_path, ledger)
     _atomic_write_json(root / f"operator_interaction_response_consumed_{request_id}.json", {**payload, "consumed_at": utc_now(), "authority_granted": False})
+    # The response file is the observable completion signal for external readers.
+    # Publish the consumed restart state before removing that signal.
+    _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(consumed))
     try:
         response_path.unlink()
     except FileNotFoundError:
         pass
-    _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(consumed))
     return consumed
 
 

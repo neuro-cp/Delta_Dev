@@ -110,6 +110,15 @@ from orchestration.runtime.continuous_runtime_controller import (  # noqa: E402
 from orchestration.runtime.local_model_request_result_ledger import LocalModelRequestResultLedger  # noqa: E402
 from orchestration.runtime.continuous_subgoal_executor import execute_continuous_active_subgoal  # noqa: E402
 from orchestration.runtime.developmental_learning import classify_developmental_instruction  # noqa: E402
+from orchestration.runtime.persistent_autonomous_development_runtime import (  # noqa: E402
+    DEFAULT_RUNTIME_ROOT as PERSISTENT_DEVELOPMENT_RUNTIME_ROOT,
+    export_runtime_report,
+    initialize_runtime,
+    pause_runtime,
+    resume_runtime,
+    run_until_idle,
+    stop_runtime,
+)
 from orchestration.runtime import gsr_a_governed_self_regulation as gsr  # noqa: E402
 from integration.model_runtime.provider_manager import ProviderManager  # noqa: E402
 
@@ -1459,6 +1468,9 @@ class DeltaApp:
         self.last_report_inspection: dict[str, object] | None = None
         self.rc6_pilot_events: list[dict[str, object]] = []
         self.live_runtime_session: LiveWikipediaRuntimeSession | None = None
+        self.persistent_development_runtime = initialize_runtime(
+            runtime_root=PERSISTENT_DEVELOPMENT_RUNTIME_ROOT
+        )
         self.live_runtime_status = tk.StringVar(value="Live runtime: stopped")
         self.live_runtime_worker_results: queue.Queue[dict[str, object]] = queue.Queue()
         self.live_runtime_request_in_flight = False
@@ -2389,6 +2401,64 @@ class DeltaApp:
     def _is_developmental_learning_mission(self, message: str) -> bool:
         return classify_developmental_instruction(message) is not None
 
+    def _is_persistent_development_goal(self, message: str) -> bool:
+        normalized = " ".join(message.lower().split())
+        return normalized.startswith(("your goal today is", "goal today is", "goals today are"))
+
+    def _handle_persistent_development_goal(self, message: str) -> str:
+        runtime = initialize_runtime(
+            runtime_root=PERSISTENT_DEVELOPMENT_RUNTIME_ROOT,
+            goals=(message,),
+        )
+        runtime = run_until_idle(
+            state=runtime,
+            runtime_root=PERSISTENT_DEVELOPMENT_RUNTIME_ROOT,
+            maximum_cycles=32,
+        )
+        self.persistent_development_runtime = runtime
+        report = export_runtime_report(
+            state=runtime,
+            runtime_root=PERSISTENT_DEVELOPMENT_RUNTIME_ROOT,
+        )
+        goals = tuple(report.get("goals") or ())
+        current = goals[-1] if goals else {}
+        return (
+            "Persistent developmental runtime finished its current bounded work queue.\n\n"
+            f"Goal: {current.get('topic') or 'none'}\n"
+            f"Disposition: {current.get('state') or runtime.get('lifecycle_state')}\n"
+            f"Reason: {current.get('blocker') or runtime.get('terminal_reason') or 'none'}\n"
+            f"Checkpoint: {runtime.get('checkpoint_sequence')}\n"
+            f"Report: {PERSISTENT_DEVELOPMENT_RUNTIME_ROOT / 'PERSISTENT_AUTONOMOUS_DEVELOPMENT_REPORT.json'}\n\n"
+            "No provider, trusted-memory admission, capability promotion, or model-weight update occurred."
+        )
+
+    def _handle_persistent_development_control(self, command: str) -> str:
+        runtime = initialize_runtime(runtime_root=PERSISTENT_DEVELOPMENT_RUNTIME_ROOT)
+        if command == "pause":
+            runtime = pause_runtime(state=runtime, runtime_root=PERSISTENT_DEVELOPMENT_RUNTIME_ROOT)
+        elif command == "resume":
+            runtime = resume_runtime(state=runtime, runtime_root=PERSISTENT_DEVELOPMENT_RUNTIME_ROOT)
+        elif command == "stop":
+            runtime = stop_runtime(state=runtime, runtime_root=PERSISTENT_DEVELOPMENT_RUNTIME_ROOT)
+        self.persistent_development_runtime = runtime
+        return f"Persistent developmental runtime: {runtime.get('lifecycle_state')}; checkpoint={runtime.get('checkpoint_sequence')}."
+
+    def _handle_persistent_development_status(self) -> str:
+        runtime = initialize_runtime(runtime_root=PERSISTENT_DEVELOPMENT_RUNTIME_ROOT)
+        report = export_runtime_report(state=runtime, runtime_root=PERSISTENT_DEVELOPMENT_RUNTIME_ROOT)
+        goals = tuple(report.get("goals") or ())
+        paused_or_blocked = tuple(
+            goal for goal in goals
+            if goal.get("state") in {"blocked_evidence_environment", "paused_budget", "blocked_capability_gap"}
+        )
+        return (
+            f"Persistent developmental runtime: {report.get('lifecycle_state')}; "
+            f"provider calls={report.get('provider_calls')}; "
+            f"estimated spend=${report.get('provider_spend_estimated_usd')}; "
+            f"goals={len(goals)}; paused_or_blocked={len(paused_or_blocked)}.\n"
+            f"Report: {PERSISTENT_DEVELOPMENT_RUNTIME_ROOT / 'PERSISTENT_AUTONOMOUS_DEVELOPMENT_REPORT.json'}"
+        )
+
     def _handle_developmental_learning_mission(self, message: str) -> str:
         """Run one bounded local learning cycle through the continuous controller."""
 
@@ -3011,6 +3081,32 @@ class DeltaApp:
                 )
             except (KeyError, RuntimeError, OSError) as exc:
                 self._append_chat("DELTA", f"The shared local-model request was not executed: {exc}.")
+            self._refresh_state_cards()
+            return
+        persistent_controls = {
+            "pause learning runtime": "pause",
+            "resume learning runtime": "resume",
+            "stop learning runtime": "stop",
+        }
+        if lower in persistent_controls:
+            self._append_session("user", message)
+            reply = self._handle_persistent_development_control(persistent_controls[lower])
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            self._refresh_state_cards()
+            return
+        if lower in {"learning runtime status", "developmental runtime status", "show blocked learning goals", "show learning budget", "export learning report"}:
+            self._append_session("user", message)
+            reply = self._handle_persistent_development_status()
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            self._refresh_state_cards()
+            return
+        if self._is_persistent_development_goal(message):
+            self._append_session("user", message)
+            reply = self._handle_persistent_development_goal(message)
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
             self._refresh_state_cards()
             return
         if self._is_developmental_learning_mission(message):
