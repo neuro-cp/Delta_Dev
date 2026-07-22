@@ -15,6 +15,7 @@ import re
 import argparse
 from datetime import datetime, timedelta, timezone
 import time
+import uuid
 from typing import Any, Callable, Mapping, Sequence
 from urllib.parse import urlparse
 
@@ -85,7 +86,7 @@ def _atomic_write(path: Path, payload: Mapping[str, Any]) -> None:
 def _publish_transition_metadata(path: Path, payload: Mapping[str, Any]) -> dict[str, Any]:
     body = dict(payload)
     body["transition_digest"] = _digest(body)
-    temporary = path.parent / f".{path.stem}.{os.getpid()}.tmp"
+    temporary = path.parent / f".{uuid.uuid4().hex[:8]}.tmp"
     with temporary.open("w", encoding="utf-8") as handle:
         json.dump(body, handle, indent=2, sort_keys=True)
         handle.write("\n")
@@ -95,21 +96,48 @@ def _publish_transition_metadata(path: Path, payload: Mapping[str, Any]) -> dict
     return body
 
 
+def _transition_record_path(root: Path, sequence: str) -> Path:
+    transition_dir = root / f"{sequence}.transition"
+    if transition_dir.exists():
+        return transition_dir / "metadata.json"
+    return root / f"{sequence}.json"
+
+
+def _read_transition_records(root: Path) -> dict[str, dict[str, Any]]:
+    records = {path.name: _read(path) for path in root.glob("*.json")} if root.exists() else {}
+    if root.exists():
+        for path in root.glob("*.transition"):
+            metadata = path / "metadata.json"
+            if metadata.exists():
+                records[f"{path.stem}.json"] = _read(metadata)
+    return records
+
+
 def _exclusive_transition(*, runtime_root: Path, execution_id: str, sequence: str, payload: Mapping[str, Any], repair_orphaned_lock: bool = False) -> tuple[str, dict[str, Any]]:
-    """Create one durable ownership transition without exposing partial JSON."""
+    """Create one durable ownership transition by publishing a complete directory."""
     root = Path(runtime_root) / EVIDENCE_REVISION_OWNERSHIP_DIRECTORY / execution_id
-    lock = root / f"{sequence}.lock"
-    path = root / f"{sequence}.json"
+    transition_dir = root / f"{sequence}.transition"
+    legacy_path = root / f"{sequence}.json"
     root.mkdir(parents=True, exist_ok=True)
+    if transition_dir.exists():
+        return ("already_exists", _read(transition_dir / "metadata.json"))
+    if legacy_path.exists():
+        return ("already_exists", _read(legacy_path))
+    temp_dir = root / f".{uuid.uuid4().hex[:8]}.td"
+    temp_dir.mkdir()
+    body = _publish_transition_metadata(temp_dir / "metadata.json", payload)
     try:
-        lock.mkdir()
+        temp_dir.rename(transition_dir)
     except FileExistsError:
-        if path.exists():
-            return ("already_exists", _read(path))
-        if repair_orphaned_lock:
-            return ("repaired_orphaned_lock", _publish_transition_metadata(path, payload))
-        return ("already_exists", {"schema": str(payload.get("schema") or ""), "execution_claim_id": execution_id, "state": "owned_metadata_pending", "sequence": sequence})
-    body = _publish_transition_metadata(path, payload)
+        (temp_dir / "metadata.json").unlink(missing_ok=True)
+        temp_dir.rmdir()
+        return ("already_exists", _read_transition_records(root).get(f"{sequence}.json", {}))
+    except OSError:
+        if transition_dir.exists():
+            (temp_dir / "metadata.json").unlink(missing_ok=True)
+            temp_dir.rmdir()
+            return ("already_exists", _read(transition_dir / "metadata.json"))
+        raise
     return ("acquired", body)
 
 
@@ -1614,9 +1642,9 @@ def execute_persistent_evidence_revision_consumer(
         if result_path.exists():
             reconciled = _reconcile_persistent_evidence_revision_terminal_result(runtime_root=runtime_root, authority_id=authority_id, authority=authority, execution_id=execution_id, result=_read(result_path))
             return {"status": "execution_replay_suppressed", "execution_result": reconciled["execution_result"], "reconciliation_status": reconciled["status"]}
-        recovery_path = Path(runtime_root) / EVIDENCE_REVISION_OWNERSHIP_DIRECTORY / execution_id / "060-recovery-classified.json"
-        if recovery_path.exists() and not recovery_resume:
-            return {"status": "execution_recovery_classified_replay_suppressed", "recovery": _read(recovery_path)}
+        recovery_records = _read_transition_records(Path(runtime_root) / EVIDENCE_REVISION_OWNERSHIP_DIRECTORY / execution_id)
+        if "060-recovery-classified.json" in recovery_records and not recovery_resume:
+            return {"status": "execution_recovery_classified_replay_suppressed", "recovery": recovery_records["060-recovery-classified.json"]}
     if goal_index < 0 or str(pending.get("status") or "") != "preflight_accepted":
         raise ValueError("persistent_runtime_revision_execution_not_preflight_accepted")
     preflight_id = str(pending.get("execution_claim_id") or "")
@@ -1713,7 +1741,7 @@ def recover_persistent_evidence_revision_execution(*, runtime_root: Path, author
         reconciled = _reconcile_persistent_evidence_revision_terminal_result(runtime_root=runtime_root, authority_id=authority_id, authority=authority, execution_id=execution_id, result=_read(result_path))
         return {"status": "terminal_result_reconciled", "execution_result": reconciled["execution_result"]}
     root = Path(runtime_root) / EVIDENCE_REVISION_OWNERSHIP_DIRECTORY / execution_id
-    transitions = {path.name: _read(path) for path in root.glob("*.json")} if root.exists() else {}
+    transitions = _read_transition_records(root)
     acquired = dict(transitions.get("000-acquired.json") or {})
     candidate = next((dict(item) for item in goal.get("candidate_versions") or () if str(item.get("candidate_id") or "") == str(authority.get("candidate_id") or "")), None)
     if not candidate:

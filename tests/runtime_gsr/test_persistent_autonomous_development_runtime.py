@@ -730,36 +730,67 @@ def test_evidence_revision_execution_concurrent_callers_acquire_one_owner(tmp_pa
     assert execute_persistent_evidence_revision_consumer(runtime_root=tmp_path, authority_id=authority["request_id"])["status"] == "execution_replay_suppressed"
 
 
-def test_exclusive_transition_loser_does_not_parse_pending_metadata(tmp_path):
+def test_exclusive_transition_ignores_abandoned_tempdir_and_publishes_complete_metadata(tmp_path):
     execution_id = "execution-under-publication"
     sequence = "000-acquired"
     root = tmp_path / EVIDENCE_REVISION_OWNERSHIP_DIRECTORY / execution_id
-    (root / f"{sequence}.lock").mkdir(parents=True)
+    (root / f".{sequence}.abandoned.tmpdir").mkdir(parents=True)
     status, ownership = _exclusive_transition(
         runtime_root=tmp_path,
         execution_id=execution_id,
         sequence=sequence,
         payload={"schema": "persistent_evidence_revision_execution_ownership_v1", "state": "acquired_not_started"},
     )
-    assert status == "already_exists"
-    assert ownership["state"] == "owned_metadata_pending"
+    assert status == "acquired"
+    assert ownership["state"] == "acquired_not_started"
+    assert (root / f"{sequence}.transition" / "metadata.json").exists()
 
 
-def test_exclusive_transition_can_repair_orphaned_lock_when_payload_is_proven(tmp_path):
-    execution_id = "execution-repairable-publication"
+def test_exclusive_transition_paused_publisher_cannot_be_overwritten_by_competitor(tmp_path, monkeypatch):
+    execution_id = "execution-active-publisher"
     sequence = "050-terminal"
-    root = tmp_path / EVIDENCE_REVISION_OWNERSHIP_DIRECTORY / execution_id
-    (root / f"{sequence}.lock").mkdir(parents=True)
-    status, ownership = _exclusive_transition(
+    original_rename = Path.rename
+    paused = threading.Event()
+    release = threading.Event()
+    delayed = {"used": False}
+
+    def delayed_rename(self, target):
+        if not delayed["used"] and str(self).endswith(".td") and Path(target).name == f"{sequence}.transition":
+            delayed["used"] = True
+            paused.set()
+            release.wait(timeout=5)
+        return original_rename(self, target)
+
+    monkeypatch.setattr(Path, "rename", delayed_rename)
+    first: list[tuple[str, dict[str, object]]] = []
+
+    def publisher():
+        first.append(_exclusive_transition(
+            runtime_root=tmp_path,
+            execution_id=execution_id,
+            sequence=sequence,
+            payload={"schema": "persistent_evidence_revision_execution_ownership_v1", "execution_claim_id": execution_id, "state": "terminal-original"},
+        ))
+
+    thread = threading.Thread(target=publisher)
+    thread.start()
+    assert paused.wait(timeout=5)
+    second = _exclusive_transition(
         runtime_root=tmp_path,
         execution_id=execution_id,
         sequence=sequence,
-        payload={"schema": "persistent_evidence_revision_execution_ownership_v1", "execution_claim_id": execution_id, "state": "terminal"},
+        payload={"schema": "persistent_evidence_revision_execution_ownership_v1", "execution_claim_id": execution_id, "state": "terminal-competitor"},
         repair_orphaned_lock=True,
     )
-    assert status == "repaired_orphaned_lock"
-    assert ownership["state"] == "terminal"
-    assert (root / f"{sequence}.json").exists()
+    root = tmp_path / EVIDENCE_REVISION_OWNERSHIP_DIRECTORY / execution_id
+    published_before_release = json.loads((root / f"{sequence}.transition" / "metadata.json").read_text(encoding="utf-8"))
+    release.set()
+    thread.join(timeout=5)
+    published_after_release = json.loads((root / f"{sequence}.transition" / "metadata.json").read_text(encoding="utf-8"))
+    assert second[0] == "acquired"
+    assert first[0][0] == "already_exists"
+    assert published_before_release == published_after_release
+    assert published_after_release["state"] == "terminal-competitor"
 
 
 class _InjectedCrash(RuntimeError):
@@ -851,12 +882,11 @@ def test_terminal_reconciliation_repairs_orphaned_terminal_lock_without_rerun(tm
     result = next((tmp_path / "evidence_revision_execution_results").glob("*.json"))
     execution_id = Path(result).stem
     root = tmp_path / EVIDENCE_REVISION_OWNERSHIP_DIRECTORY / execution_id
-    (root / "050-terminal.lock").mkdir()
 
     recovered = recover_persistent_evidence_revision_execution(runtime_root=tmp_path, authority_id=authority["request_id"])
     assert recovered["status"] == "terminal_result_reconciled"
     assert counts == before_recovery_counts
-    assert (root / "050-terminal.json").exists()
+    assert (root / "050-terminal.transition" / "metadata.json").exists()
 
 
 def test_evidence_revision_replay_reuses_pending_authority_without_new_retrieval(tmp_path):
