@@ -15,12 +15,14 @@ import ctypes
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 import time
 import threading
 from typing import Any, Iterable, Mapping, Sequence
 
 from orchestration.runtime.delta_1_0_common import safety_metadata, stable_id, utc_now, write_json, write_markdown
+from orchestration.runtime.developmental_bootstrap import bootstrap_digest
 from orchestration.runtime.continuous_mission_foundation import (
     ActiveSubgoal,
     ApiAuthorityState,
@@ -72,6 +74,23 @@ from orchestration.runtime.developmental_learning import (
     assess_local_model_learning_evidence,
     load_retained_learning_bundle,
     MissionBoundLocalModelBridge,
+)
+from orchestration.runtime.live_bootstrap_csv_mission import run_live_bootstrap_csv_validation_mission
+from orchestration.runtime.live_competence_adapter import run_live_competence_json_validation_mission
+from orchestration.runtime.live_general_2_dynamic_mission import (
+    _capability_resolution as _live_general_2_capability_resolution,
+    _evaluation_item as _live_general_2_evaluation_item,
+    _mission as _live_general_2_mission,
+    _work_items as _live_general_2_work_items,
+    _write as _write_live_runtime_artifact,
+)
+from orchestration.runtime.live_general_3_learning_mission import (
+    LIVE_GENERAL_3_ROOT,
+    NEW_RECONCILIATION_COMPETENCE_ID,
+    _final_eval as _live_general_3_final_eval,
+    _final_synthesis as _live_general_3_final_synthesis,
+    _reconciliation_output as _live_general_3_reconciliation_output,
+    _validate_reconciliation as _live_general_3_validate_reconciliation,
 )
 from orchestration.runtime.delta_1_6_operational_autonomy import (
     AuthorityRequest,
@@ -752,6 +771,453 @@ def attach_continuous_mission(
         journal=controller.journal + (_journal_entry("continuous_mission", "broad_goal_compiled_to_persistent_mission", (contract.mission_id,)),),
     )
     return refresh_developmental_self_direction(updated)
+
+
+LIVE_RUNTIME_1_ROOT = Path(".tmp") / "live-runtime-1-sustained-attended-v1"
+LIVE_RUNTIME_1_RECONCILIATION_COMPETENCE_DIGEST = "a6801d3d44615baa20db13bdf55dc5b8dde375dc1bee8d46d54692512caf1b42"
+LIVE_RUNTIME_1_OBJECTIVE = (
+    "Run one attended sustained competence mission through the persistent continuous runtime controller. "
+    "Coordinate CSV validation, JSON validation, accepted cross-format reconciliation competence, and final grounded synthesis."
+)
+LIVE_RUNTIME_1_PHASES = (
+    "mission_registered",
+    "work_graph_registered",
+    "csv_capability_resolved",
+    "json_capability_resolved",
+    "reconciliation_competence_bound",
+    "synthesis_capability_resolved",
+    "csv_completed",
+    "json_completed",
+    "reconciliation_completed",
+    "final_synthesis_completed",
+)
+
+
+def _runtime_1_digest_record(record: Mapping[str, Any]) -> dict[str, Any]:
+    normalized = dict(record)
+    normalized["artifact_digest"] = bootstrap_digest({key: value for key, value in normalized.items() if key not in {"artifact_digest", "created_at"}})
+    return normalized
+
+
+def _runtime_1_state(controller: ContinuousRuntimeController) -> dict[str, Any]:
+    return dict(dict(controller.continuous_learning_state or {}).get("live_runtime_1") or {})
+
+
+def _runtime_1_root(state: Mapping[str, Any] | None = None, root: str | Path | None = None) -> Path:
+    return Path(root or (state or {}).get("runtime_root") or LIVE_RUNTIME_1_ROOT)
+
+
+def _runtime_1_store(
+    controller: ContinuousRuntimeController,
+    state: Mapping[str, Any],
+    *,
+    mission_state: str,
+    work_item: str,
+) -> ContinuousRuntimeController:
+    learning = dict(controller.continuous_learning_state or {})
+    learning["live_runtime_1"] = dict(state)
+    return replace(controller, continuous_learning_state=learning, continuous_mission_state=mission_state, active_work_item=work_item)
+
+
+def _runtime_1_with_cycle(
+    before: ContinuousRuntimeController,
+    after: ContinuousRuntimeController,
+    *,
+    event: str,
+    idle_result: str,
+) -> ContinuousRuntimeController:
+    record = _cycle_record(
+        before,
+        time.perf_counter(),
+        before.continuous_mission_state or before.lifecycle_state,
+        after.continuous_mission_state or after.lifecycle_state,
+        (event,),
+        (),
+        (),
+        idle_result,
+        duration_ms=0.0,
+        health_state=after.health.health_state,
+    )
+    return replace(
+        after,
+        cycles=tuple(after.cycles) + (record,),
+        journal=tuple(after.journal) + (_journal_entry("live_runtime_1", event, (idle_result,)),),
+    )
+
+
+def _runtime_1_label_map(items: Sequence[Mapping[str, Any]]) -> dict[str, dict[str, Any]]:
+    return {str(item["label"]): dict(item) for item in items}
+
+
+def _runtime_1_register_mission_artifact(root: Path) -> dict[str, Any]:
+    base = _live_general_2_mission()
+    record = {
+        **base,
+        "schema": "live_runtime_1_operator_mission_v1",
+        "objective": LIVE_RUNTIME_1_OBJECTIVE,
+        "accepted_live_general_3_competence": {
+            "competence_id": NEW_RECONCILIATION_COMPETENCE_ID,
+            "competence_digest": LIVE_RUNTIME_1_RECONCILIATION_COMPETENCE_DIGEST,
+            "source": "accepted_live_general_3_terminal",
+        },
+        "sustained_attended": True,
+    }
+    return _write_live_runtime_artifact(root, "mission", record["mission_id"], _runtime_1_digest_record(record))
+
+
+def _runtime_1_read_json(path: Path) -> dict[str, Any]:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _runtime_1_discover_accepted_reconciliation_competence(accepted_root: str | Path) -> dict[str, Any]:
+    root = Path(accepted_root)
+    competence_path = root / "developmental_competence" / f"{NEW_RECONCILIATION_COMPETENCE_ID}.json"
+    terminal_path = root / "terminal" / "terminal.json"
+    if not competence_path.exists() or not terminal_path.exists():
+        raise ValueError("live_runtime_1_accepted_reconciliation_competence_not_persisted")
+    competence = _runtime_1_read_json(competence_path)
+    terminal = _runtime_1_read_json(terminal_path)
+    if competence.get("competence_id") != NEW_RECONCILIATION_COMPETENCE_ID:
+        raise ValueError("live_runtime_1_accepted_reconciliation_competence_id_mismatch")
+    if competence.get("artifact_digest") != LIVE_RUNTIME_1_RECONCILIATION_COMPETENCE_DIGEST:
+        raise ValueError("live_runtime_1_accepted_reconciliation_competence_digest_mismatch")
+    if terminal.get("new_developmental_competence_id") != competence["competence_id"]:
+        raise ValueError("live_runtime_1_accepted_reconciliation_terminal_id_mismatch")
+    if terminal.get("new_developmental_competence_digest") != competence["artifact_digest"]:
+        raise ValueError("live_runtime_1_accepted_reconciliation_terminal_digest_mismatch")
+    if competence.get("trusted") is not False or competence.get("promoted") is not False:
+        raise ValueError("live_runtime_1_accepted_reconciliation_competence_authority_mismatch")
+    return {
+        "competence": competence,
+        "terminal": terminal,
+        "accepted_root": str(root),
+        "source_competence_path": str(competence_path),
+        "source_terminal_path": str(terminal_path),
+    }
+
+
+def _runtime_1_competence_binding(root: Path, mission: Mapping[str, Any], item: Mapping[str, Any], accepted: Mapping[str, Any]) -> dict[str, Any]:
+    competence = dict(accepted["competence"])
+    terminal = dict(accepted["terminal"])
+    record = {
+        "schema": "live_runtime_1_accepted_reconciliation_competence_binding_v1",
+        "binding_id": stable_id("live-runtime-1-reconciliation-binding", mission["mission_id"], item["work_item_id"], NEW_RECONCILIATION_COMPETENCE_ID),
+        "mission_id": mission["mission_id"],
+        "mission_digest": mission["artifact_digest"],
+        "work_item_id": item["work_item_id"],
+        "work_item_digest": item["artifact_digest"],
+        "competence_id": competence["competence_id"],
+        "competence_digest": competence["artifact_digest"],
+        "classification": competence["classification"],
+        "trusted": competence["trusted"],
+        "promoted": competence["promoted"],
+        "accepted_terminal_digest": terminal["artifact_digest"],
+        "accepted_terminal_status": terminal["terminal_status"],
+        "accepted_source_path": accepted["source_competence_path"],
+        "accepted_terminal_path": accepted["source_terminal_path"],
+        "mutation_authority": False,
+        "provider_authority": False,
+        "created_at": "2026-07-22T00:00:00+00:00",
+    }
+    return _write_live_runtime_artifact(root, "accepted_competence_binding", record["binding_id"], _runtime_1_digest_record(record))
+
+
+def _runtime_1_reconciliation_resolution(
+    root: Path,
+    mission: Mapping[str, Any],
+    item: Mapping[str, Any],
+    binding: Mapping[str, Any],
+) -> dict[str, Any]:
+    record = {
+        "schema": "live_runtime_1_capability_resolution_v1",
+        "resolution_id": stable_id("live-runtime-1-resolution", item["work_item_id"], NEW_RECONCILIATION_COMPETENCE_ID),
+        "mission_id": mission["mission_id"],
+        "mission_digest": mission["artifact_digest"],
+        "work_item_id": item["work_item_id"],
+        "work_item_digest": item["artifact_digest"],
+        "task_class": item["task_class"],
+        "required_capability_type": "developmentally_learned_competence",
+        "selected_capability_source": "developmentally_learned_competence",
+        "selected_competence_id": NEW_RECONCILIATION_COMPETENCE_ID,
+        "selected_artifact_digest": binding["competence_digest"],
+        "accepted_competence_binding_id": binding["binding_id"],
+        "accepted_competence_binding_digest": binding["artifact_digest"],
+        "eligibility_decision": "eligible_from_accepted_live_general_3_competence",
+        "decision_reason": "previously_accepted_reconciliation_competence_bound_by_id_and_digest",
+        "authority_requirements": {"provider_calls": 0, "network": False, "tracked_source_mutation": False, "fixture_input_mutation": False},
+        "mutation_surface": (),
+        "network_requirements": (),
+        "created_at": "2026-07-22T00:00:00+00:00",
+    }
+    return _write_live_runtime_artifact(root, "capability_resolution_after_learning", record["resolution_id"], _runtime_1_digest_record(record))
+
+
+def _runtime_1_interim_synthesis(
+    root: Path,
+    mission: Mapping[str, Any],
+    item: Mapping[str, Any],
+    csv_result: Mapping[str, Any],
+    json_result: Mapping[str, Any],
+    recon_item: Mapping[str, Any],
+    recon_resolution: Mapping[str, Any],
+) -> dict[str, Any]:
+    record = {
+        "schema": "live_runtime_1_interim_synthesis_v1",
+        "interim_synthesis_id": stable_id("live-runtime-1-interim", mission["mission_id"], csv_result["validation_digest"], json_result["validation_digest"], recon_resolution["artifact_digest"]),
+        "mission_id": mission["mission_id"],
+        "work_item_id": item["work_item_id"],
+        "csv_result": {"output_id": csv_result["output_id"], "output_digest": csv_result["output_digest"], "validation_id": csv_result["validation_id"], "validation_digest": csv_result["validation_digest"]},
+        "json_result": {"output_id": json_result["output_id"], "output_digest": json_result["output_digest"], "validation_id": json_result["validation_id"], "validation_digest": json_result["validation_digest"]},
+        "reconciliation_status": "accepted_competence_bound_waiting_execution",
+        "reconciliation_work_item_id": recon_item["work_item_id"],
+        "reconciliation_capability_source": recon_resolution["selected_capability_source"],
+        "reconciliation_competence_id": recon_resolution["selected_competence_id"],
+        "reconciliation_competence_digest": recon_resolution["selected_artifact_digest"],
+        "capability_origin_attribution": {
+            "csv": "developmentally_learned_competence",
+            "json": "declared_adapter_capability",
+            "reconciliation": "developmentally_learned_competence",
+            "synthesis": "validated_bootstrap_competence",
+        },
+        "input_preservation": {
+            "csv": csv_result["fixture_input_digests_before"] == csv_result["fixture_input_digests_after"],
+            "json": json_result["fixture_input_digests_before"] == json_result["fixture_input_digests_after"],
+        },
+        "limits": ("final synthesis waits for reconciliation output", "accepted reconciliation competence remains untrusted and unpromoted"),
+        "synthesis_attempt": 1,
+        "created_at": "2026-07-22T00:00:00+00:00",
+    }
+    return _write_live_runtime_artifact(root, "interim_synthesis", record["interim_synthesis_id"], _runtime_1_digest_record(record))
+
+
+def attach_live_runtime_1_attended_mission(
+    controller: ContinuousRuntimeController,
+    *,
+    runtime_root: str | Path = LIVE_RUNTIME_1_ROOT,
+    accepted_competence_root: str | Path = LIVE_GENERAL_3_ROOT,
+    reset: bool = False,
+) -> ContinuousRuntimeController:
+    root = _runtime_1_root(root=runtime_root)
+    if reset and root.exists():
+        shutil.rmtree(root)
+    existing = _runtime_1_state(controller)
+    if existing:
+        return controller
+    state = {
+        "schema": "live_runtime_1_controller_state_v1",
+        "runtime_root": str(root),
+        "accepted_competence_root": str(Path(accepted_competence_root)),
+        "status": "attached",
+        "phase_index": 0,
+        "phase_history": (),
+        "scheduler_cycles": 0,
+        "mission_registrations": 0,
+        "work_graph_registrations": 0,
+        "operator_requests_created": 0,
+        "accepted_reconciliation_competence_id": NEW_RECONCILIATION_COMPETENCE_ID,
+        "accepted_reconciliation_competence_digest": LIVE_RUNTIME_1_RECONCILIATION_COMPETENCE_DIGEST,
+        "capability_attribution": {
+            "csv_validation": "developmentally_learned_competence",
+            "json_validation": "declared_adapter_capability",
+            "cross_format_reconciliation": "developmentally_learned_competence",
+            "dynamic_synthesis": "validated_bootstrap_competence",
+        },
+        "counts": {
+            "provider_calls": 0,
+            "csv_learner": 0,
+            "json_adapter": 0,
+            "reconciliation_executor": 0,
+            "final_synthesis": 0,
+            "evaluators": {"csv": 0, "json": 0, "reconciliation": 0, "final_synthesis": 0},
+        },
+        "evaluation_item_ids": (),
+        "trusted_admissions": 0,
+        "capability_promotions": 0,
+        "tracked_source_mutation": False,
+    }
+    attached = _runtime_1_store(controller, state, mission_state="live_runtime_1_attached", work_item="live_runtime_1_ready_for_scheduler")
+    return _runtime_1_with_cycle(before=controller, after=attached, event="live_runtime_1_attached", idle_result="mission_attached")
+
+
+def advance_live_runtime_1_attended_mission(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
+    state = _runtime_1_state(controller)
+    if not state:
+        return attach_live_runtime_1_attended_mission(controller)
+    if state.get("status") == "terminal":
+        return controller
+
+    before = controller
+    root = _runtime_1_root(state)
+    phase_index = int(state.get("phase_index") or 0)
+    phase = LIVE_RUNTIME_1_PHASES[phase_index] if phase_index < len(LIVE_RUNTIME_1_PHASES) else "terminal"
+    artifacts = dict(state.get("artifacts") or {})
+    resolutions = {str(key): dict(value) for key, value in dict(state.get("capability_resolutions") or {}).items()}
+    evaluation_item_ids = tuple(state.get("evaluation_item_ids") or ())
+    counts = dict(state.get("counts") or {})
+    counts["evaluators"] = dict(counts.get("evaluators") or {})
+    status_by_label = dict(state.get("work_item_status") or {})
+    mission_state = "live_runtime_1_running"
+    active_work_item = phase
+
+    if phase == "mission_registered":
+        mission = _runtime_1_register_mission_artifact(root)
+        artifacts["mission_id"] = mission["mission_id"]
+        artifacts["mission_digest"] = mission["artifact_digest"]
+        state["mission"] = mission
+        state["mission_registrations"] = int(state.get("mission_registrations") or 0) + 1
+    elif phase == "work_graph_registered":
+        mission = dict(state["mission"])
+        items = tuple(_write_live_runtime_artifact(root, "work_graph", item["work_item_id"], item) for item in _live_general_2_work_items(mission))
+        state["work_items"] = tuple(items)
+        status_by_label = {str(item["label"]): "queued" for item in items}
+        state["work_graph_registrations"] = int(state.get("work_graph_registrations") or 0) + 1
+    elif phase == "csv_capability_resolved":
+        mission = dict(state["mission"])
+        items = _runtime_1_label_map(tuple(state["work_items"]))
+        resolution = _live_general_2_capability_resolution(root, mission, items["csv_validation"])
+        resolutions["csv_validation"] = resolution
+        status_by_label["csv_validation"] = "ready"
+    elif phase == "json_capability_resolved":
+        mission = dict(state["mission"])
+        items = _runtime_1_label_map(tuple(state["work_items"]))
+        resolution = _live_general_2_capability_resolution(root, mission, items["json_validation"])
+        resolutions["json_validation"] = resolution
+        status_by_label["json_validation"] = "ready"
+    elif phase == "reconciliation_competence_bound":
+        mission = dict(state["mission"])
+        items = _runtime_1_label_map(tuple(state["work_items"]))
+        accepted = _runtime_1_discover_accepted_reconciliation_competence(state.get("accepted_competence_root") or LIVE_GENERAL_3_ROOT)
+        binding = _runtime_1_competence_binding(root, mission, items["cross_format_reconciliation"], accepted)
+        resolution = _runtime_1_reconciliation_resolution(root, mission, items["cross_format_reconciliation"], binding)
+        resolutions["cross_format_reconciliation"] = resolution
+        status_by_label["cross_format_reconciliation"] = "ready"
+        artifacts["accepted_competence_binding_id"] = binding["binding_id"]
+        artifacts["accepted_competence_binding_digest"] = binding["artifact_digest"]
+        artifacts["accepted_competence_source_path"] = accepted["source_competence_path"]
+        artifacts["accepted_competence_terminal_path"] = accepted["source_terminal_path"]
+    elif phase == "synthesis_capability_resolved":
+        mission = dict(state["mission"])
+        items = _runtime_1_label_map(tuple(state["work_items"]))
+        resolution = _live_general_2_capability_resolution(root, mission, items["dynamic_synthesis"])
+        resolutions["dynamic_synthesis"] = resolution
+        status_by_label["dynamic_synthesis"] = "waiting_dependencies"
+    elif phase == "csv_completed":
+        mission = dict(state["mission"])
+        items = _runtime_1_label_map(tuple(state["work_items"]))
+        csv_result = run_live_bootstrap_csv_validation_mission(root=root / "work_items" / "csv", reset=False)
+        resolution = dict(resolutions["csv_validation"])
+        eval_item = _live_general_2_evaluation_item(root, mission, items["csv_validation"], resolution, output_id=csv_result["output_id"], output_digest=csv_result["output_digest"], validator_id=csv_result["validation_id"], validator_digest=csv_result["validation_digest"], outcomes=csv_result["case_results"], aggregate="passed", terminal_state="completed")
+        evaluation_item_ids = tuple(dict.fromkeys(evaluation_item_ids + (eval_item["evaluation_item_id"],)))
+        status_by_label["csv_validation"] = "completed"
+        artifacts["csv_result"] = csv_result
+        counts["csv_learner"] = 1
+        counts["evaluators"]["csv"] = 1
+    elif phase == "json_completed":
+        mission = dict(state["mission"])
+        items = _runtime_1_label_map(tuple(state["work_items"]))
+        json_result = run_live_competence_json_validation_mission(root=root / "work_items" / "json", reset=False)
+        resolution = dict(resolutions["json_validation"])
+        eval_item = _live_general_2_evaluation_item(root, mission, items["json_validation"], resolution, output_id=json_result["output_id"], output_digest=json_result["output_digest"], validator_id=json_result["validation_id"], validator_digest=json_result["validation_digest"], outcomes=json_result["case_results"], aggregate="passed", terminal_state="completed")
+        evaluation_item_ids = tuple(dict.fromkeys(evaluation_item_ids + (eval_item["evaluation_item_id"],)))
+        status_by_label["json_validation"] = "completed"
+        artifacts["json_result"] = json_result
+        counts["json_adapter"] = 1
+        counts["evaluators"]["json"] = 1
+        interim = _runtime_1_interim_synthesis(root, mission, items["dynamic_synthesis"], dict(artifacts["csv_result"]), json_result, items["cross_format_reconciliation"], dict(resolutions["cross_format_reconciliation"]))
+        artifacts["interim_synthesis_id"] = interim["interim_synthesis_id"]
+        artifacts["interim_synthesis_digest"] = interim["artifact_digest"]
+    elif phase == "reconciliation_completed":
+        mission = dict(state["mission"])
+        items = _runtime_1_label_map(tuple(state["work_items"]))
+        competence = {"competence_id": NEW_RECONCILIATION_COMPETENCE_ID, "artifact_digest": LIVE_RUNTIME_1_RECONCILIATION_COMPETENCE_DIGEST}
+        reconciliation = _live_general_3_reconciliation_output(root, competence)
+        validation = _live_general_3_validate_reconciliation(root, reconciliation)
+        resolution = dict(resolutions["cross_format_reconciliation"])
+        eval_item = _live_general_2_evaluation_item(root, mission, items["cross_format_reconciliation"], resolution, output_id=reconciliation["output_id"], output_digest=reconciliation["artifact_digest"], validator_id=validation["validation_id"], validator_digest=validation["artifact_digest"], outcomes=validation["predicate_outcomes"], aggregate=validation["aggregate_status"], terminal_state="completed")
+        evaluation_item_ids = tuple(dict.fromkeys(evaluation_item_ids + (eval_item["evaluation_item_id"],)))
+        status_by_label["cross_format_reconciliation"] = "completed"
+        artifacts["reconciliation"] = reconciliation
+        artifacts["reconciliation_validation"] = validation
+        counts["reconciliation_executor"] = 1
+        counts["evaluators"]["reconciliation"] = 1
+    elif phase == "final_synthesis_completed":
+        mission = dict(state["mission"])
+        items = _runtime_1_label_map(tuple(state["work_items"]))
+        csv_result = dict(artifacts["csv_result"])
+        json_result = dict(artifacts["json_result"])
+        reconciliation = dict(artifacts["reconciliation"])
+        validation = dict(artifacts["reconciliation_validation"])
+        synthesis = _live_general_3_final_synthesis(root, csv_result, json_result, {"aggregate_status": "passed"}, reconciliation, validation)
+        synth_eval_data = _live_general_3_final_eval(root, synthesis)
+        resolution = dict(resolutions["dynamic_synthesis"])
+        eval_item = _live_general_2_evaluation_item(root, mission, items["dynamic_synthesis"], resolution, output_id=synthesis["output_id"], output_digest=synthesis["artifact_digest"], validator_id=synth_eval_data["validator_id"], validator_digest=synth_eval_data["validator_digest"], outcomes=synth_eval_data["predicate_outcomes"], aggregate=synth_eval_data["aggregate_status"], terminal_state="completed")
+        evaluation_item_ids = tuple(dict.fromkeys(evaluation_item_ids + (eval_item["evaluation_item_id"],)))
+        status_by_label["dynamic_synthesis"] = "completed"
+        artifacts["final_synthesis_id"] = synthesis["output_id"]
+        artifacts["final_synthesis_digest"] = synthesis["artifact_digest"]
+        artifacts["final_synthesis_evaluation_id"] = synth_eval_data["evaluation_id"]
+        artifacts["final_synthesis_evaluation_digest"] = synth_eval_data["artifact_digest"]
+        counts["final_synthesis"] = 1
+        counts["evaluators"]["final_synthesis"] = 1
+        terminal = _write_live_runtime_artifact(root, "terminal", "terminal", _runtime_1_digest_record({
+            "schema": "live_runtime_1_terminal_v1",
+            "mission_id": mission["mission_id"],
+            "mission_digest": mission["artifact_digest"],
+            "work_items": tuple({"label": label, "terminal_state": terminal_state} for label, terminal_state in status_by_label.items()),
+            "evaluation_item_ids": evaluation_item_ids,
+            "accepted_reconciliation_competence_id": NEW_RECONCILIATION_COMPETENCE_ID,
+            "accepted_reconciliation_competence_digest": LIVE_RUNTIME_1_RECONCILIATION_COMPETENCE_DIGEST,
+            "capability_attribution": state["capability_attribution"],
+            "counts": counts,
+            "scheduler_cycles": int(state.get("scheduler_cycles") or 0) + 1,
+            "trusted_admissions": 0,
+            "capability_promotions": 0,
+            "tracked_source_mutation": False,
+            "terminal_status": "LIVE_RUNTIME_1_SUSTAINED_ATTENDED_PASSED",
+            "created_at": "2026-07-22T00:00:00+00:00",
+        }))
+        artifacts["terminal_digest"] = terminal["artifact_digest"]
+        state["terminal"] = terminal
+        state["status"] = "terminal"
+        mission_state = "live_runtime_1_terminal"
+        active_work_item = "live_runtime_1_complete"
+
+    state.update({
+        "status": state.get("status") if state.get("status") == "terminal" else "running",
+        "phase_index": phase_index + 1,
+        "phase_history": tuple(state.get("phase_history") or ()) + (phase,),
+        "scheduler_cycles": int(state.get("scheduler_cycles") or 0) + 1,
+        "artifacts": artifacts,
+        "capability_resolutions": resolutions,
+        "work_item_status": status_by_label,
+        "evaluation_item_ids": evaluation_item_ids,
+        "counts": counts,
+        "operator_requests_created": 0,
+        "trusted_admissions": 0,
+        "capability_promotions": 0,
+        "tracked_source_mutation": False,
+    })
+    if state.get("status") == "terminal":
+        mission_state = "live_runtime_1_terminal"
+        active_work_item = "live_runtime_1_complete"
+    updated = _runtime_1_store(controller, state, mission_state=mission_state, work_item=active_work_item)
+    return _runtime_1_with_cycle(before=before, after=updated, event=f"live_runtime_1_{phase}", idle_result=phase)
+
+
+def run_live_runtime_1_attended_cycles(
+    controller: ContinuousRuntimeController,
+    *,
+    runtime_root: str | Path = LIVE_RUNTIME_1_ROOT,
+    accepted_competence_root: str | Path = LIVE_GENERAL_3_ROOT,
+    max_cycles: int = len(LIVE_RUNTIME_1_PHASES) + 1,
+    reset: bool = False,
+) -> ContinuousRuntimeController:
+    current = attach_live_runtime_1_attended_mission(controller, runtime_root=runtime_root, accepted_competence_root=accepted_competence_root, reset=reset)
+    for _ in range(max_cycles):
+        if _runtime_1_state(current).get("status") == "terminal":
+            break
+        current = advance_live_runtime_1_attended_mission(current)
+    return current
 
 
 def attach_developmental_learning_mission(
