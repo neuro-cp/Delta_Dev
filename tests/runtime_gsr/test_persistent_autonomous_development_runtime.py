@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 import threading
 
 import pytest
@@ -744,6 +745,23 @@ def test_exclusive_transition_loser_does_not_parse_pending_metadata(tmp_path):
     assert ownership["state"] == "owned_metadata_pending"
 
 
+def test_exclusive_transition_can_repair_orphaned_lock_when_payload_is_proven(tmp_path):
+    execution_id = "execution-repairable-publication"
+    sequence = "050-terminal"
+    root = tmp_path / EVIDENCE_REVISION_OWNERSHIP_DIRECTORY / execution_id
+    (root / f"{sequence}.lock").mkdir(parents=True)
+    status, ownership = _exclusive_transition(
+        runtime_root=tmp_path,
+        execution_id=execution_id,
+        sequence=sequence,
+        payload={"schema": "persistent_evidence_revision_execution_ownership_v1", "execution_claim_id": execution_id, "state": "terminal"},
+        repair_orphaned_lock=True,
+    )
+    assert status == "repaired_orphaned_lock"
+    assert ownership["state"] == "terminal"
+    assert (root / f"{sequence}.json").exists()
+
+
 class _InjectedCrash(RuntimeError):
     pass
 
@@ -802,6 +820,43 @@ def test_evidence_revision_execution_recovery_classifies_crash_windows(tmp_path,
         assert len(final["goals"][0]["behavioral_evaluations"]) == 2
     if expected_status.endswith("integrity_stop") or expected_status.endswith("manual_recovery_required"):
         assert execute_persistent_evidence_revision_consumer(runtime_root=tmp_path, authority_id=authority["request_id"])["status"] == "execution_recovery_classified_replay_suppressed"
+
+
+def test_terminal_reconciliation_repairs_orphaned_terminal_lock_without_rerun(tmp_path, monkeypatch):
+    authority = _prepare_revision_execution(tmp_path)
+    import orchestration.runtime.developmental_learning as developmental_learning
+
+    original_execute = developmental_learning.execute_learning_attempt
+    original_evaluate = developmental_learning.evaluate_learning_attempt
+    counts = {"learner": 0, "evaluator": 0}
+
+    def counted_execute(*args, **kwargs):
+        counts["learner"] += 1
+        return original_execute(*args, **kwargs)
+
+    def counted_evaluate(*args, **kwargs):
+        counts["evaluator"] += 1
+        return original_evaluate(*args, **kwargs)
+
+    monkeypatch.setattr(developmental_learning, "execute_learning_attempt", counted_execute)
+    monkeypatch.setattr(developmental_learning, "evaluate_learning_attempt", counted_evaluate)
+
+    def crash_hook(name):
+        if name == "after_terminal_result_persisted":
+            raise _InjectedCrash(name)
+
+    with pytest.raises(_InjectedCrash):
+        execute_persistent_evidence_revision_consumer(runtime_root=tmp_path, authority_id=authority["request_id"], boundary_hook=crash_hook)
+    before_recovery_counts = dict(counts)
+    result = next((tmp_path / "evidence_revision_execution_results").glob("*.json"))
+    execution_id = Path(result).stem
+    root = tmp_path / EVIDENCE_REVISION_OWNERSHIP_DIRECTORY / execution_id
+    (root / "050-terminal.lock").mkdir()
+
+    recovered = recover_persistent_evidence_revision_execution(runtime_root=tmp_path, authority_id=authority["request_id"])
+    assert recovered["status"] == "terminal_result_reconciled"
+    assert counts == before_recovery_counts
+    assert (root / "050-terminal.json").exists()
 
 
 def test_evidence_revision_replay_reuses_pending_authority_without_new_retrieval(tmp_path):

@@ -82,25 +82,34 @@ def _atomic_write(path: Path, payload: Mapping[str, Any]) -> None:
     os.replace(temporary, path)
 
 
-def _exclusive_transition(*, runtime_root: Path, execution_id: str, sequence: str, payload: Mapping[str, Any]) -> tuple[str, dict[str, Any]]:
-    """Create one durable ownership transition without exposing partial JSON."""
-    root = Path(runtime_root) / EVIDENCE_REVISION_OWNERSHIP_DIRECTORY / execution_id
-    lock = root / f"{sequence}.lock"
-    path = root / f"{sequence}.json"
-    root.mkdir(parents=True, exist_ok=True)
+def _publish_transition_metadata(path: Path, payload: Mapping[str, Any]) -> dict[str, Any]:
     body = dict(payload)
     body["transition_digest"] = _digest(body)
-    try:
-        lock.mkdir()
-    except FileExistsError:
-        return ("already_exists", _read(path) if path.exists() else {"schema": str(payload.get("schema") or ""), "execution_claim_id": execution_id, "state": "owned_metadata_pending", "sequence": sequence})
-    temporary = root / f".{sequence}.{os.getpid()}.tmp"
+    temporary = path.parent / f".{path.stem}.{os.getpid()}.tmp"
     with temporary.open("w", encoding="utf-8") as handle:
         json.dump(body, handle, indent=2, sort_keys=True)
         handle.write("\n")
         handle.flush()
         os.fsync(handle.fileno())
     os.replace(temporary, path)
+    return body
+
+
+def _exclusive_transition(*, runtime_root: Path, execution_id: str, sequence: str, payload: Mapping[str, Any], repair_orphaned_lock: bool = False) -> tuple[str, dict[str, Any]]:
+    """Create one durable ownership transition without exposing partial JSON."""
+    root = Path(runtime_root) / EVIDENCE_REVISION_OWNERSHIP_DIRECTORY / execution_id
+    lock = root / f"{sequence}.lock"
+    path = root / f"{sequence}.json"
+    root.mkdir(parents=True, exist_ok=True)
+    try:
+        lock.mkdir()
+    except FileExistsError:
+        if path.exists():
+            return ("already_exists", _read(path))
+        if repair_orphaned_lock:
+            return ("repaired_orphaned_lock", _publish_transition_metadata(path, payload))
+        return ("already_exists", {"schema": str(payload.get("schema") or ""), "execution_claim_id": execution_id, "state": "owned_metadata_pending", "sequence": sequence})
+    body = _publish_transition_metadata(path, payload)
     return ("acquired", body)
 
 
@@ -1507,7 +1516,7 @@ def _finalize_persistent_evidence_revision_execution(
     goals = list(current.get("goals") or ())
     goals[goal_index] = updated_goal
     _checkpoint(state={**current, "goals": tuple(goals), "active_goal_id": "", "active_work_item": {}, "lifecycle_state": "ready"}, runtime_root=runtime_root, reason="evidence_revision_execution_completed_without_trust_or_promotion")
-    _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="050-terminal", payload={**ownership_payload, "state": "terminal", "execution_result_id": result["artifact_id"], "at": utc_now()})
+    _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="050-terminal", payload={**ownership_payload, "state": "terminal", "execution_result_id": result["artifact_id"], "at": utc_now()}, repair_orphaned_lock=True)
     return {"status": "execution_completed", "execution_claim": dict(claim), "execution_result": result, "attempt": attempt, "evaluation": evaluation, "disposition": disposition}
 
 
@@ -1712,30 +1721,30 @@ def recover_persistent_evidence_revision_execution(*, runtime_root: Path, author
     if "040-evaluation-persisted.json" in transitions:
         claim_path = Path(runtime_root) / EVIDENCE_REVISION_EXECUTION_CLAIM_DIRECTORY / f"{execution_id}.json"
         if not claim_path.exists():
-            _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "execution_claim_missing_after_evaluation_integrity_stop", "at": utc_now()})
+            _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "execution_claim_missing_after_evaluation_integrity_stop", "at": utc_now()}, repair_orphaned_lock=True)
             return {"status": "execution_claim_missing_after_evaluation_integrity_stop", "ownership": transitions}
         attempt_id = str(dict(transitions.get("020-learner-persisted.json") or {}).get("attempt_artifact_id") or "")
         evaluation_id = str(dict(transitions.get("040-evaluation-persisted.json") or {}).get("evaluation_artifact_id") or "")
         attempt_artifact = _read(Path(runtime_root) / "learning_attempts" / f"{attempt_id}.json") if attempt_id else _find_claim_artifact(runtime_root=runtime_root, directory="learning_attempts", claim_id=execution_id)
         evaluation_artifact = _read(Path(runtime_root) / "learning_evaluations" / f"{evaluation_id}.json") if evaluation_id else _find_claim_artifact(runtime_root=runtime_root, directory="learning_evaluations", claim_id=execution_id)
         if not attempt_artifact or not evaluation_artifact:
-            _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "persisted_evaluation_artifacts_incomplete_integrity_stop", "at": utc_now()})
+            _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "persisted_evaluation_artifacts_incomplete_integrity_stop", "at": utc_now()}, repair_orphaned_lock=True)
             return {"status": "persisted_evaluation_artifacts_incomplete_integrity_stop", "ownership": transitions}
-        _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "finalizing_from_persisted_evaluation", "at": utc_now()})
+        _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "finalizing_from_persisted_evaluation", "at": utc_now()}, repair_orphaned_lock=True)
         finalized = _finalize_persistent_evidence_revision_execution(runtime_root=runtime_root, authority_id=authority_id, authority=authority, candidate=candidate, claim=_read(claim_path), attempt_artifact=attempt_artifact, evaluation_artifact=evaluation_artifact, ownership_payload=acquired)
         return {**finalized, "status": "recovery_finalized_from_persisted_evaluation"}
     if "010-learner-dispatching.json" in transitions and "020-learner-persisted.json" not in transitions:
-        _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "execution_outcome_unknown_integrity_stop", "at": utc_now()})
+        _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "execution_outcome_unknown_integrity_stop", "at": utc_now()}, repair_orphaned_lock=True)
         return {"status": "execution_outcome_unknown_integrity_stop", "ownership": transitions}
     if "030-evaluator-dispatching.json" in transitions and "040-evaluation-persisted.json" not in transitions:
-        _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "evaluation_outcome_unknown_integrity_stop", "at": utc_now()})
+        _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "evaluation_outcome_unknown_integrity_stop", "at": utc_now()}, repair_orphaned_lock=True)
         return {"status": "evaluation_outcome_unknown_integrity_stop", "ownership": transitions}
     if "020-learner-persisted.json" in transitions and "030-evaluator-dispatching.json" not in transitions:
         claim_path = Path(runtime_root) / EVIDENCE_REVISION_EXECUTION_CLAIM_DIRECTORY / f"{execution_id}.json"
         attempt_id = str(dict(transitions.get("020-learner-persisted.json") or {}).get("attempt_artifact_id") or "")
         attempt_artifact = _read(Path(runtime_root) / "learning_attempts" / f"{attempt_id}.json") if attempt_id else _find_claim_artifact(runtime_root=runtime_root, directory="learning_attempts", claim_id=execution_id)
         if not claim_path.exists() or not attempt_artifact:
-            _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "persisted_attempt_artifacts_incomplete_integrity_stop", "at": utc_now()})
+            _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "persisted_attempt_artifacts_incomplete_integrity_stop", "at": utc_now()}, repair_orphaned_lock=True)
             return {"status": "persisted_attempt_artifacts_incomplete_integrity_stop", "ownership": transitions}
         recovery_status, recovery = _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="025-recovery-resume-evaluator", payload={**acquired, "state": "recovery_resume_evaluator_from_persisted_attempt", "recovery_process_id": os.getpid(), "attempt_artifact_id": attempt_artifact["artifact_id"], "at": utc_now()})
         if recovery_status != "acquired":
@@ -1747,14 +1756,14 @@ def recover_persistent_evidence_revision_execution(*, runtime_root: Path, author
         evaluation = evaluate_learning_attempt(materials["subgoal"], attempt, materials["retained_bundle"])
         evaluation_artifact = _write_immutable_artifact(runtime_root=runtime_root, directory="learning_evaluations", artifact_id=evaluation.evaluation_id, payload={"schema": "persistent_learning_evaluation_v1", "claim_id": execution_id, "revision_execution_claim_id": execution_id, "sealed_package_digest": authority["sealed_package_digest"], "learner_response_digest": attempt.candidate_digest, "evaluation": evaluation.as_dict(), "completed_at": utc_now()})
         _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="040-evaluation-persisted", payload={**acquired, "state": "evaluation_persisted", "evaluation_artifact_id": evaluation_artifact["artifact_id"], "at": utc_now()})
-        _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "finalizing_after_evaluator_resume", "at": utc_now()})
+        _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "finalizing_after_evaluator_resume", "at": utc_now()}, repair_orphaned_lock=True)
         finalized = _finalize_persistent_evidence_revision_execution(runtime_root=runtime_root, authority_id=authority_id, authority=authority, candidate=materials["candidate"], claim=_read(claim_path), attempt_artifact=attempt_artifact, evaluation_artifact=evaluation_artifact, ownership_payload=acquired)
         return {**finalized, "status": "recovery_resumed_evaluation_from_persisted_attempt"}
     if "000-acquired.json" in transitions and "010-learner-dispatching.json" not in transitions:
-        _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "safe_resume_before_learner", "at": utc_now()})
+        _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "safe_resume_before_learner", "at": utc_now()}, repair_orphaned_lock=True)
         resumed = execute_persistent_evidence_revision_consumer(runtime_root=runtime_root, authority_id=authority_id, recovery_resume=True)
         return {**resumed, "status": "recovery_resumed_before_learner"}
-    _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "incomplete_dispatch_recovery_required", "at": utc_now()})
+    _exclusive_transition(runtime_root=runtime_root, execution_id=execution_id, sequence="060-recovery-classified", payload={**acquired, "state": "incomplete_dispatch_recovery_required", "at": utc_now()}, repair_orphaned_lock=True)
     return {"status": "incomplete_dispatch_recovery_required", "ownership": transitions}
 
 
