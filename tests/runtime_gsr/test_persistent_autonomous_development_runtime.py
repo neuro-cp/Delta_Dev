@@ -14,11 +14,13 @@ from orchestration.runtime.persistent_autonomous_development_runtime import (
     compile_persistent_generic_evaluator_authority,
     compile_persistent_evidence_revision_plan,
     execute_persistent_evidence_revision_consumer,
+    execute_persistent_sealed_evaluation,
     preflight_persistent_evidence_revision_execution,
     recover_persistent_evidence_revision_execution,
     recover_historical_retrieval_with_persistence,
     run_persistent_evidence_revision_cycle,
     _target_is_satisfied,
+    _checkpoint,
     _exclusive_transition,
     _write_immutable_artifact,
     export_runtime_report,
@@ -524,6 +526,95 @@ def test_grounded_candidate_compiles_pending_generic_evaluator_authority(tmp_pat
     assert authority["recommended_approval_token"] == "approve_persistent_generic_evaluator_authoring"
     assert authority["source_artifact_digest"] == goal["retrieval_claims"][0]["source_artifact_digest"]
     assert "no_capability_promotion" in authority["authority_limits"]
+
+
+def test_generic_sealed_evaluation_candidate_revision_clears_operator_blocker(tmp_path, monkeypatch):
+    state = initialize_runtime(runtime_root=tmp_path, goals=("learn grammar",))
+    result = run_until_idle(
+        state=state, runtime_root=tmp_path, maximum_cycles=1, evidence_resolver=_local_miss,
+        public_evidence_resolver=_public_candidate, retrieval_executor=_retrieval,
+    )
+    goal = dict(result["goals"][0])
+    pending = dict(goal["pending_evaluator_authority"])
+    sealed_result = _write_immutable_artifact(
+        runtime_root=tmp_path,
+        directory="evaluator_authority_requests/execution_results",
+        artifact_id="fixture-sealed-evaluator-result",
+        payload={
+            "schema": "persistent_isolated_evaluator_execution_result_v1",
+            "execution_claim_id": "fixture-evaluator-claim",
+            "request_id": pending["request_id"],
+            "claim_state": "completed",
+            "sealed_package": {
+                "sealed_package_id": "fixture-sealed-package",
+                "execution_contract_version": "sealed_evaluator_execution_v3",
+                "independent_evaluator": {"identity": "fixture"},
+                "sealed_evaluation_cases": ({
+                    "case_id": "grammar-held-out",
+                    "case_kind": "held_out",
+                    "task_type": "concept_coverage",
+                    "capability_dimension": "grammar_scope",
+                    "learner_view": {
+                        "instruction": "Explain the scoped grammar concept.",
+                        "prompt": "Explain the concept using retained facts.",
+                        "constraints": (),
+                        "input_data": {"input_kind": "text_context"},
+                        "response_schema": {"response_kind": "text_explanation", "required_fields": ({"field_name": "explanation", "field_type": "text"},)},
+                    },
+                },),
+            },
+        },
+    )
+    goal["pending_evaluator_authority"] = {**pending, "status": "sealed_package_ready", "result_artifact_id": sealed_result["artifact_id"]}
+    _checkpoint(state={**result, "goals": (goal,)}, runtime_root=tmp_path, reason="fixture_sealed_package_ready")
+
+    class Attempt:
+        attempt_id = "fixture-attempt"
+        candidate_digest = "fixture-response-digest"
+        task_records = ()
+
+        def as_dict(self):
+            return {"attempt_id": self.attempt_id, "candidate_digest": self.candidate_digest, "task_records": self.task_records}
+
+    class Evaluation:
+        evaluation_id = "fixture-evaluation"
+        disposition = "behaviorally_improved_but_incomplete"
+
+        def as_dict(self):
+            return {
+                "evaluation_id": self.evaluation_id,
+                "disposition": self.disposition,
+                "promotion_eligible": False,
+                "case_ids": ("grammar-held-out",),
+                "content_case_results": (),
+            }
+
+    import orchestration.runtime.developmental_learning as developmental_learning
+
+    counts = {"learner": 0, "evaluator": 0}
+
+    def fake_execute(*args, **kwargs):
+        counts["learner"] += 1
+        return Attempt()
+
+    def fake_evaluate(*args, **kwargs):
+        counts["evaluator"] += 1
+        return Evaluation()
+
+    monkeypatch.setattr(developmental_learning, "execute_learning_attempt", fake_execute)
+    monkeypatch.setattr(developmental_learning, "evaluate_learning_attempt", fake_evaluate)
+
+    executed = execute_persistent_sealed_evaluation(runtime_root=tmp_path, request_id=pending["request_id"])
+    final = initialize_runtime(runtime_root=tmp_path)
+    final_goal = final["goals"][0]
+
+    assert executed["disposition"] == "candidate_revision_required"
+    assert counts == {"learner": 1, "evaluator": 1}
+    assert final_goal["pending_evaluator_authority"]["status"] == "behavioral_evaluation_complete"
+    assert final_goal["state"] == "queued"
+    assert final_goal["blocker"] == ""
+    assert len(final_goal["learning_attempts"]) == 1
+    assert len(final_goal["behavioral_evaluations"]) == 1
 
 
 def test_explicit_persistence_recovery_preserves_digest_only_history_and_creates_new_authority(tmp_path):

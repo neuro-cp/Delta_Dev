@@ -948,6 +948,24 @@ def _persistent_disposition(*, candidate: Mapping[str, Any], evaluation: Mapping
     return ("conceptual_knowledge_update", {"evaluation_passed": True, "sensitive": False, "functional": False, "reason": "scoped_conceptual_behavior_without_runtime_or_authority_mutation"})
 
 
+def _apply_post_behavioral_evaluation_goal_state(goal: Mapping[str, Any], disposition: str) -> dict[str, Any]:
+    updated = dict(goal)
+    if disposition == "candidate_revision_required":
+        queued = any(str(node.get("state") or "") == "queued" for node in updated.get("work_nodes") or ())
+        updated["state"] = "queued" if queued else "development_route_exhausted"
+        updated["blocker"] = "" if queued else "all_unique_development_routes_exhausted_after_evaluation"
+    elif disposition == "conceptual_knowledge_update":
+        updated["state"] = "developmental_evidence_validated"
+        updated["blocker"] = "tier_a_conceptual_knowledge_update_pending"
+    elif disposition == "functional_capability_proposal":
+        updated["state"] = "blocked_operator_authority"
+        updated["blocker"] = "tier_b_functional_adaptation_proposal_required"
+    elif disposition == "sensitive_capability_review_required":
+        updated["state"] = "blocked_operator_authority"
+        updated["blocker"] = "tier_c_sensitive_authority_request_required"
+    return updated
+
+
 def compile_sealed_case_execution_view(*, sealed_package: Mapping[str, Any], sealed_package_digest: str) -> dict[str, Any]:
     """Create the sole read-only V3-to-learning selector compatibility boundary."""
     cases = []
@@ -1965,6 +1983,7 @@ def execute_persistent_sealed_evaluation(*, runtime_root: Path, request_id: str,
         updated_goal["scoped_developmental_competence"] = {"candidate_id": candidate["candidate_id"], "evaluation_id": evaluation.evaluation_id, "scope_limits": candidate.get("unresolved_limits") or (), "capability_promotion": False, "trusted_admission": False}
     elif disposition == "candidate_revision_required":
         updated_goal["work_nodes"] = _expand_work_nodes({**updated_goal, "work_nodes": tuple({**dict(node), "state": "exhausted" if str(node.get("node_id")) == claim.get("work_node_id") else node.get("state")} for node in updated_goal.get("work_nodes") or ())})
+    updated_goal = _apply_post_behavioral_evaluation_goal_state(updated_goal, disposition)
     goals = [updated_goal if item.get("goal_id") == goal["goal_id"] else item for item in state.get("goals") or ()]
     _checkpoint(state={**state, "goals": tuple(goals), "active_goal_id": "", "active_work_item": {}, "lifecycle_state": "ready"}, runtime_root=runtime_root, reason="persistent_sealed_evaluation_and_disposition_completed")
     return {"claim": claim, "attempt": attempt.as_dict(), "evaluation": evaluation.as_dict(), "attempt_artifact": attempt_artifact, "evaluation_artifact": evaluation_artifact, "disposition": disposition, "disposition_reasons": reasons, "retry_authority": retry}
