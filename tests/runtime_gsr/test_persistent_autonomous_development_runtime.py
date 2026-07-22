@@ -32,6 +32,9 @@ from orchestration.runtime.persistent_autonomous_development_runtime import (
     run_until_idle,
     schedule_runtime_wake,
     stop_runtime,
+    _default_public_evidence_resolver,
+    _extract_source_facets,
+    _map_persisted_source_artifact,
 )
 
 
@@ -392,6 +395,68 @@ def test_malformed_or_self_authorizing_provider_response_is_terminal_and_untrust
     assert claim["claim_state"] == "failed"
     assert claim["failure_reason"] == "provider_response_advisory_boundary_invalid"
     assert result["trusted_admissions"] == result["capability_promotions"] == 0
+
+
+def test_python_csv_advisory_routes_to_official_standard_library_docs():
+    goal = {
+        "goal_id": "csv-goal",
+        "topic": "learn to correctly read CSV data in Python using the standard csv module",
+    }
+    advisory = {
+        "search_queries": ("python csv module tutorial",),
+        "source_suggestions": ("Official Python documentation for csv module (https://docs.python.org/3/library/csv.html)",),
+    }
+
+    result = _default_public_evidence_resolver(goal, advisory)
+    candidate = result["evidence"]["candidates"][0]
+
+    assert result["evidence"]["route"] == "python_standard_library_documentation"
+    assert candidate["canonical_locator"] == "https://docs.python.org/3/library/csv.html"
+    assert candidate["source_class"] == "python_standard_library_documentation"
+    assert candidate["evidence_target"] == "csv module"
+
+
+def test_python_docs_html_maps_csv_module_facets_without_header_noise():
+    html = """
+    <html><head><title>csv documentation</title></head><body>
+    <h1>csv -- CSV File Reading and Writing</h1>
+    <p>The csv module implements classes to read and write tabular data in CSV format.</p>
+    <p>Programmers can also describe the CSV formats understood by other applications.</p>
+    </body></html>
+    """
+
+    facets = _extract_source_facets(text=html, evidence_target="csv module")
+
+    assert {item["facet"] for item in facets} == {"definition", "scope_limit"}
+    assert all("<" not in item["text"] for item in facets)
+    assert any("implements classes" in item["text"] for item in facets)
+
+
+def test_persisted_source_mapping_strips_python_docs_html_for_csv_module(tmp_path):
+    source = _write_immutable_artifact(
+        runtime_root=tmp_path,
+        directory=SOURCE_ARTIFACT_DIRECTORY,
+        artifact_id="python-csv-source",
+        payload={
+            "schema": "persistent_source_artifact_v1",
+            "retained_text": """
+            <html><head><title>csv documentation</title></head><body>
+            <p>The csv module implements classes to read and write tabular data in CSV format.</p>
+            <p>Programmers can also describe the CSV formats understood by other applications.</p>
+            </body></html>
+            """,
+        },
+    )
+
+    mapping = _map_persisted_source_artifact(
+        runtime_root=tmp_path,
+        source_artifact=source,
+        evidence_target="csv module",
+        unresolved_facet="definition_and_scope_limit",
+    )
+
+    assert {item["facet"] for item in mapping["accepted_excerpts"]} == {"definition", "scope_limit"}
+    assert all("<" not in item["text"] for item in mapping["accepted_excerpts"])
 
 
 def test_source_body_candidate_has_exact_excerpts_and_sealed_evaluation_before_progress(tmp_path):
