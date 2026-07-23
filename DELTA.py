@@ -28,6 +28,8 @@ LIVE_RUNTIME_2_ROOT = ROOT / ".tmp" / "live-runtime-2-bounded-unattended-v1"
 LIVE_RUNTIME_2_ACCEPTED_ROOT = ROOT / ".tmp" / "live-general-3-approved-learning-v1"
 LIVE_RUNTIME_3_ROOT = ROOT / ".tmp" / "live-runtime-3-interruption-resumption-v1"
 LIVE_RUNTIME_3_ACCEPTED_ROOT = ROOT / ".tmp" / "live-general-3-approved-learning-v1"
+LIVE_RUNTIME_4_ROOT = ROOT / ".tmp" / "live-runtime-4-crash-integrity-v1"
+LIVE_RUNTIME_4_ACCEPTED_ROOT = ROOT / ".tmp" / "live-general-3-approved-learning-v1"
 
 from orchestration.runtime.rc1_operator_console import (  # noqa: E402
     append_observation,
@@ -131,6 +133,12 @@ from orchestration.runtime.live_runtime_3_interruption_resumption import (  # no
     compile_live_runtime_3_unattended_authority,
     prepare_live_runtime_3_mission,
     start_live_runtime_3_process,
+)
+from orchestration.runtime.live_runtime_4_crash_integrity import (  # noqa: E402
+    compile_live_runtime_4_unattended_authority,
+    prepare_live_runtime_4_mission,
+    recover_live_runtime_4_interrupted_runner,
+    start_live_runtime_4_process,
 )
 from orchestration.runtime.local_model_request_result_ledger import LocalModelRequestResultLedger  # noqa: E402
 from orchestration.runtime.continuous_subgoal_executor import execute_continuous_active_subgoal  # noqa: E402
@@ -1512,6 +1520,8 @@ class DeltaApp:
         self.live_runtime_2_process: subprocess.Popen[object] | None = None
         self.live_runtime_3_controller = None
         self.live_runtime_3_process: subprocess.Popen[object] | None = None
+        self.live_runtime_4_controller = None
+        self.live_runtime_4_process: subprocess.Popen[object] | None = None
         self.provider_manager = ProviderManager(keep_loaded=True)
         self.resident_model_id: str | None = None
         self.resident_lane: str | None = None
@@ -1523,6 +1533,7 @@ class DeltaApp:
         self._load_live_runtime_1b_state()
         self._load_live_runtime_2_state()
         self._load_live_runtime_3_state()
+        self._load_live_runtime_4_state()
         self.root.after(50, self._poll_live_runtime_worker_results)
         self._refresh_state_cards()
         self._warm_default_model()
@@ -2465,6 +2476,124 @@ class DeltaApp:
         return (
             "LIVE-RUNTIME-3 bounded unattended runner started from explicit Tk operator command.\n\n"
             f"Process ID: {self.live_runtime_3_process.pid}\n"
+            "Close the Tk window now for the bounded unattended interval."
+        )
+
+    def _live_runtime_4_restart_path(self) -> Path:
+        return LIVE_RUNTIME_4_ROOT / "restart_state.json"
+
+    def _load_live_runtime_4_state(self) -> None:
+        restart_path = self._live_runtime_4_restart_path()
+        if not restart_path.exists():
+            return
+        try:
+            worker_path = LIVE_RUNTIME_4_ROOT / "worker_status.json"
+            if worker_path.exists():
+                worker = json.loads(worker_path.read_text(encoding="utf-8"))
+                if worker.get("worker_state") == "running":
+                    recover_live_runtime_4_interrupted_runner(runtime_root=LIVE_RUNTIME_4_ROOT)
+            restart_state = json.loads(restart_path.read_text(encoding="utf-8"))
+            controller = start_continuous_runtime_controller(session_id=str(restart_state.get("session_id") or "tk-live-runtime-4"), wake_mode="MANUAL")
+            self.live_runtime_4_controller = restore_continuous_mission_restart_state(controller, restart_state)
+            self._sync_live_runtime_4_evaluation_items()
+            stop_path = LIVE_RUNTIME_4_ROOT / "unattended_stop" / "stop.json"
+            if stop_path.exists():
+                stop = json.loads(stop_path.read_text(encoding="utf-8"))
+                self.live_runtime_status.set(f"LIVE-RUNTIME-4: stopped {stop.get('stop_reason')}")
+            else:
+                self.live_runtime_status.set(f"LIVE-RUNTIME-4: {self.live_runtime_4_controller.continuous_mission_state}")
+        except Exception as exc:  # noqa: BLE001 - UI recovery must fail closed.
+            self.live_runtime_4_controller = None
+            self.live_runtime_status.set(f"LIVE-RUNTIME-4 recovery blocked: {type(exc).__name__}: {str(exc)[:160]}")
+
+    def _sync_live_runtime_4_evaluation_items(self) -> None:
+        eval_dir = LIVE_RUNTIME_4_ROOT / "evaluation_ui"
+        runtime_items: list[dict[str, object]] = []
+        if eval_dir.exists():
+            for path in sorted(eval_dir.glob("*.json")):
+                record = json.loads(path.read_text(encoding="utf-8"))
+                runtime_items.append({
+                    "item_type": "live_runtime_4_evaluation",
+                    "title": f"LIVE-RUNTIME-4 {record.get('task_class')}",
+                    "status": str(record.get("terminal_state") or record.get("aggregate_disposition") or "available"),
+                    "boundary": "Crash-safe bounded unattended Evaluation artifact rendered through Tk after recovery.",
+                    "operator_action": "Review only. This display does not authorize source mutation, promotion, deployment, provider access, learning, or another mission.",
+                    "details": record,
+                })
+        self.evaluation_review_items = runtime_items
+        self._refresh_evaluation_snapshot()
+
+    def _live_runtime_4_summary(self) -> str:
+        controller = getattr(self, "live_runtime_4_controller", None)
+        if controller is None:
+            return "LIVE-RUNTIME-4 is not attached."
+        state = dict((controller.continuous_learning_state or {}).get("live_runtime_1") or {})
+        stop_text = ""
+        stop_path = LIVE_RUNTIME_4_ROOT / "unattended_stop" / "stop.json"
+        if stop_path.exists():
+            stop = json.loads(stop_path.read_text(encoding="utf-8"))
+            recovery = dict(stop.get("recovery_classification") or {})
+            recovery_text = f"\nRecovery: {recovery.get('disposition')} / {recovery.get('advancement_id')}" if recovery.get("disposition") else ""
+            stop_text = f"\nStop: {stop.get('stop_reason')} / {stop.get('result_status')}{recovery_text}"
+        return (
+            f"State: {controller.continuous_mission_state}\n"
+            f"Root: {LIVE_RUNTIME_4_ROOT}\n"
+            f"Cycles: {state.get('scheduler_cycles')}\n"
+            f"Mission: {(state.get('mission') or {}).get('mission_id') or 'pending'}\n"
+            f"Work items: {json.dumps(dict(state.get('work_item_status') or {}), sort_keys=True)}\n"
+            f"Evaluation entries: {len(tuple((LIVE_RUNTIME_4_ROOT / 'evaluation_ui').glob('*.json'))) if (LIVE_RUNTIME_4_ROOT / 'evaluation_ui').exists() else 0}\n"
+            f"Counts: {json.dumps(dict(state.get('counts') or {}), sort_keys=True, default=str)}"
+            f"{stop_text}"
+        )
+
+    def _prepare_live_runtime_4_from_ui(self) -> str:
+        if LIVE_RUNTIME_4_ROOT.exists() and self._live_runtime_4_restart_path().exists():
+            self._load_live_runtime_4_state()
+            return "LIVE-RUNTIME-4 already has persisted state. No second mission was started.\n\n" + self._live_runtime_4_summary()
+        self.live_runtime_4_controller = prepare_live_runtime_4_mission(
+            runtime_root=LIVE_RUNTIME_4_ROOT,
+            accepted_competence_root=LIVE_RUNTIME_4_ACCEPTED_ROOT,
+            reset=True,
+        )
+        self._sync_live_runtime_4_evaluation_items()
+        self.live_runtime_status.set("LIVE-RUNTIME-4: graph registered awaiting first authority")
+        return "LIVE-RUNTIME-4 mission approved and graph registered through Tk.\n\n" + self._live_runtime_4_summary()
+
+    def _authorize_live_runtime_4_from_ui(self, generation: int) -> str:
+        controller = getattr(self, "live_runtime_4_controller", None)
+        if controller is None:
+            self._load_live_runtime_4_state()
+            controller = getattr(self, "live_runtime_4_controller", None)
+        if controller is None:
+            return "LIVE-RUNTIME-4 cannot authorize unattended mode: no mission graph is registered."
+        authority = compile_live_runtime_4_unattended_authority(
+            controller,
+            runtime_root=LIVE_RUNTIME_4_ROOT,
+            generation=generation,
+            max_cycles=8,
+        )
+        self.live_runtime_status.set(f"LIVE-RUNTIME-4: authority {generation} accepted")
+        return (
+            f"LIVE-RUNTIME-4 authority {generation} accepted.\n\n"
+            f"Authority: {authority['authority_id']}\n"
+            f"Digest: {authority['artifact_digest']}\n"
+            f"Allowed work items: {json.dumps(tuple(authority['allowed_work_item_ids']))}\n"
+            "Limits: one mission, eight controller advances, 10 minutes, provider budget 0, learning disabled, network disabled, mutation disabled, deployment disabled."
+        )
+
+    def _start_live_runtime_4_from_ui(self, *, crash_after_prepared: bool = False) -> str:
+        if not (LIVE_RUNTIME_4_ROOT / "unattended_authority").exists():
+            return "LIVE-RUNTIME-4 cannot start unattended mode: authority record is missing."
+        self.live_runtime_4_process = start_live_runtime_4_process(
+            runtime_root=LIVE_RUNTIME_4_ROOT,
+            python_executable=sys.executable,
+            fault_after_prepared_phase="json_completed" if crash_after_prepared else None,
+        )
+        self.live_runtime_status.set("LIVE-RUNTIME-4: bounded unattended runner started")
+        mode = "crash-injection" if crash_after_prepared else "resumption"
+        return (
+            f"LIVE-RUNTIME-4 {mode} bounded unattended runner started from explicit Tk operator command.\n\n"
+            f"Process ID: {self.live_runtime_4_process.pid}\n"
             "Close the Tk window now for the bounded unattended interval."
         )
 
@@ -3552,6 +3681,50 @@ class DeltaApp:
             self._append_session("user", message)
             self._load_live_runtime_3_state()
             reply = self._live_runtime_3_summary()
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            self._refresh_state_cards()
+            return
+        if lower == "prepare live runtime 4 crash mission":
+            self._append_session("user", message)
+            reply = self._prepare_live_runtime_4_from_ui()
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            self._refresh_state_cards()
+            return
+        if lower == "authorize first bounded unattended live runtime 4":
+            self._append_session("user", message)
+            reply = self._authorize_live_runtime_4_from_ui(1)
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            self._refresh_state_cards()
+            return
+        if lower == "start crash bounded unattended live runtime 4":
+            self._append_session("user", message)
+            reply = self._start_live_runtime_4_from_ui(crash_after_prepared=True)
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            self._refresh_state_cards()
+            return
+        if lower == "authorize second bounded unattended live runtime 4":
+            self._append_session("user", message)
+            self._load_live_runtime_4_state()
+            reply = self._authorize_live_runtime_4_from_ui(2)
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            self._refresh_state_cards()
+            return
+        if lower == "start bounded unattended live runtime 4":
+            self._append_session("user", message)
+            reply = self._start_live_runtime_4_from_ui()
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            self._refresh_state_cards()
+            return
+        if lower == "live runtime 4 status":
+            self._append_session("user", message)
+            self._load_live_runtime_4_state()
+            reply = self._live_runtime_4_summary()
             self._append_chat("DELTA", reply)
             self._append_session("assistant", reply)
             self._refresh_state_cards()
