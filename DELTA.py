@@ -140,6 +140,19 @@ from orchestration.runtime.live_runtime_4_crash_integrity import (  # noqa: E402
     recover_live_runtime_4_interrupted_runner,
     start_live_runtime_4_process,
 )
+from orchestration.runtime.operator_ux import (  # noqa: E402
+    audit_rc_tabs,
+    compile_formal_operator_response,
+    compile_narration_event,
+    compile_operator_request_card,
+    consume_formal_operator_response,
+    explain_operator_request,
+    goal_card_from_live_runtime_state,
+    human_state_label,
+    narration_from_live_runtime_state,
+    normalize_operator_intent,
+    write_json as write_operator_ux_json,
+)
 from orchestration.runtime.local_model_request_result_ledger import LocalModelRequestResultLedger  # noqa: E402
 from orchestration.runtime.continuous_subgoal_executor import execute_continuous_active_subgoal  # noqa: E402
 from orchestration.runtime.developmental_learning import classify_developmental_instruction  # noqa: E402
@@ -1522,6 +1535,13 @@ class DeltaApp:
         self.live_runtime_3_process: subprocess.Popen[object] | None = None
         self.live_runtime_4_controller = None
         self.live_runtime_4_process: subprocess.Popen[object] | None = None
+        self.operator_ux_root = ROOT / ".tmp" / "operator-ux-1-humanized-runtime-v1"
+        self.active_operator_ux_request: dict[str, object] | None = None
+        self.operator_ux_request_card: dict[str, object] | None = None
+        self.operator_ux_responses: list[dict[str, object]] = []
+        self.operator_ux_consumed_responses: list[dict[str, object]] = []
+        self.operator_ux_narration_events: dict[str, dict[str, object]] = {}
+        self.operator_ux_popup: tk.Toplevel | None = None
         self.provider_manager = ProviderManager(keep_loaded=True)
         self.resident_model_id: str | None = None
         self.resident_lane: str | None = None
@@ -1534,6 +1554,7 @@ class DeltaApp:
         self._load_live_runtime_2_state()
         self._load_live_runtime_3_state()
         self._load_live_runtime_4_state()
+        self._refresh_operator_ux_views()
         self.root.after(50, self._poll_live_runtime_worker_results)
         self._refresh_state_cards()
         self._warm_default_model()
@@ -1547,26 +1568,39 @@ class DeltaApp:
         self.notebook.pack(fill=tk.BOTH, expand=True)
 
         self.conversation_tab = ttk.Frame(self.notebook, padding=10)
+        self.goals_tab = ttk.Frame(self.notebook, padding=10)
+        self.activity_tab = ttk.Frame(self.notebook, padding=10)
         self.database_tab = ttk.Frame(self.notebook, padding=10)
-        self.rc3_tab = ttk.Frame(self.notebook, padding=10)
-        self.rc4_tab = ttk.Frame(self.notebook, padding=10)
-        self.rc5_tab = ttk.Frame(self.notebook, padding=10)
         self.evaluation_tab = ttk.Frame(self.notebook, padding=10)
-        self.advanced_tab = ttk.Frame(self.notebook, padding=10)
+        self.settings_tab = ttk.Frame(self.notebook, padding=10)
+        self.developer_tab = ttk.Frame(self.notebook, padding=10)
+        self.developer_notebook = ttk.Notebook(self.developer_tab)
+        self.developer_notebook.pack(fill=tk.BOTH, expand=True)
+        self.rc3_tab = ttk.Frame(self.developer_notebook, padding=10)
+        self.rc4_tab = ttk.Frame(self.developer_notebook, padding=10)
+        self.rc5_tab = ttk.Frame(self.developer_notebook, padding=10)
+        self.advanced_tab = ttk.Frame(self.developer_notebook, padding=10)
         self.notebook.add(self.conversation_tab, text="Conversation")
-        self.notebook.add(self.database_tab, text="Database")
-        self.notebook.add(self.rc3_tab, text="RC3")
-        self.notebook.add(self.rc4_tab, text="RC4")
-        self.notebook.add(self.rc5_tab, text="RC5")
+        self.notebook.add(self.goals_tab, text="Goals")
+        self.notebook.add(self.activity_tab, text="Activity")
         self.notebook.add(self.evaluation_tab, text="Evaluation")
-        self.notebook.add(self.advanced_tab, text="Advanced / Operator Console")
+        self.notebook.add(self.database_tab, text="Memory")
+        self.notebook.add(self.settings_tab, text="Settings")
+        self.notebook.add(self.developer_tab, text="Developer")
+        self.developer_notebook.add(self.rc3_tab, text="RC3")
+        self.developer_notebook.add(self.rc4_tab, text="RC4")
+        self.developer_notebook.add(self.rc5_tab, text="RC5")
+        self.developer_notebook.add(self.advanced_tab, text="Diagnostics")
 
         self._build_conversation_tab()
+        self._build_goals_tab()
+        self._build_activity_tab()
+        self._build_evaluation_tab()
         self._build_database_tab()
+        self._build_settings_tab()
         self._build_rc3_tab()
         self._build_rc4_tab()
         self._build_rc5_tab()
-        self._build_evaluation_tab()
         self._build_advanced_tab()
 
     def _build_conversation_tab(self) -> None:
@@ -1596,7 +1630,7 @@ class DeltaApp:
         self.mode.set("Conversation")
         self.mode.pack(side=tk.LEFT, padx=(6, 10))
         ttk.Checkbutton(mode_bar, text="Developer Overlay", variable=self.developer_overlay_enabled).pack(side=tk.LEFT)
-        ttk.Button(mode_bar, text="Advanced Operator Console", command=lambda: self.notebook.select(self.advanced_tab)).pack(side=tk.RIGHT)
+        ttk.Button(mode_bar, text="Advanced Operator Console", command=self._open_developer_diagnostics).pack(side=tk.RIGHT)
 
         live_bar = ttk.Frame(self.conversation_tab)
         live_bar.pack(fill=tk.X, pady=(8, 0))
@@ -1625,7 +1659,7 @@ class DeltaApp:
         ttk.Button(memory_bar, text="Reject Selected Concept", command=self._reject_selected_concept).pack(side=tk.LEFT, padx=(8, 0))
         ttk.Button(memory_bar, text="Inspect Selected Concept", command=self._inspect_selected_concept).pack(side=tk.LEFT, padx=(8, 0))
         ttk.Button(memory_bar, text="Clear Local Memory Store", command=self._clear_local_store).pack(side=tk.LEFT, padx=(8, 0))
-        ttk.Button(memory_bar, text="Open Operator Console", command=lambda: self.notebook.select(self.advanced_tab)).pack(side=tk.RIGHT)
+        ttk.Button(memory_bar, text="Open Operator Console", command=self._open_developer_diagnostics).pack(side=tk.RIGHT)
 
         review = ttk.LabelFrame(self.conversation_tab, text="Concept Review")
         review.pack(fill=tk.X, pady=(8, 0))
@@ -1643,6 +1677,352 @@ class DeltaApp:
             text="Default mode is natural conversation. Possible concepts appear in Concept Review and are stored only if you press Accept.",
         )
         hint.pack(anchor=tk.W, pady=(6, 0))
+
+    def _open_developer_diagnostics(self) -> None:
+        self.notebook.select(self.developer_tab)
+        self.developer_notebook.select(self.advanced_tab)
+
+    def _build_goals_tab(self) -> None:
+        top = ttk.Frame(self.goals_tab)
+        top.pack(fill=tk.X)
+        ttk.Label(top, text="Goals").pack(side=tk.LEFT)
+        ttk.Button(top, text="Refresh", command=self._refresh_operator_ux_views).pack(side=tk.RIGHT)
+
+        self.goals_status = tk.StringVar(value="Human-facing goal cards. Technical identifiers are hidden until View technical details.")
+        ttk.Label(self.goals_tab, textvariable=self.goals_status).pack(anchor=tk.W, pady=(8, 0))
+
+        panes = ttk.PanedWindow(self.goals_tab, orient=tk.HORIZONTAL)
+        panes.pack(fill=tk.BOTH, expand=True, pady=(8, 0))
+        left = ttk.Frame(panes)
+        right = ttk.Frame(panes)
+        panes.add(left, weight=1)
+        panes.add(right, weight=3)
+
+        self.goal_cards = ttk.Treeview(left, columns=("state", "progress"), show="headings", height=14)
+        self.goal_cards.heading("state", text="State")
+        self.goal_cards.heading("progress", text="Progress")
+        self.goal_cards.column("state", width=180)
+        self.goal_cards.column("progress", width=100, anchor=tk.CENTER)
+        self.goal_cards.pack(fill=tk.BOTH, expand=True)
+        self.goal_cards.bind("<<TreeviewSelect>>", lambda _event: self._show_selected_goal_card())
+
+        controls = ttk.Frame(right)
+        controls.pack(fill=tk.X, pady=(0, 6))
+        ttk.Button(controls, text="Approve next step", command=lambda: self._handle_operator_ux_button("approve")).pack(side=tk.LEFT)
+        ttk.Button(controls, text="Decline next step", command=lambda: self._handle_operator_ux_button("decline")).pack(side=tk.LEFT, padx=(6, 0))
+        ttk.Button(controls, text="Explain", command=lambda: self._handle_operator_ux_button("explain")).pack(side=tk.LEFT, padx=(6, 0))
+        ttk.Button(controls, text="Change limits", command=lambda: self._handle_operator_ux_button("change_limits")).pack(side=tk.LEFT, padx=(6, 0))
+        ttk.Button(controls, text="Pause", command=lambda: self._handle_operator_ux_button("pause")).pack(side=tk.LEFT, padx=(6, 0))
+        ttk.Button(controls, text="View technical details", command=self._show_operator_ux_technical_details).pack(side=tk.LEFT, padx=(6, 0))
+
+        self.goal_detail = scrolledtext.ScrolledText(right, wrap=tk.WORD)
+        self.goal_detail.pack(fill=tk.BOTH, expand=True)
+        self.goal_detail.configure(state=tk.DISABLED)
+        self.operator_ux_goal_cards: dict[str, dict[str, object]] = {}
+
+    def _build_activity_tab(self) -> None:
+        top = ttk.Frame(self.activity_tab)
+        top.pack(fill=tk.X)
+        ttk.Label(top, text="Activity").pack(side=tk.LEFT)
+        ttk.Button(top, text="Refresh", command=self._refresh_operator_ux_views).pack(side=tk.RIGHT)
+        self.activity_status = tk.StringVar(value="Concise runtime narration rebuilt from persisted transitions.")
+        ttk.Label(self.activity_tab, textvariable=self.activity_status).pack(anchor=tk.W, pady=(8, 0))
+        self.activity_items = ttk.Treeview(self.activity_tab, columns=("message", "status"), show="headings", height=18)
+        self.activity_items.heading("message", text="Message")
+        self.activity_items.heading("status", text="Status")
+        self.activity_items.column("message", width=720)
+        self.activity_items.column("status", width=140)
+        self.activity_items.pack(fill=tk.BOTH, expand=True, pady=(8, 0))
+
+    def _build_settings_tab(self) -> None:
+        ttk.Label(self.settings_tab, text="Settings").pack(anchor=tk.W)
+        ttk.Label(
+            self.settings_tab,
+            text=(
+                "Developer diagnostics are available in the Developer tab. "
+                "Normal operation uses Conversation, Goals, Activity, Evaluation, and Memory."
+            ),
+            wraplength=900,
+        ).pack(anchor=tk.W, pady=(8, 0))
+
+    def _operator_ux_current_runtime_state(self) -> dict[str, object]:
+        for root in (LIVE_RUNTIME_4_ROOT, LIVE_RUNTIME_3_ROOT, LIVE_RUNTIME_2_ROOT, LIVE_RUNTIME_1B_ROOT):
+            restart = root / "restart_state.json"
+            if restart.exists():
+                try:
+                    state = json.loads(restart.read_text(encoding="utf-8"))
+                    runtime_state = dict(dict(state.get("continuous_learning_state") or {}).get("live_runtime_1") or {})
+                    if runtime_state:
+                        return runtime_state
+                except (OSError, json.JSONDecodeError):
+                    continue
+        return {}
+
+    def _persist_operator_ux_record(self, directory: str, artifact_id: str, payload: dict[str, object]) -> None:
+        write_operator_ux_json(self.operator_ux_root / directory / f"{artifact_id}.json", payload)
+
+    def _load_operator_ux_state(self) -> None:
+        request_dir = self.operator_ux_root / "requests"
+        response_dir = self.operator_ux_root / "responses"
+        consumed_dir = self.operator_ux_root / "consumed_responses"
+        active: dict[str, object] | None = None
+        if request_dir.exists():
+            requests = [json.loads(path.read_text(encoding="utf-8")) for path in sorted(request_dir.glob("*.json"))]
+            consumed_request_ids = {
+                str(json.loads(path.read_text(encoding="utf-8")).get("request_id") or "")
+                for path in sorted(consumed_dir.glob("*.json"))
+            } if consumed_dir.exists() else set()
+            for request in requests:
+                if str(request.get("request_id") or "") not in consumed_request_ids:
+                    active = request
+        self.active_operator_ux_request = active
+        if active:
+            self.operator_ux_request_card = compile_operator_request_card(active)
+        else:
+            self.operator_ux_request_card = None
+        self.operator_ux_responses = [
+            json.loads(path.read_text(encoding="utf-8"))
+            for path in sorted(response_dir.glob("*.json"))
+        ] if response_dir.exists() else []
+        self.operator_ux_consumed_responses = [
+            json.loads(path.read_text(encoding="utf-8"))
+            for path in sorted(consumed_dir.glob("*.json"))
+        ] if consumed_dir.exists() else []
+        narration_dir = self.operator_ux_root / "narration"
+        if narration_dir.exists():
+            for path in sorted(narration_dir.glob("*.json")):
+                event = json.loads(path.read_text(encoding="utf-8"))
+                self.operator_ux_narration_events[str(event.get("event_id") or path.stem)] = event
+
+    def _refresh_operator_ux_views(self) -> None:
+        self._load_operator_ux_state()
+        state = self._operator_ux_current_runtime_state()
+        cards: dict[str, dict[str, object]] = {}
+        if state:
+            card = goal_card_from_live_runtime_state(state)
+            cards[str(card["goal_id"])] = card
+            for event in narration_from_live_runtime_state(state):
+                self.operator_ux_narration_events.setdefault(str(event["event_id"]), event)
+        if self.active_operator_ux_request:
+            request = self.active_operator_ux_request
+            card = {
+                "goal_id": str(request.get("goal_id") or request["request_id"]),
+                "title": str(request.get("goal_title") or "Operator decision"),
+                "objective": str(request.get("what_delta_wants") or "Review the active request."),
+                "state": "Waiting for you",
+                "progress_completed": 0,
+                "progress_total": 1,
+                "current_activity": "I need your approval",
+                "next_expected_action": "Approve, decline, explain, or pause",
+                "unresolved_issue": str(request.get("missing_information_or_capability") or ""),
+                "capability_source": str(request.get("capability_source") or "Governed operator decision"),
+                "technical_details_hidden": True,
+            }
+            cards[str(card["goal_id"])] = card
+        self.operator_ux_goal_cards = cards
+        if hasattr(self, "goal_cards"):
+            for item in self.goal_cards.get_children():
+                self.goal_cards.delete(item)
+            for goal_id, card in cards.items():
+                progress = f"{card.get('progress_completed', 0)} of {card.get('progress_total', 0)}"
+                self.goal_cards.insert("", tk.END, iid=goal_id, values=(card.get("state", ""), progress))
+            if cards:
+                first = next(iter(cards))
+                self.goal_cards.selection_set(first)
+                self._show_selected_goal_card()
+        if hasattr(self, "activity_items"):
+            for item in self.activity_items.get_children():
+                self.activity_items.delete(item)
+            for event in sorted(self.operator_ux_narration_events.values(), key=lambda item: str(item.get("event_id"))):
+                self.activity_items.insert("", tk.END, iid=str(event["event_id"]), values=(event.get("message", ""), human_state_label(str(event.get("event_type") or ""))))
+
+    def _show_selected_goal_card(self) -> None:
+        selected = self.goal_cards.selection()
+        if not selected:
+            return
+        card = self.operator_ux_goal_cards.get(str(selected[0]), {})
+        lines = [
+            str(card.get("title") or "Goal"),
+            "",
+            f"State: {card.get('state')}",
+            f"Objective: {card.get('objective')}",
+            f"Progress: {card.get('progress_completed', 0)} of {card.get('progress_total', 0)} tasks complete",
+            f"Current activity: {card.get('current_activity')}",
+            f"Next: {card.get('next_expected_action')}",
+            f"Unresolved issue: {card.get('unresolved_issue') or 'None'}",
+            f"Capability source: {card.get('capability_source')}",
+            "",
+            "Technical details are hidden by default. Use View technical details if needed.",
+        ]
+        if self.operator_ux_request_card:
+            request = self.operator_ux_request_card
+            lines.extend([
+                "",
+                "I need your approval",
+                str(request.get("what_delta_wants")),
+                "",
+                f"Why: {request.get('why')}",
+                f"Will inspect: {', '.join(request.get('files_or_resources') or ()) or 'No files listed'}",
+                f"May change: {request.get('may_change')}",
+                f"Provider/network: {request.get('provider_or_network_use')}",
+                f"Learning attempts: {request.get('learning_attempts')}",
+                f"Recommended: {request.get('recommended_action')}",
+                f"If declined: {request.get('if_declined')}",
+                "",
+                "Buttons: Approve, Decline, Explain, Change limits, Pause goal",
+            ])
+        self.goal_detail.configure(state=tk.NORMAL)
+        self.goal_detail.delete("1.0", tk.END)
+        self.goal_detail.insert(tk.END, "\n".join(lines))
+        self.goal_detail.configure(state=tk.DISABLED)
+
+    def _show_operator_ux_technical_details(self) -> None:
+        details = {
+            "active_request": self.active_operator_ux_request,
+            "request_card": self.operator_ux_request_card,
+            "responses": self.operator_ux_responses,
+            "consumed_responses": self.operator_ux_consumed_responses,
+            "rc_tab_audit": audit_rc_tabs(),
+        }
+        self.goal_detail.configure(state=tk.NORMAL)
+        self.goal_detail.delete("1.0", tk.END)
+        self.goal_detail.insert(tk.END, json.dumps(details, indent=2, sort_keys=True, default=str))
+        self.goal_detail.configure(state=tk.DISABLED)
+
+    def _show_operator_ux_popup(self) -> None:
+        if not self.operator_ux_request_card:
+            return
+        if self.operator_ux_popup is not None and self.operator_ux_popup.winfo_exists():
+            self.operator_ux_popup.lift()
+            return
+        card = self.operator_ux_request_card
+        popup = tk.Toplevel(self.root)
+        popup.title(str(card.get("title") or "I need your approval"))
+        popup.geometry("620x420")
+        popup.protocol("WM_DELETE_WINDOW", popup.destroy)
+        self.operator_ux_popup = popup
+        frame = ttk.Frame(popup, padding=12)
+        frame.pack(fill=tk.BOTH, expand=True)
+        ttk.Label(frame, text=str(card.get("title") or "I need your approval"), font=("Segoe UI", 12, "bold")).pack(anchor=tk.W)
+        text = scrolledtext.ScrolledText(frame, wrap=tk.WORD, height=14)
+        text.pack(fill=tk.BOTH, expand=True, pady=(8, 8))
+        text.insert(
+            tk.END,
+            "\n".join([
+                str(card.get("what_delta_wants")),
+                "",
+                f"Why: {card.get('why')}",
+                f"Missing: {card.get('missing_information_or_capability')}",
+                f"Will inspect: {', '.join(card.get('files_or_resources') or ()) or 'No files listed'}",
+                f"May change: {card.get('may_change')}",
+                f"Provider/network: {card.get('provider_or_network_use')}",
+                f"Learning attempts: {card.get('learning_attempts')}",
+                f"Recommended: {card.get('recommended_action')}",
+                f"If declined: {card.get('if_declined')}",
+            ]),
+        )
+        text.configure(state=tk.DISABLED)
+        buttons = ttk.Frame(frame)
+        buttons.pack(fill=tk.X)
+        ttk.Button(buttons, text="Approve", command=lambda: self._handle_operator_ux_button("approve")).pack(side=tk.LEFT)
+        ttk.Button(buttons, text="Decline", command=lambda: self._handle_operator_ux_button("decline")).pack(side=tk.LEFT, padx=(6, 0))
+        ttk.Button(buttons, text="Explain", command=lambda: self._handle_operator_ux_button("explain")).pack(side=tk.LEFT, padx=(6, 0))
+        ttk.Button(buttons, text="Change limits", command=lambda: self._handle_operator_ux_button("change_limits")).pack(side=tk.LEFT, padx=(6, 0))
+        ttk.Button(buttons, text="Pause goal", command=lambda: self._handle_operator_ux_button("pause")).pack(side=tk.LEFT, padx=(6, 0))
+
+    def _create_operator_ux_demo_request(self) -> dict[str, object]:
+        request = {
+            "schema": "operator_ux_demo_request_v1",
+            "request_id": "operator-ux-demo-request-reconciliation",
+            "goal_id": "operator-ux-demo-goal",
+            "goal_title": "Compare customer records",
+            "title": "I need your approval",
+            "what_delta_wants": "Try one bounded reconciliation step for the current disposable CSV and JSON records.",
+            "why": "The report is more useful if matching records across formats can be checked before final synthesis.",
+            "missing_information_or_capability": "A safe record-reconciliation decision for this branch.",
+            "files_or_resources": ("current disposable CSV fixture", "current disposable JSON fixture"),
+            "may_change": "Only disposable operator-UX records under .tmp/operator-ux-1-humanized-runtime-v1.",
+            "provider_or_network_use": "No provider calls and no network expansion.",
+            "learning_attempts": 0,
+            "limits": {"controller_cycles": 0, "provider_calls": 0, "network": False, "source_mutation": False},
+            "recommended_action": "Approve",
+            "if_declined": "The goal remains paused and no reconciliation step is authorized.",
+            "mission_id": "operator-ux-demo-mission",
+            "work_item_id": "operator-ux-demo-work-item",
+            "authority_id": "operator-ux-demo-authority",
+            "authority_digest": "hidden-in-normal-view",
+            "approval_token": "operator-ux-demo-token",
+            "created_at": "2026-07-22T00:00:00+00:00",
+        }
+        request = compile_operator_request_card(request) | {key: value for key, value in request.items() if key not in {"artifact_digest"}}
+        request["artifact_digest"] = compile_operator_request_card(request)["artifact_digest"]
+        self.active_operator_ux_request = request
+        self.operator_ux_request_card = compile_operator_request_card(request)
+        self._persist_operator_ux_record("requests", str(request["request_id"]), request)
+        event = compile_narration_event(
+            mission_id=str(request["mission_id"]),
+            work_item_id=str(request["work_item_id"]),
+            phase="approval_requested",
+            event_type="approval_needed",
+            message="I need your approval before continuing this bounded step.",
+            source_artifact=str(request["artifact_digest"]),
+        )
+        self.operator_ux_narration_events[str(event["event_id"])] = event
+        self._persist_operator_ux_record("narration", str(event["event_id"]), event)
+        self._show_operator_ux_popup()
+        return request
+
+    def _handle_operator_ux_button(self, intent: str) -> None:
+        if not self.active_operator_ux_request:
+            self._append_chat("DELTA", "There is no active approval request right now.")
+            return
+        if intent == "explain":
+            self._append_chat("DELTA", explain_operator_request(self.active_operator_ux_request))
+            return
+        if intent == "change_limits":
+            self._append_chat("DELTA", "For this gate, provider calls, network, deployment, credentials, and source mutation stay disabled. I can create a revised bounded request later.")
+            return
+        synthetic = {"intent": intent, "raw_text": intent, "normalized_text": intent, "requires_clarification": False}
+        self._consume_operator_ux_intent(synthetic, response_source=f"button:{intent}")
+
+    def _consume_operator_ux_intent(self, intent: dict[str, object], *, response_source: str) -> bool:
+        request = self.active_operator_ux_request
+        if not request:
+            return False
+        if intent.get("intent") == "explain":
+            self._append_chat("DELTA", explain_operator_request(request))
+            return True
+        if intent.get("intent") == "ambiguous":
+            self._append_chat("DELTA", "I'm not sure whether you are approving this action. Approve or decline?")
+            return True
+        response = compile_formal_operator_response(request, intent, response_source=response_source)
+        consumed = consume_formal_operator_response(response)
+        self.operator_ux_responses.append(response)
+        self.operator_ux_consumed_responses.append(consumed)
+        self._persist_operator_ux_record("responses", str(response["response_id"]), response)
+        self._persist_operator_ux_record("consumed_responses", str(consumed["consumption_id"]), consumed)
+        self.active_operator_ux_request = None
+        self.operator_ux_request_card = None
+        if self.operator_ux_popup is not None and self.operator_ux_popup.winfo_exists():
+            self.operator_ux_popup.destroy()
+        message = {
+            "approve": "Approval received. I'm resuming the bounded step.",
+            "decline": "Declined. I will leave this branch paused without authorizing the step.",
+            "pause": "Paused. I will wait before continuing this goal.",
+        }.get(str(intent.get("intent")), "Response recorded.")
+        event = compile_narration_event(
+            mission_id=str(request.get("mission_id") or ""),
+            work_item_id=str(request.get("work_item_id") or ""),
+            phase="operator_response_consumed",
+            event_type="resumed" if intent.get("intent") == "approve" else "waiting",
+            message=message,
+            source_artifact=str(consumed["artifact_digest"]),
+        )
+        self.operator_ux_narration_events[str(event["event_id"])] = event
+        self._persist_operator_ux_record("narration", str(event["event_id"]), event)
+        self._append_chat("DELTA", message)
+        self._refresh_operator_ux_views()
+        return True
 
     def _build_database_tab(self) -> None:
         top = ttk.Frame(self.database_tab)
@@ -3557,6 +3937,21 @@ class DeltaApp:
         self.chat_input.delete(0, tk.END)
         self._append_chat("You", message)
         lower = message.lower().strip()
+        if getattr(self, "active_operator_ux_request", None):
+            intent = normalize_operator_intent(message)
+            if self._consume_operator_ux_intent(intent, response_source="conversation"):
+                self._refresh_state_cards()
+                return
+        if lower == "create operator ux demo goal":
+            request = self._create_operator_ux_demo_request()
+            self._append_chat("DELTA", "I created a demo goal and need your approval before the next bounded step.")
+            self._refresh_operator_ux_views()
+            self._refresh_state_cards()
+            return
+        if lower == "operator ux status":
+            self._refresh_operator_ux_views()
+            self._append_chat("DELTA", f"Operator UX active request: {'yes' if self.active_operator_ux_request else 'no'}. Goals: {len(self.operator_ux_goal_cards)}.")
+            return
         cancel_words = {"no", "n", "not now", "no thanks", "keep chatting", "nevermind", "never mind", "cancel", "stop", "forget it"}
         affirm_words = {"yes", "y", "yes please", "sure", "okay", "ok", "go ahead", "do it", "tell me more", "more", "go deeper"}
         discourse_frame = build_discourse_frame(message, self.last_report_inspection)
