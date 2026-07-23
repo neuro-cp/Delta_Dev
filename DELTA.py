@@ -151,6 +151,14 @@ from orchestration.runtime.autonomy_goal_prioritization import (  # noqa: E402
     persist_prioritization,
     persist_selection as persist_autonomy_2_selection,
 )
+from orchestration.runtime.autonomy_goal_queue_planning import (  # noqa: E402
+    AUTONOMY_3_ROOT,
+    approve_plan_for_future_execution,
+    compile_plan_proposal,
+    compile_plan_review_request,
+    normalize_plan_feedback,
+    select_goal_for_planning,
+)
 from orchestration.runtime.operator_ux import (  # noqa: E402
     audit_rc_tabs,
     compile_formal_operator_response,
@@ -2050,12 +2058,74 @@ class DeltaApp:
         self._show_operator_ux_popup()
         return result
 
+    def _plan_autonomy_3_next_goal(self) -> dict[str, object]:
+        goal_dir = self.operator_ux_root / "approved_goals"
+        goals: list[dict[str, object]] = []
+        if goal_dir.exists():
+            for path in sorted(goal_dir.glob("*.json")):
+                try:
+                    record = json.loads(path.read_text(encoding="utf-8"))
+                except (OSError, json.JSONDecodeError):
+                    continue
+                if record.get("schema") == "autonomy_3_goal_queue_record_v1":
+                    goals.append(record)
+                elif record.get("schema") in {"autonomy_2_queued_goal_record_v1", "autonomy_1_approved_goal_record_v1"}:
+                    condition = str(record.get("selected_condition_key") or record.get("goal_id") or "queued_goal")
+                    goals.append({
+                        "schema": "autonomy_3_goal_queue_record_v1",
+                        "goal_id": str(record.get("selected_candidate_id") or record.get("goal_id") or path.stem),
+                        "artifact_digest": str(record.get("artifact_digest") or path.stem),
+                        "selected_candidate_id": str(record.get("selected_candidate_id") or record.get("goal_id") or ""),
+                        "selected_candidate_digest": str(record.get("selected_candidate_digest") or record.get("request_digest") or ""),
+                        "ranking_id": str(record.get("ranking_id") or ""),
+                        "ranking_digest": str(record.get("ranking_digest") or ""),
+                        "title": condition.replace("_", " ").title(),
+                        "objective": f"Improve {condition.replace('_', ' ')}.",
+                        "normalized_objective": " ".join(f"Improve {condition.replace('_', ' ')}.".lower().split()),
+                        "condition_key": condition,
+                        "source_artifact_ids": (),
+                        "source_artifact_digests": (),
+                        "prerequisites": ("retained evidence", "validator design"),
+                        "missing_prerequisites": (),
+                        "authority_requirements": (),
+                        "current_queue_state": "queued" if record.get("status") in {"queued", "approved_queued_for_future_planning"} else str(record.get("status") or "queued"),
+                        "priority": 1,
+                        "execution_started": False,
+                        "learning_started": False,
+                        "trusted": False,
+                        "promoted": False,
+                    })
+        selected = select_goal_for_planning(goals)
+        if not selected:
+            self._append_chat("DELTA", "I did not find an eligible queued goal to plan.")
+            return {"status": "no_eligible_goal"}
+        plan = compile_plan_proposal(selected)
+        request = compile_plan_review_request(plan)
+        self._persist_operator_ux_record("autonomy_3_plans", str(plan["plan_id"]), plan)
+        self.active_operator_ux_request = request
+        self.operator_ux_request_card = compile_operator_request_card(request)
+        self._persist_operator_ux_record("requests", str(request["request_id"]), request)
+        event = compile_narration_event(
+            mission_id=str(plan["plan_id"]),
+            work_item_id=str(selected["goal_id"]),
+            phase="goal_planning",
+            event_type="plan_waiting_for_review",
+            message=f"I created a {len(tuple(plan.get('proposed_work_items') or ())) }-step plan and defined validation before execution.",
+            source_artifact=str(plan["artifact_digest"]),
+        )
+        self.operator_ux_narration_events[str(event["event_id"])] = event
+        self._persist_operator_ux_record("narration", str(event["event_id"]), event)
+        self._show_operator_ux_popup()
+        return {"status": "AUTONOMY_3_PLAN_WAITING_FOR_OPERATOR", "plan": plan, "operator_request": request}
+
     def _handle_operator_ux_button(self, intent: str) -> None:
         if not self.active_operator_ux_request:
             self._append_chat("DELTA", "There is no active approval request right now.")
             return
         if intent == "explain":
-            if self.active_operator_ux_request.get("schema") == "autonomy_2_goal_selection_request_v1":
+            if self.active_operator_ux_request.get("schema") == "autonomy_3_plan_review_request_v1":
+                self._append_chat("DELTA", "The evaluator is defined before execution. Each step has hidden positive, negative, boundary, adversarial, and transfer cases, and approval here does not start the plan.")
+            elif self.active_operator_ux_request.get("schema") == "autonomy_2_goal_selection_request_v1":
                 ranking = {
                     "status": "AUTONOMY_2_GOAL_PRIORITIZATION_RECOMMENDATION",
                     "recommended_candidate": tuple(self.active_operator_ux_request.get("candidates") or ())[0],
@@ -2077,6 +2147,32 @@ class DeltaApp:
             self._append_chat("DELTA", "\n".join(lines))
             return
         if intent == "change_limits":
+            if self.active_operator_ux_request.get("schema") == "autonomy_3_plan_review_request_v1":
+                prior_request = dict(self.active_operator_ux_request)
+                plan_path = self.operator_ux_root / "autonomy_3_plans" / f"{self.active_operator_ux_request.get('plan_id')}.json"
+                plan = json.loads(plan_path.read_text(encoding="utf-8"))
+                goal = {
+                    "goal_id": plan["goal_id"],
+                    "artifact_digest": plan["goal_digest"],
+                    "normalized_objective": plan["normalized_objective"],
+                    "condition_key": self.active_operator_ux_request.get("goal_id", ""),
+                    "current_queue_state": "waiting_for_operator",
+                    "prerequisites": plan.get("required_capabilities") or (),
+                    "missing_prerequisites": plan.get("missing_capabilities") or (),
+                    "source_artifact_digests": plan.get("source_evidence") or (),
+                }
+                revised = compile_plan_proposal(goal, prior_plan=plan, requested_changes=("reduce budget",), budget={"max_work_items": 3}, preference={"priority": "low_cost"})
+                self._persist_operator_ux_record("autonomy_3_plans", str(revised["plan_id"]), revised)
+                revision_intent = {"intent": "pause", "raw_text": "reduce the budget", "normalized_text": "reduce the budget", "requires_clarification": False}
+                response = compile_formal_operator_response(prior_request, revision_intent, response_source="plan_revision_request")
+                consumed = consume_formal_operator_response(response)
+                self._persist_operator_ux_record("responses", str(response["response_id"]), response)
+                self._persist_operator_ux_record("consumed_responses", str(consumed["consumption_id"]), consumed)
+                self.active_operator_ux_request = compile_plan_review_request(revised)
+                self.operator_ux_request_card = compile_operator_request_card(self.active_operator_ux_request)
+                self._persist_operator_ux_record("requests", str(self.active_operator_ux_request["request_id"]), self.active_operator_ux_request)
+                self._append_chat("DELTA", f"I created a lower-budget revised plan and preserved the original: {revised['plan_id']}.")
+                return
             if self.active_operator_ux_request.get("schema") == "autonomy_2_goal_selection_request_v1":
                 ranking = compile_autonomy_2_ranking(
                     evidence_roots=(ROOT / ".tmp" / "autonomy-2-disposable-evidence-v1",),
@@ -2096,6 +2192,34 @@ class DeltaApp:
         request = self.active_operator_ux_request
         if not request:
             return False
+        if request.get("schema") == "autonomy_3_plan_review_request_v1":
+            feedback = normalize_plan_feedback(str(intent.get("raw_text") or intent.get("intent") or ""))
+            if feedback["intent"] == "explain":
+                self._append_chat("DELTA", "This is a proposal-only plan. Validation is defined before execution, and no mission or worker starts from this response.")
+                return True
+            if feedback["requires_clarification"]:
+                self._append_chat("DELTA", "I'm not sure whether you approved, declined, paused, or requested a revision to the plan.")
+                return True
+            plan_path = self.operator_ux_root / "autonomy_3_plans" / f"{request.get('plan_id')}.json"
+            plan = json.loads(plan_path.read_text(encoding="utf-8"))
+            if feedback["intent"] == "revise":
+                self._handle_operator_ux_button("change_limits")
+                return True
+            if feedback["intent"] == "approve":
+                approval = approve_plan_for_future_execution(plan, feedback)
+                self._persist_operator_ux_record("autonomy_3_plan_approvals", str(approval["approval_id"]), approval)
+            formal_intent = {"intent": "approve" if feedback["intent"] == "approve" else "decline" if feedback["intent"] == "decline" else "pause", "raw_text": feedback["raw_text"], "normalized_text": feedback["normalized_text"], "requires_clarification": False}
+            response = compile_formal_operator_response(request, formal_intent, response_source=response_source)
+            consumed = consume_formal_operator_response(response)
+            self._persist_operator_ux_record("responses", str(response["response_id"]), response)
+            self._persist_operator_ux_record("consumed_responses", str(consumed["consumption_id"]), consumed)
+            self.active_operator_ux_request = None
+            self.operator_ux_request_card = None
+            if self.operator_ux_popup is not None and self.operator_ux_popup.winfo_exists():
+                self.operator_ux_popup.destroy()
+            self._append_chat("DELTA", "I recorded the plan decision. No mission, worker, provider call, or learning run has started.")
+            self._refresh_operator_ux_views()
+            return True
         if request.get("schema") == "autonomy_2_goal_selection_request_v1":
             selection = persist_autonomy_2_selection(
                 request=request,
@@ -4132,6 +4256,11 @@ class DeltaApp:
             request = dict(result.get("operator_request") or {})
             if request:
                 self._append_chat("DELTA", str(request.get("title") or "I found several possible next goals"))
+            self._refresh_operator_ux_views()
+            self._refresh_state_cards()
+            return
+        if lower == "plan next queued goal":
+            self._plan_autonomy_3_next_goal()
             self._refresh_operator_ux_views()
             self._refresh_state_cards()
             return
