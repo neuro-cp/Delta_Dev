@@ -140,6 +140,10 @@ from orchestration.runtime.live_runtime_4_crash_integrity import (  # noqa: E402
     recover_live_runtime_4_interrupted_runner,
     start_live_runtime_4_process,
 )
+from orchestration.runtime.autonomy_goal_discovery import (  # noqa: E402
+    AUTONOMY_1_ROOT,
+    persist_autonomy_1_goal_discovery,
+)
 from orchestration.runtime.operator_ux import (  # noqa: E402
     audit_rc_tabs,
     compile_formal_operator_response,
@@ -1711,6 +1715,7 @@ class DeltaApp:
         ttk.Button(controls, text="Approve next step", command=lambda: self._handle_operator_ux_button("approve")).pack(side=tk.LEFT)
         ttk.Button(controls, text="Decline next step", command=lambda: self._handle_operator_ux_button("decline")).pack(side=tk.LEFT, padx=(6, 0))
         ttk.Button(controls, text="Explain", command=lambda: self._handle_operator_ux_button("explain")).pack(side=tk.LEFT, padx=(6, 0))
+        ttk.Button(controls, text="Show alternatives", command=lambda: self._handle_operator_ux_button("show_alternatives")).pack(side=tk.LEFT, padx=(6, 0))
         ttk.Button(controls, text="Change limits", command=lambda: self._handle_operator_ux_button("change_limits")).pack(side=tk.LEFT, padx=(6, 0))
         ttk.Button(controls, text="Pause", command=lambda: self._handle_operator_ux_button("pause")).pack(side=tk.LEFT, padx=(6, 0))
         ttk.Button(controls, text="View technical details", command=self._show_operator_ux_technical_details).pack(side=tk.LEFT, padx=(6, 0))
@@ -1927,6 +1932,7 @@ class DeltaApp:
         ttk.Button(buttons, text="Approve", command=lambda: self._handle_operator_ux_button("approve")).pack(side=tk.LEFT)
         ttk.Button(buttons, text="Decline", command=lambda: self._handle_operator_ux_button("decline")).pack(side=tk.LEFT, padx=(6, 0))
         ttk.Button(buttons, text="Explain", command=lambda: self._handle_operator_ux_button("explain")).pack(side=tk.LEFT, padx=(6, 0))
+        ttk.Button(buttons, text="Show alternatives", command=lambda: self._handle_operator_ux_button("show_alternatives")).pack(side=tk.LEFT, padx=(6, 0))
         ttk.Button(buttons, text="Change limits", command=lambda: self._handle_operator_ux_button("change_limits")).pack(side=tk.LEFT, padx=(6, 0))
         ttk.Button(buttons, text="Pause goal", command=lambda: self._handle_operator_ux_button("pause")).pack(side=tk.LEFT, padx=(6, 0))
 
@@ -1972,12 +1978,55 @@ class DeltaApp:
         self._show_operator_ux_popup()
         return request
 
+    def _discover_autonomy_1_next_goal(self) -> dict[str, object]:
+        evidence_roots = (
+            ROOT / ".tmp" / "live-general-2-dynamic-branch-v1",
+            ROOT / ".tmp" / "live-general-3-approved-learning-v1",
+            ROOT / ".tmp" / "live-runtime-3-interruption-resumption-v1",
+            ROOT / ".tmp" / "live-runtime-4-crash-integrity-v1",
+        )
+        result = persist_autonomy_1_goal_discovery(
+            evidence_roots=evidence_roots,
+            output_root=ROOT / AUTONOMY_1_ROOT,
+        )
+        request = result.get("operator_request")
+        if not request:
+            self._append_chat("DELTA", "I inspected retained runtime evidence and did not find an unresolved development goal to propose.")
+            return result
+        request = dict(request)
+        self.active_operator_ux_request = request
+        self.operator_ux_request_card = compile_operator_request_card(request)
+        self._persist_operator_ux_record("requests", str(request["request_id"]), request)
+        event = compile_narration_event(
+            mission_id=str(request["mission_id"]),
+            work_item_id=str(request["work_item_id"]),
+            phase="goal_discovery",
+            event_type="next_goal_proposed",
+            message="I found a possible next goal from retained runtime evidence.",
+            source_artifact=str(request["artifact_digest"]),
+        )
+        self.operator_ux_narration_events[str(event["event_id"])] = event
+        self._persist_operator_ux_record("narration", str(event["event_id"]), event)
+        self._show_operator_ux_popup()
+        return result
+
     def _handle_operator_ux_button(self, intent: str) -> None:
         if not self.active_operator_ux_request:
             self._append_chat("DELTA", "There is no active approval request right now.")
             return
         if intent == "explain":
             self._append_chat("DELTA", explain_operator_request(self.active_operator_ux_request))
+            return
+        if intent == "show_alternatives":
+            alternatives = tuple(self.active_operator_ux_request.get("alternatives") or ())
+            if not alternatives:
+                self._append_chat("DELTA", "I did not find a grounded alternative goal in the retained evidence.")
+                return
+            lines = ["Grounded alternatives:"]
+            for item in alternatives[:5]:
+                score = dict(item.get("score") or {})
+                lines.append(f"- rank {item.get('rank')}: {item.get('goal')} (score {score.get('total_score')}, status {item.get('status')})")
+            self._append_chat("DELTA", "\n".join(lines))
             return
         if intent == "change_limits":
             self._append_chat("DELTA", "For this gate, provider calls, network, deployment, credentials, and source mutation stay disabled. I can create a revised bounded request later.")
@@ -2005,8 +2054,25 @@ class DeltaApp:
         self.operator_ux_request_card = None
         if self.operator_ux_popup is not None and self.operator_ux_popup.winfo_exists():
             self.operator_ux_popup.destroy()
+        if request.get("schema") == "autonomy_1_goal_approval_request_v1" and intent.get("intent") == "approve":
+            approved_goal = {
+                "schema": "autonomy_1_approved_goal_record_v1",
+                "goal_id": request.get("goal_id"),
+                "request_id": request.get("request_id"),
+                "request_digest": request.get("artifact_digest"),
+                "proposal_id": request.get("proposal_id"),
+                "proposal_digest": request.get("proposal_digest"),
+                "status": "approved_queued_for_future_planning",
+                "execution_started": False,
+                "learning_started": False,
+                "provider_calls": 0,
+                "trusted_admission": False,
+                "capability_promotion": False,
+                "created_at": "2026-07-22T00:00:00+00:00",
+            }
+            self._persist_operator_ux_record("approved_goals", str(request.get("goal_id")), approved_goal)
         message = {
-            "approve": "Approval received. I'm resuming the bounded step.",
+            "approve": "Approval received. I recorded the goal for a later planning gate; no learning or execution has started." if request.get("schema") == "autonomy_1_goal_approval_request_v1" else "Approval received. I'm resuming the bounded step.",
             "decline": "Declined. I will leave this branch paused without authorizing the step.",
             "pause": "Paused. I will wait before continuing this goal.",
         }.get(str(intent.get("intent")), "Response recorded.")
@@ -3951,6 +4017,15 @@ class DeltaApp:
         if lower == "operator ux status":
             self._refresh_operator_ux_views()
             self._append_chat("DELTA", f"Operator UX active request: {'yes' if self.active_operator_ux_request else 'no'}. Goals: {len(self.operator_ux_goal_cards)}.")
+            return
+        if lower == "discover next goal":
+            result = self._discover_autonomy_1_next_goal()
+            proposal = dict(result["proposal"])
+            goal = dict(proposal.get("recommended_goal") or {})
+            if goal:
+                self._append_chat("DELTA", f"I found a possible next goal: {goal.get('goal')}")
+            self._refresh_operator_ux_views()
+            self._refresh_state_cards()
             return
         cancel_words = {"no", "n", "not now", "no thanks", "keep chatting", "nevermind", "never mind", "cancel", "stop", "forget it"}
         affirm_words = {"yes", "y", "yes please", "sure", "okay", "ok", "go ahead", "do it", "tell me more", "more", "go deeper"}

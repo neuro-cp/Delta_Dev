@@ -108,7 +108,7 @@ def compile_operator_request_card(request: Mapping[str, Any]) -> dict[str, Any]:
         "limits": dict(request.get("limits") or {}),
         "recommended_action": str(request.get("recommended_action") or "Approve"),
         "if_declined": str(request.get("if_declined") or "The blocked branch will remain unresolved or be skipped."),
-        "buttons": ("Approve", "Decline", "Explain", "Change limits", "Pause goal"),
+        "buttons": ("Approve goal", "Decline", "Explain", "Show alternatives", "Change limits"),
         "technical_details_hidden": True,
         "technical_details": {
             key: request.get(key)
