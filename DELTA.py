@@ -159,6 +159,21 @@ from orchestration.runtime.autonomy_goal_queue_planning import (  # noqa: E402
     normalize_plan_feedback,
     select_goal_for_planning,
 )
+from orchestration.runtime.autonomy_approved_plan_execution import (  # noqa: E402
+    AUTONOMY_4_ROOT,
+    resume_paused_execution,
+    run_approved_plan_execution,
+)
+from orchestration.runtime.autonomy_outcome_review import (  # noqa: E402
+    explain_review_evidence,
+    respond_to_outcome_review,
+    review_completed_outcome,
+)
+from orchestration.runtime.autonomy_competence_admission import (  # noqa: E402
+    explain_competence_scope,
+    respond_to_competence_admission,
+    review_competence_candidate,
+)
 from orchestration.runtime.operator_ux import (  # noqa: E402
     audit_rc_tabs,
     compile_formal_operator_response,
@@ -1561,6 +1576,12 @@ class DeltaApp:
         self.operator_ux_consumed_responses: list[dict[str, object]] = []
         self.operator_ux_narration_events: dict[str, dict[str, object]] = {}
         self.operator_ux_popup: tk.Toplevel | None = None
+        self.a4_execution_status = tk.StringVar(value="A4: no approved plan")
+        self.a4_control_buttons: dict[str, ttk.Button] = {}
+        self.a5_review_status = tk.StringVar(value="A5: no outcome review")
+        self.a5_control_buttons: dict[str, ttk.Button] = {}
+        self.a6_admission_status = tk.StringVar(value="A6: no competence review")
+        self.a6_control_buttons: dict[str, ttk.Button] = {}
         self.provider_manager = ProviderManager(keep_loaded=True)
         self.resident_model_id: str | None = None
         self.resident_lane: str | None = None
@@ -1735,6 +1756,56 @@ class DeltaApp:
         ttk.Button(controls, text="Pause", command=lambda: self._handle_operator_ux_button("pause")).pack(side=tk.LEFT, padx=(6, 0))
         ttk.Button(controls, text="View technical details", command=self._show_operator_ux_technical_details).pack(side=tk.LEFT, padx=(6, 0))
 
+        a4_controls = ttk.LabelFrame(right, text="Approved Plan Execution")
+        a4_controls.pack(fill=tk.X, pady=(0, 6))
+        ttk.Label(a4_controls, textvariable=self.a4_execution_status).pack(side=tk.LEFT, padx=(6, 10))
+        a4_button_specs = (
+            ("start", "Start approved plan", lambda: self._run_autonomy_4_visible_control("start")),
+            ("pause", "Pause", lambda: self._run_autonomy_4_visible_control("pause")),
+            ("resume", "Resume", lambda: self._run_autonomy_4_visible_control("resume")),
+            ("stop", "Stop", lambda: self._run_autonomy_4_visible_control("stop")),
+            ("step", "Explain current step", lambda: self._run_autonomy_4_visible_control("step")),
+            ("limits", "View limits", lambda: self._run_autonomy_4_visible_control("limits")),
+            ("evidence", "View evidence", lambda: self._run_autonomy_4_visible_control("evidence")),
+        )
+        for key, label, command in a4_button_specs:
+            button = ttk.Button(a4_controls, text=label, command=command)
+            button.pack(side=tk.LEFT, padx=(0, 6))
+            self.a4_control_buttons[key] = button
+
+        a5_controls = ttk.LabelFrame(right, text="Outcome Review")
+        a5_controls.pack(fill=tk.X, pady=(0, 6))
+        ttk.Label(a5_controls, textvariable=self.a5_review_status).pack(side=tk.LEFT, padx=(6, 10))
+        a5_button_specs = (
+            ("review", "Review completed outcome", lambda: self._run_autonomy_5_visible_control("review")),
+            ("explain", "Explain the evidence", lambda: self._run_autonomy_5_visible_control("explain")),
+            ("failed", "View failed cases", lambda: self._run_autonomy_5_visible_control("failed")),
+            ("keep", "Keep provisional", lambda: self._run_autonomy_5_visible_control("keep")),
+            ("send", "Send to competence review", lambda: self._run_autonomy_5_visible_control("send")),
+        )
+        for key, label, command in a5_button_specs:
+            button = ttk.Button(a5_controls, text=label, command=command)
+            button.pack(side=tk.LEFT, padx=(0, 6))
+            self.a5_control_buttons[key] = button
+
+        a6_controls = ttk.LabelFrame(right, text="Competence Admission")
+        a6_controls.pack(fill=tk.X, pady=(0, 6))
+        ttk.Label(a6_controls, textvariable=self.a6_admission_status).pack(side=tk.LEFT, padx=(6, 10))
+        a6_button_specs = (
+            ("review", "Review competence candidate", lambda: self._run_autonomy_6_visible_control("review")),
+            ("admit", "Admit this competence", lambda: self._run_autonomy_6_visible_control("admit")),
+            ("keep", "Keep provisional", lambda: self._run_autonomy_6_visible_control("keep")),
+            ("reject", "Reject admission", lambda: self._run_autonomy_6_visible_control("reject")),
+            ("more", "Request more evaluation", lambda: self._run_autonomy_6_visible_control("more")),
+            ("explain", "Explain the scope", lambda: self._run_autonomy_6_visible_control("explain")),
+            ("ambiguous", "looks good", lambda: self._run_autonomy_6_visible_control("ambiguous")),
+            ("details", "View technical details", lambda: self._run_autonomy_6_visible_control("details")),
+        )
+        for key, label, command in a6_button_specs:
+            button = ttk.Button(a6_controls, text=label, command=command)
+            button.pack(side=tk.LEFT, padx=(0, 6))
+            self.a6_control_buttons[key] = button
+
         self.goal_detail = scrolledtext.ScrolledText(right, wrap=tk.WORD)
         self.goal_detail.pack(fill=tk.BOTH, expand=True)
         self.goal_detail.configure(state=tk.DISABLED)
@@ -1855,6 +1926,9 @@ class DeltaApp:
                 self.activity_items.delete(item)
             for event in sorted(self.operator_ux_narration_events.values(), key=lambda item: str(item.get("event_id"))):
                 self.activity_items.insert("", tk.END, iid=str(event["event_id"]), values=(event.get("message", ""), human_state_label(str(event.get("event_type") or ""))))
+        self._refresh_autonomy_4_controls()
+        self._refresh_autonomy_5_controls()
+        self._refresh_autonomy_6_controls()
 
     def _show_selected_goal_card(self) -> None:
         selected = self.goal_cards.selection()
@@ -1908,6 +1982,296 @@ class DeltaApp:
         self.goal_detail.delete("1.0", tk.END)
         self.goal_detail.insert(tk.END, json.dumps(details, indent=2, sort_keys=True, default=str))
         self.goal_detail.configure(state=tk.DISABLED)
+
+    def _peek_autonomy_4_approved_plan(self) -> tuple[dict[str, object] | None, dict[str, object] | None]:
+        approval_dir = self.operator_ux_root / "autonomy_3_plan_approvals"
+        plan_dir = self.operator_ux_root / "autonomy_3_plans"
+        approvals: list[dict[str, object]] = []
+        if approval_dir.exists():
+            for path in sorted(approval_dir.glob("*.json")):
+                try:
+                    approvals.append(json.loads(path.read_text(encoding="utf-8")))
+                except (OSError, json.JSONDecodeError):
+                    continue
+        if not approvals:
+            return None, None
+        approval = approvals[-1]
+        plan_path = plan_dir / f"{approval.get('plan_id')}.json"
+        try:
+            plan = json.loads(plan_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return None, approval
+        return plan, approval
+
+    def _autonomy_4_persisted_state(self) -> str:
+        plan, _approval = self._peek_autonomy_4_approved_plan()
+        execution_root = self.operator_ux_root / "autonomy_4_execution"
+        if not plan and not execution_root.exists():
+            return "no_plan"
+        final_dir = execution_root / "final_synthesis"
+        finals = tuple(final_dir.glob("*.json")) if final_dir.exists() else ()
+        if finals:
+            try:
+                final = json.loads(sorted(finals)[-1].read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                return "integrity_stop"
+            return str(final.get("final_disposition") or "completed")
+        stop_dir = execution_root / "boundary_stops"
+        stops = tuple(stop_dir.glob("*.json")) if stop_dir.exists() else ()
+        if stops:
+            try:
+                stop = json.loads(sorted(stops)[-1].read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                return "integrity_stop"
+            return str(stop.get("status") or "integrity_stop")
+        if (execution_root / "runner.lock").exists():
+            return "running"
+        lifecycle_dir = execution_root / "work_item_lifecycle"
+        transitions = tuple(lifecycle_dir.glob("*.json")) if lifecycle_dir.exists() else ()
+        if transitions:
+            latest_state = "running"
+            latest_cycle = -1
+            for path in transitions:
+                try:
+                    transition = json.loads(path.read_text(encoding="utf-8"))
+                except (OSError, json.JSONDecodeError):
+                    continue
+                cycle = int(transition.get("controller_cycle") or 0)
+                if str(transition.get("work_item_id")) == "approved-plan-execution" and cycle >= latest_cycle:
+                    latest_cycle = cycle
+                    latest_state = str(transition.get("next_state") or latest_state)
+            return latest_state
+        return "approved_not_started" if plan else "no_plan"
+
+    def _refresh_autonomy_4_controls(self) -> None:
+        state = self._autonomy_4_persisted_state()
+        labels = {
+            "no_plan": "A4: no approved plan",
+            "approved_not_started": "A4: approved, not started",
+            "running": "A4: running",
+            "paused_operator": "A4: paused",
+            "stopped_by_operator": "A4: stopped",
+            "authority_expired": "A4: authority expired",
+            "completed_with_provisional_evidence": "A4: completed",
+            "completed_without_revision": "A4: completed",
+            "failed_after_revision": "A4: failed after revision",
+            "integrity_stop": "A4: integrity stop",
+            "terminal": "A4: completed",
+        }
+        self.a4_execution_status.set(labels.get(state, f"A4: {state.replace('_', ' ')}"))
+        has_plan = state != "no_plan"
+        enabled = {
+            "start": state == "approved_not_started",
+            "pause": state == "running",
+            "resume": state == "paused_operator",
+            "stop": state in {"running", "paused_operator"},
+            "step": has_plan,
+            "limits": has_plan,
+            "evidence": has_plan,
+        }
+        for key, button in self.a4_control_buttons.items():
+            button.configure(state=tk.NORMAL if enabled.get(key) else tk.DISABLED)
+
+    def _run_autonomy_4_visible_control(self, action: str) -> dict[str, object] | None:
+        if action == "start":
+            result = self._start_autonomy_4_approved_plan()
+        elif action == "pause":
+            result = self._start_autonomy_4_approved_plan(mode="pause")
+        elif action == "resume":
+            result = self._start_autonomy_4_approved_plan(mode="resume")
+        elif action == "stop":
+            result = self._start_autonomy_4_approved_plan(mode="stop")
+        elif action in {"step", "limits", "evidence"}:
+            result = self._explain_autonomy_4_execution(action)
+        else:
+            return None
+        self._refresh_operator_ux_views()
+        self._refresh_state_cards()
+        return result
+
+    def _latest_autonomy_5_review(self) -> tuple[dict[str, object] | None, dict[str, object] | None]:
+        review_dir = self.operator_ux_root / "autonomy_5_outcome_review" / "reviews"
+        request_dir = self.operator_ux_root / "autonomy_5_outcome_review" / "operator_requests"
+        reviews = []
+        for path in sorted(review_dir.glob("*.json")) if review_dir.exists() else ():
+            try:
+                reviews.append(json.loads(path.read_text(encoding="utf-8")))
+            except (OSError, json.JSONDecodeError):
+                continue
+        requests = []
+        for path in sorted(request_dir.glob("*.json")) if request_dir.exists() else ():
+            try:
+                requests.append(json.loads(path.read_text(encoding="utf-8")))
+            except (OSError, json.JSONDecodeError):
+                continue
+        return (reviews[-1] if reviews else None, requests[-1] if requests else None)
+
+    def _latest_autonomy_6_review(self) -> tuple[dict[str, object] | None, dict[str, object] | None, dict[str, object] | None]:
+        root = self.operator_ux_root / "autonomy_6_competence_admission"
+        candidates = []
+        policies = []
+        requests = []
+        for directory, target in (("admission_candidates", candidates), ("policy_decisions", policies), ("operator_requests", requests)):
+            base = root / directory
+            for path in sorted(base.glob("*.json")) if base.exists() else ():
+                try:
+                    target.append(json.loads(path.read_text(encoding="utf-8")))
+                except (OSError, json.JSONDecodeError):
+                    continue
+        return (candidates[-1] if candidates else None, policies[-1] if policies else None, requests[-1] if requests else None)
+
+    def _refresh_autonomy_5_controls(self) -> None:
+        execution_root = self.operator_ux_root / "autonomy_4_execution"
+        has_final = bool(tuple((execution_root / "final_synthesis").glob("*.json"))) if execution_root.exists() else False
+        review, request = self._latest_autonomy_5_review()
+        if review:
+            self.a5_review_status.set(f"A5: {str(review.get('provisional_disposition') or 'reviewed').replace('_', ' ')}")
+        elif has_final:
+            self.a5_review_status.set("A5: outcome ready for review")
+        else:
+            self.a5_review_status.set("A5: no completed A4 outcome")
+        enabled = {
+            "review": has_final and not bool(review),
+            "explain": bool(review),
+            "failed": bool(review),
+            "keep": bool(review and request),
+            "send": bool(review and request),
+        }
+        for key, button in self.a5_control_buttons.items():
+            button.configure(state=tk.NORMAL if enabled.get(key) else tk.DISABLED)
+
+    def _refresh_autonomy_6_controls(self) -> None:
+        a5_review, _a5_request = self._latest_autonomy_5_review()
+        candidate, policy, request = self._latest_autonomy_6_review()
+        if policy:
+            self.a6_admission_status.set(f"A6: {str(policy.get('admission_recommendation') or 'reviewed').replace('_', ' ')}")
+        elif a5_review and a5_review.get("provisional_disposition") == "candidate_for_competence_admission_review":
+            self.a6_admission_status.set("A6: candidate ready")
+        else:
+            self.a6_admission_status.set("A6: no eligible A5 candidate")
+        enabled = {
+            "review": bool(a5_review and not candidate),
+            "admit": bool(candidate and policy and request),
+            "keep": bool(candidate and policy and request),
+            "reject": bool(candidate and policy and request),
+            "more": bool(candidate and policy and request),
+            "explain": bool(candidate and policy),
+            "ambiguous": bool(candidate and policy and request),
+            "details": bool(candidate and policy),
+        }
+        for key, button in self.a6_control_buttons.items():
+            button.configure(state=tk.NORMAL if enabled.get(key) else tk.DISABLED)
+
+    def _run_autonomy_5_visible_control(self, action: str) -> dict[str, object] | None:
+        output_root = self.operator_ux_root / "autonomy_5_outcome_review"
+        if action == "review":
+            result = review_completed_outcome(self.operator_ux_root / "autonomy_4_execution", output_root=output_root)
+            review = dict(result.get("review") or {})
+            request = dict(result.get("operator_request") or {})
+            if request:
+                self.active_operator_ux_request = request
+                self.operator_ux_request_card = compile_operator_request_card(request)
+                self._persist_operator_ux_record("requests", str(request["request_id"]), request)
+            for event in tuple(result.get("narration") or ()):
+                event = dict(event)
+                self.operator_ux_narration_events[str(event["event_id"])] = event
+                self._persist_operator_ux_record("narration", str(event["event_id"]), event)
+            self._append_chat("DELTA", f"I reviewed what this plan actually proved: {review.get('provisional_disposition')}. No competence was admitted.")
+        else:
+            review, request = self._latest_autonomy_5_review()
+            if not review:
+                self._append_chat("DELTA", "I do not have an A5 outcome review yet.")
+                return {"status": "blocked_no_a5_review"}
+            if action == "explain":
+                message = explain_review_evidence(review)
+                self._append_chat("DELTA", message)
+                result = {"status": "explained", "message": message}
+            elif action == "failed":
+                failed = ", ".join(tuple(review.get("failed_case_ids") or ())) or "No failed cases in the final reviewed evaluator result."
+                self._append_chat("DELTA", f"A5 failed cases: {failed}")
+                result = {"status": "failed_cases_shown", "failed_cases": tuple(review.get("failed_case_ids") or ())}
+            elif action in {"keep", "send"}:
+                if not request:
+                    self._append_chat("DELTA", "The A5 review request is missing; I will not create a response.")
+                    return {"status": "blocked_no_a5_request"}
+                text = "keep it provisional" if action == "keep" else "send it for competence review"
+                result = respond_to_outcome_review(review, request, text, output_root=output_root)
+                response = dict(result.get("response") or {})
+                self.operator_ux_responses.append(response)
+                self._persist_operator_ux_record("responses", str(response["response_id"]), response)
+                if response.get("consumed"):
+                    self.operator_ux_consumed_responses.append(response)
+                    self._persist_operator_ux_record("consumed_responses", str(response["response_id"]), response)
+                self._append_chat("DELTA", f"A5 response recorded: {response.get('operator_action')}. No competence was admitted.")
+            else:
+                return None
+        self._refresh_operator_ux_views()
+        self._refresh_state_cards()
+        return result
+
+    def _run_autonomy_6_visible_control(self, action: str) -> dict[str, object] | None:
+        output_root = self.operator_ux_root / "autonomy_6_competence_admission"
+        if action == "review":
+            result = review_competence_candidate(
+                self.operator_ux_root / "autonomy_5_outcome_review",
+                output_root=output_root,
+                existing_competence_roots=(LIVE_RUNTIME_4_ACCEPTED_ROOT,),
+            )
+            candidate = dict(result.get("candidate") or {})
+            policy = dict(result.get("policy") or {})
+            request = dict(result.get("operator_request") or {})
+            if request:
+                self.active_operator_ux_request = request
+                self.operator_ux_request_card = dict(request.get("card") or {})
+                self._persist_operator_ux_record("requests", str(request["request_id"]), request)
+            for event in tuple(result.get("narration") or ()):
+                event = dict(event)
+                self.operator_ux_narration_events[str(event["event_id"])] = event
+                self._persist_operator_ux_record("narration", str(event["event_id"]), event)
+            self._append_chat("DELTA", f"A6 reviewed the competence candidate: {policy.get('admission_recommendation')}. No competence was admitted automatically.")
+        else:
+            candidate, policy, request = self._latest_autonomy_6_review()
+            if not candidate or not policy:
+                self._append_chat("DELTA", "I do not have an A6 competence candidate yet.")
+                return {"status": "blocked_no_a6_candidate"}
+            if action == "explain":
+                message = explain_competence_scope(candidate, policy)
+                self._append_chat("DELTA", message)
+                result = {"status": "explained", "message": message}
+            elif action == "details":
+                details = f"Candidate: {candidate.get('admission_candidate_id')}; policy: {policy.get('policy_id')}; activation: {candidate.get('permitted_activation_state')}"
+                self._append_chat("DELTA", details)
+                result = {"status": "technical_details_shown", "details": details}
+            else:
+                if not request:
+                    self._append_chat("DELTA", "The A6 admission request is missing; I will not create a response.")
+                    return {"status": "blocked_no_a6_request"}
+                text_by_action = {
+                    "admit": "admit this competence",
+                    "keep": "keep it provisional",
+                    "reject": "reject admission",
+                    "more": "request more evaluation",
+                    "ambiguous": "looks good",
+                }
+                result = respond_to_competence_admission(
+                    candidate,
+                    policy,
+                    request,
+                    text_by_action.get(action, ""),
+                    output_root=output_root,
+                    visible_button="Admit this competence" if action == "admit" else None,
+                )
+                response = dict(result.get("response") or {})
+                if response:
+                    self.operator_ux_responses.append(response)
+                    self._persist_operator_ux_record("responses", str(response["response_id"]), response)
+                    if response.get("consumed"):
+                        self.operator_ux_consumed_responses.append(response)
+                        self._persist_operator_ux_record("consumed_responses", str(response["response_id"]), response)
+                self._append_chat("DELTA", f"A6 response: {result.get('status')}. Activation remains inactive and unpromoted.")
+        self._refresh_operator_ux_views()
+        self._refresh_state_cards()
+        return result
 
     def _show_operator_ux_popup(self) -> None:
         if not self.operator_ux_request_card:
@@ -2117,6 +2481,71 @@ class DeltaApp:
         self._persist_operator_ux_record("narration", str(event["event_id"]), event)
         self._show_operator_ux_popup()
         return {"status": "AUTONOMY_3_PLAN_WAITING_FOR_OPERATOR", "plan": plan, "operator_request": request}
+
+    def _load_autonomy_4_approved_plan(self) -> tuple[dict[str, object] | None, dict[str, object] | None]:
+        approval_dir = self.operator_ux_root / "autonomy_3_plan_approvals"
+        plan_dir = self.operator_ux_root / "autonomy_3_plans"
+        approvals = []
+        if approval_dir.exists():
+            for path in sorted(approval_dir.glob("*.json")):
+                try:
+                    approvals.append(json.loads(path.read_text(encoding="utf-8")))
+                except (OSError, json.JSONDecodeError):
+                    continue
+        if not approvals:
+            self._append_chat("DELTA", "I do not have an approved plan to execute.")
+            return None, None
+        approval = approvals[-1]
+        plan_path = plan_dir / f"{approval['plan_id']}.json"
+        plan = json.loads(plan_path.read_text(encoding="utf-8"))
+        return plan, approval
+
+    def _start_autonomy_4_approved_plan(self, *, mode: str = "start") -> dict[str, object]:
+        loaded = self._load_autonomy_4_approved_plan()
+        plan, approval = loaded
+        if not plan or not approval:
+            return {"status": "blocked_no_approved_plan"}
+        execution_root = self.operator_ux_root / "autonomy_4_execution"
+        if mode == "pause":
+            result = run_approved_plan_execution(plan, approval, output_root=execution_root, pause_after_stage="evaluator")
+        elif mode == "stop":
+            result = run_approved_plan_execution(plan, approval, output_root=execution_root, stop_after_stage="prepared")
+        elif mode == "resume":
+            result = resume_paused_execution(plan, approval, output_root=execution_root)
+        else:
+            result = run_approved_plan_execution(plan, approval, output_root=execution_root)
+        final = dict(result.get("final_synthesis") or {})
+        if final:
+            self._persist_operator_ux_record("autonomy_4_final_synthesis", str(final["synthesis_id"]), final)
+            event = compile_narration_event(
+                mission_id=str(plan["plan_id"]),
+                work_item_id=str(plan["goal_id"]),
+                phase="approved_plan_execution",
+                event_type="execution_terminal",
+                message=f"I completed the approved plan with disposition {final['final_disposition']} and stopped.",
+                source_artifact=str(final["artifact_digest"]),
+            )
+            self.operator_ux_narration_events[str(event["event_id"])] = event
+            self._persist_operator_ux_record("narration", str(event["event_id"]), event)
+            self._append_chat("DELTA", event["message"])
+        else:
+            self._append_chat("DELTA", f"Execution stopped before work began: {result.get('status')}")
+        return result
+
+    def _explain_autonomy_4_execution(self, topic: str) -> dict[str, object]:
+        plan, approval = self._load_autonomy_4_approved_plan()
+        if not plan or not approval:
+            return {"status": "blocked_no_approved_plan"}
+        if topic == "limits":
+            message = "A4 limits: no provider calls, no source mutation, no trusted admission, no capability promotion, one bounded revision, and a 10 minute authority window."
+        elif topic == "evidence":
+            message = f"A4 evidence: approved plan {plan['plan_id']} is bound to digest {plan['artifact_digest']} and validator count {len(tuple(plan.get('validation_strategy') or ()))}."
+        else:
+            lifecycle_path = self.operator_ux_root / "autonomy_4_execution" / "work_item_lifecycle"
+            count = len(tuple(lifecycle_path.glob("*.json"))) if lifecycle_path.exists() else 0
+            message = f"A4 current step: {count} durable lifecycle transitions are recorded; execution advances only through ready, running, completed, revision, paused, stopped, expired, or terminal states."
+        self._append_chat("DELTA", message)
+        return {"status": "explained", "topic": topic, "message": message}
 
     def _handle_operator_ux_button(self, intent: str) -> None:
         if not self.active_operator_ux_request:
@@ -4263,6 +4692,74 @@ class DeltaApp:
             self._plan_autonomy_3_next_goal()
             self._refresh_operator_ux_views()
             self._refresh_state_cards()
+            return
+        if lower == "start approved plan":
+            self._start_autonomy_4_approved_plan()
+            self._refresh_operator_ux_views()
+            self._refresh_state_cards()
+            return
+        if lower in {"pause approved plan", "pause the plan", "wait on approved plan"}:
+            self._start_autonomy_4_approved_plan(mode="pause")
+            self._refresh_operator_ux_views()
+            self._refresh_state_cards()
+            return
+        if lower in {"stop approved plan", "stop the plan", "cancel remaining work"}:
+            self._start_autonomy_4_approved_plan(mode="stop")
+            self._refresh_operator_ux_views()
+            self._refresh_state_cards()
+            return
+        if lower in {"resume approved plan", "resume the plan"}:
+            self._start_autonomy_4_approved_plan(mode="resume")
+            self._refresh_operator_ux_views()
+            self._refresh_state_cards()
+            return
+        if lower in {"show my limits", "show approved plan limits"}:
+            self._explain_autonomy_4_execution("limits")
+            return
+        if lower in {"show the evidence", "show approved plan evidence"}:
+            self._explain_autonomy_4_execution("evidence")
+            return
+        if lower in {"explain current step", "what step are you on"}:
+            self._explain_autonomy_4_execution("step")
+            return
+        if lower in {"review completed outcome", "review the completed outcome", "start autonomy 5"}:
+            self._run_autonomy_5_visible_control("review")
+            return
+        if lower in {"explain the evidence", "explain outcome evidence"}:
+            self._run_autonomy_5_visible_control("explain")
+            return
+        if lower in {"show failed cases", "view failed cases"}:
+            self._run_autonomy_5_visible_control("failed")
+            return
+        if lower in {"keep it provisional", "keep as provisional evidence"}:
+            if self._latest_autonomy_6_review()[0]:
+                self._run_autonomy_6_visible_control("keep")
+            else:
+                self._run_autonomy_5_visible_control("keep")
+            return
+        if lower in {"send it for competence review", "send to competence review"}:
+            self._run_autonomy_5_visible_control("send")
+            return
+        if lower in {"review competence candidate", "start autonomy 6", "review competence admission"}:
+            self._run_autonomy_6_visible_control("review")
+            return
+        if lower in {"admit this competence", "accept this competence", "add this competence", "approve competence admission"}:
+            self._run_autonomy_6_visible_control("admit")
+            return
+        if lower in {"reject the competence", "reject admission", "do not accept this"}:
+            self._run_autonomy_6_visible_control("reject")
+            return
+        if lower in {"do not admit it yet", "leave it provisional"}:
+            self._run_autonomy_6_visible_control("keep")
+            return
+        if lower in {"test it more", "request more evaluation", "gather more evidence first"}:
+            self._run_autonomy_6_visible_control("more")
+            return
+        if lower in {"explain the scope", "what can it actually do", "what are the limitations", "i don't understand the competence", "i dont understand the competence"}:
+            self._run_autonomy_6_visible_control("explain")
+            return
+        if lower in {"looks good", "proceed", "yes"} and self._latest_autonomy_6_review()[0]:
+            self._run_autonomy_6_visible_control("ambiguous")
             return
         cancel_words = {"no", "n", "not now", "no thanks", "keep chatting", "nevermind", "never mind", "cancel", "stop", "forget it"}
         affirm_words = {"yes", "y", "yes please", "sure", "okay", "ok", "go ahead", "do it", "tell me more", "more", "go deeper"}
