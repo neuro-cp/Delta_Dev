@@ -42,6 +42,11 @@ def _latest(root: Path, rel: str) -> dict[str, Any] | None:
     return _read_json(files[-1]) if files else None
 
 
+def _latest_input_plan(root: Path) -> dict[str, Any]:
+    plans = sorted((root / "inputs").glob("*.plan.json")) if (root / "inputs").exists() else []
+    return _read_json(plans[-1]) if plans else {}
+
+
 def _goal_evidence(root: Path, name: str, **overrides: object) -> Path:
     record = {
         "schema": "autonomy_2_counterfactual_goal_evidence_v1",
@@ -88,6 +93,7 @@ def run_outcome_feedback_loop(
         ranking = _latest(output_root, "rankings") or {}
         return {"status": "AUTONOMY_7_OUTCOME_FEEDBACK_LOOP_PASSED", "feedback": existing, "ranking": ranking, "duplicate_suppressed": True}
     final = _latest(a4_root, "final_synthesis") or {}
+    plan = _latest_input_plan(a4_root)
     review = _latest(a5_root, "reviews") or {}
     accepted = _latest(a6_root, "accepted_competencies")
     response = _latest(a6_root, "responses") or {}
@@ -104,7 +110,8 @@ def run_outcome_feedback_loop(
         return {"status": "AUTONOMY_7_OUTCOME_FEEDBACK_LOOP_INTEGRITY_STOP", "feedback": feedback}
     admitted = bool(accepted and accepted.get("admission_status") == "accepted_bounded_competence")
     goal_transition = "resolved" if admitted else "retained_provisional"
-    resolved = ("missing_or_unreliable_identifier_reconciliation",) if admitted else ()
+    resolved_condition = str(plan.get("condition_key") or "missing_or_unreliable_identifier_reconciliation")
+    resolved = (resolved_condition,) if admitted else ()
     unresolved = tuple(review.get("remaining_limitations") or ()) + (() if admitted else ("competence_not_admitted",))
     capability_state = _digest_record({
         "schema": "autonomy_7_capability_state_transition_v1",
@@ -120,9 +127,9 @@ def run_outcome_feedback_loop(
     if admitted:
         _goal_evidence(
             evidence_root,
-            "missing_or_unreliable_identifier_reconciliation",
+            resolved_condition,
             already_resolved=True,
-            resolves_conditions=("missing_or_unreliable_identifier_reconciliation",),
+            resolves_conditions=(resolved_condition,),
             current_capability_state="accepted_bounded_inactive",
             expected_benefit=0,
         )
@@ -164,7 +171,7 @@ def run_outcome_feedback_loop(
         "resolved_condition_keys": resolved,
         "unresolved_condition_keys": unresolved,
         "new_limitations": tuple(review.get("remaining_limitations") or ()),
-        "stale_candidates_suppressed": ("missing_or_unreliable_identifier_reconciliation",) if admitted else (),
+        "stale_candidates_suppressed": (resolved_condition,) if admitted else (),
         "active_candidates_retained": tuple(candidate.get("condition_key") for candidate in tuple(ranking.get("candidates") or ()) if candidate.get("eligibility_disposition") == "eligible"),
         "goal_transition": goal_transition,
         "capability_state_transition": capability_state,

@@ -11,6 +11,14 @@ from typing import Any, Callable, Mapping, Sequence
 from orchestration.runtime.delta_1_0_common import stable_id
 from orchestration.runtime.developmental_bootstrap import bootstrap_digest
 from orchestration.runtime.operator_ux import FIXED_TIMESTAMP
+from orchestration.runtime.autonomy_cycle_families import (
+    compile_family_evaluator,
+    compile_family_revision,
+    compile_family_strategy,
+    evaluate_family_strategy,
+    infer_cycle_family,
+    validate_cycle_family_eligibility,
+)
 
 
 AUTONOMY_4_ROOT = Path(".tmp") / "autonomy-4-approved-plan-execution-v1"
@@ -209,7 +217,7 @@ def compile_execution_authority(
     plan: Mapping[str, Any],
     approval: Mapping[str, Any],
     *,
-    expires_at: str = "2026-07-25T00:00:00+00:00",
+    expires_at: str = "2026-10-22T00:00:00+00:00",
     issued_at: str = FIXED_TIMESTAMP,
 ) -> dict[str, Any]:
     authority = {
@@ -283,6 +291,9 @@ def validate_execution_eligibility(
     reqs = dict(plan.get("authority_requirements") or {})
     if reqs.get("tracked_source_mutation") or reqs.get("network") or reqs.get("deployment") or reqs.get("credentials"):
         reasons.append("prohibited_permission_required")
+    family = validate_cycle_family_eligibility(plan)
+    if not family["eligible"]:
+        reasons.append(str(family["reason"]))
     return _digest_record({
         "schema": "autonomy_4_execution_eligibility_v1",
         "eligibility_id": stable_id("autonomy-4-eligibility", plan.get("plan_id"), approval.get("approval_id"), authority.get("authority_id"), tuple(reasons)),
@@ -290,53 +301,239 @@ def validate_execution_eligibility(
         "authority_id": authority.get("authority_id"),
         "eligible": not reasons,
         "reasons": tuple(reasons),
+        "cycle_family": family["cycle_family"],
         "created_at": FIXED_TIMESTAMP,
     })
 
 
-def compile_fixed_evaluator(plan: Mapping[str, Any]) -> dict[str, Any]:
-    cases = (
-        "exact_stable_identifier",
-        "identifier_missing",
-        "identifier_renamed",
-        "composite_identifier",
-        "duplicated_identifier",
-        "conflicting_identifiers",
-        "ambiguous_near_match",
-        "no_valid_match",
-        "adversarial_similarity",
-        "transfer_unseen_fixture",
+def _decision(left_key: str, status: str, *, right_keys: Sequence[str] = (), reason: str = "", provenance: Sequence[str] = ("input_record",)) -> dict[str, Any]:
+    return {
+        "left_key": left_key,
+        "right_keys": tuple(right_keys),
+        "status": status,
+        "reason": reason or status,
+        "provenance": tuple(provenance),
+    }
+
+
+def _case(
+    category: str,
+    *,
+    left: Sequence[Mapping[str, Any]],
+    right: Sequence[Mapping[str, Any]],
+    expected: Sequence[Mapping[str, Any]],
+    field_mappings: Mapping[str, str] | None = None,
+    composite_keys: Sequence[str] = (),
+    unsupported_shape: bool = False,
+) -> dict[str, Any]:
+    semantic_key = bootstrap_digest({"left": tuple(left), "right": tuple(right), "expected_statuses": tuple((item["left_key"], item["status"]) for item in expected)})
+    visible = {
+        "left_records": tuple(dict(item) for item in left),
+        "right_records": tuple(dict(item) for item in right),
+        "field_mappings": dict(field_mappings or {}),
+        "composite_keys": tuple(composite_keys),
+        "visible_provenance": ("source_file", "row_id", "declared_field_mapping"),
+        "permitted_matching_rules": ("stable_identifier", "declared_composite_key", "uncertainty_preservation"),
+        "declared_uncertainty_policy": "preserve ambiguity when corroborating identifier or composite evidence is absent",
+        "permitted_output_schema": ("confirmed", "ambiguous", "unmatched", "unsupported"),
+        "unsupported_shape": unsupported_shape,
+    }
+    return {
+        "case_id": stable_id("autonomy-4-record-case", semantic_key),
+        "case_category": category,
+        "semantic_key": semantic_key,
+        "strategy_visible_input": visible,
+        "expected_decisions": tuple(dict(item) for item in expected),
+    }
+
+
+def _record_level_cases() -> tuple[dict[str, Any], ...]:
+    return (
+        _case("exact_stable_identifier", left=({"key": "l-exact", "record_id": "A-1", "name": "Ada Core", "source_file": "left.csv", "row_id": 1},), right=({"key": "r-exact", "record_id": "A-1", "name": "Ada Core", "source_file": "right.json", "row_id": 11},), expected=(_decision("l-exact", "confirmed", right_keys=("r-exact",), reason="stable_identifier"),)),
+        _case("identifier_missing", left=({"key": "l-missing", "record_id": "", "name": "Solo Missing", "source_file": "left.csv", "row_id": 2},), right=({"key": "r-other", "record_id": "B-2", "name": "Other Record", "source_file": "right.json", "row_id": 12},), expected=(_decision("l-missing", "unmatched", reason="missing_identifier_no_candidate"),)),
+        _case("identifier_renamed", left=({"key": "l-renamed", "record_id": "C-3", "name": "Renamed Field", "source_file": "left.tsv", "row_id": 3},), right=({"key": "r-renamed", "legacy_id": "C-3", "name": "Renamed Field", "source_file": "right.ndjson", "row_id": 13},), field_mappings={"record_id": "legacy_id"}, expected=(_decision("l-renamed", "confirmed", right_keys=("r-renamed",), reason="mapped_identifier"),)),
+        _case("composite_identifier", left=({"key": "l-composite", "region": "NE", "account": "44", "name": "Composite Account", "source_file": "left.csv", "row_id": 4},), right=({"key": "r-composite", "region": "NE", "account": "44", "name": "Composite Account", "source_file": "right.json", "row_id": 14},), composite_keys=("region", "account"), expected=(_decision("l-composite", "confirmed", right_keys=("r-composite",), reason="composite_identifier"),)),
+        _case("duplicated_identifier", left=({"key": "l-dup", "record_id": "D-4", "name": "Duplicate Id", "source_file": "left.csv", "row_id": 5},), right=({"key": "r-dup-1", "record_id": "D-4", "name": "Duplicate Id A", "source_file": "right.json", "row_id": 15}, {"key": "r-dup-2", "record_id": "D-4", "name": "Duplicate Id B", "source_file": "right.json", "row_id": 16}), expected=(_decision("l-dup", "ambiguous", right_keys=("r-dup-1", "r-dup-2"), reason="duplicate_identifier"),)),
+        _case("conflicting_identifiers", left=({"key": "l-conflict", "record_id": "E-5", "name": "Conflict", "provenance_tag": "verified", "source_file": "left.csv", "row_id": 6},), right=({"key": "r-conflict", "record_id": "E-5", "name": "Conflict", "provenance_tag": "contradicted", "source_file": "right.json", "row_id": 17},), expected=(_decision("l-conflict", "ambiguous", right_keys=("r-conflict",), reason="conflicting_provenance"),)),
+        _case("ambiguous_near_match", left=({"key": "l-near", "record_id": "", "name": "North Clinic", "source_file": "left.csv", "row_id": 7},), right=({"key": "r-near", "record_id": "", "name": "North Clinical", "source_file": "right.json", "row_id": 18},), expected=(_decision("l-near", "ambiguous", right_keys=("r-near",), reason="near_match_without_corroboration"),)),
+        _case("no_valid_match", left=({"key": "l-none", "record_id": "F-6", "name": "No Match", "source_file": "left.csv", "row_id": 8},), right=({"key": "r-none", "record_id": "G-7", "name": "Different", "source_file": "right.json", "row_id": 19},), expected=(_decision("l-none", "unmatched", reason="no_valid_match"),)),
+        _case("adversarial_similarity", left=({"key": "l-adv", "record_id": "", "name": "Jordan Lee", "entity_class": "person", "source_file": "left.csv", "row_id": 9},), right=({"key": "r-adv", "record_id": "", "name": "Jordan Lee", "entity_class": "facility", "source_file": "right.json", "row_id": 20},), expected=(_decision("l-adv", "unmatched", reason="incompatible_entity_class"),)),
+        _case("transfer_unseen_fixture", left=({"key": "l-transfer", "asset_code": "T-8", "label": "Transfer Asset", "source_file": "left.parsed", "row_id": 10},), right=({"key": "r-transfer", "id_code": "T-8", "label": "Transfer Asset", "source_file": "right.parsed", "row_id": 21},), field_mappings={"asset_code": "id_code"}, expected=(_decision("l-transfer", "confirmed", right_keys=("r-transfer",), reason="transfer_mapped_identifier"),)),
     )
+
+
+def _visible_input_integrity(evaluator: Mapping[str, Any]) -> dict[str, Any]:
+    reasons: list[str] = []
+    for case in tuple(evaluator.get("record_level_cases") or ()):
+        visible = dict(case.get("strategy_visible_input") or {})
+        text = json.dumps(visible, sort_keys=True, default=str).lower()
+        if "expected_decisions" in visible or "expected_output" in text or "sealed_expected" in text:
+            reasons.append(f"hidden_expected_output_visible:{case.get('case_category')}")
+    return {"passed": not reasons, "reasons": tuple(reasons)}
+
+
+def _record_value(record: Mapping[str, Any], fields: Sequence[str]) -> tuple[Any, ...]:
+    return tuple(record.get(field) for field in fields)
+
+
+def _similar(left: Mapping[str, Any], right: Mapping[str, Any]) -> bool:
+    lname = str(left.get("name") or left.get("label") or "").lower()
+    rname = str(right.get("name") or right.get("label") or "").lower()
+    if not lname or not rname:
+        return False
+    return lname == rname or lname.split()[0:1] == rname.split()[0:1]
+
+
+def _strategy_decision_for_left(left: Mapping[str, Any], rights: Sequence[Mapping[str, Any]], visible: Mapping[str, Any], behavior: str) -> dict[str, Any]:
+    mappings = dict(visible.get("field_mappings") or {})
+    composite_keys = tuple(visible.get("composite_keys") or ())
+    if visible.get("unsupported_shape"):
+        return _decision(str(left["key"]), "unsupported", reason="unsupported_input_shape")
+    left_id = str(left.get("record_id") or left.get("asset_code") or "")
+    right_id_field = mappings.get("record_id") or mappings.get("asset_code") or "record_id"
+    id_matches = tuple(right for right in rights if left_id and str(right.get(right_id_field) or right.get("record_id") or right.get("id_code") or "") == left_id)
+    if len(id_matches) > 1:
+        return _decision(str(left["key"]), "ambiguous", right_keys=tuple(str(item["key"]) for item in id_matches), reason="duplicate_identifier")
+    if len(id_matches) == 1:
+        right = id_matches[0]
+        if left.get("provenance_tag") and right.get("provenance_tag") and left.get("provenance_tag") != right.get("provenance_tag"):
+            return _decision(str(left["key"]), "ambiguous", right_keys=(str(right["key"]),), reason="conflicting_provenance")
+        return _decision(str(left["key"]), "confirmed", right_keys=(str(right["key"]),), reason="stable_identifier")
+    if composite_keys:
+        composite_matches = tuple(right for right in rights if _record_value(left, composite_keys) == _record_value(right, composite_keys))
+        if len(composite_matches) == 1:
+            return _decision(str(left["key"]), "confirmed", right_keys=(str(composite_matches[0]["key"]),), reason="composite_identifier")
+    near = tuple(right for right in rights if _similar(left, right))
+    if near and behavior == "name_similarity_without_corroboration":
+        return _decision(str(left["key"]), "confirmed", right_keys=(str(near[0]["key"]),), reason="name_similarity_without_corroboration")
+    if near and any(left.get("entity_class") and right.get("entity_class") and left.get("entity_class") != right.get("entity_class") for right in near):
+        return _decision(str(left["key"]), "unmatched", reason="incompatible_entity_class")
+    if near:
+        return _decision(str(left["key"]), "ambiguous", right_keys=tuple(str(item["key"]) for item in near), reason="near_match_without_corroboration")
+    return _decision(str(left["key"]), "unmatched", reason="no_valid_match")
+
+
+def execute_record_strategy(strategy: Mapping[str, Any], evaluator: Mapping[str, Any], *, visible_cases: Sequence[Mapping[str, Any]] | None = None) -> dict[str, Any]:
+    behavior = str(strategy.get("behavior_profile") or "")
+    results: dict[str, Any] = {}
+    for case in tuple(visible_cases or evaluator.get("record_level_cases") or ()):
+        visible = dict(case.get("strategy_visible_input") or {})
+        decisions = tuple(_strategy_decision_for_left(left, tuple(visible.get("right_records") or ()), visible, behavior) for left in tuple(visible.get("left_records") or ()))
+        output = _digest_record({
+            "schema": "autonomy_4_record_level_strategy_output_v1",
+            "case_id": case.get("case_id"),
+            "case_category": case.get("case_category"),
+            "strategy_id": strategy.get("strategy_id"),
+            "evaluator_digest": evaluator.get("artifact_digest"),
+            "decisions": decisions,
+            "hidden_expected_outputs_seen": False,
+            "created_at": FIXED_TIMESTAMP,
+        })
+        results[str(case["case_id"])] = output
+    return results
+
+
+def _grade_record_case(case: Mapping[str, Any], output: Mapping[str, Any]) -> dict[str, Any]:
+    expected = tuple(dict(item) for item in tuple(case.get("expected_decisions") or ()))
+    actual = tuple(dict(item) for item in tuple(output.get("decisions") or ()))
+    failed: list[str] = []
+    passed: list[str] = []
+    actual_by_left = {str(item.get("left_key")): item for item in actual}
+    for expected_item in expected:
+        left_key = str(expected_item.get("left_key"))
+        actual_item = actual_by_left.get(left_key)
+        if not actual_item:
+            failed.append(f"missing_decision:{left_key}")
+            continue
+        for field in ("status", "right_keys"):
+            if tuple(actual_item.get(field) or ()) != tuple(expected_item.get(field) or ()) if field == "right_keys" else actual_item.get(field) != expected_item.get(field):
+                failed.append(f"{field}_mismatch:{left_key}")
+            else:
+                passed.append(f"{field}_matched:{left_key}")
+        if not tuple(actual_item.get("provenance") or ()):
+            failed.append(f"missing_provenance:{left_key}")
+        else:
+            passed.append(f"provenance_present:{left_key}")
+        if actual_item.get("status") == "confirmed" and expected_item.get("status") in {"ambiguous", "unmatched"}:
+            failed.append(f"negative_control_false_positive:{left_key}")
+    unexpected_confirmed = tuple(item for item in actual if item.get("status") == "confirmed" and str(item.get("left_key")) not in {str(exp.get("left_key")) for exp in expected})
+    if unexpected_confirmed:
+        failed.append("unexpected_confirmed_match")
+    score = max(0, len(passed) - len(failed))
+    disposition = "passed" if not failed else "failed"
+    return {
+        "schema": "autonomy_4_record_level_case_observation_v1",
+        "case_id": case.get("case_id"),
+        "case_category": case.get("case_category"),
+        "strategy_output": output,
+        "expected_output_digest": bootstrap_digest(expected),
+        "strategy_output_digest": output.get("artifact_digest") or bootstrap_digest(output),
+        "passed_assertions": tuple(passed),
+        "failed_assertions": tuple(failed),
+        "score": score,
+        "disposition": disposition,
+    }
+
+
+def compile_fixed_evaluator(plan: Mapping[str, Any]) -> dict[str, Any]:
+    cases = _record_level_cases()
+    case_categories = tuple(str(case["case_category"]) for case in cases)
+    sealed_expected = tuple({"case_id": case["case_id"], "case_category": case["case_category"], "expected_decisions": case["expected_decisions"]} for case in cases)
     return _digest_record({
         "schema": "autonomy_4_fixed_evaluator_v1",
-        "evaluator_id": stable_id("autonomy-4-evaluator", plan["plan_id"], cases),
+        "evaluator_id": stable_id("autonomy-4-evaluator", plan["plan_id"], tuple(case["semantic_key"] for case in cases)),
         "plan_id": plan["plan_id"],
         "sealed_before_strategy": True,
-        "case_categories": cases,
+        "case_categories": case_categories,
+        "record_level_cases": cases,
+        "sealed_expected_outputs": sealed_expected,
+        "sealed_expected_output_digest": bootstrap_digest(sealed_expected),
+        "scoring_rules": (
+            "confirmed decisions must match expected left and right record keys",
+            "ambiguous decisions must preserve all candidate right record keys",
+            "unmatched decisions must not fabricate a right record",
+            "every decision must include provenance",
+            "unsupported input shapes must be rejected instead of matched",
+        ),
         "visible_cases": ("exact_stable_identifier", "identifier_missing"),
-        "hidden_cases": tuple(case for case in cases if case not in {"exact_stable_identifier", "identifier_missing"}),
+        "hidden_cases": tuple(case for case in case_categories if case not in {"exact_stable_identifier", "identifier_missing"}),
         "negative_controls": True,
         "transfer_cases": True,
+        "negative_control_rules": (
+            "forced ambiguous match fails",
+            "name-only false positive fails",
+            "duplicate identifier overconfidence fails",
+            "missing evidence certainty fails",
+            "fabricated provenance fails",
+            "expected-output replay fails",
+        ),
+        "transfer_threshold": "all record-level cases must pass",
         "evaluator_authority": "approved_plan_validation_strategy",
         "evaluator_provenance": tuple(plan.get("validation_strategy") or ()),
         "leakage_controls": ("strategy receives no expected hidden outputs",),
         "decision_rule": "all case categories must pass",
-        "pass_threshold": len(cases),
+        "pass_threshold": len(case_categories),
         "created_at": FIXED_TIMESTAMP,
     })
 
 
 def compile_strategy(plan: Mapping[str, Any], evaluator: Mapping[str, Any], *, version: str) -> dict[str, Any]:
+    family_strategy = compile_family_strategy(plan, evaluator, version=version)
+    if family_strategy:
+        return family_strategy
     if version in {"initial", "revised_failed"}:
         rules = ("match exact stable id", "use normalized name similarity when id absent", "preserve duplicates as ambiguous")
+        behavior = "name_similarity_without_corroboration"
     else:
         rules = ("match exact stable id", "use composite keys when declared", "preserve missing or near-match cases as ambiguous unless corroborated", "preserve duplicates as ambiguous")
+        behavior = "require_corroborating_identifier_or_preserve_uncertainty"
     return _digest_record({
         "schema": "autonomy_4_reconciliation_strategy_v1",
         "strategy_id": stable_id("autonomy-4-strategy", plan["plan_id"], evaluator["artifact_digest"], version),
         "plan_id": plan["plan_id"],
         "evaluator_digest": evaluator["artifact_digest"],
         "version": version,
+        "behavior_profile": behavior,
         "rules": rules,
         "hidden_expected_outputs_seen": False,
         "created_at": FIXED_TIMESTAMP,
@@ -344,31 +541,63 @@ def compile_strategy(plan: Mapping[str, Any], evaluator: Mapping[str, Any], *, v
 
 
 def evaluate_strategy(strategy: Mapping[str, Any], evaluator: Mapping[str, Any]) -> dict[str, Any]:
-    version = str(strategy.get("version"))
-    outcomes = []
-    for case in tuple(evaluator.get("case_categories") or ()):
-        passed = True
-        if version in {"initial", "revised_failed"} and case in {"ambiguous_near_match", "adversarial_similarity"}:
-            passed = False
-        outcomes.append({"case_id": stable_id("autonomy-4-case", evaluator["evaluator_id"], case), "case_category": case, "outcome": "passed" if passed else "failed"})
+    family_evaluation = evaluate_family_strategy(strategy, evaluator)
+    if family_evaluation:
+        return family_evaluation
+    integrity = _visible_input_integrity(evaluator)
+    if not integrity["passed"]:
+        return _digest_record({
+            "schema": "autonomy_4_strategy_evaluation_v1",
+            "evaluation_id": stable_id("autonomy-4-evaluation", strategy.get("strategy_id"), evaluator.get("artifact_digest"), tuple(integrity["reasons"])),
+            "strategy_id": strategy.get("strategy_id"),
+            "strategy_digest": strategy.get("artifact_digest"),
+            "evaluator_id": evaluator.get("evaluator_id"),
+            "evaluator_digest": evaluator.get("artifact_digest"),
+            "case_outcomes": (),
+            "aggregate_status": "integrity_stop",
+            "failed_case_ids": (),
+            "failed_case_categories": (),
+            "evaluator_weakened": False,
+            "integrity_reasons": integrity["reasons"],
+            "record_level_evaluation": True,
+            "created_at": FIXED_TIMESTAMP,
+        })
+    outputs = dict(strategy.get("precomputed_outputs") or execute_record_strategy(strategy, evaluator))
+    observations = tuple(_grade_record_case(case, dict(outputs.get(str(case["case_id"])) or {})) for case in tuple(evaluator.get("record_level_cases") or ()))
+    outcomes = tuple({
+        "case_id": observation["case_id"],
+        "case_category": observation["case_category"],
+        "outcome": "passed" if observation["disposition"] == "passed" else "failed",
+        "score": observation["score"],
+        "expected_output_digest": observation["expected_output_digest"],
+        "strategy_output_digest": observation["strategy_output_digest"],
+    } for observation in observations)
     failed = tuple(item for item in outcomes if item["outcome"] != "passed")
     return _digest_record({
         "schema": "autonomy_4_strategy_evaluation_v1",
-        "evaluation_id": stable_id("autonomy-4-evaluation", strategy["strategy_id"], evaluator["artifact_digest"]),
+        "evaluation_id": stable_id("autonomy-4-evaluation", strategy["artifact_digest"], evaluator["artifact_digest"], tuple(item["strategy_output_digest"] for item in outcomes)),
         "strategy_id": strategy["strategy_id"],
         "strategy_digest": strategy["artifact_digest"],
         "evaluator_id": evaluator["evaluator_id"],
         "evaluator_digest": evaluator["artifact_digest"],
-        "case_outcomes": tuple(outcomes),
+        "case_outcomes": outcomes,
+        "strategy_outputs": outputs,
+        "evaluator_observations": observations,
         "aggregate_status": "passed" if not failed else "revision_required",
         "failed_case_ids": tuple(item["case_id"] for item in failed),
         "failed_case_categories": tuple(item["case_category"] for item in failed),
         "evaluator_weakened": False,
+        "record_level_evaluation": True,
+        "strategy_identity_used_for_scoring": False,
+        "fixture_name_used_for_scoring": False,
         "created_at": FIXED_TIMESTAMP,
     })
 
 
 def compile_revision(prior_strategy: Mapping[str, Any], evaluation: Mapping[str, Any], evaluator: Mapping[str, Any], *, budget_remaining: int) -> dict[str, Any]:
+    family_revision = compile_family_revision(prior_strategy, evaluation, evaluator, budget_remaining=budget_remaining)
+    if family_revision:
+        return family_revision
     if not evaluation.get("failed_case_ids"):
         raise ValueError("revision_requires_failed_evidence")
     if budget_remaining <= 0:
@@ -396,6 +625,7 @@ def final_synthesis(plan: Mapping[str, Any], evaluator: Mapping[str, Any], strat
     disposition = "completed_with_provisional_evidence" if final_eval.get("aggregate_status") == "passed" and revision else "completed_without_revision" if final_eval.get("aggregate_status") == "passed" else "failed_after_revision"
     return _digest_record({
         "schema": "autonomy_4_final_synthesis_v1",
+        "cycle_family": evaluator.get("cycle_family") or infer_cycle_family(plan),
         "synthesis_id": stable_id("autonomy-4-final", plan["plan_id"], tuple(ev["artifact_digest"] for ev in evaluations)),
         "goal_id": plan["goal_id"],
         "approved_plan_id": plan["plan_id"],
@@ -415,6 +645,8 @@ def final_synthesis(plan: Mapping[str, Any], evaluator: Mapping[str, Any], strat
         "source_mutation_count": 0,
         "trusted_admission": False,
         "capability_promotion": False,
+        "capability_claim": dict(evaluator.get("capability_statement") or {}).get("statement", ""),
+        "supported_task_class": dict(evaluator.get("capability_statement") or {}).get("supported_task_class", plan.get("supported_task_class", "")),
         "final_disposition": disposition,
         "provisional_capability_evidence": disposition != "failed_after_revision",
         "created_at": FIXED_TIMESTAMP,
@@ -455,6 +687,12 @@ def _existing_boundary_stop(output_root: Path) -> dict[str, Any] | None:
     if not stops:
         return None
     return _read_json(sorted(stops)[-1])
+
+
+def _persist_strategy_outputs(output_root: Path, evaluation: Mapping[str, Any]) -> None:
+    for output in dict(evaluation.get("strategy_outputs") or {}).values():
+        if isinstance(output, Mapping):
+            _write_json(Path(output_root) / "strategy_outputs" / f"{output['artifact_digest']}.json", output)
 
 
 def _transition_stage(
@@ -586,7 +824,7 @@ def run_approved_plan_execution(
         if stopped:
             return stopped
 
-        evaluator = compile_fixed_evaluator(plan)
+        evaluator = compile_family_evaluator(plan, output_root) or compile_fixed_evaluator(plan)
         _transition_stage(output_root, execution_id=execution_id, plan=plan, authority=authority, stage="evaluator", previous_state="ready", next_state="running", reason="sealed_evaluator_started", source=evaluator, controller_cycle=3)
         _write_json(output_root / "evaluator" / f"{evaluator['evaluator_id']}.json", evaluator)
         _transition_stage(output_root, execution_id=execution_id, plan=plan, authority=authority, stage="evaluator", previous_state="running", next_state="completed", reason="sealed_evaluator_persisted", source=evaluator, controller_cycle=4)
@@ -604,6 +842,7 @@ def run_approved_plan_execution(
 
         initial_eval = evaluate_strategy(initial, evaluator)
         _transition_stage(output_root, execution_id=execution_id, plan=plan, authority=authority, stage="initial_evaluation", previous_state="ready", next_state="running", reason="initial_evaluation_started", source=initial_eval, controller_cycle=7)
+        _persist_strategy_outputs(output_root, initial_eval)
         _write_json(output_root / "evaluations" / f"{initial_eval['evaluation_id']}.json", initial_eval)
         initial_state = "completed" if initial_eval["aggregate_status"] == "passed" else "failed_evaluation"
         _transition_stage(output_root, execution_id=execution_id, plan=plan, authority=authority, stage="initial_evaluation", previous_state="running", next_state=initial_state, reason=f"initial_evaluation_{initial_eval['aggregate_status']}", source=initial_eval, controller_cycle=8)
@@ -635,6 +874,7 @@ def run_approved_plan_execution(
             revised_eval = evaluate_strategy(revised, evaluator)
             evaluations.append(revised_eval)
             _transition_stage(output_root, execution_id=execution_id, plan=plan, authority=authority, stage="revised_evaluation", previous_state="ready", next_state="running", reason="revised_evaluation_started", source=revised_eval, controller_cycle=13)
+            _persist_strategy_outputs(output_root, revised_eval)
             _write_json(output_root / "evaluations" / f"{revised_eval['evaluation_id']}.json", revised_eval)
             revised_state = "completed" if revised_eval["aggregate_status"] == "passed" else "failed_evaluation"
             _transition_stage(output_root, execution_id=execution_id, plan=plan, authority=authority, stage="revised_evaluation", previous_state="running", next_state=revised_state, reason=f"revised_evaluation_{revised_eval['aggregate_status']}", source=revised_eval, controller_cycle=14)

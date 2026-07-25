@@ -41,11 +41,13 @@ def _load_goals(root: Path) -> list[dict[str, Any]]:
     return [record for path in sorted((root / "goals").glob("*.json")) if (record := _read_json(path))] if (root / "goals").exists() else []
 
 
-def persist_goal(output_root: str | Path, *, condition_key: str, priority: int, state: str = "queued", authority_requirements: Sequence[str] = (), prerequisites: Sequence[str] = (), created_index: int = 0) -> dict[str, Any]:
+def persist_goal(output_root: str | Path, *, condition_key: str, priority: int, state: str = "queued", authority_requirements: Sequence[str] = (), prerequisites: Sequence[str] = (), created_index: int = 0, cycle_family: str = "", supported_task_class: str = "") -> dict[str, Any]:
     goal = _digest_record({
         "schema": "autonomy_8_scheduled_goal_v1",
         "goal_id": stable_id("autonomy-8-goal", condition_key),
         "condition_key": condition_key,
+        "cycle_family": cycle_family,
+        "supported_task_class": supported_task_class,
         "priority": priority,
         "state": state,
         "authority_requirements": tuple(authority_requirements),
@@ -84,7 +86,7 @@ def run_scheduler(output_root: str | Path = AUTONOMY_8_ROOT, *, seed_goals: Sequ
             key = str(goal["condition_key"])
             state = "duplicate" if key in seen else str(goal.get("state") or "queued")
             seen.add(key)
-            persist_goal(output_root, condition_key=key, priority=int(goal.get("priority") or 0), state=state, authority_requirements=tuple(goal.get("authority_requirements") or ()), prerequisites=tuple(goal.get("prerequisites") or ()), created_index=index)
+            persist_goal(output_root, condition_key=key, priority=int(goal.get("priority") or 0), state=state, authority_requirements=tuple(goal.get("authority_requirements") or ()), prerequisites=tuple(goal.get("prerequisites") or ()), created_index=index, cycle_family=str(goal.get("cycle_family") or ""), supported_task_class=str(goal.get("supported_task_class") or ""))
     if mark_completed:
         for goal in _load_goals(output_root):
             if goal.get("goal_id") == mark_completed or goal.get("condition_key") == mark_completed:

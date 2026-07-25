@@ -44,6 +44,9 @@ JSON_CASE_CLASSES = (
     "invalid_nested_object",
     "multiple_error_record",
     "optional_null",
+    "malformed_json",
+    "unsupported_schema_version",
+    "provenance_completeness",
 )
 JSON_SEMANTIC_OPERATIONS = (
     "missing required field detection",
@@ -240,6 +243,7 @@ def _json_schema_records() -> dict[str, dict[str, Any]]:
         "invalid_nested_object.json",
         "multiple_error.json",
         "optional_null.json",
+        "malformed_json.json",
     )}
 
 
@@ -260,15 +264,22 @@ def create_json_fixture(root: Path, *, reset: bool = False) -> dict[str, Any]:
         "invalid_nested_object.json": [{"id": 5, "active": True, "profile": "not-object"}],
         "multiple_error.json": [{"active": "maybe", "profile": {"score": "high"}, "rogue": "x"}],
         "optional_null.json": [{"id": 7, "active": False, "profile": {"score": 0}, "note": None}],
+        "unsupported_schema_version.json": [{"id": 8, "active": True, "profile": {"score": 1}}],
     }
     for name, payload in payloads.items():
         path = input_dir / name
         if not path.exists():
             path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    malformed = input_dir / "malformed_json.json"
+    if not malformed.exists():
+        malformed.write_text('[{"id": 9, "active": true, "profile": {"score": 2}}\n', encoding="utf-8")
     for name, schema in _json_schema_records().items():
         path = schema_dir / f"{name}.schema.json"
         if not path.exists():
             path.write_text(json.dumps(schema, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    unsupported = schema_dir / "unsupported_schema_version.json.schema.json"
+    if not unsupported.exists():
+        unsupported.write_text(json.dumps({"__schema_version__": "2", "fields": _json_schema_records()["valid_records.json"]}, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     input_digests = tuple(sorted((path.name, _file_digest(path)) for path in input_dir.glob("*.json")))
     schema_digests = tuple(sorted((path.name, _file_digest(path)) for path in schema_dir.glob("*.json")))
     record = {
@@ -322,8 +333,17 @@ def _json_report(root: Path) -> dict[str, Any]:
     files = []
     for input_path in sorted((root / "inputs").glob("*.json")):
         schema = _read_json(root / "schemas" / f"{input_path.name}.schema.json")
-        records = _read_json(input_path)
         errors: list[dict[str, Any]] = []
+        if schema.get("__schema_version__") not in {None, "1"}:
+            errors.append({"file": input_path.name, "row": None, "path": "__schema_version__", "category": "unsupported_schema_version", "observed": schema.get("__schema_version__"), "expected": "1", "message": "schema version is unsupported"})
+            files.append({"file": input_path.name, "valid": False, "errors": tuple(errors), "recommendations": tuple(f"Review {error['path']} in {input_path.name}" for error in errors)})
+            continue
+        try:
+            records = _read_json(input_path)
+        except json.JSONDecodeError as exc:
+            errors.append({"file": input_path.name, "row": None, "path": "$", "category": "malformed_json", "observed": exc.msg, "expected": "parseable_json", "message": "JSON text cannot be parsed"})
+            files.append({"file": input_path.name, "valid": False, "errors": tuple(errors), "recommendations": tuple(f"Review {error['path']} in {input_path.name}" for error in errors)})
+            continue
         for index, record in enumerate(records, start=1):
             errors.extend(_json_errors(record, schema, input_path.name, row=index))
         files.append({"file": input_path.name, "valid": not bool(errors), "errors": tuple(errors), "recommendations": tuple(f"Review {error['path']} in {input_path.name}" for error in errors)})
@@ -506,6 +526,8 @@ def _case_map() -> dict[str, str]:
         "invalid_nested_object": "invalid_nested_object.json",
         "multiple_error_record": "multiple_error.json",
         "optional_null": "optional_null.json",
+        "malformed_json": "malformed_json.json",
+        "unsupported_schema_version": "unsupported_schema_version.json",
     }
 
 
@@ -520,6 +542,11 @@ def _validate_json_output(root: Path, mission: Mapping[str, Any], fixture: Mappi
     for case_class, file_name in _case_map().items():
         passed = file_name in report_by_file and file_name in expected_by_file and json.dumps(report_by_file[file_name], sort_keys=True) == json.dumps(expected_by_file[file_name], sort_keys=True)
         cases.append({"case_class": case_class, "outcome": "passed" if passed else "failed"})
+    provenance_complete = report_is_structured and set(report_by_file) == set(expected_by_file) and all(
+        all(all(key in error for key in ("file", "row", "path", "category", "message")) for error in tuple(item.get("errors") or ()))
+        for item in tuple(report.get("files") or ())
+    )
+    cases.append({"case_class": "provenance_completeness", "outcome": "passed" if provenance_complete else "failed"})
     unchanged = after_digests == before_digests
     passed = unchanged and report_is_structured and all(item["outcome"] == "passed" for item in cases)
     aggregate = "integrity_stop" if not unchanged or integrity_status == "integrity_stop" else ("passed" if passed else "failed")

@@ -263,8 +263,9 @@ def compile_transfer_review(bundle: Mapping[str, Any]) -> dict[str, Any]:
     evaluator = dict(bundle.get("evaluator") or {})
     final_eval = dict((tuple(bundle.get("evaluations") or ()) or ({},))[-1])
     _passed, _failed, by_case = _case_sets(final_eval)
+    case_families = dict(evaluator.get("case_family_sets") or CASE_FAMILIES)
     family_results = {}
-    for family, cases in CASE_FAMILIES.items():
+    for family, cases in case_families.items():
         present = sorted(case for case in cases if case in by_case)
         passed = sorted(case for case in present if by_case.get(case) == "passed")
         failed = sorted(case for case in present if by_case.get(case) != "passed")
@@ -272,6 +273,7 @@ def compile_transfer_review(bundle: Mapping[str, Any]) -> dict[str, Any]:
     negative_discriminative = bool(evaluator.get("negative_controls")) and family_results["negative_control"]["all_passed"]
     return _digest_record({
         "schema": "autonomy_5_transfer_review_v1",
+        "cycle_family": evaluator.get("cycle_family", ""),
         "transfer_review_id": stable_id("autonomy-5-transfer", evaluator.get("evaluator_id"), final_eval.get("evaluation_id")),
         "evaluator_id": evaluator.get("evaluator_id"),
         "evaluator_digest": evaluator.get("artifact_digest"),
@@ -312,7 +314,24 @@ def _claims_audit(final: Mapping[str, Any], transfer: Mapping[str, Any], disposi
     })
 
 
-def _capability_statement(transfer: Mapping[str, Any]) -> dict[str, Any]:
+def _capability_statement(transfer: Mapping[str, Any], evaluator: Mapping[str, Any]) -> dict[str, Any]:
+    declared = dict(evaluator.get("capability_statement") or {})
+    if declared:
+        return _digest_record({
+            "schema": "autonomy_5_proposed_capability_statement_v1",
+            "cycle_family": evaluator.get("cycle_family", ""),
+            "statement_id": stable_id("autonomy-5-capability-statement", evaluator.get("evaluator_id"), declared.get("statement")),
+            "statement": declared.get("statement"),
+            "supported_inputs": tuple(declared.get("supported_inputs") or ()),
+            "supported_outputs": tuple(declared.get("supported_outputs") or ()),
+            "supported_case_families": tuple(declared.get("supported_case_families") or ()),
+            "uncertainty_behavior": declared.get("uncertainty_behavior") or "unsupported cases remain failed or provisional",
+            "excluded_domains": tuple(declared.get("excluded_domains") or ()),
+            "known_failure_modes": tuple(declared.get("known_failure_modes") or ()),
+            "required_provenance": ("A4 evaluator digest", "A4 strategy/evaluation digests", "A5 outcome review digest"),
+            "evaluator_version": evaluator.get("evaluator_policy_version") or REVIEW_POLICY_VERSION,
+            "created_at": FIXED_TIMESTAMP,
+        })
     family_results = dict(transfer.get("family_results") or {})
     supported_cases = []
     for family in ("visible", "transfer", "adversarial", "negative_control"):
@@ -418,10 +437,11 @@ def review_completed_outcome(a4_root: str | Path, *, output_root: str | Path = A
     evaluator = dict(bundle["evaluator"])
     strategies = [dict(item) for item in tuple(bundle.get("strategies") or ())]
     evaluations = [dict(item) for item in tuple(bundle.get("evaluations") or ())]
-    capability = _capability_statement(transfer)
+    capability = _capability_statement(transfer, evaluator)
     claims = _claims_audit(final, transfer, disposition)
     review = _digest_record({
         "schema": "autonomy_5_outcome_review_record_v1",
+        "cycle_family": evaluator.get("cycle_family", ""),
         "review_id": stable_id("autonomy-5-review", bundle.get("a4_root"), final.get("artifact_digest"), disposition),
         "review_policy_version": REVIEW_POLICY_VERSION,
         "reviewer_implementation_path": "orchestration/runtime/autonomy_outcome_review.py",
@@ -435,6 +455,8 @@ def review_completed_outcome(a4_root: str | Path, *, output_root: str | Path = A
         "authority_digest": dict(bundle["authority"]).get("artifact_digest"),
         "evaluator_id": evaluator.get("evaluator_id"),
         "evaluator_digest": evaluator.get("artifact_digest"),
+        "evaluator_results": tuple(evaluations),
+        "record_level_evidence": all(bool(evaluation.get("record_level_evaluation")) for evaluation in evaluations),
         "initial_strategy_id": strategies[0].get("strategy_id"),
         "initial_strategy_digest": strategies[0].get("artifact_digest"),
         "revised_strategy_id": strategies[-1].get("strategy_id") if len(strategies) > 1 else "",
@@ -450,6 +472,10 @@ def review_completed_outcome(a4_root: str | Path, *, output_root: str | Path = A
         "failed_case_ids": tuple(item.get("case_id") for item in tuple(evaluations[-1].get("case_outcomes") or ()) if item.get("outcome") != "passed"),
         "hidden_transfer_case_results": dict(transfer.get("family_results") or {}),
         "negative_control_results": dict(dict(transfer.get("family_results") or {}).get("negative_control") or {}),
+        "supported_behavior": capability.get("statement"),
+        "supported_inputs": tuple(capability.get("supported_inputs") or ()),
+        "supported_outputs": tuple(capability.get("supported_outputs") or ()),
+        "supported_case_families": tuple(capability.get("supported_case_families") or ()),
         "strategy_change_summary": revision.get("strategy_change_summary"),
         "first_incorrect_transition_identified_by_a4": revision.get("diagnosed_first_incorrect_transition"),
         "revision_addressed_first_incorrect_transition": revision.get("revision_addressed_first_incorrect_transition"),

@@ -67,6 +67,7 @@ def test_a5_reviews_a4_artifacts_independently_and_does_not_admit_competence(tmp
 
     assert result["status"] == "AUTONOMY_5_OUTCOME_REVIEW_PASSED"
     assert review["provisional_disposition"] == "candidate_for_competence_admission_review"
+    assert all(item["record_level_evaluation"] is True for item in review["evaluator_results"])
     assert review["integrity_passed"] is True
     assert review["accepted_competence_created"] is False
     assert review["capability_promotion"] is False
@@ -103,6 +104,7 @@ def test_a5_revision_effectiveness_transfer_and_negative_controls_are_separate(t
     assert transfer["family_results"]["transfer"]["all_passed"] is True
     assert transfer["family_results"]["adversarial"]["all_passed"] is True
     assert transfer["negative_controls_discriminative"] is True
+    assert result["review"]["record_level_evidence"] is True
 
 
 def test_a5_failed_after_revision_disposition(tmp_path):

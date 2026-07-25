@@ -13,7 +13,9 @@ from orchestration.runtime.autonomy_approved_plan_execution import (
     compile_execution_authority,
     compile_fixed_evaluator,
     compile_revision,
+    compile_strategy,
     evaluate_strategy,
+    execute_record_strategy,
     persist_work_item_transition,
     recover_prepared_execution,
     reconstruct_lifecycle_state,
@@ -92,6 +94,117 @@ def test_evaluator_fixed_before_strategy_and_hidden_cases_isolated():
     assert evaluator["leakage_controls"]
     assert evaluator["negative_controls"] is True
     assert evaluator["transfer_cases"] is True
+    assert evaluator["sealed_expected_output_digest"]
+    assert "expected_decisions" not in json.dumps(evaluator["record_level_cases"][0]["strategy_visible_input"]).lower()
+
+
+def test_b0_same_behavior_different_strategy_version_same_record_result():
+    _goal, plan, _approval = _approved_plan()
+    evaluator = compile_fixed_evaluator(plan)
+    strategy = compile_strategy(plan, evaluator, version="revised")
+    relabeled = {**strategy, "version": "renamed_experiment", "strategy_id": "renamed", "artifact_digest": "renamed-digest"}
+
+    first = evaluate_strategy(strategy, evaluator)
+    second = evaluate_strategy(relabeled, evaluator)
+
+    assert first["aggregate_status"] == second["aggregate_status"]
+    assert tuple(item["outcome"] for item in first["case_outcomes"]) == tuple(item["outcome"] for item in second["case_outcomes"])
+    assert tuple(obs["failed_assertions"] for obs in first["evaluator_observations"]) == tuple(obs["failed_assertions"] for obs in second["evaluator_observations"])
+    assert first["strategy_identity_used_for_scoring"] is False
+
+
+def test_b0_same_label_different_behavior_changes_record_result():
+    _goal, plan, _approval = _approved_plan()
+    evaluator = compile_fixed_evaluator(plan)
+    strategy = compile_strategy(plan, evaluator, version="revised")
+    weaker = {**strategy, "behavior_profile": "name_similarity_without_corroboration", "artifact_digest": "same-label-different-behavior"}
+
+    passed = evaluate_strategy(strategy, evaluator)
+    failed = evaluate_strategy(weaker, evaluator)
+
+    assert passed["aggregate_status"] == "passed"
+    assert failed["aggregate_status"] == "revision_required"
+    assert set(failed["failed_case_categories"]) == {"ambiguous_near_match", "adversarial_similarity"}
+
+
+def test_b0_fixture_and_case_id_rename_preserves_semantic_result():
+    _goal, plan, _approval = _approved_plan()
+    evaluator = compile_fixed_evaluator(plan)
+    renamed_cases = []
+    for index, case in enumerate(evaluator["record_level_cases"], start=1):
+        renamed = {**case, "case_id": f"renamed-case-{index}", "case_category": f"renamed-family-{index}"}
+        renamed_cases.append(renamed)
+    renamed_evaluator = {**evaluator, "record_level_cases": tuple(renamed_cases), "case_categories": tuple(case["case_category"] for case in renamed_cases), "artifact_digest": "renamed-evaluator-digest"}
+    strategy = compile_strategy(plan, evaluator, version="revised")
+
+    original = evaluate_strategy(strategy, evaluator)
+    renamed = evaluate_strategy(strategy, renamed_evaluator)
+
+    assert original["aggregate_status"] == renamed["aggregate_status"]
+    assert tuple(item["outcome"] for item in original["case_outcomes"]) == tuple(item["outcome"] for item in renamed["case_outcomes"])
+    assert tuple(obs["score"] for obs in original["evaluator_observations"]) == tuple(obs["score"] for obs in renamed["evaluator_observations"])
+    assert renamed["fixture_name_used_for_scoring"] is False
+
+
+def test_b0_hidden_expected_output_visible_integrity_stop():
+    _goal, plan, _approval = _approved_plan()
+    evaluator = compile_fixed_evaluator(plan)
+    case = dict(evaluator["record_level_cases"][0])
+    visible = dict(case["strategy_visible_input"])
+    visible["expected_decisions"] = case["expected_decisions"]
+    case["strategy_visible_input"] = visible
+    leaked = {**evaluator, "record_level_cases": (case,) + tuple(evaluator["record_level_cases"][1:]), "artifact_digest": "leaked"}
+    strategy = compile_strategy(plan, evaluator, version="revised")
+
+    result = evaluate_strategy(strategy, leaked)
+
+    assert result["aggregate_status"] == "integrity_stop"
+    assert "hidden_expected_output_visible:exact_stable_identifier" in result["integrity_reasons"]
+
+
+def test_b0_negative_control_forced_ambiguous_match_and_missing_provenance_fail():
+    _goal, plan, _approval = _approved_plan()
+    evaluator = compile_fixed_evaluator(plan)
+    strategy = compile_strategy(plan, evaluator, version="revised")
+    outputs = execute_record_strategy(strategy, evaluator)
+    target = next(case for case in evaluator["record_level_cases"] if case["case_category"] == "ambiguous_near_match")
+    output = dict(outputs[target["case_id"]])
+    decision = dict(output["decisions"][0])
+    decision["status"] = "confirmed"
+    decision["provenance"] = ()
+    output["decisions"] = (decision,)
+    tampered = {**outputs, target["case_id"]: output}
+
+    observation = next(obs for obs in evaluate_strategy({**strategy, "precomputed_outputs": tampered}, evaluator)["evaluator_observations"] if obs["case_category"] == "ambiguous_near_match")
+
+    assert "status_mismatch:l-near" in observation["failed_assertions"]
+    assert "missing_provenance:l-near" in observation["failed_assertions"]
+    assert "negative_control_false_positive:l-near" in observation["failed_assertions"]
+
+
+def test_b0_unsupported_shape_is_explicit_not_fabricated_match():
+    _goal, plan, _approval = _approved_plan()
+    evaluator = compile_fixed_evaluator(plan)
+    case = {
+        **evaluator["record_level_cases"][0],
+        "case_id": "unsupported-case",
+        "case_category": "unsupported_shape",
+        "strategy_visible_input": {
+            "left_records": ({"key": "l-unsupported", "blob": ["not", "tabular"]},),
+            "right_records": (),
+            "unsupported_shape": True,
+            "field_mappings": {},
+            "composite_keys": (),
+        },
+        "expected_decisions": ({"left_key": "l-unsupported", "right_keys": (), "status": "unsupported", "reason": "unsupported_input_shape", "provenance": ("input_record",)},),
+    }
+    custom = {**evaluator, "record_level_cases": (case,), "case_categories": ("unsupported_shape",), "artifact_digest": "unsupported-evaluator"}
+    strategy = compile_strategy(plan, evaluator, version="revised")
+
+    result = evaluate_strategy(strategy, custom)
+
+    assert result["aggregate_status"] == "passed"
+    assert result["evaluator_observations"][0]["strategy_output"]["decisions"][0]["status"] == "unsupported"
 
 
 def test_initial_pass_needs_no_revision(tmp_path):

@@ -125,6 +125,21 @@ def _case_statuses(review: Mapping[str, Any]) -> dict[str, str]:
 
 
 def _clause_support(review: Mapping[str, Any]) -> tuple[dict[str, Any], ...]:
+    if review.get("cycle_family") and review.get("cycle_family") != "reconciliation_record_level_v1":
+        statuses = _case_statuses(review)
+        supported = tuple(review.get("supported_case_families") or ())
+        return tuple({
+            "clause": str(clause),
+            "supporting_case_ids": tuple(case for case in supported if statuses.get(str(case)) == "passed"),
+            "evaluator_result": "passed" if supported and all(statuses.get(str(case)) == "passed" for case in supported) else "not_fully_supported",
+            "transfer_support": bool(dict(dict(review.get("hidden_transfer_case_results") or {}).get("transfer") or {}).get("passed")),
+            "limitations": tuple(review.get("remaining_limitations") or ("bounded retained fixtures only",)),
+            "admission_eligibility": bool(supported and all(statuses.get(str(case)) == "passed" for case in supported)),
+        } for clause in (
+            review.get("supported_behavior") or "family-specific supported behavior",
+            "bounded declared inputs",
+            "deterministic declared outputs",
+        ))
     statuses = _case_statuses(review)
     clauses = (
         ("confirmed records", ("exact_stable_identifier", "identifier_renamed", "composite_identifier")),
@@ -152,8 +167,23 @@ def compile_admission_candidate(bundle: Mapping[str, Any]) -> dict[str, Any]:
     review = dict(bundle.get("review") or {})
     transfer = dict(bundle.get("transfer_review") or {})
     capability = dict(bundle.get("capability_statement") or {})
+    family = str(review.get("cycle_family") or capability.get("cycle_family") or "reconciliation_record_level_v1")
+    is_reconciliation = family in {"", "reconciliation_record_level_v1"}
+    statement = NARROW_CAPABILITY_STATEMENT if is_reconciliation else capability.get("statement")
+    supported_task_class = "bounded_cross_format_record_reconciliation" if is_reconciliation else str(review.get("supported_task_class") or "structured_json_validation")
+    title = "Bounded Cross-Format Ambiguity-Preserving Reconciliation" if is_reconciliation else "Bounded JSON Schema Validation Reporting"
+    demonstrated = (
+        "classifies bounded tabular fixture records as confirmed, ambiguous, or unmatched",
+        "preserves uncertainty for duplicate, conflicting, near-match, and adversarial cases",
+        "uses fixed evaluator provenance without provider, mutation, trust, deployment, or promotion authority",
+    ) if is_reconciliation else (
+        "validates bounded JSON record sets against supplied schemas",
+        "reports missing, unexpected, primitive type, nested object, optional-null, and multiple-error cases",
+        "uses fixed evaluator provenance without provider, mutation, trust, deployment, or promotion authority",
+    )
     candidate = {
         "schema": "autonomy_6_admission_candidate_v1",
+        "cycle_family": family,
         "admission_candidate_id": stable_id("autonomy-6-admission-candidate", review.get("review_id"), review.get("artifact_digest")),
         "a5_review_id": review.get("review_id"),
         "a5_review_digest": review.get("artifact_digest"),
@@ -174,22 +204,18 @@ def compile_admission_candidate(bundle: Mapping[str, Any]) -> dict[str, Any]:
         "a4_initial_evaluation_digest": review.get("initial_evaluation_digest"),
         "a4_revised_evaluation_id": review.get("revised_evaluation_id"),
         "a4_revised_evaluation_digest": review.get("revised_evaluation_digest"),
-        "proposed_competence_title": "Bounded Cross-Format Ambiguity-Preserving Reconciliation",
-        "exact_behavioral_capability_statement": NARROW_CAPABILITY_STATEMENT,
-        "demonstrated_behavior": (
-            "classifies bounded tabular fixture records as confirmed, ambiguous, or unmatched",
-            "preserves uncertainty for duplicate, conflicting, near-match, and adversarial cases",
-            "uses fixed evaluator provenance without provider, mutation, trust, deployment, or promotion authority",
-        ),
-        "inferred_but_unproven_behavior": ("possible utility on adjacent tabular reconciliation tasks with similar fixtures",),
-        "excluded_behavior": tuple(capability.get("excluded_domains") or ()) + ("general entity resolution", "arbitrary database reconciliation", "universal fuzzy matching"),
-        "supported_task_class": "bounded_cross_format_record_reconciliation",
+        "proposed_competence_title": title,
+        "exact_behavioral_capability_statement": statement,
+        "demonstrated_behavior": demonstrated,
+        "inferred_but_unproven_behavior": ("possible utility on adjacent tasks with similar bounded fixtures",),
+        "excluded_behavior": tuple(capability.get("excluded_domains") or ()) + (() if not is_reconciliation else ("general entity resolution", "arbitrary database reconciliation", "universal fuzzy matching")),
+        "supported_task_class": supported_task_class,
         "supported_input_forms": tuple(capability.get("supported_inputs") or ("bounded tabular fixtures",)),
         "supported_output_forms": tuple(capability.get("supported_outputs") or ("confirmed", "ambiguous", "unmatched")),
-        "supported_case_families": tuple(capability.get("supported_case_families") or SUPPORTED_CASES),
+        "supported_case_families": tuple(capability.get("supported_case_families") or (SUPPORTED_CASES if is_reconciliation else ())),
         "uncertainty_behavior": capability.get("uncertainty_behavior") or "preserve ambiguity without corroborating evidence",
         "provenance_requirements": tuple(capability.get("required_provenance") or ()),
-        "evaluator_version": "autonomy_4_fixed_evaluator_v1",
+        "evaluator_version": capability.get("evaluator_version") or "autonomy_4_fixed_evaluator_v1",
         "evaluator_digest": review.get("evaluator_digest"),
         "transfer_case_results": dict(dict(transfer.get("family_results") or {}).get("transfer") or {}),
         "negative_control_results": dict(review.get("negative_control_results") or {}),
@@ -258,6 +284,14 @@ def compile_admission_policy(candidate: Mapping[str, Any], bundle: Mapping[str, 
     transfer = dict(bundle.get("transfer_review") or {})
     claims = dict(bundle.get("claims_audit") or {})
     final_cases = _case_statuses(review)
+    family = str(candidate.get("cycle_family") or review.get("cycle_family") or "reconciliation_record_level_v1")
+    transfer_family = dict(dict(transfer.get("family_results") or {}).get("transfer") or {})
+    negative_family = dict(dict(transfer.get("family_results") or {}).get("negative_control") or {})
+    transfer_cases_passed = bool(transfer_family.get("present")) and not tuple(transfer_family.get("failed") or ())
+    negative_cases_passed = bool(negative_family.get("present")) and not tuple(negative_family.get("failed") or ())
+    if family in {"", "reconciliation_record_level_v1"}:
+        transfer_cases_passed = all(final_cases.get(case) == "passed" for case in TRANSFER_CASES)
+        negative_cases_passed = transfer.get("negative_controls_discriminative") is True and all(final_cases.get(case) == "passed" for case in NEGATIVE_CASES)
     checks = {
         "a5_candidate_disposition": review.get("provisional_disposition") == "candidate_for_competence_admission_review",
         "a5_review_digest_valid": _verify_digest(review),
@@ -265,7 +299,7 @@ def compile_admission_policy(candidate: Mapping[str, Any], bundle: Mapping[str, 
         "evaluator_fixed_before_strategy_execution": integrity.get("evaluator_fixed_before_strategy") is True,
         "evaluator_digest_unchanged_across_revision": review.get("evaluator_digest") and review.get("evaluator_digest") == dict(bundle.get("revision_effectiveness") or {}).get("evaluator_digest_after"),
         "hidden_and_transfer_cases_isolated": integrity.get("hidden_case_isolation_confirmed") is True and bool(dict(dict(transfer.get("family_results") or {}).get("transfer") or {}).get("present")),
-        "negative_controls_discriminated": transfer.get("negative_controls_discriminative") is True and all(final_cases.get(case) == "passed" for case in NEGATIVE_CASES),
+        "negative_controls_discriminated": negative_cases_passed,
         "unsupported_claims_removed": claims.get("recommended_statement_contains_unsupported_claim") is False,
         "no_provider_call_influenced_evaluator": review.get("provider_calls") == 0,
         "no_tracked_source_mutation_occurred": review.get("source_mutation_performed_by_a5") is False,
@@ -275,7 +309,7 @@ def compile_admission_policy(candidate: Mapping[str, Any], bundle: Mapping[str, 
         "limitations_explicit": bool(tuple(candidate.get("known_limitations") or ())),
         "not_already_rejected_or_admitted": True,
         "no_equivalent_accepted_competence": overlap.get("overlap_disposition") != "duplicate_existing_competence",
-        "transfer_evidence_present": all(final_cases.get(case) == "passed" for case in TRANSFER_CASES),
+        "transfer_evidence_present": transfer_cases_passed,
         "clause_level_support_passed": all(row.get("admission_eligibility") for row in tuple(candidate.get("clause_support_table") or ())),
     }
     failed = tuple(key for key, passed in checks.items() if not passed)
@@ -374,7 +408,7 @@ def compile_narration(candidate: Mapping[str, Any], policy: Mapping[str, Any]) -
     messages = (
         "I am checking whether the provisional result qualifies as a bounded competence.",
         "The evaluator and hidden transfer evidence passed the admission policy." if policy.get("admission_recommendation") == "recommend_admission" else "The admission policy found unresolved evidence conditions.",
-        "The proposed competence remains limited to bounded tabular reconciliation.",
+        f"The proposed competence remains limited to: {candidate.get('exact_behavioral_capability_statement')}",
         "This does not grant source mutation, deployment, provider, or trusted authority.",
     )
     return tuple(_digest_record({
