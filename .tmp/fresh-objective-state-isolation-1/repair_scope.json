@@ -1,0 +1,14 @@
+{
+  "excluded_files": [
+    "orchestration/runtime/live_competence_adapter.py",
+    "DELTA-75",
+    "reports/RC4_*",
+    "unrelated claim-relation files/tests"
+  ],
+  "stage_files": [
+    "DELTA.py",
+    "orchestration/runtime/conversational_runtime_operation.py",
+    "tests/runtime_gsr/test_conversational_runtime_operation.py",
+    ".tmp/fresh-objective-state-isolation-1/"
+  ]
+}

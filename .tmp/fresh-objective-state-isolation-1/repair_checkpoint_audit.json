@@ -1,0 +1,91 @@
+{
+  "branch": {
+    "command": "git branch --show-current",
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "codex/delta-cognitive-core\n"
+  },
+  "diff_check": {
+    "command": "git diff --check -- DELTA.py orchestration/runtime/conversational_runtime_operation.py tests/runtime_gsr/test_conversational_runtime_operation.py",
+    "returncode": 0
+  },
+  "diff_stat": {
+    "command": "git diff --stat -- DELTA.py orchestration/runtime/conversational_runtime_operation.py tests/runtime_gsr/test_conversational_runtime_operation.py",
+    "returncode": 0,
+    "stderr": "warning: in the working copy of 'DELTA.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'orchestration/runtime/conversational_runtime_operation.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'tests/runtime_gsr/test_conversational_runtime_operation.py', LF will be replaced by CRLF the next time Git touches it\n",
+    "stdout": " DELTA.py                                           |  19 +--\n .../runtime/conversational_runtime_operation.py    | 128 ++++++++++++++++++---\n .../test_conversational_runtime_operation.py       |  96 ++++++++++++++++\n 3 files changed, 218 insertions(+), 25 deletions(-)\n"
+  },
+  "gate": "FRESH_OBJECTIVE_STATE_ISOLATION_1",
+  "head": {
+    "command": "git rev-parse HEAD",
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "cd73de1d7e25c28cfa538ad3a144cdf31571a9c2\n"
+  },
+  "process_audit": {
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "[\n    {\n        \"Id\":  10400,\n        \"ProcessName\":  \"python\",\n        \"Path\":  \"G:\\\\Delta_Dev\\\\.venv311\\\\Scripts\\\\python.exe\",\n        \"StartTime\":  \"\\/Date(1785193719902)\\/\"\n    },\n    {\n        \"Id\":  29748,\n        \"ProcessName\":  \"python\",\n        \"Path\":  \"C:\\\\Program Files\\\\Python311\\\\python.exe\",\n        \"StartTime\":  \"\\/Date(1785193719912)\\/\"\n    }\n]\n"
+  },
+  "protected_paths_preserved": true,
+  "protected_status": {
+    "command": "git status --short -- orchestration/runtime/live_competence_adapter.py DELTA-75 reports/RC4_*",
+    "returncode": 0,
+    "stderr": "",
+    "stdout": " M orchestration/runtime/live_competence_adapter.py\n"
+  },
+  "py_compile": {
+    "command": "python -m py_compile DELTA.py orchestration/runtime/conversational_runtime_operation.py tests/runtime_gsr/test_conversational_runtime_operation.py",
+    "returncode": 0
+  },
+  "recorded_at": "2026-07-27T23:08:41.554640+00:00",
+  "remote": {
+    "command": "git ls-remote --heads origin codex/delta-cognitive-core",
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "cd73de1d7e25c28cfa538ad3a144cdf31571a9c2\trefs/heads/codex/delta-cognitive-core\n"
+  },
+  "staged_before": {
+    "command": "git diff --cached --name-only",
+    "returncode": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  "staging_empty_before_checkpoint": true,
+  "status_short": {
+    "command": "git status --short",
+    "returncode": 0,
+    "stderr": "",
+    "stdout": " M DELTA.py\n M orchestration/runtime/conversational_runtime_operation.py\n M orchestration/runtime/live_competence_adapter.py\n M tests/runtime_gsr/test_conversational_runtime_operation.py\n?? orchestration/runtime/cognitive_claim_relation_runtime.py\n?? orchestration/runtime/cognitive_claim_relations.py\n?? orchestration/runtime/cognitive_contradiction_evaluation.py\n?? orchestration/runtime/cognitive_excluded_path_reconciliation.py\n?? tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py\n?? tests/runtime_gsr/test_cognitive_claim_relation_runtime.py\n?? tests/runtime_gsr/test_cognitive_claim_relations.py\n?? tests/runtime_gsr/test_cognitive_contradiction_evaluation.py\n?? tests/runtime_gsr/test_cognitive_excluded_path_reconciliation.py\n"
+  },
+  "tests": {
+    "command": "python -m pytest tests/runtime_gsr/test_conversational_runtime_operation.py tests/runtime_gsr/test_conversational_runtime_ui.py -q",
+    "result": "35 passed"
+  },
+  "upstream": {
+    "command": "git rev-parse --abbrev-ref --symbolic-full-name \"@{u}\"",
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "origin/codex/delta-cognitive-core\n"
+  },
+  "upstream_head": {
+    "command": "git rev-parse \"@{u}\"",
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "cd73de1d7e25c28cfa538ad3a144cdf31571a9c2\n"
+  },
+  "validated_scope": [
+    "goal intent before stale-review routing",
+    "archive prior objective",
+    "fresh objective-scoped cycle keys",
+    "fresh episode path and budgets",
+    "clear prior pending request scope",
+    "clear prior provider authority scope",
+    "clear prior review state",
+    "clear prior insufficiency records",
+    "clear prior relation decisions",
+    "preserve archived objective evidence",
+    "preserve restart behavior",
+    "prevent duplicate-goal recreation"
+  ]
+}

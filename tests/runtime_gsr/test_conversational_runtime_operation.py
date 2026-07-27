@@ -11,6 +11,7 @@ from orchestration.runtime.conversational_runtime_operation import (
     render_goal_review,
     request_provider_learning_packet,
     resolve_pending_chat_request,
+    run_background_objective_cycle,
     save_runtime_state,
     start_or_restore_runtime,
     stop_active_objective,
@@ -369,6 +370,101 @@ def test_stop_active_objective_preserves_chat_runtime_without_new_authority(tmp_
     assert stopped.lifecycle_state == "stopped"
     assert stopped.active_objective.lifecycle_state == "stopped"
     assert stopped.authority.authority_effect == "routine_internal_only"
+
+
+def test_fresh_objective_archives_prior_scope_and_starts_at_cycle_zero(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path).state
+    state = handle_conversational_message(
+        state,
+        "No, when I say the thing before, inspect the previous user message.",
+        runtime_root=tmp_path,
+        run_background_cycle=False,
+    ).state
+    state = _with_local_insufficiency(state, tmp_path)
+    state = request_provider_learning_packet(state, "Request a provider learning packet.", runtime_root=tmp_path).state
+    state = resolve_pending_chat_request(state, "Approve, but do not send my actual messages.", runtime_root=tmp_path).state
+    while len(state.completed_cycle_keys) < state.active_objective.cycle_budget:
+        state = run_background_objective_cycle(state, runtime_root=tmp_path, reason=f"budget-fill-{len(state.completed_cycle_keys)}")
+    state = run_background_objective_cycle(state, runtime_root=tmp_path, reason="budget-pauses")
+    assert state.lifecycle_state == "paused_budget"
+    prior_objective_id = state.active_objective.objective_id
+    prior_cycle_keys = state.completed_cycle_keys
+
+    new_goal = (
+        "Your goal today is to keep working on semantic reconciliation of queued and implied references. "
+        "Improve topic switches, corrections, and false-transfer guards."
+    )
+    result = handle_conversational_message(state, new_goal, runtime_root=tmp_path, run_background_cycle=False)
+
+    assert result.objective_created is True
+    assert result.state.active_objective.objective_id != prior_objective_id
+    assert result.state.lifecycle_state == "running"
+    assert result.state.completed_cycle_keys == ()
+    assert result.state.pending_chat_requests == ()
+    assert result.state.provider_authorities == ()
+    assert result.state.local_semantic_insufficiencies == ()
+    assert result.state.goal_reviews == ()
+    assert result.state.archived_objectives[-1]["objective_id"] == prior_objective_id
+    assert tuple(result.state.archived_objectives[-1]["completed_cycle_keys"]) == prior_cycle_keys
+
+    advanced = run_background_objective_cycle(result.state, runtime_root=tmp_path, reason="fresh-objective")
+    assert len(advanced.completed_cycle_keys) == 1
+    assert advanced.lifecycle_state == "running"
+
+
+def test_duplicate_objective_wording_does_not_reset_cycle_state(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path).state
+    cycle_keys = state.completed_cycle_keys
+
+    duplicate = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path)
+
+    assert duplicate.objective_created is False
+    assert duplicate.state.active_objective.objective_id == state.active_objective.objective_id
+    assert duplicate.state.completed_cycle_keys == cycle_keys
+    assert duplicate.state.archived_objectives == ()
+    assert "matches the active goal" in duplicate.reply
+
+
+def test_review_only_reports_current_objective_scope(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path, run_background_cycle=False).state
+    state = handle_conversational_message(
+        state,
+        "No, when I say the thing before, inspect the previous user message.",
+        runtime_root=tmp_path,
+        run_background_cycle=False,
+    ).state
+    new_goal = "Your goal today is to learn topic switch handling so we can communicate better."
+    state = handle_conversational_message(state, new_goal, runtime_root=tmp_path, run_background_cycle=False).state
+
+    reviewed, text = render_goal_review(state, status="implementation_review_required")
+
+    assert reviewed.active_objective.objective_id != reviewed.archived_objectives[-1]["objective_id"]
+    assert "no scoped lessons retained" in text
+    assert "provider authority exists" not in text
+
+
+def test_goal_sentence_with_review_word_still_classifies_as_goal(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path, run_background_cycle=False).state
+    message = (
+        "Your goal today is to work on queued implied references and stop at implementation review "
+        "so we can communicate better."
+    )
+
+    intent = classify_conversational_intent(
+        message,
+        active_objective=state.active_objective,
+        recent_turns=state.conversation,
+    )
+    result = handle_conversational_message(state, message, runtime_root=tmp_path, run_background_cycle=False)
+
+    assert intent.intent_type == "persistent_or_session_goal"
+    assert result.objective_created is True
+    assert result.state.active_objective.operator_wording == message
+    assert result.state.goal_reviews == ()
 
 
 def test_evaluator_rejects_storage_only_and_accepts_correction_learning(tmp_path):

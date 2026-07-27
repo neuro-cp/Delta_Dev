@@ -5543,7 +5543,17 @@ class DeltaApp:
             self._refresh_state_cards()
             return True
         lower_message = " ".join(message.lower().split())
-        if state.active_objective and any(term in lower_message for term in ("provider", "openai", "gpt", "external example", "outside example", "learning packet")) and any(term in lower_message for term in ("request", "ask", "recommend", "need", "use")):
+        intent = classify_conversational_intent(
+            message,
+            active_objective=state.active_objective,
+            recent_turns=state.conversation,
+        )
+        if (
+            intent.intent_type != "persistent_or_session_goal"
+            and state.active_objective
+            and any(term in lower_message for term in ("provider", "openai", "gpt", "external example", "outside example", "learning packet"))
+            and any(term in lower_message for term in ("request", "ask", "recommend", "need", "use"))
+        ):
             result = request_provider_learning_packet(
                 state,
                 message,
@@ -5556,7 +5566,7 @@ class DeltaApp:
             self._refresh_conversational_runtime_status()
             self._refresh_state_cards()
             return True
-        if state.active_objective and "review" in lower_message and "goal" in lower_message:
+        if intent.intent_type != "persistent_or_session_goal" and state.active_objective and "review" in lower_message and "goal" in lower_message:
             self.conversational_runtime_state, review = render_goal_review(
                 state,
                 status="implementation_review_required" if state.lifecycle_state in {"paused_budget", "running"} else state.lifecycle_state,
@@ -5568,11 +5578,6 @@ class DeltaApp:
             self._refresh_conversational_runtime_status()
             self._refresh_state_cards()
             return True
-        intent = classify_conversational_intent(
-            message,
-            active_objective=state.active_objective,
-            recent_turns=state.conversation,
-        )
         provisional_turn_id = f"ui-provisional-{len(state.conversation) + 1}"
         relation = decide_turn_relation(state, message, turn_id=provisional_turn_id) if state.active_objective else None
         transfer = infer_lesson_transfer(state, message, relation=relation) if state.active_objective else {"applied": False}

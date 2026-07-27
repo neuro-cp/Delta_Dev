@@ -328,6 +328,7 @@ class ConversationalRuntimeState:
     turn_relation_decisions: tuple[TurnRelationDecision, ...] = ()
     local_semantic_insufficiencies: tuple[LocalSemanticInsufficiency, ...] = ()
     goal_reviews: tuple[Mapping[str, Any], ...] = ()
+    archived_objectives: tuple[Mapping[str, Any], ...] = ()
     schema_version: str = SCHEMA_VERSION
 
     def as_record(self) -> dict[str, Any]:
@@ -528,6 +529,39 @@ def _insufficiency_from_record(item: Any) -> LocalSemanticInsufficiency:
     return LocalSemanticInsufficiency(**payload)
 
 
+def _active_objective_id(state: ConversationalRuntimeState) -> str:
+    return state.active_objective.objective_id if state.active_objective else ""
+
+
+def _active_lessons(state: ConversationalRuntimeState) -> tuple[ScopedLesson, ...]:
+    objective_id = _active_objective_id(state)
+    if not objective_id:
+        return ()
+    return tuple(lesson for lesson in state.accepted_lessons if lesson.objective_id == objective_id)
+
+
+def _archive_active_objective(state: ConversationalRuntimeState) -> Mapping[str, Any] | None:
+    if state.active_objective is None:
+        return None
+    objective_id = state.active_objective.objective_id
+    return {
+        "archive_id": stable_id("archived-conversational-objective", state.runtime_id, objective_id, str(len(state.archived_objectives) + 1)),
+        "objective_id": objective_id,
+        "objective": state.active_objective.as_record(),
+        "authority": state.authority.as_record() if state.authority else None,
+        "lifecycle_state": state.lifecycle_state,
+        "active_episode_path": state.active_episode_path,
+        "completed_cycle_keys": state.completed_cycle_keys,
+        "pending_chat_requests": tuple(item.as_record() for item in state.pending_chat_requests if item.objective_id == objective_id),
+        "resolved_chat_requests": tuple(item.as_record() for item in state.resolved_chat_requests if item.objective_id == objective_id),
+        "provider_authorities": tuple(auth for auth in state.provider_authorities if auth.get("objective_id") == objective_id),
+        "turn_relation_decisions": tuple(item.as_record() for item in state.turn_relation_decisions if item.active_goal_id == objective_id),
+        "local_semantic_insufficiencies": tuple(item.as_record() for item in state.local_semantic_insufficiencies if item.goal_id == objective_id),
+        "goal_reviews": tuple(review for review in state.goal_reviews if review.get("objective_id") == objective_id),
+        "archived_at": utc_now(),
+    }
+
+
 def _negative_instruction_tokens(message: str) -> tuple[str, ...]:
     lower = message.lower()
     tokens = []
@@ -567,7 +601,7 @@ def decide_turn_relation(
     turn_id: str,
 ) -> TurnRelationDecision:
     negative = _negative_instruction_tokens(message)
-    considered = tuple(lesson.lesson_id for lesson in state.accepted_lessons)
+    considered = tuple(lesson.lesson_id for lesson in _active_lessons(state))
     if _pending_request_for_reply(state, message):
         request = _pending_request_for_reply(state, message)
         return TurnRelationDecision(
@@ -1082,6 +1116,7 @@ def _state_from_record(payload: Mapping[str, Any]) -> ConversationalRuntimeState
         turn_relation_decisions=tuple(_turn_relation_from_record(item) for item in payload.get("turn_relation_decisions", ())),
         local_semantic_insufficiencies=tuple(_insufficiency_from_record(item) for item in payload.get("local_semantic_insufficiencies", ())),
         goal_reviews=tuple(payload.get("goal_reviews", ())),
+        archived_objectives=tuple(payload.get("archived_objectives", ())),
         schema_version=str(payload.get("schema_version") or SCHEMA_VERSION),
     )
 
@@ -1129,8 +1164,32 @@ def handle_conversational_message(
         )
     if intent.intent_type == "persistent_or_session_goal":
         objective = compile_conversational_objective(message, intent)
+        if state.active_objective and state.active_objective.objective_id == objective.objective_id:
+            assistant_reply = "That matches the active goal already. I kept the existing objective identity and did not reset its cycle or authority state."
+            assistant_turn = ConversationTurn(
+                turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), assistant_reply),
+                role="assistant",
+                text=assistant_reply,
+                intent_type="duplicate_objective_acknowledgement",
+                objective_id=state.active_objective.objective_id,
+            )
+            updated = _replace_state(
+                state,
+                conversation=state.conversation + (user_turn, assistant_turn),
+                objective_progress=state.objective_progress + ({"event": "duplicate_objective_rejected", "objective_id": objective.objective_id, "at": utc_now()},),
+            )
+            save_runtime_state(runtime_root, updated)
+            return RuntimeTurnResult(state=updated, intent=intent, reply=assistant_reply)
+        goal_user_turn = ConversationTurn(
+            turn_id=user_turn.turn_id,
+            role=user_turn.role,
+            text=user_turn.text,
+            intent_type=user_turn.intent_type,
+            objective_id=objective.objective_id,
+            created_at=user_turn.created_at,
+        )
         authority = derive_standing_authority(objective)
-        episode_path = str(Path(runtime_root) / "active_episode.json")
+        episode_path = str(Path(runtime_root) / f"active_episode_{objective.objective_id}.json")
         episode = initialize_episode(
             title="Conversational English comprehension objective",
             goal_summary=objective.interpreted_objective,
@@ -1146,15 +1205,42 @@ def handle_conversational_message(
         )
         episode = replace(episode, budgets={**episode.budgets, "max_cycles": objective.cycle_budget, "max_model_calls": objective.model_call_budget})
         write_episode_state(episode_path, episode)
-        focus = {"event": "objective_registered", "objective_id": objective.objective_id, "episode_id": episode.episode_id, "at": utc_now()}
+        archived = _archive_active_objective(state)
+        focus = {
+            "event": "objective_registered",
+            "objective_id": objective.objective_id,
+            "episode_id": episode.episode_id,
+            "archived_previous_objective_id": archived.get("objective_id") if archived else "",
+            "at": utc_now(),
+        }
+        progress = (
+            {
+                "event": "fresh_objective_scope_started",
+                "objective_id": objective.objective_id,
+                "archived_previous_objective_id": archived.get("objective_id") if archived else "",
+                "cycle_count": 0,
+                "at": utc_now(),
+            },
+            {"event": "standing_authority_assigned", "authority_id": authority.authority_id, "at": utc_now()},
+        )
         updated = _replace_state(
             state,
+            lifecycle_state="running",
             active_objective=objective,
             authority=authority,
-            conversation=state.conversation + (user_turn,),
+            conversation=state.conversation + (goal_user_turn,),
             active_episode_path=episode_path,
+            completed_cycle_keys=(),
+            pending_material_authority=(),
+            pending_chat_requests=(),
+            resolved_chat_requests=(),
+            provider_authorities=(),
+            turn_relation_decisions=(),
+            local_semantic_insufficiencies=(),
+            goal_reviews=(),
+            objective_progress=progress,
             focus_history=state.focus_history + (focus,),
-            objective_progress=state.objective_progress + ({"event": "standing_authority_assigned", "authority_id": authority.authority_id, "at": utc_now()},),
+            archived_objectives=state.archived_objectives + ((archived,) if archived else ()),
         )
         if run_background_cycle:
             updated = run_background_objective_cycle(updated, runtime_root=runtime_root, reason="objective_registered", model_runner=model_runner)
@@ -1332,7 +1418,7 @@ def infer_lesson_transfer(
     if relation and relation.routing_decision == "foreground_answer_without_goal_lesson":
         return {"applied": False, "lesson_id": "", "strategy_update": "", "rejection_reason": relation.rejection_reason}
     tokens = set(re.findall(r"[a-z0-9]{3,}", message.lower()))
-    for lesson in reversed(state.accepted_lessons):
+    for lesson in reversed(_active_lessons(state)):
         applies = set(lesson.applicable_when)
         blocked = set(lesson.not_applicable_when)
         if tokens & applies and not tokens & blocked:
@@ -1367,6 +1453,7 @@ def _ordinary_reply(
 
 def evaluate_conversational_runtime(state: ConversationalRuntimeState) -> dict[str, Any]:
     failures: list[str] = []
+    active_lessons = _active_lessons(state)
     if not state.active_objective:
         failures.append("goal_not_durable")
     if not state.authority:
@@ -1377,9 +1464,9 @@ def evaluate_conversational_runtime(state: ConversationalRuntimeState) -> dict[s
         failures.append("cognition_not_started")
     if not state.corrections:
         failures.append("correction_not_attached")
-    if not state.accepted_lessons:
+    if not active_lessons:
         failures.append("correction_stored_without_transfer")
-    if any(lesson.authority_effect != "none" for lesson in state.accepted_lessons):
+    if any(lesson.authority_effect != "none" for lesson in active_lessons):
         failures.append("salience_grants_authority")
     return {
         "schema_version": SCHEMA_VERSION,
@@ -1387,7 +1474,7 @@ def evaluate_conversational_runtime(state: ConversationalRuntimeState) -> dict[s
         "failure_reasons": failures,
         "objective_id": state.active_objective.objective_id if state.active_objective else "",
         "correction_count": len(state.corrections),
-        "accepted_lesson_count": len(state.accepted_lessons),
+        "accepted_lesson_count": len(active_lessons),
         "background_cycle_count": len(state.completed_cycle_keys),
         "pending_material_authority_count": len(state.pending_material_authority),
     }
@@ -1395,27 +1482,32 @@ def evaluate_conversational_runtime(state: ConversationalRuntimeState) -> dict[s
 
 def render_goal_review(state: ConversationalRuntimeState, *, status: str = "implementation_review_required") -> tuple[ConversationalRuntimeState, str]:
     objective = state.active_objective
+    objective_id = objective.objective_id if objective else ""
+    active_lessons = _active_lessons(state)
+    active_decisions = tuple(item for item in state.turn_relation_decisions if item.active_goal_id == objective_id)
+    active_provider_authorities = tuple(auth for auth in state.provider_authorities if auth.get("objective_id") == objective_id)
+    active_insufficiencies = tuple(item for item in state.local_semantic_insufficiencies if item.goal_id == objective_id)
     goal_label = "Language understanding"
     completed = "I reached an implementation-review boundary for the active language-comprehension goal."
     learned = []
-    if state.turn_relation_decisions:
+    if active_decisions:
         learned.append("foreground messages must be routed separately from background goal work")
-    if state.local_semantic_insufficiencies:
+    if active_insufficiencies:
         learned.append("external escalation requires a recorded local insufficiency first")
-    if state.accepted_lessons:
-        learned.append(f"{len(state.accepted_lessons)} scoped correction-derived lesson(s) are available")
+    if active_lessons:
+        learned.append(f"{len(active_lessons)} scoped correction-derived lesson(s) are available")
     if not learned:
         learned.append("no durable learning has been validated yet")
-    retained = [lesson.summary for lesson in state.accepted_lessons[-3:]] or ["no scoped lessons retained"]
-    rejected = [item.rejection_reason for item in state.turn_relation_decisions[-5:] if item.rejection_reason] or ["no rejected lesson applicability recorded"]
+    retained = [lesson.summary for lesson in active_lessons[-3:]] or ["no scoped lessons retained"]
+    rejected = [item.rejection_reason for item in active_decisions[-5:] if item.rejection_reason] or ["no rejected lesson applicability recorded"]
     unresolved = []
     if status == "implementation_review_required":
         unresolved.append("implementation review is required before source-level semantic capability changes")
-    if any(auth.get("status") == "authorized_not_executed" for auth in state.provider_authorities):
+    if any(auth.get("status") == "authorized_not_executed" for auth in active_provider_authorities):
         unresolved.append("provider authority exists but has not been consumed")
     provider_use = "local-only; no external provider calls performed"
-    if state.provider_authorities:
-        auth = state.provider_authorities[-1]
+    if active_provider_authorities:
+        auth = active_provider_authorities[-1]
         provider_use = f"authority recorded for {auth.get('provider')} with max_calls={auth.get('max_calls')}, spent=$0, consumed_calls={auth.get('consumed_call_count')}"
     review_text = (
         f"[Goal review · {goal_label}]\n\n"
