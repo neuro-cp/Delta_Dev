@@ -1,0 +1,60 @@
+{
+  "adapter_identity": "goal_oriented_ui_campaign.ProviderManager.exact_prompt",
+  "availability_state": "available",
+  "execution_completed_at": "2026-07-27T02:48:37+00:00",
+  "execution_started_at": "2026-07-27T02:47:35+00:00",
+  "failure_classification": "",
+  "failure_detail": "",
+  "latency_seconds": 61.7281,
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "provenance": {
+    "execution_claim_id": "shared-local-model-execution-claim-a89c09cac7ad4748",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    }
+  },
+  "request_id": "shared-local-model-request-1e3b9933653fbd8c",
+  "response_digest": "f0fd396d6131aea068cb83c37a67c1355db049bd1d12ccc33f8374f04027cb15",
+  "response_reference": "{\n  \"experiment_id\": \"focus-c\",\n  \"title\": \"Retain deterministic subset and retire semantic relation ambitions\",\n  \"practical_objective\": \"Ensure the cognitive system operates with a deterministic subset of features, reducing complexity and potential for semantic conflicts.\",\n  \"why_it_is_useful\": \"By focusing on a deterministic subset, we can ensure consistent and reliable performance, reducing the risk of semantic conflicts and improving overall system stability.\",\n  \"related_operator_or_project_goal\": \"SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1\",\n  \"expected_artifact_or_outcome\": \"A refined cognitive model with a deterministic subset of features, free from semantic relation ambitions.\",\n  \"local_evidence_available\": [\"cognitive_excluded_path_reconciliation.py\", \"overlap_analysis.json\"],\n  \"contrary_or_uncertainty_evidence\": [\"may leave direct contradiction usefulness gap unresolved\"],\n  \"required_cognitive_operations\": [\"formulate_experiment_candidate\"],\n  \"required_bounded_actions\": [\"refine_cognitive_model\", \"exclude_semantic_relations\"],\n  \"required_authority\": \"operator_authorized_sustained_operator_objective_campaign_1\",\n  \"expected_cycle_count\":   \"3\",\n  \"restart_relevance\": \"N/A\",\n  \"success_criteria\": \"The cognitive model operates with a deterministic subset of features without semantic conflicts.\",\n  \"failure_criteria\": \"The cognitive model still contains semantic conflicts or direct contradictions.\",\n  \"risk_and_scope\": \"The risk is limited to potential underutilization of features, but the benefit is improved system stability and reliability.\",\n  \"estimated_time_and_model_call_budget\": \"4 hours\"\n}",
+  "result_digest": "c9e7464ca7d015e1ff6ac3540179f9f45c04ac7c9373948f0e6888d79793d92a",
+  "result_id": "shared-local-model-result-ec97dd95bb997ebb",
+  "terminal_state": "completed"
+}

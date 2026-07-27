@@ -1,0 +1,1535 @@
+{
+  "artifacts": [
+    {
+      "callers_sample": [
+        ".\\orchestration\\runtime\\cognitive_excluded_path_reconciliation.py:342:        \"contract_identity.json\": {\"path\": \"orchestration/runtime/cognitive_claim_relations.py\", \"contract_digest\": EXPECTED_CONTRACT_DIGEST},",
+        ".\\orchestration\\runtime\\cognitive_claim_relation_integration_audit.py:28:CONTRACT_PATH = Path(\"orchestration/runtime/cognitive_claim_relations.py\")",
+        ".\\orchestration\\runtime\\cognitive_claim_relation_integration_audit.py:29:CONTRACT_TEST_PATH = Path(\"tests/runtime_gsr/test_cognitive_claim_relations.py\")",
+        ".\\orchestration\\runtime\\cognitive_claim_relation_integration_audit.py:385:        _edge(\"relation classification\", \"relation transition\", \"existing inert only\", \"cognitive_claim_relations.py not production-integrated\"),",
+        ".\\orchestration\\runtime\\cognitive_claim_relation_integration_audit.py:401:            \"orchestration/runtime/cognitive_claim_relations.py inert transition contract\",",
+        ".\\orchestration\\runtime\\cognitive_claim_relations.py:638:        \"new_inert_contract_paths\": (\"orchestration/runtime/cognitive_claim_relations.py\", \"tests/runtime_gsr/test_cognitive_claim_relations.py\"),",
+        ".\\orchestration\\runtime\\cognitive_claim_relation_runtime.py:14:from orchestration.runtime.cognitive_claim_relations import (",
+        ".\\tests\\runtime_gsr\\test_cognitive_claim_relation_runtime.py:9:from orchestration.runtime.cognitive_claim_relations import read_bundle",
+        ".\\tests\\runtime_gsr\\test_cognitive_claim_relations.py:6:from orchestration.runtime.cognitive_claim_relations import ("
+      ],
+      "definitions": [
+        {
+          "kind": "ClassDef",
+          "line": 114,
+          "name": "GovernedClaimRecord"
+        },
+        {
+          "kind": "ClassDef",
+          "line": 135,
+          "name": "GovernedClaimRelationRecord"
+        },
+        {
+          "kind": "ClassDef",
+          "line": 160,
+          "name": "GovernedOperatorResolutionRecord"
+        },
+        {
+          "kind": "ClassDef",
+          "line": 180,
+          "name": "GovernedWorkItem"
+        },
+        {
+          "kind": "ClassDef",
+          "line": 192,
+          "name": "ClaimRelationStateBundle"
+        },
+        {
+          "kind": "ClassDef",
+          "line": 205,
+          "name": "TransitionResult"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 214,
+          "name": "first_missing_transition"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 230,
+          "name": "construct_claim"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 274,
+          "name": "relation_identity"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 294,
+          "name": "construct_relation"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 348,
+          "name": "validate_claim"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 363,
+          "name": "validate_relation"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 384,
+          "name": "validate_bundle"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 398,
+          "name": "register_claim"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 408,
+          "name": "classify_relation"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 425,
+          "name": "link_confirmation"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 429,
+          "name": "link_duplicate"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 433,
+          "name": "apply_explicit_correction"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 449,
+          "name": "register_contradiction"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 465,
+          "name": "register_uncertain_conflict"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 470,
+          "name": "apply_temporal_transition"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 477,
+          "name": "apply_scoped_preference_update"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 484,
+          "name": "apply_bounded_exception"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 491,
+          "name": "revoke_authority"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 500,
+          "name": "mark_unrelated"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 505,
+          "name": "invalidate_relation"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 513,
+          "name": "request_operator_resolution"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 544,
+          "name": "resolve_by_operator"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 565,
+          "name": "resolve_by_grounded_evidence"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 575,
+          "name": "suspend_dependent_work"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 589,
+          "name": "operator_resolution_key"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 598,
+          "name": "expose_for_evaluator"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 622,
+          "name": "proposal_amendment_record"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 653,
+          "name": "transition_contracts"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 689,
+          "name": "claim_schema"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 693,
+          "name": "relation_schema"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 697,
+          "name": "negative_controls"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 714,
+          "name": "serialize_bundle"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 718,
+          "name": "reconstruct_bundle"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 743,
+          "name": "write_bundle"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 751,
+          "name": "read_bundle"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 758,
+          "name": "run_claim_relation_contract_report"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 834,
+          "name": "_append_relation"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 841,
+          "name": "_replace_claims"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 848,
+          "name": "_replace_relation"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 854,
+          "name": "_dedupe_relations"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 861,
+          "name": "_journal"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 865,
+          "name": "_transition_preconditions"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 878,
+          "name": "_human_question"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 884,
+          "name": "_request_by_id"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 891,
+          "name": "_evaluator_relation_name"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 899,
+          "name": "_claim_from_mapping"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 906,
+          "name": "_relation_from_mapping"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 913,
+          "name": "_request_from_mapping"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 920,
+          "name": "_work_from_mapping"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 926,
+          "name": "_journal_from_mapping"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 933,
+          "name": "_write_json"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 938,
+          "name": "_git_lines"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 943,
+          "name": "_file_digest"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 130,
+          "name": "as_record"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 155,
+          "name": "as_record"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 175,
+          "name": "as_record"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 187,
+          "name": "as_record"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 200,
+          "name": "as_record"
+        }
+      ],
+      "exists": true,
+      "git_status": "??",
+      "imports": [
+        "from __future__ import annotations",
+        "from dataclasses import asdict, dataclass, replace",
+        "import json",
+        "import os",
+        "import subprocess",
+        "from pathlib import Path",
+        "from typing import Any, Mapping, Sequence",
+        "from orchestration.runtime.developmental_bootstrap import bootstrap_digest",
+        "from orchestration.runtime.operator_ux import FIXED_TIMESTAMP"
+      ],
+      "line_count": 1001,
+      "path": "orchestration/runtime/cognitive_claim_relations.py",
+      "sha256": "583cbb78c5ca2b8dfbb8f4fdb9b2f7505dfaaeed40f43d5d230096c74734cafb",
+      "tests": [
+        "tests/runtime_gsr/test_cognitive_claim_relations.py"
+      ]
+    },
+    {
+      "callers_sample": [
+        ".\\orchestration\\runtime\\cognitive_claim_relation_integration_audit.py:27:EVALUATOR_PATH = Path(\"orchestration/runtime/cognitive_contradiction_evaluation.py\")",
+        ".\\orchestration\\runtime\\cognitive_claim_relations.py:26:EVALUATOR_PATH = \"orchestration/runtime/cognitive_contradiction_evaluation.py\"",
+        ".\\orchestration\\runtime\\cognitive_excluded_path_reconciliation.py:341:        \"evaluator_identity.json\": {\"path\": \"orchestration/runtime/cognitive_contradiction_evaluation.py\", \"digest\": EXPECTED_EVALUATOR_DIGEST},",
+        ".\\tests\\runtime_gsr\\test_cognitive_contradiction_evaluation.py:3:from orchestration.runtime.cognitive_contradiction_evaluation import (",
+        ".\\tests\\runtime_gsr\\test_cognitive_claim_relation_runtime.py:10:from orchestration.runtime.cognitive_contradiction_evaluation import behavioral_cases, evaluate_observation",
+        ".\\tests\\runtime_gsr\\test_cognitive_claim_relation_runtime.py:151:    digest = hashlib.sha256(open(\"orchestration/runtime/cognitive_contradiction_evaluation.py\", \"rb\").read()).hexdigest()",
+        ".\\tests\\runtime_gsr\\test_cognitive_claim_relations.py:48:from orchestration.runtime.cognitive_contradiction_evaluation import evaluate_observation, behavioral_cases"
+      ],
+      "definitions": [
+        {
+          "kind": "ClassDef",
+          "line": 58,
+          "name": "ContradictionCase"
+        },
+        {
+          "kind": "ClassDef",
+          "line": 76,
+          "name": "ContradictionEvaluation"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 88,
+          "name": "behavioral_cases"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 207,
+          "name": "inspect_current_runtime_paths"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 244,
+          "name": "observe_current_behavior"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 284,
+          "name": "expected_observation"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 325,
+          "name": "evaluate_observation"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 371,
+          "name": "run_baseline_evaluation"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 420,
+          "name": "_observe_authority_path"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 446,
+          "name": "_relations"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 450,
+          "name": "_expected_relation_satisfied"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 465,
+          "name": "_observed_as_unrelated"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 470,
+          "name": "_evaluation"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 481,
+          "name": "_round_trip_preserves_payload"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 492,
+          "name": "_digest"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 498,
+          "name": "_write_json"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 503,
+          "name": "_write_markdown"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 537,
+          "name": "perturb_non_behavioral_labels"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 545,
+          "name": "with_relation"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 71,
+          "name": "as_dict"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 84,
+          "name": "as_dict"
+        }
+      ],
+      "exists": true,
+      "git_status": "??",
+      "imports": [
+        "from __future__ import annotations",
+        "import json",
+        "from dataclasses import asdict, dataclass, replace",
+        "from pathlib import Path",
+        "from typing import Any",
+        "from orchestration.runtime.v31_contradiction_aggregation import (",
+        "from orchestration.runtime.v31_gated_integration import (",
+        "from orchestration.runtime.v31_learning_opportunity import detect_learning_opportunities",
+        "from orchestration.runtime.v34_cognitive_state import build_runtime_state_snapshot",
+        "import hashlib"
+      ],
+      "line_count": 554,
+      "path": "orchestration/runtime/cognitive_contradiction_evaluation.py",
+      "sha256": "951523a638224e953fa404e54c439ebe98831b59ce738c9ac478f2a1861071ea",
+      "tests": [
+        "tests/runtime_gsr/test_cognitive_contradiction_evaluation.py"
+      ]
+    },
+    {
+      "callers_sample": [
+        ".\\orchestration\\runtime\\cognitive_claim_relation_integration_audit.py:20:SCHEMA_VERSION = \"cognitive_claim_relation_integration_audit_v1\"",
+        ".\\tests\\runtime_gsr\\test_cognitive_claim_relation_integration_audit.py:3:from orchestration.runtime.cognitive_claim_relation_integration_audit import ("
+      ],
+      "definitions": [
+        {
+          "kind": "FunctionDef",
+          "line": 81,
+          "name": "first_missing_transition"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 97,
+          "name": "producer_inventory"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 200,
+          "name": "consumer_inventory"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 213,
+          "name": "persistence_inventory"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 254,
+          "name": "authority_inventory"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 263,
+          "name": "operator_request_inventory"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 272,
+          "name": "dependent_work_inventory"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 280,
+          "name": "restart_inventory"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 289,
+          "name": "deterministic_relation_types"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 293,
+          "name": "semantic_relation_types"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 297,
+          "name": "classify_feasibility"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 333,
+          "name": "relation_classifier_audit"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 346,
+          "name": "required_information_matrix"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 380,
+          "name": "integration_path_graph"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 395,
+          "name": "minimum_pilot_boundary"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 412,
+          "name": "amendment_consequence"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 428,
+          "name": "run_integration_audit_report"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 508,
+          "name": "_consumer"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 524,
+          "name": "_edge"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 528,
+          "name": "_integrity_reasons"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 543,
+          "name": "_report_value"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 548,
+          "name": "_read_json"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 552,
+          "name": "_write_json"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 557,
+          "name": "_git_lines"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 562,
+          "name": "_git_one"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 567,
+          "name": "artifact_digest_for_paths"
+        }
+      ],
+      "exists": true,
+      "git_status": "??",
+      "imports": [
+        "from __future__ import annotations",
+        "import json",
+        "import subprocess",
+        "from pathlib import Path",
+        "from typing import Any, Mapping, Sequence",
+        "from orchestration.runtime.developmental_bootstrap import bootstrap_digest"
+      ],
+      "line_count": 596,
+      "path": "orchestration/runtime/cognitive_claim_relation_integration_audit.py",
+      "sha256": "0a1bc051870638ab34287dd55b6e21ae45fd89be8ee13e47af47937fd8594927",
+      "tests": [
+        "tests/runtime_gsr/test_cognitive_claim_relation_integration_audit.py"
+      ]
+    },
+    {
+      "callers_sample": [
+        ".\\tests\\runtime_gsr\\test_cognitive_excluded_path_reconciliation.py:3:from orchestration.runtime.cognitive_excluded_path_reconciliation import ("
+      ],
+      "definitions": [
+        {
+          "kind": "FunctionDef",
+          "line": 77,
+          "name": "first_missing_transition"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 93,
+          "name": "delta_hunk_inventory"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 107,
+          "name": "live_adapter_hunk_inventory"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 118,
+          "name": "classify_delta_hunks"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 142,
+          "name": "classify_live_adapter_hunks"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 156,
+          "name": "delta_integration_seams"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 165,
+          "name": "live_adapter_dependency"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 177,
+          "name": "alternative_clean_seams"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 187,
+          "name": "semantic_classifier_placement"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 198,
+          "name": "deterministic_pilot_cases"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 202,
+          "name": "deferred_semantic_cases"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 206,
+          "name": "minimum_pilot"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 227,
+          "name": "scope_conflict_matrix"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 242,
+          "name": "checkpoint_ownership"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 253,
+          "name": "classify_reconciliation"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 280,
+          "name": "exact_authorization_boundary"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 315,
+          "name": "run_reconciliation_report"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 388,
+          "name": "git_diff_for"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 393,
+          "name": "worktree_digest"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 397,
+          "name": "head_digest"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 402,
+          "name": "_hunk"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 416,
+          "name": "_seam"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 433,
+          "name": "_delta_behavioral_effect"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 443,
+          "name": "_matrix_row"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 460,
+          "name": "_classification"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 464,
+          "name": "_write_json"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 469,
+          "name": "_git_lines"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 474,
+          "name": "_git_one"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 479,
+          "name": "_sha256"
+        }
+      ],
+      "exists": true,
+      "git_status": "??",
+      "imports": [
+        "from __future__ import annotations",
+        "import hashlib",
+        "import json",
+        "import subprocess",
+        "from pathlib import Path",
+        "from typing import Any, Mapping, Sequence"
+      ],
+      "line_count": 509,
+      "path": "orchestration/runtime/cognitive_excluded_path_reconciliation.py",
+      "sha256": "9cfac83e382ffb85c861d45413379dcc056187aa35df209fe05b016b07847a48",
+      "tests": [
+        "tests/runtime_gsr/test_cognitive_excluded_path_reconciliation.py"
+      ]
+    },
+    {
+      "callers_sample": [
+        ".\\DELTA.py:60:from orchestration.runtime.cognitive_claim_relation_runtime import (  # noqa: E402",
+        ".\\orchestration\\runtime\\cognitive_claim_relation_runtime.py:34:SCHEMA_VERSION = \"cognitive_claim_relation_runtime_1e_v1\"",
+        ".\\tests\\runtime_gsr\\test_cognitive_claim_relation_delta_integration.py:4:from orchestration.runtime.cognitive_claim_relation_runtime import GovernedClaimRelationRuntime",
+        ".\\tests\\runtime_gsr\\test_cognitive_claim_relation_runtime.py:5:from orchestration.runtime.cognitive_claim_relation_runtime import ("
+      ],
+      "definitions": [
+        {
+          "kind": "ClassDef",
+          "line": 39,
+          "name": "PilotClaim"
+        },
+        {
+          "kind": "ClassDef",
+          "line": 45,
+          "name": "DeterministicRelationResult"
+        },
+        {
+          "kind": "ClassDef",
+          "line": 62,
+          "name": "PilotTurnResult"
+        },
+        {
+          "kind": "ClassDef",
+          "line": 81,
+          "name": "ClaimRelationRuntimeStateError"
+        },
+        {
+          "kind": "ClassDef",
+          "line": 85,
+          "name": "GovernedClaimRelationRuntime"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 280,
+          "name": "extract_operator_claim"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 373,
+          "name": "classify_structural_relation"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 406,
+          "name": "_apply_relation_transition"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 427,
+          "name": "_relation_result"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 454,
+          "name": "_claim"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 481,
+          "name": "_normalize_text"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 485,
+          "name": "_scope_key"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 489,
+          "name": "_operator_visible_text"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 57,
+          "name": "as_record"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 75,
+          "name": "as_record"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 86,
+          "name": "__init__"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 93,
+          "name": "set_enabled"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 96,
+          "name": "process_operator_turn"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 180,
+          "name": "restart"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 183,
+          "name": "evaluator_observation"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 189,
+          "name": "_load"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 199,
+          "name": "_persist"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 205,
+          "name": "_find_prior_claim"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 224,
+          "name": "_latest_current_claim_for_unrelated"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 234,
+          "name": "_existing_turn_result"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 255,
+          "name": "_turn_result"
+        }
+      ],
+      "exists": true,
+      "git_status": "??",
+      "imports": [
+        "from __future__ import annotations",
+        "from dataclasses import asdict, dataclass, replace",
+        "import re",
+        "from pathlib import Path",
+        "from typing import Any, Mapping",
+        "from orchestration.runtime.cognitive_claim_relations import (",
+        "from orchestration.runtime.operator_ux import FIXED_TIMESTAMP"
+      ],
+      "line_count": 509,
+      "path": "orchestration/runtime/cognitive_claim_relation_runtime.py",
+      "sha256": "e368f7aa6e77dd1a6f26b9accf566ad83c786e779e752ca04ca40899f48cf606",
+      "tests": [
+        "tests/runtime_gsr/test_cognitive_claim_relation_runtime.py"
+      ]
+    },
+    {
+      "callers_sample": [
+        ".\\orchestration\\runtime\\cognitive_claim_relation_integration_audit.py:29:CONTRACT_TEST_PATH = Path(\"tests/runtime_gsr/test_cognitive_claim_relations.py\")",
+        ".\\orchestration\\runtime\\cognitive_claim_relations.py:638:        \"new_inert_contract_paths\": (\"orchestration/runtime/cognitive_claim_relations.py\", \"tests/runtime_gsr/test_cognitive_claim_relations.py\"),"
+      ],
+      "definitions": [
+        {
+          "kind": "FunctionDef",
+          "line": 51,
+          "name": "_claim"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 63,
+          "name": "_bundle"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 67,
+          "name": "_case"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 71,
+          "name": "test_governed_claim_construction_is_immutable_and_complete"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 83,
+          "name": "test_deterministic_claim_identity_and_digest"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 90,
+          "name": "test_scope_sensitive_identity_rejects_raw_text_only_identity"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 98,
+          "name": "test_relation_identity_and_schema_are_typed_and_distinct"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 109,
+          "name": "test_confirmation_and_duplicate_restatement_are_not_contradictions"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 119,
+          "name": "test_explicit_correction_supersedes_without_deleting_prior_claim"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 131,
+          "name": "test_direct_contradiction_does_not_make_newest_claim_true"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 142,
+          "name": "test_uncertain_conflict_preserves_uncertainty"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 150,
+          "name": "test_temporal_transition_is_historical_not_direct_contradiction"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 160,
+          "name": "test_scoped_preference_update_preserves_broader_preference"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 170,
+          "name": "test_bounded_exception_preserves_original_rule_and_expiration"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 180,
+          "name": "test_authority_revocation_is_prospective_and_durable"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 190,
+          "name": "test_unrelated_claims_do_not_block_unrelated_work"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 200,
+          "name": "test_ambiguous_scope_creates_one_operator_request_and_suspends_only_dependent_work"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 215,
+          "name": "test_operator_and_grounded_evidence_resolution_are_deterministic"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 230,
+          "name": "test_restart_persistence_preserves_supersession_revocation_exception_and_requests"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 251,
+          "name": "test_resolved_request_consumption_survives_restart_without_reactivation"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 265,
+          "name": "test_corruption_and_invalid_transition_rejection"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 278,
+          "name": "test_evaluator_contract_compatibility"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 290,
+          "name": "test_proposal_amendment_linkage_and_no_production_integration"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 305,
+          "name": "test_transition_contract_catalog_and_negative_controls"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 319,
+          "name": "test_register_claim_idempotency_and_invalid_key"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 328,
+          "name": "test_serialization_roundtrip_preserves_relation_types_and_claim_state"
+        }
+      ],
+      "exists": true,
+      "git_status": "??",
+      "imports": [
+        "import json",
+        "from dataclasses import FrozenInstanceError",
+        "import pytest",
+        "from orchestration.runtime.cognitive_claim_relations import (",
+        "from orchestration.runtime.cognitive_contradiction_evaluation import evaluate_observation, behavioral_cases"
+      ],
+      "line_count": 335,
+      "path": "tests/runtime_gsr/test_cognitive_claim_relations.py",
+      "sha256": "1c7d208a4f030968692a832ac707ee67c7927eabfc42da08bc554aad6ea6e57e",
+      "tests": []
+    },
+    {
+      "callers_sample": [],
+      "definitions": [
+        {
+          "kind": "FunctionDef",
+          "line": 18,
+          "name": "_case"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 22,
+          "name": "test_behavioral_case_catalog_covers_required_transfer_cases"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 40,
+          "name": "test_path_inventory_is_diagnosis_only_and_names_current_surfaces"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 49,
+          "name": "test_positive_controls_classify_expected_behavior"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 57,
+          "name": "test_evaluator_ignores_strategy_fixture_and_final_status_labels"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 64,
+          "name": "test_missing_relation_record_detects_current_baseline_failure"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 75,
+          "name": "test_unrelated_topics_are_not_false_positive_contradictions"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 83,
+          "name": "test_duplicate_restatement_is_not_misread_as_contradiction_success"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 91,
+          "name": "test_current_baseline_does_not_create_operator_boundary_request"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 101,
+          "name": "test_authority_revocation_requires_linked_relation_state"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 110,
+          "name": "test_restart_case_requires_durable_claim_relation_state"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 119,
+          "name": "test_baseline_report_identifies_one_material_gap_and_stops"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 136,
+          "name": "test_baseline_has_positive_control_and_multiple_independent_failures"
+        }
+      ],
+      "exists": true,
+      "git_status": "??",
+      "imports": [
+        "import json",
+        "from orchestration.runtime.cognitive_contradiction_evaluation import ("
+      ],
+      "line_count": 143,
+      "path": "tests/runtime_gsr/test_cognitive_contradiction_evaluation.py",
+      "sha256": "eda6db3fbcf6401722bc54141135b4e649b5e5b91b6cf7029479a6ac8461c699",
+      "tests": []
+    },
+    {
+      "callers_sample": [],
+      "definitions": [
+        {
+          "kind": "FunctionDef",
+          "line": 30,
+          "name": "test_first_missing_transition_is_exact_integration_gap"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 36,
+          "name": "test_producer_inventory_classifies_clean_and_excluded_paths"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 45,
+          "name": "test_consumer_inventory_detects_claim_currentness_gap"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 52,
+          "name": "test_persistence_boundary_has_clean_candidate_but_no_general_schema_slot"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 58,
+          "name": "test_classifier_distinguishes_deterministic_from_semantic_relation_types"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 73,
+          "name": "test_feasibility_prefers_excluded_path_required_over_other_blocks"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 79,
+          "name": "test_feasibility_can_expose_other_classifications_for_audit_controls"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 90,
+          "name": "test_authority_operator_request_and_workitem_adjacency_are_existing_but_unbound"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 98,
+          "name": "test_restart_inventory_preserves_requests_without_auto_resume"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 104,
+          "name": "test_path_graph_and_information_matrix_show_missing_boundaries"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 112,
+          "name": "test_minimum_pilot_boundary_is_bounded_and_blocked_by_exclusion"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 119,
+          "name": "test_amendment_consequence_names_next_gate_without_execution"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 126,
+          "name": "test_report_files_identities_and_no_production_integration"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 144,
+          "name": "test_report_does_not_claim_integration_success"
+        }
+      ],
+      "exists": true,
+      "git_status": "??",
+      "imports": [
+        "import json",
+        "from orchestration.runtime.cognitive_claim_relation_integration_audit import ("
+      ],
+      "line_count": 151,
+      "path": "tests/runtime_gsr/test_cognitive_claim_relation_integration_audit.py",
+      "sha256": "13188f004b15af59e0084729766b48e96b03c25a44dbd9048d1c6a1e22e95cd2",
+      "tests": []
+    },
+    {
+      "callers_sample": [],
+      "definitions": [
+        {
+          "kind": "FunctionDef",
+          "line": 31,
+          "name": "test_first_missing_transition_matches_excluded_path_reconciliation_gap"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 37,
+          "name": "test_delta_only_classification_is_primary_when_live_adapter_deferred"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 43,
+          "name": "test_both_files_required_classification_control"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 48,
+          "name": "test_conflict_and_unknown_ownership_controls_take_precedence"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 53,
+          "name": "test_clean_adapter_and_semantic_classifier_controls"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 58,
+          "name": "test_delta_hunks_are_inventoryed_and_preserved"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 68,
+          "name": "test_live_adapter_hunk_is_deferred_compatibility_repair"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 79,
+          "name": "test_delta_integration_seams_are_additive_and_flaggable"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 86,
+          "name": "test_clean_adapter_alternatives_are_rejected_when_they_bypass_production"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 92,
+          "name": "test_semantic_classifier_is_deferred_but_deterministic_pilot_remains_meaningful"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 101,
+          "name": "test_minimum_pilot_completeness"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 109,
+          "name": "test_scope_conflict_matrix_records_required_and_deferred_paths"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 117,
+          "name": "test_checkpoint_ownership_separates_existing_dirty_work_from_transfer_pilot"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 124,
+          "name": "test_exact_authorization_boundary_is_delta_only_and_deterministic"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 132,
+          "name": "test_report_files_identity_stability_and_no_excluded_file_mutation"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 147,
+          "name": "test_report_records_accepted_identities"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 158,
+          "name": "test_report_does_not_authorize_or_simulate_integration"
+        }
+      ],
+      "exists": true,
+      "git_status": "??",
+      "imports": [
+        "import json",
+        "from orchestration.runtime.cognitive_excluded_path_reconciliation import ("
+      ],
+      "line_count": 165,
+      "path": "tests/runtime_gsr/test_cognitive_excluded_path_reconciliation.py",
+      "sha256": "84ce1c7a1f926245b671a8c365517c72124ebd1003a6ba792cd34afe8c3ecf98",
+      "tests": []
+    },
+    {
+      "callers_sample": [],
+      "definitions": [
+        {
+          "kind": "FunctionDef",
+          "line": 13,
+          "name": "_runtime"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 17,
+          "name": "_case"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 21,
+          "name": "_claim_states"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 25,
+          "name": "test_feature_flag_is_disabled_by_default_and_writes_no_state"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 35,
+          "name": "test_explicit_correction_preserves_and_supersedes_after_restart"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 49,
+          "name": "test_duplicate_restatement_does_not_create_duplicate_current_claim"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 61,
+          "name": "test_temporal_transition_preserves_historical_and_current"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 72,
+          "name": "test_authority_revocation_is_prospective_and_restart_stable"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 86,
+          "name": "test_bounded_exception_remains_scoped_after_restart"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 99,
+          "name": "test_unrelated_claims_are_independent_and_do_not_block_work"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 111,
+          "name": "test_unsupported_semantic_contradiction_is_deferred_without_winner"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 122,
+          "name": "test_claim_provenance_and_bounded_prior_lookup"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 131,
+          "name": "test_atomic_persistence_corruption_blocks_without_silent_reset"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 140,
+          "name": "test_no_duplicate_relation_after_restart_replay"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 150,
+          "name": "test_evaluator_source_digest_is_stable_during_runtime_tests"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 155,
+          "name": "test_bundle_written_is_restart_readable"
+        }
+      ],
+      "exists": true,
+      "git_status": "??",
+      "imports": [
+        "import hashlib",
+        "import pytest",
+        "from orchestration.runtime.cognitive_claim_relation_runtime import (",
+        "from orchestration.runtime.cognitive_claim_relations import read_bundle",
+        "from orchestration.runtime.cognitive_contradiction_evaluation import behavioral_cases, evaluate_observation"
+      ],
+      "line_count": 160,
+      "path": "tests/runtime_gsr/test_cognitive_claim_relation_runtime.py",
+      "sha256": "8c245680199bcab34199a95a1ec05be82603c203dfa233c1486b47baf86fe3c4",
+      "tests": []
+    },
+    {
+      "callers_sample": [],
+      "definitions": [
+        {
+          "kind": "FunctionDef",
+          "line": 7,
+          "name": "_delta_shell"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 14,
+          "name": "test_delta_claim_relation_hook_is_disabled_path_equivalent"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 21,
+          "name": "test_delta_claim_relation_hook_uses_explicit_local_activation"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 31,
+          "name": "test_delta_claim_relation_hook_defers_unsupported_semantic_conflict"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 39,
+          "name": "test_delta_claim_relation_pilot_state_path_is_not_tmp_dependent"
+        },
+        {
+          "kind": "FunctionDef",
+          "line": 49,
+          "name": "test_delta_active_cognitive_loop_starts_and_reports_persistent_state"
+        }
+      ],
+      "exists": true,
+      "git_status": "??",
+      "imports": [
+        "from pathlib import Path",
+        "import DELTA",
+        "from orchestration.runtime.cognitive_claim_relation_runtime import GovernedClaimRelationRuntime"
+      ],
+      "line_count": 60,
+      "path": "tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py",
+      "sha256": "a5ab1e4c6a24be67d14891ef9960b75505a39ef58ee66f66173ab5b03ca5d4e4",
+      "tests": []
+    }
+  ]
+}

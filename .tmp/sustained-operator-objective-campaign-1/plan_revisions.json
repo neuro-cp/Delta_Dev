@@ -1,0 +1,16 @@
+[
+  {
+    "evidence": "paused_budget with 6 model calls, no duplicate after restart, next_intended_step=summarize learning and choose next focus",
+    "new_budget": "14 cycles / 12 model calls",
+    "old_budget": "8 cycles / 6 model calls implicit default",
+    "revision": "increase active episode budget after material hypothesis revision",
+    "scope_change": false
+  },
+  {
+    "bounded_repair": "remove head_mismatch as integrity reason while preserving frozen head as recorded historical evidence; add focused regression",
+    "direct_evidence": "test_cognitive_claim_relation_integration_audit failed with COGNITIVE_TRANSFER_CYCLE_1C_INTEGRITY_STOP after accepted later checkpoints",
+    "first_incorrect_transition": "post-transfer branch head -> historical 1C audit report -> integrity_stop solely from head movement",
+    "revision": "repair historical audit head mismatch",
+    "scope_change": false
+  }
+]

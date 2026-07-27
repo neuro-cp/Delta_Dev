@@ -1,0 +1,28 @@
+{
+  "adapted_response": {
+    "assumptions": [],
+    "contrary_evidence_considered": [
+      "ev_semantic_deferred",
+      "ev_authority_overlap"
+    ],
+    "evidence_refs": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk"
+    ],
+    "interpretation": "Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred. Authority evaluators already classify actions; claim revocation state is not yet a broad enforcement consumer. Direct semantic contradiction is deferred without a winner. No compelling evidence of semantic contradiction or authority overlap that would challenge the current hypothesis.",
+    "next_evidence_need": "local evidence supporting or challenging the goal",
+    "next_focus_proposal": "Resolve discrepancy for goal: Determine smallest coherent useful role for claim-relation and contradiction work",
+    "operation_result_type": "compare_evidence_result",
+    "recommended_action": "Investigate overlap risks and semantic deferral in detail",
+    "recommended_state_transition": "weaken_hypothesis",
+    "uncertainty": "Overlap risks and semantic deferral remain unresolved"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"assumptions\":[],\"contrary_evidence_considered\":[\"ev_semantic_deferred\",\"ev_authority_overlap\"],\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\"],\"interpretation\":\"Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred. Authority evaluators already classify actions; claim revocation state is not yet a broad enforcement consumer. Direct semantic contradiction is deferred without a winner. No compelling evidence of semantic contradiction or authority overlap that would challenge the current hypothesis.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"Resolve discrepancy for goal: Determine smallest coherent useful role for claim-relation and contradiction work\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"Investigate overlap risks and semantic deferral in detail\",\"recommended_state_transition\":\"weaken_hypothesis\",\"uncertainty\":\"Overlap risks and semantic deferral remain unresolved\"}",
+  "raw_response_digest": "f5bcc9f551ed903c057a7ff07e0e23f31e4924a36f98a11f82e885947e8e4b9e",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

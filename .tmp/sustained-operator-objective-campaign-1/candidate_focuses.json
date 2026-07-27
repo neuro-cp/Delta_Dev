@@ -1,0 +1,471 @@
+{
+  "candidate_count": 6,
+  "candidates": [
+    {
+      "contrary_evidence": [
+        "semantic contradictions remain deferred; chat rigidity risk"
+      ],
+      "development_objective": "To enhance the live chat functionality by integrating deterministic correction and currentness notices, ensuring that corrections are accurately reflected in real-time.",
+      "estimated_cycles_and_model_calls": "50 hours",
+      "evidence_supporting_pursuit": [
+        "DELTA.py",
+        "cognitive_claim_relation_runtime.py",
+        "tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py"
+      ],
+      "expected_useful_outcome": "A live chat system that accurately reflects corrections in real-time, based on deterministic correction and currentness notices.",
+      "failure_criteria": "The live chat system fails to accurately reflect corrections in real-time.",
+      "focus_id": "focus-a",
+      "minimum_source_scope": "There is a risk of semantic contradictions and chat rigidity, but these will be managed through careful implementation and testing.",
+      "observed_problem_addressed": "Improving the accuracy and timeliness of corrections in live chat will enhance user satisfaction and the overall quality of the chat experience.",
+      "protected_dependencies": [],
+      "required_authority": "operator_authorized_sustained_operator_objective_campaign_1",
+      "retirement_criteria": "Retire if no distinct consumer or user-visible value is evidenced.",
+      "success_criteria": "The live chat system accurately reflects corrections in real-time based on deterministic correction and currentness notices."
+    },
+    {
+      "contrary_evidence": [
+        "existing authority evaluators may already cover action decisions"
+      ],
+      "development_objective": "Ensure that revoked authority is not mistakenly enforced by the system.",
+      "estimated_cycles_and_model_calls": "1-2 weeks",
+      "evidence_supporting_pursuit": [
+        "cognitive_claim_relations.py",
+        "cognitive_claim_relation_runtime.py",
+        "authority tests"
+      ],
+      "expected_useful_outcome": "Enhanced authority revocation mechanism based on claim relations.",
+      "failure_criteria": "Revoked authority is still enforced by the system.",
+      "focus_id": "focus-b",
+      "minimum_source_scope": "The risk is limited to potential security breaches due to outdated authorizations. The scope is confined to the claim relations for currentness.",
+      "observed_problem_addressed": "By focusing on claim relations for currentness, we can prevent the system from enforcing outdated or revoked authorizations, thereby enhancing security and compliance.",
+      "protected_dependencies": [],
+      "required_authority": "operator_authorized_sustained_operator_objective_campaign_1",
+      "retirement_criteria": "Retire if no distinct consumer or user-visible value is evidenced.",
+      "success_criteria": "Revoked authority is not enforced by the system."
+    },
+    {
+      "contrary_evidence": [
+        "may leave direct contradiction usefulness gap unresolved"
+      ],
+      "development_objective": "Ensure the cognitive system operates with a deterministic subset of features, reducing complexity and potential for semantic conflicts.",
+      "estimated_cycles_and_model_calls": "4 hours",
+      "evidence_supporting_pursuit": [
+        "cognitive_excluded_path_reconciliation.py",
+        "overlap_analysis.json"
+      ],
+      "expected_useful_outcome": "A refined cognitive model with a deterministic subset of features, free from semantic relation ambitions.",
+      "failure_criteria": "The cognitive model still contains semantic conflicts or direct contradictions.",
+      "focus_id": "focus-c",
+      "minimum_source_scope": "The risk is limited to potential underutilization of features, but the benefit is improved system stability and reliability.",
+      "observed_problem_addressed": "By focusing on a deterministic subset, we can ensure consistent and reliable performance, reducing the risk of semantic conflicts and improving overall system stability.",
+      "protected_dependencies": [],
+      "required_authority": "operator_authorized_sustained_operator_objective_campaign_1",
+      "retirement_criteria": "Retire if no distinct consumer or user-visible value is evidenced.",
+      "success_criteria": "The cognitive model operates with a deterministic subset of features without semantic conflicts."
+    },
+    {
+      "contrary_evidence": [
+        "Could become another framework if no consumer exists."
+      ],
+      "development_objective": "Resolve semantic conflicts by linking them to active hypothesis challenges, thereby generating meaningful relations and hypothesis effects.",
+      "estimated_cycles_and_model_calls": "3 cycles, each cycle taking 2 weeks with 100 model calls.",
+      "evidence_supporting_pursuit": [
+        "active_cognitive_loop.py",
+        "cognitive_claim_relation_runtime.py",
+        "semantic_classification_required"
+      ],
+      "expected_useful_outcome": "Enhanced cognitive claim relations and active hypothesis challenge evidence generation.",
+      "failure_criteria": "Semantic conflicts remain unresolved or lead to dead-end hypothesis challenges.",
+      "focus_id": "focus-d",
+      "minimum_source_scope": "Risk of overcomplicating the system if not properly managed. Scope limited to existing codebase without new UI panels or schemas.",
+      "observed_problem_addressed": "Enabling the system to handle and resolve semantic conflicts more effectively, leading to better hypothesis formulation and validation.",
+      "protected_dependencies": [],
+      "required_authority": "operator_authorized_sustained_operator_objective_campaign_1",
+      "retirement_criteria": "Retire if no distinct consumer or user-visible value is evidenced.",
+      "success_criteria": "Semantic conflicts are effectively linked to active hypothesis challenges, resulting in meaningful relations and hypothesis effects."
+    },
+    {
+      "contrary_evidence": [
+        "existing DELTA hook suggests some production value exists"
+      ],
+      "development_objective": "Reduce the risk of live state audits while maintaining their value for evaluation purposes.",
+      "estimated_cycles_and_model_calls": "3 days of development time, 100 model calls",
+      "evidence_supporting_pursuit": [
+        "cognitive_contradiction_evaluation.py",
+        "integration audit tests"
+      ],
+      "expected_useful_outcome": "Evaluator-only capabilities for audits, with no integration into production chat.",
+      "failure_criteria": "Audits remain integrated into production chat or are not converted to evaluator-only capabilities.",
+      "focus_id": "focus-e",
+      "minimum_source_scope": "The risk of exposing audits to live state is reduced, but there may be uncertainty about the production value of certain audits.",
+      "observed_problem_addressed": "Audits provide valuable insights but may not be suitable for live state due to potential risks. By converting them to evaluator-only capabilities, we can retain their utility without exposing them to production risks.",
+      "protected_dependencies": [],
+      "required_authority": "operator_authorized_sustained_operator_objective_campaign_1",
+      "retirement_criteria": "Retire if no distinct consumer or user-visible value is evidenced.",
+      "success_criteria": "All audits are converted to evaluator-only capabilities and no longer integrated into production chat."
+    },
+    {
+      "contrary_evidence": [
+        "Limited natural-language patterns may be too narrow for broader use."
+      ],
+      "development_objective": "Enable and document a controlled, opt-in pilot of a deterministic live capability to gather feedback and validate its effectiveness.",
+      "estimated_cycles_and_model_calls": "1 week, 200 model calls",
+      "evidence_supporting_pursuit": [
+        "DELTA.py enable command",
+        "runtime tests",
+        "state path data/runtime/claim_relation_pilot/state.json"
+      ],
+      "expected_useful_outcome": "A documented, controlled, and opt-in pilot of the deterministic live capability, with feedback and validation results.",
+      "failure_criteria": "Negative feedback or inability to validate the deterministic live capability.",
+      "focus_id": "focus-f",
+      "minimum_source_scope": "Risks include limited user feedback and potential issues with the narrow scope of the pilot. The scope is limited to a controlled, opt-in pilot.",
+      "observed_problem_addressed": "To ensure the deterministic live capability can be safely and effectively used by a select group of users before full-scale deployment, providing valuable insights and adjustments.",
+      "protected_dependencies": [],
+      "required_authority": "operator_authorized_sustained_operator_objective_campaign_1",
+      "retirement_criteria": "Retire if no distinct consumer or user-visible value is evidenced.",
+      "success_criteria": "Positive feedback and validation of the deterministic live capability from the pilot users."
+    }
+  ],
+  "cognition_lane": true,
+  "operation_type": "formulate_experiment_candidate",
+  "operations": [
+    {
+      "accepted": true,
+      "focus": {
+        "contrary_evidence": [
+          "semantic contradictions remain deferred; chat rigidity risk"
+        ],
+        "development_objective": "To enhance the live chat functionality by integrating deterministic correction and currentness notices, ensuring that corrections are accurately reflected in real-time.",
+        "estimated_cycles_and_model_calls": "50 hours",
+        "evidence_supporting_pursuit": [
+          "DELTA.py",
+          "cognitive_claim_relation_runtime.py",
+          "tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py"
+        ],
+        "expected_useful_outcome": "A live chat system that accurately reflects corrections in real-time, based on deterministic correction and currentness notices.",
+        "failure_criteria": "The live chat system fails to accurately reflect corrections in real-time.",
+        "focus_id": "focus-a",
+        "minimum_source_scope": "There is a risk of semantic contradictions and chat rigidity, but these will be managed through careful implementation and testing.",
+        "observed_problem_addressed": "Improving the accuracy and timeliness of corrections in live chat will enhance user satisfaction and the overall quality of the chat experience.",
+        "protected_dependencies": [],
+        "required_authority": "operator_authorized_sustained_operator_objective_campaign_1",
+        "retirement_criteria": "Retire if no distinct consumer or user-visible value is evidenced.",
+        "success_criteria": "The live chat system accurately reflects corrections in real-time based on deterministic correction and currentness notices."
+      },
+      "index": 1,
+      "model_request_id": "shared-local-model-request-d1603bbf71fde4eb",
+      "model_result_id": "shared-local-model-result-92a15f532489c7ea",
+      "raw_parsed": {
+        "contrary_or_uncertainty_evidence": [
+          "semantic contradictions remain deferred; chat rigidity risk"
+        ],
+        "estimated_time_and_model_call_budget": "50 hours",
+        "expected_artifact_or_outcome": "A live chat system that accurately reflects corrections in real-time, based on deterministic correction and currentness notices.",
+        "expected_cycle_count": "3",
+        "experiment_id": "focus-a",
+        "failure_criteria": "The live chat system fails to accurately reflect corrections in real-time.",
+        "local_evidence_available": [
+          "DELTA.py",
+          "cognitive_claim_relation_runtime.py",
+          "tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py"
+        ],
+        "practical_objective": "To enhance the live chat functionality by integrating deterministic correction and currentness notices, ensuring that corrections are accurately reflected in real-time.",
+        "related_operator_or_project_goal": "SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1",
+        "required_authority": "operator_authorized_sustained_operator_objective_campaign_1",
+        "required_bounded_actions": [
+          "integrate_deterministic_correction",
+          "implement_currentness_notices"
+        ],
+        "required_cognitive_operations": [
+          "formulate_experiment_candidate"
+        ],
+        "restart_relevance": "N/A",
+        "risk_and_scope": "There is a risk of semantic contradictions and chat rigidity, but these will be managed through careful implementation and testing.",
+        "success_criteria": "The live chat system accurately reflects corrections in real-time based on deterministic correction and currentness notices.",
+        "title": "Integrate deterministic correction/currentness notices",
+        "why_it_is_useful": "Improving the accuracy and timeliness of corrections in live chat will enhance user satisfaction and the overall quality of the chat experience."
+      }
+    },
+    {
+      "accepted": true,
+      "focus": {
+        "contrary_evidence": [
+          "existing authority evaluators may already cover action decisions"
+        ],
+        "development_objective": "Ensure that revoked authority is not mistakenly enforced by the system.",
+        "estimated_cycles_and_model_calls": "1-2 weeks",
+        "evidence_supporting_pursuit": [
+          "cognitive_claim_relations.py",
+          "cognitive_claim_relation_runtime.py",
+          "authority tests"
+        ],
+        "expected_useful_outcome": "Enhanced authority revocation mechanism based on claim relations.",
+        "failure_criteria": "Revoked authority is still enforced by the system.",
+        "focus_id": "focus-b",
+        "minimum_source_scope": "The risk is limited to potential security breaches due to outdated authorizations. The scope is confined to the claim relations for currentness.",
+        "observed_problem_addressed": "By focusing on claim relations for currentness, we can prevent the system from enforcing outdated or revoked authorizations, thereby enhancing security and compliance.",
+        "protected_dependencies": [],
+        "required_authority": "operator_authorized_sustained_operator_objective_campaign_1",
+        "retirement_criteria": "Retire if no distinct consumer or user-visible value is evidenced.",
+        "success_criteria": "Revoked authority is not enforced by the system."
+      },
+      "index": 2,
+      "model_request_id": "shared-local-model-request-67b6da0f8c928561",
+      "model_result_id": "shared-local-model-result-5cb2f001609193b8",
+      "raw_parsed": {
+        "contrary_or_uncertainty_evidence": [
+          "existing authority evaluators may already cover action decisions"
+        ],
+        "estimated_time_and_model_call_budget": "1-2 weeks",
+        "expected_artifact_or_outcome": "Enhanced authority revocation mechanism based on claim relations.",
+        "expected_cycle_count": "*",
+        "experiment_id": "focus-b",
+        "failure_criteria": "Revoked authority is still enforced by the system.",
+        "local_evidence_available": [
+          "cognitive_claim_relations.py",
+          "cognitive_claim_relation_runtime.py",
+          "authority tests"
+        ],
+        "practical_objective": "Ensure that revoked authority is not mistakenly enforced by the system.",
+        "related_operator_or_project_goal": "SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1",
+        "required_authority": "operator_authorized_sustained_operator_objective_campaign_1",
+        "required_bounded_actions": [],
+        "required_cognitive_operations": [
+          "formulate_experiment_candidate"
+        ],
+        "restart_relevance": "N/A",
+        "risk_and_scope": "The risk is limited to potential security breaches due to outdated authorizations. The scope is confined to the claim relations for currentness.",
+        "success_criteria": "Revoked authority is not enforced by the system.",
+        "title": "Use claim relations for authority revocation currentness only",
+        "why_it_is_useful": "By focusing on claim relations for currentness, we can prevent the system from enforcing outdated or revoked authorizations, thereby enhancing security and compliance."
+      }
+    },
+    {
+      "accepted": true,
+      "focus": {
+        "contrary_evidence": [
+          "may leave direct contradiction usefulness gap unresolved"
+        ],
+        "development_objective": "Ensure the cognitive system operates with a deterministic subset of features, reducing complexity and potential for semantic conflicts.",
+        "estimated_cycles_and_model_calls": "4 hours",
+        "evidence_supporting_pursuit": [
+          "cognitive_excluded_path_reconciliation.py",
+          "overlap_analysis.json"
+        ],
+        "expected_useful_outcome": "A refined cognitive model with a deterministic subset of features, free from semantic relation ambitions.",
+        "failure_criteria": "The cognitive model still contains semantic conflicts or direct contradictions.",
+        "focus_id": "focus-c",
+        "minimum_source_scope": "The risk is limited to potential underutilization of features, but the benefit is improved system stability and reliability.",
+        "observed_problem_addressed": "By focusing on a deterministic subset, we can ensure consistent and reliable performance, reducing the risk of semantic conflicts and improving overall system stability.",
+        "protected_dependencies": [],
+        "required_authority": "operator_authorized_sustained_operator_objective_campaign_1",
+        "retirement_criteria": "Retire if no distinct consumer or user-visible value is evidenced.",
+        "success_criteria": "The cognitive model operates with a deterministic subset of features without semantic conflicts."
+      },
+      "index": 3,
+      "model_request_id": "shared-local-model-request-1e3b9933653fbd8c",
+      "model_result_id": "shared-local-model-result-ec97dd95bb997ebb",
+      "raw_parsed": {
+        "contrary_or_uncertainty_evidence": [
+          "may leave direct contradiction usefulness gap unresolved"
+        ],
+        "estimated_time_and_model_call_budget": "4 hours",
+        "expected_artifact_or_outcome": "A refined cognitive model with a deterministic subset of features, free from semantic relation ambitions.",
+        "expected_cycle_count": "3",
+        "experiment_id": "focus-c",
+        "failure_criteria": "The cognitive model still contains semantic conflicts or direct contradictions.",
+        "local_evidence_available": [
+          "cognitive_excluded_path_reconciliation.py",
+          "overlap_analysis.json"
+        ],
+        "practical_objective": "Ensure the cognitive system operates with a deterministic subset of features, reducing complexity and potential for semantic conflicts.",
+        "related_operator_or_project_goal": "SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1",
+        "required_authority": "operator_authorized_sustained_operator_objective_campaign_1",
+        "required_bounded_actions": [
+          "refine_cognitive_model",
+          "exclude_semantic_relations"
+        ],
+        "required_cognitive_operations": [
+          "formulate_experiment_candidate"
+        ],
+        "restart_relevance": "N/A",
+        "risk_and_scope": "The risk is limited to potential underutilization of features, but the benefit is improved system stability and reliability.",
+        "success_criteria": "The cognitive model operates with a deterministic subset of features without semantic conflicts.",
+        "title": "Retain deterministic subset and retire semantic relation ambitions",
+        "why_it_is_useful": "By focusing on a deterministic subset, we can ensure consistent and reliable performance, reducing the risk of semantic conflicts and improving overall system stability."
+      }
+    },
+    {
+      "accepted": true,
+      "focus": {
+        "contrary_evidence": [
+          "Could become another framework if no consumer exists."
+        ],
+        "development_objective": "Resolve semantic conflicts by linking them to active hypothesis challenges, thereby generating meaningful relations and hypothesis effects.",
+        "estimated_cycles_and_model_calls": "3 cycles, each cycle taking 2 weeks with 100 model calls.",
+        "evidence_supporting_pursuit": [
+          "active_cognitive_loop.py",
+          "cognitive_claim_relation_runtime.py",
+          "semantic_classification_required"
+        ],
+        "expected_useful_outcome": "Enhanced cognitive claim relations and active hypothesis challenge evidence generation.",
+        "failure_criteria": "Semantic conflicts remain unresolved or lead to dead-end hypothesis challenges.",
+        "focus_id": "focus-d",
+        "minimum_source_scope": "Risk of overcomplicating the system if not properly managed. Scope limited to existing codebase without new UI panels or schemas.",
+        "observed_problem_addressed": "Enabling the system to handle and resolve semantic conflicts more effectively, leading to better hypothesis formulation and validation.",
+        "protected_dependencies": [],
+        "required_authority": "operator_authorized_sustained_operator_objective_campaign_1",
+        "retirement_criteria": "Retire if no distinct consumer or user-visible value is evidenced.",
+        "success_criteria": "Semantic conflicts are effectively linked to active hypothesis challenges, resulting in meaningful relations and hypothesis effects."
+      },
+      "index": 4,
+      "model_request_id": "shared-local-model-request-0f3e9070e5b03ffe",
+      "model_result_id": "shared-local-model-result-c819eb43206cc2a1",
+      "raw_parsed": {
+        "contrary_or_uncertainty_evidence": [
+          "Could become another framework if no consumer exists."
+        ],
+        "estimated_time_and_model_call_budget": "3 cycles, each cycle taking 2 weeks with 100 model calls.",
+        "expected_artifact_or_outcome": "Enhanced cognitive claim relations and active hypothesis challenge evidence generation.",
+        "expected_cycle_count": "sustained",
+        "experiment_id": "focus-d",
+        "failure_criteria": "Semantic conflicts remain unresolved or lead to dead-end hypothesis challenges.",
+        "local_evidence_available": [
+          "active_cognitive_loop.py",
+          "cognitive_claim_relation_runtime.py",
+          "semantic_classification_required"
+        ],
+        "practical_objective": "Resolve semantic conflicts by linking them to active hypothesis challenges, thereby generating meaningful relations and hypothesis effects.",
+        "related_operator_or_project_goal": "SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1",
+        "required_authority": "operator_authorized_sustained_operator_objective_campaign_1",
+        "required_bounded_actions": [
+          "link_semantic_conflicts_to_hypothesis",
+          "generate_hypothesis_evidence"
+        ],
+        "required_cognitive_operations": [
+          "formulate_hypothesis",
+          "validate_hypothesis",
+          "resolve_conflict"
+        ],
+        "restart_relevance": "Yes",
+        "risk_and_scope": "Risk of overcomplicating the system if not properly managed. Scope limited to existing codebase without new UI panels or schemas.",
+        "success_criteria": "Semantic conflicts are effectively linked to active hypothesis challenges, resulting in meaningful relations and hypothesis effects.",
+        "title": "Bind unresolved semantic conflicts to active hypothesis challenge evidence",
+        "why_it_is_useful": "Enabling the system to handle and resolve semantic conflicts more effectively, leading to better hypothesis formulation and validation."
+      }
+    },
+    {
+      "accepted": true,
+      "focus": {
+        "contrary_evidence": [
+          "existing DELTA hook suggests some production value exists"
+        ],
+        "development_objective": "Reduce the risk of live state audits while maintaining their value for evaluation purposes.",
+        "estimated_cycles_and_model_calls": "3 days of development time, 100 model calls",
+        "evidence_supporting_pursuit": [
+          "cognitive_contradiction_evaluation.py",
+          "integration audit tests"
+        ],
+        "expected_useful_outcome": "Evaluator-only capabilities for audits, with no integration into production chat.",
+        "failure_criteria": "Audits remain integrated into production chat or are not converted to evaluator-only capabilities.",
+        "focus_id": "focus-e",
+        "minimum_source_scope": "The risk of exposing audits to live state is reduced, but there may be uncertainty about the production value of certain audits.",
+        "observed_problem_addressed": "Audits provide valuable insights but may not be suitable for live state due to potential risks. By converting them to evaluator-only capabilities, we can retain their utility without exposing them to production risks.",
+        "protected_dependencies": [],
+        "required_authority": "operator_authorized_sustained_operator_objective_campaign_1",
+        "retirement_criteria": "Retire if no distinct consumer or user-visible value is evidenced.",
+        "success_criteria": "All audits are converted to evaluator-only capabilities and no longer integrated into production chat."
+      },
+      "index": 5,
+      "model_request_id": "shared-local-model-request-d51d05b92c998c6b",
+      "model_result_id": "shared-local-model-result-4f0109ba14e9af3b",
+      "raw_parsed": {
+        "contrary_or_uncertainty_evidence": [
+          "existing DELTA hook suggests some production value exists"
+        ],
+        "estimated_time_and_model_call_budget": "3 days of development time, 100 model calls",
+        "expected_artifact_or_outcome": "Evaluator-only capabilities for audits, with no integration into production chat.",
+        "expected_cycle_count": "strconv(3)",
+        "experiment_id": "focus-e",
+        "failure_criteria": "Audits remain integrated into production chat or are not converted to evaluator-only capabilities.",
+        "local_evidence_available": [
+          "cognitive_contradiction_evaluation.py",
+          "integration audit tests"
+        ],
+        "practical_objective": "Reduce the risk of live state audits while maintaining their value for evaluation purposes.",
+        "related_operator_or_project_goal": "SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1",
+        "required_authority": "operator_authorized_sustained_operator_objective_campaign_1",
+        "required_bounded_actions": [
+          "modify cognitive_contradiction_evaluation.py to exclude production chat integration",
+          "update integration audit tests to reflect new capabilities"
+        ],
+        "required_cognitive_operations": [
+          "formulate_experiment_candidate"
+        ],
+        "restart_relevance": "N/A",
+        "risk_and_scope": "The risk of exposing audits to live state is reduced, but there may be uncertainty about the production value of certain audits.",
+        "success_criteria": "All audits are converted to evaluator-only capabilities and no longer integrated into production chat.",
+        "title": "Convert audits to evaluator-only capability and avoid production chat integration",
+        "why_it_is_useful": "Audits provide valuable insights but may not be suitable for live state due to potential risks. By converting them to evaluator-only capabilities, we can retain their utility without exposing them to production risks."
+      }
+    },
+    {
+      "accepted": true,
+      "focus": {
+        "contrary_evidence": [
+          "Limited natural-language patterns may be too narrow for broader use."
+        ],
+        "development_objective": "Enable and document a controlled, opt-in pilot of a deterministic live capability to gather feedback and validate its effectiveness.",
+        "estimated_cycles_and_model_calls": "1 week, 200 model calls",
+        "evidence_supporting_pursuit": [
+          "DELTA.py enable command",
+          "runtime tests",
+          "state path data/runtime/claim_relation_pilot/state.json"
+        ],
+        "expected_useful_outcome": "A documented, controlled, and opt-in pilot of the deterministic live capability, with feedback and validation results.",
+        "failure_criteria": "Negative feedback or inability to validate the deterministic live capability.",
+        "focus_id": "focus-f",
+        "minimum_source_scope": "Risks include limited user feedback and potential issues with the narrow scope of the pilot. The scope is limited to a controlled, opt-in pilot.",
+        "observed_problem_addressed": "To ensure the deterministic live capability can be safely and effectively used by a select group of users before full-scale deployment, providing valuable insights and adjustments.",
+        "protected_dependencies": [],
+        "required_authority": "operator_authorized_sustained_operator_objective_campaign_1",
+        "retirement_criteria": "Retire if no distinct consumer or user-visible value is evidenced.",
+        "success_criteria": "Positive feedback and validation of the deterministic live capability from the pilot users."
+      },
+      "index": 6,
+      "model_request_id": "shared-local-model-request-ef0a9ab81d0cd5f5",
+      "model_result_id": "shared-local-model-result-6f713358aae3dc0f",
+      "raw_parsed": {
+        "contrary_or_uncertainty_evidence": [
+          "Limited natural-language patterns may be too narrow for broader use."
+        ],
+        "estimated_time_and_model_call_budget": "1 week, 200 model calls",
+        "expected_artifact_or_outcome": "A documented, controlled, and opt-in pilot of the deterministic live capability, with feedback and validation results.",
+        "expected_cycle_count": "3",
+        "experiment_id": "focus-f",
+        "failure_criteria": "Negative feedback or inability to validate the deterministic live capability.",
+        "local_evidence_available": [
+          "DELTA.py enable command",
+          "runtime tests",
+          "state path data/runtime/claim_relation_pilot/state.json"
+        ],
+        "practical_objective": "Enable and document a controlled, opt-in pilot of a deterministic live capability to gather feedback and validate its effectiveness.",
+        "related_operator_or_project_goal": "SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1",
+        "required_authority": "operator_authorized_sustained_operator_objective_campaign_1",
+        "required_bounded_actions": [
+          "Enable the deterministic live capability via the DELTA.py enable command.",
+          "Conduct runtime tests to validate the capability.",
+          "Document the results and feedback from the pilot."
+        ],
+        "required_cognitive_operations": [
+          "formulate_experiment_candidate"
+        ],
+        "restart_relevance": "N/A",
+        "risk_and_scope": "Risks include limited user feedback and potential issues with the narrow scope of the pilot. The scope is limited to a controlled, opt-in pilot.",
+        "success_criteria": "Positive feedback and validation of the deterministic live capability from the pilot users.",
+        "title": "Exercise and document opt-in deterministic pilot as narrow live capability",
+        "why_it_is_useful": "To ensure the deterministic live capability can be safely and effectively used by a select group of users before full-scale deployment, providing valuable insights and adjustments."
+      }
+    }
+  ]
+}

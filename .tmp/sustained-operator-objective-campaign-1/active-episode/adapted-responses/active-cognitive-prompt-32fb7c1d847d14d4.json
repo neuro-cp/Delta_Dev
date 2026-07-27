@@ -1,0 +1,24 @@
+{
+  "adapted_response": {
+    "discrepancy": "progress_observed",
+    "evidence_refs": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk",
+      "ev_semantic_deferred",
+      "ev_authority_overlap"
+    ],
+    "expected_outcome": "Perform propose_plan for the active focus using only referenced evidence.",
+    "lesson": "Direct semantic contradiction deferred without clear winner; hypothesis remains contested",
+    "observed_outcome": "Direct semantic contradiction is deferred without a winner",
+    "recommended_state_transition": "reflect_on_outcome",
+    "uncertainty": "Outcome of direct semantic contradiction resolution"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"expected_outcome\":\"Perform propose_plan for the active focus using only referenced evidence.\",\"observed_outcome\":\"Direct semantic contradiction is deferred without a winner\",\"discrepancy\":\"progress_observed\",\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\",\"ev_semantic_deferred\",\"ev_authority_overlap\"],\"lesson\":\"Direct semantic contradiction deferred without clear winner; hypothesis remains contested\",\"uncertainty\":\"Outcome of direct semantic contradiction resolution\",\"recommended_state_transition\":\"reflect_on_outcome\"}",
+  "raw_response_digest": "b831b2192f7d351321203804295c6038f5955f29421102e9d61732e4326a1f5e",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

@@ -1,0 +1,4 @@
+{
+  "command": ".venv311/Scripts/python.exe -m py_compile orchestration/runtime/cognitive_claim_relations.py orchestration/runtime/cognitive_claim_relation_runtime.py orchestration/runtime/cognitive_contradiction_evaluation.py orchestration/runtime/cognitive_claim_relation_integration_audit.py orchestration/runtime/cognitive_excluded_path_reconciliation.py DELTA.py integration/model_runtime/model_session.py orchestration/runtime/active_cognitive_loop.py",
+  "status": "passed"
+}

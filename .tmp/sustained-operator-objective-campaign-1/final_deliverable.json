@@ -1,0 +1,19 @@
+{
+  "changed_files": [],
+  "decision": "retain narrow deterministic live capability; retire/defer semantic ambitions from active path for now",
+  "deliverable_type": "Narrow-subset capability and retirement package",
+  "evidence": [
+    "model selected focus-f",
+    "behavioral cases passed",
+    "semantic contradiction deferred safely",
+    "active cognition revised hypothesis under contrary evidence",
+    "restart resumed without duplicate model request"
+  ],
+  "operator_decisions_still_needed": [
+    "staging/commit authorization if this dirty preserved capability should be checkpointed",
+    "future deletion/archive authorization only if operator wants to retire deferred semantic files"
+  ],
+  "retained_capability": "Opt-in deterministic claim-relation pilot for explicit correction, duplicate restatement, temporal transition, authority revocation, bounded exception, unrelated topic currentness, durable persistence, and restart.",
+  "retired_or_deferred_scope": "Direct semantic contradiction, uncertain conflict, ambiguous scope, implicit scoped preference update, broad authority enforcement, and canonical memory writes remain deferred; do not integrate without a future observed consumer and classifier qualification.",
+  "source_edits_required": false
+}

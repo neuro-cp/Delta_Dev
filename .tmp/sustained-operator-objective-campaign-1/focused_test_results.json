@@ -1,0 +1,6 @@
+{
+  "after_repair": "85 passed",
+  "claim_relation_contradiction_audit": "85 passed",
+  "command": ".venv311/Scripts/python.exe -m pytest tests/runtime_gsr/test_cognitive_claim_relations.py tests/runtime_gsr/test_cognitive_claim_relation_runtime.py tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py tests/runtime_gsr/test_cognitive_contradiction_evaluation.py tests/runtime_gsr/test_cognitive_claim_relation_integration_audit.py tests/runtime_gsr/test_cognitive_excluded_path_reconciliation.py -q",
+  "initial_failure": "1 stale head-mismatch failure before bounded repair"
+}

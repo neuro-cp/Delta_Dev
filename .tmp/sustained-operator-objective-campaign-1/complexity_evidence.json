@@ -1,0 +1,18 @@
+{
+  "failure_modes": [
+    "semantic direct contradiction deferred",
+    "limited parser patterns",
+    "revocation not broad enforcement consumer"
+  ],
+  "maintenance_burden": "retain deterministic runtime and tests; treat historical audits as evidence, not production truth",
+  "model_calls_completed": 17,
+  "model_calls_failed": 1,
+  "new_persistent_state": "none added by campaign; existing pilot state path remains data/runtime/claim_relation_pilot/state.json",
+  "new_runtime_architecture": false,
+  "new_ui_or_schema": false,
+  "runtime_coupling": "existing DELTA opt-in hook only",
+  "source_changes": [
+    "orchestration/runtime/cognitive_claim_relation_integration_audit.py",
+    "tests/runtime_gsr/test_cognitive_claim_relation_integration_audit.py"
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "adapter_identity": "goal_oriented_ui_campaign.ProviderManager.exact_prompt",
+  "availability_state": "available",
+  "execution_completed_at": "2026-07-27T02:47:35+00:00",
+  "execution_started_at": "2026-07-27T02:46:39+00:00",
+  "failure_classification": "",
+  "failure_detail": "",
+  "latency_seconds": 55.7271,
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "provenance": {
+    "execution_claim_id": "shared-local-model-execution-claim-680bd4a0e7b5371a",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    }
+  },
+  "request_id": "shared-local-model-request-67b6da0f8c928561",
+  "response_digest": "60ed49452807004b247907e8879382d9254a6c07652a9b21215f921ae560d9f8",
+  "response_reference": "{ \"experiment_id\": \"focus-b\", \"title\": \"Use claim relations for authority revocation currentness only\", \"practical_objective\": \"Ensure that revoked authority is not mistakenly enforced by the system.\", \"why_it_is_useful\": \"By focusing on claim relations for currentness, we can prevent the system from enforcing outdated or revoked authorizations, thereby enhancing security and compliance.\", \"related_operator_or_project_goal\": \"SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1\", \"expected_artifact_or_outcome\": \"Enhanced authority revocation mechanism based on claim relations.\", \"local_evidence_available\": [\"cognitive_claim_relations.py\", \"cognitive_claim_relation_runtime.py\", \"authority tests\"], \"contrary_or_uncertainty_evidence\": [\"existing authority evaluators may already cover action decisions\"], \"required_cognitive_operations\": [\"formulate_experiment_candidate\"], \"required_bounded_actions\": [], \"required_authority\": \"operator_authorized_sustained_operator_objective_campaign_1\", \"expected_cycle_count\":   \"*\", \"restart_relevance\": \"N/A\", \"success_criteria\": \"Revoked authority is not enforced by the system.\", \"failure_criteria\": \"Revoked authority is still enforced by the system.\", \"risk_and_scope\": \"The risk is limited to potential security breaches due to outdated authorizations. The scope is confined to the claim relations for currentness.\", \"estimated_time_and_model_call_budget\": \"1-2 weeks\" }",
+  "result_digest": "023413b331c6a25ac0d3a6d932f018482632cc4b3eb7166cc0afdb40577b018c",
+  "result_id": "shared-local-model-result-5cb2f001609193b8",
+  "terminal_state": "completed"
+}

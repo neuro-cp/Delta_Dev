@@ -1,0 +1,103 @@
+{
+  "ownership": [
+    {
+      "actual_consumer": "GovernedClaimRelationRuntime and evaluator exposure; DELTA hook indirectly",
+      "actual_producer": "operator text via DELTA hook or deterministic test harness",
+      "checkpoint_ownership": "untracked preserved dirty work; not in accepted b81c04b checkpoint",
+      "intended_function": "inert governed claim/relation state contract",
+      "originating_transfer_gate": "COGNITIVE_TRANSFER_CYCLE_1B_CONTRACT_PASSED",
+      "path": "orchestration/runtime/cognitive_claim_relations.py",
+      "protected_or_excluded_dependencies": []
+    },
+    {
+      "actual_consumer": "claim-relation tests and runtime evaluator observation",
+      "actual_producer": "operator text via DELTA hook or deterministic test harness",
+      "checkpoint_ownership": "untracked preserved dirty work; not in accepted b81c04b checkpoint",
+      "intended_function": "independent behavioral evaluator",
+      "originating_transfer_gate": "COGNITIVE_TRANSFER_CYCLE_1A_GAP_IDENTIFIED",
+      "path": "orchestration/runtime/cognitive_contradiction_evaluation.py",
+      "protected_or_excluded_dependencies": []
+    },
+    {
+      "actual_consumer": "tests and preserved decision evidence",
+      "actual_producer": "operator text via DELTA hook or deterministic test harness",
+      "checkpoint_ownership": "untracked preserved dirty work; not in accepted b81c04b checkpoint",
+      "intended_function": "read-only integration feasibility audit",
+      "originating_transfer_gate": "COGNITIVE_TRANSFER_CYCLE_1C_EXCLUDED_PATH_REQUIRED",
+      "path": "orchestration/runtime/cognitive_claim_relation_integration_audit.py",
+      "protected_or_excluded_dependencies": []
+    },
+    {
+      "actual_consumer": "tests and preserved decision evidence",
+      "actual_producer": "operator text via DELTA hook or deterministic test harness",
+      "checkpoint_ownership": "untracked preserved dirty work; not in accepted b81c04b checkpoint",
+      "intended_function": "read-only excluded path scope reconciliation",
+      "originating_transfer_gate": "COGNITIVE_TRANSFER_CYCLE_1D_DELTA_ONLY_AUTHORIZATION_REQUIRED",
+      "path": "orchestration/runtime/cognitive_excluded_path_reconciliation.py",
+      "protected_or_excluded_dependencies": []
+    },
+    {
+      "actual_consumer": "DELTA.py _apply_claim_relation_pilot when session-enabled",
+      "actual_producer": "operator text via DELTA hook or deterministic test harness",
+      "checkpoint_ownership": "untracked preserved dirty work; not in accepted b81c04b checkpoint",
+      "intended_function": "disabled-by-default deterministic operator-claim pilot runtime",
+      "originating_transfer_gate": "COGNITIVE_TRANSFER_CYCLE_1E_DETERMINISTIC_PILOT_INTEGRATION",
+      "path": "orchestration/runtime/cognitive_claim_relation_runtime.py",
+      "protected_or_excluded_dependencies": []
+    },
+    {
+      "actual_consumer": "pytest",
+      "actual_producer": "test/audit runner",
+      "checkpoint_ownership": "untracked preserved dirty work; not in accepted b81c04b checkpoint",
+      "intended_function": "focused regression/evidence",
+      "originating_transfer_gate": "associated_test",
+      "path": "tests/runtime_gsr/test_cognitive_claim_relations.py",
+      "protected_or_excluded_dependencies": []
+    },
+    {
+      "actual_consumer": "claim-relation tests and runtime evaluator observation",
+      "actual_producer": "test/audit runner",
+      "checkpoint_ownership": "untracked preserved dirty work; not in accepted b81c04b checkpoint",
+      "intended_function": "independent behavioral evaluator",
+      "originating_transfer_gate": "COGNITIVE_TRANSFER_CYCLE_1A_GAP_IDENTIFIED",
+      "path": "tests/runtime_gsr/test_cognitive_contradiction_evaluation.py",
+      "protected_or_excluded_dependencies": []
+    },
+    {
+      "actual_consumer": "tests and preserved decision evidence",
+      "actual_producer": "test/audit runner",
+      "checkpoint_ownership": "untracked preserved dirty work; not in accepted b81c04b checkpoint",
+      "intended_function": "read-only integration feasibility audit",
+      "originating_transfer_gate": "COGNITIVE_TRANSFER_CYCLE_1C_EXCLUDED_PATH_REQUIRED",
+      "path": "tests/runtime_gsr/test_cognitive_claim_relation_integration_audit.py",
+      "protected_or_excluded_dependencies": []
+    },
+    {
+      "actual_consumer": "tests and preserved decision evidence",
+      "actual_producer": "test/audit runner",
+      "checkpoint_ownership": "untracked preserved dirty work; not in accepted b81c04b checkpoint",
+      "intended_function": "read-only excluded path scope reconciliation",
+      "originating_transfer_gate": "COGNITIVE_TRANSFER_CYCLE_1D_DELTA_ONLY_AUTHORIZATION_REQUIRED",
+      "path": "tests/runtime_gsr/test_cognitive_excluded_path_reconciliation.py",
+      "protected_or_excluded_dependencies": []
+    },
+    {
+      "actual_consumer": "DELTA.py _apply_claim_relation_pilot when session-enabled",
+      "actual_producer": "test/audit runner",
+      "checkpoint_ownership": "untracked preserved dirty work; not in accepted b81c04b checkpoint",
+      "intended_function": "disabled-by-default deterministic operator-claim pilot runtime",
+      "originating_transfer_gate": "COGNITIVE_TRANSFER_CYCLE_1E_DETERMINISTIC_PILOT_INTEGRATION",
+      "path": "tests/runtime_gsr/test_cognitive_claim_relation_runtime.py",
+      "protected_or_excluded_dependencies": []
+    },
+    {
+      "actual_consumer": "pytest",
+      "actual_producer": "test/audit runner",
+      "checkpoint_ownership": "untracked preserved dirty work; not in accepted b81c04b checkpoint",
+      "intended_function": "focused regression/evidence",
+      "originating_transfer_gate": "associated_test",
+      "path": "tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py",
+      "protected_or_excluded_dependencies": []
+    }
+  ]
+}

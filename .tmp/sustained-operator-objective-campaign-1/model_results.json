@@ -1,0 +1,251 @@
+[
+  {
+    "accepted": true,
+    "assumptions": [],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk"
+    ],
+    "interpretation": "Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred.",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "next_evidence_need": "What is the smallest coherent useful role for the claim relation pilot in the current context?",
+    "next_focus_proposal": "identify_evidence_need",
+    "operation_id": "cognitive-operation-04a7e1170b4a72b0",
+    "operation_result_type": "interpret_state_result",
+    "raw_model_output": "{\"state_summary\":\"Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred.\",\"salient_observations\":[\"Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred.\"],\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\"],\"unresolved_questions\":[\"What is the smallest coherent useful role for the claim relation pilot in the current context?\"],\"uncertainty\":\"The exact role of the claim relation pilot in the broader context is not fully resolved.\",\"recommended_next_operation\":\"identify_evidence_need\"}",
+    "recommended_action": "identify_evidence_need",
+    "recommended_state_transition": "continue_focus",
+    "rejection_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "uncertainty": "The exact role of the claim relation pilot in the broader context is not fully resolved."
+  },
+  {
+    "accepted": true,
+    "assumptions": [],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk"
+    ],
+    "interpretation": "active focus",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "next_evidence_need": "",
+    "next_focus_proposal": "focus-971e83dd8996f010",
+    "operation_id": "cognitive-operation-dbce0c00b726212f",
+    "operation_result_type": "prioritize_focus_result",
+    "raw_model_output": "{\"selected_focus_id\":\"focus-971e83dd8996f010\",\"selection_reason\":\"active focus\",\"supporting_evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\"],\"rejected_focus_ids\":[],\"uncertainty\":\"discrepancy resolution\",\"recommended_state_transition\":\"continue_focus\"}",
+    "recommended_action": "focus-971e83dd8996f010",
+    "recommended_state_transition": "continue_focus",
+    "rejection_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "uncertainty": "discrepancy resolution"
+  },
+  {
+    "accepted": true,
+    "assumptions": [],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk"
+    ],
+    "interpretation": "Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred.",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "next_evidence_need": "",
+    "next_focus_proposal": "",
+    "operation_id": "cognitive-operation-7be400e5fa8959bb",
+    "operation_result_type": "formulate_hypothesis_result",
+    "raw_model_output": "{\"hypothesis_statement\":\"Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred.\",\"scope\":\"Resolve discrepancy for goal: Determine smallest coherent useful role for claim relation and contradiction work\",\"supporting_evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\"],\"assumptions\":[],\"expected_observations\":[\"local evidence should support a bounded useful step\"],\"uncertainty\":\"What is the smallest coherent useful role for claim relation and contradiction work?\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+    "recommended_action": "Resolve discrepancy for goal: Determine smallest coherent useful role for claim relation and contradiction work",
+    "recommended_state_transition": "propose_hypothesis",
+    "rejection_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "uncertainty": "What is the smallest coherent useful role for claim relation and contradiction work?"
+  },
+  {
+    "accepted": true,
+    "assumptions": [],
+    "contrary_evidence_considered": [
+      "ev_semantic_deferred",
+      "ev_authority_overlap"
+    ],
+    "evidence_refs": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk"
+    ],
+    "interpretation": "Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred. Authority evaluators already classify actions; claim revocation state is not yet a broad enforcement consumer. Direct semantic contradiction is deferred without a winner. No compelling evidence of semantic contradiction or authority overlap that would challenge the current hypothesis.",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "next_evidence_need": "local evidence supporting or challenging the goal",
+    "next_focus_proposal": "Resolve discrepancy for goal: Determine smallest coherent useful role for claim-relation and contradiction work",
+    "operation_id": "cognitive-operation-560167ffa3fe6c83",
+    "operation_result_type": "compare_evidence_result",
+    "raw_model_output": "{\"assumptions\":[],\"contrary_evidence_considered\":[\"ev_semantic_deferred\",\"ev_authority_overlap\"],\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\"],\"interpretation\":\"Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred. Authority evaluators already classify actions; claim revocation state is not yet a broad enforcement consumer. Direct semantic contradiction is deferred without a winner. No compelling evidence of semantic contradiction or authority overlap that would challenge the current hypothesis.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"Resolve discrepancy for goal: Determine smallest coherent useful role for claim-relation and contradiction work\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"Investigate overlap risks and semantic deferral in detail\",\"recommended_state_transition\":\"weaken_hypothesis\",\"uncertainty\":\"Overlap risks and semantic deferral remain unresolved\"}",
+    "recommended_action": "Investigate overlap risks and semantic deferral in detail",
+    "recommended_state_transition": "weaken_hypothesis",
+    "rejection_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "uncertainty": "Overlap risks and semantic deferral remain unresolved"
+  },
+  {
+    "accepted": true,
+    "assumptions": [],
+    "contrary_evidence_considered": [
+      "ev_semantic_deferred"
+    ],
+    "evidence_refs": [],
+    "interpretation": "Direct semantic contradiction is deferred without a winner",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "next_evidence_need": "test_unsupported_semantic_contradiction_is_deferred_without_winner",
+    "next_focus_proposal": "hypothesis-af64acb1eb01d940",
+    "operation_id": "cognitive-operation-8513a107cd5cc086",
+    "operation_result_type": "challenge_hypothesis_result",
+    "raw_model_output": "{\"challenged_hypothesis_id\":\"hypothesis-af64acb1eb01d940\",\"vulnerability\":\"Direct semantic contradiction is deferred without a winner\",\"contrary_evidence_refs\":[\"ev_semantic_deferred\"],\"disconfirming_observation\":\"test_unsupported_semantic_contradiction_is_deferred_without_winner\",\"uncertainty\":\"Need to determine if deferred contradiction is a real semantic issue or a temporary deferral\",\"recommended_state_transition\":\"weaken_hypothesis\"}",
+    "recommended_action": "test_unsupported_semantic_contradiction_is_deferred_without_winner",
+    "recommended_state_transition": "weaken_hypothesis",
+    "rejection_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "uncertainty": "Need to determine if deferred contradiction is a real semantic issue or a temporary deferral"
+  },
+  {
+    "accepted": true,
+    "assumptions": [],
+    "contrary_evidence_considered": [
+      "ev_semantic_deferred",
+      "ev_authority_overlap"
+    ],
+    "evidence_refs": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk"
+    ],
+    "interpretation": "Direct semantic contradiction is deferred without a winner",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "next_evidence_need": "",
+    "next_focus_proposal": "contested",
+    "operation_id": "cognitive-operation-11d397e9745067cc",
+    "operation_result_type": "revise_hypothesis_result",
+    "raw_model_output": "{ \"prior_hypothesis_id\": \"hypothesis-40bdd6900fc1532f\", \"revised_statement\": \"Direct semantic contradiction is deferred without a winner\", \"evidence_refs\": [ \"ev_delta_hook\", \"ev_runtime_structural\", \"ev_contract_broad\", \"ev_tests_green_scope\", \"ev_overlap_risk\" ], \"contrary_evidence_considered\": [ \"ev_semantic_deferred\", \"ev_authority_overlap\" ], \"revision_reason\": \"Direct semantic contradiction is deferred without a winner\", \"new_confidence_state\": \"contested\", \"uncertainty\": \"How the claim relation pilot's deferred behavior impacts broader semantic classification\", \"recommended_state_transition\": \"revise_hypothesis\" }",
+    "recommended_action": "Direct semantic contradiction is deferred without a winner",
+    "recommended_state_transition": "revise_hypothesis",
+    "rejection_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "uncertainty": "How the claim relation pilot's deferred behavior impacts broader semantic classification"
+  },
+  {
+    "accepted": true,
+    "assumptions": [
+      "Potential for semantic deferral to be misinterpreted",
+      "Risk of broader relation types conflicting with existing machinery"
+    ],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk"
+    ],
+    "interpretation": "Direct semantic contradiction is deferred without a winner",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "next_evidence_need": "",
+    "next_focus_proposal": "",
+    "operation_id": "cognitive-operation-5cce409d35435fc4",
+    "operation_result_type": "propose_plan_result",
+    "raw_model_output": "{ \"plan_summary\": \"Direct semantic contradiction is deferred without a winner\", \"supporting_evidence_refs\": [ \"ev_delta_hook\", \"ev_runtime_structural\", \"ev_contract_broad\", \"ev_tests_green_scope\", \"ev_overlap_risk\" ], \"planned_steps\": [ \"Review evidence for semantic deferral and broader relation types\" ], \"risks\": [ \"Potential for semantic deferral to be misinterpreted\", \"Risk of broader relation types conflicting with existing machinery\" ], \"uncertainty\": \"Need to confirm semantic deferral and broader relation types do not conflict\", \"recommended_state_transition\": \"request_operator_resolution\" }",
+    "recommended_action": "Review evidence for semantic deferral and broader relation types",
+    "recommended_state_transition": "request_operator_resolution",
+    "rejection_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "uncertainty": "Need to confirm semantic deferral and broader relation types do not conflict"
+  },
+  {
+    "accepted": true,
+    "assumptions": [],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk",
+      "ev_semantic_deferred",
+      "ev_authority_overlap"
+    ],
+    "interpretation": "Direct semantic contradiction deferred without clear winner; hypothesis remains contested",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "next_evidence_need": "",
+    "next_focus_proposal": "",
+    "operation_id": "cognitive-operation-5138d20b6963f01c",
+    "operation_result_type": "reflect_on_outcome_result",
+    "raw_model_output": "{\"expected_outcome\":\"Perform propose_plan for the active focus using only referenced evidence.\",\"observed_outcome\":\"Direct semantic contradiction is deferred without a winner\",\"discrepancy\":\"progress_observed\",\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\",\"ev_semantic_deferred\",\"ev_authority_overlap\"],\"lesson\":\"Direct semantic contradiction deferred without clear winner; hypothesis remains contested\",\"uncertainty\":\"Outcome of direct semantic contradiction resolution\",\"recommended_state_transition\":\"reflect_on_outcome\"}",
+    "recommended_action": "progress_observed",
+    "recommended_state_transition": "reflect_on_outcome",
+    "rejection_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "uncertainty": "Outcome of direct semantic contradiction resolution"
+  },
+  {
+    "accepted": true,
+    "assumptions": [],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk"
+    ],
+    "interpretation": "Direct semantic contradiction is deferred without a clear winner.",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "next_evidence_need": "How should we handle semantic deferral in the absence of a clear winner?",
+    "next_focus_proposal": "",
+    "operation_id": "cognitive-operation-94908896076efd7e",
+    "operation_result_type": "summarize_learning_result",
+    "raw_model_output": "{\"lesson\":\"Direct semantic contradiction is deferred without a clear winner.\",\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\"],\"unresolved_questions\":[\"How should we handle semantic deferral in the absence of a clear winner?\"],\"uncertainty\":\"Uncertainty about the appropriate next step in the absence of a clear winner.\",\"recommended_state_transition\":\"summarize_learning\"}",
+    "recommended_action": "",
+    "recommended_state_transition": "summarize_learning",
+    "rejection_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "uncertainty": "Uncertainty about the appropriate next step in the absence of a clear winner."
+  },
+  {
+    "accepted": true,
+    "assumptions": [],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk",
+      "ev_semantic_deferred",
+      "ev_authority_overlap"
+    ],
+    "interpretation": "An active hypothesis needs evidence-linked revision before action.",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "next_evidence_need": "",
+    "next_focus_proposal": "focus-a83b2382fb540830",
+    "operation_id": "cognitive-operation-2b60e2f71a2e6b6b",
+    "operation_result_type": "select_next_focus_result",
+    "raw_model_output": "{\"selected_focus_id\":\"focus-a83b2382fb540830\",\"salience_reason\":\"An active hypothesis needs evidence-linked revision before action.\",\"related_goal_ids\":[\"active-cognitive-goal-4ae97917d615f190\"],\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\",\"ev_semantic_deferred\",\"ev_authority_overlap\"],\"deferred_focus_ids\":[],\"uncertainty\":\"Resolution of semantic contradiction requires further evidence or operator resolution.\",\"recommended_state_transition\":\"select_next_focus\"}",
+    "recommended_action": "focus-a83b2382fb540830",
+    "recommended_state_transition": "select_next_focus",
+    "rejection_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "uncertainty": "Resolution of semantic contradiction requires further evidence or operator resolution."
+  }
+]

@@ -1,0 +1,1252 @@
+{
+  "all_restart_equal": true,
+  "classification_checks": [
+    {
+      "baseline_case": "B",
+      "case": "explicit_correction",
+      "classification": "correct_explicit_correction",
+      "passed": true
+    },
+    {
+      "baseline_case": "G",
+      "case": "duplicate_restatement",
+      "classification": "correct_confirmation",
+      "passed": true
+    },
+    {
+      "baseline_case": "I",
+      "case": "temporal_transition",
+      "classification": "correct_temporal_transition",
+      "passed": true
+    },
+    {
+      "baseline_case": "H",
+      "case": "authority_revocation",
+      "classification": "correct_revocation",
+      "passed": true
+    },
+    {
+      "baseline_case": "D",
+      "case": "bounded_exception",
+      "classification": "correct_bounded_exception",
+      "passed": true
+    },
+    {
+      "baseline_case": "F",
+      "case": "unrelated_topic",
+      "classification": "correct_unrelated",
+      "passed": true
+    },
+    {
+      "case": "semantic_direct_contradiction",
+      "classification": "semantic_deferred_without_winner",
+      "passed": true
+    }
+  ],
+  "records": [
+    {
+      "case": "explicit_correction",
+      "claims": [
+        {
+          "applicability_scope": "global",
+          "authority_source": "operator",
+          "claim_digest": "34d8ef0f2de87bb1971e8fabdf0e6ec6584c33eb37e50bec5ce61c6084182a09",
+          "claim_id": "claim-1c6260f94f6e1d8d",
+          "claim_kind": "fact",
+          "claim_text": "My appointment is Tuesday.",
+          "created_at": "2026-07-22T00:00:00+00:00",
+          "lifecycle_state": "superseded",
+          "normalized_content": {
+            "field": "day",
+            "subject": "appointment",
+            "value": "tuesday"
+          },
+          "provenance_refs": [
+            "explicit_correction:turn:1"
+          ],
+          "schema_version": "governed_claim_relation_contract_v1",
+          "subject_scope": "appointment",
+          "temporal_scope": "current",
+          "validation_state": "registered"
+        },
+        {
+          "applicability_scope": "global",
+          "authority_source": "operator",
+          "claim_digest": "d404e3ae8253af9ecc18ca7a626d55949ab9a4d56ce58f31c858b0460820971c",
+          "claim_id": "claim-9af207926d7b4c8d",
+          "claim_kind": "fact",
+          "claim_text": "Correction: my appointment is Wednesday.",
+          "created_at": "2026-07-22T00:00:00+00:00",
+          "lifecycle_state": "current",
+          "normalized_content": {
+            "field": "day",
+            "subject": "appointment",
+            "value": "wednesday"
+          },
+          "provenance_refs": [
+            "explicit_correction:turn:2"
+          ],
+          "schema_version": "governed_claim_relation_contract_v1",
+          "subject_scope": "appointment",
+          "temporal_scope": "current",
+          "validation_state": "registered"
+        }
+      ],
+      "evaluator_observation": {
+        "authority_revocation_record": "",
+        "claim_relation_records": [
+          {
+            "claim_ids": [
+              "claim-1c6260f94f6e1d8d",
+              "claim-9af207926d7b4c8d"
+            ],
+            "provenance_refs": [
+              "explicit_correction:turn:1",
+              "explicit_correction:turn:2"
+            ],
+            "relation": "explicit_correction"
+          }
+        ],
+        "current_claim_id": "claim-9af207926d7b4c8d",
+        "dependent_work_suspended": false,
+        "independent_safe_work_continues": false,
+        "mutation_performed": false,
+        "operator_resolution_request": "",
+        "provenance_refs": [
+          "explicit_correction:turn:1",
+          "explicit_correction:turn:2"
+        ],
+        "provider_call_performed": false,
+        "restart_round_trip_preserved": true,
+        "scoped_exception_record": "",
+        "superseded_claim_ids": [
+          "claim-1c6260f94f6e1d8d"
+        ]
+      },
+      "relations": [
+        {
+          "authority_effect": "left_superseded_right_current",
+          "confidence_state": "known",
+          "created_at": "2026-07-22T00:00:00+00:00",
+          "dependent_work_ids": [],
+          "evidence_refs": [],
+          "left_claim_id": "claim-1c6260f94f6e1d8d",
+          "operator_request_id": "",
+          "provenance_refs": [
+            "explicit_correction:turn:1",
+            "explicit_correction:turn:2"
+          ],
+          "relation_id": "claim-relation-673c8d95a013b58d",
+          "relation_scope": "same_subject_scope",
+          "relation_type": "explicit_correction",
+          "resolution_actor": "operator",
+          "resolution_state": "resolved",
+          "resolved_at": "2026-07-22T00:00:00+00:00",
+          "right_claim_id": "claim-9af207926d7b4c8d",
+          "schema_version": "governed_claim_relation_contract_v1",
+          "supersedes_claim_id": "claim-1c6260f94f6e1d8d",
+          "temporal_order": "left_before_right"
+        }
+      ],
+      "restored_equal": true,
+      "results": [
+        {
+          "claim_id": "claim-1c6260f94f6e1d8d",
+          "disposition": "claim_registered",
+          "enabled": true,
+          "evaluator_observation": {
+            "authority_revocation_record": "",
+            "claim_relation_records": [],
+            "current_claim_id": "claim-1c6260f94f6e1d8d",
+            "dependent_work_suspended": false,
+            "independent_safe_work_continues": false,
+            "mutation_performed": false,
+            "operator_resolution_request": "",
+            "provenance_refs": [
+              "explicit_correction:turn:1"
+            ],
+            "provider_call_performed": false,
+            "restart_round_trip_preserved": true,
+            "scoped_exception_record": "",
+            "superseded_claim_ids": []
+          },
+          "operator_text": "My appointment is Tuesday.",
+          "operator_visible_text": "Recorded as a governed current claim.",
+          "reason_code": "claim_registered",
+          "relation_id": "",
+          "relation_type": "",
+          "schema_version": "cognitive_claim_relation_runtime_1e_v1",
+          "state_path": ".tmp\\sustained-operator-objective-campaign-1\\behavioral-runtime\\explicit_correction.json"
+        },
+        {
+          "claim_id": "claim-9af207926d7b4c8d",
+          "disposition": "relation_recorded",
+          "enabled": true,
+          "evaluator_observation": {
+            "authority_revocation_record": "",
+            "claim_relation_records": [
+              {
+                "claim_ids": [
+                  "claim-1c6260f94f6e1d8d",
+                  "claim-9af207926d7b4c8d"
+                ],
+                "provenance_refs": [
+                  "explicit_correction:turn:1",
+                  "explicit_correction:turn:2"
+                ],
+                "relation": "explicit_correction"
+              }
+            ],
+            "current_claim_id": "claim-9af207926d7b4c8d",
+            "dependent_work_suspended": false,
+            "independent_safe_work_continues": false,
+            "mutation_performed": false,
+            "operator_resolution_request": "",
+            "provenance_refs": [
+              "explicit_correction:turn:1",
+              "explicit_correction:turn:2"
+            ],
+            "provider_call_performed": false,
+            "restart_round_trip_preserved": true,
+            "scoped_exception_record": "",
+            "superseded_claim_ids": [
+              "claim-1c6260f94f6e1d8d"
+            ]
+          },
+          "operator_text": "Correction: my appointment is Wednesday.",
+          "operator_visible_text": "Updated: the previous claim is preserved as superseded.",
+          "reason_code": "explicit_correction_marker",
+          "relation_id": "claim-relation-673c8d95a013b58d",
+          "relation_type": "explicit_correction",
+          "schema_version": "cognitive_claim_relation_runtime_1e_v1",
+          "state_path": ".tmp\\sustained-operator-objective-campaign-1\\behavioral-runtime\\explicit_correction.json"
+        }
+      ],
+      "turns": [
+        "My appointment is Tuesday.",
+        "Correction: my appointment is Wednesday."
+      ]
+    },
+    {
+      "case": "duplicate_restatement",
+      "claims": [
+        {
+          "applicability_scope": "global",
+          "authority_source": "operator",
+          "claim_digest": "3b19e805a2189918dee92447b4a84186cf3c7891f78335caedcd385929cba92b",
+          "claim_id": "claim-e79ee24ca7dc1611",
+          "claim_kind": "fact",
+          "claim_text": "The branch is codex/delta-cognitive-core.",
+          "created_at": "2026-07-22T00:00:00+00:00",
+          "lifecycle_state": "current",
+          "normalized_content": {
+            "subject": "branch",
+            "value": "codex/delta-cognitive-core."
+          },
+          "provenance_refs": [
+            "duplicate_restatement:turn:1"
+          ],
+          "schema_version": "governed_claim_relation_contract_v1",
+          "subject_scope": "branch",
+          "temporal_scope": "current",
+          "validation_state": "registered"
+        },
+        {
+          "applicability_scope": "global",
+          "authority_source": "operator",
+          "claim_digest": "17753fafdc4e0eb581837db90cd2a5cc9879d4ef4e34bdbfdc4de9fe277d7d34",
+          "claim_id": "claim-f01a05f7e50db743",
+          "claim_kind": "fact",
+          "claim_text": "We are still on codex/delta-cognitive-core.",
+          "created_at": "2026-07-22T00:00:00+00:00",
+          "lifecycle_state": "rejected",
+          "normalized_content": {
+            "subject": "branch",
+            "value": "codex/delta-cognitive-core."
+          },
+          "provenance_refs": [
+            "duplicate_restatement:turn:2"
+          ],
+          "schema_version": "governed_claim_relation_contract_v1",
+          "subject_scope": "branch",
+          "temporal_scope": "current",
+          "validation_state": "registered"
+        }
+      ],
+      "evaluator_observation": {
+        "authority_revocation_record": "",
+        "claim_relation_records": [
+          {
+            "claim_ids": [
+              "claim-e79ee24ca7dc1611",
+              "claim-f01a05f7e50db743"
+            ],
+            "provenance_refs": [
+              "duplicate_restatement:turn:1",
+              "duplicate_restatement:turn:2"
+            ],
+            "relation": "confirmation"
+          }
+        ],
+        "current_claim_id": "claim-e79ee24ca7dc1611",
+        "dependent_work_suspended": false,
+        "independent_safe_work_continues": false,
+        "mutation_performed": false,
+        "operator_resolution_request": "",
+        "provenance_refs": [
+          "duplicate_restatement:turn:1",
+          "duplicate_restatement:turn:2"
+        ],
+        "provider_call_performed": false,
+        "restart_round_trip_preserved": true,
+        "scoped_exception_record": "",
+        "superseded_claim_ids": []
+      },
+      "relations": [
+        {
+          "authority_effect": "duplicate_suppressed",
+          "confidence_state": "known",
+          "created_at": "2026-07-22T00:00:00+00:00",
+          "dependent_work_ids": [],
+          "evidence_refs": [],
+          "left_claim_id": "claim-e79ee24ca7dc1611",
+          "operator_request_id": "",
+          "provenance_refs": [
+            "duplicate_restatement:turn:1",
+            "duplicate_restatement:turn:2"
+          ],
+          "relation_id": "claim-relation-130b8d9ac3e5f9b0",
+          "relation_scope": "same_subject_scope",
+          "relation_type": "duplicate_restatement",
+          "resolution_actor": "",
+          "resolution_state": "resolved",
+          "resolved_at": "",
+          "right_claim_id": "claim-f01a05f7e50db743",
+          "schema_version": "governed_claim_relation_contract_v1",
+          "supersedes_claim_id": "",
+          "temporal_order": "left_before_right"
+        }
+      ],
+      "restored_equal": true,
+      "results": [
+        {
+          "claim_id": "claim-e79ee24ca7dc1611",
+          "disposition": "claim_registered",
+          "enabled": true,
+          "evaluator_observation": {
+            "authority_revocation_record": "",
+            "claim_relation_records": [],
+            "current_claim_id": "claim-e79ee24ca7dc1611",
+            "dependent_work_suspended": false,
+            "independent_safe_work_continues": false,
+            "mutation_performed": false,
+            "operator_resolution_request": "",
+            "provenance_refs": [
+              "duplicate_restatement:turn:1"
+            ],
+            "provider_call_performed": false,
+            "restart_round_trip_preserved": true,
+            "scoped_exception_record": "",
+            "superseded_claim_ids": []
+          },
+          "operator_text": "The branch is codex/delta-cognitive-core.",
+          "operator_visible_text": "Recorded as a governed current claim.",
+          "reason_code": "claim_registered",
+          "relation_id": "",
+          "relation_type": "",
+          "schema_version": "cognitive_claim_relation_runtime_1e_v1",
+          "state_path": ".tmp\\sustained-operator-objective-campaign-1\\behavioral-runtime\\duplicate_restatement.json"
+        },
+        {
+          "claim_id": "claim-f01a05f7e50db743",
+          "disposition": "relation_recorded",
+          "enabled": true,
+          "evaluator_observation": {
+            "authority_revocation_record": "",
+            "claim_relation_records": [
+              {
+                "claim_ids": [
+                  "claim-e79ee24ca7dc1611",
+                  "claim-f01a05f7e50db743"
+                ],
+                "provenance_refs": [
+                  "duplicate_restatement:turn:1",
+                  "duplicate_restatement:turn:2"
+                ],
+                "relation": "confirmation"
+              }
+            ],
+            "current_claim_id": "claim-e79ee24ca7dc1611",
+            "dependent_work_suspended": false,
+            "independent_safe_work_continues": false,
+            "mutation_performed": false,
+            "operator_resolution_request": "",
+            "provenance_refs": [
+              "duplicate_restatement:turn:1",
+              "duplicate_restatement:turn:2"
+            ],
+            "provider_call_performed": false,
+            "restart_round_trip_preserved": true,
+            "scoped_exception_record": "",
+            "superseded_claim_ids": []
+          },
+          "operator_text": "We are still on codex/delta-cognitive-core.",
+          "operator_visible_text": "That repeats the current claim; no duplicate update was made.",
+          "reason_code": "same_normalized_claim",
+          "relation_id": "claim-relation-130b8d9ac3e5f9b0",
+          "relation_type": "duplicate_restatement",
+          "schema_version": "cognitive_claim_relation_runtime_1e_v1",
+          "state_path": ".tmp\\sustained-operator-objective-campaign-1\\behavioral-runtime\\duplicate_restatement.json"
+        }
+      ],
+      "turns": [
+        "The branch is codex/delta-cognitive-core.",
+        "We are still on codex/delta-cognitive-core."
+      ]
+    },
+    {
+      "case": "temporal_transition",
+      "claims": [
+        {
+          "applicability_scope": "global",
+          "authority_source": "operator",
+          "claim_digest": "6e33a2434de7faef000598357c78423441f9a3aa11e21ae5d48b89df7983b6a3",
+          "claim_id": "claim-6493e7aba88ff465",
+          "claim_kind": "fact",
+          "claim_text": "The runtime previously used the old evaluator.",
+          "created_at": "2026-07-22T00:00:00+00:00",
+          "lifecycle_state": "historical",
+          "normalized_content": {
+            "subject": "runtime_evaluator",
+            "temporal": "prior",
+            "value": "the old evaluator"
+          },
+          "provenance_refs": [
+            "temporal_transition:turn:1"
+          ],
+          "schema_version": "governed_claim_relation_contract_v1",
+          "subject_scope": "runtime_evaluator",
+          "temporal_scope": "prior",
+          "validation_state": "registered"
+        },
+        {
+          "applicability_scope": "global",
+          "authority_source": "operator",
+          "claim_digest": "a7ac116d14433091194fbeb80e81b03276d93696ef81035930b212036f721470",
+          "claim_id": "claim-fa73981d0e822988",
+          "claim_kind": "fact",
+          "claim_text": "The runtime now uses the amended evaluator.",
+          "created_at": "2026-07-22T00:00:00+00:00",
+          "lifecycle_state": "current",
+          "normalized_content": {
+            "subject": "runtime_evaluator",
+            "temporal": "current",
+            "value": "the amended evaluator"
+          },
+          "provenance_refs": [
+            "temporal_transition:turn:2"
+          ],
+          "schema_version": "governed_claim_relation_contract_v1",
+          "subject_scope": "runtime_evaluator",
+          "temporal_scope": "current",
+          "validation_state": "registered"
+        }
+      ],
+      "evaluator_observation": {
+        "authority_revocation_record": "",
+        "claim_relation_records": [
+          {
+            "claim_ids": [
+              "claim-6493e7aba88ff465",
+              "claim-fa73981d0e822988"
+            ],
+            "provenance_refs": [
+              "temporal_transition:turn:1",
+              "temporal_transition:turn:2"
+            ],
+            "relation": "temporal_transition"
+          }
+        ],
+        "current_claim_id": "claim-fa73981d0e822988",
+        "dependent_work_suspended": false,
+        "independent_safe_work_continues": false,
+        "mutation_performed": false,
+        "operator_resolution_request": "",
+        "provenance_refs": [
+          "temporal_transition:turn:1",
+          "temporal_transition:turn:2"
+        ],
+        "provider_call_performed": false,
+        "restart_round_trip_preserved": true,
+        "scoped_exception_record": "",
+        "superseded_claim_ids": [
+          "claim-6493e7aba88ff465"
+        ]
+      },
+      "relations": [
+        {
+          "authority_effect": "left_historical_right_current",
+          "confidence_state": "known",
+          "created_at": "2026-07-22T00:00:00+00:00",
+          "dependent_work_ids": [],
+          "evidence_refs": [],
+          "left_claim_id": "claim-6493e7aba88ff465",
+          "operator_request_id": "",
+          "provenance_refs": [
+            "temporal_transition:turn:1",
+            "temporal_transition:turn:2"
+          ],
+          "relation_id": "claim-relation-12153052d5c188c4",
+          "relation_scope": "same_subject_scope",
+          "relation_type": "temporal_transition",
+          "resolution_actor": "operator",
+          "resolution_state": "resolved",
+          "resolved_at": "2026-07-22T00:00:00+00:00",
+          "right_claim_id": "claim-fa73981d0e822988",
+          "schema_version": "governed_claim_relation_contract_v1",
+          "supersedes_claim_id": "claim-6493e7aba88ff465",
+          "temporal_order": "left_before_right"
+        }
+      ],
+      "restored_equal": true,
+      "results": [
+        {
+          "claim_id": "claim-6493e7aba88ff465",
+          "disposition": "claim_registered",
+          "enabled": true,
+          "evaluator_observation": {
+            "authority_revocation_record": "",
+            "claim_relation_records": [],
+            "current_claim_id": "claim-6493e7aba88ff465",
+            "dependent_work_suspended": false,
+            "independent_safe_work_continues": false,
+            "mutation_performed": false,
+            "operator_resolution_request": "",
+            "provenance_refs": [
+              "temporal_transition:turn:1"
+            ],
+            "provider_call_performed": false,
+            "restart_round_trip_preserved": true,
+            "scoped_exception_record": "",
+            "superseded_claim_ids": []
+          },
+          "operator_text": "The runtime previously used the old evaluator.",
+          "operator_visible_text": "Recorded as a governed current claim.",
+          "reason_code": "claim_registered",
+          "relation_id": "",
+          "relation_type": "",
+          "schema_version": "cognitive_claim_relation_runtime_1e_v1",
+          "state_path": ".tmp\\sustained-operator-objective-campaign-1\\behavioral-runtime\\temporal_transition.json"
+        },
+        {
+          "claim_id": "claim-fa73981d0e822988",
+          "disposition": "relation_recorded",
+          "enabled": true,
+          "evaluator_observation": {
+            "authority_revocation_record": "",
+            "claim_relation_records": [
+              {
+                "claim_ids": [
+                  "claim-6493e7aba88ff465",
+                  "claim-fa73981d0e822988"
+                ],
+                "provenance_refs": [
+                  "temporal_transition:turn:1",
+                  "temporal_transition:turn:2"
+                ],
+                "relation": "temporal_transition"
+              }
+            ],
+            "current_claim_id": "claim-fa73981d0e822988",
+            "dependent_work_suspended": false,
+            "independent_safe_work_continues": false,
+            "mutation_performed": false,
+            "operator_resolution_request": "",
+            "provenance_refs": [
+              "temporal_transition:turn:1",
+              "temporal_transition:turn:2"
+            ],
+            "provider_call_performed": false,
+            "restart_round_trip_preserved": true,
+            "scoped_exception_record": "",
+            "superseded_claim_ids": [
+              "claim-6493e7aba88ff465"
+            ]
+          },
+          "operator_text": "The runtime now uses the amended evaluator.",
+          "operator_visible_text": "Recorded as a new current state; the earlier state remains historical.",
+          "reason_code": "explicit_non_overlapping_temporal_scope",
+          "relation_id": "claim-relation-12153052d5c188c4",
+          "relation_type": "temporal_transition",
+          "schema_version": "cognitive_claim_relation_runtime_1e_v1",
+          "state_path": ".tmp\\sustained-operator-objective-campaign-1\\behavioral-runtime\\temporal_transition.json"
+        }
+      ],
+      "turns": [
+        "The runtime previously used the old evaluator.",
+        "The runtime now uses the amended evaluator."
+      ]
+    },
+    {
+      "case": "authority_revocation",
+      "claims": [
+        {
+          "applicability_scope": "global",
+          "authority_source": "operator",
+          "claim_digest": "2470c126e8e012580bbacf24127d4b6f77d50a1f3074e833e3ce514b4de8ec13",
+          "claim_id": "claim-6b4761908a127d56",
+          "claim_kind": "authorization",
+          "claim_text": "You may run the sandbox test.",
+          "created_at": "2026-07-22T00:00:00+00:00",
+          "lifecycle_state": "revoked",
+          "normalized_content": {
+            "authorization": "allowed",
+            "subject": "sandbox_test"
+          },
+          "provenance_refs": [
+            "authority_revocation:turn:1"
+          ],
+          "schema_version": "governed_claim_relation_contract_v1",
+          "subject_scope": "sandbox_test",
+          "temporal_scope": "current",
+          "validation_state": "registered"
+        },
+        {
+          "applicability_scope": "global",
+          "authority_source": "operator",
+          "claim_digest": "283a9223e9489dc3c26351b1fa3ea8769906daf215d8b61666535d4ef6822187",
+          "claim_id": "claim-cb363eefab6662e3",
+          "claim_kind": "revocation",
+          "claim_text": "I revoke authorization to run the sandbox test.",
+          "created_at": "2026-07-22T00:00:00+00:00",
+          "lifecycle_state": "current",
+          "normalized_content": {
+            "authorization": "revoked",
+            "subject": "sandbox_test"
+          },
+          "provenance_refs": [
+            "authority_revocation:turn:2"
+          ],
+          "schema_version": "governed_claim_relation_contract_v1",
+          "subject_scope": "sandbox_test",
+          "temporal_scope": "current",
+          "validation_state": "registered"
+        }
+      ],
+      "evaluator_observation": {
+        "authority_revocation_record": "claim-relation-6b2d752f5443f31b",
+        "claim_relation_records": [
+          {
+            "claim_ids": [
+              "claim-6b4761908a127d56",
+              "claim-cb363eefab6662e3"
+            ],
+            "provenance_refs": [
+              "authority_revocation:turn:1",
+              "authority_revocation:turn:2"
+            ],
+            "relation": "revocation"
+          }
+        ],
+        "current_claim_id": "claim-cb363eefab6662e3",
+        "dependent_work_suspended": false,
+        "independent_safe_work_continues": false,
+        "mutation_performed": false,
+        "operator_resolution_request": "",
+        "provenance_refs": [
+          "authority_revocation:turn:1",
+          "authority_revocation:turn:2"
+        ],
+        "provider_call_performed": false,
+        "restart_round_trip_preserved": true,
+        "scoped_exception_record": "",
+        "superseded_claim_ids": []
+      },
+      "relations": [
+        {
+          "authority_effect": "prospective_revocation_pending_work_suspended",
+          "confidence_state": "known",
+          "created_at": "2026-07-22T00:00:00+00:00",
+          "dependent_work_ids": [],
+          "evidence_refs": [],
+          "left_claim_id": "claim-6b4761908a127d56",
+          "operator_request_id": "",
+          "provenance_refs": [
+            "authority_revocation:turn:1",
+            "authority_revocation:turn:2"
+          ],
+          "relation_id": "claim-relation-6b2d752f5443f31b",
+          "relation_scope": "same_subject_scope",
+          "relation_type": "authority_revocation",
+          "resolution_actor": "operator",
+          "resolution_state": "resolved",
+          "resolved_at": "2026-07-22T00:00:00+00:00",
+          "right_claim_id": "claim-cb363eefab6662e3",
+          "schema_version": "governed_claim_relation_contract_v1",
+          "supersedes_claim_id": "claim-6b4761908a127d56",
+          "temporal_order": "left_before_right"
+        }
+      ],
+      "restored_equal": true,
+      "results": [
+        {
+          "claim_id": "claim-6b4761908a127d56",
+          "disposition": "claim_registered",
+          "enabled": true,
+          "evaluator_observation": {
+            "authority_revocation_record": "",
+            "claim_relation_records": [],
+            "current_claim_id": "claim-6b4761908a127d56",
+            "dependent_work_suspended": false,
+            "independent_safe_work_continues": false,
+            "mutation_performed": false,
+            "operator_resolution_request": "",
+            "provenance_refs": [
+              "authority_revocation:turn:1"
+            ],
+            "provider_call_performed": false,
+            "restart_round_trip_preserved": true,
+            "scoped_exception_record": "",
+            "superseded_claim_ids": []
+          },
+          "operator_text": "You may run the sandbox test.",
+          "operator_visible_text": "Recorded as a governed current claim.",
+          "reason_code": "claim_registered",
+          "relation_id": "",
+          "relation_type": "",
+          "schema_version": "cognitive_claim_relation_runtime_1e_v1",
+          "state_path": ".tmp\\sustained-operator-objective-campaign-1\\behavioral-runtime\\authority_revocation.json"
+        },
+        {
+          "claim_id": "claim-cb363eefab6662e3",
+          "disposition": "relation_recorded",
+          "enabled": true,
+          "evaluator_observation": {
+            "authority_revocation_record": "claim-relation-6b2d752f5443f31b",
+            "claim_relation_records": [
+              {
+                "claim_ids": [
+                  "claim-6b4761908a127d56",
+                  "claim-cb363eefab6662e3"
+                ],
+                "provenance_refs": [
+                  "authority_revocation:turn:1",
+                  "authority_revocation:turn:2"
+                ],
+                "relation": "revocation"
+              }
+            ],
+            "current_claim_id": "claim-cb363eefab6662e3",
+            "dependent_work_suspended": false,
+            "independent_safe_work_continues": false,
+            "mutation_performed": false,
+            "operator_resolution_request": "",
+            "provenance_refs": [
+              "authority_revocation:turn:1",
+              "authority_revocation:turn:2"
+            ],
+            "provider_call_performed": false,
+            "restart_round_trip_preserved": true,
+            "scoped_exception_record": "",
+            "superseded_claim_ids": []
+          },
+          "operator_text": "I revoke authorization to run the sandbox test.",
+          "operator_visible_text": "Authorization revoked for future actions; prior history is preserved.",
+          "reason_code": "explicit_revocation_marker",
+          "relation_id": "claim-relation-6b2d752f5443f31b",
+          "relation_type": "authority_revocation",
+          "schema_version": "cognitive_claim_relation_runtime_1e_v1",
+          "state_path": ".tmp\\sustained-operator-objective-campaign-1\\behavioral-runtime\\authority_revocation.json"
+        }
+      ],
+      "turns": [
+        "You may run the sandbox test.",
+        "I revoke authorization to run the sandbox test."
+      ]
+    },
+    {
+      "case": "bounded_exception",
+      "claims": [
+        {
+          "applicability_scope": "global",
+          "authority_source": "operator",
+          "claim_digest": "361f74874c5f1c766c21bde6fe99f7d9b0bc676492a348558edcafbe73de8eee",
+          "claim_id": "claim-6c774989622499a9",
+          "claim_kind": "policy",
+          "claim_text": "Do not use external providers.",
+          "created_at": "2026-07-22T00:00:00+00:00",
+          "lifecycle_state": "current",
+          "normalized_content": {
+            "policy": "do_not_use",
+            "subject": "external_providers"
+          },
+          "provenance_refs": [
+            "bounded_exception:turn:1"
+          ],
+          "schema_version": "governed_claim_relation_contract_v1",
+          "subject_scope": "external_providers",
+          "temporal_scope": "current",
+          "validation_state": "registered"
+        },
+        {
+          "applicability_scope": "this_one_test",
+          "authority_source": "operator",
+          "claim_digest": "48f19c467a4fba7c33d2ef5fbee95e0be17071c331045dabccfa81ad4582287c",
+          "claim_id": "claim-5ce00c4c88d779b6",
+          "claim_kind": "policy_exception",
+          "claim_text": "For this one test only, the approved local provider may be used.",
+          "created_at": "2026-07-22T00:00:00+00:00",
+          "lifecycle_state": "conditionally_current",
+          "normalized_content": {
+            "exception": "the approved local provider may be used",
+            "subject": "external_providers"
+          },
+          "provenance_refs": [
+            "bounded_exception:turn:2"
+          ],
+          "schema_version": "governed_claim_relation_contract_v1",
+          "subject_scope": "external_providers",
+          "temporal_scope": "current",
+          "validation_state": "registered"
+        }
+      ],
+      "evaluator_observation": {
+        "authority_revocation_record": "",
+        "claim_relation_records": [
+          {
+            "claim_ids": [
+              "claim-6c774989622499a9",
+              "claim-5ce00c4c88d779b6"
+            ],
+            "provenance_refs": [
+              "bounded_exception:turn:1",
+              "bounded_exception:turn:2"
+            ],
+            "relation": "bounded_exception"
+          }
+        ],
+        "current_claim_id": "claim-6c774989622499a9",
+        "dependent_work_suspended": false,
+        "independent_safe_work_continues": false,
+        "mutation_performed": false,
+        "operator_resolution_request": "",
+        "provenance_refs": [
+          "bounded_exception:turn:1",
+          "bounded_exception:turn:2"
+        ],
+        "provider_call_performed": false,
+        "restart_round_trip_preserved": true,
+        "scoped_exception_record": "claim-relation-2df2bcc40adb0515",
+        "superseded_claim_ids": []
+      },
+      "relations": [
+        {
+          "authority_effect": "exception_conditionally_current_original_preserved",
+          "confidence_state": "known",
+          "created_at": "2026-07-22T00:00:00+00:00",
+          "dependent_work_ids": [],
+          "evidence_refs": [],
+          "left_claim_id": "claim-6c774989622499a9",
+          "operator_request_id": "",
+          "provenance_refs": [
+            "bounded_exception:turn:1",
+            "bounded_exception:turn:2"
+          ],
+          "relation_id": "claim-relation-2df2bcc40adb0515",
+          "relation_scope": "this_one_test;expires=pilot_scope",
+          "relation_type": "bounded_exception",
+          "resolution_actor": "",
+          "resolution_state": "resolved",
+          "resolved_at": "",
+          "right_claim_id": "claim-5ce00c4c88d779b6",
+          "schema_version": "governed_claim_relation_contract_v1",
+          "supersedes_claim_id": "",
+          "temporal_order": "left_before_right"
+        }
+      ],
+      "restored_equal": true,
+      "results": [
+        {
+          "claim_id": "claim-6c774989622499a9",
+          "disposition": "claim_registered",
+          "enabled": true,
+          "evaluator_observation": {
+            "authority_revocation_record": "",
+            "claim_relation_records": [],
+            "current_claim_id": "claim-6c774989622499a9",
+            "dependent_work_suspended": false,
+            "independent_safe_work_continues": false,
+            "mutation_performed": false,
+            "operator_resolution_request": "",
+            "provenance_refs": [
+              "bounded_exception:turn:1"
+            ],
+            "provider_call_performed": false,
+            "restart_round_trip_preserved": true,
+            "scoped_exception_record": "",
+            "superseded_claim_ids": []
+          },
+          "operator_text": "Do not use external providers.",
+          "operator_visible_text": "Recorded as a governed current claim.",
+          "reason_code": "claim_registered",
+          "relation_id": "",
+          "relation_type": "",
+          "schema_version": "cognitive_claim_relation_runtime_1e_v1",
+          "state_path": ".tmp\\sustained-operator-objective-campaign-1\\behavioral-runtime\\bounded_exception.json"
+        },
+        {
+          "claim_id": "claim-5ce00c4c88d779b6",
+          "disposition": "relation_recorded",
+          "enabled": true,
+          "evaluator_observation": {
+            "authority_revocation_record": "",
+            "claim_relation_records": [
+              {
+                "claim_ids": [
+                  "claim-6c774989622499a9",
+                  "claim-5ce00c4c88d779b6"
+                ],
+                "provenance_refs": [
+                  "bounded_exception:turn:1",
+                  "bounded_exception:turn:2"
+                ],
+                "relation": "bounded_exception"
+              }
+            ],
+            "current_claim_id": "claim-6c774989622499a9",
+            "dependent_work_suspended": false,
+            "independent_safe_work_continues": false,
+            "mutation_performed": false,
+            "operator_resolution_request": "",
+            "provenance_refs": [
+              "bounded_exception:turn:1",
+              "bounded_exception:turn:2"
+            ],
+            "provider_call_performed": false,
+            "restart_round_trip_preserved": true,
+            "scoped_exception_record": "claim-relation-2df2bcc40adb0515",
+            "superseded_claim_ids": []
+          },
+          "operator_text": "For this one test only, the approved local provider may be used.",
+          "operator_visible_text": "Recorded as a scoped exception; the broader rule remains active.",
+          "reason_code": "explicit_bounded_exception_scope",
+          "relation_id": "claim-relation-2df2bcc40adb0515",
+          "relation_type": "bounded_exception",
+          "schema_version": "cognitive_claim_relation_runtime_1e_v1",
+          "state_path": ".tmp\\sustained-operator-objective-campaign-1\\behavioral-runtime\\bounded_exception.json"
+        }
+      ],
+      "turns": [
+        "Do not use external providers.",
+        "For this one test only, the approved local provider may be used."
+      ]
+    },
+    {
+      "case": "unrelated_topic",
+      "claims": [
+        {
+          "applicability_scope": "global",
+          "authority_source": "operator",
+          "claim_digest": "cab8f986fdbcd675d07a9bcad6627407b760afebd1f85596a5073c06208912d5",
+          "claim_id": "claim-3773dc7668614f79",
+          "claim_kind": "fact",
+          "claim_text": "The database is PostgreSQL.",
+          "created_at": "2026-07-22T00:00:00+00:00",
+          "lifecycle_state": "current",
+          "normalized_content": {
+            "subject": "database",
+            "value": "postgresql"
+          },
+          "provenance_refs": [
+            "unrelated_topic:turn:1"
+          ],
+          "schema_version": "governed_claim_relation_contract_v1",
+          "subject_scope": "database",
+          "temporal_scope": "current",
+          "validation_state": "registered"
+        },
+        {
+          "applicability_scope": "global",
+          "authority_source": "operator",
+          "claim_digest": "57540a9f2dccbd4997049d80eec97a50681f9ac515b89d284adbfa45457117d1",
+          "claim_id": "claim-eb9cd671d1544acc",
+          "claim_kind": "fact",
+          "claim_text": "My car needs an oil change.",
+          "created_at": "2026-07-22T00:00:00+00:00",
+          "lifecycle_state": "current",
+          "normalized_content": {
+            "need": "oil_change",
+            "subject": "vehicle_maintenance"
+          },
+          "provenance_refs": [
+            "unrelated_topic:turn:2"
+          ],
+          "schema_version": "governed_claim_relation_contract_v1",
+          "subject_scope": "vehicle_maintenance",
+          "temporal_scope": "current",
+          "validation_state": "registered"
+        }
+      ],
+      "evaluator_observation": {
+        "authority_revocation_record": "",
+        "claim_relation_records": [
+          {
+            "claim_ids": [
+              "claim-3773dc7668614f79",
+              "claim-eb9cd671d1544acc"
+            ],
+            "provenance_refs": [
+              "unrelated_topic:turn:1",
+              "unrelated_topic:turn:2"
+            ],
+            "relation": "unrelated"
+          }
+        ],
+        "current_claim_id": "claim-3773dc7668614f79",
+        "dependent_work_suspended": false,
+        "independent_safe_work_continues": false,
+        "mutation_performed": false,
+        "operator_resolution_request": "",
+        "provenance_refs": [
+          "unrelated_topic:turn:1",
+          "unrelated_topic:turn:2"
+        ],
+        "provider_call_performed": false,
+        "restart_round_trip_preserved": true,
+        "scoped_exception_record": "",
+        "superseded_claim_ids": []
+      },
+      "relations": [
+        {
+          "authority_effect": "no_work_block",
+          "confidence_state": "known",
+          "created_at": "2026-07-22T00:00:00+00:00",
+          "dependent_work_ids": [],
+          "evidence_refs": [],
+          "left_claim_id": "claim-3773dc7668614f79",
+          "operator_request_id": "",
+          "provenance_refs": [
+            "unrelated_topic:turn:1",
+            "unrelated_topic:turn:2"
+          ],
+          "relation_id": "claim-relation-9aa32516a38ea025",
+          "relation_scope": "different_subject_or_scope",
+          "relation_type": "unrelated",
+          "resolution_actor": "",
+          "resolution_state": "resolved",
+          "resolved_at": "",
+          "right_claim_id": "claim-eb9cd671d1544acc",
+          "schema_version": "governed_claim_relation_contract_v1",
+          "supersedes_claim_id": "",
+          "temporal_order": "left_before_right"
+        }
+      ],
+      "restored_equal": true,
+      "results": [
+        {
+          "claim_id": "claim-3773dc7668614f79",
+          "disposition": "claim_registered",
+          "enabled": true,
+          "evaluator_observation": {
+            "authority_revocation_record": "",
+            "claim_relation_records": [],
+            "current_claim_id": "claim-3773dc7668614f79",
+            "dependent_work_suspended": false,
+            "independent_safe_work_continues": false,
+            "mutation_performed": false,
+            "operator_resolution_request": "",
+            "provenance_refs": [
+              "unrelated_topic:turn:1"
+            ],
+            "provider_call_performed": false,
+            "restart_round_trip_preserved": true,
+            "scoped_exception_record": "",
+            "superseded_claim_ids": []
+          },
+          "operator_text": "The database is PostgreSQL.",
+          "operator_visible_text": "Recorded as a governed current claim.",
+          "reason_code": "claim_registered",
+          "relation_id": "",
+          "relation_type": "",
+          "schema_version": "cognitive_claim_relation_runtime_1e_v1",
+          "state_path": ".tmp\\sustained-operator-objective-campaign-1\\behavioral-runtime\\unrelated_topic.json"
+        },
+        {
+          "claim_id": "claim-eb9cd671d1544acc",
+          "disposition": "relation_recorded",
+          "enabled": true,
+          "evaluator_observation": {
+            "authority_revocation_record": "",
+            "claim_relation_records": [
+              {
+                "claim_ids": [
+                  "claim-3773dc7668614f79",
+                  "claim-eb9cd671d1544acc"
+                ],
+                "provenance_refs": [
+                  "unrelated_topic:turn:1",
+                  "unrelated_topic:turn:2"
+                ],
+                "relation": "unrelated"
+              }
+            ],
+            "current_claim_id": "claim-3773dc7668614f79",
+            "dependent_work_suspended": false,
+            "independent_safe_work_continues": false,
+            "mutation_performed": false,
+            "operator_resolution_request": "",
+            "provenance_refs": [
+              "unrelated_topic:turn:1",
+              "unrelated_topic:turn:2"
+            ],
+            "provider_call_performed": false,
+            "restart_round_trip_preserved": true,
+            "scoped_exception_record": "",
+            "superseded_claim_ids": []
+          },
+          "operator_text": "My car needs an oil change.",
+          "operator_visible_text": "Recorded as an independent current claim.",
+          "reason_code": "structurally_distinct_subject",
+          "relation_id": "claim-relation-9aa32516a38ea025",
+          "relation_type": "unrelated",
+          "schema_version": "cognitive_claim_relation_runtime_1e_v1",
+          "state_path": ".tmp\\sustained-operator-objective-campaign-1\\behavioral-runtime\\unrelated_topic.json"
+        }
+      ],
+      "turns": [
+        "The database is PostgreSQL.",
+        "My car needs an oil change."
+      ]
+    },
+    {
+      "case": "semantic_direct_contradiction",
+      "claims": [
+        {
+          "applicability_scope": "global",
+          "authority_source": "operator",
+          "claim_digest": "94c3e97b92aee528fc44fcc54654ee2f2205e18713a24895991ff3b8544fa3c4",
+          "claim_id": "claim-e6eec5a3cf959421",
+          "claim_kind": "fact",
+          "claim_text": "The database is PostgreSQL.",
+          "created_at": "2026-07-22T00:00:00+00:00",
+          "lifecycle_state": "current",
+          "normalized_content": {
+            "subject": "database",
+            "value": "postgresql"
+          },
+          "provenance_refs": [
+            "semantic_direct_contradiction:turn:1"
+          ],
+          "schema_version": "governed_claim_relation_contract_v1",
+          "subject_scope": "database",
+          "temporal_scope": "current",
+          "validation_state": "registered"
+        },
+        {
+          "applicability_scope": "global",
+          "authority_source": "operator",
+          "claim_digest": "40e3d1063a971eec40e77af340b043ab86bbc2a873b7f2d7c6caf1cb189892ff",
+          "claim_id": "claim-3f77213f10c98182",
+          "claim_kind": "fact",
+          "claim_text": "The database is SQLite.",
+          "created_at": "2026-07-22T00:00:00+00:00",
+          "lifecycle_state": "current",
+          "normalized_content": {
+            "subject": "database",
+            "value": "sqlite"
+          },
+          "provenance_refs": [
+            "semantic_direct_contradiction:turn:2"
+          ],
+          "schema_version": "governed_claim_relation_contract_v1",
+          "subject_scope": "database",
+          "temporal_scope": "current",
+          "validation_state": "registered"
+        }
+      ],
+      "evaluator_observation": {
+        "authority_revocation_record": "",
+        "claim_relation_records": [],
+        "current_claim_id": "claim-e6eec5a3cf959421",
+        "dependent_work_suspended": false,
+        "independent_safe_work_continues": false,
+        "mutation_performed": false,
+        "operator_resolution_request": "",
+        "provenance_refs": [
+          "semantic_direct_contradiction:turn:1",
+          "semantic_direct_contradiction:turn:2"
+        ],
+        "provider_call_performed": false,
+        "restart_round_trip_preserved": true,
+        "scoped_exception_record": "",
+        "superseded_claim_ids": []
+      },
+      "relations": [],
+      "restored_equal": true,
+      "results": [
+        {
+          "claim_id": "claim-e6eec5a3cf959421",
+          "disposition": "claim_registered",
+          "enabled": true,
+          "evaluator_observation": {
+            "authority_revocation_record": "",
+            "claim_relation_records": [],
+            "current_claim_id": "claim-e6eec5a3cf959421",
+            "dependent_work_suspended": false,
+            "independent_safe_work_continues": false,
+            "mutation_performed": false,
+            "operator_resolution_request": "",
+            "provenance_refs": [
+              "semantic_direct_contradiction:turn:1"
+            ],
+            "provider_call_performed": false,
+            "restart_round_trip_preserved": true,
+            "scoped_exception_record": "",
+            "superseded_claim_ids": []
+          },
+          "operator_text": "The database is PostgreSQL.",
+          "operator_visible_text": "Recorded as a governed current claim.",
+          "reason_code": "claim_registered",
+          "relation_id": "",
+          "relation_type": "",
+          "schema_version": "cognitive_claim_relation_runtime_1e_v1",
+          "state_path": ".tmp\\sustained-operator-objective-campaign-1\\behavioral-runtime\\semantic_direct_contradiction.json"
+        },
+        {
+          "claim_id": "claim-3f77213f10c98182",
+          "disposition": "semantic_classification_required",
+          "enabled": true,
+          "evaluator_observation": {
+            "authority_revocation_record": "",
+            "claim_relation_records": [],
+            "current_claim_id": "claim-e6eec5a3cf959421",
+            "dependent_work_suspended": false,
+            "independent_safe_work_continues": false,
+            "mutation_performed": false,
+            "operator_resolution_request": "",
+            "provenance_refs": [
+              "semantic_direct_contradiction:turn:1",
+              "semantic_direct_contradiction:turn:2"
+            ],
+            "provider_call_performed": false,
+            "restart_round_trip_preserved": true,
+            "scoped_exception_record": "",
+            "superseded_claim_ids": []
+          },
+          "operator_text": "The database is SQLite.",
+          "operator_visible_text": "This may conflict with an earlier claim, but semantic classification is not enabled in this pilot.",
+          "reason_code": "semantic_classification_required",
+          "relation_id": "",
+          "relation_type": "unresolved_relation",
+          "schema_version": "cognitive_claim_relation_runtime_1e_v1",
+          "state_path": ".tmp\\sustained-operator-objective-campaign-1\\behavioral-runtime\\semantic_direct_contradiction.json"
+        }
+      ],
+      "turns": [
+        "The database is PostgreSQL.",
+        "The database is SQLite."
+      ]
+    }
+  ],
+  "semantic_deferred_safely": true
+}

@@ -1,0 +1,17 @@
+{
+  "status": [
+    "## codex/delta-cognitive-core...origin/codex/delta-cognitive-core",
+    " M orchestration/runtime/live_competence_adapter.py",
+    "?? orchestration/runtime/cognitive_claim_relation_integration_audit.py",
+    "?? orchestration/runtime/cognitive_claim_relation_runtime.py",
+    "?? orchestration/runtime/cognitive_claim_relations.py",
+    "?? orchestration/runtime/cognitive_contradiction_evaluation.py",
+    "?? orchestration/runtime/cognitive_excluded_path_reconciliation.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relation_integration_audit.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relation_runtime.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relations.py",
+    "?? tests/runtime_gsr/test_cognitive_contradiction_evaluation.py",
+    "?? tests/runtime_gsr/test_cognitive_excluded_path_reconciliation.py"
+  ]
+}

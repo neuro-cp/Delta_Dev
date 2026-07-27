@@ -1,0 +1,26 @@
+{
+  "adapted_response": {
+    "contrary_evidence_considered": [
+      "ev_semantic_deferred",
+      "ev_authority_overlap"
+    ],
+    "evidence_refs": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk"
+    ],
+    "new_confidence_state": "contested",
+    "prior_hypothesis_id": "hypothesis-40bdd6900fc1532f",
+    "recommended_state_transition": "revise_hypothesis",
+    "revised_statement": "Direct semantic contradiction is deferred without a winner",
+    "revision_reason": "Direct semantic contradiction is deferred without a winner",
+    "uncertainty": "How the claim relation pilot's deferred behavior impacts broader semantic classification"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{ \"prior_hypothesis_id\": \"hypothesis-40bdd6900fc1532f\", \"revised_statement\": \"Direct semantic contradiction is deferred without a winner\", \"evidence_refs\": [ \"ev_delta_hook\", \"ev_runtime_structural\", \"ev_contract_broad\", \"ev_tests_green_scope\", \"ev_overlap_risk\" ], \"contrary_evidence_considered\": [ \"ev_semantic_deferred\", \"ev_authority_overlap\" ], \"revision_reason\": \"Direct semantic contradiction is deferred without a winner\", \"new_confidence_state\": \"contested\", \"uncertainty\": \"How the claim relation pilot's deferred behavior impacts broader semantic classification\", \"recommended_state_transition\": \"revise_hypothesis\" }",
+  "raw_response_digest": "832567deb26c5b70ca5e61f6fea60437e7667d619ffd096d85f1c188d1e4389f",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

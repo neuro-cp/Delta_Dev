@@ -1,0 +1,25 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk"
+    ],
+    "recommended_next_operation": "identify_evidence_need",
+    "salient_observations": [
+      "Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred."
+    ],
+    "state_summary": "Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred.",
+    "uncertainty": "The exact role of the claim relation pilot in the broader context is not fully resolved.",
+    "unresolved_questions": [
+      "What is the smallest coherent useful role for the claim relation pilot in the current context?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"state_summary\":\"Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred.\",\"salient_observations\":[\"Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred.\"],\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\"],\"unresolved_questions\":[\"What is the smallest coherent useful role for the claim relation pilot in the current context?\"],\"uncertainty\":\"The exact role of the claim relation pilot in the broader context is not fully resolved.\",\"recommended_next_operation\":\"identify_evidence_need\"}",
+  "raw_response_digest": "91995bed5d4625bc77d6c74e929155bcda2b2960fa73becc82871d8f488e0e87",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

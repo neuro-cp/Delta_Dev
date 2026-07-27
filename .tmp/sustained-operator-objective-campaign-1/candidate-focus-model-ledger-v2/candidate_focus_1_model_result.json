@@ -1,0 +1,60 @@
+{
+  "adapter_identity": "goal_oriented_ui_campaign.ProviderManager.exact_prompt",
+  "availability_state": "available",
+  "execution_completed_at": "2026-07-27T02:46:39+00:00",
+  "execution_started_at": "2026-07-27T02:45:31+00:00",
+  "failure_classification": "",
+  "failure_detail": "",
+  "latency_seconds": 67.5762,
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "provenance": {
+    "execution_claim_id": "shared-local-model-execution-claim-6f3b21f17aca66dd",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    }
+  },
+  "request_id": "shared-local-model-request-d1603bbf71fde4eb",
+  "response_digest": "20b16dedda6d70f08f4cc051959a8971df12a6ea67cbf77d38b21000da922867",
+  "response_reference": "{\n  \"experiment_id\": \"focus-a\",\n  \"title\": \"Integrate deterministic correction/currentness notices\",\n  \"practical_objective\": \"To enhance the live chat functionality by integrating deterministic correction and currentness notices, ensuring that corrections are accurately reflected in real-time.\",\n  \"why_it_is_useful\": \"Improving the accuracy and timeliness of corrections in live chat will enhance user satisfaction and the overall quality of the chat experience.\",\n  \"related_operator_or_project_goal\": \"SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1\",\n  \"expected_artifact_or_outcome\": \"A live chat system that accurately reflects corrections in real-time, based on deterministic correction and currentness notices.\",\n  \"local_evidence_available\": [\"DELTA.py\", \"cognitive_claim_relation_runtime.py\", \"tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py\"],\n  \"contrary_or_uncertainty_evidence\": [\"semantic contradictions remain deferred; chat rigidity risk\"],\n  \"required_cognitive_operations\": [\"formulate_experiment_candidate\"],\n  \"required_bounded_actions\": [\"integrate_deterministic_correction\", \"implement_currentness_notices\"],\n  \"required_authority\": \"operator_authorized_sustained_operator_objective_campaign_1\",\n  \"expected_cycle_count\":   \"3\",\n  \"restart_relevance\": \"N/A\",\n  \"success_criteria\": \"The live chat system accurately reflects corrections in real-time based on deterministic correction and currentness notices.\",\n  \"failure_criteria\": \"The live chat system fails to accurately reflect corrections in real-time.\",\n  \"risk_and_scope\": \"There is a risk of semantic contradictions and chat rigidity, but these will be managed through careful implementation and testing.\",\n  \"estimated_time_and_model_call_budget\": \"50 hours\"\n}",
+  "result_digest": "da3bb2ad2d8e0ce76244efb24bc4c301b9c88d6d6a2e2d138c3321f039825971",
+  "result_id": "shared-local-model-result-92a15f532489c7ea",
+  "terminal_state": "completed"
+}

@@ -1,0 +1,17 @@
+{
+  "adapted_response": {
+    "challenged_hypothesis_id": "hypothesis-af64acb1eb01d940",
+    "contrary_evidence_refs": [
+      "ev_semantic_deferred"
+    ],
+    "disconfirming_observation": "test_unsupported_semantic_contradiction_is_deferred_without_winner",
+    "recommended_state_transition": "weaken_hypothesis",
+    "uncertainty": "Need to determine if deferred contradiction is a real semantic issue or a temporary deferral",
+    "vulnerability": "Direct semantic contradiction is deferred without a winner"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"challenged_hypothesis_id\":\"hypothesis-af64acb1eb01d940\",\"vulnerability\":\"Direct semantic contradiction is deferred without a winner\",\"contrary_evidence_refs\":[\"ev_semantic_deferred\"],\"disconfirming_observation\":\"test_unsupported_semantic_contradiction_is_deferred_without_winner\",\"uncertainty\":\"Need to determine if deferred contradiction is a real semantic issue or a temporary deferral\",\"recommended_state_transition\":\"weaken_hypothesis\"}",
+  "raw_response_digest": "201d0578c4658c34b32812165f6cc71a3171dbc07aa57fda59f6ded327875ccb",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

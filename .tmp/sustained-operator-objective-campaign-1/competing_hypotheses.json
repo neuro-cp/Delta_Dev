@@ -1,0 +1,68 @@
+{
+  "hypotheses": [
+    {
+      "confidence_state": "plausible",
+      "contrary_evidence": [
+        "ev_semantic_deferred",
+        "ev_overlap_risk"
+      ],
+      "expected_observations": [
+        "Existing DELTA hook is production reachable after opt-in",
+        "Behavioral cases produce visible currentness effects",
+        "Restart preserves claim lifecycle",
+        "Focused tests pass without chat regression"
+      ],
+      "falsification_condition": "No user-visible behavior or no durable consumer beyond inert tests",
+      "hypothesis_id": "integration",
+      "implementation_consequence": "Retain opt-in deterministic pilot as narrow live capability",
+      "statement": "A bounded subset of claim-relation state provides useful live behavior not already covered by active cognition.",
+      "supporting_evidence": [
+        "ev_delta_hook",
+        "ev_runtime_structural",
+        "ev_tests_green_scope"
+      ]
+    },
+    {
+      "confidence_state": "plausible",
+      "contrary_evidence": [
+        "ev_delta_hook",
+        "ev_runtime_structural"
+      ],
+      "expected_observations": [
+        "No production consumer exists",
+        "Behavior is only reports/tests",
+        "Active cognition already resolves the need",
+        "Authority revocation is already enforced elsewhere"
+      ],
+      "falsification_condition": "Opt-in runtime produces durable visible behavior that existing machinery does not",
+      "hypothesis_id": "redundancy",
+      "implementation_consequence": "Produce retirement decision package and request deletion/archival authority later",
+      "statement": "The work duplicates existing hypothesis, discourse, memory, or authority machinery and should be retired or reduced.",
+      "supporting_evidence": [
+        "ev_overlap_risk",
+        "ev_authority_overlap"
+      ]
+    },
+    {
+      "confidence_state": "supported_candidate",
+      "contrary_evidence": [
+        "ev_contract_broad"
+      ],
+      "expected_observations": [
+        "Explicit correction, duplicate, temporal, revocation, exception, and unrelated cases pass",
+        "Direct semantic contradiction remains deferred safely",
+        "No new UI/schema needed",
+        "Maintenance surface is small"
+      ],
+      "falsification_condition": "Deterministic subset fails live or cannot be explained as useful",
+      "hypothesis_id": "narrow_subset",
+      "implementation_consequence": "Deliver narrow-subset capability and retirement/defer semantic cases",
+      "statement": "Only deterministic structural relation types justify retention; semantic relation ambitions should remain deferred or retired.",
+      "supporting_evidence": [
+        "ev_runtime_structural",
+        "ev_semantic_deferred",
+        "ev_tests_green_scope"
+      ]
+    }
+  ]
+}

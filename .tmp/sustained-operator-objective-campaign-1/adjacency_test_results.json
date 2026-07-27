@@ -1,0 +1,8 @@
+{
+  "active_tk_execution_lane": "51 passed",
+  "chat_regression": "7 passed",
+  "commands": [
+    ".venv311/Scripts/python.exe -m pytest tests/runtime_gsr/test_active_cognitive_loop.py tests/runtime_gsr/test_goal_oriented_ui_campaign.py tests/runtime_gsr/test_model_execution_lane_isolation.py tests/runtime_gsr/test_local_model_request_result_ledger.py -q",
+    ".venv311/Scripts/python.exe -m pytest tests/delta_1_3/test_behavioral_maturation.py tests/runtime_v30/test_v30_conversational_answer_formatter.py -q"
+  ]
+}

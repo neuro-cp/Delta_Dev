@@ -1,0 +1,16 @@
+{
+  "default_enabled": false,
+  "delta_applies_to_operator_turns": true,
+  "delta_disable_command": true,
+  "delta_enable_command": true,
+  "delta_imports_runtime": true,
+  "delta_instantiates_runtime": true,
+  "delta_py_already_dirty": false,
+  "live_adapter_dirty_preserved": [
+    " M orchestration/runtime/live_competence_adapter.py"
+  ],
+  "live_adapter_required": false,
+  "production_reachable_summary": "Reachable through existing DELTA.py chat command after explicit local-session enable; disabled by default; deterministic structural forms only.",
+  "protected_dependency_required": false,
+  "state_path": "data/runtime/claim_relation_pilot/state.json"
+}

@@ -1,0 +1,102 @@
+{
+  "claims": [
+    {
+      "applicability_scope": "global",
+      "authority_source": "operator",
+      "claim_digest": "6e33a2434de7faef000598357c78423441f9a3aa11e21ae5d48b89df7983b6a3",
+      "claim_id": "claim-6493e7aba88ff465",
+      "claim_kind": "fact",
+      "claim_text": "The runtime previously used the old evaluator.",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "lifecycle_state": "historical",
+      "normalized_content": {
+        "subject": "runtime_evaluator",
+        "temporal": "prior",
+        "value": "the old evaluator"
+      },
+      "provenance_refs": [
+        "temporal_transition:turn:1"
+      ],
+      "schema_version": "governed_claim_relation_contract_v1",
+      "subject_scope": "runtime_evaluator",
+      "temporal_scope": "prior",
+      "validation_state": "registered"
+    },
+    {
+      "applicability_scope": "global",
+      "authority_source": "operator",
+      "claim_digest": "a7ac116d14433091194fbeb80e81b03276d93696ef81035930b212036f721470",
+      "claim_id": "claim-fa73981d0e822988",
+      "claim_kind": "fact",
+      "claim_text": "The runtime now uses the amended evaluator.",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "lifecycle_state": "current",
+      "normalized_content": {
+        "subject": "runtime_evaluator",
+        "temporal": "current",
+        "value": "the amended evaluator"
+      },
+      "provenance_refs": [
+        "temporal_transition:turn:2"
+      ],
+      "schema_version": "governed_claim_relation_contract_v1",
+      "subject_scope": "runtime_evaluator",
+      "temporal_scope": "current",
+      "validation_state": "registered"
+    }
+  ],
+  "operator_requests": [],
+  "relations": [
+    {
+      "authority_effect": "left_historical_right_current",
+      "confidence_state": "known",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "dependent_work_ids": [],
+      "evidence_refs": [],
+      "left_claim_id": "claim-6493e7aba88ff465",
+      "operator_request_id": "",
+      "provenance_refs": [
+        "temporal_transition:turn:1",
+        "temporal_transition:turn:2"
+      ],
+      "relation_id": "claim-relation-12153052d5c188c4",
+      "relation_scope": "same_subject_scope",
+      "relation_type": "temporal_transition",
+      "resolution_actor": "operator",
+      "resolution_state": "resolved",
+      "resolved_at": "2026-07-22T00:00:00+00:00",
+      "right_claim_id": "claim-fa73981d0e822988",
+      "schema_version": "governed_claim_relation_contract_v1",
+      "supersedes_claim_id": "claim-6493e7aba88ff465",
+      "temporal_order": "left_before_right"
+    }
+  ],
+  "schema_version": "governed_claim_relation_contract_v1",
+  "transition_journal": [
+    {
+      "authority_scope": "inert_claim_relation_contract_only",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "ids": [
+        "claim-6493e7aba88ff465"
+      ],
+      "transition": "register_claim"
+    },
+    {
+      "authority_scope": "inert_claim_relation_contract_only",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "ids": [
+        "claim-fa73981d0e822988"
+      ],
+      "transition": "register_claim"
+    },
+    {
+      "authority_scope": "inert_claim_relation_contract_only",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "ids": [
+        "claim-relation-12153052d5c188c4"
+      ],
+      "transition": "apply_temporal_transition"
+    }
+  ],
+  "work_items": []
+}

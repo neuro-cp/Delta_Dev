@@ -1,0 +1,30 @@
+{
+  "active_cognition_overlap": [
+    "hypotheses already model evidence/revision/plans but do not persist user-stated currentness/revocation facts as claims",
+    "working memory packets carry evidence refs but not durable claim lifecycle"
+  ],
+  "authority_overlap": [
+    "authority evaluators classify actions; pilot can preserve explicit revocation facts but is not enforcement yet"
+  ],
+  "deferred_or_weak_subset": [
+    "direct semantic contradiction",
+    "uncertain conflict",
+    "ambiguous scope",
+    "implicit scoped preference update"
+  ],
+  "discourse_overlap": [
+    "discourse frame routes user requests, but does not supersede/revoke prior operator facts"
+  ],
+  "memory_overlap": [
+    "memory candidates/canonical memory exist elsewhere; pilot does not write canonical memory and should not make chat rigid"
+  ],
+  "risk": "Broad semantic classification would duplicate cognition and risk brittle chat behavior; deterministic opt-in subset has bounded value.",
+  "useful_nonduplicated_subset": [
+    "explicit correction",
+    "duplicate restatement",
+    "temporal transition",
+    "authority revocation",
+    "bounded exception",
+    "unrelated-topic guard"
+  ]
+}

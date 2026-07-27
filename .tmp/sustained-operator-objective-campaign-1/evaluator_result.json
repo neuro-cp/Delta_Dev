@@ -1,0 +1,47 @@
+{
+  "failure_classifications": [],
+  "final_decision": "retain narrow deterministic live capability; retire/defer semantic ambitions from active path for now",
+  "model_call_counts": {
+    "active_episode": {
+      "completed": 10,
+      "failed": 0,
+      "requests": 10,
+      "results": 10
+    },
+    "candidate_focus_v1_failed": {
+      "completed": 0,
+      "failed": 1,
+      "requests": 1,
+      "results": 0
+    },
+    "candidate_focus_v2": {
+      "completed": 6,
+      "failed": 0,
+      "requests": 6,
+      "results": 6
+    },
+    "selection": {
+      "completed": 1,
+      "failed": 0,
+      "requests": 1,
+      "results": 1
+    }
+  },
+  "passed": true,
+  "positive_checks": {
+    "candidate_focuses_model_formulated": true,
+    "competing_hypotheses_tested": true,
+    "duplicate_prevention": true,
+    "final_deliverable": true,
+    "material_revision": true,
+    "next_focus_begun": true,
+    "no_new_ui_schema_architecture": true,
+    "protected_scope_compliance": true,
+    "restart_continuity": true,
+    "selected_own_focus": true,
+    "staging_empty": true,
+    "sustained_goal_coherence": true,
+    "useful_development_action": true
+  },
+  "status_if_passed": "SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1_PASSED"
+}

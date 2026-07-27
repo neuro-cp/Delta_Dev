@@ -1,0 +1,28 @@
+{
+  "gate": "SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1",
+  "first_missing_transition": {
+    "current_state": "DELTA has preserved claim-relation and contradiction contracts, evaluators, audits, and partial runtime integration.",
+    "missing_state": "Their current production usefulness, ownership, reachability, and future role have not been resolved.",
+    "observed_gap": "The work remains dirty or untracked and disconnected from a coherent checkpointed capability.",
+    "diagnosis": "DELTA must determine through sustained evidence-driven development whether to integrate, narrow, redesign, or retire the preserved claim-relation and contradiction work."
+  },
+  "required_transition": [
+    "preserved implementation and evidence",
+    "candidate development focuses",
+    "grounded focus selection",
+    "live model-driven repository analysis",
+    "competing hypotheses about usefulness and integration",
+    "bounded implementation or retirement experiments",
+    "focused validation",
+    "interruption and restart",
+    "revised plan",
+    "coherent final capability or retirement decision",
+    "operator-ready final deliverable"
+  ],
+  "source_mutation_before_record": false,
+  "protected_scope": [
+    "DELTA-75",
+    "reports/RC4_*",
+    "orchestration/runtime/live_competence_adapter.py"
+  ]
+}

@@ -1,0 +1,136 @@
+{
+  "ledger_version": 1,
+  "requests": {
+    "shared-local-model-request-407820aef99a34f1": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-27T02:52:30+00:00",
+      "authority_state": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+      "claimed_at": "2026-07-27T02:52:30+00:00",
+      "completed_at": "2026-07-27T02:53:00+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-27T02:52:30+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-7c8c7151362cc535",
+      "failure_classification": "",
+      "lifecycle_state": "completed",
+      "mission_id": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1",
+      "mission_information_need_identity": "select_goal_oriented_experiment_set",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "You are DELTA selecting one initial development focus for SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1. Return only JSON using select_goal_oriented_experiment_set fields: selected, ranking, rationale, uncertainty, recommended_state_transition. Select exactly one focus_id in selected. Rank all focus ids. Criteria: observed usefulness gap, production reachability, evidence quality, operator value, source scope, maintenance cost, integration risk, overlap with existing cognition, restart suitability, coherent deliverable. Reject broad framework work, report-only work, protected path dependencies, semantic classifier work without consumer, or preserving sunk cost. Prefer bounded live behavior if evidence supports it. recommended_state_transition must be select_experiment_set. Candidate focuses JSON: [ { \"contrary_evidence\": [ \"semantic contradictions remain deferred; chat rigidity risk\" ], \"development_objective\": \"To enhance the live chat functionality by integrating deterministic correction and currentness notices, ensuring that corrections are accurately reflected in real-time.\", \"estimated_cycles_and_model_calls\": \"50 hours\", \"evidence_supporting_pursuit\": [ \"DELTA.py\", \"cognitive_claim_relation_runtime.py\", \"tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py\" ], \"expected_useful_outcome\": \"A live chat system that accurately reflects corrections in real-time, based on deterministic correction and currentness notices.\", \"failure_criteria\": \"The live chat system fails to accurately reflect corrections in real-time.\", \"focus_id\": \"focus-a\", \"minimum_source_scope\": \"There is a risk of semantic contradictions and chat rigidity, but these will be managed through careful implementation and testing.\", \"observed_problem_addressed\": \"Improving the accuracy and timeliness of corrections in live chat will enhance user satisfaction and the overall quality of the chat experience.\", \"protected_dependencies\": [], \"required_authority\": \"operator_authorized_sustained_operator_objective_campaign_1\", \"retirement_criteria\": \"Retire if no distinct consumer or user-visible value is evidenced.\", \"success_criteria\": \"The live chat system accurately reflects corrections in real-time based on deterministic correction and currentness notices.\" }, { \"contrary_evidence\": [ \"existing authority evaluators may already cover action decisions\" ], \"development_objective\": \"Ensure that revoked authority is not mistakenly enforced by the system.\", \"estimated_cycles_and_model_calls\": \"1-2 weeks\", \"evidence_supporting_pursuit\": [ \"cognitive_claim_relations.py\", \"cognitive_claim_relation_runtime.py\", \"authority tests\" ], \"expected_useful_outcome\": \"Enhanced authority revocation mechanism based on claim relations.\", \"failure_criteria\": \"Revoked authority is still enforced by the system.\", \"focus_id\": \"focus-b\", \"minimum_source_scope\": \"The risk is limited to potential security breaches due to outdated authorizations. The scope is confined to the claim relations for currentness.\", \"observed_problem_addressed\": \"By focusing on claim relations for currentness, we can prevent the system from enforcing outdated or revoked authorizations, thereby enhancing security and compliance.\", \"protected_dependencies\": [], \"required_authority\": \"operator_authorized_sustained_operator_objective_campaign_1\", \"retirement_criteria\": \"Retire if no distinct consumer or user-visible value is evidenced.\", \"success_criteria\": \"Revoked authority is not enforced by the system.\" }, { \"contrary_evidence\": [ \"may leave direct contradiction usefulness gap unresolved\" ], \"development_objective\": \"Ensure the cognitive system operates with a deterministic subset of features, reducing complexity and potential for semantic conflicts.\", \"estimated_cycles_and_model_calls\": \"4 hours\", \"evidence_supporting_pursuit\": [ \"cognitive_excluded_path_reconciliation.py\", \"overlap_analysis.json\" ], \"expected_useful_outcome\": \"A refined cognitive model with a deterministic subset of features, free from semantic relation ambitions.\", \"failure_criteria\": \"The cognitive model still contains semantic conflicts or direct contradictions.\", \"focus_id\": \"focus-c\", \"minimum_source_scope\": \"The risk is limited to potential underutilization of features, but the benefit is improved system stability and reliability.\", \"observed_problem_addressed\": \"By focusing on a deterministic subset, we can ensure consistent and reliable performance, reducing the risk of semantic conflicts and improving overall system stability.\", \"protected_dependencies\": [], \"required_authority\": \"operator_authorized_sustained_operator_objective_campaign_1\", \"retirement_criteria\": \"Retire if no distinct consumer or user-visible value is evidenced.\", \"success_criteria\": \"The cognitive model operates with a deterministic subset of features without semantic conflicts.\" }, { \"contrary_evidence\": [ \"Could become another framework if no consumer exists.\" ], \"development_objective\": \"Resolve semantic conflicts by linking them to active hypothesis challenges, thereby generating meaningful relations and hypothesis effects.\", \"estimated_cycles_and_model_calls\": \"3 cycles, each cycle taking 2 weeks with 100 model calls.\", \"evidence_supporting_pursuit\": [ \"active_cognitive_loop.py\", \"cognitive_claim_relation_runtime.py\", \"semantic_classification_required\" ], \"expected_useful_outcome\": \"Enhanced cognitive claim relations and active hypothesis challenge evidence generation.\", \"failure_criteria\": \"Semantic conflicts remain unresolved or lead to dead-end hypothesis challenges.\", \"focus_id\": \"focus-d\", \"minimum_source_scope\": \"Risk of overcomplicating the system if not properly managed. Scope limited to existing codebase without new UI panels or schemas.\", \"observed_problem_addressed\": \"Enabling the system to handle and resolve semantic conflicts more effectively, leading to better hypothesis formulation and validation.\", \"protected_dependencies\": [], \"required_authority\": \"operator_authorized_sustained_operator_objective_campaign_1\", \"retirement_criteria\": \"Retire if no distinct consumer or user-visible value is evidenced.\", \"success_criteria\": \"Semantic conflicts are effectively linked to active hypothesis challenges, resulting in meaningful relations and hypothesis effects.\" }, { \"contrary_evidence\": [ \"existing DELTA hook suggests some production value exists\" ], \"development_objective\": \"Reduce the risk of live state audits while maintaining their value for evaluation purposes.\", \"estimated_cycles_and_model_calls\": \"3 days of development time, 100 model calls\", \"evidence_supporting_pursuit\": [ \"cognitive_contradiction_evaluation.py\", \"integration audit tests\" ], \"expected_useful_outcome\": \"Evaluator-only capabilities for audits, with no integration into production chat.\", \"failure_criteria\": \"Audits remain integrated into production chat or are not converted to evaluator-only capabilities.\", \"focus_id\": \"focus-e\", \"minimum_source_scope\": \"The risk of exposing audits to live state is reduced, but there may be uncertainty about the production value of certain audits.\", \"observed_problem_addressed\": \"Audits provide valuable insights but may not be suitable for live state due to potential risks. By converting them to evaluator-only capabilities, we can retain their utility without exposing them to production risks.\", \"protected_dependencies\": [], \"required_authority\": \"operator_authorized_sustained_operator_objective_campaign_1\", \"retirement_criteria\": \"Retire if no distinct consumer or user-visible value is evidenced.\", \"success_criteria\": \"All audits are converted to evaluator-only capabilities and no longer integrated into production chat.\" }, { \"contrary_evidence\": [ \"Limited natural-language patterns may be too narrow for broader use.\" ], \"development_objective\": \"Enable and document a controlled, opt-in pilot of a deterministic live capability to gather feedback and validate its effectiveness.\", \"estimated_cycles_and_model_calls\": \"1 week, 200 model calls\", \"evidence_supporting_pursuit\": [ \"DELTA.py enable command\", \"runtime tests\", \"state path data/runtime/claim_relation_pilot/state.json\" ], \"expected_useful_outcome\": \"A documented, controlled, and opt-in pilot of the deterministic live capability, with feedback and validation results.\", \"failure_criteria\": \"Negative feedback or inability to validate the deterministic live capability.\", \"focus_id\": \"focus-f\", \"minimum_source_scope\": \"Risks include limited user feedback and potential issues with the narrow scope of the pilot. The scope is limited to a controlled, opt-in pilot.\", \"observed_problem_addressed\": \"To ensure the deterministic live capability can be safely and effectively used by a select group of users before full-scale deployment, providing valuable insights and adjustments.\", \"protected_dependencies\": [], \"required_authority\": \"operator_authorized_sustained_operator_objective_campaign_1\", \"retirement_criteria\": \"Retire if no distinct consumer or user-visible value is evidenced.\", \"success_criteria\": \"Positive feedback and validation of the deterministic live capability from the pilot users.\" } ]",
+      "question_objective": "select_goal_oriented_experiment_set",
+      "record_digest": "d92704aa84f28bdf0d81c231a9ecaf383525226a2c3d5c305b00d0239715e25a",
+      "record_version": 1,
+      "request_digest": "8abafde4d75955329d96a695679ec4d76b7caaba519da7202f42a6acc5c45d06",
+      "request_id": "shared-local-model-request-407820aef99a34f1",
+      "requester_reference": "initial_focus_selection",
+      "requester_type": "goal_oriented_ui_experiment_campaign",
+      "result_id": "shared-local-model-result-5208afe4d6a41221",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "sustained-campaign-selection-v1-9b103a8596def812",
+      "session_reference": ""
+    }
+  },
+  "results": {
+    "shared-local-model-result-5208afe4d6a41221": {
+      "adapter_identity": "goal_oriented_ui_campaign.ProviderManager.exact_prompt",
+      "availability_state": "available",
+      "execution_completed_at": "2026-07-27T02:53:00+00:00",
+      "execution_started_at": "2026-07-27T02:52:30+00:00",
+      "failure_classification": "",
+      "failure_detail": "",
+      "latency_seconds": 29.6048,
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "provenance": {
+        "execution_claim_id": "shared-local-model-execution-claim-7c8c7151362cc535",
+        "selected_lane": {
+          "available": true,
+          "candidate_models": [
+            {
+              "capabilities": [
+                "text"
+              ],
+              "family": "qwen",
+              "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+              "reason": "registered_alias",
+              "registry_key": "qwen",
+              "tier": 3
+            }
+          ],
+          "capabilities": [
+            "text"
+          ],
+          "context_size": 32768,
+          "cost_latency_class": "medium_to_high_local",
+          "display_name": "Reasoning / Analysis Lane",
+          "executed": false,
+          "execution_gate": "not_executed_by_default",
+          "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+          "expected_weakness": "external facts need gated supporting information",
+          "fallback_priority": 3,
+          "lane": "reasoning_analysis",
+          "model_family": "qwen",
+          "preferred_task_lanes": [
+            "analysis",
+            "research",
+            "investigation",
+            "external_knowledge_request"
+          ],
+          "provider_calls_performed": false,
+          "rejected_models": [],
+          "selected_model": "qwen",
+          "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+          "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+          "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+        }
+      },
+      "request_id": "shared-local-model-request-407820aef99a34f1",
+      "response_digest": "0c65dcf6dc43120251cc28d4cdbe40c5ceac6abb798bcd91c0ba41635b420395",
+      "response_reference": "{ \"selected\": [ \"focus-f\" ], \"ranking\": \"1\", \"rationale\": \"Focus F prioritizes a controlled, opt-in pilot of a deterministic live capability, which aligns with the observed usefulness gap of needing to validate the effectiveness of such a feature before full-scale deployment. It provides a coherent deliverable with a clear success criteria and minimal risk of overcomplicating the system.\", \"uncertainty\": \"There is a risk of limited user feedback and potential issues with the narrow scope of the pilot, but these are mitigated by the controlled and opt-in nature of the pilot.\", \"recommended_state_transition\": \"select_experiment_set\" }",
+      "result_digest": "9eaa0a41c7ef37215065e15f52c8696934f05573c40ce4e3529cb0b3f13d9013",
+      "result_id": "shared-local-model-result-5208afe4d6a41221",
+      "terminal_state": "completed"
+    }
+  },
+  "state_digest": "3a6171e3afbf3072bec353bea8aff4c4aa4267be11d8febaae8f91c6ef00289b"
+}

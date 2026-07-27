@@ -1,0 +1,102 @@
+{
+  "claims": [
+    {
+      "applicability_scope": "global",
+      "authority_source": "operator",
+      "claim_digest": "34d8ef0f2de87bb1971e8fabdf0e6ec6584c33eb37e50bec5ce61c6084182a09",
+      "claim_id": "claim-1c6260f94f6e1d8d",
+      "claim_kind": "fact",
+      "claim_text": "My appointment is Tuesday.",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "lifecycle_state": "superseded",
+      "normalized_content": {
+        "field": "day",
+        "subject": "appointment",
+        "value": "tuesday"
+      },
+      "provenance_refs": [
+        "explicit_correction:turn:1"
+      ],
+      "schema_version": "governed_claim_relation_contract_v1",
+      "subject_scope": "appointment",
+      "temporal_scope": "current",
+      "validation_state": "registered"
+    },
+    {
+      "applicability_scope": "global",
+      "authority_source": "operator",
+      "claim_digest": "d404e3ae8253af9ecc18ca7a626d55949ab9a4d56ce58f31c858b0460820971c",
+      "claim_id": "claim-9af207926d7b4c8d",
+      "claim_kind": "fact",
+      "claim_text": "Correction: my appointment is Wednesday.",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "lifecycle_state": "current",
+      "normalized_content": {
+        "field": "day",
+        "subject": "appointment",
+        "value": "wednesday"
+      },
+      "provenance_refs": [
+        "explicit_correction:turn:2"
+      ],
+      "schema_version": "governed_claim_relation_contract_v1",
+      "subject_scope": "appointment",
+      "temporal_scope": "current",
+      "validation_state": "registered"
+    }
+  ],
+  "operator_requests": [],
+  "relations": [
+    {
+      "authority_effect": "left_superseded_right_current",
+      "confidence_state": "known",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "dependent_work_ids": [],
+      "evidence_refs": [],
+      "left_claim_id": "claim-1c6260f94f6e1d8d",
+      "operator_request_id": "",
+      "provenance_refs": [
+        "explicit_correction:turn:1",
+        "explicit_correction:turn:2"
+      ],
+      "relation_id": "claim-relation-673c8d95a013b58d",
+      "relation_scope": "same_subject_scope",
+      "relation_type": "explicit_correction",
+      "resolution_actor": "operator",
+      "resolution_state": "resolved",
+      "resolved_at": "2026-07-22T00:00:00+00:00",
+      "right_claim_id": "claim-9af207926d7b4c8d",
+      "schema_version": "governed_claim_relation_contract_v1",
+      "supersedes_claim_id": "claim-1c6260f94f6e1d8d",
+      "temporal_order": "left_before_right"
+    }
+  ],
+  "schema_version": "governed_claim_relation_contract_v1",
+  "transition_journal": [
+    {
+      "authority_scope": "inert_claim_relation_contract_only",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "ids": [
+        "claim-1c6260f94f6e1d8d"
+      ],
+      "transition": "register_claim"
+    },
+    {
+      "authority_scope": "inert_claim_relation_contract_only",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "ids": [
+        "claim-9af207926d7b4c8d"
+      ],
+      "transition": "register_claim"
+    },
+    {
+      "authority_scope": "inert_claim_relation_contract_only",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "ids": [
+        "claim-relation-673c8d95a013b58d"
+      ],
+      "transition": "apply_explicit_correction"
+    }
+  ],
+  "work_items": []
+}

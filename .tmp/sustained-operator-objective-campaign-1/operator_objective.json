@@ -1,0 +1,15 @@
+{
+  "authorized_actions": "inspection, cognition-lane operations, bounded local edits/tests/evidence, restart exercise",
+  "forbidden": [
+    "stage",
+    "commit",
+    "push",
+    "network",
+    "external providers",
+    "package install",
+    "model download",
+    "protected path mutation"
+  ],
+  "gate": "SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1",
+  "question": "What is the smallest coherent and useful role, if any, for preserved claim-relation and contradiction work in current active cognition runtime?"
+}

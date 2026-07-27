@@ -1,0 +1,422 @@
+[
+  {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-57c3a0180dc1d96e",
+    "evidence_constraints": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk",
+      "ev_semantic_deferred",
+      "ev_authority_overlap"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-79ca56c06ddc6f04",
+    "goal_id": "active-cognitive-goal-4ae97917d615f190",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-04a7e1170b4a72b0",
+    "operation_type": "interpret_state",
+    "provenance": [
+      "working-memory-packet-edc5581a2e2b9891"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform interpret_state for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "cf83cb9bedcc1a1569c216acf6327b092a9ef5cca3f48aed4ce93fc5e5e1ac30"
+  },
+  {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-f13765976d848ef8",
+    "evidence_constraints": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk",
+      "ev_semantic_deferred",
+      "ev_authority_overlap"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-971e83dd8996f010",
+    "goal_id": "active-cognitive-goal-4ae97917d615f190",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-dbce0c00b726212f",
+    "operation_type": "prioritize_focus",
+    "provenance": [
+      "working-memory-packet-1e72105b27ca70d1"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform prioritize_focus for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "f58a3d1ed0166275ca8b4d23038da55f6bc3383442e8fd9556f8e70aa30f9f3a"
+  },
+  {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-6a1bacd645c516c1",
+    "evidence_constraints": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk",
+      "ev_semantic_deferred",
+      "ev_authority_overlap"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-178021cffc17550f",
+    "goal_id": "active-cognitive-goal-4ae97917d615f190",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-7be400e5fa8959bb",
+    "operation_type": "formulate_hypothesis",
+    "provenance": [
+      "working-memory-packet-e6bde2296aa0e7e0"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "d710ab1b15567a24aaa22edf653fab931b89a5feb7958dcf1a02bf7723d11f40"
+  },
+  {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-a66b4b890f43e8ea",
+    "evidence_constraints": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk",
+      "ev_semantic_deferred",
+      "ev_authority_overlap"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-f6e5cd1019c7a6d9",
+    "goal_id": "active-cognitive-goal-4ae97917d615f190",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-560167ffa3fe6c83",
+    "operation_type": "compare_evidence",
+    "provenance": [
+      "working-memory-packet-143a5e0552d0e571"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform compare_evidence for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "c693498c6ccbd15682b2f2dbe8b1ee40cb007e57a585889f9ccb4debabde8309"
+  },
+  {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-dfc4e5abc8d395b0",
+    "evidence_constraints": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk",
+      "ev_semantic_deferred",
+      "ev_authority_overlap"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-c5a4f939b1b4102a",
+    "goal_id": "active-cognitive-goal-4ae97917d615f190",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-8513a107cd5cc086",
+    "operation_type": "challenge_hypothesis",
+    "provenance": [
+      "working-memory-packet-364518c2309f4336"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform challenge_hypothesis for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "38969c3073881dbf1bb14c98befdb839920102eb4378a1f764801ba21a10081b"
+  },
+  {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-84ea9b26fa964c4d",
+    "evidence_constraints": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk",
+      "ev_semantic_deferred",
+      "ev_authority_overlap"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-13cdf71346216a24",
+    "goal_id": "active-cognitive-goal-4ae97917d615f190",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-11d397e9745067cc",
+    "operation_type": "revise_hypothesis",
+    "provenance": [
+      "working-memory-packet-67a90ba312d8969c"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform revise_hypothesis for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "8ca0302cc714c2d7b69ec889f074db8c5972b0e70ac2b897228c89e32c0c71ba"
+  },
+  {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-d62f253038ee6d4f",
+    "evidence_constraints": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk",
+      "ev_semantic_deferred",
+      "ev_authority_overlap"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-e17717863e2f8189",
+    "goal_id": "active-cognitive-goal-4ae97917d615f190",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-5cce409d35435fc4",
+    "operation_type": "propose_plan",
+    "provenance": [
+      "working-memory-packet-9bb97e2173f2ac27"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform propose_plan for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "5290b21b2f523c2c76c48a5f6f52aaca09aea6b2f759d05e6d9a81d7d23ddabf"
+  },
+  {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-124c1e36e5d2fe20",
+    "evidence_constraints": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk",
+      "ev_semantic_deferred",
+      "ev_authority_overlap"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-ad0de720dd09f4ec",
+    "goal_id": "active-cognitive-goal-4ae97917d615f190",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-5138d20b6963f01c",
+    "operation_type": "reflect_on_outcome",
+    "provenance": [
+      "working-memory-packet-44645461f5c092b8"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform reflect_on_outcome for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "cb5c81d882af9ef1ee95b29b68274b828d52faaa88c81faefcc5deb6df951bf6"
+  },
+  {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-19313f1b44ef7106",
+    "evidence_constraints": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk",
+      "ev_semantic_deferred",
+      "ev_authority_overlap"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-a6cbea8c505ae5e4",
+    "goal_id": "active-cognitive-goal-4ae97917d615f190",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-94908896076efd7e",
+    "operation_type": "summarize_learning",
+    "provenance": [
+      "working-memory-packet-3891f9e24c32301f"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform summarize_learning for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "6da42b48186009773bab11c987afd376ab8154e9eb70e1454535a82345b6c1a1"
+  },
+  {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-508b82f2a4aacc84",
+    "evidence_constraints": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk",
+      "ev_semantic_deferred",
+      "ev_authority_overlap"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-a83b2382fb540830",
+    "goal_id": "active-cognitive-goal-4ae97917d615f190",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-2b60e2f71a2e6b6b",
+    "operation_type": "select_next_focus",
+    "provenance": [
+      "working-memory-packet-2fb9e4994f5eb4a7"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform select_next_focus for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "1ce5d56c76bf5330a73a16b5569781ae210103591a7a8ec1abaf83680c83a0a6"
+  }
+]

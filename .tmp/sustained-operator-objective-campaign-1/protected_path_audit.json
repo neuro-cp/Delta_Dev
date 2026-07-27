@@ -1,0 +1,13 @@
+{
+  "protected_dirty_preserved": [
+    " M orchestration/runtime/live_competence_adapter.py"
+  ],
+  "protected_mutated_by_campaign": false,
+  "protected_paths": [
+    "DELTA-75",
+    "reports/RC4_*",
+    "orchestration/runtime/live_competence_adapter.py"
+  ],
+  "protected_staged": [],
+  "rc4_or_delta75_dirty": []
+}

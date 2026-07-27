@@ -1,0 +1,39 @@
+{
+  "evaluator_id": "sustained_operator_objective_campaign_1_evaluator_v1",
+  "failure_classes": [
+    "sunk_cost_integration",
+    "predetermined_outcome",
+    "report_only_campaign",
+    "no_live_model_cognition",
+    "no_competing_hypotheses",
+    "no_material_revision",
+    "disconnected_artifacts",
+    "no_useful_final_deliverable",
+    "broad_architecture_drift",
+    "unnecessary_ui_or_schema_layer",
+    "protected_scope_dependency",
+    "duplicate_model_request",
+    "duplicate_action_after_restart",
+    "restart_state_loss",
+    "canned_next_focus",
+    "operator_objective_drift",
+    "self_certified_success",
+    "retirement_without_evidence",
+    "integration_without_consumer"
+  ],
+  "judges": [
+    "sustained_goal_coherence",
+    "focus_relevance",
+    "evidence_grounding",
+    "competing_hypotheses",
+    "material_revision",
+    "useful_development_action",
+    "artifact_coherence",
+    "restart_continuity",
+    "duplicate_prevention",
+    "autonomous_next_focus",
+    "final_decision_quality",
+    "operator_boundary_correctness",
+    "protected_scope_compliance"
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "adapter_identity": "goal_oriented_ui_campaign.ProviderManager.exact_prompt",
+  "availability_state": "available",
+  "execution_completed_at": "2026-07-27T02:49:46+00:00",
+  "execution_started_at": "2026-07-27T02:48:37+00:00",
+  "failure_classification": "",
+  "failure_detail": "",
+  "latency_seconds": 68.9504,
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "provenance": {
+    "execution_claim_id": "shared-local-model-execution-claim-0d7ba539c545e907",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    }
+  },
+  "request_id": "shared-local-model-request-0f3e9070e5b03ffe",
+  "response_digest": "aa8ba098c11c6b29f2b12dc6ce769c7c9154633a3dddc3c317f9260af97a04ce",
+  "response_reference": "{\n    \"experiment_id\": \"focus-d\",\n    \"title\": \"Bind unresolved semantic conflicts to active hypothesis challenge evidence\",\n    \"practical_objective\": \"Resolve semantic conflicts by linking them to active hypothesis challenges, thereby generating meaningful relations and hypothesis effects.\",\n    \"why_it_is_useful\": \"Enabling the system to handle and resolve semantic conflicts more effectively, leading to better hypothesis formulation and validation.\",\n    \"related_operator_or_project_goal\": \"SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1\",\n    \"expected_artifact_or_outcome\": \"Enhanced cognitive claim relations and active hypothesis challenge evidence generation.\",\n    \"local_evidence_available\": [\"active_cognitive_loop.py\", \"cognitive_claim_relation_runtime.py\", \"semantic_classification_required\"],\n    \"contrary_or_uncertainty_evidence\": [\"Could become another framework if no consumer exists.\"],\n    \"required_cognitive_operations\": [\"formulate_hypothesis\", \"validate_hypothesis\", \"resolve_conflict\"],\n    \"required_bounded_actions\": [\"link_semantic_conflicts_to_hypothesis\", \"generate_hypothesis_evidence\"],\n    \"required_authority\": \"operator_authorized_sustained_operator_objective_campaign_1\",\n    \"expected_cycle_count\":   \"sustained\",\n    \"restart_relevance\": \"Yes\",\n    \"success_criteria\": \"Semantic conflicts are effectively linked to active hypothesis challenges, resulting in meaningful relations and hypothesis effects.\",\n    \"failure_criteria\": \"Semantic conflicts remain unresolved or lead to dead-end hypothesis challenges.\",\n    \"risk_and_scope\": \"Risk of overcomplicating the system if not properly managed. Scope limited to existing codebase without new UI panels or schemas.\",\n    \"estimated_time_and_model_call_budget\": \"3 cycles, each cycle taking 2 weeks with 100 model calls.\"\n}",
+  "result_digest": "d19c028ba606f281b48920136197f23f9192c7a259be6ce5ef544c935d213f0a",
+  "result_id": "shared-local-model-result-c819eb43206cc2a1",
+  "terminal_state": "completed"
+}

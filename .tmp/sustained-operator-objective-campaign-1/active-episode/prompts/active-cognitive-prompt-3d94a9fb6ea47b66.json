@@ -1,0 +1,90 @@
+{
+  "authority_constraints": [
+    "no network",
+    "no protected paths",
+    "no commit",
+    "bounded local actions only"
+  ],
+  "contrary_evidence_ids_supplied": [
+    "ev_semantic_deferred",
+    "ev_authority_overlap"
+  ],
+  "cycle_id": "active-cognitive-cycle-57c3a0180dc1d96e",
+  "evidence_ids_supplied": [
+    "ev_delta_hook",
+    "ev_runtime_structural",
+    "ev_contract_broad",
+    "ev_tests_green_scope",
+    "ev_overlap_risk"
+  ],
+  "expected_response_schema": {
+    "evidence_refs": [
+      "IDs only from supplied evidence"
+    ],
+    "recommended_next_operation": "one allowed next operation",
+    "salient_observations": [
+      "nonempty observation strings grounded in evidence_refs"
+    ],
+    "state_summary": "nonempty summary of current state",
+    "uncertainty": "nonempty uncertainty phrase",
+    "unresolved_questions": [
+      "questions that remain unresolved"
+    ]
+  },
+  "focus_id": "focus-79ca56c06ddc6f04",
+  "goal_id": "active-cognitive-goal-4ae97917d615f190",
+  "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+  "operation_request": {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-57c3a0180dc1d96e",
+    "evidence_constraints": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk",
+      "ev_semantic_deferred",
+      "ev_authority_overlap"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-79ca56c06ddc6f04",
+    "goal_id": "active-cognitive-goal-4ae97917d615f190",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-04a7e1170b4a72b0",
+    "operation_type": "interpret_state",
+    "provenance": [
+      "working-memory-packet-edc5581a2e2b9891"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform interpret_state for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "cf83cb9bedcc1a1569c216acf6327b092a9ef5cca3f48aed4ce93fc5e5e1ac30"
+  },
+  "operation_type": "interpret_state",
+  "prompt_byte_digest": "ee71532cf6c7fa535ce7464aeb75ba1146cbc4ac1d0d87d8b390ef160784056d",
+  "prompt_length": 4871,
+  "prompt_schema_version": "active_cognitive_prompt_qualification_1_v1",
+  "prompt_snapshot_id": "active-cognitive-prompt-3d94a9fb6ea47b66",
+  "prompt_text": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- state_summary: nonempty string\n- salient_observations: array[string]\n- evidence_refs: array[string]\n- unresolved_questions: array[string]\n- uncertainty: nonempty string\n- recommended_next_operation: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- evidence_refs values must be chosen from: ev_delta_hook, ev_runtime_structural, ev_contract_broad, ev_tests_green_scope, ev_overlap_risk, ev_semantic_deferred, ev_authority_overlap\nTASK: perform only operation interpret_state. Allowed transition/next-operation values: prioritize_focus, formulate_hypothesis, identify_evidence_need, compare_evidence, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: ev_delta_hook, ev_runtime_structural, ev_contract_broad, ev_tests_green_scope, ev_overlap_risk. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied.\nCONTEXT_JSON:\n{\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":1,\"description\":\"Resolve discrepancy for goal: Determine smallest coherent useful role for claim-relation and contradiction work\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-79ca56c06ddc6f04\",\"related_goal_ids\":[\"active-cognitive-goal-4ae97917d615f190\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"test_unsupported_semantic_contradiction_is_deferred_without_winner\",\"evidence_id\":\"ev_semantic_deferred\",\"source\":\"local_uncertainty\",\"summary\":\"Direct semantic contradiction returns semantic_classification_required without relation or winner\"},{\"content\":\"ownership_audit.json; production_reachability.json\",\"evidence_id\":\"ev_authority_overlap\",\"source\":\"local_analysis\",\"summary\":\"Authority evaluators already classify actions; claim revocation state is not yet a broad enforcement consumer\"}],\"current_goal\":{\"expected_state\":\"coherent integrated narrow capability or retirement decision package\",\"goal_id\":\"active-cognitive-goal-4ae97917d615f190\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Determine smallest coherent useful role for claim-relation and contradiction work\"},\"current_hypotheses\":[],\"evidence_for\":[{\"content\":\"DELTA.py:60-63,1626-1629,5612-5621,5831-5853\",\"evidence_id\":\"ev_delta_hook\",\"source\":\"local_repo\",\"summary\":\"DELTA.py imports, enables, and applies the claim relation pilot after explicit command\"},{\"content\":\"orchestration/runtime/cognitive_claim_relation_runtime.py\",\"evidence_id\":\"ev_runtime_structural\",\"source\":\"local_repo\",\"summary\":\"GovernedClaimRelationRuntime handles explicit correction, duplicates, temporal transitions, revocations, bounded exceptions, unrelated topics, persistence, restart, and semantic deferral\"},{\"content\":\"orchestration/runtime/cognitive_claim_relations.py\",\"evidence_id\":\"ev_contract_broad\",\"source\":\"local_repo\",\"summary\":\"Underlying contract supports broader relation types, operator requests, lifecycle state, provenance, and restart reconstruction\"},{\"content\":\"tests/runtime_gsr/test_cognitive_claim_relation_runtime.py; tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py\",\"evidence_id\":\"ev_tests_green_scope\",\"source\":\"local_tests\",\"summary\":\"Existing focused tests cover runtime, DELTA hook, evaluator compatibility, and restart behavior\"},{\"content\":\"overlap_analysis.json\",\"evidence_id\":\"ev_overlap_risk\",\"source\":\"local_analysis\",\"summary\":\"Active cognition already handles hypothesis revision; broad semantic claim classification risks duplicate machinery and rigid chat\"}],\"recent_outcomes\":[]}",
+  "request_identity": "active-cognitive-ledger-request-d6670b3e9c93802b",
+  "retry_sequence": 0,
+  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+  "working_memory_packet_digest": "cf83cb9bedcc1a1569c216acf6327b092a9ef5cca3f48aed4ce93fc5e5e1ac30",
+  "working_memory_packet_id": "working-memory-packet-edc5581a2e2b9891"
+}

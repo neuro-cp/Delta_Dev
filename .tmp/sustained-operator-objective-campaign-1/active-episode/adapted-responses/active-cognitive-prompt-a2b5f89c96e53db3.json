@@ -1,0 +1,26 @@
+{
+  "adapted_response": {
+    "deferred_focus_ids": [],
+    "evidence_refs": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk",
+      "ev_semantic_deferred",
+      "ev_authority_overlap"
+    ],
+    "recommended_state_transition": "select_next_focus",
+    "related_goal_ids": [
+      "active-cognitive-goal-4ae97917d615f190"
+    ],
+    "salience_reason": "An active hypothesis needs evidence-linked revision before action.",
+    "selected_focus_id": "focus-a83b2382fb540830",
+    "uncertainty": "Resolution of semantic contradiction requires further evidence or operator resolution."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"selected_focus_id\":\"focus-a83b2382fb540830\",\"salience_reason\":\"An active hypothesis needs evidence-linked revision before action.\",\"related_goal_ids\":[\"active-cognitive-goal-4ae97917d615f190\"],\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\",\"ev_semantic_deferred\",\"ev_authority_overlap\"],\"deferred_focus_ids\":[],\"uncertainty\":\"Resolution of semantic contradiction requires further evidence or operator resolution.\",\"recommended_state_transition\":\"select_next_focus\"}",
+  "raw_response_digest": "9cbc9aff58653e79c76c189a7b92e2c90afdc41e4ea9f3318f031073f16a7a75",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

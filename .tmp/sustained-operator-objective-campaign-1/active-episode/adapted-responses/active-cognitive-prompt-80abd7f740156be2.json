@@ -1,0 +1,26 @@
+{
+  "adapted_response": {
+    "plan_summary": "Direct semantic contradiction is deferred without a winner",
+    "planned_steps": [
+      "Review evidence for semantic deferral and broader relation types"
+    ],
+    "recommended_state_transition": "request_operator_resolution",
+    "risks": [
+      "Potential for semantic deferral to be misinterpreted",
+      "Risk of broader relation types conflicting with existing machinery"
+    ],
+    "supporting_evidence_refs": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk"
+    ],
+    "uncertainty": "Need to confirm semantic deferral and broader relation types do not conflict"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{ \"plan_summary\": \"Direct semantic contradiction is deferred without a winner\", \"supporting_evidence_refs\": [ \"ev_delta_hook\", \"ev_runtime_structural\", \"ev_contract_broad\", \"ev_tests_green_scope\", \"ev_overlap_risk\" ], \"planned_steps\": [ \"Review evidence for semantic deferral and broader relation types\" ], \"risks\": [ \"Potential for semantic deferral to be misinterpreted\", \"Risk of broader relation types conflicting with existing machinery\" ], \"uncertainty\": \"Need to confirm semantic deferral and broader relation types do not conflict\", \"recommended_state_transition\": \"request_operator_resolution\" }",
+  "raw_response_digest": "5d8f25d7dd0e1ef2c6fe55afd439b9d3a5f9ecbf1db6c9f6807f44a398107031",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

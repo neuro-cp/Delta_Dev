@@ -1,0 +1,100 @@
+{
+  "claims": [
+    {
+      "applicability_scope": "global",
+      "authority_source": "operator",
+      "claim_digest": "cab8f986fdbcd675d07a9bcad6627407b760afebd1f85596a5073c06208912d5",
+      "claim_id": "claim-3773dc7668614f79",
+      "claim_kind": "fact",
+      "claim_text": "The database is PostgreSQL.",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "lifecycle_state": "current",
+      "normalized_content": {
+        "subject": "database",
+        "value": "postgresql"
+      },
+      "provenance_refs": [
+        "unrelated_topic:turn:1"
+      ],
+      "schema_version": "governed_claim_relation_contract_v1",
+      "subject_scope": "database",
+      "temporal_scope": "current",
+      "validation_state": "registered"
+    },
+    {
+      "applicability_scope": "global",
+      "authority_source": "operator",
+      "claim_digest": "57540a9f2dccbd4997049d80eec97a50681f9ac515b89d284adbfa45457117d1",
+      "claim_id": "claim-eb9cd671d1544acc",
+      "claim_kind": "fact",
+      "claim_text": "My car needs an oil change.",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "lifecycle_state": "current",
+      "normalized_content": {
+        "need": "oil_change",
+        "subject": "vehicle_maintenance"
+      },
+      "provenance_refs": [
+        "unrelated_topic:turn:2"
+      ],
+      "schema_version": "governed_claim_relation_contract_v1",
+      "subject_scope": "vehicle_maintenance",
+      "temporal_scope": "current",
+      "validation_state": "registered"
+    }
+  ],
+  "operator_requests": [],
+  "relations": [
+    {
+      "authority_effect": "no_work_block",
+      "confidence_state": "known",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "dependent_work_ids": [],
+      "evidence_refs": [],
+      "left_claim_id": "claim-3773dc7668614f79",
+      "operator_request_id": "",
+      "provenance_refs": [
+        "unrelated_topic:turn:1",
+        "unrelated_topic:turn:2"
+      ],
+      "relation_id": "claim-relation-9aa32516a38ea025",
+      "relation_scope": "different_subject_or_scope",
+      "relation_type": "unrelated",
+      "resolution_actor": "",
+      "resolution_state": "resolved",
+      "resolved_at": "",
+      "right_claim_id": "claim-eb9cd671d1544acc",
+      "schema_version": "governed_claim_relation_contract_v1",
+      "supersedes_claim_id": "",
+      "temporal_order": "left_before_right"
+    }
+  ],
+  "schema_version": "governed_claim_relation_contract_v1",
+  "transition_journal": [
+    {
+      "authority_scope": "inert_claim_relation_contract_only",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "ids": [
+        "claim-3773dc7668614f79"
+      ],
+      "transition": "register_claim"
+    },
+    {
+      "authority_scope": "inert_claim_relation_contract_only",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "ids": [
+        "claim-eb9cd671d1544acc"
+      ],
+      "transition": "register_claim"
+    },
+    {
+      "authority_scope": "inert_claim_relation_contract_only",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "ids": [
+        "claim-relation-9aa32516a38ea025"
+      ],
+      "transition": "unrelated_marked"
+    }
+  ],
+  "work_items": []
+}

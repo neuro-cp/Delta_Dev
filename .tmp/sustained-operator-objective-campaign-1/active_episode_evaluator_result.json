@@ -1,0 +1,76 @@
+{
+  "cycle_count": 10,
+  "failure_classifications": [],
+  "model_call_count": 10,
+  "observable": {
+    "blocked_authority_state": {},
+    "budget_remaining": {
+      "cycles": 4,
+      "model_calls": 2
+    },
+    "completed": true,
+    "current_focus": "Challenge or revise hypothesis: Direct semantic contradiction is deferred without a winner",
+    "current_goal": "Determine smallest coherent useful role for claim-relation and contradiction work",
+    "current_operation": "select_next_focus",
+    "episode_id": "active-cognitive-episode-14493efa0cf9faa8",
+    "evidence_considered": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_semantic_deferred"
+    ],
+    "hypothesis_state": {
+      "assumptions": [],
+      "confidence_state": "contested",
+      "created_at": "2026-07-27T02:56:56+00:00",
+      "disposition": "revised_from_evidence",
+      "evidence_against": [
+        "ev_semantic_deferred",
+        "ev_authority_overlap"
+      ],
+      "evidence_for": [
+        "ev_delta_hook",
+        "ev_runtime_structural",
+        "ev_contract_broad",
+        "ev_tests_green_scope",
+        "ev_overlap_risk"
+      ],
+      "expected_observations": [
+        "revised smaller step should match local evidence"
+      ],
+      "hypothesis_id": "hypothesis-c9d7e93e111687ef",
+      "lifecycle_state": "active",
+      "originating_focus_id": "focus-178021cffc17550f",
+      "originating_goal_id": "active-cognitive-goal-4ae97917d615f190",
+      "provenance": [
+        "cognitive-operation-11d397e9745067cc"
+      ],
+      "revised_at": "2026-07-27T02:56:56+00:00",
+      "revision_parent_id": "hypothesis-40bdd6900fc1532f",
+      "revision_reason": "Direct semantic contradiction is deferred without a winner",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "scope": "Resolve discrepancy for goal: Determine smallest coherent useful role for claim-relation and contradiction work",
+      "statement": "Direct semantic contradiction is deferred without a winner"
+    },
+    "last_observed_outcome": {
+      "created_at": "2026-07-27T03:00:05+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform select_next_focus for the active focus using only referenced evidence.",
+      "observed": "An active hypothesis needs evidence-linked revision before action.",
+      "operation_id": "cognitive-operation-2b60e2f71a2e6b6b",
+      "outcome_id": "outcome-de8a6295c107b961"
+    },
+    "loop_state": "completed",
+    "next_intended_step": "inspect useful artifact and select next focus",
+    "title": "Sustained Operator Objective: Claim Relation Role",
+    "why_focus": [
+      "An active hypothesis needs evidence-linked revision before action.",
+      "unresolved_hypothesis",
+      "evidence_revision",
+      "expected_useful_progress"
+    ]
+  },
+  "passed": true,
+  "useful_artifact_count": 3
+}

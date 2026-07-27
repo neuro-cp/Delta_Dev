@@ -1,0 +1,5 @@
+{
+  "command": "git diff --check",
+  "status": "passed_with_line_ending_warning_only",
+  "warning": "live_competence_adapter.py LF/CRLF warning only; protected file not modified by campaign"
+}

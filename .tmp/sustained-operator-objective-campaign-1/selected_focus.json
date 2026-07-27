@@ -1,0 +1,40 @@
+{
+  "cognition_lane": true,
+  "model_request_id": "shared-local-model-request-407820aef99a34f1",
+  "model_result_id": "shared-local-model-result-5208afe4d6a41221",
+  "operation_type": "select_goal_oriented_experiment_set",
+  "ranking": "1",
+  "rationale": "Focus F prioritizes a controlled, opt-in pilot of a deterministic live capability, which aligns with the observed usefulness gap of needing to validate the effectiveness of such a feature before full-scale deployment. It provides a coherent deliverable with a clear success criteria and minimal risk of overcomplicating the system.",
+  "recommended_state_transition": "select_experiment_set",
+  "selected_focus": {
+    "contrary_evidence": [
+      "Limited natural-language patterns may be too narrow for broader use."
+    ],
+    "development_objective": "Enable and document a controlled, opt-in pilot of a deterministic live capability to gather feedback and validate its effectiveness.",
+    "estimated_cycles_and_model_calls": "1 week, 200 model calls",
+    "evidence_supporting_pursuit": [
+      "DELTA.py enable command",
+      "runtime tests",
+      "state path data/runtime/claim_relation_pilot/state.json"
+    ],
+    "expected_useful_outcome": "A documented, controlled, and opt-in pilot of the deterministic live capability, with feedback and validation results.",
+    "failure_criteria": "Negative feedback or inability to validate the deterministic live capability.",
+    "focus_id": "focus-f",
+    "minimum_source_scope": "Risks include limited user feedback and potential issues with the narrow scope of the pilot. The scope is limited to a controlled, opt-in pilot.",
+    "observed_problem_addressed": "To ensure the deterministic live capability can be safely and effectively used by a select group of users before full-scale deployment, providing valuable insights and adjustments.",
+    "protected_dependencies": [],
+    "required_authority": "operator_authorized_sustained_operator_objective_campaign_1",
+    "retirement_criteria": "Retire if no distinct consumer or user-visible value is evidenced.",
+    "success_criteria": "Positive feedback and validation of the deterministic live capability from the pilot users."
+  },
+  "selected_ids": [
+    "focus-f"
+  ],
+  "uncertainty": "There is a risk of limited user feedback and potential issues with the narrow scope of the pilot, but these are mitigated by the controlled and opt-in nature of the pilot.",
+  "validation": {
+    "externally_inspectable": true,
+    "paths_exist": true,
+    "protected_dependencies_excluded": true,
+    "scope_bounded": true
+  }
+}

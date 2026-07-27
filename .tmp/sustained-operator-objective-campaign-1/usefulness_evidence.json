@@ -1,0 +1,51 @@
+{
+  "authority_enforcement": "not claimed beyond visible revocation currentness",
+  "chat_non_rigidity": "opt-in disabled by default; unsupported forms produce no notice unless enabled and supported",
+  "current_state_consistency": true,
+  "evidence": [
+    {
+      "baseline_case": "B",
+      "case": "explicit_correction",
+      "classification": "correct_explicit_correction",
+      "passed": true
+    },
+    {
+      "baseline_case": "G",
+      "case": "duplicate_restatement",
+      "classification": "correct_confirmation",
+      "passed": true
+    },
+    {
+      "baseline_case": "I",
+      "case": "temporal_transition",
+      "classification": "correct_temporal_transition",
+      "passed": true
+    },
+    {
+      "baseline_case": "H",
+      "case": "authority_revocation",
+      "classification": "correct_revocation",
+      "passed": true
+    },
+    {
+      "baseline_case": "D",
+      "case": "bounded_exception",
+      "classification": "correct_bounded_exception",
+      "passed": true
+    },
+    {
+      "baseline_case": "F",
+      "case": "unrelated_topic",
+      "classification": "correct_unrelated",
+      "passed": true
+    },
+    {
+      "case": "semantic_direct_contradiction",
+      "classification": "semantic_deferred_without_winner",
+      "passed": true
+    }
+  ],
+  "hypothesis_revision_improved": "semantic deferral became explicit contrary evidence",
+  "long_horizon_continuity": true,
+  "operator_clarity": true
+}

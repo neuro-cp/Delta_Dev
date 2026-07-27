@@ -1,0 +1,1288 @@
+{
+  "ledger_version": 1,
+  "requests": {
+    "shared-local-model-request-0fb521a3660efcc8": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-27T02:54:10+00:00",
+      "authority_state": "operator_authorized_sustained_operator_objective_campaign_1",
+      "claimed_at": "2026-07-27T02:54:10+00:00",
+      "completed_at": "2026-07-27T02:54:42+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-27T02:54:10+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-837ae2b15138fb83",
+      "failure_classification": "",
+      "lifecycle_state": "completed",
+      "mission_id": "active-cognitive-goal-4ae97917d615f190",
+      "mission_information_need_identity": "focus-79ca56c06ddc6f04",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - state_summary: nonempty string - salient_observations: array[string] - evidence_refs: array[string] - unresolved_questions: array[string] - uncertainty: nonempty string - recommended_next_operation: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - evidence_refs values must be chosen from: ev_delta_hook, ev_runtime_structural, ev_contract_broad, ev_tests_green_scope, ev_overlap_risk, ev_semantic_deferred, ev_authority_overlap TASK: perform only operation interpret_state. Allowed transition/next-operation values: prioritize_focus, formulate_hypothesis, identify_evidence_need, compare_evidence, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: ev_delta_hook, ev_runtime_structural, ev_contract_broad, ev_tests_green_scope, ev_overlap_risk. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":1,\"description\":\"Resolve discrepancy for goal: Determine smallest coherent useful role for claim-relation and contradiction work\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-79ca56c06ddc6f04\",\"related_goal_ids\":[\"active-cognitive-goal-4ae97917d615f190\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"test_unsupported_semantic_contradiction_is_deferred_without_winner\",\"evidence_id\":\"ev_semantic_deferred\",\"source\":\"local_uncertainty\",\"summary\":\"Direct semantic contradiction returns semantic_classification_required without relation or winner\"},{\"content\":\"ownership_audit.json; production_reachability.json\",\"evidence_id\":\"ev_authority_overlap\",\"source\":\"local_analysis\",\"summary\":\"Authority evaluators already classify actions; claim revocation state is not yet a broad enforcement consumer\"}],\"current_goal\":{\"expected_state\":\"coherent integrated narrow capability or retirement decision package\",\"goal_id\":\"active-cognitive-goal-4ae97917d615f190\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Determine smallest coherent useful role for claim-relation and contradiction work\"},\"current_hypotheses\":[],\"evidence_for\":[{\"content\":\"DELTA.py:60-63,1626-1629,5612-5621,5831-5853\",\"evidence_id\":\"ev_delta_hook\",\"source\":\"local_repo\",\"summary\":\"DELTA.py imports, enables, and applies the claim relation pilot after explicit command\"},{\"content\":\"orchestration/runtime/cognitive_claim_relation_runtime.py\",\"evidence_id\":\"ev_runtime_structural\",\"source\":\"local_repo\",\"summary\":\"GovernedClaimRelationRuntime handles explicit correction, duplicates, temporal transitions, revocations, bounded exceptions, unrelated topics, persistence, restart, and semantic deferral\"},{\"content\":\"orchestration/runtime/cognitive_claim_relations.py\",\"evidence_id\":\"ev_contract_broad\",\"source\":\"local_repo\",\"summary\":\"Underlying contract supports broader relation types, operator requests, lifecycle state, provenance, and restart reconstruction\"},{\"content\":\"tests/runtime_gsr/test_cognitive_claim_relation_runtime.py; tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py\",\"evidence_id\":\"ev_tests_green_scope\",\"source\":\"local_tests\",\"summary\":\"Existing focused tests cover runtime, DELTA hook, evaluator compatibility, and restart behavior\"},{\"content\":\"overlap_analysis.json\",\"evidence_id\":\"ev_overlap_risk\",\"source\":\"local_analysis\",\"summary\":\"Active cognition already handles hypothesis revision; broad semantic claim classification risks duplicate machinery and rigid chat\"}],\"recent_outcomes\":[]}",
+      "question_objective": "interpret_state",
+      "record_digest": "db4a031e9f2373f81d51bb59aeee96af7376bcb56b07e58faca19170877d292b",
+      "record_version": 1,
+      "request_digest": "860c3dba6f3ebcd5576ca081c4beda704545f547d02c18d35aada692f191e54a",
+      "request_id": "shared-local-model-request-0fb521a3660efcc8",
+      "requester_reference": "cognitive-operation-04a7e1170b4a72b0",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "shared-local-model-result-7495ba7b8a43b53e",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-d6670b3e9c93802b",
+      "session_reference": "active-cognitive-cycle-57c3a0180dc1d96e"
+    },
+    "shared-local-model-request-32ba7682731cec53": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-27T02:56:04+00:00",
+      "authority_state": "operator_authorized_sustained_operator_objective_campaign_1",
+      "claimed_at": "2026-07-27T02:56:04+00:00",
+      "completed_at": "2026-07-27T02:56:25+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-27T02:56:04+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-13352e536cdf3719",
+      "failure_classification": "",
+      "lifecycle_state": "completed",
+      "mission_id": "active-cognitive-goal-4ae97917d615f190",
+      "mission_information_need_identity": "focus-c5a4f939b1b4102a",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - challenged_hypothesis_id: nonempty string - vulnerability: nonempty string - contrary_evidence_refs: array[string] - disconfirming_observation: nonempty string - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - contrary_evidence_refs values must be chosen from: ev_semantic_deferred, ev_authority_overlap OPERATION RULE: vulnerability must name a concrete weakness in current_hypotheses and connect it to a contrary evidence ID; do not answer with generic phrases such as local evidence is incomplete; do not copy the assumption local evidence is complete for this bounded episode as a vulnerability TASK: perform only operation challenge_hypothesis. Allowed transition/next-operation values: weaken_hypothesis, revise_hypothesis, reject_hypothesis, falsify_hypothesis. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: ev_delta_hook, ev_runtime_structural, ev_contract_broad, ev_tests_green_scope, ev_overlap_risk. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"semantic comparison\",\"creation_sequence\":5,\"description\":\"Challenge or revise hypothesis: Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred. Authority\",\"evidence_need\":\"contrary and supporting evidence\",\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\",\"ev_semantic_deferred\",\"ev_authority_overlap\"],\"expected_value\":\"belief_revision\",\"focus_id\":\"focus-c5a4f939b1b4102a\",\"related_goal_ids\":[\"active-cognitive-goal-4ae97917d615f190\"],\"salience_categories\":[\"unresolved_hypothesis\",\"evidence_revision\",\"expected_useful_progress\"],\"salience_explanation\":\"An active hypothesis needs evidence-linked revision before action.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"hypothesis_revision\",\"urgency\":\"high\"},\"contrary_evidence\":[{\"content\":\"test_unsupported_semantic_contradiction_is_deferred_without_winner\",\"evidence_id\":\"ev_semantic_deferred\",\"source\":\"local_uncertainty\",\"summary\":\"Direct semantic contradiction returns semantic_classification_required without relation or winner\"},{\"content\":\"ownership_audit.json; production_reachability.json\",\"evidence_id\":\"ev_authority_overlap\",\"source\":\"local_analysis\",\"summary\":\"Authority evaluators already classify actions; claim revocation state is not yet a broad enforcement consumer\"}],\"current_goal\":{\"expected_state\":\"coherent integrated narrow capability or retirement decision package\",\"goal_id\":\"active-cognitive-goal-4ae97917d615f190\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Determine smallest coherent useful role for claim-relation and contradiction work\"},\"current_hypotheses\":[{\"assumptions\":[],\"confidence_state\":\"contested\",\"created_at\":\"2026-07-27T02:56:04+00:00\",\"disposition\":\"revised_from_evidence\",\"evidence_against\":[\"ev_semantic_deferred\",\"ev_authority_overlap\"],\"evidence_for\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\"],\"expected_observations\":[\"revised smaller step should match local evidence\"],\"hypothesis_id\":\"hypothesis-af64acb1eb01d940\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-178021cffc17550f\",\"originating_goal_id\":\"active-cognitive-goal-4ae97917d615f190\",\"provenance\":[\"cognitive-operation-560167ffa3fe6c83\"],\"revised_at\":\"2026-07-27T02:56:04+00:00\",\"revision_parent_id\":\"hypothesis-2a6c6e304b954e19\",\"revision_reason\":\"Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred. Authority evaluators already classify actions; claim revocation state is not yet a broad enforcement consumer. Direct semantic contradiction is deferred without a winner. No compelling evidence of semantic contradiction or authority overlap that would challenge the current hypothesis.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: Determine smallest coherent useful role for claim-relation and contradiction work\",\"statement\":\"Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred. Authority evaluators already classify actions; claim revocation state is not yet a broad enforcement consumer. Direct semantic contradiction is deferred without a winner. No compelling evidence of semantic contradiction or authority overlap that would challenge the current hypothesis.\"}],\"evidence_for\":[{\"content\":\"DELTA.py:60-63,1626-1629,5612-5621,5831-5853\",\"evidence_id\":\"ev_delta_hook\",\"source\":\"local_repo\",\"summary\":\"DELTA.py imports, enables, and applies the claim relation pilot after explicit command\"},{\"content\":\"orchestration/runtime/cognitive_claim_relation_runtime.py\",\"evidence_id\":\"ev_runtime_structural\",\"source\":\"local_repo\",\"summary\":\"GovernedClaimRelationRuntime handles explicit correction, duplicates, temporal transitions, revocations, bounded exceptions, unrelated topics, persistence, restart, and semantic deferral\"},{\"content\":\"orchestration/runtime/cognitive_claim_relations.py\",\"evidence_id\":\"ev_contract_broad\",\"source\":\"local_repo\",\"summary\":\"Underlying contract supports broader relation types, operator requests, lifecycle state, provenance, and restart reconstruction\"},{\"content\":\"tests/runtime_gsr/test_cognitive_claim_relation_runtime.py; tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py\",\"evidence_id\":\"ev_tests_green_scope\",\"source\":\"local_tests\",\"summary\":\"Existing focused tests cover runtime, DELTA hook, evaluator compatibility, and restart behavior\"},{\"content\":\"overlap_analysis.json\",\"evidence_id\":\"ev_overlap_risk\",\"source\":\"local_analysis\",\"summary\":\"Active cognition already handles hypothesis revision; broad semantic claim classification risks duplicate machinery and rigid chat\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-27T02:56:04+00:00\",\"discrepancy\":\"revised\",\"expected\":\"Perform compare_evidence for the active focus using only referenced evidence.\",\"observed\":\"Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred. Authority evaluators already classify actions; claim revocation state is not yet a broad enforcement consumer. Direct semantic contradiction is deferred without a winner. No compelling evidence of semantic contradiction or authority overlap that would challenge the current hypothesis.\",\"operation_id\":\"cognitive-operation-560167ffa3fe6c83\",\"outcome_id\":\"outcome-17e2f40e4feff11d\"}]}",
+      "question_objective": "challenge_hypothesis",
+      "record_digest": "205abc88d13340450c57662942322a12847a046546000b648afcd27ae31abbaf",
+      "record_version": 1,
+      "request_digest": "9048ab3e1ba4fd63900f17862f8cea87f30d7e60f0e707905a78cc030f939246",
+      "request_id": "shared-local-model-request-32ba7682731cec53",
+      "requester_reference": "cognitive-operation-8513a107cd5cc086",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "shared-local-model-result-9d3425b9332f1969",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-5d93391defa2fc26",
+      "session_reference": "active-cognitive-cycle-dfc4e5abc8d395b0"
+    },
+    "shared-local-model-request-40dc52b50381a001": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-27T02:58:08+00:00",
+      "authority_state": "operator_authorized_sustained_operator_objective_campaign_1",
+      "claimed_at": "2026-07-27T02:58:08+00:00",
+      "completed_at": "2026-07-27T02:58:35+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-27T02:58:08+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-4aa38e2c8534a8d1",
+      "failure_classification": "",
+      "lifecycle_state": "completed",
+      "mission_id": "active-cognitive-goal-4ae97917d615f190",
+      "mission_information_need_identity": "focus-e17717863e2f8189",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - plan_summary: nonempty string - supporting_evidence_refs: array[string] - planned_steps: array[string] - risks: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: ev_delta_hook, ev_runtime_structural, ev_contract_broad, ev_tests_green_scope, ev_overlap_risk TASK: perform only operation propose_plan. Allowed transition/next-operation values: propose_plan, request_operator_resolution, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: ev_delta_hook, ev_runtime_structural, ev_contract_broad, ev_tests_green_scope, ev_overlap_risk. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"semantic comparison\",\"creation_sequence\":7,\"description\":\"Challenge or revise hypothesis: Direct semantic contradiction is deferred without a winner\",\"evidence_need\":\"contrary and supporting evidence\",\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\",\"ev_semantic_deferred\",\"ev_authority_overlap\"],\"expected_value\":\"belief_revision\",\"focus_id\":\"focus-e17717863e2f8189\",\"related_goal_ids\":[\"active-cognitive-goal-4ae97917d615f190\"],\"salience_categories\":[\"unresolved_hypothesis\",\"evidence_revision\",\"expected_useful_progress\"],\"salience_explanation\":\"An active hypothesis needs evidence-linked revision before action.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"hypothesis_revision\",\"urgency\":\"high\"},\"contrary_evidence\":[{\"content\":\"test_unsupported_semantic_contradiction_is_deferred_without_winner\",\"evidence_id\":\"ev_semantic_deferred\",\"source\":\"local_uncertainty\",\"summary\":\"Direct semantic contradiction returns semantic_classification_required without relation or winner\"},{\"content\":\"ownership_audit.json; production_reachability.json\",\"evidence_id\":\"ev_authority_overlap\",\"source\":\"local_analysis\",\"summary\":\"Authority evaluators already classify actions; claim revocation state is not yet a broad enforcement consumer\"}],\"current_goal\":{\"expected_state\":\"coherent integrated narrow capability or retirement decision package\",\"goal_id\":\"active-cognitive-goal-4ae97917d615f190\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Determine smallest coherent useful role for claim-relation and contradiction work\"},\"current_hypotheses\":[{\"assumptions\":[],\"confidence_state\":\"contested\",\"created_at\":\"2026-07-27T02:56:56+00:00\",\"disposition\":\"revised_from_evidence\",\"evidence_against\":[\"ev_semantic_deferred\",\"ev_authority_overlap\"],\"evidence_for\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\"],\"expected_observations\":[\"revised smaller step should match local evidence\"],\"hypothesis_id\":\"hypothesis-c9d7e93e111687ef\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-178021cffc17550f\",\"originating_goal_id\":\"active-cognitive-goal-4ae97917d615f190\",\"provenance\":[\"cognitive-operation-11d397e9745067cc\"],\"revised_at\":\"2026-07-27T02:56:56+00:00\",\"revision_parent_id\":\"hypothesis-40bdd6900fc1532f\",\"revision_reason\":\"Direct semantic contradiction is deferred without a winner\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: Determine smallest coherent useful role for claim-relation and contradiction work\",\"statement\":\"Direct semantic contradiction is deferred without a winner\"}],\"evidence_for\":[{\"content\":\"DELTA.py:60-63,1626-1629,5612-5621,5831-5853\",\"evidence_id\":\"ev_delta_hook\",\"source\":\"local_repo\",\"summary\":\"DELTA.py imports, enables, and applies the claim relation pilot after explicit command\"},{\"content\":\"orchestration/runtime/cognitive_claim_relation_runtime.py\",\"evidence_id\":\"ev_runtime_structural\",\"source\":\"local_repo\",\"summary\":\"GovernedClaimRelationRuntime handles explicit correction, duplicates, temporal transitions, revocations, bounded exceptions, unrelated topics, persistence, restart, and semantic deferral\"},{\"content\":\"orchestration/runtime/cognitive_claim_relations.py\",\"evidence_id\":\"ev_contract_broad\",\"source\":\"local_repo\",\"summary\":\"Underlying contract supports broader relation types, operator requests, lifecycle state, provenance, and restart reconstruction\"},{\"content\":\"tests/runtime_gsr/test_cognitive_claim_relation_runtime.py; tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py\",\"evidence_id\":\"ev_tests_green_scope\",\"source\":\"local_tests\",\"summary\":\"Existing focused tests cover runtime, DELTA hook, evaluator compatibility, and restart behavior\"},{\"content\":\"overlap_analysis.json\",\"evidence_id\":\"ev_overlap_risk\",\"source\":\"local_analysis\",\"summary\":\"Active cognition already handles hypothesis revision; broad semantic claim classification risks duplicate machinery and rigid chat\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-27T02:56:56+00:00\",\"discrepancy\":\"revised\",\"expected\":\"Perform revise_hypothesis for the active focus using only referenced evidence.\",\"observed\":\"Direct semantic contradiction is deferred without a winner\",\"operation_id\":\"cognitive-operation-11d397e9745067cc\",\"outcome_id\":\"outcome-020b16566461293e\"}]}",
+      "question_objective": "propose_plan",
+      "record_digest": "c1ec3925fc70f478b0f3e5b05baf2c56b99755da14b196cb363605b1e4cd645f",
+      "record_version": 1,
+      "request_digest": "a475f4294e738538d825c87c1f02d7847c81ff42d4e8d3be4e4bb52268c9ba71",
+      "request_id": "shared-local-model-request-40dc52b50381a001",
+      "requester_reference": "cognitive-operation-5cce409d35435fc4",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "shared-local-model-result-753d7d684311f974",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-f69a788ae035c925",
+      "session_reference": "active-cognitive-cycle-d62f253038ee6d4f"
+    },
+    "shared-local-model-request-50f56500c0b5bc8c": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-27T02:58:35+00:00",
+      "authority_state": "operator_authorized_sustained_operator_objective_campaign_1",
+      "claimed_at": "2026-07-27T02:58:35+00:00",
+      "completed_at": "2026-07-27T02:58:58+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-27T02:58:35+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-b9fbd9316cde4722",
+      "failure_classification": "",
+      "lifecycle_state": "completed",
+      "mission_id": "active-cognitive-goal-4ae97917d615f190",
+      "mission_information_need_identity": "focus-ad0de720dd09f4ec",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - expected_outcome: nonempty string - observed_outcome: nonempty string - discrepancy: nonempty string - evidence_refs: array[string] - lesson: nonempty string - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - evidence_refs values must be chosen from: ev_delta_hook, ev_runtime_structural, ev_contract_broad, ev_tests_green_scope, ev_overlap_risk, ev_semantic_deferred, ev_authority_overlap TASK: perform only operation reflect_on_outcome. Allowed transition/next-operation values: reflect_on_outcome, weaken_hypothesis, revise_hypothesis, summarize_learning. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: ev_delta_hook, ev_runtime_structural, ev_contract_broad, ev_tests_green_scope, ev_overlap_risk. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"semantic comparison\",\"creation_sequence\":8,\"description\":\"Challenge or revise hypothesis: Direct semantic contradiction is deferred without a winner\",\"evidence_need\":\"contrary and supporting evidence\",\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\",\"ev_semantic_deferred\",\"ev_authority_overlap\"],\"expected_value\":\"belief_revision\",\"focus_id\":\"focus-ad0de720dd09f4ec\",\"related_goal_ids\":[\"active-cognitive-goal-4ae97917d615f190\"],\"salience_categories\":[\"unresolved_hypothesis\",\"evidence_revision\",\"expected_useful_progress\"],\"salience_explanation\":\"An active hypothesis needs evidence-linked revision before action.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"hypothesis_revision\",\"urgency\":\"high\"},\"contrary_evidence\":[{\"content\":\"test_unsupported_semantic_contradiction_is_deferred_without_winner\",\"evidence_id\":\"ev_semantic_deferred\",\"source\":\"local_uncertainty\",\"summary\":\"Direct semantic contradiction returns semantic_classification_required without relation or winner\"},{\"content\":\"ownership_audit.json; production_reachability.json\",\"evidence_id\":\"ev_authority_overlap\",\"source\":\"local_analysis\",\"summary\":\"Authority evaluators already classify actions; claim revocation state is not yet a broad enforcement consumer\"}],\"current_goal\":{\"expected_state\":\"coherent integrated narrow capability or retirement decision package\",\"goal_id\":\"active-cognitive-goal-4ae97917d615f190\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Determine smallest coherent useful role for claim-relation and contradiction work\"},\"current_hypotheses\":[{\"assumptions\":[],\"confidence_state\":\"contested\",\"created_at\":\"2026-07-27T02:56:56+00:00\",\"disposition\":\"revised_from_evidence\",\"evidence_against\":[\"ev_semantic_deferred\",\"ev_authority_overlap\"],\"evidence_for\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\"],\"expected_observations\":[\"revised smaller step should match local evidence\"],\"hypothesis_id\":\"hypothesis-c9d7e93e111687ef\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-178021cffc17550f\",\"originating_goal_id\":\"active-cognitive-goal-4ae97917d615f190\",\"provenance\":[\"cognitive-operation-11d397e9745067cc\"],\"revised_at\":\"2026-07-27T02:56:56+00:00\",\"revision_parent_id\":\"hypothesis-40bdd6900fc1532f\",\"revision_reason\":\"Direct semantic contradiction is deferred without a winner\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: Determine smallest coherent useful role for claim-relation and contradiction work\",\"statement\":\"Direct semantic contradiction is deferred without a winner\"}],\"evidence_for\":[{\"content\":\"DELTA.py:60-63,1626-1629,5612-5621,5831-5853\",\"evidence_id\":\"ev_delta_hook\",\"source\":\"local_repo\",\"summary\":\"DELTA.py imports, enables, and applies the claim relation pilot after explicit command\"},{\"content\":\"orchestration/runtime/cognitive_claim_relation_runtime.py\",\"evidence_id\":\"ev_runtime_structural\",\"source\":\"local_repo\",\"summary\":\"GovernedClaimRelationRuntime handles explicit correction, duplicates, temporal transitions, revocations, bounded exceptions, unrelated topics, persistence, restart, and semantic deferral\"},{\"content\":\"orchestration/runtime/cognitive_claim_relations.py\",\"evidence_id\":\"ev_contract_broad\",\"source\":\"local_repo\",\"summary\":\"Underlying contract supports broader relation types, operator requests, lifecycle state, provenance, and restart reconstruction\"},{\"content\":\"tests/runtime_gsr/test_cognitive_claim_relation_runtime.py; tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py\",\"evidence_id\":\"ev_tests_green_scope\",\"source\":\"local_tests\",\"summary\":\"Existing focused tests cover runtime, DELTA hook, evaluator compatibility, and restart behavior\"},{\"content\":\"overlap_analysis.json\",\"evidence_id\":\"ev_overlap_risk\",\"source\":\"local_analysis\",\"summary\":\"Active cognition already handles hypothesis revision; broad semantic claim classification risks duplicate machinery and rigid chat\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-27T02:58:35+00:00\",\"discrepancy\":\"progress_observed\",\"expected\":\"Perform propose_plan for the active focus using only referenced evidence.\",\"observed\":\"Direct semantic contradiction is deferred without a winner\",\"operation_id\":\"cognitive-operation-5cce409d35435fc4\",\"outcome_id\":\"outcome-22cc99ddb6671146\"}]}",
+      "question_objective": "reflect_on_outcome",
+      "record_digest": "e74315d11ac73953c6c20d024155121d944c24480d7828ae6df0ba409b2afd48",
+      "record_version": 1,
+      "request_digest": "1df5eff55b3fdaa23e7751f2c985c498355a9bf327d9ba3215711c90768c41d2",
+      "request_id": "shared-local-model-request-50f56500c0b5bc8c",
+      "requester_reference": "cognitive-operation-5138d20b6963f01c",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "shared-local-model-result-42c57a4c292d1dcd",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-f91756d7ec3ea14d",
+      "session_reference": "active-cognitive-cycle-124c1e36e5d2fe20"
+    },
+    "shared-local-model-request-6bee7e5ce430ef70": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-27T02:58:58+00:00",
+      "authority_state": "operator_authorized_sustained_operator_objective_campaign_1",
+      "claimed_at": "2026-07-27T02:58:58+00:00",
+      "completed_at": "2026-07-27T02:59:16+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-27T02:58:58+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-df9625df7cac1967",
+      "failure_classification": "",
+      "lifecycle_state": "completed",
+      "mission_id": "active-cognitive-goal-4ae97917d615f190",
+      "mission_information_need_identity": "focus-a6cbea8c505ae5e4",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - lesson: nonempty string - evidence_refs: array[string] - unresolved_questions: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - evidence_refs values must be chosen from: ev_delta_hook, ev_runtime_structural, ev_contract_broad, ev_tests_green_scope, ev_overlap_risk, ev_semantic_deferred, ev_authority_overlap TASK: perform only operation summarize_learning. Allowed transition/next-operation values: summarize_learning, select_next_focus. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: ev_delta_hook, ev_runtime_structural, ev_contract_broad, ev_tests_green_scope, ev_overlap_risk. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"semantic comparison\",\"creation_sequence\":9,\"description\":\"Challenge or revise hypothesis: Direct semantic contradiction is deferred without a winner\",\"evidence_need\":\"contrary and supporting evidence\",\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\",\"ev_semantic_deferred\",\"ev_authority_overlap\"],\"expected_value\":\"belief_revision\",\"focus_id\":\"focus-a6cbea8c505ae5e4\",\"related_goal_ids\":[\"active-cognitive-goal-4ae97917d615f190\"],\"salience_categories\":[\"unresolved_hypothesis\",\"evidence_revision\",\"expected_useful_progress\"],\"salience_explanation\":\"An active hypothesis needs evidence-linked revision before action.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"hypothesis_revision\",\"urgency\":\"high\"},\"contrary_evidence\":[{\"content\":\"test_unsupported_semantic_contradiction_is_deferred_without_winner\",\"evidence_id\":\"ev_semantic_deferred\",\"source\":\"local_uncertainty\",\"summary\":\"Direct semantic contradiction returns semantic_classification_required without relation or winner\"},{\"content\":\"ownership_audit.json; production_reachability.json\",\"evidence_id\":\"ev_authority_overlap\",\"source\":\"local_analysis\",\"summary\":\"Authority evaluators already classify actions; claim revocation state is not yet a broad enforcement consumer\"}],\"current_goal\":{\"expected_state\":\"coherent integrated narrow capability or retirement decision package\",\"goal_id\":\"active-cognitive-goal-4ae97917d615f190\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Determine smallest coherent useful role for claim-relation and contradiction work\"},\"current_hypotheses\":[{\"assumptions\":[],\"confidence_state\":\"contested\",\"created_at\":\"2026-07-27T02:56:56+00:00\",\"disposition\":\"revised_from_evidence\",\"evidence_against\":[\"ev_semantic_deferred\",\"ev_authority_overlap\"],\"evidence_for\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\"],\"expected_observations\":[\"revised smaller step should match local evidence\"],\"hypothesis_id\":\"hypothesis-c9d7e93e111687ef\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-178021cffc17550f\",\"originating_goal_id\":\"active-cognitive-goal-4ae97917d615f190\",\"provenance\":[\"cognitive-operation-11d397e9745067cc\"],\"revised_at\":\"2026-07-27T02:56:56+00:00\",\"revision_parent_id\":\"hypothesis-40bdd6900fc1532f\",\"revision_reason\":\"Direct semantic contradiction is deferred without a winner\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: Determine smallest coherent useful role for claim-relation and contradiction work\",\"statement\":\"Direct semantic contradiction is deferred without a winner\"}],\"evidence_for\":[{\"content\":\"DELTA.py:60-63,1626-1629,5612-5621,5831-5853\",\"evidence_id\":\"ev_delta_hook\",\"source\":\"local_repo\",\"summary\":\"DELTA.py imports, enables, and applies the claim relation pilot after explicit command\"},{\"content\":\"orchestration/runtime/cognitive_claim_relation_runtime.py\",\"evidence_id\":\"ev_runtime_structural\",\"source\":\"local_repo\",\"summary\":\"GovernedClaimRelationRuntime handles explicit correction, duplicates, temporal transitions, revocations, bounded exceptions, unrelated topics, persistence, restart, and semantic deferral\"},{\"content\":\"orchestration/runtime/cognitive_claim_relations.py\",\"evidence_id\":\"ev_contract_broad\",\"source\":\"local_repo\",\"summary\":\"Underlying contract supports broader relation types, operator requests, lifecycle state, provenance, and restart reconstruction\"},{\"content\":\"tests/runtime_gsr/test_cognitive_claim_relation_runtime.py; tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py\",\"evidence_id\":\"ev_tests_green_scope\",\"source\":\"local_tests\",\"summary\":\"Existing focused tests cover runtime, DELTA hook, evaluator compatibility, and restart behavior\"},{\"content\":\"overlap_analysis.json\",\"evidence_id\":\"ev_overlap_risk\",\"source\":\"local_analysis\",\"summary\":\"Active cognition already handles hypothesis revision; broad semantic claim classification risks duplicate machinery and rigid chat\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-27T02:58:58+00:00\",\"discrepancy\":\"progress_observed\",\"expected\":\"Perform reflect_on_outcome for the active focus using only referenced evidence.\",\"observed\":\"Direct semantic contradiction deferred without clear winner; hypothesis remains contested\",\"operation_id\":\"cognitive-operation-5138d20b6963f01c\",\"outcome_id\":\"outcome-65ba152324c9e8e5\"}]}",
+      "question_objective": "summarize_learning",
+      "record_digest": "68763f99aeff1a546e9be975befe6390f7bfdd2f3bebaf6344c3307177230f07",
+      "record_version": 1,
+      "request_digest": "087967508422c761235156964b65b737cf49a74c2b2e3d34684251eac72864d2",
+      "request_id": "shared-local-model-request-6bee7e5ce430ef70",
+      "requester_reference": "cognitive-operation-94908896076efd7e",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "shared-local-model-result-42ba1fdd60d6f126",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-b33e3a952f0e0141",
+      "session_reference": "active-cognitive-cycle-19313f1b44ef7106"
+    },
+    "shared-local-model-request-8073aca760ea30dc": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-27T02:59:36+00:00",
+      "authority_state": "operator_authorized_sustained_operator_objective_campaign_1",
+      "claimed_at": "2026-07-27T02:59:36+00:00",
+      "completed_at": "2026-07-27T03:00:05+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-27T02:59:36+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-3a3867dbf6ba36d3",
+      "failure_classification": "",
+      "lifecycle_state": "completed",
+      "mission_id": "active-cognitive-goal-4ae97917d615f190",
+      "mission_information_need_identity": "focus-a83b2382fb540830",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - selected_focus_id: nonempty string - salience_reason: nonempty string - related_goal_ids: array[string] - evidence_refs: array[string] - deferred_focus_ids: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - evidence_refs values must be chosen from: ev_delta_hook, ev_runtime_structural, ev_contract_broad, ev_tests_green_scope, ev_overlap_risk, ev_semantic_deferred, ev_authority_overlap OPERATION RULE: selected_focus_id must be the active_focus focus_id or one supplied candidate focus ID TASK: perform only operation select_next_focus. Allowed transition/next-operation values: select_next_focus, request_operator_resolution. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: ev_delta_hook, ev_runtime_structural, ev_contract_broad, ev_tests_green_scope, ev_overlap_risk. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"semantic comparison\",\"creation_sequence\":10,\"description\":\"Challenge or revise hypothesis: Direct semantic contradiction is deferred without a winner\",\"evidence_need\":\"contrary and supporting evidence\",\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\",\"ev_semantic_deferred\",\"ev_authority_overlap\"],\"expected_value\":\"belief_revision\",\"focus_id\":\"focus-a83b2382fb540830\",\"related_goal_ids\":[\"active-cognitive-goal-4ae97917d615f190\"],\"salience_categories\":[\"unresolved_hypothesis\",\"evidence_revision\",\"expected_useful_progress\"],\"salience_explanation\":\"An active hypothesis needs evidence-linked revision before action.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"hypothesis_revision\",\"urgency\":\"high\"},\"contrary_evidence\":[{\"content\":\"test_unsupported_semantic_contradiction_is_deferred_without_winner\",\"evidence_id\":\"ev_semantic_deferred\",\"source\":\"local_uncertainty\",\"summary\":\"Direct semantic contradiction returns semantic_classification_required without relation or winner\"},{\"content\":\"ownership_audit.json; production_reachability.json\",\"evidence_id\":\"ev_authority_overlap\",\"source\":\"local_analysis\",\"summary\":\"Authority evaluators already classify actions; claim revocation state is not yet a broad enforcement consumer\"}],\"current_goal\":{\"expected_state\":\"coherent integrated narrow capability or retirement decision package\",\"goal_id\":\"active-cognitive-goal-4ae97917d615f190\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Determine smallest coherent useful role for claim-relation and contradiction work\"},\"current_hypotheses\":[{\"assumptions\":[],\"confidence_state\":\"contested\",\"created_at\":\"2026-07-27T02:56:56+00:00\",\"disposition\":\"revised_from_evidence\",\"evidence_against\":[\"ev_semantic_deferred\",\"ev_authority_overlap\"],\"evidence_for\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\"],\"expected_observations\":[\"revised smaller step should match local evidence\"],\"hypothesis_id\":\"hypothesis-c9d7e93e111687ef\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-178021cffc17550f\",\"originating_goal_id\":\"active-cognitive-goal-4ae97917d615f190\",\"provenance\":[\"cognitive-operation-11d397e9745067cc\"],\"revised_at\":\"2026-07-27T02:56:56+00:00\",\"revision_parent_id\":\"hypothesis-40bdd6900fc1532f\",\"revision_reason\":\"Direct semantic contradiction is deferred without a winner\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: Determine smallest coherent useful role for claim-relation and contradiction work\",\"statement\":\"Direct semantic contradiction is deferred without a winner\"}],\"evidence_for\":[{\"content\":\"DELTA.py:60-63,1626-1629,5612-5621,5831-5853\",\"evidence_id\":\"ev_delta_hook\",\"source\":\"local_repo\",\"summary\":\"DELTA.py imports, enables, and applies the claim relation pilot after explicit command\"},{\"content\":\"orchestration/runtime/cognitive_claim_relation_runtime.py\",\"evidence_id\":\"ev_runtime_structural\",\"source\":\"local_repo\",\"summary\":\"GovernedClaimRelationRuntime handles explicit correction, duplicates, temporal transitions, revocations, bounded exceptions, unrelated topics, persistence, restart, and semantic deferral\"},{\"content\":\"orchestration/runtime/cognitive_claim_relations.py\",\"evidence_id\":\"ev_contract_broad\",\"source\":\"local_repo\",\"summary\":\"Underlying contract supports broader relation types, operator requests, lifecycle state, provenance, and restart reconstruction\"},{\"content\":\"tests/runtime_gsr/test_cognitive_claim_relation_runtime.py; tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py\",\"evidence_id\":\"ev_tests_green_scope\",\"source\":\"local_tests\",\"summary\":\"Existing focused tests cover runtime, DELTA hook, evaluator compatibility, and restart behavior\"},{\"content\":\"overlap_analysis.json\",\"evidence_id\":\"ev_overlap_risk\",\"source\":\"local_analysis\",\"summary\":\"Active cognition already handles hypothesis revision; broad semantic claim classification risks duplicate machinery and rigid chat\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-27T02:59:16+00:00\",\"discrepancy\":\"progress_observed\",\"expected\":\"Perform summarize_learning for the active focus using only referenced evidence.\",\"observed\":\"Direct semantic contradiction is deferred without a clear winner.\",\"operation_id\":\"cognitive-operation-94908896076efd7e\",\"outcome_id\":\"outcome-44ac94acf39b703c\"}]}",
+      "question_objective": "select_next_focus",
+      "record_digest": "941f18c7f63ee0038a5dfeb9e13a2fd0fb0649329d8a97588d2c0e99a28007f3",
+      "record_version": 1,
+      "request_digest": "ef8d7eb2caca8ea42ec1c32b84dee2c779bfa4844eae3f1b293995b1a1a8a86c",
+      "request_id": "shared-local-model-request-8073aca760ea30dc",
+      "requester_reference": "cognitive-operation-2b60e2f71a2e6b6b",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "shared-local-model-result-81a07499d04c60b2",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-8bbaaf1a6900222f",
+      "session_reference": "active-cognitive-cycle-508b82f2a4aacc84"
+    },
+    "shared-local-model-request-b4af5ccbabff1a6f": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-27T02:54:42+00:00",
+      "authority_state": "operator_authorized_sustained_operator_objective_campaign_1",
+      "claimed_at": "2026-07-27T02:54:42+00:00",
+      "completed_at": "2026-07-27T02:54:58+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-27T02:54:42+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-c3a7f6f8c3bacfa2",
+      "failure_classification": "",
+      "lifecycle_state": "completed",
+      "mission_id": "active-cognitive-goal-4ae97917d615f190",
+      "mission_information_need_identity": "focus-971e83dd8996f010",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - selected_focus_id: nonempty string - selection_reason: nonempty string - supporting_evidence_refs: array[string] - rejected_focus_ids: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: ev_delta_hook, ev_runtime_structural, ev_contract_broad, ev_tests_green_scope, ev_overlap_risk OPERATION RULE: selected_focus_id must be the active_focus focus_id or one supplied candidate focus ID TASK: perform only operation prioritize_focus. Allowed transition/next-operation values: select_next_focus, continue_focus, request_operator_resolution. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: ev_delta_hook, ev_runtime_structural, ev_contract_broad, ev_tests_green_scope, ev_overlap_risk. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":2,\"description\":\"Resolve discrepancy for goal: Determine smallest coherent useful role for claim-relation and contradiction work\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-971e83dd8996f010\",\"related_goal_ids\":[\"active-cognitive-goal-4ae97917d615f190\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"test_unsupported_semantic_contradiction_is_deferred_without_winner\",\"evidence_id\":\"ev_semantic_deferred\",\"source\":\"local_uncertainty\",\"summary\":\"Direct semantic contradiction returns semantic_classification_required without relation or winner\"},{\"content\":\"ownership_audit.json; production_reachability.json\",\"evidence_id\":\"ev_authority_overlap\",\"source\":\"local_analysis\",\"summary\":\"Authority evaluators already classify actions; claim revocation state is not yet a broad enforcement consumer\"}],\"current_goal\":{\"expected_state\":\"coherent integrated narrow capability or retirement decision package\",\"goal_id\":\"active-cognitive-goal-4ae97917d615f190\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Determine smallest coherent useful role for claim-relation and contradiction work\"},\"current_hypotheses\":[{\"assumptions\":[],\"confidence_state\":\"plausible\",\"created_at\":\"2026-07-27T02:54:42+00:00\",\"disposition\":\"needs_challenge\",\"evidence_against\":[],\"evidence_for\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\"],\"expected_observations\":[\"local evidence should support a bounded useful step\"],\"hypothesis_id\":\"hypothesis-7925da22c50e5a1d\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-79ca56c06ddc6f04\",\"originating_goal_id\":\"active-cognitive-goal-4ae97917d615f190\",\"provenance\":[\"cognitive-operation-04a7e1170b4a72b0\"],\"revised_at\":\"\",\"revision_parent_id\":\"\",\"revision_reason\":\"\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: Determine smallest coherent useful role for claim-relation and contradiction work\",\"statement\":\"Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred.\"}],\"evidence_for\":[{\"content\":\"DELTA.py:60-63,1626-1629,5612-5621,5831-5853\",\"evidence_id\":\"ev_delta_hook\",\"source\":\"local_repo\",\"summary\":\"DELTA.py imports, enables, and applies the claim relation pilot after explicit command\"},{\"content\":\"orchestration/runtime/cognitive_claim_relation_runtime.py\",\"evidence_id\":\"ev_runtime_structural\",\"source\":\"local_repo\",\"summary\":\"GovernedClaimRelationRuntime handles explicit correction, duplicates, temporal transitions, revocations, bounded exceptions, unrelated topics, persistence, restart, and semantic deferral\"},{\"content\":\"orchestration/runtime/cognitive_claim_relations.py\",\"evidence_id\":\"ev_contract_broad\",\"source\":\"local_repo\",\"summary\":\"Underlying contract supports broader relation types, operator requests, lifecycle state, provenance, and restart reconstruction\"},{\"content\":\"tests/runtime_gsr/test_cognitive_claim_relation_runtime.py; tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py\",\"evidence_id\":\"ev_tests_green_scope\",\"source\":\"local_tests\",\"summary\":\"Existing focused tests cover runtime, DELTA hook, evaluator compatibility, and restart behavior\"},{\"content\":\"overlap_analysis.json\",\"evidence_id\":\"ev_overlap_risk\",\"source\":\"local_analysis\",\"summary\":\"Active cognition already handles hypothesis revision; broad semantic claim classification risks duplicate machinery and rigid chat\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-27T02:54:42+00:00\",\"discrepancy\":\"progress_observed\",\"expected\":\"Perform interpret_state for the active focus using only referenced evidence.\",\"observed\":\"Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred.\",\"operation_id\":\"cognitive-operation-04a7e1170b4a72b0\",\"outcome_id\":\"outcome-712a3571eaa51a3e\"}]}",
+      "question_objective": "prioritize_focus",
+      "record_digest": "daf3c05d8dce8a346fc78ad6b89419348ede9e59b85ecb08a53c5beade4c8648",
+      "record_version": 1,
+      "request_digest": "851e95c3f8641c7408c5358d02df3f4cfe427d1d7b4249fa77da74eae0b3be90",
+      "request_id": "shared-local-model-request-b4af5ccbabff1a6f",
+      "requester_reference": "cognitive-operation-dbce0c00b726212f",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "shared-local-model-result-62e4b97fc64851ab",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-c2b1548557d4e9a8",
+      "session_reference": "active-cognitive-cycle-f13765976d848ef8"
+    },
+    "shared-local-model-request-d41792ce15f6fdde": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-27T02:54:59+00:00",
+      "authority_state": "operator_authorized_sustained_operator_objective_campaign_1",
+      "claimed_at": "2026-07-27T02:54:59+00:00",
+      "completed_at": "2026-07-27T02:55:24+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-27T02:54:59+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-5c5f9e7030f81d17",
+      "failure_classification": "",
+      "lifecycle_state": "completed",
+      "mission_id": "active-cognitive-goal-4ae97917d615f190",
+      "mission_information_need_identity": "focus-178021cffc17550f",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: ev_delta_hook, ev_runtime_structural, ev_contract_broad, ev_tests_green_scope, ev_overlap_risk OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: ev_delta_hook, ev_runtime_structural, ev_contract_broad, ev_tests_green_scope, ev_overlap_risk. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":3,\"description\":\"Resolve discrepancy for goal: Determine smallest coherent useful role for claim-relation and contradiction work\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-178021cffc17550f\",\"related_goal_ids\":[\"active-cognitive-goal-4ae97917d615f190\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"test_unsupported_semantic_contradiction_is_deferred_without_winner\",\"evidence_id\":\"ev_semantic_deferred\",\"source\":\"local_uncertainty\",\"summary\":\"Direct semantic contradiction returns semantic_classification_required without relation or winner\"},{\"content\":\"ownership_audit.json; production_reachability.json\",\"evidence_id\":\"ev_authority_overlap\",\"source\":\"local_analysis\",\"summary\":\"Authority evaluators already classify actions; claim revocation state is not yet a broad enforcement consumer\"}],\"current_goal\":{\"expected_state\":\"coherent integrated narrow capability or retirement decision package\",\"goal_id\":\"active-cognitive-goal-4ae97917d615f190\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Determine smallest coherent useful role for claim-relation and contradiction work\"},\"current_hypotheses\":[{\"assumptions\":[],\"confidence_state\":\"plausible\",\"created_at\":\"2026-07-27T02:54:42+00:00\",\"disposition\":\"needs_challenge\",\"evidence_against\":[],\"evidence_for\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\"],\"expected_observations\":[\"local evidence should support a bounded useful step\"],\"hypothesis_id\":\"hypothesis-7925da22c50e5a1d\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-79ca56c06ddc6f04\",\"originating_goal_id\":\"active-cognitive-goal-4ae97917d615f190\",\"provenance\":[\"cognitive-operation-04a7e1170b4a72b0\"],\"revised_at\":\"\",\"revision_parent_id\":\"\",\"revision_reason\":\"\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: Determine smallest coherent useful role for claim-relation and contradiction work\",\"statement\":\"Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred.\"}],\"evidence_for\":[{\"content\":\"DELTA.py:60-63,1626-1629,5612-5621,5831-5853\",\"evidence_id\":\"ev_delta_hook\",\"source\":\"local_repo\",\"summary\":\"DELTA.py imports, enables, and applies the claim relation pilot after explicit command\"},{\"content\":\"orchestration/runtime/cognitive_claim_relation_runtime.py\",\"evidence_id\":\"ev_runtime_structural\",\"source\":\"local_repo\",\"summary\":\"GovernedClaimRelationRuntime handles explicit correction, duplicates, temporal transitions, revocations, bounded exceptions, unrelated topics, persistence, restart, and semantic deferral\"},{\"content\":\"orchestration/runtime/cognitive_claim_relations.py\",\"evidence_id\":\"ev_contract_broad\",\"source\":\"local_repo\",\"summary\":\"Underlying contract supports broader relation types, operator requests, lifecycle state, provenance, and restart reconstruction\"},{\"content\":\"tests/runtime_gsr/test_cognitive_claim_relation_runtime.py; tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py\",\"evidence_id\":\"ev_tests_green_scope\",\"source\":\"local_tests\",\"summary\":\"Existing focused tests cover runtime, DELTA hook, evaluator compatibility, and restart behavior\"},{\"content\":\"overlap_analysis.json\",\"evidence_id\":\"ev_overlap_risk\",\"source\":\"local_analysis\",\"summary\":\"Active cognition already handles hypothesis revision; broad semantic claim classification risks duplicate machinery and rigid chat\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-27T02:54:59+00:00\",\"discrepancy\":\"progress_observed\",\"expected\":\"Perform prioritize_focus for the active focus using only referenced evidence.\",\"observed\":\"active focus\",\"operation_id\":\"cognitive-operation-dbce0c00b726212f\",\"outcome_id\":\"outcome-59cb0272db7643f8\"}]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "666d38599784bbf6ec4a104ce7c884e4a8fcbf32c8fecc7a7a1d77c1c9b3b88c",
+      "record_version": 1,
+      "request_digest": "05140b67cba4bd8ee9777be86f5c8bd013ae9f0a087a88af4536a8c4d9afe5ca",
+      "request_id": "shared-local-model-request-d41792ce15f6fdde",
+      "requester_reference": "cognitive-operation-7be400e5fa8959bb",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "shared-local-model-result-db793323d0e53ea6",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-ed46c54c947c7633",
+      "session_reference": "active-cognitive-cycle-6a1bacd645c516c1"
+    },
+    "shared-local-model-request-df693eab4d337086": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-27T02:55:24+00:00",
+      "authority_state": "operator_authorized_sustained_operator_objective_campaign_1",
+      "claimed_at": "2026-07-27T02:55:24+00:00",
+      "completed_at": "2026-07-27T02:56:04+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-27T02:55:24+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-a081086cd87bdcd4",
+      "failure_classification": "",
+      "lifecycle_state": "completed",
+      "mission_id": "active-cognitive-goal-4ae97917d615f190",
+      "mission_information_need_identity": "focus-f6e5cd1019c7a6d9",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - operation_result_type: nonempty string - interpretation: nonempty string - evidence_refs: array[string] - contrary_evidence_considered: array[string] - uncertainty: nonempty string - assumptions: array[string] - recommended_state_transition: nonempty string - recommended_action: nonempty string - next_evidence_need: nonempty string - next_focus_proposal: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - evidence_refs values must be chosen from: ev_delta_hook, ev_runtime_structural, ev_contract_broad, ev_tests_green_scope, ev_overlap_risk - contrary_evidence_considered values must be chosen from: ev_semantic_deferred, ev_authority_overlap - contrary_evidence_considered must include at least one contrary_evidence ID TASK: perform only operation compare_evidence. Allowed transition/next-operation values: add_supporting_evidence, add_conflicting_evidence, weaken_hypothesis, revise_hypothesis. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: ev_delta_hook, ev_runtime_structural, ev_contract_broad, ev_tests_green_scope, ev_overlap_risk. Use contrary_evidence_considered only from contrary_evidence IDs: ev_semantic_deferred, ev_authority_overlap. If contrary_evidence is not empty, the interpretation must state how it changes or weakens the hypothesis Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":4,\"description\":\"Resolve discrepancy for goal: Determine smallest coherent useful role for claim-relation and contradiction work\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-f6e5cd1019c7a6d9\",\"related_goal_ids\":[\"active-cognitive-goal-4ae97917d615f190\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"test_unsupported_semantic_contradiction_is_deferred_without_winner\",\"evidence_id\":\"ev_semantic_deferred\",\"source\":\"local_uncertainty\",\"summary\":\"Direct semantic contradiction returns semantic_classification_required without relation or winner\"},{\"content\":\"ownership_audit.json; production_reachability.json\",\"evidence_id\":\"ev_authority_overlap\",\"source\":\"local_analysis\",\"summary\":\"Authority evaluators already classify actions; claim revocation state is not yet a broad enforcement consumer\"}],\"current_goal\":{\"expected_state\":\"coherent integrated narrow capability or retirement decision package\",\"goal_id\":\"active-cognitive-goal-4ae97917d615f190\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Determine smallest coherent useful role for claim-relation and contradiction work\"},\"current_hypotheses\":[{\"assumptions\":[],\"confidence_state\":\"plausible\",\"created_at\":\"2026-07-27T02:55:24+00:00\",\"disposition\":\"needs_challenge\",\"evidence_against\":[],\"evidence_for\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\"],\"expected_observations\":[\"local evidence should support a bounded useful step\"],\"hypothesis_id\":\"hypothesis-2a6c6e304b954e19\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-178021cffc17550f\",\"originating_goal_id\":\"active-cognitive-goal-4ae97917d615f190\",\"provenance\":[\"cognitive-operation-7be400e5fa8959bb\"],\"revised_at\":\"\",\"revision_parent_id\":\"\",\"revision_reason\":\"\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: Determine smallest coherent useful role for claim-relation and contradiction work\",\"statement\":\"Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred.\"}],\"evidence_for\":[{\"content\":\"DELTA.py:60-63,1626-1629,5612-5621,5831-5853\",\"evidence_id\":\"ev_delta_hook\",\"source\":\"local_repo\",\"summary\":\"DELTA.py imports, enables, and applies the claim relation pilot after explicit command\"},{\"content\":\"orchestration/runtime/cognitive_claim_relation_runtime.py\",\"evidence_id\":\"ev_runtime_structural\",\"source\":\"local_repo\",\"summary\":\"GovernedClaimRelationRuntime handles explicit correction, duplicates, temporal transitions, revocations, bounded exceptions, unrelated topics, persistence, restart, and semantic deferral\"},{\"content\":\"orchestration/runtime/cognitive_claim_relations.py\",\"evidence_id\":\"ev_contract_broad\",\"source\":\"local_repo\",\"summary\":\"Underlying contract supports broader relation types, operator requests, lifecycle state, provenance, and restart reconstruction\"},{\"content\":\"tests/runtime_gsr/test_cognitive_claim_relation_runtime.py; tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py\",\"evidence_id\":\"ev_tests_green_scope\",\"source\":\"local_tests\",\"summary\":\"Existing focused tests cover runtime, DELTA hook, evaluator compatibility, and restart behavior\"},{\"content\":\"overlap_analysis.json\",\"evidence_id\":\"ev_overlap_risk\",\"source\":\"local_analysis\",\"summary\":\"Active cognition already handles hypothesis revision; broad semantic claim classification risks duplicate machinery and rigid chat\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-27T02:55:24+00:00\",\"discrepancy\":\"progress_observed\",\"expected\":\"Perform formulate_hypothesis for the active focus using only referenced evidence.\",\"observed\":\"Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred.\",\"operation_id\":\"cognitive-operation-7be400e5fa8959bb\",\"outcome_id\":\"outcome-c9ad3b3701b63d47\"}]}",
+      "question_objective": "compare_evidence",
+      "record_digest": "15e485f92261a19da39ae5355805856c3c59374573a145c2d39dfee150348d0e",
+      "record_version": 1,
+      "request_digest": "bab60822ef080cb2058291a1162bc32eaa4a4fdf1e6cfef37f2df025f248c806",
+      "request_id": "shared-local-model-request-df693eab4d337086",
+      "requester_reference": "cognitive-operation-560167ffa3fe6c83",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "shared-local-model-result-899302cc213c26e5",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-6defcd2d7a14e087",
+      "session_reference": "active-cognitive-cycle-a66b4b890f43e8ea"
+    },
+    "shared-local-model-request-e97e555c1e387bb1": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-27T02:56:25+00:00",
+      "authority_state": "operator_authorized_sustained_operator_objective_campaign_1",
+      "claimed_at": "2026-07-27T02:56:25+00:00",
+      "completed_at": "2026-07-27T02:56:56+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-27T02:56:25+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-13befa2a114469e9",
+      "failure_classification": "",
+      "lifecycle_state": "completed",
+      "mission_id": "active-cognitive-goal-4ae97917d615f190",
+      "mission_information_need_identity": "focus-13cdf71346216a24",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - prior_hypothesis_id: nonempty string - revised_statement: nonempty string - evidence_refs: array[string] - contrary_evidence_considered: array[string] - revision_reason: nonempty string - new_confidence_state: nonempty string - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - evidence_refs values must be chosen from: ev_delta_hook, ev_runtime_structural, ev_contract_broad, ev_tests_green_scope, ev_overlap_risk - contrary_evidence_considered values must be chosen from: ev_semantic_deferred, ev_authority_overlap - contrary_evidence_considered must include at least one contrary_evidence ID OPERATION RULE: revised_statement must differ semantically from the prior hypothesis and revision_reason must explain the change TASK: perform only operation revise_hypothesis. Allowed transition/next-operation values: revise_hypothesis, reject_hypothesis, falsify_hypothesis. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: ev_delta_hook, ev_runtime_structural, ev_contract_broad, ev_tests_green_scope, ev_overlap_risk. Use contrary_evidence_considered only from contrary_evidence IDs: ev_semantic_deferred, ev_authority_overlap. If contrary_evidence is not empty, the interpretation must state how it changes or weakens the hypothesis Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"semantic comparison\",\"creation_sequence\":6,\"description\":\"Challenge or revise hypothesis: Direct semantic contradiction is deferred without a winner\",\"evidence_need\":\"contrary and supporting evidence\",\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\",\"ev_semantic_deferred\",\"ev_authority_overlap\"],\"expected_value\":\"belief_revision\",\"focus_id\":\"focus-13cdf71346216a24\",\"related_goal_ids\":[\"active-cognitive-goal-4ae97917d615f190\"],\"salience_categories\":[\"unresolved_hypothesis\",\"evidence_revision\",\"expected_useful_progress\"],\"salience_explanation\":\"An active hypothesis needs evidence-linked revision before action.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"hypothesis_revision\",\"urgency\":\"high\"},\"contrary_evidence\":[{\"content\":\"test_unsupported_semantic_contradiction_is_deferred_without_winner\",\"evidence_id\":\"ev_semantic_deferred\",\"source\":\"local_uncertainty\",\"summary\":\"Direct semantic contradiction returns semantic_classification_required without relation or winner\"},{\"content\":\"ownership_audit.json; production_reachability.json\",\"evidence_id\":\"ev_authority_overlap\",\"source\":\"local_analysis\",\"summary\":\"Authority evaluators already classify actions; claim revocation state is not yet a broad enforcement consumer\"}],\"current_goal\":{\"expected_state\":\"coherent integrated narrow capability or retirement decision package\",\"goal_id\":\"active-cognitive-goal-4ae97917d615f190\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Determine smallest coherent useful role for claim-relation and contradiction work\"},\"current_hypotheses\":[{\"assumptions\":[],\"confidence_state\":\"contested\",\"created_at\":\"2026-07-27T02:56:25+00:00\",\"disposition\":\"revised_from_evidence\",\"evidence_against\":[\"ev_semantic_deferred\",\"ev_authority_overlap\"],\"evidence_for\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\"],\"expected_observations\":[\"revised smaller step should match local evidence\"],\"hypothesis_id\":\"hypothesis-40bdd6900fc1532f\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-178021cffc17550f\",\"originating_goal_id\":\"active-cognitive-goal-4ae97917d615f190\",\"provenance\":[\"cognitive-operation-8513a107cd5cc086\"],\"revised_at\":\"2026-07-27T02:56:25+00:00\",\"revision_parent_id\":\"hypothesis-af64acb1eb01d940\",\"revision_reason\":\"Direct semantic contradiction is deferred without a winner\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: Determine smallest coherent useful role for claim-relation and contradiction work\",\"statement\":\"Direct semantic contradiction is deferred without a winner\"}],\"evidence_for\":[{\"content\":\"DELTA.py:60-63,1626-1629,5612-5621,5831-5853\",\"evidence_id\":\"ev_delta_hook\",\"source\":\"local_repo\",\"summary\":\"DELTA.py imports, enables, and applies the claim relation pilot after explicit command\"},{\"content\":\"orchestration/runtime/cognitive_claim_relation_runtime.py\",\"evidence_id\":\"ev_runtime_structural\",\"source\":\"local_repo\",\"summary\":\"GovernedClaimRelationRuntime handles explicit correction, duplicates, temporal transitions, revocations, bounded exceptions, unrelated topics, persistence, restart, and semantic deferral\"},{\"content\":\"orchestration/runtime/cognitive_claim_relations.py\",\"evidence_id\":\"ev_contract_broad\",\"source\":\"local_repo\",\"summary\":\"Underlying contract supports broader relation types, operator requests, lifecycle state, provenance, and restart reconstruction\"},{\"content\":\"tests/runtime_gsr/test_cognitive_claim_relation_runtime.py; tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py\",\"evidence_id\":\"ev_tests_green_scope\",\"source\":\"local_tests\",\"summary\":\"Existing focused tests cover runtime, DELTA hook, evaluator compatibility, and restart behavior\"},{\"content\":\"overlap_analysis.json\",\"evidence_id\":\"ev_overlap_risk\",\"source\":\"local_analysis\",\"summary\":\"Active cognition already handles hypothesis revision; broad semantic claim classification risks duplicate machinery and rigid chat\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-27T02:56:25+00:00\",\"discrepancy\":\"revised\",\"expected\":\"Perform challenge_hypothesis for the active focus using only referenced evidence.\",\"observed\":\"Direct semantic contradiction is deferred without a winner\",\"operation_id\":\"cognitive-operation-8513a107cd5cc086\",\"outcome_id\":\"outcome-828ed33cf6382aec\"}]}",
+      "question_objective": "revise_hypothesis",
+      "record_digest": "41ac18a1ced7fba9983465c80b0d62be399f46fec860ee10a13a25ebab7e4e63",
+      "record_version": 1,
+      "request_digest": "065b587c2c23add1f4c1d8b655bdc0aee34a21328eaa9968498285cefa79351c",
+      "request_id": "shared-local-model-request-e97e555c1e387bb1",
+      "requester_reference": "cognitive-operation-11d397e9745067cc",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "shared-local-model-result-bc5228391d4a134a",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-ed589d42c868549a",
+      "session_reference": "active-cognitive-cycle-84ea9b26fa964c4d"
+    }
+  },
+  "results": {
+    "shared-local-model-result-42ba1fdd60d6f126": {
+      "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+      "availability_state": "available",
+      "execution_completed_at": "2026-07-27T02:59:16+00:00",
+      "execution_started_at": "2026-07-27T02:58:58+00:00",
+      "failure_classification": "",
+      "failure_detail": "",
+      "latency_seconds": 18.1912,
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "provenance": {
+        "execution_claim_id": "shared-local-model-execution-claim-df9625df7cac1967",
+        "selected_lane": {
+          "available": true,
+          "candidate_models": [
+            {
+              "capabilities": [
+                "text"
+              ],
+              "family": "qwen",
+              "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+              "reason": "registered_alias",
+              "registry_key": "qwen",
+              "tier": 3
+            }
+          ],
+          "capabilities": [
+            "text"
+          ],
+          "context_size": 32768,
+          "cost_latency_class": "medium_to_high_local",
+          "display_name": "Reasoning / Analysis Lane",
+          "executed": false,
+          "execution_gate": "not_executed_by_default",
+          "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+          "expected_weakness": "external facts need gated supporting information",
+          "fallback_priority": 3,
+          "lane": "reasoning_analysis",
+          "model_family": "qwen",
+          "preferred_task_lanes": [
+            "analysis",
+            "research",
+            "investigation",
+            "external_knowledge_request"
+          ],
+          "provider_calls_performed": false,
+          "rejected_models": [],
+          "selected_model": "qwen",
+          "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+          "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+          "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+        }
+      },
+      "request_id": "shared-local-model-request-6bee7e5ce430ef70",
+      "response_digest": "5ef8977fc0f10676e2375c06b48648c26afd6495465b1377c2d6976fdda81fee",
+      "response_reference": "{\"lesson\":\"Direct semantic contradiction is deferred without a clear winner.\",\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\"],\"unresolved_questions\":[\"How should we handle semantic deferral in the absence of a clear winner?\"],\"uncertainty\":\"Uncertainty about the appropriate next step in the absence of a clear winner.\",\"recommended_state_transition\":\"summarize_learning\"}",
+      "result_digest": "93de3575891a034900a155f2f65b3f7292317dd3f2bc081327906d91062de92c",
+      "result_id": "shared-local-model-result-42ba1fdd60d6f126",
+      "terminal_state": "completed"
+    },
+    "shared-local-model-result-42c57a4c292d1dcd": {
+      "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+      "availability_state": "available",
+      "execution_completed_at": "2026-07-27T02:58:58+00:00",
+      "execution_started_at": "2026-07-27T02:58:35+00:00",
+      "failure_classification": "",
+      "failure_detail": "",
+      "latency_seconds": 22.7175,
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "provenance": {
+        "execution_claim_id": "shared-local-model-execution-claim-b9fbd9316cde4722",
+        "selected_lane": {
+          "available": true,
+          "candidate_models": [
+            {
+              "capabilities": [
+                "text"
+              ],
+              "family": "qwen",
+              "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+              "reason": "registered_alias",
+              "registry_key": "qwen",
+              "tier": 3
+            }
+          ],
+          "capabilities": [
+            "text"
+          ],
+          "context_size": 32768,
+          "cost_latency_class": "medium_to_high_local",
+          "display_name": "Reasoning / Analysis Lane",
+          "executed": false,
+          "execution_gate": "not_executed_by_default",
+          "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+          "expected_weakness": "external facts need gated supporting information",
+          "fallback_priority": 3,
+          "lane": "reasoning_analysis",
+          "model_family": "qwen",
+          "preferred_task_lanes": [
+            "analysis",
+            "research",
+            "investigation",
+            "external_knowledge_request"
+          ],
+          "provider_calls_performed": false,
+          "rejected_models": [],
+          "selected_model": "qwen",
+          "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+          "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+          "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+        }
+      },
+      "request_id": "shared-local-model-request-50f56500c0b5bc8c",
+      "response_digest": "8d97ad4880a86eab4ae6dcdbb0f412fd0b6661fbbcc009a05bd92db4b50df86f",
+      "response_reference": "{\"expected_outcome\":\"Perform propose_plan for the active focus using only referenced evidence.\",\"observed_outcome\":\"Direct semantic contradiction is deferred without a winner\",\"discrepancy\":\"progress_observed\",\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\",\"ev_semantic_deferred\",\"ev_authority_overlap\"],\"lesson\":\"Direct semantic contradiction deferred without clear winner; hypothesis remains contested\",\"uncertainty\":\"Outcome of direct semantic contradiction resolution\",\"recommended_state_transition\":\"reflect_on_outcome\"}",
+      "result_digest": "ba3872f89f7d963bccaeb8de59b97cbb0200a992add157c8b19a8e855ec98922",
+      "result_id": "shared-local-model-result-42c57a4c292d1dcd",
+      "terminal_state": "completed"
+    },
+    "shared-local-model-result-62e4b97fc64851ab": {
+      "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+      "availability_state": "available",
+      "execution_completed_at": "2026-07-27T02:54:58+00:00",
+      "execution_started_at": "2026-07-27T02:54:42+00:00",
+      "failure_classification": "",
+      "failure_detail": "",
+      "latency_seconds": 16.4975,
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "provenance": {
+        "execution_claim_id": "shared-local-model-execution-claim-c3a7f6f8c3bacfa2",
+        "selected_lane": {
+          "available": true,
+          "candidate_models": [
+            {
+              "capabilities": [
+                "text"
+              ],
+              "family": "qwen",
+              "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+              "reason": "registered_alias",
+              "registry_key": "qwen",
+              "tier": 3
+            }
+          ],
+          "capabilities": [
+            "text"
+          ],
+          "context_size": 32768,
+          "cost_latency_class": "medium_to_high_local",
+          "display_name": "Reasoning / Analysis Lane",
+          "executed": false,
+          "execution_gate": "not_executed_by_default",
+          "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+          "expected_weakness": "external facts need gated supporting information",
+          "fallback_priority": 3,
+          "lane": "reasoning_analysis",
+          "model_family": "qwen",
+          "preferred_task_lanes": [
+            "analysis",
+            "research",
+            "investigation",
+            "external_knowledge_request"
+          ],
+          "provider_calls_performed": false,
+          "rejected_models": [],
+          "selected_model": "qwen",
+          "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+          "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+          "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+        }
+      },
+      "request_id": "shared-local-model-request-b4af5ccbabff1a6f",
+      "response_digest": "b5583218e9a63dff029158a05e6ac566024e53c7a482456ff223642ab8dfa57b",
+      "response_reference": "{\"selected_focus_id\":\"focus-971e83dd8996f010\",\"selection_reason\":\"active focus\",\"supporting_evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\"],\"rejected_focus_ids\":[],\"uncertainty\":\"discrepancy resolution\",\"recommended_state_transition\":\"continue_focus\"}",
+      "result_digest": "edaadbec9637289424287bfedbf8fdcbe74b0d47bcc5c8ea341ed7247c772475",
+      "result_id": "shared-local-model-result-62e4b97fc64851ab",
+      "terminal_state": "completed"
+    },
+    "shared-local-model-result-7495ba7b8a43b53e": {
+      "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+      "availability_state": "available",
+      "execution_completed_at": "2026-07-27T02:54:42+00:00",
+      "execution_started_at": "2026-07-27T02:54:10+00:00",
+      "failure_classification": "",
+      "failure_detail": "",
+      "latency_seconds": 31.5601,
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "provenance": {
+        "execution_claim_id": "shared-local-model-execution-claim-837ae2b15138fb83",
+        "selected_lane": {
+          "available": true,
+          "candidate_models": [
+            {
+              "capabilities": [
+                "text"
+              ],
+              "family": "qwen",
+              "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+              "reason": "registered_alias",
+              "registry_key": "qwen",
+              "tier": 3
+            }
+          ],
+          "capabilities": [
+            "text"
+          ],
+          "context_size": 32768,
+          "cost_latency_class": "medium_to_high_local",
+          "display_name": "Reasoning / Analysis Lane",
+          "executed": false,
+          "execution_gate": "not_executed_by_default",
+          "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+          "expected_weakness": "external facts need gated supporting information",
+          "fallback_priority": 3,
+          "lane": "reasoning_analysis",
+          "model_family": "qwen",
+          "preferred_task_lanes": [
+            "analysis",
+            "research",
+            "investigation",
+            "external_knowledge_request"
+          ],
+          "provider_calls_performed": false,
+          "rejected_models": [],
+          "selected_model": "qwen",
+          "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+          "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+          "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+        }
+      },
+      "request_id": "shared-local-model-request-0fb521a3660efcc8",
+      "response_digest": "a0174e900d866849d903b8ff77f74f99a0951ad8bd44a266b9fc64ab00fb04b0",
+      "response_reference": "{\"state_summary\":\"Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred.\",\"salient_observations\":[\"Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred.\"],\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\"],\"unresolved_questions\":[\"What is the smallest coherent useful role for the claim relation pilot in the current context?\"],\"uncertainty\":\"The exact role of the claim relation pilot in the broader context is not fully resolved.\",\"recommended_next_operation\":\"identify_evidence_need\"}",
+      "result_digest": "e86ef0f31bdb58d3441007a7b6a561a45d9fc25c82144283d3969a893d6fe53c",
+      "result_id": "shared-local-model-result-7495ba7b8a43b53e",
+      "terminal_state": "completed"
+    },
+    "shared-local-model-result-753d7d684311f974": {
+      "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+      "availability_state": "available",
+      "execution_completed_at": "2026-07-27T02:58:35+00:00",
+      "execution_started_at": "2026-07-27T02:58:08+00:00",
+      "failure_classification": "",
+      "failure_detail": "",
+      "latency_seconds": 27.0902,
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "provenance": {
+        "execution_claim_id": "shared-local-model-execution-claim-4aa38e2c8534a8d1",
+        "selected_lane": {
+          "available": true,
+          "candidate_models": [
+            {
+              "capabilities": [
+                "text"
+              ],
+              "family": "qwen",
+              "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+              "reason": "registered_alias",
+              "registry_key": "qwen",
+              "tier": 3
+            }
+          ],
+          "capabilities": [
+            "text"
+          ],
+          "context_size": 32768,
+          "cost_latency_class": "medium_to_high_local",
+          "display_name": "Reasoning / Analysis Lane",
+          "executed": false,
+          "execution_gate": "not_executed_by_default",
+          "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+          "expected_weakness": "external facts need gated supporting information",
+          "fallback_priority": 3,
+          "lane": "reasoning_analysis",
+          "model_family": "qwen",
+          "preferred_task_lanes": [
+            "analysis",
+            "research",
+            "investigation",
+            "external_knowledge_request"
+          ],
+          "provider_calls_performed": false,
+          "rejected_models": [],
+          "selected_model": "qwen",
+          "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+          "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+          "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+        }
+      },
+      "request_id": "shared-local-model-request-40dc52b50381a001",
+      "response_digest": "16bf10f5fa9ddc9a9bed47462ba06d4b54181af7e45425c71e37ac37fbf151bd",
+      "response_reference": "{ \"plan_summary\": \"Direct semantic contradiction is deferred without a winner\", \"supporting_evidence_refs\": [ \"ev_delta_hook\", \"ev_runtime_structural\", \"ev_contract_broad\", \"ev_tests_green_scope\", \"ev_overlap_risk\" ], \"planned_steps\": [ \"Review evidence for semantic deferral and broader relation types\" ], \"risks\": [ \"Potential for semantic deferral to be misinterpreted\", \"Risk of broader relation types conflicting with existing machinery\" ], \"uncertainty\": \"Need to confirm semantic deferral and broader relation types do not conflict\", \"recommended_state_transition\": \"request_operator_resolution\" }",
+      "result_digest": "579cede8bb80478e12dc93e20b0d41f5fb5f8d549b2faf94a2e1c201a226b60d",
+      "result_id": "shared-local-model-result-753d7d684311f974",
+      "terminal_state": "completed"
+    },
+    "shared-local-model-result-81a07499d04c60b2": {
+      "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+      "availability_state": "available",
+      "execution_completed_at": "2026-07-27T03:00:05+00:00",
+      "execution_started_at": "2026-07-27T02:59:36+00:00",
+      "failure_classification": "",
+      "failure_detail": "",
+      "latency_seconds": 27.9789,
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "provenance": {
+        "execution_claim_id": "shared-local-model-execution-claim-3a3867dbf6ba36d3",
+        "selected_lane": {
+          "available": true,
+          "candidate_models": [
+            {
+              "capabilities": [
+                "text"
+              ],
+              "family": "qwen",
+              "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+              "reason": "registered_alias",
+              "registry_key": "qwen",
+              "tier": 3
+            }
+          ],
+          "capabilities": [
+            "text"
+          ],
+          "context_size": 32768,
+          "cost_latency_class": "medium_to_high_local",
+          "display_name": "Reasoning / Analysis Lane",
+          "executed": false,
+          "execution_gate": "not_executed_by_default",
+          "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+          "expected_weakness": "external facts need gated supporting information",
+          "fallback_priority": 3,
+          "lane": "reasoning_analysis",
+          "model_family": "qwen",
+          "preferred_task_lanes": [
+            "analysis",
+            "research",
+            "investigation",
+            "external_knowledge_request"
+          ],
+          "provider_calls_performed": false,
+          "rejected_models": [],
+          "selected_model": "qwen",
+          "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+          "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+          "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+        }
+      },
+      "request_id": "shared-local-model-request-8073aca760ea30dc",
+      "response_digest": "cf1c76c6069f6e4724c0b8681df9ced0abe8baac9a9280ebe6c22ae2298a4c75",
+      "response_reference": "{\"selected_focus_id\":\"focus-a83b2382fb540830\",\"salience_reason\":\"An active hypothesis needs evidence-linked revision before action.\",\"related_goal_ids\":[\"active-cognitive-goal-4ae97917d615f190\"],\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\",\"ev_semantic_deferred\",\"ev_authority_overlap\"],\"deferred_focus_ids\":[],\"uncertainty\":\"Resolution of semantic contradiction requires further evidence or operator resolution.\",\"recommended_state_transition\":\"select_next_focus\"}",
+      "result_digest": "42ec9230dfea3ef14b3e165645ad711ad367d4f357b0192cf4c3ca38452e7a39",
+      "result_id": "shared-local-model-result-81a07499d04c60b2",
+      "terminal_state": "completed"
+    },
+    "shared-local-model-result-899302cc213c26e5": {
+      "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+      "availability_state": "available",
+      "execution_completed_at": "2026-07-27T02:56:04+00:00",
+      "execution_started_at": "2026-07-27T02:55:24+00:00",
+      "failure_classification": "",
+      "failure_detail": "",
+      "latency_seconds": 40.1328,
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "provenance": {
+        "execution_claim_id": "shared-local-model-execution-claim-a081086cd87bdcd4",
+        "selected_lane": {
+          "available": true,
+          "candidate_models": [
+            {
+              "capabilities": [
+                "text"
+              ],
+              "family": "qwen",
+              "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+              "reason": "registered_alias",
+              "registry_key": "qwen",
+              "tier": 3
+            }
+          ],
+          "capabilities": [
+            "text"
+          ],
+          "context_size": 32768,
+          "cost_latency_class": "medium_to_high_local",
+          "display_name": "Reasoning / Analysis Lane",
+          "executed": false,
+          "execution_gate": "not_executed_by_default",
+          "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+          "expected_weakness": "external facts need gated supporting information",
+          "fallback_priority": 3,
+          "lane": "reasoning_analysis",
+          "model_family": "qwen",
+          "preferred_task_lanes": [
+            "analysis",
+            "research",
+            "investigation",
+            "external_knowledge_request"
+          ],
+          "provider_calls_performed": false,
+          "rejected_models": [],
+          "selected_model": "qwen",
+          "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+          "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+          "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+        }
+      },
+      "request_id": "shared-local-model-request-df693eab4d337086",
+      "response_digest": "56ea2c01edf27cfdb930ea8292b755e20d011e418413cea600b0699f422f7006",
+      "response_reference": "{\"assumptions\":[],\"contrary_evidence_considered\":[\"ev_semantic_deferred\",\"ev_authority_overlap\"],\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\"],\"interpretation\":\"Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred. Authority evaluators already classify actions; claim revocation state is not yet a broad enforcement consumer. Direct semantic contradiction is deferred without a winner. No compelling evidence of semantic contradiction or authority overlap that would challenge the current hypothesis.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"Resolve discrepancy for goal: Determine smallest coherent useful role for claim-relation and contradiction work\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"Investigate overlap risks and semantic deferral in detail\",\"recommended_state_transition\":\"weaken_hypothesis\",\"uncertainty\":\"Overlap risks and semantic deferral remain unresolved\"}",
+      "result_digest": "68098e67b9dac29004cc6d796ada7ccfe689784904a8d6b9577004c91a49c0e4",
+      "result_id": "shared-local-model-result-899302cc213c26e5",
+      "terminal_state": "completed"
+    },
+    "shared-local-model-result-9d3425b9332f1969": {
+      "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+      "availability_state": "available",
+      "execution_completed_at": "2026-07-27T02:56:25+00:00",
+      "execution_started_at": "2026-07-27T02:56:04+00:00",
+      "failure_classification": "",
+      "failure_detail": "",
+      "latency_seconds": 21.1304,
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "provenance": {
+        "execution_claim_id": "shared-local-model-execution-claim-13352e536cdf3719",
+        "selected_lane": {
+          "available": true,
+          "candidate_models": [
+            {
+              "capabilities": [
+                "text"
+              ],
+              "family": "qwen",
+              "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+              "reason": "registered_alias",
+              "registry_key": "qwen",
+              "tier": 3
+            }
+          ],
+          "capabilities": [
+            "text"
+          ],
+          "context_size": 32768,
+          "cost_latency_class": "medium_to_high_local",
+          "display_name": "Reasoning / Analysis Lane",
+          "executed": false,
+          "execution_gate": "not_executed_by_default",
+          "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+          "expected_weakness": "external facts need gated supporting information",
+          "fallback_priority": 3,
+          "lane": "reasoning_analysis",
+          "model_family": "qwen",
+          "preferred_task_lanes": [
+            "analysis",
+            "research",
+            "investigation",
+            "external_knowledge_request"
+          ],
+          "provider_calls_performed": false,
+          "rejected_models": [],
+          "selected_model": "qwen",
+          "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+          "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+          "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+        }
+      },
+      "request_id": "shared-local-model-request-32ba7682731cec53",
+      "response_digest": "6992680287e2a20fc1ef2bd7877b427e7b6233aff2de08c8743308325c69a0df",
+      "response_reference": "{\"challenged_hypothesis_id\":\"hypothesis-af64acb1eb01d940\",\"vulnerability\":\"Direct semantic contradiction is deferred without a winner\",\"contrary_evidence_refs\":[\"ev_semantic_deferred\"],\"disconfirming_observation\":\"test_unsupported_semantic_contradiction_is_deferred_without_winner\",\"uncertainty\":\"Need to determine if deferred contradiction is a real semantic issue or a temporary deferral\",\"recommended_state_transition\":\"weaken_hypothesis\"}",
+      "result_digest": "fbe7356d290714cf3a0bfc2892365296b93fbbb73b15ee49f00f70e162f04489",
+      "result_id": "shared-local-model-result-9d3425b9332f1969",
+      "terminal_state": "completed"
+    },
+    "shared-local-model-result-bc5228391d4a134a": {
+      "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+      "availability_state": "available",
+      "execution_completed_at": "2026-07-27T02:56:56+00:00",
+      "execution_started_at": "2026-07-27T02:56:25+00:00",
+      "failure_classification": "",
+      "failure_detail": "",
+      "latency_seconds": 30.4128,
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "provenance": {
+        "execution_claim_id": "shared-local-model-execution-claim-13befa2a114469e9",
+        "selected_lane": {
+          "available": true,
+          "candidate_models": [
+            {
+              "capabilities": [
+                "text"
+              ],
+              "family": "qwen",
+              "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+              "reason": "registered_alias",
+              "registry_key": "qwen",
+              "tier": 3
+            }
+          ],
+          "capabilities": [
+            "text"
+          ],
+          "context_size": 32768,
+          "cost_latency_class": "medium_to_high_local",
+          "display_name": "Reasoning / Analysis Lane",
+          "executed": false,
+          "execution_gate": "not_executed_by_default",
+          "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+          "expected_weakness": "external facts need gated supporting information",
+          "fallback_priority": 3,
+          "lane": "reasoning_analysis",
+          "model_family": "qwen",
+          "preferred_task_lanes": [
+            "analysis",
+            "research",
+            "investigation",
+            "external_knowledge_request"
+          ],
+          "provider_calls_performed": false,
+          "rejected_models": [],
+          "selected_model": "qwen",
+          "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+          "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+          "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+        }
+      },
+      "request_id": "shared-local-model-request-e97e555c1e387bb1",
+      "response_digest": "f0a5a1af836b485b8e8dbda482d24f02bb67036e3f447479009762274df3c98e",
+      "response_reference": "{ \"prior_hypothesis_id\": \"hypothesis-40bdd6900fc1532f\", \"revised_statement\": \"Direct semantic contradiction is deferred without a winner\", \"evidence_refs\": [ \"ev_delta_hook\", \"ev_runtime_structural\", \"ev_contract_broad\", \"ev_tests_green_scope\", \"ev_overlap_risk\" ], \"contrary_evidence_considered\": [ \"ev_semantic_deferred\", \"ev_authority_overlap\" ], \"revision_reason\": \"Direct semantic contradiction is deferred without a winner\", \"new_confidence_state\": \"contested\", \"uncertainty\": \"How the claim relation pilot's deferred behavior impacts broader semantic classification\", \"recommended_state_transition\": \"revise_hypothesis\" }",
+      "result_digest": "c9b683b3ff2ad5d8e069c215f1493fe2afee782d18004597b41692943d760959",
+      "result_id": "shared-local-model-result-bc5228391d4a134a",
+      "terminal_state": "completed"
+    },
+    "shared-local-model-result-db793323d0e53ea6": {
+      "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+      "availability_state": "available",
+      "execution_completed_at": "2026-07-27T02:55:24+00:00",
+      "execution_started_at": "2026-07-27T02:54:59+00:00",
+      "failure_classification": "",
+      "failure_detail": "",
+      "latency_seconds": 25.4866,
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "provenance": {
+        "execution_claim_id": "shared-local-model-execution-claim-5c5f9e7030f81d17",
+        "selected_lane": {
+          "available": true,
+          "candidate_models": [
+            {
+              "capabilities": [
+                "text"
+              ],
+              "family": "qwen",
+              "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+              "reason": "registered_alias",
+              "registry_key": "qwen",
+              "tier": 3
+            }
+          ],
+          "capabilities": [
+            "text"
+          ],
+          "context_size": 32768,
+          "cost_latency_class": "medium_to_high_local",
+          "display_name": "Reasoning / Analysis Lane",
+          "executed": false,
+          "execution_gate": "not_executed_by_default",
+          "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+          "expected_weakness": "external facts need gated supporting information",
+          "fallback_priority": 3,
+          "lane": "reasoning_analysis",
+          "model_family": "qwen",
+          "preferred_task_lanes": [
+            "analysis",
+            "research",
+            "investigation",
+            "external_knowledge_request"
+          ],
+          "provider_calls_performed": false,
+          "rejected_models": [],
+          "selected_model": "qwen",
+          "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+          "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+          "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+        }
+      },
+      "request_id": "shared-local-model-request-d41792ce15f6fdde",
+      "response_digest": "49d73ba3072753fa12a2d4bb743323feeb0c0e9e660316c2f47621bcd3c0ad9a",
+      "response_reference": "{\"hypothesis_statement\":\"Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred.\",\"scope\":\"Resolve discrepancy for goal: Determine smallest coherent useful role for claim relation and contradiction work\",\"supporting_evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\"],\"assumptions\":[],\"expected_observations\":[\"local evidence should support a bounded useful step\"],\"uncertainty\":\"What is the smallest coherent useful role for claim relation and contradiction work?\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+      "result_digest": "e9f3c75e67e5849ce90695f23cd1d131c64e3a24a0d22aaa06316910f3895522",
+      "result_id": "shared-local-model-result-db793323d0e53ea6",
+      "terminal_state": "completed"
+    }
+  },
+  "state_digest": "2e4b761faa5855b96cd2d6f6315c8b9995a7e75d0099e589f64410f35347148e"
+}

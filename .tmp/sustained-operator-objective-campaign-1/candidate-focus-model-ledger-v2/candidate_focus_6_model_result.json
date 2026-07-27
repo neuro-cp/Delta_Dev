@@ -1,0 +1,60 @@
+{
+  "adapter_identity": "goal_oriented_ui_campaign.ProviderManager.exact_prompt",
+  "availability_state": "available",
+  "execution_completed_at": "2026-07-27T02:52:11+00:00",
+  "execution_started_at": "2026-07-27T02:50:55+00:00",
+  "failure_classification": "",
+  "failure_detail": "",
+  "latency_seconds": 76.5045,
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "provenance": {
+    "execution_claim_id": "shared-local-model-execution-claim-86434d125b1b51fc",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    }
+  },
+  "request_id": "shared-local-model-request-ef0a9ab81d0cd5f5",
+  "response_digest": "01d62d6d9f37b3e83a481b43efbb873c0f5b6cda1eb0be70797c8532716b8bbe",
+  "response_reference": "{\n  \"experiment_id\": \"focus-f\",\n  \"title\": \"Exercise and document opt-in deterministic pilot as narrow live capability\",\n  \"practical_objective\": \"Enable and document a controlled, opt-in pilot of a deterministic live capability to gather feedback and validate its effectiveness.\",\n  \"why_it_is_useful\": \"To ensure the deterministic live capability can be safely and effectively used by a select group of users before full-scale deployment, providing valuable insights and adjustments.\",\n  \"related_operator_or_project_goal\": \"SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1\",\n  \"expected_artifact_or_outcome\": \"A documented, controlled, and opt-in pilot of the deterministic live capability, with feedback and validation results.\",\n  \"local_evidence_available\": [\n    \"DELTA.py enable command\",\n    \"runtime tests\",\n    \"state path data/runtime/claim_relation_pilot/state.json\"\n  ],\n  \"contrary_or_uncertainty_evidence\": [\n    \"Limited natural-language patterns may be too narrow for broader use.\"\n  ],\n  \"required_cognitive_operations\": [\n    \"formulate_experiment_candidate\"\n  ],\n  \"required_bounded_actions\": [\n    \"Enable the deterministic live capability via the DELTA.py enable command.\",\n    \"Conduct runtime tests to validate the capability.\",\n    \"Document the results and feedback from the pilot.\"\n  ],\n  \"required_authority\": \"operator_authorized_sustained_operator_objective_campaign_1\",\n  \"expected_cycle_count\":   \"3\",\n  \"restart_relevance\": \"N/A\",\n  \"success_criteria\": \"Positive feedback and validation of the deterministic live capability from the pilot users.\",\n  \"failure_criteria\": \"Negative feedback or inability to validate the deterministic live capability.\",\n  \"risk_and_scope\": \"Risks include limited user feedback and potential issues with the narrow scope of the pilot. The scope is limited to a controlled, opt-in pilot.\",\n  \"estimated_time_and_model_call_budget\": \"1 week, 200 model calls\"\n}",
+  "result_digest": "b447797c4260f480e13b8d429482a54ac23671f2dc011e5a6d075c276ac762f3",
+  "result_id": "shared-local-model-result-6f713358aae3dc0f",
+  "terminal_state": "completed"
+}

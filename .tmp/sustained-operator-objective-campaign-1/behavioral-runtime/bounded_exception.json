@@ -1,0 +1,101 @@
+{
+  "claims": [
+    {
+      "applicability_scope": "global",
+      "authority_source": "operator",
+      "claim_digest": "361f74874c5f1c766c21bde6fe99f7d9b0bc676492a348558edcafbe73de8eee",
+      "claim_id": "claim-6c774989622499a9",
+      "claim_kind": "policy",
+      "claim_text": "Do not use external providers.",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "lifecycle_state": "current",
+      "normalized_content": {
+        "policy": "do_not_use",
+        "subject": "external_providers"
+      },
+      "provenance_refs": [
+        "bounded_exception:turn:1"
+      ],
+      "schema_version": "governed_claim_relation_contract_v1",
+      "subject_scope": "external_providers",
+      "temporal_scope": "current",
+      "validation_state": "registered"
+    },
+    {
+      "applicability_scope": "this_one_test",
+      "authority_source": "operator",
+      "claim_digest": "48f19c467a4fba7c33d2ef5fbee95e0be17071c331045dabccfa81ad4582287c",
+      "claim_id": "claim-5ce00c4c88d779b6",
+      "claim_kind": "policy_exception",
+      "claim_text": "For this one test only, the approved local provider may be used.",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "lifecycle_state": "conditionally_current",
+      "normalized_content": {
+        "exception": "the approved local provider may be used",
+        "subject": "external_providers"
+      },
+      "provenance_refs": [
+        "bounded_exception:turn:2"
+      ],
+      "schema_version": "governed_claim_relation_contract_v1",
+      "subject_scope": "external_providers",
+      "temporal_scope": "current",
+      "validation_state": "registered"
+    }
+  ],
+  "operator_requests": [],
+  "relations": [
+    {
+      "authority_effect": "exception_conditionally_current_original_preserved",
+      "confidence_state": "known",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "dependent_work_ids": [],
+      "evidence_refs": [],
+      "left_claim_id": "claim-6c774989622499a9",
+      "operator_request_id": "",
+      "provenance_refs": [
+        "bounded_exception:turn:1",
+        "bounded_exception:turn:2"
+      ],
+      "relation_id": "claim-relation-2df2bcc40adb0515",
+      "relation_scope": "this_one_test;expires=pilot_scope",
+      "relation_type": "bounded_exception",
+      "resolution_actor": "",
+      "resolution_state": "resolved",
+      "resolved_at": "",
+      "right_claim_id": "claim-5ce00c4c88d779b6",
+      "schema_version": "governed_claim_relation_contract_v1",
+      "supersedes_claim_id": "",
+      "temporal_order": "left_before_right"
+    }
+  ],
+  "schema_version": "governed_claim_relation_contract_v1",
+  "transition_journal": [
+    {
+      "authority_scope": "inert_claim_relation_contract_only",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "ids": [
+        "claim-6c774989622499a9"
+      ],
+      "transition": "register_claim"
+    },
+    {
+      "authority_scope": "inert_claim_relation_contract_only",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "ids": [
+        "claim-5ce00c4c88d779b6"
+      ],
+      "transition": "register_claim"
+    },
+    {
+      "authority_scope": "inert_claim_relation_contract_only",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "ids": [
+        "claim-relation-2df2bcc40adb0515",
+        "pilot_scope"
+      ],
+      "transition": "apply_bounded_exception"
+    }
+  ],
+  "work_items": []
+}

@@ -1,0 +1,6 @@
+{
+  "duplicate_action_after_restart": false,
+  "duplicate_model_request": false,
+  "model_requests_after_resume": 6,
+  "model_requests_before_pause": 6
+}

@@ -1,0 +1,776 @@
+{
+  "ledger_version": 1,
+  "requests": {
+    "shared-local-model-request-0f3e9070e5b03ffe": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-27T02:48:37+00:00",
+      "authority_state": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+      "claimed_at": "2026-07-27T02:48:37+00:00",
+      "completed_at": "2026-07-27T02:49:46+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-27T02:48:37+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-0d7ba539c545e907",
+      "failure_classification": "",
+      "lifecycle_state": "completed",
+      "mission_id": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1",
+      "mission_information_need_identity": "formulate_experiment_candidate",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "Return only JSON for active cognitive operation formulate_experiment_candidate. This is SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1. Content is a candidate development focus. No new UI panels, no new schemas, no network, no packages, no protected paths, no report-only work. Protected paths: DELTA-75, reports/RC4_*, orchestration/runtime/live_competence_adapter.py. Use experiment_id exactly focus-d. Title/objective: Bind unresolved semantic conflicts to active hypothesis challenge evidence. Problem: semantic conflict currently produces no relation and no hypothesis effect. Evidence: active_cognitive_loop.py; cognitive_claim_relation_runtime.py semantic_classification_required. Contrary: could become another framework if no consumer exists. Fields required: experiment_id,title,practical_objective,why_it_is_useful,related_operator_or_project_goal,expected_artifact_or_outcome,local_evidence_available,contrary_or_uncertainty_evidence,required_cognitive_operations,required_bounded_actions,required_authority,expected_cycle_count,restart_relevance,success_criteria,failure_criteria,risk_and_scope,estimated_time_and_model_call_budget. Use arrays for evidence/actions/operations. required_authority=operator_authorized_sustained_operator_objective_campaign_1. expected_cycle_count=3. Already accepted: [\"focus-a\", \"focus-b\", \"focus-c\"]",
+      "question_objective": "formulate_experiment_candidate",
+      "record_digest": "e70f33cf81add5796964b29f650022eecbf0850d88da3dc777cd517624b6c684",
+      "record_version": 1,
+      "request_digest": "8595742911dd4717208397e49c0fec0a74017e3f533cf0a2030b37b881950c1c",
+      "request_id": "shared-local-model-request-0f3e9070e5b03ffe",
+      "requester_reference": "candidate_focus_4",
+      "requester_type": "goal_oriented_ui_experiment_campaign",
+      "result_id": "shared-local-model-result-c819eb43206cc2a1",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "sustained-campaign-focus-v2-f4cc75caf7cbe372",
+      "session_reference": ""
+    },
+    "shared-local-model-request-1e3b9933653fbd8c": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-27T02:47:35+00:00",
+      "authority_state": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+      "claimed_at": "2026-07-27T02:47:35+00:00",
+      "completed_at": "2026-07-27T02:48:37+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-27T02:47:35+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-a89c09cac7ad4748",
+      "failure_classification": "",
+      "lifecycle_state": "completed",
+      "mission_id": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1",
+      "mission_information_need_identity": "formulate_experiment_candidate",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "Return only JSON for active cognitive operation formulate_experiment_candidate. This is SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1. Content is a candidate development focus. No new UI panels, no new schemas, no network, no packages, no protected paths, no report-only work. Protected paths: DELTA-75, reports/RC4_*, orchestration/runtime/live_competence_adapter.py. Use experiment_id exactly focus-c. Title/objective: Retain deterministic subset and retire semantic relation ambitions. Problem: semantic cases are deferred and may duplicate active cognition. Evidence: cognitive_excluded_path_reconciliation.py; overlap_analysis.json. Contrary: may leave direct contradiction usefulness gap unresolved. Fields required: experiment_id,title,practical_objective,why_it_is_useful,related_operator_or_project_goal,expected_artifact_or_outcome,local_evidence_available,contrary_or_uncertainty_evidence,required_cognitive_operations,required_bounded_actions,required_authority,expected_cycle_count,restart_relevance,success_criteria,failure_criteria,risk_and_scope,estimated_time_and_model_call_budget. Use arrays for evidence/actions/operations. required_authority=operator_authorized_sustained_operator_objective_campaign_1. expected_cycle_count=3. Already accepted: [\"focus-a\", \"focus-b\"]",
+      "question_objective": "formulate_experiment_candidate",
+      "record_digest": "e0db2f1316aceb621a38555cd439f486d43b4d6aee3f14c2aa534110f442be6a",
+      "record_version": 1,
+      "request_digest": "3eed93aa4f1e1dc1368276ad2fca28e6f45357651c8b8de16cbc6f8b82bb4941",
+      "request_id": "shared-local-model-request-1e3b9933653fbd8c",
+      "requester_reference": "candidate_focus_3",
+      "requester_type": "goal_oriented_ui_experiment_campaign",
+      "result_id": "shared-local-model-result-ec97dd95bb997ebb",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "sustained-campaign-focus-v2-62fe1848a3253d3a",
+      "session_reference": ""
+    },
+    "shared-local-model-request-67b6da0f8c928561": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-27T02:46:39+00:00",
+      "authority_state": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+      "claimed_at": "2026-07-27T02:46:39+00:00",
+      "completed_at": "2026-07-27T02:47:35+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-27T02:46:39+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-680bd4a0e7b5371a",
+      "failure_classification": "",
+      "lifecycle_state": "completed",
+      "mission_id": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1",
+      "mission_information_need_identity": "formulate_experiment_candidate",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "Return only JSON for active cognitive operation formulate_experiment_candidate. This is SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1. Content is a candidate development focus. No new UI panels, no new schemas, no network, no packages, no protected paths, no report-only work. Protected paths: DELTA-75, reports/RC4_*, orchestration/runtime/live_competence_adapter.py. Use experiment_id exactly focus-b. Title/objective: Use claim relations for authority revocation currentness only. Problem: revoked authority may be preserved but not enforced broadly. Evidence: cognitive_claim_relations.py revoke_authority; cognitive_claim_relation_runtime.py; authority tests. Contrary: existing authority evaluators may already cover action decisions. Fields required: experiment_id,title,practical_objective,why_it_is_useful,related_operator_or_project_goal,expected_artifact_or_outcome,local_evidence_available,contrary_or_uncertainty_evidence,required_cognitive_operations,required_bounded_actions,required_authority,expected_cycle_count,restart_relevance,success_criteria,failure_criteria,risk_and_scope,estimated_time_and_model_call_budget. Use arrays for evidence/actions/operations. required_authority=operator_authorized_sustained_operator_objective_campaign_1. expected_cycle_count=3. Already accepted: [\"focus-a\"]",
+      "question_objective": "formulate_experiment_candidate",
+      "record_digest": "aa0821b286d9a8b87c7cc7ae766d41d294e5945a49dbe9e9b5f558e56661aa2c",
+      "record_version": 1,
+      "request_digest": "b24a9058a9546ac1640b571bb2d10a9a3578fa6f1fb0bbbe07c352f33b30db97",
+      "request_id": "shared-local-model-request-67b6da0f8c928561",
+      "requester_reference": "candidate_focus_2",
+      "requester_type": "goal_oriented_ui_experiment_campaign",
+      "result_id": "shared-local-model-result-5cb2f001609193b8",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "sustained-campaign-focus-v2-2ffb8ac895a74c52",
+      "session_reference": ""
+    },
+    "shared-local-model-request-d1603bbf71fde4eb": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-27T02:45:31+00:00",
+      "authority_state": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+      "claimed_at": "2026-07-27T02:45:31+00:00",
+      "completed_at": "2026-07-27T02:46:39+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-27T02:45:31+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-6f3b21f17aca66dd",
+      "failure_classification": "",
+      "lifecycle_state": "completed",
+      "mission_id": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1",
+      "mission_information_need_identity": "formulate_experiment_candidate",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "Return only JSON for active cognitive operation formulate_experiment_candidate. This is SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1. Content is a candidate development focus. No new UI panels, no new schemas, no network, no packages, no protected paths, no report-only work. Protected paths: DELTA-75, reports/RC4_*, orchestration/runtime/live_competence_adapter.py. Use experiment_id exactly focus-a. Title/objective: Integrate deterministic correction/currentness notices. Problem: existing pilot records corrections but usefulness in live chat is not proven. Evidence: DELTA.py; cognitive_claim_relation_runtime.py; tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py. Contrary: semantic contradictions remain deferred; chat rigidity risk. Fields required: experiment_id,title,practical_objective,why_it_is_useful,related_operator_or_project_goal,expected_artifact_or_outcome,local_evidence_available,contrary_or_uncertainty_evidence,required_cognitive_operations,required_bounded_actions,required_authority,expected_cycle_count,restart_relevance,success_criteria,failure_criteria,risk_and_scope,estimated_time_and_model_call_budget. Use arrays for evidence/actions/operations. required_authority=operator_authorized_sustained_operator_objective_campaign_1. expected_cycle_count=3. Already accepted: []",
+      "question_objective": "formulate_experiment_candidate",
+      "record_digest": "14ae6878dee755ffbf3e46686a809d2af68785531f07f8d887d614a61c0bda5d",
+      "record_version": 1,
+      "request_digest": "1227393d2a5f173f1fd09e27dc973856625c28890434305aa3fe23698d8bb9fb",
+      "request_id": "shared-local-model-request-d1603bbf71fde4eb",
+      "requester_reference": "candidate_focus_1",
+      "requester_type": "goal_oriented_ui_experiment_campaign",
+      "result_id": "shared-local-model-result-92a15f532489c7ea",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "sustained-campaign-focus-v2-e253cf74950366ac",
+      "session_reference": ""
+    },
+    "shared-local-model-request-d51d05b92c998c6b": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-27T02:49:46+00:00",
+      "authority_state": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+      "claimed_at": "2026-07-27T02:49:46+00:00",
+      "completed_at": "2026-07-27T02:50:55+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-27T02:49:46+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-3c6493b832c73248",
+      "failure_classification": "",
+      "lifecycle_state": "completed",
+      "mission_id": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1",
+      "mission_information_need_identity": "formulate_experiment_candidate",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "Return only JSON for active cognitive operation formulate_experiment_candidate. This is SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1. Content is a candidate development focus. No new UI panels, no new schemas, no network, no packages, no protected paths, no report-only work. Protected paths: DELTA-75, reports/RC4_*, orchestration/runtime/live_competence_adapter.py. Use experiment_id exactly focus-e. Title/objective: Convert audits to evaluator-only capability and avoid production chat integration. Problem: audits are useful but may not justify live state. Evidence: cognitive_contradiction_evaluation.py; integration audit tests. Contrary: existing DELTA hook suggests some production value exists. Fields required: experiment_id,title,practical_objective,why_it_is_useful,related_operator_or_project_goal,expected_artifact_or_outcome,local_evidence_available,contrary_or_uncertainty_evidence,required_cognitive_operations,required_bounded_actions,required_authority,expected_cycle_count,restart_relevance,success_criteria,failure_criteria,risk_and_scope,estimated_time_and_model_call_budget. Use arrays for evidence/actions/operations. required_authority=operator_authorized_sustained_operator_objective_campaign_1. expected_cycle_count=3. Already accepted: [\"focus-a\", \"focus-b\", \"focus-c\", \"focus-d\"]",
+      "question_objective": "formulate_experiment_candidate",
+      "record_digest": "404bfec2b9d343322a17f35255e04d480803847aa4a8b8c1235bfbd0bada5939",
+      "record_version": 1,
+      "request_digest": "6785d5dba864bc4ad6fb7485338284aa8a78472955b705e5e0660d7b9cebca91",
+      "request_id": "shared-local-model-request-d51d05b92c998c6b",
+      "requester_reference": "candidate_focus_5",
+      "requester_type": "goal_oriented_ui_experiment_campaign",
+      "result_id": "shared-local-model-result-4f0109ba14e9af3b",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "sustained-campaign-focus-v2-89f8f25ecf88f78f",
+      "session_reference": ""
+    },
+    "shared-local-model-request-ef0a9ab81d0cd5f5": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-27T02:50:55+00:00",
+      "authority_state": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+      "claimed_at": "2026-07-27T02:50:55+00:00",
+      "completed_at": "2026-07-27T02:52:11+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-27T02:50:55+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-86434d125b1b51fc",
+      "failure_classification": "",
+      "lifecycle_state": "completed",
+      "mission_id": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1",
+      "mission_information_need_identity": "formulate_experiment_candidate",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "Return only JSON for active cognitive operation formulate_experiment_candidate. This is SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1. Content is a candidate development focus. No new UI panels, no new schemas, no network, no packages, no protected paths, no report-only work. Protected paths: DELTA-75, reports/RC4_*, orchestration/runtime/live_competence_adapter.py. Use experiment_id exactly focus-f. Title/objective: Exercise and document opt-in deterministic pilot as narrow live capability. Problem: existing hook is disabled but production reachable and stateful. Evidence: DELTA.py enable command; runtime tests; state path data/runtime/claim_relation_pilot/state.json. Contrary: limited natural-language patterns may be too narrow. Fields required: experiment_id,title,practical_objective,why_it_is_useful,related_operator_or_project_goal,expected_artifact_or_outcome,local_evidence_available,contrary_or_uncertainty_evidence,required_cognitive_operations,required_bounded_actions,required_authority,expected_cycle_count,restart_relevance,success_criteria,failure_criteria,risk_and_scope,estimated_time_and_model_call_budget. Use arrays for evidence/actions/operations. required_authority=operator_authorized_sustained_operator_objective_campaign_1. expected_cycle_count=3. Already accepted: [\"focus-a\", \"focus-b\", \"focus-c\", \"focus-d\", \"focus-e\"]",
+      "question_objective": "formulate_experiment_candidate",
+      "record_digest": "96d6711ef8c9f5848841bc94b7db5dbce31e429b3a1c39c05b8b18ad07b29ae1",
+      "record_version": 1,
+      "request_digest": "11d89198bab334fccc29be75a532415944af2ba6b6abde0ae23255131075a540",
+      "request_id": "shared-local-model-request-ef0a9ab81d0cd5f5",
+      "requester_reference": "candidate_focus_6",
+      "requester_type": "goal_oriented_ui_experiment_campaign",
+      "result_id": "shared-local-model-result-6f713358aae3dc0f",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "sustained-campaign-focus-v2-d657e73d56980d2b",
+      "session_reference": ""
+    }
+  },
+  "results": {
+    "shared-local-model-result-4f0109ba14e9af3b": {
+      "adapter_identity": "goal_oriented_ui_campaign.ProviderManager.exact_prompt",
+      "availability_state": "available",
+      "execution_completed_at": "2026-07-27T02:50:55+00:00",
+      "execution_started_at": "2026-07-27T02:49:46+00:00",
+      "failure_classification": "",
+      "failure_detail": "",
+      "latency_seconds": 69.252,
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "provenance": {
+        "execution_claim_id": "shared-local-model-execution-claim-3c6493b832c73248",
+        "selected_lane": {
+          "available": true,
+          "candidate_models": [
+            {
+              "capabilities": [
+                "text"
+              ],
+              "family": "qwen",
+              "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+              "reason": "registered_alias",
+              "registry_key": "qwen",
+              "tier": 3
+            }
+          ],
+          "capabilities": [
+            "text"
+          ],
+          "context_size": 32768,
+          "cost_latency_class": "medium_to_high_local",
+          "display_name": "Reasoning / Analysis Lane",
+          "executed": false,
+          "execution_gate": "not_executed_by_default",
+          "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+          "expected_weakness": "external facts need gated supporting information",
+          "fallback_priority": 3,
+          "lane": "reasoning_analysis",
+          "model_family": "qwen",
+          "preferred_task_lanes": [
+            "analysis",
+            "research",
+            "investigation",
+            "external_knowledge_request"
+          ],
+          "provider_calls_performed": false,
+          "rejected_models": [],
+          "selected_model": "qwen",
+          "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+          "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+          "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+        }
+      },
+      "request_id": "shared-local-model-request-d51d05b92c998c6b",
+      "response_digest": "cc5ab21ccc7b8693423b3f51bd5bd819fdc827d466c32502b7961c7d1f0fe2a1",
+      "response_reference": "{\n    \"experiment_id\": \"focus-e\",\n    \"title\": \"Convert audits to evaluator-only capability and avoid production chat integration\",\n    \"practical_objective\": \"Reduce the risk of live state audits while maintaining their value for evaluation purposes.\",\n    \"why_it_is_useful\": \"Audits provide valuable insights but may not be suitable for live state due to potential risks. By converting them to evaluator-only capabilities, we can retain their utility without exposing them to production risks.\",\n    \"related_operator_or_project_goal\": \"SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1\",\n    \"expected_artifact_or_outcome\": \"Evaluator-only capabilities for audits, with no integration into production chat.\",\n    \"local_evidence_available\": [\"cognitive_contradiction_evaluation.py\", \"integration audit tests\"],\n    \"contrary_or_uncertainty_evidence\": [\"existing DELTA hook suggests some production value exists\"],\n    \"required_cognitive_operations\": [\"formulate_experiment_candidate\"],\n    \"required_bounded_actions\": [\"modify cognitive_contradiction_evaluation.py to exclude production chat integration\", \"update integration audit tests to reflect new capabilities\"],\n    \"required_authority\": \"operator_authorized_sustained_operator_objective_campaign_1\",\n    \"expected_cycle_count\":  \"strconv(3)\",\n    \"restart_relevance\": \"N/A\",\n    \"success_criteria\": \"All audits are converted to evaluator-only capabilities and no longer integrated into production chat.\",\n    \"failure_criteria\": \"Audits remain integrated into production chat or are not converted to evaluator-only capabilities.\",\n    \"risk_and_scope\": \"The risk of exposing audits to live state is reduced, but there may be uncertainty about the production value of certain audits.\",\n    \"estimated_time_and_model_call_budget\": \"3 days of development time, 100 model calls\"\n}",
+      "result_digest": "7f165dc7061f7aa07fefd6c12245bae770990110eda360660cdb7446a4ddfcf0",
+      "result_id": "shared-local-model-result-4f0109ba14e9af3b",
+      "terminal_state": "completed"
+    },
+    "shared-local-model-result-5cb2f001609193b8": {
+      "adapter_identity": "goal_oriented_ui_campaign.ProviderManager.exact_prompt",
+      "availability_state": "available",
+      "execution_completed_at": "2026-07-27T02:47:35+00:00",
+      "execution_started_at": "2026-07-27T02:46:39+00:00",
+      "failure_classification": "",
+      "failure_detail": "",
+      "latency_seconds": 55.7271,
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "provenance": {
+        "execution_claim_id": "shared-local-model-execution-claim-680bd4a0e7b5371a",
+        "selected_lane": {
+          "available": true,
+          "candidate_models": [
+            {
+              "capabilities": [
+                "text"
+              ],
+              "family": "qwen",
+              "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+              "reason": "registered_alias",
+              "registry_key": "qwen",
+              "tier": 3
+            }
+          ],
+          "capabilities": [
+            "text"
+          ],
+          "context_size": 32768,
+          "cost_latency_class": "medium_to_high_local",
+          "display_name": "Reasoning / Analysis Lane",
+          "executed": false,
+          "execution_gate": "not_executed_by_default",
+          "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+          "expected_weakness": "external facts need gated supporting information",
+          "fallback_priority": 3,
+          "lane": "reasoning_analysis",
+          "model_family": "qwen",
+          "preferred_task_lanes": [
+            "analysis",
+            "research",
+            "investigation",
+            "external_knowledge_request"
+          ],
+          "provider_calls_performed": false,
+          "rejected_models": [],
+          "selected_model": "qwen",
+          "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+          "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+          "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+        }
+      },
+      "request_id": "shared-local-model-request-67b6da0f8c928561",
+      "response_digest": "60ed49452807004b247907e8879382d9254a6c07652a9b21215f921ae560d9f8",
+      "response_reference": "{ \"experiment_id\": \"focus-b\", \"title\": \"Use claim relations for authority revocation currentness only\", \"practical_objective\": \"Ensure that revoked authority is not mistakenly enforced by the system.\", \"why_it_is_useful\": \"By focusing on claim relations for currentness, we can prevent the system from enforcing outdated or revoked authorizations, thereby enhancing security and compliance.\", \"related_operator_or_project_goal\": \"SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1\", \"expected_artifact_or_outcome\": \"Enhanced authority revocation mechanism based on claim relations.\", \"local_evidence_available\": [\"cognitive_claim_relations.py\", \"cognitive_claim_relation_runtime.py\", \"authority tests\"], \"contrary_or_uncertainty_evidence\": [\"existing authority evaluators may already cover action decisions\"], \"required_cognitive_operations\": [\"formulate_experiment_candidate\"], \"required_bounded_actions\": [], \"required_authority\": \"operator_authorized_sustained_operator_objective_campaign_1\", \"expected_cycle_count\":   \"*\", \"restart_relevance\": \"N/A\", \"success_criteria\": \"Revoked authority is not enforced by the system.\", \"failure_criteria\": \"Revoked authority is still enforced by the system.\", \"risk_and_scope\": \"The risk is limited to potential security breaches due to outdated authorizations. The scope is confined to the claim relations for currentness.\", \"estimated_time_and_model_call_budget\": \"1-2 weeks\" }",
+      "result_digest": "023413b331c6a25ac0d3a6d932f018482632cc4b3eb7166cc0afdb40577b018c",
+      "result_id": "shared-local-model-result-5cb2f001609193b8",
+      "terminal_state": "completed"
+    },
+    "shared-local-model-result-6f713358aae3dc0f": {
+      "adapter_identity": "goal_oriented_ui_campaign.ProviderManager.exact_prompt",
+      "availability_state": "available",
+      "execution_completed_at": "2026-07-27T02:52:11+00:00",
+      "execution_started_at": "2026-07-27T02:50:55+00:00",
+      "failure_classification": "",
+      "failure_detail": "",
+      "latency_seconds": 76.5045,
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "provenance": {
+        "execution_claim_id": "shared-local-model-execution-claim-86434d125b1b51fc",
+        "selected_lane": {
+          "available": true,
+          "candidate_models": [
+            {
+              "capabilities": [
+                "text"
+              ],
+              "family": "qwen",
+              "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+              "reason": "registered_alias",
+              "registry_key": "qwen",
+              "tier": 3
+            }
+          ],
+          "capabilities": [
+            "text"
+          ],
+          "context_size": 32768,
+          "cost_latency_class": "medium_to_high_local",
+          "display_name": "Reasoning / Analysis Lane",
+          "executed": false,
+          "execution_gate": "not_executed_by_default",
+          "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+          "expected_weakness": "external facts need gated supporting information",
+          "fallback_priority": 3,
+          "lane": "reasoning_analysis",
+          "model_family": "qwen",
+          "preferred_task_lanes": [
+            "analysis",
+            "research",
+            "investigation",
+            "external_knowledge_request"
+          ],
+          "provider_calls_performed": false,
+          "rejected_models": [],
+          "selected_model": "qwen",
+          "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+          "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+          "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+        }
+      },
+      "request_id": "shared-local-model-request-ef0a9ab81d0cd5f5",
+      "response_digest": "01d62d6d9f37b3e83a481b43efbb873c0f5b6cda1eb0be70797c8532716b8bbe",
+      "response_reference": "{\n  \"experiment_id\": \"focus-f\",\n  \"title\": \"Exercise and document opt-in deterministic pilot as narrow live capability\",\n  \"practical_objective\": \"Enable and document a controlled, opt-in pilot of a deterministic live capability to gather feedback and validate its effectiveness.\",\n  \"why_it_is_useful\": \"To ensure the deterministic live capability can be safely and effectively used by a select group of users before full-scale deployment, providing valuable insights and adjustments.\",\n  \"related_operator_or_project_goal\": \"SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1\",\n  \"expected_artifact_or_outcome\": \"A documented, controlled, and opt-in pilot of the deterministic live capability, with feedback and validation results.\",\n  \"local_evidence_available\": [\n    \"DELTA.py enable command\",\n    \"runtime tests\",\n    \"state path data/runtime/claim_relation_pilot/state.json\"\n  ],\n  \"contrary_or_uncertainty_evidence\": [\n    \"Limited natural-language patterns may be too narrow for broader use.\"\n  ],\n  \"required_cognitive_operations\": [\n    \"formulate_experiment_candidate\"\n  ],\n  \"required_bounded_actions\": [\n    \"Enable the deterministic live capability via the DELTA.py enable command.\",\n    \"Conduct runtime tests to validate the capability.\",\n    \"Document the results and feedback from the pilot.\"\n  ],\n  \"required_authority\": \"operator_authorized_sustained_operator_objective_campaign_1\",\n  \"expected_cycle_count\":   \"3\",\n  \"restart_relevance\": \"N/A\",\n  \"success_criteria\": \"Positive feedback and validation of the deterministic live capability from the pilot users.\",\n  \"failure_criteria\": \"Negative feedback or inability to validate the deterministic live capability.\",\n  \"risk_and_scope\": \"Risks include limited user feedback and potential issues with the narrow scope of the pilot. The scope is limited to a controlled, opt-in pilot.\",\n  \"estimated_time_and_model_call_budget\": \"1 week, 200 model calls\"\n}",
+      "result_digest": "b447797c4260f480e13b8d429482a54ac23671f2dc011e5a6d075c276ac762f3",
+      "result_id": "shared-local-model-result-6f713358aae3dc0f",
+      "terminal_state": "completed"
+    },
+    "shared-local-model-result-92a15f532489c7ea": {
+      "adapter_identity": "goal_oriented_ui_campaign.ProviderManager.exact_prompt",
+      "availability_state": "available",
+      "execution_completed_at": "2026-07-27T02:46:39+00:00",
+      "execution_started_at": "2026-07-27T02:45:31+00:00",
+      "failure_classification": "",
+      "failure_detail": "",
+      "latency_seconds": 67.5762,
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "provenance": {
+        "execution_claim_id": "shared-local-model-execution-claim-6f3b21f17aca66dd",
+        "selected_lane": {
+          "available": true,
+          "candidate_models": [
+            {
+              "capabilities": [
+                "text"
+              ],
+              "family": "qwen",
+              "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+              "reason": "registered_alias",
+              "registry_key": "qwen",
+              "tier": 3
+            }
+          ],
+          "capabilities": [
+            "text"
+          ],
+          "context_size": 32768,
+          "cost_latency_class": "medium_to_high_local",
+          "display_name": "Reasoning / Analysis Lane",
+          "executed": false,
+          "execution_gate": "not_executed_by_default",
+          "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+          "expected_weakness": "external facts need gated supporting information",
+          "fallback_priority": 3,
+          "lane": "reasoning_analysis",
+          "model_family": "qwen",
+          "preferred_task_lanes": [
+            "analysis",
+            "research",
+            "investigation",
+            "external_knowledge_request"
+          ],
+          "provider_calls_performed": false,
+          "rejected_models": [],
+          "selected_model": "qwen",
+          "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+          "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+          "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+        }
+      },
+      "request_id": "shared-local-model-request-d1603bbf71fde4eb",
+      "response_digest": "20b16dedda6d70f08f4cc051959a8971df12a6ea67cbf77d38b21000da922867",
+      "response_reference": "{\n  \"experiment_id\": \"focus-a\",\n  \"title\": \"Integrate deterministic correction/currentness notices\",\n  \"practical_objective\": \"To enhance the live chat functionality by integrating deterministic correction and currentness notices, ensuring that corrections are accurately reflected in real-time.\",\n  \"why_it_is_useful\": \"Improving the accuracy and timeliness of corrections in live chat will enhance user satisfaction and the overall quality of the chat experience.\",\n  \"related_operator_or_project_goal\": \"SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1\",\n  \"expected_artifact_or_outcome\": \"A live chat system that accurately reflects corrections in real-time, based on deterministic correction and currentness notices.\",\n  \"local_evidence_available\": [\"DELTA.py\", \"cognitive_claim_relation_runtime.py\", \"tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py\"],\n  \"contrary_or_uncertainty_evidence\": [\"semantic contradictions remain deferred; chat rigidity risk\"],\n  \"required_cognitive_operations\": [\"formulate_experiment_candidate\"],\n  \"required_bounded_actions\": [\"integrate_deterministic_correction\", \"implement_currentness_notices\"],\n  \"required_authority\": \"operator_authorized_sustained_operator_objective_campaign_1\",\n  \"expected_cycle_count\":   \"3\",\n  \"restart_relevance\": \"N/A\",\n  \"success_criteria\": \"The live chat system accurately reflects corrections in real-time based on deterministic correction and currentness notices.\",\n  \"failure_criteria\": \"The live chat system fails to accurately reflect corrections in real-time.\",\n  \"risk_and_scope\": \"There is a risk of semantic contradictions and chat rigidity, but these will be managed through careful implementation and testing.\",\n  \"estimated_time_and_model_call_budget\": \"50 hours\"\n}",
+      "result_digest": "da3bb2ad2d8e0ce76244efb24bc4c301b9c88d6d6a2e2d138c3321f039825971",
+      "result_id": "shared-local-model-result-92a15f532489c7ea",
+      "terminal_state": "completed"
+    },
+    "shared-local-model-result-c819eb43206cc2a1": {
+      "adapter_identity": "goal_oriented_ui_campaign.ProviderManager.exact_prompt",
+      "availability_state": "available",
+      "execution_completed_at": "2026-07-27T02:49:46+00:00",
+      "execution_started_at": "2026-07-27T02:48:37+00:00",
+      "failure_classification": "",
+      "failure_detail": "",
+      "latency_seconds": 68.9504,
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "provenance": {
+        "execution_claim_id": "shared-local-model-execution-claim-0d7ba539c545e907",
+        "selected_lane": {
+          "available": true,
+          "candidate_models": [
+            {
+              "capabilities": [
+                "text"
+              ],
+              "family": "qwen",
+              "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+              "reason": "registered_alias",
+              "registry_key": "qwen",
+              "tier": 3
+            }
+          ],
+          "capabilities": [
+            "text"
+          ],
+          "context_size": 32768,
+          "cost_latency_class": "medium_to_high_local",
+          "display_name": "Reasoning / Analysis Lane",
+          "executed": false,
+          "execution_gate": "not_executed_by_default",
+          "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+          "expected_weakness": "external facts need gated supporting information",
+          "fallback_priority": 3,
+          "lane": "reasoning_analysis",
+          "model_family": "qwen",
+          "preferred_task_lanes": [
+            "analysis",
+            "research",
+            "investigation",
+            "external_knowledge_request"
+          ],
+          "provider_calls_performed": false,
+          "rejected_models": [],
+          "selected_model": "qwen",
+          "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+          "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+          "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+        }
+      },
+      "request_id": "shared-local-model-request-0f3e9070e5b03ffe",
+      "response_digest": "aa8ba098c11c6b29f2b12dc6ce769c7c9154633a3dddc3c317f9260af97a04ce",
+      "response_reference": "{\n    \"experiment_id\": \"focus-d\",\n    \"title\": \"Bind unresolved semantic conflicts to active hypothesis challenge evidence\",\n    \"practical_objective\": \"Resolve semantic conflicts by linking them to active hypothesis challenges, thereby generating meaningful relations and hypothesis effects.\",\n    \"why_it_is_useful\": \"Enabling the system to handle and resolve semantic conflicts more effectively, leading to better hypothesis formulation and validation.\",\n    \"related_operator_or_project_goal\": \"SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1\",\n    \"expected_artifact_or_outcome\": \"Enhanced cognitive claim relations and active hypothesis challenge evidence generation.\",\n    \"local_evidence_available\": [\"active_cognitive_loop.py\", \"cognitive_claim_relation_runtime.py\", \"semantic_classification_required\"],\n    \"contrary_or_uncertainty_evidence\": [\"Could become another framework if no consumer exists.\"],\n    \"required_cognitive_operations\": [\"formulate_hypothesis\", \"validate_hypothesis\", \"resolve_conflict\"],\n    \"required_bounded_actions\": [\"link_semantic_conflicts_to_hypothesis\", \"generate_hypothesis_evidence\"],\n    \"required_authority\": \"operator_authorized_sustained_operator_objective_campaign_1\",\n    \"expected_cycle_count\":   \"sustained\",\n    \"restart_relevance\": \"Yes\",\n    \"success_criteria\": \"Semantic conflicts are effectively linked to active hypothesis challenges, resulting in meaningful relations and hypothesis effects.\",\n    \"failure_criteria\": \"Semantic conflicts remain unresolved or lead to dead-end hypothesis challenges.\",\n    \"risk_and_scope\": \"Risk of overcomplicating the system if not properly managed. Scope limited to existing codebase without new UI panels or schemas.\",\n    \"estimated_time_and_model_call_budget\": \"3 cycles, each cycle taking 2 weeks with 100 model calls.\"\n}",
+      "result_digest": "d19c028ba606f281b48920136197f23f9192c7a259be6ce5ef544c935d213f0a",
+      "result_id": "shared-local-model-result-c819eb43206cc2a1",
+      "terminal_state": "completed"
+    },
+    "shared-local-model-result-ec97dd95bb997ebb": {
+      "adapter_identity": "goal_oriented_ui_campaign.ProviderManager.exact_prompt",
+      "availability_state": "available",
+      "execution_completed_at": "2026-07-27T02:48:37+00:00",
+      "execution_started_at": "2026-07-27T02:47:35+00:00",
+      "failure_classification": "",
+      "failure_detail": "",
+      "latency_seconds": 61.7281,
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "provenance": {
+        "execution_claim_id": "shared-local-model-execution-claim-a89c09cac7ad4748",
+        "selected_lane": {
+          "available": true,
+          "candidate_models": [
+            {
+              "capabilities": [
+                "text"
+              ],
+              "family": "qwen",
+              "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+              "reason": "registered_alias",
+              "registry_key": "qwen",
+              "tier": 3
+            }
+          ],
+          "capabilities": [
+            "text"
+          ],
+          "context_size": 32768,
+          "cost_latency_class": "medium_to_high_local",
+          "display_name": "Reasoning / Analysis Lane",
+          "executed": false,
+          "execution_gate": "not_executed_by_default",
+          "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+          "expected_weakness": "external facts need gated supporting information",
+          "fallback_priority": 3,
+          "lane": "reasoning_analysis",
+          "model_family": "qwen",
+          "preferred_task_lanes": [
+            "analysis",
+            "research",
+            "investigation",
+            "external_knowledge_request"
+          ],
+          "provider_calls_performed": false,
+          "rejected_models": [],
+          "selected_model": "qwen",
+          "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+          "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+          "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+        }
+      },
+      "request_id": "shared-local-model-request-1e3b9933653fbd8c",
+      "response_digest": "f0fd396d6131aea068cb83c37a67c1355db049bd1d12ccc33f8374f04027cb15",
+      "response_reference": "{\n  \"experiment_id\": \"focus-c\",\n  \"title\": \"Retain deterministic subset and retire semantic relation ambitions\",\n  \"practical_objective\": \"Ensure the cognitive system operates with a deterministic subset of features, reducing complexity and potential for semantic conflicts.\",\n  \"why_it_is_useful\": \"By focusing on a deterministic subset, we can ensure consistent and reliable performance, reducing the risk of semantic conflicts and improving overall system stability.\",\n  \"related_operator_or_project_goal\": \"SUSTAINED_OPERATOR_OBJECTIVE_CAMPAIGN_1\",\n  \"expected_artifact_or_outcome\": \"A refined cognitive model with a deterministic subset of features, free from semantic relation ambitions.\",\n  \"local_evidence_available\": [\"cognitive_excluded_path_reconciliation.py\", \"overlap_analysis.json\"],\n  \"contrary_or_uncertainty_evidence\": [\"may leave direct contradiction usefulness gap unresolved\"],\n  \"required_cognitive_operations\": [\"formulate_experiment_candidate\"],\n  \"required_bounded_actions\": [\"refine_cognitive_model\", \"exclude_semantic_relations\"],\n  \"required_authority\": \"operator_authorized_sustained_operator_objective_campaign_1\",\n  \"expected_cycle_count\":   \"3\",\n  \"restart_relevance\": \"N/A\",\n  \"success_criteria\": \"The cognitive model operates with a deterministic subset of features without semantic conflicts.\",\n  \"failure_criteria\": \"The cognitive model still contains semantic conflicts or direct contradictions.\",\n  \"risk_and_scope\": \"The risk is limited to potential underutilization of features, but the benefit is improved system stability and reliability.\",\n  \"estimated_time_and_model_call_budget\": \"4 hours\"\n}",
+      "result_digest": "c9e7464ca7d015e1ff6ac3540179f9f45c04ac7c9373948f0e6888d79793d92a",
+      "result_id": "shared-local-model-result-ec97dd95bb997ebb",
+      "terminal_state": "completed"
+    }
+  },
+  "state_digest": "039249e24834f29779310d735499a38df283018f4b9c0fc74ffcceebb7783a5d"
+}

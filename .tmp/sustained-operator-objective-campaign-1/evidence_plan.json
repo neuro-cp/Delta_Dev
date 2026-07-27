@@ -1,0 +1,34 @@
+{
+  "behavioral_cases": [
+    "explicit correction",
+    "duplicate restatement",
+    "temporal transition",
+    "direct semantic contradiction",
+    "bounded exception",
+    "authority revocation",
+    "unrelated topic",
+    "restart reconstruction"
+  ],
+  "complexity_measures": [
+    "source changes",
+    "persistent state",
+    "runtime coupling",
+    "model calls",
+    "failure modes",
+    "maintenance burden"
+  ],
+  "static_evidence": [
+    "call graph",
+    "producer/consumer",
+    "persistence/restart",
+    "authority overlap",
+    "UI/chat reachability",
+    "test coverage"
+  ],
+  "usefulness_measures": [
+    "current-state consistency",
+    "operator clarity",
+    "long-horizon continuity",
+    "chat non-rigidity"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk"
+    ],
+    "lesson": "Direct semantic contradiction is deferred without a clear winner.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "Uncertainty about the appropriate next step in the absence of a clear winner.",
+    "unresolved_questions": [
+      "How should we handle semantic deferral in the absence of a clear winner?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"Direct semantic contradiction is deferred without a clear winner.\",\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\"],\"unresolved_questions\":[\"How should we handle semantic deferral in the absence of a clear winner?\"],\"uncertainty\":\"Uncertainty about the appropriate next step in the absence of a clear winner.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "d8bce654226e208527b1ee32661193215ecbc0f10c9fa891465356b79abb6a88",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

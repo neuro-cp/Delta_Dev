@@ -1,0 +1,96 @@
+[
+  {
+    "at": "2026-07-27T02:54:10+00:00",
+    "focus_id": "focus-79ca56c06ddc6f04",
+    "reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+    "sequence": 1,
+    "transition": "establish_focus"
+  },
+  {
+    "at": "2026-07-27T02:54:42+00:00",
+    "focus_id": "focus-971e83dd8996f010",
+    "reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+    "sequence": 2,
+    "transition": "switch_focus"
+  },
+  {
+    "at": "2026-07-27T02:54:59+00:00",
+    "focus_id": "focus-178021cffc17550f",
+    "reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+    "sequence": 3,
+    "transition": "switch_focus"
+  },
+  {
+    "at": "2026-07-27T02:55:24+00:00",
+    "focus_id": "focus-f6e5cd1019c7a6d9",
+    "reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+    "sequence": 4,
+    "transition": "switch_focus"
+  },
+  {
+    "at": "2026-07-27T02:56:04+00:00",
+    "focus_id": "focus-c5a4f939b1b4102a",
+    "reason": "An active hypothesis needs evidence-linked revision before action.",
+    "sequence": 5,
+    "transition": "switch_focus"
+  },
+  {
+    "at": "2026-07-27T02:56:25+00:00",
+    "focus_id": "focus-13cdf71346216a24",
+    "reason": "An active hypothesis needs evidence-linked revision before action.",
+    "sequence": 6,
+    "transition": "switch_focus"
+  },
+  {
+    "at": "2026-07-27T02:56:56+00:00",
+    "focus_id": "focus-13cdf71346216a24",
+    "priority": "high",
+    "reason": "planned sustained campaign restart exercise",
+    "return_condition": "resume same focus without duplicate completed work",
+    "sequence": 7,
+    "transition": "interrupt_focus"
+  },
+  {
+    "at": "2026-07-27T02:56:56+00:00",
+    "focus_id": "focus-13cdf71346216a24",
+    "reason": "restored from durable state after planned Tk/runtime restart",
+    "return_condition": "resume same focus without duplicate completed work",
+    "sequence": 8,
+    "transition": "resume_focus"
+  },
+  {
+    "at": "2026-07-27T02:58:08+00:00",
+    "focus_id": "focus-e17717863e2f8189",
+    "reason": "An active hypothesis needs evidence-linked revision before action.",
+    "sequence": 9,
+    "transition": "switch_focus"
+  },
+  {
+    "at": "2026-07-27T02:58:35+00:00",
+    "focus_id": "focus-ad0de720dd09f4ec",
+    "reason": "An active hypothesis needs evidence-linked revision before action.",
+    "sequence": 10,
+    "transition": "switch_focus"
+  },
+  {
+    "at": "2026-07-27T02:58:58+00:00",
+    "focus_id": "focus-a6cbea8c505ae5e4",
+    "reason": "An active hypothesis needs evidence-linked revision before action.",
+    "sequence": 11,
+    "transition": "switch_focus"
+  },
+  {
+    "at": "2026-07-27T02:59:17+00:00",
+    "focus_id": "focus-a6cbea8c505ae5e4",
+    "reason": "Narrow deterministic claim-relation pilot is useful as an opt-in live currentness capability; semantic relation ambitions are deferred or retired from active integration pending a qualified consumer/classifier.",
+    "sequence": 12,
+    "transition": "complete_focus"
+  },
+  {
+    "at": "2026-07-27T02:59:36+00:00",
+    "focus_id": "focus-a83b2382fb540830",
+    "reason": "An active hypothesis needs evidence-linked revision before action.",
+    "sequence": 13,
+    "transition": "switch_focus"
+  }
+]

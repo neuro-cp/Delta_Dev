@@ -1,0 +1,8 @@
+{
+  "consumer": "operator-visible text plus persisted ClaimRelationStateBundle; not broad authority enforcement",
+  "missing_transition_after_experiment": "No source repair required for narrow deterministic subset; broad semantic/enforcement integration remains deferred.",
+  "persistence": "data/runtime/claim_relation_pilot/state.json in DELTA, test path in campaign",
+  "producer": "DELTA.py opt-in command plus GovernedClaimRelationRuntime.process_operator_turn",
+  "restart": "runtime.restart/read_bundle reconstructs same bundle",
+  "source_edits_required": false
+}

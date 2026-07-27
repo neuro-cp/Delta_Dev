@@ -1,0 +1,100 @@
+{
+  "claims": [
+    {
+      "applicability_scope": "global",
+      "authority_source": "operator",
+      "claim_digest": "2470c126e8e012580bbacf24127d4b6f77d50a1f3074e833e3ce514b4de8ec13",
+      "claim_id": "claim-6b4761908a127d56",
+      "claim_kind": "authorization",
+      "claim_text": "You may run the sandbox test.",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "lifecycle_state": "revoked",
+      "normalized_content": {
+        "authorization": "allowed",
+        "subject": "sandbox_test"
+      },
+      "provenance_refs": [
+        "authority_revocation:turn:1"
+      ],
+      "schema_version": "governed_claim_relation_contract_v1",
+      "subject_scope": "sandbox_test",
+      "temporal_scope": "current",
+      "validation_state": "registered"
+    },
+    {
+      "applicability_scope": "global",
+      "authority_source": "operator",
+      "claim_digest": "283a9223e9489dc3c26351b1fa3ea8769906daf215d8b61666535d4ef6822187",
+      "claim_id": "claim-cb363eefab6662e3",
+      "claim_kind": "revocation",
+      "claim_text": "I revoke authorization to run the sandbox test.",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "lifecycle_state": "current",
+      "normalized_content": {
+        "authorization": "revoked",
+        "subject": "sandbox_test"
+      },
+      "provenance_refs": [
+        "authority_revocation:turn:2"
+      ],
+      "schema_version": "governed_claim_relation_contract_v1",
+      "subject_scope": "sandbox_test",
+      "temporal_scope": "current",
+      "validation_state": "registered"
+    }
+  ],
+  "operator_requests": [],
+  "relations": [
+    {
+      "authority_effect": "prospective_revocation_pending_work_suspended",
+      "confidence_state": "known",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "dependent_work_ids": [],
+      "evidence_refs": [],
+      "left_claim_id": "claim-6b4761908a127d56",
+      "operator_request_id": "",
+      "provenance_refs": [
+        "authority_revocation:turn:1",
+        "authority_revocation:turn:2"
+      ],
+      "relation_id": "claim-relation-6b2d752f5443f31b",
+      "relation_scope": "same_subject_scope",
+      "relation_type": "authority_revocation",
+      "resolution_actor": "operator",
+      "resolution_state": "resolved",
+      "resolved_at": "2026-07-22T00:00:00+00:00",
+      "right_claim_id": "claim-cb363eefab6662e3",
+      "schema_version": "governed_claim_relation_contract_v1",
+      "supersedes_claim_id": "claim-6b4761908a127d56",
+      "temporal_order": "left_before_right"
+    }
+  ],
+  "schema_version": "governed_claim_relation_contract_v1",
+  "transition_journal": [
+    {
+      "authority_scope": "inert_claim_relation_contract_only",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "ids": [
+        "claim-6b4761908a127d56"
+      ],
+      "transition": "register_claim"
+    },
+    {
+      "authority_scope": "inert_claim_relation_contract_only",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "ids": [
+        "claim-cb363eefab6662e3"
+      ],
+      "transition": "register_claim"
+    },
+    {
+      "authority_scope": "inert_claim_relation_contract_only",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "ids": [
+        "claim-relation-6b2d752f5443f31b"
+      ],
+      "transition": "revoke_authority"
+    }
+  ],
+  "work_items": []
+}

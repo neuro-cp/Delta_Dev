@@ -1,0 +1,21 @@
+{
+  "adapted_response": {
+    "recommended_state_transition": "continue_focus",
+    "rejected_focus_ids": [],
+    "selected_focus_id": "focus-971e83dd8996f010",
+    "selection_reason": "active focus",
+    "supporting_evidence_refs": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk"
+    ],
+    "uncertainty": "discrepancy resolution"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"selected_focus_id\":\"focus-971e83dd8996f010\",\"selection_reason\":\"active focus\",\"supporting_evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\"],\"rejected_focus_ids\":[],\"uncertainty\":\"discrepancy resolution\",\"recommended_state_transition\":\"continue_focus\"}",
+  "raw_response_digest": "d7fa347e5be54e48b0b97ad8f3ef43bd67f4cb95aef502b5417fe592a8971c72",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

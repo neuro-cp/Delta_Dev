@@ -1,0 +1,27 @@
+{
+  "active_process_check": {
+    "args": [
+      "powershell",
+      "-NoProfile",
+      "-Command",
+      "Get-Process python,python3,pythonw,pytest,ollama,llama-server -ErrorAction SilentlyContinue | Select-Object ProcessName,Id,Path | ConvertTo-Json"
+    ],
+    "returncode": 1,
+    "stderr": [],
+    "stdout": [
+      "[",
+      "    {",
+      "        \"ProcessName\":  \"python\",",
+      "        \"Id\":  26548,",
+      "        \"Path\":  \"C:\\\\Program Files\\\\Python311\\\\python.exe\"",
+      "    },",
+      "    {",
+      "        \"ProcessName\":  \"python\",",
+      "        \"Id\":  32680,",
+      "        \"Path\":  \"G:\\\\Delta_Dev\\\\.venv311\\\\Scripts\\\\python.exe\"",
+      "    }",
+      "]"
+    ]
+  },
+  "active_python_model_processes": []
+}

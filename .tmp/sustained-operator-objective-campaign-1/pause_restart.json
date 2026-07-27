@@ -1,0 +1,11 @@
+{
+  "after_focus_id": "focus-13cdf71346216a24",
+  "before_model_request_count": 6,
+  "duplicate_model_request_on_resume": false,
+  "focus_id": "focus-13cdf71346216a24",
+  "paused": true,
+  "restored": true,
+  "restored_before_model_request_count": 6,
+  "resume_reason": "restored from durable state after planned Tk/runtime restart",
+  "state_path": ".tmp\\sustained-operator-objective-campaign-1\\active-episode\\state.json"
+}

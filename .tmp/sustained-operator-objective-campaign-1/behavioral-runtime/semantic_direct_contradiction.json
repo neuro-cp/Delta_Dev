@@ -1,0 +1,68 @@
+{
+  "claims": [
+    {
+      "applicability_scope": "global",
+      "authority_source": "operator",
+      "claim_digest": "94c3e97b92aee528fc44fcc54654ee2f2205e18713a24895991ff3b8544fa3c4",
+      "claim_id": "claim-e6eec5a3cf959421",
+      "claim_kind": "fact",
+      "claim_text": "The database is PostgreSQL.",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "lifecycle_state": "current",
+      "normalized_content": {
+        "subject": "database",
+        "value": "postgresql"
+      },
+      "provenance_refs": [
+        "semantic_direct_contradiction:turn:1"
+      ],
+      "schema_version": "governed_claim_relation_contract_v1",
+      "subject_scope": "database",
+      "temporal_scope": "current",
+      "validation_state": "registered"
+    },
+    {
+      "applicability_scope": "global",
+      "authority_source": "operator",
+      "claim_digest": "40e3d1063a971eec40e77af340b043ab86bbc2a873b7f2d7c6caf1cb189892ff",
+      "claim_id": "claim-3f77213f10c98182",
+      "claim_kind": "fact",
+      "claim_text": "The database is SQLite.",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "lifecycle_state": "current",
+      "normalized_content": {
+        "subject": "database",
+        "value": "sqlite"
+      },
+      "provenance_refs": [
+        "semantic_direct_contradiction:turn:2"
+      ],
+      "schema_version": "governed_claim_relation_contract_v1",
+      "subject_scope": "database",
+      "temporal_scope": "current",
+      "validation_state": "registered"
+    }
+  ],
+  "operator_requests": [],
+  "relations": [],
+  "schema_version": "governed_claim_relation_contract_v1",
+  "transition_journal": [
+    {
+      "authority_scope": "inert_claim_relation_contract_only",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "ids": [
+        "claim-e6eec5a3cf959421"
+      ],
+      "transition": "register_claim"
+    },
+    {
+      "authority_scope": "inert_claim_relation_contract_only",
+      "created_at": "2026-07-22T00:00:00+00:00",
+      "ids": [
+        "claim-3f77213f10c98182"
+      ],
+      "transition": "register_claim"
+    }
+  ],
+  "work_items": []
+}

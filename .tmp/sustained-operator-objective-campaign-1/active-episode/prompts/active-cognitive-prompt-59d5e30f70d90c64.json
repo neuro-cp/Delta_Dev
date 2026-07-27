@@ -1,0 +1,87 @@
+{
+  "authority_constraints": [
+    "no network",
+    "no protected paths",
+    "no commit",
+    "bounded local actions only"
+  ],
+  "contrary_evidence_ids_supplied": [
+    "ev_semantic_deferred",
+    "ev_authority_overlap"
+  ],
+  "cycle_id": "active-cognitive-cycle-19313f1b44ef7106",
+  "evidence_ids_supplied": [
+    "ev_delta_hook",
+    "ev_runtime_structural",
+    "ev_contract_broad",
+    "ev_tests_green_scope",
+    "ev_overlap_risk"
+  ],
+  "expected_response_schema": {
+    "evidence_refs": [
+      "IDs only from supplied evidence"
+    ],
+    "lesson": "learning from outcome",
+    "recommended_state_transition": "one allowed transition",
+    "uncertainty": "nonempty uncertainty phrase",
+    "unresolved_questions": [
+      "questions that remain unresolved"
+    ]
+  },
+  "focus_id": "focus-a6cbea8c505ae5e4",
+  "goal_id": "active-cognitive-goal-4ae97917d615f190",
+  "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+  "operation_request": {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-19313f1b44ef7106",
+    "evidence_constraints": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk",
+      "ev_semantic_deferred",
+      "ev_authority_overlap"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-a6cbea8c505ae5e4",
+    "goal_id": "active-cognitive-goal-4ae97917d615f190",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-94908896076efd7e",
+    "operation_type": "summarize_learning",
+    "provenance": [
+      "working-memory-packet-3891f9e24c32301f"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform summarize_learning for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "6da42b48186009773bab11c987afd376ab8154e9eb70e1454535a82345b6c1a1"
+  },
+  "operation_type": "summarize_learning",
+  "prompt_byte_digest": "4b1886b21b6e9b36009e2b31e3241bada71e5f2240f08382f0e94588b09acfeb",
+  "prompt_length": 6208,
+  "prompt_schema_version": "active_cognitive_prompt_qualification_1_v1",
+  "prompt_snapshot_id": "active-cognitive-prompt-59d5e30f70d90c64",
+  "prompt_text": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- lesson: nonempty string\n- evidence_refs: array[string]\n- unresolved_questions: array[string]\n- uncertainty: nonempty string\n- recommended_state_transition: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- evidence_refs values must be chosen from: ev_delta_hook, ev_runtime_structural, ev_contract_broad, ev_tests_green_scope, ev_overlap_risk, ev_semantic_deferred, ev_authority_overlap\nTASK: perform only operation summarize_learning. Allowed transition/next-operation values: summarize_learning, select_next_focus. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: ev_delta_hook, ev_runtime_structural, ev_contract_broad, ev_tests_green_scope, ev_overlap_risk. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied.\nCONTEXT_JSON:\n{\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"semantic comparison\",\"creation_sequence\":9,\"description\":\"Challenge or revise hypothesis: Direct semantic contradiction is deferred without a winner\",\"evidence_need\":\"contrary and supporting evidence\",\"evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\",\"ev_semantic_deferred\",\"ev_authority_overlap\"],\"expected_value\":\"belief_revision\",\"focus_id\":\"focus-a6cbea8c505ae5e4\",\"related_goal_ids\":[\"active-cognitive-goal-4ae97917d615f190\"],\"salience_categories\":[\"unresolved_hypothesis\",\"evidence_revision\",\"expected_useful_progress\"],\"salience_explanation\":\"An active hypothesis needs evidence-linked revision before action.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"hypothesis_revision\",\"urgency\":\"high\"},\"contrary_evidence\":[{\"content\":\"test_unsupported_semantic_contradiction_is_deferred_without_winner\",\"evidence_id\":\"ev_semantic_deferred\",\"source\":\"local_uncertainty\",\"summary\":\"Direct semantic contradiction returns semantic_classification_required without relation or winner\"},{\"content\":\"ownership_audit.json; production_reachability.json\",\"evidence_id\":\"ev_authority_overlap\",\"source\":\"local_analysis\",\"summary\":\"Authority evaluators already classify actions; claim revocation state is not yet a broad enforcement consumer\"}],\"current_goal\":{\"expected_state\":\"coherent integrated narrow capability or retirement decision package\",\"goal_id\":\"active-cognitive-goal-4ae97917d615f190\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Determine smallest coherent useful role for claim-relation and contradiction work\"},\"current_hypotheses\":[{\"assumptions\":[],\"confidence_state\":\"contested\",\"created_at\":\"2026-07-27T02:56:56+00:00\",\"disposition\":\"revised_from_evidence\",\"evidence_against\":[\"ev_semantic_deferred\",\"ev_authority_overlap\"],\"evidence_for\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\"],\"expected_observations\":[\"revised smaller step should match local evidence\"],\"hypothesis_id\":\"hypothesis-c9d7e93e111687ef\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-178021cffc17550f\",\"originating_goal_id\":\"active-cognitive-goal-4ae97917d615f190\",\"provenance\":[\"cognitive-operation-11d397e9745067cc\"],\"revised_at\":\"2026-07-27T02:56:56+00:00\",\"revision_parent_id\":\"hypothesis-40bdd6900fc1532f\",\"revision_reason\":\"Direct semantic contradiction is deferred without a winner\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: Determine smallest coherent useful role for claim-relation and contradiction work\",\"statement\":\"Direct semantic contradiction is deferred without a winner\"}],\"evidence_for\":[{\"content\":\"DELTA.py:60-63,1626-1629,5612-5621,5831-5853\",\"evidence_id\":\"ev_delta_hook\",\"source\":\"local_repo\",\"summary\":\"DELTA.py imports, enables, and applies the claim relation pilot after explicit command\"},{\"content\":\"orchestration/runtime/cognitive_claim_relation_runtime.py\",\"evidence_id\":\"ev_runtime_structural\",\"source\":\"local_repo\",\"summary\":\"GovernedClaimRelationRuntime handles explicit correction, duplicates, temporal transitions, revocations, bounded exceptions, unrelated topics, persistence, restart, and semantic deferral\"},{\"content\":\"orchestration/runtime/cognitive_claim_relations.py\",\"evidence_id\":\"ev_contract_broad\",\"source\":\"local_repo\",\"summary\":\"Underlying contract supports broader relation types, operator requests, lifecycle state, provenance, and restart reconstruction\"},{\"content\":\"tests/runtime_gsr/test_cognitive_claim_relation_runtime.py; tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py\",\"evidence_id\":\"ev_tests_green_scope\",\"source\":\"local_tests\",\"summary\":\"Existing focused tests cover runtime, DELTA hook, evaluator compatibility, and restart behavior\"},{\"content\":\"overlap_analysis.json\",\"evidence_id\":\"ev_overlap_risk\",\"source\":\"local_analysis\",\"summary\":\"Active cognition already handles hypothesis revision; broad semantic claim classification risks duplicate machinery and rigid chat\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-27T02:58:58+00:00\",\"discrepancy\":\"progress_observed\",\"expected\":\"Perform reflect_on_outcome for the active focus using only referenced evidence.\",\"observed\":\"Direct semantic contradiction deferred without clear winner; hypothesis remains contested\",\"operation_id\":\"cognitive-operation-5138d20b6963f01c\",\"outcome_id\":\"outcome-65ba152324c9e8e5\"}]}",
+  "request_identity": "active-cognitive-ledger-request-b33e3a952f0e0141",
+  "retry_sequence": 0,
+  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+  "working_memory_packet_digest": "6da42b48186009773bab11c987afd376ab8154e9eb70e1454535a82345b6c1a1",
+  "working_memory_packet_id": "working-memory-packet-3891f9e24c32301f"
+}

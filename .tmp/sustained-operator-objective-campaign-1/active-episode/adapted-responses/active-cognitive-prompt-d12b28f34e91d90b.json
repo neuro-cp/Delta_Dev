@@ -1,0 +1,24 @@
+{
+  "adapted_response": {
+    "assumptions": [],
+    "expected_observations": [
+      "local evidence should support a bounded useful step"
+    ],
+    "hypothesis_statement": "Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "Resolve discrepancy for goal: Determine smallest coherent useful role for claim relation and contradiction work",
+    "supporting_evidence_refs": [
+      "ev_delta_hook",
+      "ev_runtime_structural",
+      "ev_contract_broad",
+      "ev_tests_green_scope",
+      "ev_overlap_risk"
+    ],
+    "uncertainty": "What is the smallest coherent useful role for claim relation and contradiction work?"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"hypothesis_statement\":\"Claim relation pilot is active, governed, and tested; broader claim relation types are supported; overlap risks are identified; direct semantic contradiction is deferred.\",\"scope\":\"Resolve discrepancy for goal: Determine smallest coherent useful role for claim relation and contradiction work\",\"supporting_evidence_refs\":[\"ev_delta_hook\",\"ev_runtime_structural\",\"ev_contract_broad\",\"ev_tests_green_scope\",\"ev_overlap_risk\"],\"assumptions\":[],\"expected_observations\":[\"local evidence should support a bounded useful step\"],\"uncertainty\":\"What is the smallest coherent useful role for claim relation and contradiction work?\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+  "raw_response_digest": "cb416db5c62bd4ef2b91c7c4da563e452d1a79e26942490f091607d13a1cd345",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}
