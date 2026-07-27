@@ -1,0 +1,190 @@
+{
+  "allowed_episode_refs": [
+    "episode_a_contrary_prior_block",
+    "episode_a_runtime_support",
+    "episode_a_useful_target"
+  ],
+  "checkpoint_authorization": "not_staged_not_committed_waiting_for_explicit_authorization",
+  "checks": {
+    "episode_a_artifact_durable_inspectable": true,
+    "episode_a_refs_exact_supplied_ids": true,
+    "episode_a_required_path_exercised": true,
+    "evaluator_digest_recorded_matches": true,
+    "final_status_passed": true,
+    "identify_evidence_need_deferred": true,
+    "identify_evidence_need_excluded_from_required_pass_arithmetic": true,
+    "matrix_matches_required_runtime_records": true,
+    "no_duplicate_semantic_model_requests_in_ledgers": true,
+    "no_multi_attempt_ledger_requests": true,
+    "no_pending_or_stale_ledger_requests": true,
+    "only_expected_tracked_dirty_files": true,
+    "protected_paths_clean": true,
+    "qualification_status_passed": true,
+    "required_operations_3x3_passed": true,
+    "schema_registry_digest_recorded": true,
+    "staging_empty": true
+  },
+  "duplicate_semantic_model_requests": [],
+  "episode_artifacts": [
+    {
+      "artifact_id": "useful-artifact-c9fb7e62cd1f53f1",
+      "artifact_type": "cognitive_episode_summary",
+      "evidence_refs": [
+        "episode_a_runtime_support",
+        "episode_a_useful_target",
+        "episode_a_contrary_prior_block"
+      ],
+      "summary": "Understand the local model's ledger and operation-specific grammars to resolve discrepancies and support active focus"
+    }
+  ],
+  "episode_learning_updates": [
+    {
+      "created_at": "2026-07-26T07:18:08+00:00",
+      "evidence_refs": [
+        "episode_a_runtime_support",
+        "episode_a_useful_target",
+        "episode_a_contrary_prior_block"
+      ],
+      "learning_id": "learning-c9fb7e62cd1f53f1",
+      "summary": "Understand the local model's ledger and operation-specific grammars to resolve discrepancies and support active focus"
+    }
+  ],
+  "episode_result_digest": "d671179c5359e06b042ee05cb1354b74a7a8e51c6b2201461bc2947fe17775a7",
+  "evaluator_digest": "ebb4c91fb962a24a224dec355e95227ab88d80e32afb5c13578e1c5caeb79fbc",
+  "git_status": [
+    "## codex/delta-cognitive-core...origin/codex/delta-cognitive-core",
+    " M DELTA.py",
+    " M integration/model_runtime/gguf_model_runner.py",
+    " M integration/model_runtime/model_session.py",
+    " M integration/model_runtime/prompt_builder.py",
+    " M integration/model_runtime/provider_manager.py",
+    " M orchestration/runtime/live_competence_adapter.py",
+    "?? integration/model_runtime/execution_lanes.py",
+    "?? orchestration/runtime/active_cognitive_loop.py",
+    "?? orchestration/runtime/cognitive_claim_relation_integration_audit.py",
+    "?? orchestration/runtime/cognitive_claim_relation_runtime.py",
+    "?? orchestration/runtime/cognitive_claim_relations.py",
+    "?? orchestration/runtime/cognitive_contradiction_evaluation.py",
+    "?? orchestration/runtime/cognitive_excluded_path_reconciliation.py",
+    "?? tests/runtime_gsr/test_active_cognitive_loop.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relation_integration_audit.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relation_runtime.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relations.py",
+    "?? tests/runtime_gsr/test_cognitive_contradiction_evaluation.py",
+    "?? tests/runtime_gsr/test_cognitive_excluded_path_reconciliation.py",
+    "?? tests/runtime_gsr/test_model_execution_lane_isolation.py"
+  ],
+  "ledger_file_count": 44,
+  "ledger_request_count": 0,
+  "max_execution_attempt_count": 0,
+  "operation_matrix_digest": "3c882a0fa860be0ce6aebfa7b283a7981219a7bd43995517bece5cb413c1b788",
+  "pending_requests": [],
+  "per_operation": {
+    "challenge_hypothesis": {
+      "completed": 3,
+      "failures": [],
+      "passed": 3,
+      "pattern": "schema10_challenge_hypothesis_*.json"
+    },
+    "compare_evidence": {
+      "completed": 3,
+      "failures": [],
+      "passed": 3,
+      "pattern": "schema7_compare_evidence_*.json"
+    },
+    "declare_blocked_capability": {
+      "completed": 3,
+      "failures": [],
+      "passed": 3,
+      "pattern": "schema15_declare_blocked_capability_*.json"
+    },
+    "declare_insufficient_evidence": {
+      "completed": 3,
+      "failures": [],
+      "passed": 3,
+      "pattern": "schema11_declare_insufficient_evidence_*.json"
+    },
+    "formulate_hypothesis": {
+      "completed": 3,
+      "failures": [],
+      "passed": 3,
+      "pattern": "schema4_formulate_hypothesis_*.json"
+    },
+    "interpret_state": {
+      "completed": 3,
+      "failures": [],
+      "passed": 3,
+      "pattern": "interpret_state_aligned_*.json"
+    },
+    "prioritize_focus": {
+      "completed": 3,
+      "failures": [],
+      "passed": 3,
+      "pattern": "schema4_prioritize_focus_*.json"
+    },
+    "propose_plan": {
+      "completed": 3,
+      "failures": [],
+      "passed": 3,
+      "pattern": "schema14_propose_plan_*.json"
+    },
+    "reflect_on_outcome": {
+      "completed": 3,
+      "failures": [],
+      "passed": 3,
+      "pattern": "schema10_reflect_on_outcome_*.json"
+    },
+    "request_operator_resolution": {
+      "completed": 3,
+      "failures": [],
+      "passed": 3,
+      "pattern": "schema15_request_operator_resolution_*.json"
+    },
+    "revise_hypothesis": {
+      "completed": 3,
+      "failures": [],
+      "passed": 3,
+      "pattern": "schema10_revise_hypothesis_*.json"
+    },
+    "revise_plan": {
+      "completed": 3,
+      "failures": [],
+      "passed": 3,
+      "pattern": "schema15_revise_plan_*.json"
+    },
+    "select_next_focus": {
+      "completed": 3,
+      "failures": [],
+      "passed": 3,
+      "pattern": "schema10_select_next_focus_*.json"
+    },
+    "summarize_learning": {
+      "completed": 3,
+      "failures": [],
+      "passed": 3,
+      "pattern": "schema15_summarize_learning_*.json"
+    }
+  },
+  "protected_touched": [],
+  "schema_registry_digest": "d192b477abd334631d9096819023995b80cceba3d612a7a71bcfcef5481590a7",
+  "staged_files": [],
+  "status": "PASSED",
+  "tracked_unexpected_dirty_files": [],
+  "used_episode_refs": [
+    "episode_a_runtime_support",
+    "episode_a_useful_target",
+    "episode_a_contrary_prior_block",
+    "episode_a_runtime_support",
+    "episode_a_useful_target",
+    "episode_a_contrary_prior_block",
+    "episode_a_runtime_support",
+    "episode_a_useful_target",
+    "episode_a_runtime_support",
+    "episode_a_useful_target",
+    "episode_a_contrary_prior_block",
+    "episode_a_runtime_support",
+    "episode_a_useful_target",
+    "episode_a_contrary_prior_block"
+  ]
+}

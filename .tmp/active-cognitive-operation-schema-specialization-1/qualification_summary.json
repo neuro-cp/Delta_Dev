@@ -1,0 +1,79 @@
+{
+  "closure_audit": {
+    "all_episode_a_refs_exact_supplied_ids": true,
+    "allowed_refs": [
+      "episode_a_contrary_prior_block",
+      "episode_a_runtime_support",
+      "episode_a_useful_target"
+    ],
+    "evaluator_digest": "ebb4c91fb962a24a224dec355e95227ab88d80e32afb5c13578e1c5caeb79fbc",
+    "fresh_episode_a_artifact_inspectable": true,
+    "hypothesis_revision_material": true,
+    "identify_evidence_need_deferred_and_excluded": true,
+    "next_focus_selection_grounded": true,
+    "restart_duplicate_behavior_covered_by_focused_tests": true,
+    "used_refs": [
+      "episode_a_runtime_support",
+      "episode_a_useful_target",
+      "episode_a_contrary_prior_block",
+      "episode_a_runtime_support",
+      "episode_a_useful_target",
+      "episode_a_contrary_prior_block",
+      "episode_a_runtime_support",
+      "episode_a_useful_target",
+      "episode_a_runtime_support",
+      "episode_a_useful_target",
+      "episode_a_contrary_prior_block",
+      "episode_a_runtime_support",
+      "episode_a_useful_target",
+      "episode_a_contrary_prior_block"
+    ]
+  },
+  "completed_by_operation": {
+    "challenge_hypothesis": 3,
+    "compare_evidence": 3,
+    "declare_blocked_capability": 3,
+    "declare_insufficient_evidence": 3,
+    "formulate_hypothesis": 3,
+    "interpret_state": 3,
+    "prioritize_focus": 3,
+    "propose_plan": 3,
+    "reflect_on_outcome": 3,
+    "request_operator_resolution": 3,
+    "revise_hypothesis": 3,
+    "revise_plan": 3,
+    "select_next_focus": 3,
+    "summarize_learning": 3
+  },
+  "deferred_optional_operations": [
+    "identify_evidence_need"
+  ],
+  "episode_a": {
+    "accepted_all_requested": true,
+    "final_completed": true,
+    "final_loop_state": "completed",
+    "has_compare_evidence": true,
+    "has_interpret_state": true,
+    "has_next_focus_selection": true,
+    "has_revision": true,
+    "has_useful_artifact": true
+  },
+  "passed_by_operation": {
+    "challenge_hypothesis": 3,
+    "compare_evidence": 3,
+    "declare_blocked_capability": 3,
+    "declare_insufficient_evidence": 3,
+    "formulate_hypothesis": 3,
+    "interpret_state": 3,
+    "prioritize_focus": 3,
+    "propose_plan": 3,
+    "reflect_on_outcome": 3,
+    "request_operator_resolution": 3,
+    "revise_hypothesis": 3,
+    "revise_plan": 3,
+    "select_next_focus": 3,
+    "summarize_learning": 3
+  },
+  "required_matrix_passed": true,
+  "status": "ACTIVE_COGNITIVE_OPERATION_SCHEMA_SPECIALIZATION_1_PASSED"
+}

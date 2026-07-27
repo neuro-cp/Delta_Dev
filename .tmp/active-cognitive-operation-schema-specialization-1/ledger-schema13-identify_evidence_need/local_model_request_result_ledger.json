@@ -1,0 +1,136 @@
+{
+  "ledger_version": 1,
+  "requests": {
+    "shared-local-model-request-e7c2f7ef0d62a8ff": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-26T06:59:54+00:00",
+      "authority_state": "operator_authorized_active_cognitive_loop",
+      "claimed_at": "2026-07-26T06:59:54+00:00",
+      "completed_at": "2026-07-26T07:00:19+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-26T06:59:54+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-dabba02dcd061fb1",
+      "failure_classification": "",
+      "lifecycle_state": "completed",
+      "mission_id": "active-cognitive-goal-30a083470f369341",
+      "mission_information_need_identity": "focus-6bfee569086ccc13",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - evidence_gap: nonempty string - existing_evidence_refs: array[string] - missing_evidence: array[string] - bounded_next_evidence_request: nonempty string - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - existing_evidence_refs values must be chosen from: support_schema13_identify_evidence_need_1_a, useful_schema13_identify_evidence_need_1_b OPERATION RULE: evidence_gap must name a specific missing or unresolved evidence need; do not write none, and do not use the operation name as the bounded_next_evidence_request TASK: perform only operation identify_evidence_need. Allowed transition/next-operation values: identify_evidence_need, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: support_schema13_identify_evidence_need_1_a, useful_schema13_identify_evidence_need_1_b. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":1,\"description\":\"Resolve discrepancy for goal: qualify operation family identify_evidence_need\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"support_schema13_identify_evidence_need_1_a\",\"useful_schema13_identify_evidence_need_1_b\",\"contrary_schema13_identify_evidence_need_1_c\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-6bfee569086ccc13\",\"related_goal_ids\":[\"active-cognitive-goal-30a083470f369341\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"Prior cognition-lane attempts failed or weakened the active hypothesis.\",\"evidence_id\":\"contrary_schema13_identify_evidence_need_1_c\",\"source\":\"matrix\",\"summary\":\"Contrary evidence\"}],\"current_goal\":{\"expected_state\":\"qualified structured response produced\",\"goal_id\":\"active-cognitive-goal-30a083470f369341\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"qualify operation family identify_evidence_need\"},\"current_hypotheses\":[{\"assumptions\":[\"local evidence is complete for this bounded episode\"],\"confidence_state\":\"plausible\",\"created_at\":\"2026-07-26T06:59:54+00:00\",\"disposition\":\"needs_challenge\",\"evidence_against\":[\"contrary_schema13_identify_evidence_need_1_c\"],\"evidence_for\":[\"support_schema13_identify_evidence_need_1_a\",\"useful_schema13_identify_evidence_need_1_b\"],\"expected_observations\":[\"local evidence should support a bounded useful step\"],\"hypothesis_id\":\"hypothesis-3a458b554e74341c\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-6bfee569086ccc13\",\"originating_goal_id\":\"active-cognitive-goal-30a083470f369341\",\"provenance\":[\"cognitive-operation-20aab9d9267d26ec\"],\"revised_at\":\"\",\"revision_parent_id\":\"\",\"revision_reason\":\"\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: qualify operation family identify_evidence_need\",\"statement\":\"A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family identify_evidence_need can progress using the available local evidence.\"}],\"evidence_for\":[{\"content\":\"Runtime state and local ledger are available for this bounded operation.\",\"evidence_id\":\"support_schema13_identify_evidence_need_1_a\",\"source\":\"matrix\",\"summary\":\"Supporting evidence\"},{\"content\":\"The operation must produce a bounded next cognitive action without declaring success.\",\"evidence_id\":\"useful_schema13_identify_evidence_need_1_b\",\"source\":\"matrix\",\"summary\":\"Useful target\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-26T06:59:54+00:00\",\"discrepancy\":\"progress_observed\",\"expected\":\"Perform formulate_hypothesis for the active focus using only referenced evidence.\",\"observed\":\"A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family identify_evidence_need can progress using the available local evidence.\",\"operation_id\":\"cognitive-operation-20aab9d9267d26ec\",\"outcome_id\":\"outcome-38021a00596ee72d\"}]}",
+      "question_objective": "identify_evidence_need",
+      "record_digest": "ba0d74787b183b4f8ab2974a0819df5f27adbf8f9e7431feed7043684f0fe5b8",
+      "record_version": 1,
+      "request_digest": "ff3d63ea6997c15575bcbf1c07bf9a42fa152bb62aa9a2f553ed3162269ddfda",
+      "request_id": "shared-local-model-request-e7c2f7ef0d62a8ff",
+      "requester_reference": "cognitive-operation-4a6d7445fad1c49c",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "shared-local-model-result-47e9919b88e6f06b",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-95fee69401e877fe",
+      "session_reference": "active-cognitive-cycle-587736ab3ab18dee"
+    }
+  },
+  "results": {
+    "shared-local-model-result-47e9919b88e6f06b": {
+      "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+      "availability_state": "available",
+      "execution_completed_at": "2026-07-26T07:00:19+00:00",
+      "execution_started_at": "2026-07-26T06:59:54+00:00",
+      "failure_classification": "",
+      "failure_detail": "",
+      "latency_seconds": 24.4684,
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "provenance": {
+        "execution_claim_id": "shared-local-model-execution-claim-dabba02dcd061fb1",
+        "selected_lane": {
+          "available": true,
+          "candidate_models": [
+            {
+              "capabilities": [
+                "text"
+              ],
+              "family": "qwen",
+              "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+              "reason": "registered_alias",
+              "registry_key": "qwen",
+              "tier": 3
+            }
+          ],
+          "capabilities": [
+            "text"
+          ],
+          "context_size": 32768,
+          "cost_latency_class": "medium_to_high_local",
+          "display_name": "Reasoning / Analysis Lane",
+          "executed": false,
+          "execution_gate": "not_executed_by_default",
+          "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+          "expected_weakness": "external facts need gated supporting information",
+          "fallback_priority": 3,
+          "lane": "reasoning_analysis",
+          "model_family": "qwen",
+          "preferred_task_lanes": [
+            "analysis",
+            "research",
+            "investigation",
+            "external_knowledge_request"
+          ],
+          "provider_calls_performed": false,
+          "rejected_models": [],
+          "selected_model": "qwen",
+          "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+          "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+          "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+        }
+      },
+      "request_id": "shared-local-model-request-e7c2f7ef0d62a8ff",
+      "response_digest": "d866de6ecc5010445b308d8245be1adf46fb48a4e2d94b559a94f0a25031fcb9",
+      "response_reference": "{ \"evidence_gap\": \"local evidence supporting or challenging the goal\", \"existing_evidence_refs\": [ \"support_schema13_identify_evidence_need_1_a\", \"useful_schema13_identify_evidence_need_1_b\" ], \"missing_evidence\": [ \"contrary_schema13_identify_evidence_need_1_c\" ], \"bounded_next_evidence_request\": \"support_schema13_identify_evidence_need_1_a\", \"uncertainty\": \"the extent to which local evidence supports or challenges the goal\", \"recommended_state_transition\": \"identify_evidence_need\" }",
+      "result_digest": "29ab6f0102d8ea2a429bd2f5bf9b8b47806d9e3bdcf43586ac520ee795d2f876",
+      "result_id": "shared-local-model-result-47e9919b88e6f06b",
+      "terminal_state": "completed"
+    }
+  },
+  "state_digest": "4c58013ca719d6be37f15dfb059c22be86f5fd0eb04cbbc8e561915a573d0736"
+}

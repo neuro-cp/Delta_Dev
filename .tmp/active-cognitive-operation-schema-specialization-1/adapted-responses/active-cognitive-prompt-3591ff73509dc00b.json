@@ -1,0 +1,22 @@
+{
+  "adapted_response": {
+    "contrary_evidence_considered": [
+      "contrary_schema10_revise_hypothesis_2_c"
+    ],
+    "evidence_refs": [
+      "useful_schema10_revise_hypothesis_2_b",
+      "support_schema10_revise_hypothesis_2_a"
+    ],
+    "new_confidence_state": "plausible",
+    "prior_hypothesis_id": "hypothesis-63d6d890f1875091",
+    "recommended_state_transition": "revise_hypothesis",
+    "revised_statement": "The operation must produce a bounded next cognitive action without declaring success.",
+    "revision_reason": "The original statement was too broad and did not align with the specific requirement of producing a bounded next cognitive action.",
+    "uncertainty": "How the operation will handle complex scenarios without declaring success."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{ \"prior_hypothesis_id\": \"hypothesis-63d6d890f1875091\", \"revised_statement\": \"The operation must produce a bounded next cognitive action without declaring success.\", \"evidence_refs\": [ \"useful_schema10_revise_hypothesis_2_b\", \"support_schema10_revise_hypothesis_2_a\" ], \"contrary_evidence_considered\": [ \"contrary_schema10_revise_hypothesis_2_c\" ], \"revision_reason\": \"The original statement was too broad and did not align with the specific requirement of producing a bounded next cognitive action.\", \"new_confidence_state\": \"plausible\", \"uncertainty\": \"How the operation will handle complex scenarios without declaring success.\", \"recommended_state_transition\": \"revise_hypothesis\" }",
+  "raw_response_digest": "bfe8421ce62247d4bb5b7c34b373d6f90ff4b03485d6752fe194742ce3aa042f",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

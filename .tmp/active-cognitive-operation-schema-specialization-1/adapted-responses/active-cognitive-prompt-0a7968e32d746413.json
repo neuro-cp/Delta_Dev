@@ -1,0 +1,19 @@
+{
+  "adapted_response": {
+    "discrepancy": "progress_observed",
+    "evidence_refs": [
+      "support_schema10_reflect_on_outcome_3_a",
+      "useful_schema10_reflect_on_outcome_3_b"
+    ],
+    "expected_outcome": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family reflect_on_outcome can progress using the available local evidence.",
+    "lesson": "The operation family reflect_on_outcome can utilize the available local evidence to make progress.",
+    "observed_outcome": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family reflect_on_outcome can progress using the available local evidence.",
+    "recommended_state_transition": "revise_hypothesis",
+    "uncertainty": "The outcome may not be sufficient to qualify the operation."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"expected_outcome\":\"A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family reflect_on_outcome can progress using the available local evidence.\",\"observed_outcome\":\"A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family reflect_on_outcome can progress using the available local evidence.\",\"discrepancy\":\"progress_observed\",\"evidence_refs\":[\"support_schema10_reflect_on_outcome_3_a\",\"useful_schema10_reflect_on_outcome_3_b\"],\"lesson\":\"The operation family reflect_on_outcome can utilize the available local evidence to make progress.\",\"uncertainty\":\"The outcome may not be sufficient to qualify the operation.\",\"recommended_state_transition\":\"revise_hypothesis\"}",
+  "raw_response_digest": "0ff3d0f1685ec41c1edb1421b0950fb57ed2821e46bad0d01a14d25972f928f0",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

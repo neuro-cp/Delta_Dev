@@ -1,0 +1,77 @@
+{
+  "challenge_hypothesis": {
+    "grammar": "root ::= object\nobject ::= \"{\" ws \"\\\"challenged_hypothesis_id\\\"\" ws \":\" ws string ws \",\" ws \"\\\"vulnerability\\\"\" ws \":\" ws string ws \",\" ws \"\\\"contrary_evidence_refs\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"disconfirming_observation\\\"\" ws \":\" ws string ws \",\" ws \"\\\"uncertainty\\\"\" ws \":\" ws string ws \",\" ws \"\\\"recommended_state_transition\\\"\" ws \":\" ws enum-recommended-state-transition ws \"}\"\nenum-recommended-state-transition ::= \"\\\"weaken_hypothesis\\\"\" | \"\\\"revise_hypothesis\\\"\" | \"\\\"reject_hypothesis\\\"\" | \"\\\"falsify_hypothesis\\\"\"\nstringlist ::= \"[\" ws stringitems? ws \"]\"\nstringitems ::= string (ws \",\" ws string)*\nstring ::= \"\\\"\" chars \"\\\"\"\nchars ::= char+\nchar ::= [^\"\\\\] | escape\nescape ::= \"\\\\\" [\"\\\\/bfnrt]\nws ::= [ \\t\\n\\r]*\n",
+    "grammar_length": 729,
+    "operation_type": "challenge_hypothesis"
+  },
+  "compare_evidence": {
+    "grammar": "root ::= object\nobject ::= \"{\" ws \"\\\"assumptions\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"contrary_evidence_considered\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"evidence_refs\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"interpretation\\\"\" ws \":\" ws string ws \",\" ws \"\\\"next_evidence_need\\\"\" ws \":\" ws string ws \",\" ws \"\\\"next_focus_proposal\\\"\" ws \":\" ws string ws \",\" ws \"\\\"operation_result_type\\\"\" ws \":\" ws enum-operation-result-type ws \",\" ws \"\\\"recommended_action\\\"\" ws \":\" ws string ws \",\" ws \"\\\"recommended_state_transition\\\"\" ws \":\" ws enum-recommended-state-transition ws \",\" ws \"\\\"uncertainty\\\"\" ws \":\" ws string ws \"}\"\nenum-operation-result-type ::= \"\\\"compare_evidence_result\\\"\"\nenum-recommended-state-transition ::= \"\\\"add_supporting_evidence\\\"\" | \"\\\"add_conflicting_evidence\\\"\" | \"\\\"weaken_hypothesis\\\"\" | \"\\\"revise_hypothesis\\\"\"\nstringlist ::= \"[\" ws stringitems? ws \"]\"\nstringitems ::= string (ws \",\" ws string)*\nstring ::= \"\\\"\" chars \"\\\"\"\nchars ::= char+\nchar ::= [^\"\\\\] | escape\nescape ::= \"\\\\\" [\"\\\\/bfnrt]\nws ::= [ \\t\\n\\r]*\n",
+    "grammar_length": 1024,
+    "operation_type": "compare_evidence"
+  },
+  "declare_blocked_capability": {
+    "grammar": "root ::= object\nobject ::= \"{\" ws \"\\\"capability_gap\\\"\" ws \":\" ws string ws \",\" ws \"\\\"attempted_evidence_refs\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"blocking_reason\\\"\" ws \":\" ws string ws \",\" ws \"\\\"bounded_next_action\\\"\" ws \":\" ws string ws \",\" ws \"\\\"uncertainty\\\"\" ws \":\" ws string ws \",\" ws \"\\\"recommended_state_transition\\\"\" ws \":\" ws enum-recommended-state-transition ws \"}\"\nenum-recommended-state-transition ::= \"\\\"declare_blocked_capability\\\"\"\nstringlist ::= \"[\" ws stringitems? ws \"]\"\nstringitems ::= string (ws \",\" ws string)*\nstring ::= \"\\\"\" chars \"\\\"\"\nchars ::= char+\nchar ::= [^\"\\\\] | escape\nescape ::= \"\\\\\" [\"\\\\/bfnrt]\nws ::= [ \\t\\n\\r]*\n",
+    "grammar_length": 646,
+    "operation_type": "declare_blocked_capability"
+  },
+  "declare_insufficient_evidence": {
+    "grammar": "root ::= object\nobject ::= \"{\" ws \"\\\"missing_evidence\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"attempted_evidence_refs\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"why_existing_evidence_is_insufficient\\\"\" ws \":\" ws string ws \",\" ws \"\\\"bounded_next_evidence_request\\\"\" ws \":\" ws string ws \",\" ws \"\\\"uncertainty\\\"\" ws \":\" ws string ws \",\" ws \"\\\"recommended_state_transition\\\"\" ws \":\" ws enum-recommended-state-transition ws \"}\"\nenum-recommended-state-transition ::= \"\\\"declare_insufficient_evidence\\\"\"\nstringlist ::= \"[\" ws stringitems? ws \"]\"\nstringitems ::= string (ws \",\" ws string)*\nstring ::= \"\\\"\" chars \"\\\"\"\nchars ::= char+\nchar ::= [^\"\\\\] | escape\nescape ::= \"\\\\\" [\"\\\\/bfnrt]\nws ::= [ \\t\\n\\r]*\n",
+    "grammar_length": 687,
+    "operation_type": "declare_insufficient_evidence"
+  },
+  "formulate_hypothesis": {
+    "grammar": "root ::= object\nobject ::= \"{\" ws \"\\\"hypothesis_statement\\\"\" ws \":\" ws string ws \",\" ws \"\\\"scope\\\"\" ws \":\" ws string ws \",\" ws \"\\\"supporting_evidence_refs\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"assumptions\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"expected_observations\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"uncertainty\\\"\" ws \":\" ws string ws \",\" ws \"\\\"recommended_state_transition\\\"\" ws \":\" ws enum-recommended-state-transition ws \"}\"\nenum-recommended-state-transition ::= \"\\\"propose_hypothesis\\\"\" | \"\\\"declare_insufficient_evidence\\\"\"\nstringlist ::= \"[\" ws stringitems? ws \"]\"\nstringitems ::= string (ws \",\" ws string)*\nstring ::= \"\\\"\" chars \"\\\"\"\nchars ::= char+\nchar ::= [^\"\\\\] | escape\nescape ::= \"\\\\\" [\"\\\\/bfnrt]\nws ::= [ \\t\\n\\r]*\n",
+    "grammar_length": 728,
+    "operation_type": "formulate_hypothesis"
+  },
+  "identify_evidence_need": {
+    "grammar": "root ::= object\nobject ::= \"{\" ws \"\\\"evidence_gap\\\"\" ws \":\" ws string ws \",\" ws \"\\\"existing_evidence_refs\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"missing_evidence\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"bounded_next_evidence_request\\\"\" ws \":\" ws string ws \",\" ws \"\\\"uncertainty\\\"\" ws \":\" ws string ws \",\" ws \"\\\"recommended_state_transition\\\"\" ws \":\" ws enum-recommended-state-transition ws \"}\"\nenum-recommended-state-transition ::= \"\\\"identify_evidence_need\\\"\" | \"\\\"declare_insufficient_evidence\\\"\"\nstringlist ::= \"[\" ws stringitems? ws \"]\"\nstringitems ::= string (ws \",\" ws string)*\nstring ::= \"\\\"\" chars \"\\\"\"\nchars ::= char+\nchar ::= [^\"\\\\] | escape\nescape ::= \"\\\\\" [\"\\\\/bfnrt]\nws ::= [ \\t\\n\\r]*\n",
+    "grammar_length": 692,
+    "operation_type": "identify_evidence_need"
+  },
+  "interpret_state": {
+    "grammar": "root ::= object\nobject ::= \"{\" ws \"\\\"state_summary\\\"\" ws \":\" ws string ws \",\" ws \"\\\"salient_observations\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"evidence_refs\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"unresolved_questions\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"uncertainty\\\"\" ws \":\" ws string ws \",\" ws \"\\\"recommended_next_operation\\\"\" ws \":\" ws enum-recommended-next-operation ws \"}\"\nenum-recommended-next-operation ::= \"\\\"prioritize_focus\\\"\" | \"\\\"formulate_hypothesis\\\"\" | \"\\\"identify_evidence_need\\\"\" | \"\\\"compare_evidence\\\"\" | \"\\\"declare_insufficient_evidence\\\"\"\nstringlist ::= \"[\" ws stringitems? ws \"]\"\nstringitems ::= string (ws \",\" ws string)*\nstring ::= \"\\\"\" chars \"\\\"\"\nchars ::= char+\nchar ::= [^\"\\\\] | escape\nescape ::= \"\\\\\" [\"\\\\/bfnrt]\nws ::= [ \\t\\n\\r]*\n",
+    "grammar_length": 756,
+    "operation_type": "interpret_state"
+  },
+  "prioritize_focus": {
+    "grammar": "root ::= object\nobject ::= \"{\" ws \"\\\"selected_focus_id\\\"\" ws \":\" ws string ws \",\" ws \"\\\"selection_reason\\\"\" ws \":\" ws string ws \",\" ws \"\\\"supporting_evidence_refs\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"rejected_focus_ids\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"uncertainty\\\"\" ws \":\" ws string ws \",\" ws \"\\\"recommended_state_transition\\\"\" ws \":\" ws enum-recommended-state-transition ws \"}\"\nenum-recommended-state-transition ::= \"\\\"select_next_focus\\\"\" | \"\\\"continue_focus\\\"\" | \"\\\"request_operator_resolution\\\"\"\nstringlist ::= \"[\" ws stringitems? ws \"]\"\nstringitems ::= string (ws \",\" ws string)*\nstring ::= \"\\\"\" chars \"\\\"\"\nchars ::= char+\nchar ::= [^\"\\\\] | escape\nescape ::= \"\\\\\" [\"\\\\/bfnrt]\nws ::= [ \\t\\n\\r]*\n",
+    "grammar_length": 704,
+    "operation_type": "prioritize_focus"
+  },
+  "propose_plan": {
+    "grammar": "root ::= object\nobject ::= \"{\" ws \"\\\"plan_summary\\\"\" ws \":\" ws string ws \",\" ws \"\\\"supporting_evidence_refs\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"planned_steps\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"risks\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"uncertainty\\\"\" ws \":\" ws string ws \",\" ws \"\\\"recommended_state_transition\\\"\" ws \":\" ws enum-recommended-state-transition ws \"}\"\nenum-recommended-state-transition ::= \"\\\"propose_plan\\\"\" | \"\\\"request_operator_resolution\\\"\" | \"\\\"declare_insufficient_evidence\\\"\"\nstringlist ::= \"[\" ws stringitems? ws \"]\"\nstringitems ::= string (ws \",\" ws string)*\nstring ::= \"\\\"\" chars \"\\\"\"\nchars ::= char+\nchar ::= [^\"\\\\] | escape\nescape ::= \"\\\\\" [\"\\\\/bfnrt]\nws ::= [ \\t\\n\\r]*\n",
+    "grammar_length": 697,
+    "operation_type": "propose_plan"
+  },
+  "reflect_on_outcome": {
+    "grammar": "root ::= object\nobject ::= \"{\" ws \"\\\"expected_outcome\\\"\" ws \":\" ws string ws \",\" ws \"\\\"observed_outcome\\\"\" ws \":\" ws string ws \",\" ws \"\\\"discrepancy\\\"\" ws \":\" ws string ws \",\" ws \"\\\"evidence_refs\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"lesson\\\"\" ws \":\" ws string ws \",\" ws \"\\\"uncertainty\\\"\" ws \":\" ws string ws \",\" ws \"\\\"recommended_state_transition\\\"\" ws \":\" ws enum-recommended-state-transition ws \"}\"\nenum-recommended-state-transition ::= \"\\\"reflect_on_outcome\\\"\" | \"\\\"weaken_hypothesis\\\"\" | \"\\\"revise_hypothesis\\\"\" | \"\\\"summarize_learning\\\"\"\nstringlist ::= \"[\" ws stringitems? ws \"]\"\nstringitems ::= string (ws \",\" ws string)*\nstring ::= \"\\\"\" chars \"\\\"\"\nchars ::= char+\nchar ::= [^\"\\\\] | escape\nescape ::= \"\\\\\" [\"\\\\/bfnrt]\nws ::= [ \\t\\n\\r]*\n",
+    "grammar_length": 742,
+    "operation_type": "reflect_on_outcome"
+  },
+  "request_operator_resolution": {
+    "grammar": "root ::= object\nobject ::= \"{\" ws \"\\\"question\\\"\" ws \":\" ws string ws \",\" ws \"\\\"blocking_reason\\\"\" ws \":\" ws string ws \",\" ws \"\\\"evidence_refs\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"options\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"uncertainty\\\"\" ws \":\" ws string ws \",\" ws \"\\\"recommended_state_transition\\\"\" ws \":\" ws enum-recommended-state-transition ws \"}\"\nenum-recommended-state-transition ::= \"\\\"request_operator_resolution\\\"\"\nstringlist ::= \"[\" ws stringitems? ws \"]\"\nstringitems ::= string (ws \",\" ws string)*\nstring ::= \"\\\"\" chars \"\\\"\"\nchars ::= char+\nchar ::= [^\"\\\\] | escape\nescape ::= \"\\\\\" [\"\\\\/bfnrt]\nws ::= [ \\t\\n\\r]*\n",
+    "grammar_length": 623,
+    "operation_type": "request_operator_resolution"
+  },
+  "revise_hypothesis": {
+    "grammar": "root ::= object\nobject ::= \"{\" ws \"\\\"prior_hypothesis_id\\\"\" ws \":\" ws string ws \",\" ws \"\\\"revised_statement\\\"\" ws \":\" ws string ws \",\" ws \"\\\"evidence_refs\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"contrary_evidence_considered\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"revision_reason\\\"\" ws \":\" ws string ws \",\" ws \"\\\"new_confidence_state\\\"\" ws \":\" ws string ws \",\" ws \"\\\"uncertainty\\\"\" ws \":\" ws string ws \",\" ws \"\\\"recommended_state_transition\\\"\" ws \":\" ws enum-recommended-state-transition ws \"}\"\nenum-recommended-state-transition ::= \"\\\"revise_hypothesis\\\"\" | \"\\\"reject_hypothesis\\\"\" | \"\\\"falsify_hypothesis\\\"\"\nstringlist ::= \"[\" ws stringitems? ws \"]\"\nstringitems ::= string (ws \",\" ws string)*\nstring ::= \"\\\"\" chars \"\\\"\"\nchars ::= char+\nchar ::= [^\"\\\\] | escape\nescape ::= \"\\\\\" [\"\\\\/bfnrt]\nws ::= [ \\t\\n\\r]*\n",
+    "grammar_length": 803,
+    "operation_type": "revise_hypothesis"
+  },
+  "revise_plan": {
+    "grammar": "root ::= object\nobject ::= \"{\" ws \"\\\"prior_plan_id\\\"\" ws \":\" ws string ws \",\" ws \"\\\"revised_plan_summary\\\"\" ws \":\" ws string ws \",\" ws \"\\\"evidence_refs\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"revision_reason\\\"\" ws \":\" ws string ws \",\" ws \"\\\"uncertainty\\\"\" ws \":\" ws string ws \",\" ws \"\\\"recommended_state_transition\\\"\" ws \":\" ws enum-recommended-state-transition ws \"}\"\nenum-recommended-state-transition ::= \"\\\"revise_plan\\\"\" | \"\\\"request_operator_resolution\\\"\" | \"\\\"declare_insufficient_evidence\\\"\"\nstringlist ::= \"[\" ws stringitems? ws \"]\"\nstringitems ::= string (ws \",\" ws string)*\nstring ::= \"\\\"\" chars \"\\\"\"\nchars ::= char+\nchar ::= [^\"\\\\] | escape\nescape ::= \"\\\\\" [\"\\\\/bfnrt]\nws ::= [ \\t\\n\\r]*\n",
+    "grammar_length": 695,
+    "operation_type": "revise_plan"
+  },
+  "select_next_focus": {
+    "grammar": "root ::= object\nobject ::= \"{\" ws \"\\\"selected_focus_id\\\"\" ws \":\" ws string ws \",\" ws \"\\\"salience_reason\\\"\" ws \":\" ws string ws \",\" ws \"\\\"related_goal_ids\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"evidence_refs\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"deferred_focus_ids\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"uncertainty\\\"\" ws \":\" ws string ws \",\" ws \"\\\"recommended_state_transition\\\"\" ws \":\" ws enum-recommended-state-transition ws \"}\"\nenum-recommended-state-transition ::= \"\\\"select_next_focus\\\"\" | \"\\\"request_operator_resolution\\\"\"\nstringlist ::= \"[\" ws stringitems? ws \"]\"\nstringitems ::= string (ws \",\" ws string)*\nstring ::= \"\\\"\" chars \"\\\"\"\nchars ::= char+\nchar ::= [^\"\\\\] | escape\nescape ::= \"\\\\\" [\"\\\\/bfnrt]\nws ::= [ \\t\\n\\r]*\n",
+    "grammar_length": 723,
+    "operation_type": "select_next_focus"
+  },
+  "summarize_learning": {
+    "grammar": "root ::= object\nobject ::= \"{\" ws \"\\\"lesson\\\"\" ws \":\" ws string ws \",\" ws \"\\\"evidence_refs\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"unresolved_questions\\\"\" ws \":\" ws stringlist ws \",\" ws \"\\\"uncertainty\\\"\" ws \":\" ws string ws \",\" ws \"\\\"recommended_state_transition\\\"\" ws \":\" ws enum-recommended-state-transition ws \"}\"\nenum-recommended-state-transition ::= \"\\\"summarize_learning\\\"\" | \"\\\"select_next_focus\\\"\"\nstringlist ::= \"[\" ws stringitems? ws \"]\"\nstringitems ::= string (ws \",\" ws string)*\nstring ::= \"\\\"\" chars \"\\\"\"\nchars ::= char+\nchar ::= [^\"\\\\] | escape\nescape ::= \"\\\\\" [\"\\\\/bfnrt]\nws ::= [ \\t\\n\\r]*\n",
+    "grammar_length": 602,
+    "operation_type": "summarize_learning"
+  }
+}

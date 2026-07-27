@@ -1,0 +1,29 @@
+{
+  "adapted_response": {
+    "challenged_hypothesis_id": "hypothesis-088da8ee876414c0",
+    "contrary_evidence_refs": [
+      "contrary_schema8_challenge_hypothesis_2_c"
+    ],
+    "disconfirming_observation": "Prior attempts weakened active hypothesis",
+    "recommended_state_transition": "weaken_hypothesis",
+    "uncertainty": "local evidence may not fully support the hypothesis",
+    "vulnerability": "local evidence is incomplete"
+  },
+  "elapsed_seconds": 16.742,
+  "failure_classifications": [
+    "generic_filler"
+  ],
+  "operation": "challenge_hypothesis",
+  "passed": false,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "contrary_evidence_addressed",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "meaningful_revision",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "a7522ff49ba0282aeb0a84c6285ea8e2f68d5f29f5bde3766367e800bca57b75",
+  "variant": 2
+}

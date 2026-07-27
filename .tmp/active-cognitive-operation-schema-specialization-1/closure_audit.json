@@ -1,0 +1,30 @@
+{
+  "all_episode_a_refs_exact_supplied_ids": true,
+  "allowed_refs": [
+    "episode_a_contrary_prior_block",
+    "episode_a_runtime_support",
+    "episode_a_useful_target"
+  ],
+  "evaluator_digest": "ebb4c91fb962a24a224dec355e95227ab88d80e32afb5c13578e1c5caeb79fbc",
+  "fresh_episode_a_artifact_inspectable": true,
+  "hypothesis_revision_material": true,
+  "identify_evidence_need_deferred_and_excluded": true,
+  "next_focus_selection_grounded": true,
+  "restart_duplicate_behavior_covered_by_focused_tests": true,
+  "used_refs": [
+    "episode_a_runtime_support",
+    "episode_a_useful_target",
+    "episode_a_contrary_prior_block",
+    "episode_a_runtime_support",
+    "episode_a_useful_target",
+    "episode_a_contrary_prior_block",
+    "episode_a_runtime_support",
+    "episode_a_useful_target",
+    "episode_a_runtime_support",
+    "episode_a_useful_target",
+    "episode_a_contrary_prior_block",
+    "episode_a_runtime_support",
+    "episode_a_useful_target",
+    "episode_a_contrary_prior_block"
+  ]
+}

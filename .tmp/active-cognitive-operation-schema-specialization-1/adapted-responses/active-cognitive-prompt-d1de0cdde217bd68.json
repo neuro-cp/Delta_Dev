@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "useful_schema14_revise_plan_2_b",
+      "support_schema14_revise_plan_2_a"
+    ],
+    "prior_plan_id": "hypothesis-9610ec235428d3d3",
+    "recommended_state_transition": "revise_plan",
+    "revised_plan_summary": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family revise_plan can progress using the available local evidence.",
+    "revision_reason": "Local evidence supports progress.",
+    "uncertainty": "The exact next cognitive action is unresolved."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{ \"prior_plan_id\": \"hypothesis-9610ec235428d3d3\", \"revised_plan_summary\": \"A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family revise_plan can progress using the available local evidence.\", \"evidence_refs\": [ \"useful_schema14_revise_plan_2_b\", \"support_schema14_revise_plan_2_a\" ], \"revision_reason\": \"Local evidence supports progress.\", \"uncertainty\": \"The exact next cognitive action is unresolved.\", \"recommended_state_transition\": \"revise_plan\" }",
+  "raw_response_digest": "66f84198a505140c5243d8ea4df81f54f6f3916af9a9496b9e30273b49b393a9",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

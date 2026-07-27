@@ -1,0 +1,16 @@
+﻿{
+    "trailing_whitespace":  [
+
+                            ],
+    "checked_files":  [
+                          "integration/model_runtime/execution_lanes.py",
+                          "integration/model_runtime/model_session.py",
+                          "integration/model_runtime/gguf_model_runner.py",
+                          "integration/model_runtime/prompt_builder.py",
+                          "integration/model_runtime/provider_manager.py",
+                          "orchestration/runtime/active_cognitive_loop.py",
+                          "tests/runtime_gsr/test_active_cognitive_loop.py",
+                          "tests/runtime_gsr/test_model_execution_lane_isolation.py"
+                      ],
+    "passed":  true
+}

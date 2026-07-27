@@ -1,0 +1,5 @@
+﻿{
+    "output":  "...................................                                      [100%]\n35 passed in 0.89s",
+    "command":  "python -m pytest active/lane final -q",
+    "exit_code":  0
+}

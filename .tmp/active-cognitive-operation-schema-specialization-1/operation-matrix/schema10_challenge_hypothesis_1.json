@@ -1,0 +1,27 @@
+{
+  "adapted_response": {
+    "challenged_hypothesis_id": "hypothesis-5d555b8b4a9c5ee1",
+    "contrary_evidence_refs": [
+      "contrary_schema10_challenge_hypothesis_1_c"
+    ],
+    "disconfirming_observation": "Prior attempts to resolve the discrepancy have failed or weakened the hypothesis.",
+    "recommended_state_transition": "weaken_hypothesis",
+    "uncertainty": "The exact nature of the discrepancy and the appropriate next steps remain unresolved.",
+    "vulnerability": "The current evidence does not sufficiently support the hypothesis."
+  },
+  "elapsed_seconds": 25.846,
+  "failure_classifications": [],
+  "operation": "challenge_hypothesis",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "contrary_evidence_addressed",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "meaningful_revision",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "1c9e930c26c217373e3b453ba6115b813095687286bf71f5edb854e2748b902a",
+  "variant": 1
+}

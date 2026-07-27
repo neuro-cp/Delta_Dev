@@ -1,0 +1,30 @@
+{
+  "adapted_response": {
+    "plan_summary": "Propose a plan to resolve the discrepancy by formulating a hypothesis using the available local evidence.",
+    "planned_steps": [
+      "Formulate a hypothesis based on the available local evidence."
+    ],
+    "recommended_state_transition": "propose_plan",
+    "risks": [
+      "The hypothesis may not accurately resolve the discrepancy."
+    ],
+    "supporting_evidence_refs": [
+      "useful_schema14_propose_plan_2_b",
+      "support_schema14_propose_plan_2_a"
+    ],
+    "uncertainty": "The exact nature of the discrepancy remains unresolved."
+  },
+  "elapsed_seconds": 21.403,
+  "failure_classifications": [],
+  "operation": "propose_plan",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "a7cd10c07a4522ef2f495da7aa573d4765b5bb6b2471fd5344e0653c1372909e",
+  "variant": 2
+}

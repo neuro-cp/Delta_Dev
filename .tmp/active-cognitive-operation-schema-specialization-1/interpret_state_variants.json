@@ -1,0 +1,100 @@
+[
+  {
+    "adapted_response": {
+      "evidence_refs": [
+        "support_interpret_aligned_1_a",
+        "useful_interpret_aligned_1_b",
+        "contrary_interpret_aligned_1_c"
+      ],
+      "recommended_next_operation": "formulate_hypothesis",
+      "salient_observations": [
+        "Runtime evidence available",
+        "The next cognitive operation must be selected without claiming success"
+      ],
+      "state_summary": "Persistent state, local ledger, and operator command path exist.",
+      "uncertainty": "How the available local evidence will support a bounded useful step.",
+      "unresolved_questions": [
+        "How can the universal template be adapted to avoid blank fields or evidence prose in future interpret_state attempts?"
+      ]
+    },
+    "elapsed_seconds": 24.418,
+    "failure_classifications": [],
+    "operation": "interpret_state",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "16e55e1cf74dde05a8900f68980d299ab38b16fa4f1ccf761b3fcbba9825352d",
+    "variant": 1
+  },
+  {
+    "adapted_response": {
+      "evidence_refs": [
+        "contrary_interpret_aligned_2_c",
+        "useful_interpret_aligned_2_b",
+        "support_interpret_aligned_2_a"
+      ],
+      "recommended_next_operation": "formulate_hypothesis",
+      "salient_observations": [
+        "The universal template caused blank fields or evidence prose in earlier interpret_state attempts.",
+        "The next cognitive operation must be selected without claiming success.",
+        "Persistent state, local ledger, and operator command path exist."
+      ],
+      "state_summary": "Resolve discrepancy for goal: qualify interpret_state specialized schema variant 2",
+      "uncertainty": "How to align the specialized schema with the persistent state and available evidence.",
+      "unresolved_questions": [
+        "How should the interpret_state specialized schema variant 2 be qualified given the persistent state and available evidence?"
+      ]
+    },
+    "elapsed_seconds": 26.861,
+    "failure_classifications": [],
+    "operation": "interpret_state",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "3a93a15bce0a33fa193c584952b5565905970c8038f1ea3f072ecf4bb39d9b3d",
+    "variant": 2
+  },
+  {
+    "adapted_response": {
+      "evidence_refs": [
+        "support_interpret_aligned_3_a",
+        "useful_interpret_aligned_3_b",
+        "contrary_interpret_aligned_3_c"
+      ],
+      "recommended_next_operation": "formulate_hypothesis",
+      "salient_observations": [
+        "Runtime evidence available",
+        "The next cognitive operation must be selected without claiming success",
+        "The universal template caused blank fields or evidence prose in earlier interpret_state attempts"
+      ],
+      "state_summary": "Persistent state, local ledger, and operator command path exist.",
+      "uncertainty": "How to effectively utilize the available local evidence to resolve the discrepancy?",
+      "unresolved_questions": [
+        "How to effectively utilize the available local evidence to resolve the discrepancy?"
+      ]
+    },
+    "elapsed_seconds": 25.677,
+    "failure_classifications": [],
+    "operation": "interpret_state",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "03b6612b15c30e26efa9dc8b59174ed943084d4fbd781d0f3943620a6fd3a825",
+    "variant": 3
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "checks": [
+    "exact JSON object",
+    "required fields present",
+    "nonempty required text",
+    "invented evidence rejected",
+    "evidence arrays contain IDs only",
+    "contrary evidence addressed when required by schema",
+    "uncertainty required",
+    "schema/prompt echo rejected",
+    "unsupported success/self-certification rejected",
+    "operation-specific transitions enforced"
+  ]
+}

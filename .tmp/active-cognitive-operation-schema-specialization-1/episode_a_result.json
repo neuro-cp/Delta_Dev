@@ -1,0 +1,139 @@
+{
+  "accepted_all_requested": true,
+  "final_completed": true,
+  "final_loop_state": "completed",
+  "has_compare_evidence": true,
+  "has_interpret_state": true,
+  "has_next_focus_selection": true,
+  "has_revision": true,
+  "has_useful_artifact": true,
+  "learning_updates": [
+    {
+      "created_at": "2026-07-26T07:18:08+00:00",
+      "evidence_refs": [
+        "episode_a_runtime_support",
+        "episode_a_useful_target",
+        "episode_a_contrary_prior_block"
+      ],
+      "learning_id": "learning-c9fb7e62cd1f53f1",
+      "summary": "Understand the local model's ledger and operation-specific grammars to resolve discrepancies and support active focus"
+    }
+  ],
+  "operations_requested": [
+    "interpret_state",
+    "compare_evidence",
+    "revise_hypothesis",
+    "select_next_focus",
+    "summarize_learning"
+  ],
+  "performed": true,
+  "results": [
+    {
+      "accepted": true,
+      "completed": false,
+      "contrary_evidence_considered": [],
+      "elapsed_seconds": 28.06,
+      "evidence_refs": [
+        "episode_a_runtime_support",
+        "episode_a_useful_target",
+        "episode_a_contrary_prior_block"
+      ],
+      "interpretation": "Interpreting local model ledger and operation-specific grammars to resolve discrepancy.",
+      "loop_state": "persisting",
+      "next_focus_proposal": "compare_evidence",
+      "operation": "interpret_state",
+      "recommended_action": "compare_evidence",
+      "recommended_state_transition": "continue_focus",
+      "rejection_reasons": [],
+      "sequence": 1
+    },
+    {
+      "accepted": true,
+      "completed": false,
+      "contrary_evidence_considered": [],
+      "elapsed_seconds": 32.708,
+      "evidence_refs": [
+        "episode_a_runtime_support",
+        "episode_a_useful_target",
+        "episode_a_contrary_prior_block"
+      ],
+      "interpretation": "Interpreting local model ledger and operation-specific grammars to resolve discrepancy.",
+      "loop_state": "persisting",
+      "next_focus_proposal": "Weigh evidence and revise hypothesis if necessary.",
+      "operation": "compare_evidence",
+      "recommended_action": "Weigh evidence and revise hypothesis if necessary.",
+      "recommended_state_transition": "weaken_hypothesis",
+      "rejection_reasons": [],
+      "sequence": 2
+    },
+    {
+      "accepted": true,
+      "completed": false,
+      "contrary_evidence_considered": [],
+      "elapsed_seconds": 20.875,
+      "evidence_refs": [
+        "episode_a_runtime_support",
+        "episode_a_useful_target"
+      ],
+      "interpretation": "Interpreting local model ledger and operation-specific grammars to resolve discrepancy and support active focus",
+      "loop_state": "persisting",
+      "next_focus_proposal": "supported",
+      "operation": "revise_hypothesis",
+      "recommended_action": "Adding support for active focus",
+      "recommended_state_transition": "revise_hypothesis",
+      "rejection_reasons": [],
+      "sequence": 3
+    },
+    {
+      "accepted": true,
+      "completed": false,
+      "contrary_evidence_considered": [],
+      "elapsed_seconds": 21.135,
+      "evidence_refs": [
+        "episode_a_runtime_support",
+        "episode_a_useful_target",
+        "episode_a_contrary_prior_block"
+      ],
+      "interpretation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+      "loop_state": "persisting",
+      "next_focus_proposal": "focus-78d136236d4f8a68",
+      "operation": "select_next_focus",
+      "recommended_action": "focus-78d136236d4f8a68",
+      "recommended_state_transition": "select_next_focus",
+      "rejection_reasons": [],
+      "sequence": 4
+    },
+    {
+      "accepted": true,
+      "completed": true,
+      "contrary_evidence_considered": [],
+      "elapsed_seconds": 17.543,
+      "evidence_refs": [
+        "episode_a_runtime_support",
+        "episode_a_useful_target",
+        "episode_a_contrary_prior_block"
+      ],
+      "interpretation": "Understand the local model's ledger and operation-specific grammars to resolve discrepancies and support active focus",
+      "loop_state": "completed",
+      "next_focus_proposal": "",
+      "operation": "summarize_learning",
+      "recommended_action": "",
+      "recommended_state_transition": "summarize_learning",
+      "rejection_reasons": [],
+      "sequence": 5
+    }
+  ],
+  "state_path": ".tmp\\active-cognitive-operation-schema-specialization-1\\episode_a_fresh_state.json",
+  "useful_artifacts": [
+    {
+      "artifact_id": "useful-artifact-c9fb7e62cd1f53f1",
+      "artifact_type": "cognitive_episode_summary",
+      "evidence_refs": [
+        "episode_a_runtime_support",
+        "episode_a_useful_target",
+        "episode_a_contrary_prior_block"
+      ],
+      "summary": "Understand the local model's ledger and operation-specific grammars to resolve discrepancies and support active focus"
+    }
+  ]
+}

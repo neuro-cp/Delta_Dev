@@ -1,0 +1,26 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "local evidence is complete for this bounded episode"
+    ],
+    "contrary_evidence_considered": [
+      "contrary_schema7_compare_evidence_3_c"
+    ],
+    "evidence_refs": [
+      "support_schema7_compare_evidence_3_a",
+      "useful_schema7_compare_evidence_3_b"
+    ],
+    "interpretation": "The local evidence supports the hypothesis that the operation can progress, but the prior failures of similar operations cast doubt on the reliability of this evidence.",
+    "next_evidence_need": "Further evidence to confirm the reliability of the local evidence.",
+    "next_focus_proposal": "Formulate a hypothesis based on the local evidence and consider the contrary evidence.",
+    "operation_result_type": "compare_evidence_result",
+    "recommended_action": "Consider the contrary evidence and gather further evidence to confirm the reliability of the local evidence.",
+    "recommended_state_transition": "weaken_hypothesis",
+    "uncertainty": "The reliability of the local evidence is uncertain given the history of similar operations."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{ \"assumptions\": [ \"local evidence is complete for this bounded episode\" ], \"contrary_evidence_considered\": [ \"contrary_schema7_compare_evidence_3_c\" ], \"evidence_refs\": [ \"support_schema7_compare_evidence_3_a\", \"useful_schema7_compare_evidence_3_b\" ], \"interpretation\": \"The local evidence supports the hypothesis that the operation can progress, but the prior failures of similar operations cast doubt on the reliability of this evidence.\", \"next_evidence_need\": \"Further evidence to confirm the reliability of the local evidence.\", \"next_focus_proposal\": \"Formulate a hypothesis based on the local evidence and consider the contrary evidence.\", \"operation_result_type\": \"compare_evidence_result\", \"recommended_action\": \"Consider the contrary evidence and gather further evidence to confirm the reliability of the local evidence.\", \"recommended_state_transition\": \"weaken_hypothesis\", \"uncertainty\": \"The reliability of the local evidence is uncertain given the history of similar operations.\" }",
+  "raw_response_digest": "940439df8e3e721cc130a35203a98efbdde5c31c34209178eb0e152a709b696d",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

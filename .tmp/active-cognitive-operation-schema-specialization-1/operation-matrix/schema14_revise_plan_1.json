@@ -1,0 +1,26 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "support_schema14_revise_plan_1_a",
+      "useful_schema14_revise_plan_1_b"
+    ],
+    "prior_plan_id": "plan-0123456789abcdef",
+    "recommended_state_transition": "revise_plan",
+    "revised_plan_summary": "Update the local model with the latest revision of the operation family revise_plan.",
+    "revision_reason": "Local evidence supports the update of the operation family revise_plan.",
+    "uncertainty": "The effectiveness of the updated local model in resolving the goal discrepancy remains uncertain."
+  },
+  "elapsed_seconds": 18.881,
+  "failure_classifications": [],
+  "operation": "revise_plan",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "debf37ea9cdb2534997fcf6f72e652a5f411b990caccfcecd1b390cc82e32a8c",
+  "variant": 1
+}

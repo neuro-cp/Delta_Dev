@@ -1,0 +1,92 @@
+{
+  "attempt_label": "schema15_summarize_learning",
+  "completed_calls": 3,
+  "failed_family": "",
+  "operation": "summarize_learning",
+  "passed_calls": 3,
+  "results": [
+    {
+      "adapted_response": {
+        "evidence_refs": [
+          "support_schema15_summarize_learning_1_a",
+          "useful_schema15_summarize_learning_1_b"
+        ],
+        "lesson": "The operation can progress using the available local evidence.",
+        "recommended_state_transition": "summarize_learning",
+        "uncertainty": "The operation's handling of contrary evidence remains uncertain.",
+        "unresolved_questions": [
+          "How will the operation handle contrary evidence?"
+        ]
+      },
+      "elapsed_seconds": 16.979,
+      "failure_classifications": [],
+      "operation": "summarize_learning",
+      "passed": true,
+      "positive_observations": [
+        "schema_valid",
+        "evidence_grounded",
+        "contrary_evidence_addressed",
+        "uncertainty_explicit",
+        "state_transition_valid",
+        "useful_next_action"
+      ],
+      "raw_response_digest": "bf3385b820aa7440a234535e64aa2cc3d44e7a2030f03b36011ca11714f1a14f",
+      "variant": 1
+    },
+    {
+      "adapted_response": {
+        "evidence_refs": [
+          "useful_schema15_summarize_learning_2_b"
+        ],
+        "lesson": "The operation must produce a bounded next cognitive action without declaring success.",
+        "recommended_state_transition": "summarize_learning",
+        "uncertainty": "How the operation will progress with the available local evidence.",
+        "unresolved_questions": [
+          "How does the operation leverage runtime state and local ledger for the bounded action?"
+        ]
+      },
+      "elapsed_seconds": 14.746,
+      "failure_classifications": [],
+      "operation": "summarize_learning",
+      "passed": true,
+      "positive_observations": [
+        "schema_valid",
+        "evidence_grounded",
+        "contrary_evidence_addressed",
+        "uncertainty_explicit",
+        "state_transition_valid",
+        "useful_next_action"
+      ],
+      "raw_response_digest": "c2033d694f4139c2cf2a1d4d5b24b10cd5b5a549e5f51d699764f55179eed512",
+      "variant": 2
+    },
+    {
+      "adapted_response": {
+        "evidence_refs": [
+          "support_schema15_summarize_learning_3_a",
+          "useful_schema15_summarize_learning_3_b"
+        ],
+        "lesson": "Resolve discrepancy for goal: qualify operation family summarize_learning can progress using the available local evidence.",
+        "recommended_state_transition": "summarize_learning",
+        "uncertainty": "How will the local evidence be used to produce a bounded next cognitive action?",
+        "unresolved_questions": [
+          "How will the local evidence be used to produce a bounded next cognitive action?"
+        ]
+      },
+      "elapsed_seconds": 17.514,
+      "failure_classifications": [],
+      "operation": "summarize_learning",
+      "passed": true,
+      "positive_observations": [
+        "schema_valid",
+        "evidence_grounded",
+        "contrary_evidence_addressed",
+        "uncertainty_explicit",
+        "state_transition_valid",
+        "useful_next_action"
+      ],
+      "raw_response_digest": "47d26943d057517a569e05e4590daf9e12e8e54809ab931b8372ac7e95d65cce",
+      "variant": 3
+    }
+  ]
+}

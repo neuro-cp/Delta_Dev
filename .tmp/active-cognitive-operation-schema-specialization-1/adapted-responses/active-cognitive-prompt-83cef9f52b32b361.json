@@ -1,0 +1,21 @@
+{
+  "adapted_response": {
+    "deferred_focus_ids": [],
+    "evidence_refs": [
+      "support_schema10_select_next_focus_3_a",
+      "useful_schema10_select_next_focus_3_b"
+    ],
+    "recommended_state_transition": "select_next_focus",
+    "related_goal_ids": [
+      "active-cognitive-goal-97a3028240955905"
+    ],
+    "salience_reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+    "selected_focus_id": "focus-a436292a3dd48470",
+    "uncertainty": "Resolution of the discrepancy for the goal is unresolved."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{ \"selected_focus_id\": \"focus-a436292a3dd48470\", \"salience_reason\": \"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\", \"related_goal_ids\": [ \"active-cognitive-goal-97a3028240955905\" ], \"evidence_refs\": [ \"support_schema10_select_next_focus_3_a\", \"useful_schema10_select_next_focus_3_b\" ], \"deferred_focus_ids\": [], \"uncertainty\": \"Resolution of the discrepancy for the goal is unresolved.\", \"recommended_state_transition\": \"select_next_focus\" }",
+  "raw_response_digest": "89ee1d6070eeae8963a480a35902a3a05f70826271d6acfde4b44864d650e837",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

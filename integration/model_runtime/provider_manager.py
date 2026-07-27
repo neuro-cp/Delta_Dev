@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any, Callable, Mapping, Protocol
 
 from integration.model_runtime.inference_types import CanonicalInferenceResult
+from integration.model_runtime.execution_lanes import normalize_execution_lane
 from integration.model_runtime.model_registry import ModelSpec, list_available_models
 from integration.model_runtime.provider_qualification import load_capability_database
 
@@ -99,11 +100,14 @@ class ProviderManager:
         if self._runner is None or self._active_spec is None:
             raise RuntimeError("ProviderManager.infer() has no active provider")
 
+        metadata_payload = dict(metadata or {})
+        execution_lane = normalize_execution_lane(metadata_payload.get("execution_lane"), task_type=task_type)
         input_payload = {
             "question": prompt,
             "prompt": prompt,
             "task_type": task_type,
-            "metadata": dict(metadata or {}),
+            "execution_lane": execution_lane.value,
+            "metadata": metadata_payload,
         }
         raw = self._runner.produce_output(input_payload)
         return self._canonical_result(raw, prompt=prompt, task_type=task_type)

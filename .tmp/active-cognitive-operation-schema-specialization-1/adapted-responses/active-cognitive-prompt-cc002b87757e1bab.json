@@ -1,0 +1,26 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "local evidence is complete for this bounded episode"
+    ],
+    "contrary_evidence_considered": [
+      "contrary_schema7_compare_evidence_1_c"
+    ],
+    "evidence_refs": [
+      "support_schema7_compare_evidence_1_a",
+      "useful_schema7_compare_evidence_1_b"
+    ],
+    "interpretation": "The supporting evidence and useful target are consistent with the hypothesis, but prior attempts have weakened the active hypothesis.",
+    "next_evidence_need": "additional evidence to strengthen the hypothesis",
+    "next_focus_proposal": "continue with the current hypothesis",
+    "operation_result_type": "compare_evidence_result",
+    "recommended_action": "continue with the current hypothesis",
+    "recommended_state_transition": "add_supporting_evidence",
+    "uncertainty": "how the prior failures will impact the current progress"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"assumptions\":[\"local evidence is complete for this bounded episode\"],\"contrary_evidence_considered\":[\"contrary_schema7_compare_evidence_1_c\"],\"evidence_refs\":[\"support_schema7_compare_evidence_1_a\",\"useful_schema7_compare_evidence_1_b\"],\"interpretation\":\"The supporting evidence and useful target are consistent with the hypothesis, but prior attempts have weakened the active hypothesis.\",\"next_evidence_need\":\"additional evidence to strengthen the hypothesis\",\"next_focus_proposal\":\"continue with the current hypothesis\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"continue with the current hypothesis\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"how the prior failures will impact the current progress\"}",
+  "raw_response_digest": "a042a21b9168a8db2741f66edc006956505648dd4c3c0d616cf2559ba4d005c2",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

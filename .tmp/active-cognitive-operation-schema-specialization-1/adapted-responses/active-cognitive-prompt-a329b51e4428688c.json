@@ -1,0 +1,20 @@
+{
+  "adapted_response": {
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "episode_a_runtime_support",
+      "episode_a_useful_target"
+    ],
+    "new_confidence_state": "supported",
+    "prior_hypothesis_id": "hypothesis-e4bd861e666480e8",
+    "recommended_state_transition": "revise_hypothesis",
+    "revised_statement": "Interpreting local model ledger and operation-specific grammars to resolve discrepancy and support active focus",
+    "revision_reason": "Adding support for active focus",
+    "uncertainty": "How the local model ledger and operation-specific grammars will support the active focus"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"prior_hypothesis_id\":\"hypothesis-e4bd861e666480e8\",\"revised_statement\":\"Interpreting local model ledger and operation-specific grammars to resolve discrepancy and support active focus\",\"evidence_refs\":[\"episode_a_runtime_support\",\"episode_a_useful_target\"],\"contrary_evidence_considered\":[],\"revision_reason\":\"Adding support for active focus\",\"new_confidence_state\":\"supported\",\"uncertainty\":\"How the local model ledger and operation-specific grammars will support the active focus\",\"recommended_state_transition\":\"revise_hypothesis\"}",
+  "raw_response_digest": "05003693469839911795fb1c3cc33f996fe126e1bdc1c35b84554c718e7de400",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

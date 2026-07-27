@@ -57,6 +57,21 @@ from orchestration.runtime.rc2_conversational_mode_router import (  # noqa: E402
 )
 from orchestration.runtime.rc2_storage_adapter import backend_health, load_diverse_concepts, search_concepts, substrate_counts  # noqa: E402
 from orchestration.runtime.rc2_substrate_reconciliation import build_substrate_reconciliation  # noqa: E402
+from orchestration.runtime.cognitive_claim_relation_runtime import (  # noqa: E402
+    FEATURE_FLAG_NAME as CLAIM_RELATION_PILOT_FLAG,
+    GovernedClaimRelationRuntime,
+)
+from orchestration.runtime.active_cognitive_loop import (  # noqa: E402
+    DEFAULT_STATE_PATH as ACTIVE_COGNITIVE_LOOP_STATE_PATH,
+    EvidenceRef as ActiveCognitiveEvidenceRef,
+    LedgerBackedCognitiveModelRunner,
+    active_loop_snapshot,
+    evaluate_cognitive_episode,
+    initialize_episode as initialize_active_cognitive_episode,
+    read_episode_state as read_active_cognitive_episode_state,
+    run_cognitive_cycle as run_active_cognitive_cycle,
+    write_episode_state as write_active_cognitive_episode_state,
+)
 from orchestration.runtime.rc3_ui_capability_adapter import (  # noqa: E402
     PANEL_ORDER as RC3_PANEL_ORDER,
     build_rc3_ui_integration_report,
@@ -173,6 +188,29 @@ from orchestration.runtime.autonomy_competence_admission import (  # noqa: E402
     explain_competence_scope,
     respond_to_competence_admission,
     review_competence_candidate,
+)
+from orchestration.runtime.autonomy_task_activation import (  # noqa: E402
+    run_task_scoped_activation,
+)
+from orchestration.runtime.autonomy_capability_composition import (  # noqa: E402
+    run_capability_composition,
+)
+from orchestration.runtime.autonomy_gap_detection import (  # noqa: E402
+    run_gap_detection,
+)
+from orchestration.runtime.autonomy_mixed_mission import (  # noqa: E402
+    run_mixed_mission,
+)
+from orchestration.runtime.autonomy_local_evidence import (  # noqa: E402
+    acquire_local_evidence,
+    detect_stale_packet,
+    select_real_gap,
+)
+from orchestration.runtime.autonomy_advisory_assistance import (  # noqa: E402
+    request_bounded_advice,
+)
+from orchestration.runtime.autonomy_competence_maintenance import (  # noqa: E402
+    run_competence_maintenance,
 )
 from orchestration.runtime.operator_ux import (  # noqa: E402
     audit_rc_tabs,
@@ -1570,6 +1608,12 @@ class DeltaApp:
         self.live_runtime_4_controller = None
         self.live_runtime_4_process: subprocess.Popen[object] | None = None
         self.operator_ux_root = ROOT / ".tmp" / "operator-ux-1-humanized-runtime-v1"
+        self.claim_relation_pilot = GovernedClaimRelationRuntime(
+            ROOT / "data" / "runtime" / "claim_relation_pilot" / "state.json",
+            enabled=False,
+        )
+        self.active_cognitive_loop_state_path = ROOT / ACTIVE_COGNITIVE_LOOP_STATE_PATH
+        self.active_cognitive_loop_state = self._load_active_cognitive_loop_state()
         self.active_operator_ux_request: dict[str, object] | None = None
         self.operator_ux_request_card: dict[str, object] | None = None
         self.operator_ux_responses: list[dict[str, object]] = []
@@ -1582,6 +1626,20 @@ class DeltaApp:
         self.a5_control_buttons: dict[str, ttk.Button] = {}
         self.a6_admission_status = tk.StringVar(value="A6: no competence review")
         self.a6_control_buttons: dict[str, ttk.Button] = {}
+        self.a13_activation_status = tk.StringVar(value="A13: no task activation")
+        self.a13_control_buttons: dict[str, ttk.Button] = {}
+        self.a14_composition_status = tk.StringVar(value="A14: no composed task")
+        self.a14_control_buttons: dict[str, ttk.Button] = {}
+        self.a15_gap_status = tk.StringVar(value="A15: no support classification")
+        self.a15_control_buttons: dict[str, ttk.Button] = {}
+        self.a16_mission_status = tk.StringVar(value="A16: no mixed mission")
+        self.a16_control_buttons: dict[str, ttk.Button] = {}
+        self.a17_evidence_status = tk.StringVar(value="A17: no local evidence")
+        self.a17_control_buttons: dict[str, ttk.Button] = {}
+        self.a18_advice_status = tk.StringVar(value="A18: no advisory proposal")
+        self.a18_control_buttons: dict[str, ttk.Button] = {}
+        self.a21_health_status = tk.StringVar(value="A21: no maintenance record")
+        self.a21_control_buttons: dict[str, ttk.Button] = {}
         self.provider_manager = ProviderManager(keep_loaded=True)
         self.resident_model_id: str | None = None
         self.resident_lane: str | None = None
@@ -1806,6 +1864,125 @@ class DeltaApp:
             button.pack(side=tk.LEFT, padx=(0, 6))
             self.a6_control_buttons[key] = button
 
+        a13_controls = ttk.LabelFrame(right, text="Task-Scoped Competence Use")
+        a13_controls.pack(fill=tk.X, pady=(0, 6))
+        ttk.Label(a13_controls, textvariable=self.a13_activation_status).pack(side=tk.LEFT, padx=(6, 10))
+        a13_button_specs = (
+            ("use", "Use this competence for this task", lambda: self._run_autonomy_13_visible_control("use")),
+            ("fit", "Why this competence fits", lambda: self._run_autonomy_13_visible_control("fit")),
+            ("cannot", "What it cannot do", lambda: self._run_autonomy_13_visible_control("cannot")),
+            ("scope", "Activation scope", lambda: self._run_autonomy_13_visible_control("scope")),
+            ("expires", "Activation expires", lambda: self._run_autonomy_13_visible_control("expires")),
+            ("evaluation", "View evaluation", lambda: self._run_autonomy_13_visible_control("evaluation")),
+            ("stop", "Stop task use", lambda: self._run_autonomy_13_visible_control("stop")),
+        )
+        for key, label, command in a13_button_specs:
+            button = ttk.Button(a13_controls, text=label, command=command)
+            button.pack(side=tk.LEFT, padx=(0, 6))
+            self.a13_control_buttons[key] = button
+
+        a14_controls = ttk.LabelFrame(right, text="Composed Task")
+        a14_controls.pack(fill=tk.X, pady=(0, 6))
+        ttk.Label(a14_controls, textvariable=self.a14_composition_status).pack(side=tk.LEFT, padx=(6, 10))
+        a14_button_specs = (
+            ("start", "Start composed task", lambda: self._run_autonomy_14_visible_control("start")),
+            ("pause", "Pause", lambda: self._run_autonomy_14_visible_control("pause")),
+            ("resume", "Resume", lambda: self._run_autonomy_14_visible_control("resume")),
+            ("stop", "Stop", lambda: self._run_autonomy_14_visible_control("stop")),
+            ("explain", "Explain current stage", lambda: self._run_autonomy_14_visible_control("explain")),
+            ("evidence", "View stage evidence", lambda: self._run_autonomy_14_visible_control("evidence")),
+            ("provenance", "View provenance", lambda: self._run_autonomy_14_visible_control("provenance")),
+            ("limits", "View limits", lambda: self._run_autonomy_14_visible_control("limits")),
+        )
+        for key, label, command in a14_button_specs:
+            button = ttk.Button(a14_controls, text=label, command=command)
+            button.pack(side=tk.LEFT, padx=(0, 6))
+            self.a14_control_buttons[key] = button
+
+        a15_controls = ttk.LabelFrame(right, text="Support Check")
+        a15_controls.pack(fill=tk.X, pady=(0, 6))
+        ttk.Label(a15_controls, textvariable=self.a15_gap_status).pack(side=tk.LEFT, padx=(6, 10))
+        a15_button_specs = (
+            ("classify", "What DELTA can do", lambda: self._run_autonomy_15_visible_control("classify")),
+            ("missing", "What is missing", lambda: self._run_autonomy_15_visible_control("missing")),
+            ("explain", "Explain", lambda: self._run_autonomy_15_visible_control("explain")),
+            ("evidence", "View evidence", lambda: self._run_autonomy_15_visible_control("evidence")),
+            ("clarify", "Request clarification", lambda: self._run_autonomy_15_visible_control("clarify")),
+        )
+        for key, label, command in a15_button_specs:
+            button = ttk.Button(a15_controls, text=label, command=command)
+            button.pack(side=tk.LEFT, padx=(0, 6))
+            self.a15_control_buttons[key] = button
+
+        a16_controls = ttk.LabelFrame(right, text="Mixed Mission")
+        a16_controls.pack(fill=tk.X, pady=(0, 6))
+        ttk.Label(a16_controls, textvariable=self.a16_mission_status).pack(side=tk.LEFT, padx=(6, 10))
+        a16_button_specs = (
+            ("start", "Start mission", lambda: self._run_autonomy_16_visible_control("start")),
+            ("pause", "Pause mission", lambda: self._run_autonomy_16_visible_control("pause")),
+            ("resume", "Resume mission", lambda: self._run_autonomy_16_visible_control("resume")),
+            ("stop", "Stop mission", lambda: self._run_autonomy_16_visible_control("stop")),
+            ("current", "Explain current task", lambda: self._run_autonomy_16_visible_control("current")),
+            ("blocked", "Explain blocked task", lambda: self._run_autonomy_16_visible_control("blocked")),
+            ("evidence", "View mission evidence", lambda: self._run_autonomy_16_visible_control("evidence")),
+            ("limits", "View mission limits", lambda: self._run_autonomy_16_visible_control("limits")),
+            ("graph", "View task graph", lambda: self._run_autonomy_16_visible_control("graph")),
+        )
+        for key, label, command in a16_button_specs:
+            button = ttk.Button(a16_controls, text=label, command=command)
+            button.pack(side=tk.LEFT, padx=(0, 6))
+            self.a16_control_buttons[key] = button
+
+        a17_controls = ttk.LabelFrame(right, text="Local Evidence")
+        a17_controls.pack(fill=tk.X, pady=(0, 6))
+        ttk.Label(a17_controls, textvariable=self.a17_evidence_status).pack(side=tk.LEFT, padx=(6, 10))
+        a17_button_specs = (
+            ("acquire", "Acquire local evidence", lambda: self._run_autonomy_17_visible_control("acquire")),
+            ("explain", "Explain evidence", lambda: self._run_autonomy_17_visible_control("explain")),
+            ("sources", "View sources", lambda: self._run_autonomy_17_visible_control("sources")),
+            ("contradictions", "View contradictions", lambda: self._run_autonomy_17_visible_control("contradictions")),
+            ("missing", "View missing evidence", lambda: self._run_autonomy_17_visible_control("missing")),
+            ("limits", "View limits", lambda: self._run_autonomy_17_visible_control("limits")),
+            ("revalidate", "Revalidate stale evidence", lambda: self._run_autonomy_17_visible_control("revalidate")),
+        )
+        for key, label, command in a17_button_specs:
+            button = ttk.Button(a17_controls, text=label, command=command)
+            button.pack(side=tk.LEFT, padx=(0, 6))
+            self.a17_control_buttons[key] = button
+
+        a18_controls = ttk.LabelFrame(right, text="Advisory Proposal")
+        a18_controls.pack(fill=tk.X, pady=(0, 6))
+        ttk.Label(a18_controls, textvariable=self.a18_advice_status).pack(side=tk.LEFT, padx=(6, 10))
+        a18_button_specs = (
+            ("request", "Request bounded advice", lambda: self._run_autonomy_18_visible_control("request")),
+            ("explain", "Explain advice", lambda: self._run_autonomy_18_visible_control("explain")),
+            ("grounding", "View grounding", lambda: self._run_autonomy_18_visible_control("grounding")),
+            ("rejected", "View rejected claims", lambda: self._run_autonomy_18_visible_control("rejected")),
+            ("limits", "View limits", lambda: self._run_autonomy_18_visible_control("limits")),
+            ("keep", "Keep as proposal", lambda: self._run_autonomy_18_visible_control("keep")),
+            ("reject", "Reject advice", lambda: self._run_autonomy_18_visible_control("reject")),
+        )
+        for key, label, command in a18_button_specs:
+            button = ttk.Button(a18_controls, text=label, command=command)
+            button.pack(side=tk.LEFT, padx=(0, 6))
+            self.a18_control_buttons[key] = button
+
+        a21_controls = ttk.LabelFrame(right, text="Competence Health")
+        a21_controls.pack(fill=tk.X, pady=(0, 6))
+        ttk.Label(a21_controls, textvariable=self.a21_health_status).pack(side=tk.LEFT, padx=(6, 10))
+        a21_button_specs = (
+            ("explain", "Explain competence health", lambda: self._run_autonomy_21_visible_control("explain")),
+            ("evidence", "View evidence", lambda: self._run_autonomy_21_visible_control("evidence")),
+            ("tasks", "View affected tasks", lambda: self._run_autonomy_21_visible_control("tasks")),
+            ("reevaluate", "Request reevaluation", lambda: self._run_autonomy_21_visible_control("reevaluate")),
+            ("suspend", "Suspend", lambda: self._run_autonomy_21_visible_control("suspend")),
+            ("restore", "Restore proven scope", lambda: self._run_autonomy_21_visible_control("restore")),
+        )
+        for key, label, command in a21_button_specs:
+            button = ttk.Button(a21_controls, text=label, command=command)
+            button.pack(side=tk.LEFT, padx=(0, 6))
+            self.a21_control_buttons[key] = button
+
         self.goal_detail = scrolledtext.ScrolledText(right, wrap=tk.WORD)
         self.goal_detail.pack(fill=tk.BOTH, expand=True)
         self.goal_detail.configure(state=tk.DISABLED)
@@ -1929,6 +2106,13 @@ class DeltaApp:
         self._refresh_autonomy_4_controls()
         self._refresh_autonomy_5_controls()
         self._refresh_autonomy_6_controls()
+        self._refresh_autonomy_13_controls()
+        self._refresh_autonomy_14_controls()
+        self._refresh_autonomy_15_controls()
+        self._refresh_autonomy_16_controls()
+        self._refresh_autonomy_17_controls()
+        self._refresh_autonomy_18_controls()
+        self._refresh_autonomy_21_controls()
 
     def _show_selected_goal_card(self) -> None:
         selected = self.goal_cards.selection()
@@ -2120,6 +2304,62 @@ class DeltaApp:
                     continue
         return (candidates[-1] if candidates else None, policies[-1] if policies else None, requests[-1] if requests else None)
 
+    def _latest_autonomy_13_report(self) -> dict[str, object] | None:
+        path = self.operator_ux_root / "a13_activation" / "report.json"
+        try:
+            value = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return None
+        return value if isinstance(value, dict) else None
+
+    def _latest_autonomy_14_result(self) -> dict[str, object] | None:
+        path = self.operator_ux_root / "a14_composition" / "composition_result.json"
+        try:
+            value = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return None
+        return value if isinstance(value, dict) else None
+
+    def _latest_autonomy_15_report(self) -> dict[str, object] | None:
+        path = self.operator_ux_root / "a15_gap_detection" / "report.json"
+        try:
+            value = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return None
+        return value if isinstance(value, dict) else None
+
+    def _latest_autonomy_16_report(self) -> dict[str, object] | None:
+        path = self.operator_ux_root / "a16_mixed_mission" / "report.json"
+        try:
+            value = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return None
+        return value if isinstance(value, dict) else None
+
+    def _latest_autonomy_17_packet(self) -> dict[str, object] | None:
+        path = self.operator_ux_root / "a17_evidence" / "evidence_packet.json"
+        try:
+            value = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return None
+        return value if isinstance(value, dict) else None
+
+    def _latest_autonomy_18_report(self) -> dict[str, object] | None:
+        path = self.operator_ux_root / "a18_advisory" / "report.json"
+        try:
+            value = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return None
+        return value if isinstance(value, dict) else None
+
+    def _latest_autonomy_21_report(self) -> dict[str, object] | None:
+        path = self.operator_ux_root / "a21_maintenance" / "report.json"
+        try:
+            value = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return None
+        return value if isinstance(value, dict) else None
+
     def _refresh_autonomy_5_controls(self) -> None:
         execution_root = self.operator_ux_root / "autonomy_4_execution"
         has_final = bool(tuple((execution_root / "final_synthesis").glob("*.json"))) if execution_root.exists() else False
@@ -2161,6 +2401,139 @@ class DeltaApp:
         }
         for key, button in self.a6_control_buttons.items():
             button.configure(state=tk.NORMAL if enabled.get(key) else tk.DISABLED)
+
+    def _refresh_autonomy_13_controls(self) -> None:
+        report = self._latest_autonomy_13_report()
+        accepted_root = self.operator_ux_root / "autonomy_6_competence_admission" / "accepted_competencies"
+        retained_roots = (
+            ROOT / ".tmp" / "autonomy-12r-final-cycle-1" / "a6_admission" / "accepted_competencies",
+            ROOT / ".tmp" / "autonomy-12r-final-cycle-2" / "a6_admission" / "accepted_competencies",
+        )
+        has_competence = bool(tuple(accepted_root.glob("*.json"))) if accepted_root.exists() else any(root.exists() and tuple(root.glob("*.json")) for root in retained_roots)
+        if report:
+            self.a13_activation_status.set(f"A13: {str(report.get('status') or 'reviewed').replace('_', ' ')}")
+        elif has_competence:
+            self.a13_activation_status.set("A13: accepted competence available")
+        else:
+            self.a13_activation_status.set("A13: no accepted competence")
+        enabled = {
+            "use": has_competence and not bool(report),
+            "fit": bool(report),
+            "cannot": bool(report),
+            "scope": bool(report),
+            "expires": bool(report),
+            "evaluation": bool(report),
+            "stop": bool(report),
+        }
+        for key, button in self.a13_control_buttons.items():
+            button.configure(state=tk.NORMAL if enabled.get(key) else tk.DISABLED)
+
+    def _refresh_autonomy_14_controls(self) -> None:
+        result = self._latest_autonomy_14_result()
+        if result:
+            self.a14_composition_status.set(f"A14: {str(result.get('status') or 'running').replace('_', ' ')}")
+        else:
+            self.a14_composition_status.set("A14: Validate JSON -> Reconcile records")
+        terminal = bool(result and result.get("terminal"))
+        paused = bool(result and result.get("status") == "paused_operator")
+        enabled = {
+            "start": not bool(result),
+            "pause": not terminal and not paused,
+            "resume": paused,
+            "stop": not terminal,
+            "explain": bool(result),
+            "evidence": bool(result),
+            "provenance": bool(result),
+            "limits": True,
+        }
+        for key, button in self.a14_control_buttons.items():
+            button.configure(state=tk.NORMAL if enabled.get(key) else tk.DISABLED)
+
+    def _refresh_autonomy_15_controls(self) -> None:
+        report = self._latest_autonomy_15_report()
+        if report:
+            self.a15_gap_status.set(f"A15: {str(report.get('status') or 'classified').replace('_', ' ')}")
+        else:
+            self.a15_gap_status.set("A15: support check ready")
+        enabled = {
+            "classify": not bool(report),
+            "missing": bool(report),
+            "explain": bool(report),
+            "evidence": bool(report),
+            "clarify": bool(report),
+        }
+        for key, button in self.a15_control_buttons.items():
+            button.configure(state=tk.NORMAL if enabled.get(key) else tk.DISABLED)
+
+    def _refresh_autonomy_16_controls(self) -> None:
+        report = self._latest_autonomy_16_report()
+        if report:
+            self.a16_mission_status.set(f"A16: {str(report.get('final_mission_disposition') or report.get('status') or 'running').replace('_', ' ')}")
+        else:
+            self.a16_mission_status.set("A16: mixed mission ready")
+        terminal = bool(report and report.get("final_mission_disposition") in {"partially_completed", "completed", "stopped_by_operator"})
+        enabled = {
+            "start": not bool(report),
+            "pause": not terminal,
+            "resume": bool(report) and not terminal,
+            "stop": not terminal,
+            "current": bool(report),
+            "blocked": bool(report),
+            "evidence": bool(report),
+            "limits": True,
+            "graph": bool(report),
+        }
+        for key, button in self.a16_control_buttons.items():
+            button.configure(state=tk.NORMAL if enabled.get(key) else tk.DISABLED)
+
+    def _refresh_autonomy_17_controls(self) -> None:
+        packet = self._latest_autonomy_17_packet()
+        if packet:
+            self.a17_evidence_status.set(f"A17: {str(packet.get('acquisition_disposition') or 'evidence acquired').replace('_', ' ')}")
+        else:
+            self.a17_evidence_status.set("A17: local evidence ready")
+        enabled = {
+            "acquire": not bool(packet),
+            "explain": bool(packet),
+            "sources": bool(packet),
+            "contradictions": bool(packet),
+            "missing": bool(packet),
+            "limits": bool(packet),
+            "revalidate": bool(packet),
+        }
+        for key, button in self.a17_control_buttons.items():
+            button.configure(state=tk.NORMAL if enabled.get(key) else tk.DISABLED)
+
+    def _refresh_autonomy_18_controls(self) -> None:
+        packet = self._latest_autonomy_17_packet()
+        report = self._latest_autonomy_18_report()
+        if report:
+            self.a18_advice_status.set(f"A18: {str(report.get('status') or 'advisory ready').replace('_', ' ')}")
+        elif packet:
+            self.a18_advice_status.set("A18: evidence ready for advice")
+        else:
+            self.a18_advice_status.set("A18: needs A17 packet")
+        enabled = {
+            "request": bool(packet) and not bool(report),
+            "explain": bool(report),
+            "grounding": bool(report),
+            "rejected": bool(report),
+            "limits": bool(packet) or bool(report),
+            "keep": bool(report),
+            "reject": bool(report),
+        }
+        for key, button in self.a18_control_buttons.items():
+            button.configure(state=tk.NORMAL if enabled.get(key) else tk.DISABLED)
+
+    def _refresh_autonomy_21_controls(self) -> None:
+        report = self._latest_autonomy_21_report()
+        if report:
+            states = tuple(item.get("health_label") for item in tuple(dict(report.get("competence_inventory_after") or {}).get("effective_inventory") or ()))
+            self.a21_health_status.set("A21: " + (", ".join(str(item) for item in states if item) or "maintenance passed"))
+        else:
+            self.a21_health_status.set("A21: maintenance ready")
+        for button in self.a21_control_buttons.values():
+            button.configure(state=tk.NORMAL)
 
     def _run_autonomy_5_visible_control(self, action: str) -> dict[str, object] | None:
         output_root = self.operator_ux_root / "autonomy_5_outcome_review"
@@ -2208,6 +2581,276 @@ class DeltaApp:
         self._refresh_operator_ux_views()
         self._refresh_state_cards()
         return result
+
+    def _run_autonomy_13_visible_control(self, action: str) -> dict[str, object] | None:
+        output_root = self.operator_ux_root / "a13_activation"
+        report = self._latest_autonomy_13_report()
+        if action == "use":
+            competence_roots = (
+                self.operator_ux_root / "autonomy_6_competence_admission",
+                ROOT / ".tmp" / "autonomy-12r-final-cycle-1" / "a6_admission",
+                ROOT / ".tmp" / "autonomy-12r-final-cycle-2" / "a6_admission",
+            )
+            result = run_task_scoped_activation(output_root=output_root, competence_roots=competence_roots)
+            report = dict(result.get("report") or {})
+            self._append_chat("DELTA", f"A13 task-scoped activation result: {result.get('status')}. No global competence activation was created.")
+        elif not report:
+            self._append_chat("DELTA", "I do not have an A13 task activation report yet.")
+            return {"status": "blocked_no_a13_report"}
+        elif action == "fit":
+            pilots = tuple(report.get("pilots") or ())
+            selected = ", ".join(str(dict(p.get("selection") or {}).get("reason")) for p in pilots) or "No activation selection is recorded."
+            self._append_chat("DELTA", f"Competence fit: {selected}")
+            result = {"status": "fit_shown", "pilots": len(pilots)}
+        elif action == "cannot":
+            limits = sorted({limit for pilot in tuple(report.get("pilots") or ()) for limit in tuple(dict(dict(pilot).get("activation") or {}).get("limitations") or ())})
+            self._append_chat("DELTA", "A13 limitations: " + (", ".join(limits) if limits else "No broad or global capability was admitted."))
+            result = {"status": "limitations_shown", "limitations": tuple(limits)}
+        elif action == "scope":
+            self._append_chat("DELTA", "A13 scope is task-only, exact schema/class match, no source mutation, provider, network, deployment, credentials, or global activation.")
+            result = {"status": "scope_shown"}
+        elif action == "expires":
+            expirations = tuple(dict(dict(pilot).get("activation") or {}).get("activation_expiration") for pilot in tuple(report.get("pilots") or ()))
+            self._append_chat("DELTA", "A13 activation expirations: " + ", ".join(str(item) for item in expirations if item))
+            result = {"status": "expiration_shown", "expirations": expirations}
+        elif action == "evaluation":
+            evaluations = tuple(dict(dict(pilot).get("execution_result") or {}).get("evaluation_status") for pilot in tuple(report.get("pilots") or ()))
+            self._append_chat("DELTA", "A13 evaluation statuses: " + ", ".join(str(item) for item in evaluations if item))
+            result = {"status": "evaluation_shown", "evaluations": evaluations}
+        elif action == "stop":
+            self._append_chat("DELTA", "A13 task use is terminal or report-only; no active global competence use exists to stop.")
+            result = {"status": "no_active_global_activation"}
+        else:
+            return None
+        self._refresh_operator_ux_views()
+        self._refresh_state_cards()
+        return result
+
+    def _run_autonomy_14_visible_control(self, action: str) -> dict[str, object] | None:
+        output_root = self.operator_ux_root / "a14_composition"
+        competence_roots = (
+            self.operator_ux_root / "autonomy_6_competence_admission",
+            ROOT / ".tmp" / "autonomy-12r-final-cycle-1" / "a6_admission",
+            ROOT / ".tmp" / "autonomy-12r-final-cycle-2" / "a6_admission",
+        )
+        result_record = self._latest_autonomy_14_result()
+        if action == "start":
+            result = run_capability_composition(output_root=output_root, competence_roots=competence_roots, pause_after_stage_1=True)
+            self._append_chat("DELTA", f"A14 composed task started: {result.get('status')}. Stage 1 validates JSON before reconciliation.")
+        elif action == "resume":
+            result = run_capability_composition(output_root=output_root, competence_roots=competence_roots, resume=True)
+            self._append_chat("DELTA", f"A14 composed task resumed: {result.get('status')}.")
+        elif action == "pause":
+            result = run_capability_composition(output_root=output_root, competence_roots=competence_roots, pause_after_stage_1=True)
+            self._append_chat("DELTA", f"A14 pause requested: {result.get('status')}.")
+        elif action == "stop":
+            result = run_capability_composition(output_root=output_root, competence_roots=competence_roots, stop_after_stage_1=True)
+            self._append_chat("DELTA", f"A14 stop requested: {result.get('status')}.")
+        elif not result_record:
+            self._append_chat("DELTA", "I do not have an A14 composition record yet.")
+            return {"status": "blocked_no_a14_record"}
+        elif action == "explain":
+            self._append_chat("DELTA", "A14 current stage: Stage 1 validates JSON, then Stage 2 reconciles only Stage 1 validated records.")
+            result = {"status": "explained"}
+        elif action == "evidence":
+            stage_1 = dict(result_record.get("stage_1") or {})
+            stage_2 = dict(result_record.get("stage_2") or {})
+            self._append_chat("DELTA", f"A14 evidence: Stage 1 {stage_1.get('stage_status')}; Stage 2 {stage_2.get('stage_status', 'not started')}.")
+            result = {"status": "evidence_shown"}
+        elif action == "provenance":
+            provenance = self.operator_ux_root / "a14_composition" / "provenance_chain.json"
+            self._append_chat("DELTA", f"A14 provenance record: {provenance}")
+            result = {"status": "provenance_shown"}
+        elif action == "limits":
+            self._append_chat("DELTA", "A14 limits: no provider, network, deployment, credentials, tracked-source mutation, trusted generalization, or global competence activation.")
+            result = {"status": "limits_shown"}
+        else:
+            return None
+        self._refresh_operator_ux_views()
+        self._refresh_state_cards()
+        return result
+
+    def _run_autonomy_15_visible_control(self, action: str) -> dict[str, object] | None:
+        output_root = self.operator_ux_root / "a15_gap_detection"
+        competence_roots = (
+            self.operator_ux_root / "autonomy_6_competence_admission",
+            ROOT / ".tmp" / "autonomy-12r-final-cycle-1" / "a6_admission",
+            ROOT / ".tmp" / "autonomy-12r-final-cycle-2" / "a6_admission",
+        )
+        report = self._latest_autonomy_15_report()
+        if action == "classify":
+            result = run_gap_detection(output_root=output_root, competence_roots=competence_roots)
+            self._append_chat("DELTA", f"A15 support check: {result.get('status')}. Unsupported work was not executed.")
+        elif not report:
+            self._append_chat("DELTA", "I do not have an A15 support report yet.")
+            return {"status": "blocked_no_a15_report"}
+        elif action == "missing":
+            gap_count = report.get("gap_count", 0)
+            self._append_chat("DELTA", f"A15 missing capability count: {gap_count}. Safe gaps remain proposals only.")
+            result = {"status": "missing_shown", "gap_count": gap_count}
+        elif action == "explain":
+            self._append_chat("DELTA", "A15 compares task requirements against accepted competence clauses and the A14 composition contract. It does not force-fit unsupported work.")
+            result = {"status": "explained"}
+        elif action == "evidence":
+            records = tuple(report.get("records") or ())
+            self._append_chat("DELTA", f"A15 evidence: {len(records)} fresh task requirement records classified.")
+            result = {"status": "evidence_shown", "record_count": len(records)}
+        elif action == "clarify":
+            self._append_chat("DELTA", "A15 clarification request: ambiguous tasks need task class, input schema, output schema, authority, and desired behavior before execution.")
+            result = {"status": "clarification_requested"}
+        else:
+            return None
+        self._refresh_operator_ux_views()
+        self._refresh_state_cards()
+        return result
+
+    def _run_autonomy_16_visible_control(self, action: str) -> dict[str, object] | None:
+        output_root = self.operator_ux_root / "a16_mixed_mission"
+        competence_roots = (
+            self.operator_ux_root / "autonomy_6_competence_admission",
+            ROOT / ".tmp" / "autonomy-12r-final-cycle-1" / "a6_admission",
+            ROOT / ".tmp" / "autonomy-12r-final-cycle-2" / "a6_admission",
+        )
+        report = self._latest_autonomy_16_report()
+        if action == "start":
+            result = run_mixed_mission(output_root=output_root, competence_roots=competence_roots)
+            self._append_chat("DELTA", f"A16 mixed mission result: {result.get('status')}. Independent safe work continued around blocked branches.")
+        elif action == "pause":
+            result = run_mixed_mission(output_root=output_root, competence_roots=competence_roots, mode="pause")
+            self._append_chat("DELTA", f"A16 mission pause: {result.get('status')}.")
+        elif action == "resume":
+            result = run_mixed_mission(output_root=output_root, competence_roots=competence_roots, mode="resume")
+            self._append_chat("DELTA", f"A16 mission resume: {result.get('status')}.")
+        elif action == "stop":
+            result = run_mixed_mission(output_root=output_root, competence_roots=competence_roots, mode="stop")
+            self._append_chat("DELTA", f"A16 mission stop: {result.get('status')}.")
+        elif not report:
+            self._append_chat("DELTA", "I do not have an A16 mission report yet.")
+            return {"status": "blocked_no_a16_report"}
+        elif action == "current":
+            self._append_chat("DELTA", "A16 current task view is reconstructed from durable task states; no running task remains after the pilot.")
+            result = {"status": "current_task_explained"}
+        elif action == "blocked":
+            blocked = [task for task in tuple(report.get("tasks") or ()) if str(task.get("current_lifecycle_state", "")).startswith("blocked")]
+            self._append_chat("DELTA", f"A16 blocked tasks: {len(blocked)}. Blocked branches did not stop independent safe work.")
+            result = {"status": "blocked_task_explained", "blocked_count": len(blocked)}
+        elif action == "evidence":
+            self._append_chat("DELTA", f"A16 evidence: {len(tuple(report.get('tasks') or ()))} persisted mission tasks and {report.get('gap_candidates_queued')} queued gap candidates.")
+            result = {"status": "mission_evidence_shown"}
+        elif action == "limits":
+            self._append_chat("DELTA", "A16 limits: one active task, no providers, network, deployment, credentials, source mutation, global activation, or automatic development execution.")
+            result = {"status": "mission_limits_shown"}
+        elif action == "graph":
+            self._append_chat("DELTA", f"A16 task graph is persisted under {output_root / 'task_graph.json'}.")
+            result = {"status": "task_graph_shown"}
+        else:
+            return None
+        self._refresh_operator_ux_views()
+        self._refresh_state_cards()
+        return result
+
+    def _run_autonomy_17_visible_control(self, action: str) -> dict[str, object] | None:
+        output_root = self.operator_ux_root / "a17_evidence"
+        packet = self._latest_autonomy_17_packet()
+        if action == "acquire":
+            gap_root = ROOT / ".tmp" / "autonomy-16-mixed-mission" / "gaps"
+            gap = select_real_gap(gap_root) if gap_root.exists() else None
+            result = acquire_local_evidence(output_root=output_root, gap=gap)
+            self._append_chat("DELTA", f"A17 local evidence result: {result.get('status')}. The gap remains unresolved and no development execution started.")
+        elif not packet:
+            self._append_chat("DELTA", "I do not have an A17 local evidence packet yet.")
+            return {"status": "blocked_no_a17_packet"}
+        elif action == "explain":
+            self._append_chat("DELTA", f"A17 disposition: {packet.get('acquisition_disposition')}. Evidence is planning input only; unsupported conclusions remain {', '.join(packet.get('unsupported_conclusions') or ())}.")
+            result = {"status": "evidence_explained"}
+        elif action == "sources":
+            self._append_chat("DELTA", f"A17 sources: {len(tuple(packet.get('source_paths') or ()))} inspected under approved roots. Packet: {output_root / 'evidence_packet.json'}")
+            result = {"status": "sources_shown", "source_count": len(tuple(packet.get("source_paths") or ()))}
+        elif action == "contradictions":
+            contradictions = tuple(packet.get("contradictory_evidence") or ())
+            self._append_chat("DELTA", f"A17 contradictions/limits preserved: {len(contradictions)}. No local implementation proves the blocked behavior.")
+            result = {"status": "contradictions_shown", "contradiction_count": len(contradictions)}
+        elif action == "missing":
+            missing = tuple(packet.get("missing_evidence") or ())
+            self._append_chat("DELTA", f"A17 missing evidence clauses: {len(missing)}. These must be resolved before evaluator design or capability claims.")
+            result = {"status": "missing_evidence_shown", "missing_count": len(missing)}
+        elif action == "limits":
+            self._append_chat("DELTA", "A17 limits: approved local roots only, bounded bytes/excerpts/files, no providers, network, deployment, credentials, source mutation, gap resolution, or A18 execution.")
+            result = {"status": "limits_shown"}
+        elif action == "revalidate":
+            stale = detect_stale_packet(packet)
+            write_operator_ux_json(output_root / "stale_evidence_audit.json", stale)
+            self._append_chat("DELTA", f"A17 stale revalidation: {'stale' if stale.get('stale') else 'current'}.")
+            result = {"status": "stale_revalidated", "stale": bool(stale.get("stale"))}
+        else:
+            return None
+        self._refresh_operator_ux_views()
+        self._refresh_state_cards()
+        return result
+
+    def _run_autonomy_18_visible_control(self, action: str) -> dict[str, object] | None:
+        output_root = self.operator_ux_root / "a18_advisory"
+        packet = self._latest_autonomy_17_packet()
+        report = self._latest_autonomy_18_report()
+        if action == "request":
+            if not packet:
+                self._append_chat("DELTA", "A18 needs an A17 evidence packet before bounded advice can be requested.")
+                return {"status": "blocked_no_a17_packet"}
+            result = request_bounded_advice(output_root=output_root, packet=packet)
+            self._append_chat("DELTA", f"A18 bounded advice result: {result.get('status')}. Advice remains untrusted and cannot execute anything.")
+        elif action == "limits":
+            self._append_chat("DELTA", "A18 limits: recorded advisory packet only, zero provider calls, zero network, no deployment, credentials, source mutation, authority grant, competence admission, or A19 execution.")
+            result = {"status": "advisory_limits_shown"}
+        elif not report:
+            self._append_chat("DELTA", "I do not have an A18 advisory report yet.")
+            return {"status": "blocked_no_a18_report"}
+        elif action == "explain":
+            output = dict(report.get("advisory_output") or {})
+            self._append_chat("DELTA", f"A18 proposal: {output.get('first_suspected_transition')}. It is advisory only and retains uncertainty.")
+            result = {"status": "advice_explained"}
+        elif action == "grounding":
+            audit = dict(report.get("grounding_audit") or {})
+            self._append_chat("DELTA", f"A18 grounding accepted: {audit.get('accepted')}. Provider calls: {audit.get('provider_calls')}; network calls: {audit.get('network_calls')}.")
+            result = {"status": "grounding_shown", "accepted": bool(audit.get("accepted"))}
+        elif action == "rejected":
+            rejected = tuple(report.get("rejected_outputs") or ())
+            self._append_chat("DELTA", f"A18 rejected advisory outputs: {len(rejected)}. Unsafe claims were preserved as rejected evidence.")
+            result = {"status": "rejected_claims_shown", "rejected_count": len(rejected)}
+        elif action == "keep":
+            self._append_chat("DELTA", "A18 proposal kept as advisory evidence only. No source repair or A19 authority was created.")
+            result = {"status": "proposal_kept_advisory_only"}
+        elif action == "reject":
+            self._append_chat("DELTA", "A18 advice rejected by operator surface. The A17 gap remains unresolved.")
+            result = {"status": "advice_rejected"}
+        else:
+            return None
+        self._refresh_operator_ux_views()
+        self._refresh_state_cards()
+        return result
+
+    def _run_autonomy_21_visible_control(self, action: str) -> dict[str, object] | None:
+        output_root = self.operator_ux_root / "a21_maintenance"
+        result = run_competence_maintenance(output_root=output_root)
+        report = dict(result.get("report") or {})
+        events = tuple(report.get("maintenance_events") or ())
+        if action == "explain":
+            self._append_chat("DELTA", "A21 competence health is reconstructed from immutable admissions plus maintenance records; old admissions are not rewritten.")
+        elif action == "evidence":
+            self._append_chat("DELTA", f"A21 evidence: {len(events)} maintenance transitions with preserved triggering evidence digests.")
+        elif action == "tasks":
+            affected = sorted({task for event in events for task in tuple(event.get("affected_tasks") or ())})
+            self._append_chat("DELTA", "A21 affected tasks: " + (", ".join(affected) if affected else "none"))
+        elif action == "reevaluate":
+            self._append_chat("DELTA", "A21 reevaluation requested as a maintenance event only; no global trust or authority expansion is available.")
+        elif action == "suspend":
+            self._append_chat("DELTA", "A21 suspension is represented by immutable maintenance records and blocks dependent activation/composition.")
+        elif action == "restore":
+            self._append_chat("DELTA", "A21 restore keeps only proven narrowed scope and requires operator review for reactivation.")
+        else:
+            return None
+        self._refresh_operator_ux_views()
+        self._refresh_state_cards()
+        return {"status": "maintenance_view_shown", "action": action}
 
     def _run_autonomy_6_visible_control(self, action: str) -> dict[str, object] | None:
         output_root = self.operator_ux_root / "autonomy_6_competence_admission"
@@ -4649,6 +5292,93 @@ class DeltaApp:
             f"wiki={wiki_budget}; initiative={recent_text}; autonomy={session.autonomy_status}"
         )
 
+    def _active_cognitive_loop_evidence(self) -> tuple[ActiveCognitiveEvidenceRef, ...]:
+        return (
+            ActiveCognitiveEvidenceRef(
+                "delta_runtime_components",
+                "repo",
+                "DELTA already has goals, persistence, model routing, and governed execution pieces.",
+                "DELTA.py initializes persistent development state, local ProviderManager, live runtime controls, and shared ledgers.",
+            ),
+            ActiveCognitiveEvidenceRef(
+                "delta_active_loop_gap",
+                "repo",
+                "Contrary evidence: those pieces are not yet one persistent active cognitive loop.",
+                "The missing transition is continuous focus selection, bounded working memory, model-selected operation, outcome observation, and hypothesis revision.",
+            ),
+            ActiveCognitiveEvidenceRef(
+                "delta_marathon_authority",
+                "operator",
+                "The operator authorized an active cognitive architecture marathon with local-only bounded execution.",
+                "Do not stage, commit, push, use network providers, or touch protected paths.",
+            ),
+        )
+
+    def _load_active_cognitive_loop_state(self):
+        try:
+            if self.active_cognitive_loop_state_path.exists():
+                return read_active_cognitive_episode_state(self.active_cognitive_loop_state_path)
+        except Exception:
+            return None
+        return None
+
+    def _start_active_cognitive_loop(self) -> str:
+        self.active_cognitive_loop_state = initialize_active_cognitive_episode(
+            title="DELTA active cognitive architecture marathon",
+            goal_summary="integrate DELTA's cognitive pieces into one persistent active cognitive loop",
+            expected_state="useful artifact produced by a restartable attention-memory-hypothesis cycle",
+            evidence=self._active_cognitive_loop_evidence(),
+            state_path=self.active_cognitive_loop_state_path,
+        )
+        snapshot = active_loop_snapshot(self.active_cognitive_loop_state)
+        return f"Active cognitive loop started. State={snapshot['loop_state']}; next={snapshot['next_intended_step']}."
+
+    def _active_cognitive_loop_status(self) -> str:
+        state = self.active_cognitive_loop_state or self._load_active_cognitive_loop_state()
+        if state is None:
+            return "Active cognitive loop: not started."
+        self.active_cognitive_loop_state = state
+        snapshot = active_loop_snapshot(state)
+        evaluation = evaluate_cognitive_episode(state)
+        return (
+            f"Active cognitive loop: state={snapshot['loop_state']}; completed={snapshot['completed']}; "
+            f"cycles={evaluation['cycle_count']}; model_calls={evaluation['model_call_count']}; "
+            f"focus={snapshot['current_focus'] or 'none'}; next={snapshot['next_intended_step']}."
+        )
+
+    def _run_active_cognitive_loop_cycle(self) -> str:
+        if self.active_cognitive_loop_state is None:
+            self._start_active_cognitive_loop()
+        runner = LedgerBackedCognitiveModelRunner(
+            ledger=LocalModelRequestResultLedger(),
+            provider_manager=self.provider_manager,
+            authority_reason="operator_authorized_active_cognitive_architecture_marathon_1",
+        )
+        self.active_cognitive_loop_state = run_active_cognitive_cycle(
+            self.active_cognitive_loop_state,
+            model_runner=runner,
+        )
+        write_active_cognitive_episode_state(self.active_cognitive_loop_state_path, self.active_cognitive_loop_state)
+        snapshot = active_loop_snapshot(self.active_cognitive_loop_state)
+        evaluation = evaluate_cognitive_episode(self.active_cognitive_loop_state)
+        failures = ", ".join(evaluation["failure_classifications"]) or "none"
+        return (
+            f"Active cognitive cycle complete. State={snapshot['loop_state']}; "
+            f"cycles={evaluation['cycle_count']}; model_calls={evaluation['model_call_count']}; "
+            f"failures={failures}; next={snapshot['next_intended_step']}."
+        )
+
+    def _apply_claim_relation_pilot(self, message: str) -> str:
+        result = self.claim_relation_pilot.process_operator_turn(
+            message,
+            turn_id=f"conversation-turn:{len(self.session_history) + 1}",
+        )
+        if not result.enabled or result.disposition in {"unsupported", "disabled"}:
+            return ""
+        if result.disposition == "persistence_blocked":
+            return result.operator_visible_text
+        return result.operator_visible_text
+
     def _send_chat(self) -> None:
         message = self.chat_input.get().strip()
         if not message:
@@ -4726,7 +5456,52 @@ class DeltaApp:
             self._run_autonomy_5_visible_control("review")
             return
         if lower in {"explain the evidence", "explain outcome evidence"}:
-            self._run_autonomy_5_visible_control("explain")
+            if lower == "explain the evidence" and self._latest_autonomy_17_packet():
+                self._run_autonomy_17_visible_control("explain")
+            else:
+                self._run_autonomy_5_visible_control("explain")
+            return
+        if lower == "acquire local evidence":
+            self._run_autonomy_17_visible_control("acquire")
+            return
+        if lower in {"explain local evidence", "explain the local evidence"}:
+            self._run_autonomy_17_visible_control("explain")
+            return
+        if lower in {"show evidence sources", "view evidence sources"}:
+            self._run_autonomy_17_visible_control("sources")
+            return
+        if lower in {"show contradictions", "view contradictions"}:
+            self._run_autonomy_17_visible_control("contradictions")
+            return
+        if lower in {"show missing evidence", "view missing evidence"}:
+            self._run_autonomy_17_visible_control("missing")
+            return
+        if lower in {"show evidence limits", "view evidence limits"}:
+            self._run_autonomy_17_visible_control("limits")
+            return
+        if lower in {"revalidate stale evidence", "revalidate local evidence"}:
+            self._run_autonomy_17_visible_control("revalidate")
+            return
+        if lower in {"request bounded advice", "request advisory assistance"}:
+            self._run_autonomy_18_visible_control("request")
+            return
+        if lower in {"explain advice", "explain advisory result"}:
+            self._run_autonomy_18_visible_control("explain")
+            return
+        if lower in {"view advisory grounding", "show advisory grounding"}:
+            self._run_autonomy_18_visible_control("grounding")
+            return
+        if lower in {"view rejected claims", "show rejected claims"}:
+            self._run_autonomy_18_visible_control("rejected")
+            return
+        if lower in {"view advisory limits", "show advisory limits"}:
+            self._run_autonomy_18_visible_control("limits")
+            return
+        if lower in {"keep as proposal", "keep advice as proposal"}:
+            self._run_autonomy_18_visible_control("keep")
+            return
+        if lower in {"reject advice", "reject advisory result"}:
+            self._run_autonomy_18_visible_control("reject")
             return
         if lower in {"show failed cases", "view failed cases"}:
             self._run_autonomy_5_visible_control("failed")
@@ -4760,6 +5535,80 @@ class DeltaApp:
             return
         if lower in {"looks good", "proceed", "yes"} and self._latest_autonomy_6_review()[0]:
             self._run_autonomy_6_visible_control("ambiguous")
+            return
+        composition_intents = {
+            "start composed task": "start",
+            "pause composed task": "pause",
+            "resume composed task": "resume",
+            "stop composed task": "stop",
+            "explain composition": "explain",
+            "explain current stage": "explain",
+            "show composition evidence": "evidence",
+            "show composition provenance": "provenance",
+            "show composition limits": "limits",
+        }
+        if lower in composition_intents:
+            self._run_autonomy_14_visible_control(composition_intents[lower])
+            return
+        mission_intents = {
+            "start mission": "start",
+            "pause mission": "pause",
+            "resume mission": "resume",
+            "stop mission": "stop",
+            "explain current task": "current",
+            "explain blocked task": "blocked",
+            "show mission evidence": "evidence",
+            "show mission limits": "limits",
+            "show task graph": "graph",
+            "what can continue": "blocked",
+            "why is this task blocked": "blocked",
+        }
+        if lower in mission_intents:
+            self._run_autonomy_16_visible_control(mission_intents[lower])
+            return
+        if lower == "start active cognitive loop":
+            reply = self._start_active_cognitive_loop()
+            self._append_chat("DELTA", reply)
+            self._append_session("user", message)
+            self._append_session("assistant", reply)
+            self._refresh_state_cards()
+            return
+        if lower in {"active cognitive status", "show active cognitive loop"}:
+            reply = self._active_cognitive_loop_status()
+            self._append_chat("DELTA", reply)
+            self._append_session("user", message)
+            self._append_session("assistant", reply)
+            self._refresh_state_cards()
+            return
+        if lower in {"run active cognitive cycle", "advance active cognitive loop"}:
+            reply = self._run_active_cognitive_loop_cycle()
+            self._append_chat("DELTA", reply)
+            self._append_session("user", message)
+            self._append_session("assistant", reply)
+            self._refresh_state_cards()
+            return
+        if lower == "enable governed claim relation pilot":
+            self.claim_relation_pilot.set_enabled(True)
+            reply = f"{CLAIM_RELATION_PILOT_FLAG} is enabled for this local session."
+            self._append_chat("DELTA", reply)
+            self._append_session("user", message)
+            self._append_session("assistant", reply)
+            self._refresh_state_cards()
+            return
+        if lower == "disable governed claim relation pilot":
+            self.claim_relation_pilot.set_enabled(False)
+            reply = f"{CLAIM_RELATION_PILOT_FLAG} is disabled."
+            self._append_chat("DELTA", reply)
+            self._append_session("user", message)
+            self._append_session("assistant", reply)
+            self._refresh_state_cards()
+            return
+        claim_relation_result = self._apply_claim_relation_pilot(message)
+        if claim_relation_result:
+            self._append_chat("DELTA", claim_relation_result)
+            self._append_session("user", message)
+            self._append_session("assistant", claim_relation_result)
+            self._refresh_state_cards()
             return
         cancel_words = {"no", "n", "not now", "no thanks", "keep chatting", "nevermind", "never mind", "cancel", "stop", "forget it"}
         affirm_words = {"yes", "y", "yes please", "sure", "okay", "ok", "go ahead", "do it", "tell me more", "more", "go deeper"}

@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "support_schema14_revise_plan_1_a",
+      "useful_schema14_revise_plan_1_b"
+    ],
+    "prior_plan_id": "plan-0123456789abcdef",
+    "recommended_state_transition": "revise_plan",
+    "revised_plan_summary": "Update the local model with the latest revision of the operation family revise_plan.",
+    "revision_reason": "Local evidence supports the update of the operation family revise_plan.",
+    "uncertainty": "The effectiveness of the updated local model in resolving the goal discrepancy remains uncertain."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"prior_plan_id\":\"plan-0123456789abcdef\",\"revised_plan_summary\":\"Update the local model with the latest revision of the operation family revise_plan.\",\"evidence_refs\":[\"support_schema14_revise_plan_1_a\",\"useful_schema14_revise_plan_1_b\"],\"revision_reason\":\"Local evidence supports the update of the operation family revise_plan.\",\"uncertainty\":\"The effectiveness of the updated local model in resolving the goal discrepancy remains uncertain.\",\"recommended_state_transition\":\"revise_plan\"}",
+  "raw_response_digest": "0511907ecd758afd0914e173bd23d832c3c0a52c85342431d484368380da6c5a",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

@@ -1,0 +1,25 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "contrary_interpret_aligned_2_c",
+      "useful_interpret_aligned_2_b",
+      "support_interpret_aligned_2_a"
+    ],
+    "recommended_next_operation": "formulate_hypothesis",
+    "salient_observations": [
+      "The universal template caused blank fields or evidence prose in earlier interpret_state attempts.",
+      "The next cognitive operation must be selected without claiming success.",
+      "Persistent state, local ledger, and operator command path exist."
+    ],
+    "state_summary": "Resolve discrepancy for goal: qualify interpret_state specialized schema variant 2",
+    "uncertainty": "How to align the specialized schema with the persistent state and available evidence.",
+    "unresolved_questions": [
+      "How should the interpret_state specialized schema variant 2 be qualified given the persistent state and available evidence?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"state_summary\":\"Resolve discrepancy for goal: qualify interpret_state specialized schema variant 2\",\"salient_observations\":[\"The universal template caused blank fields or evidence prose in earlier interpret_state attempts.\",\"The next cognitive operation must be selected without claiming success.\",\"Persistent state, local ledger, and operator command path exist.\"],\"evidence_refs\":[\"contrary_interpret_aligned_2_c\",\"useful_interpret_aligned_2_b\",\"support_interpret_aligned_2_a\"],\"unresolved_questions\":[\"How should the interpret_state specialized schema variant 2 be qualified given the persistent state and available evidence?\"],\"uncertainty\":\"How to align the specialized schema with the persistent state and available evidence.\",\"recommended_next_operation\":\"formulate_hypothesis\"}",
+  "raw_response_digest": "3a93a15bce0a33fa193c584952b5565905970c8038f1ea3f072ecf4bb39d9b3d",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

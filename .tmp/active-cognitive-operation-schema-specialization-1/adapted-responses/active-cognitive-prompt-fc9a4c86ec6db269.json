@@ -1,0 +1,26 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "local evidence is complete for this bounded episode"
+    ],
+    "contrary_evidence_considered": [
+      "contrary_schema7_compare_evidence_2_c"
+    ],
+    "evidence_refs": [
+      "useful_schema7_compare_evidence_2_b",
+      "support_schema7_compare_evidence_2_a"
+    ],
+    "interpretation": "The operation must produce a bounded next cognitive action without declaring success. Runtime state and local ledger are available for this bounded operation. However, prior attempts have weakened the active hypothesis.",
+    "next_evidence_need": "Further evidence to strengthen or weaken the hypothesis.",
+    "next_focus_proposal": "Re-evaluate the hypothesis based on additional evidence.",
+    "operation_result_type": "compare_evidence_result",
+    "recommended_action": "Re-evaluate the hypothesis based on additional evidence.",
+    "recommended_state_transition": "revise_hypothesis",
+    "uncertainty": "The strength of the hypothesis remains unresolved."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{ \"assumptions\": [ \"local evidence is complete for this bounded episode\" ], \"contrary_evidence_considered\": [ \"contrary_schema7_compare_evidence_2_c\" ], \"evidence_refs\": [ \"useful_schema7_compare_evidence_2_b\", \"support_schema7_compare_evidence_2_a\" ], \"interpretation\": \"The operation must produce a bounded next cognitive action without declaring success. Runtime state and local ledger are available for this bounded operation. However, prior attempts have weakened the active hypothesis.\", \"next_evidence_need\": \"Further evidence to strengthen or weaken the hypothesis.\", \"next_focus_proposal\": \"Re-evaluate the hypothesis based on additional evidence.\", \"operation_result_type\": \"compare_evidence_result\", \"recommended_action\": \"Re-evaluate the hypothesis based on additional evidence.\", \"recommended_state_transition\": \"revise_hypothesis\", \"uncertainty\": \"The strength of the hypothesis remains unresolved.\" }",
+  "raw_response_digest": "79b7a3875f1bdd05bb7e6ed1b2c028df3faeab047b240f97f4f81a42827d6133",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

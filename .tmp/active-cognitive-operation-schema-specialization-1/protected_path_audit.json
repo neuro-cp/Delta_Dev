@@ -1,0 +1,9 @@
+{
+  "DELTA_75_touched": false,
+  "RC4_reports_touched": false,
+  "live_competence_adapter_status": "pre-existing dirty path present; not edited for this gate",
+  "protected_deltas_observed": [
+    "orchestration/runtime/live_competence_adapter.py"
+  ],
+  "staging_empty": true
+}

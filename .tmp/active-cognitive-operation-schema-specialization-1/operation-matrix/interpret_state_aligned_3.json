@@ -1,0 +1,33 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "support_interpret_aligned_3_a",
+      "useful_interpret_aligned_3_b",
+      "contrary_interpret_aligned_3_c"
+    ],
+    "recommended_next_operation": "formulate_hypothesis",
+    "salient_observations": [
+      "Runtime evidence available",
+      "The next cognitive operation must be selected without claiming success",
+      "The universal template caused blank fields or evidence prose in earlier interpret_state attempts"
+    ],
+    "state_summary": "Persistent state, local ledger, and operator command path exist.",
+    "uncertainty": "How to effectively utilize the available local evidence to resolve the discrepancy?",
+    "unresolved_questions": [
+      "How to effectively utilize the available local evidence to resolve the discrepancy?"
+    ]
+  },
+  "elapsed_seconds": 25.677,
+  "failure_classifications": [],
+  "operation": "interpret_state",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "03b6612b15c30e26efa9dc8b59174ed943084d4fbd781d0f3943620a6fd3a825",
+  "variant": 3
+}

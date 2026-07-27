@@ -1,0 +1,22 @@
+{
+  "adapted_response": {
+    "contrary_evidence_considered": [
+      "contrary_schema10_revise_hypothesis_3_c"
+    ],
+    "evidence_refs": [
+      "support_schema10_revise_hypothesis_3_a",
+      "useful_schema10_revise_hypothesis_3_b"
+    ],
+    "new_confidence_state": "plausible",
+    "prior_hypothesis_id": "hypothesis-8314240ee188a5a9",
+    "recommended_state_transition": "revise_hypothesis",
+    "revised_statement": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family revise_hypothesis can progress using the available local evidence.",
+    "revision_reason": "Contrary evidence suggests that previous attempts have failed or weakened the hypothesis.",
+    "uncertainty": "The extent of the discrepancy remains unresolved."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"prior_hypothesis_id\":\"hypothesis-8314240ee188a5a9\",\"revised_statement\":\"A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family revise_hypothesis can progress using the available local evidence.\",\"evidence_refs\":[\"support_schema10_revise_hypothesis_3_a\",\"useful_schema10_revise_hypothesis_3_b\"],\"contrary_evidence_considered\":[\"contrary_schema10_revise_hypothesis_3_c\"],\"revision_reason\":\"Contrary evidence suggests that previous attempts have failed or weakened the hypothesis.\",\"new_confidence_state\":\"plausible\",\"uncertainty\":\"The extent of the discrepancy remains unresolved.\",\"recommended_state_transition\":\"revise_hypothesis\"}",
+  "raw_response_digest": "33b7c81d79e65f1a53f9efc530e3af4c2136e10a9a2f0e7708296fa859c73a71",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

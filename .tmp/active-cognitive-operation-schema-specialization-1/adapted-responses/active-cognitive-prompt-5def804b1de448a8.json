@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "support_schema15_revise_plan_3_a",
+      "useful_schema15_revise_plan_3_b"
+    ],
+    "prior_plan_id": "plan-0001",
+    "recommended_state_transition": "revise_plan",
+    "revised_plan_summary": "Adjust the constraints to allow for the possibility of failure and include a contingency plan.",
+    "revision_reason": "The current plan does not account for potential failure scenarios.",
+    "uncertainty": "The exact nature of the contingency plan is still uncertain."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"prior_plan_id\":\"plan-0001\",\"revised_plan_summary\":\"Adjust the constraints to allow for the possibility of failure and include a contingency plan.\",\"evidence_refs\":[\"support_schema15_revise_plan_3_a\",\"useful_schema15_revise_plan_3_b\"],\"revision_reason\":\"The current plan does not account for potential failure scenarios.\",\"uncertainty\":\"The exact nature of the contingency plan is still uncertain.\",\"recommended_state_transition\":\"revise_plan\"}",
+  "raw_response_digest": "3e3242eadbd2add03e58cc63435845f51cd125e2b509e7e2ccb2374fce0a0920",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

@@ -1,0 +1,10 @@
+﻿{
+    "processes":  {
+                      "ProcessId":  13536,
+                      "Name":  "powershell.exe",
+                      "CommandLine":  "\"C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -NoProfile -Command \"try { [Console]::OutputEncoding=[System.Text.Encoding]::UTF8 } catch {}\n$root=\u0027.tmp\\active-cognitive-operation-schema-specialization-1\u0027; $proc=Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -like \u0027*Delta_Dev*\u0027 -or $_.CommandLine -like \u0027*active-cognitive*\u0027 -or $_.CommandLine -like \u0027*pytest*\u0027 } | Select-Object ProcessId,Name,CommandLine; $current=$PID; $modelOrTest=$proc | Where-Object { $_.ProcessId -ne $current -and ($_.Name -match \u0027python|pytest\u0027 -or $_.CommandLine -like \u0027*llama*\u0027 -or $_.CommandLine -like \u0027*pytest*\u0027) }; @{processes=$proc; active_count=$proc.Count; active_model_or_pytest_count=$modelOrTest.Count; note=\u0027No active model or pytest child should remain; current audit command may appear in process list.\u0027} | ConvertTo-Json -Depth 6 | Set-Content \\\"$root\\process_cleanup.json\\\" -Encoding UTF8; $modelOrTest | Format-List\""
+                  },
+    "note":  "No active model or pytest child should remain; current audit command may appear in process list.",
+    "active_count":  null,
+    "active_model_or_pytest_count":  0
+}

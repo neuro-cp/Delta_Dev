@@ -1,0 +1,32 @@
+{
+  "adapted_response": {
+    "plan_summary": "Resolve discrepancy for goal: qualify operation family propose_plan using available local evidence.",
+    "planned_steps": [
+      "Analyze local evidence for propose_plan",
+      "Formulate a plan based on the analysis"
+    ],
+    "recommended_state_transition": "propose_plan",
+    "risks": [
+      "Contrary evidence suggests past failures",
+      "Uncertainty in the local evidence"
+    ],
+    "supporting_evidence_refs": [
+      "support_schema14_propose_plan_1_a",
+      "useful_schema14_propose_plan_1_b"
+    ],
+    "uncertainty": "Reliance on local evidence and potential past failures"
+  },
+  "elapsed_seconds": 26.411,
+  "failure_classifications": [],
+  "operation": "propose_plan",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "bd0d72de8f9a04d06cf49b3e587dba5700dc74882d5183e1c8ea59215b5976bc",
+  "variant": 1
+}

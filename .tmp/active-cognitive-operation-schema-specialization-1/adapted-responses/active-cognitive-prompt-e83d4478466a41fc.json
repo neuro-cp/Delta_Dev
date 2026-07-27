@@ -1,0 +1,27 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "local evidence is complete for this bounded episode"
+    ],
+    "contrary_evidence_considered": [
+      "Prior cognition-lane attempts failed or weakened the active hypothesis."
+    ],
+    "evidence_refs": [
+      "contrary_schema4_compare_evidence_2_c",
+      "useful_schema4_compare_evidence_2_b",
+      "support_schema4_compare_evidence_2_a"
+    ],
+    "interpretation": "The operation must produce a bounded next cognitive action without declaring success. Runtime state and local ledger are available for this bounded operation. The hypothesis is that the operation can progress using the available local evidence. However, contrary evidence suggests that previous attempts have failed or weakened the active hypothesis.",
+    "next_evidence_need": "Further evidence to confirm or refute the hypothesis.",
+    "next_focus_proposal": "Proceed with the operation, but remain cautious.",
+    "operation_result_type": "hypothesis",
+    "recommended_action": "Proceed with the operation, but remain cautious.",
+    "recommended_state_transition": "local_model_semantic_operation",
+    "uncertainty": "The extent to which previous failures impact the current operation."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{ \"assumptions\":[\"local evidence is complete for this bounded episode\"],\"contrary_evidence_considered\":[\"Prior cognition-lane attempts failed or weakened the active hypothesis.\"],\"evidence_refs\":[\"contrary_schema4_compare_evidence_2_c\",\"useful_schema4_compare_evidence_2_b\",\"support_schema4_compare_evidence_2_a\"],\"interpretation\":\"The operation must produce a bounded next cognitive action without declaring success. Runtime state and local ledger are available for this bounded operation. The hypothesis is that the operation can progress using the available local evidence. However, contrary evidence suggests that previous attempts have failed or weakened the active hypothesis.\",\"next_evidence_need\":\"Further evidence to confirm or refute the hypothesis.\",\"next_focus_proposal\":\"Proceed with the operation, but remain cautious.\",\"operation_result_type\":\"hypothesis\",\"recommended_action\":\"Proceed with the operation, but remain cautious.\",\"recommended_state_transition\":\"local_model_semantic_operation\",\"uncertainty\":\"The extent to which previous failures impact the current operation.\" }",
+  "raw_response_digest": "876d4f50a90406474b71485b3ebe76a583a54f225cbe9c83ae008370226dade2",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

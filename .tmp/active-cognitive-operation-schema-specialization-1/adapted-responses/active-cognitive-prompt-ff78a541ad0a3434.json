@@ -1,0 +1,17 @@
+{
+  "adapted_response": {
+    "attempted_evidence_refs": [],
+    "bounded_next_evidence_request": "Provide evidence supporting or challenging the goal.",
+    "missing_evidence": [
+      "evidence-91a52d8e-0b74-4f8c-871a-209224f15f9d"
+    ],
+    "recommended_state_transition": "declare_insufficient_evidence",
+    "uncertainty": "Insufficient evidence to support or challenge the goal.",
+    "why_existing_evidence_is_insufficient": "No evidence found to support or challenge the goal."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"missing_evidence\":[\"evidence-91a52d8e-0b74-4f8c-871a-209224f15f9d\"],\"attempted_evidence_refs\":[],\"why_existing_evidence_is_insufficient\":\"No evidence found to support or challenge the goal.\",\"bounded_next_evidence_request\":\"Provide evidence supporting or challenging the goal.\",\"uncertainty\":\"Insufficient evidence to support or challenge the goal.\",\"recommended_state_transition\":\"declare_insufficient_evidence\"}",
+  "raw_response_digest": "78f56688ffabf74e845ecfb0cac39332d96165555f381d0f3ee0ae34340ac606",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

@@ -1,0 +1,29 @@
+{
+  "adapted_response": {
+    "blocking_reason": "Runtime state and local ledger are available for this bounded operation, but the operation must produce a bounded next cognitive action without declaring success.",
+    "evidence_refs": [
+      "support_schema15_request_operator_resolution_1_a",
+      "useful_schema15_request_operator_resolution_1_b"
+    ],
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "question": "Can the operation family request_operator_resolution be qualified using the available local evidence?",
+    "recommended_state_transition": "request_operator_resolution",
+    "uncertainty": "Uncertainty remains regarding the sufficiency of the local evidence."
+  },
+  "elapsed_seconds": 18.877,
+  "failure_classifications": [],
+  "operation": "request_operator_resolution",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "41e420c4019e788d6e053136a588a151ee75e62a7cbc4275085d6791ae2b3ea5",
+  "variant": 1
+}

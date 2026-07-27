@@ -1,0 +1,153 @@
+{
+  "challenge_hypothesis": {
+    "contrary_fields": [
+      "contrary_evidence_refs"
+    ],
+    "primary_text_fields_consumed": true,
+    "shared_grounding": true,
+    "transition_enum": [
+      "weaken_hypothesis",
+      "revise_hypothesis",
+      "reject_hypothesis",
+      "falsify_hypothesis"
+    ]
+  },
+  "compare_evidence": {
+    "contrary_fields": [
+      "contrary_evidence_considered"
+    ],
+    "primary_text_fields_consumed": true,
+    "shared_grounding": true,
+    "transition_enum": [
+      "add_supporting_evidence",
+      "add_conflicting_evidence",
+      "weaken_hypothesis",
+      "revise_hypothesis"
+    ]
+  },
+  "declare_blocked_capability": {
+    "contrary_fields": [],
+    "primary_text_fields_consumed": true,
+    "shared_grounding": true,
+    "transition_enum": [
+      "declare_blocked_capability"
+    ]
+  },
+  "declare_insufficient_evidence": {
+    "contrary_fields": [],
+    "primary_text_fields_consumed": true,
+    "shared_grounding": true,
+    "transition_enum": [
+      "declare_insufficient_evidence"
+    ]
+  },
+  "formulate_hypothesis": {
+    "contrary_fields": [],
+    "primary_text_fields_consumed": true,
+    "shared_grounding": true,
+    "transition_enum": [
+      "propose_hypothesis",
+      "declare_insufficient_evidence"
+    ]
+  },
+  "identify_evidence_need": {
+    "contrary_fields": [],
+    "primary_text_fields_consumed": true,
+    "shared_grounding": true,
+    "transition_enum": [
+      "identify_evidence_need",
+      "declare_insufficient_evidence"
+    ]
+  },
+  "interpret_state": {
+    "contrary_fields": [],
+    "primary_text_fields_consumed": true,
+    "shared_grounding": true,
+    "transition_enum": [
+      "prioritize_focus",
+      "formulate_hypothesis",
+      "identify_evidence_need",
+      "compare_evidence",
+      "declare_insufficient_evidence"
+    ]
+  },
+  "prioritize_focus": {
+    "contrary_fields": [],
+    "primary_text_fields_consumed": true,
+    "shared_grounding": true,
+    "transition_enum": [
+      "select_next_focus",
+      "continue_focus",
+      "request_operator_resolution"
+    ]
+  },
+  "propose_plan": {
+    "contrary_fields": [],
+    "primary_text_fields_consumed": true,
+    "shared_grounding": true,
+    "transition_enum": [
+      "propose_plan",
+      "request_operator_resolution",
+      "declare_insufficient_evidence"
+    ]
+  },
+  "reflect_on_outcome": {
+    "contrary_fields": [],
+    "primary_text_fields_consumed": true,
+    "shared_grounding": true,
+    "transition_enum": [
+      "reflect_on_outcome",
+      "weaken_hypothesis",
+      "revise_hypothesis",
+      "summarize_learning"
+    ]
+  },
+  "request_operator_resolution": {
+    "contrary_fields": [],
+    "primary_text_fields_consumed": true,
+    "shared_grounding": true,
+    "transition_enum": [
+      "request_operator_resolution"
+    ]
+  },
+  "revise_hypothesis": {
+    "contrary_fields": [
+      "contrary_evidence_considered"
+    ],
+    "primary_text_fields_consumed": true,
+    "shared_grounding": true,
+    "transition_enum": [
+      "revise_hypothesis",
+      "reject_hypothesis",
+      "falsify_hypothesis"
+    ]
+  },
+  "revise_plan": {
+    "contrary_fields": [],
+    "primary_text_fields_consumed": true,
+    "shared_grounding": true,
+    "transition_enum": [
+      "revise_plan",
+      "request_operator_resolution",
+      "declare_insufficient_evidence"
+    ]
+  },
+  "select_next_focus": {
+    "contrary_fields": [],
+    "primary_text_fields_consumed": true,
+    "shared_grounding": true,
+    "transition_enum": [
+      "select_next_focus",
+      "request_operator_resolution"
+    ]
+  },
+  "summarize_learning": {
+    "contrary_fields": [],
+    "primary_text_fields_consumed": true,
+    "shared_grounding": true,
+    "transition_enum": [
+      "summarize_learning",
+      "select_next_focus"
+    ]
+  }
+}

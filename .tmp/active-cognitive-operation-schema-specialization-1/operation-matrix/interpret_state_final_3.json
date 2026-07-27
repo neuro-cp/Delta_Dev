@@ -1,0 +1,33 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "support_interpret_final_3_a",
+      "useful_interpret_final_3_b",
+      "contrary_interpret_final_3_c"
+    ],
+    "recommended_next_operation": "formulate_hypothesis",
+    "salient_observations": [
+      "Runtime evidence available",
+      "The next cognitive operation must be selected without claiming success",
+      "The universal template caused blank fields or evidence prose in earlier interpret_state attempts"
+    ],
+    "state_summary": "Episode needs a useful outcome",
+    "uncertainty": "Outcome of next operation is uncertain",
+    "unresolved_questions": [
+      "How will the next operation resolve the discrepancy?"
+    ]
+  },
+  "elapsed_seconds": 20.311,
+  "failure_classifications": [],
+  "operation": "interpret_state",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "37694d884de72aa00e824cabd4808380b8267d6d91e83a0463f43e57380c502a",
+  "variant": 3
+}

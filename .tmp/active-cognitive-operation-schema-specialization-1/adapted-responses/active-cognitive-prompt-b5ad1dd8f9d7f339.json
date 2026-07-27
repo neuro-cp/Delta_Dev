@@ -1,0 +1,20 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "episode_a_runtime_support",
+      "episode_a_useful_target",
+      "episode_a_contrary_prior_block"
+    ],
+    "lesson": "Understand the local model's ledger and operation-specific grammars to resolve discrepancies and support active focus",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "Uncertainty remains about the most effective approach to integrate these elements for resolving discrepancies.",
+    "unresolved_questions": [
+      "How to effectively integrate local model ledger and operation-specific grammars for resolving discrepancies?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"Understand the local model's ledger and operation-specific grammars to resolve discrepancies and support active focus\",\"evidence_refs\":[\"episode_a_runtime_support\",\"episode_a_useful_target\",\"episode_a_contrary_prior_block\"],\"unresolved_questions\":[\"How to effectively integrate local model ledger and operation-specific grammars for resolving discrepancies?\"],\"uncertainty\":\"Uncertainty remains about the most effective approach to integrate these elements for resolving discrepancies.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "8d6e8de74e98631f860d8c8e3c33db53acc419016af4fffe66b63b0bc22f22eb",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

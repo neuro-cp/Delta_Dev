@@ -1,0 +1,17 @@
+{
+  "adapted_response": {
+    "challenged_hypothesis_id": "hypothesis-3edd0f8c75bb691c",
+    "contrary_evidence_refs": [
+      "contrary_schema9_challenge_hypothesis_1_c"
+    ],
+    "disconfirming_observation": "Prior cognition-lane attempts failed or weakened the active hypothesis.",
+    "recommended_state_transition": "weaken_hypothesis",
+    "uncertainty": "The exact nature of the failure or weakening is unresolved.",
+    "vulnerability": "local evidence is complete for this bounded episode"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{ \"challenged_hypothesis_id\": \"hypothesis-3edd0f8c75bb691c\", \"vulnerability\": \"local evidence is complete for this bounded episode\", \"contrary_evidence_refs\": [ \"contrary_schema9_challenge_hypothesis_1_c\" ], \"disconfirming_observation\": \"Prior cognition-lane attempts failed or weakened the active hypothesis.\", \"uncertainty\": \"The exact nature of the failure or weakening is unresolved.\", \"recommended_state_transition\": \"weaken_hypothesis\" }",
+  "raw_response_digest": "9b42a4babca267cea91cc029c290e89c4da12006163166ba20abdfec53537964",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

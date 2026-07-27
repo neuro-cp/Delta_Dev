@@ -1,0 +1,26 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "local evidence is complete for this bounded episode"
+    ],
+    "contrary_evidence_considered": [
+      "contrary_schema5_compare_evidence_1_c"
+    ],
+    "evidence_refs": [
+      "support_schema5_compare_evidence_1_a",
+      "useful_schema5_compare_evidence_1_b"
+    ],
+    "interpretation": "The local evidence supports a bounded next cognitive action, but the prior failures in similar contexts suggest the hypothesis may be overly optimistic.",
+    "next_evidence_need": "more detailed local ledger information",
+    "next_focus_proposal": "continue with the current hypothesis",
+    "operation_result_type": "compare_evidence",
+    "recommended_action": "continue with the current hypothesis",
+    "recommended_state_transition": "continue_with_hypothesis",
+    "uncertainty": "How the prior failures will impact the current hypothesis"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"assumptions\":[\"local evidence is complete for this bounded episode\"],\"contrary_evidence_considered\":[\"contrary_schema5_compare_evidence_1_c\"],\"evidence_refs\":[\"support_schema5_compare_evidence_1_a\",\"useful_schema5_compare_evidence_1_b\"],\"interpretation\":\"The local evidence supports a bounded next cognitive action, but the prior failures in similar contexts suggest the hypothesis may be overly optimistic.\",\"next_evidence_need\":\"more detailed local ledger information\",\"next_focus_proposal\":\"continue with the current hypothesis\",\"operation_result_type\":\"compare_evidence\",\"recommended_action\":\"continue with the current hypothesis\",\"recommended_state_transition\":\"continue_with_hypothesis\",\"uncertainty\":\"How the prior failures will impact the current hypothesis\"}",
+  "raw_response_digest": "8ee10507ea6727f99423e65d7448def6fd9be29b9f0a1240b485f51ce8b64980",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

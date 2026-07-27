@@ -1,0 +1,5 @@
+﻿{
+    "output":  "warning: in the working copy of \u0027DELTA.py\u0027, LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of \u0027integration/model_runtime/gguf_model_runner.py\u0027, LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of \u0027integration/model_runtime/model_session.py\u0027, LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of \u0027integration/model_runtime/prompt_builder.py\u0027, LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of \u0027integration/model_runtime/provider_manager.py\u0027, LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of \u0027orchestration/runtime/live_competence_adapter.py\u0027, LF will be replaced by CRLF the next time Git touches it",
+    "command":  "git diff --check closure",
+    "exit_code":  0
+}

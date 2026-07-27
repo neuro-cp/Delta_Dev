@@ -1,0 +1,26 @@
+{
+  "adapted_response": {
+    "recommended_state_transition": "continue_focus",
+    "rejected_focus_ids": [],
+    "selected_focus_id": "focus-11cfc6184b5e8403",
+    "selection_reason": "Resolve discrepancy for goal: qualify operation family prioritize_focus",
+    "supporting_evidence_refs": [
+      "useful_schema4_prioritize_focus_2_b",
+      "support_schema4_prioritize_focus_2_a"
+    ],
+    "uncertainty": "Need to confirm local evidence supports useful progress"
+  },
+  "elapsed_seconds": 15.659,
+  "failure_classifications": [],
+  "operation": "prioritize_focus",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "a77936803044eda53772ddf3e16d7d4e544741518f15edb6baa547eba07bf901",
+  "variant": 2
+}

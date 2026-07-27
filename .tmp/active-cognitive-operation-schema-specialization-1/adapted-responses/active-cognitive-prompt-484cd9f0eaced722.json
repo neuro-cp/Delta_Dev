@@ -1,0 +1,19 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "support_schema15_summarize_learning_3_a",
+      "useful_schema15_summarize_learning_3_b"
+    ],
+    "lesson": "Resolve discrepancy for goal: qualify operation family summarize_learning can progress using the available local evidence.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "How will the local evidence be used to produce a bounded next cognitive action?",
+    "unresolved_questions": [
+      "How will the local evidence be used to produce a bounded next cognitive action?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"Resolve discrepancy for goal: qualify operation family summarize_learning can progress using the available local evidence.\",\"evidence_refs\":[\"support_schema15_summarize_learning_3_a\",\"useful_schema15_summarize_learning_3_b\"],\"unresolved_questions\":[\"How will the local evidence be used to produce a bounded next cognitive action?\"],\"uncertainty\":\"How will the local evidence be used to produce a bounded next cognitive action?\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "030c6ff035509f8141a118e28cf0d8c2427dcbcb5273675fbe9f56692474a0d1",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

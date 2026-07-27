@@ -1,0 +1,22 @@
+﻿## codex/delta-cognitive-core...origin/codex/delta-cognitive-core
+ M DELTA.py
+ M integration/model_runtime/gguf_model_runner.py
+ M integration/model_runtime/model_session.py
+ M integration/model_runtime/prompt_builder.py
+ M integration/model_runtime/provider_manager.py
+ M orchestration/runtime/live_competence_adapter.py
+?? integration/model_runtime/execution_lanes.py
+?? orchestration/runtime/active_cognitive_loop.py
+?? orchestration/runtime/cognitive_claim_relation_integration_audit.py
+?? orchestration/runtime/cognitive_claim_relation_runtime.py
+?? orchestration/runtime/cognitive_claim_relations.py
+?? orchestration/runtime/cognitive_contradiction_evaluation.py
+?? orchestration/runtime/cognitive_excluded_path_reconciliation.py
+?? tests/runtime_gsr/test_active_cognitive_loop.py
+?? tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py
+?? tests/runtime_gsr/test_cognitive_claim_relation_integration_audit.py
+?? tests/runtime_gsr/test_cognitive_claim_relation_runtime.py
+?? tests/runtime_gsr/test_cognitive_claim_relations.py
+?? tests/runtime_gsr/test_cognitive_contradiction_evaluation.py
+?? tests/runtime_gsr/test_cognitive_excluded_path_reconciliation.py
+?? tests/runtime_gsr/test_model_execution_lane_isolation.py

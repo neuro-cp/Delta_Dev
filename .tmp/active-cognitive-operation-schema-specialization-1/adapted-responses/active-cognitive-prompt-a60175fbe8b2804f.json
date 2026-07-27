@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "bounded_next_evidence_request": "Determine if local evidence supports the goal or challenges it.",
+    "evidence_gap": "The operation must produce a bounded next cognitive action without declaring success.",
+    "existing_evidence_refs": [
+      "useful_schema12_identify_evidence_need_2_b",
+      "support_schema12_identify_evidence_need_2_a"
+    ],
+    "missing_evidence": [],
+    "recommended_state_transition": "identify_evidence_need",
+    "uncertainty": "The outcome of the bounded next cognitive action is unresolved."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"evidence_gap\":\"The operation must produce a bounded next cognitive action without declaring success.\",\"existing_evidence_refs\":[\"useful_schema12_identify_evidence_need_2_b\",\"support_schema12_identify_evidence_need_2_a\"],\"missing_evidence\":[],\"bounded_next_evidence_request\":\"Determine if local evidence supports the goal or challenges it.\",\"uncertainty\":\"The outcome of the bounded next cognitive action is unresolved.\" \n\n, \"recommended_state_transition\": \"identify_evidence_need\" }",
+  "raw_response_digest": "1af3b9ff2c99cc5854e178ca850cde99b247617abb3a3355d27e56b36a5442cb",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

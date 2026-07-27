@@ -1,0 +1,27 @@
+{
+  "adapted_response": {
+    "challenged_hypothesis_id": "hypothesis-388055db27a8e021",
+    "contrary_evidence_refs": [
+      "contrary_schema10_challenge_hypothesis_3_c"
+    ],
+    "disconfirming_observation": "Prior cognition-lane attempts failed or weakened the active hypothesis.",
+    "recommended_state_transition": "weaken_hypothesis",
+    "uncertainty": "The reliability of the local evidence is unresolved.",
+    "vulnerability": "The local evidence is incomplete or unreliable, as prior attempts have weakened the active hypothesis."
+  },
+  "elapsed_seconds": 21.501,
+  "failure_classifications": [],
+  "operation": "challenge_hypothesis",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "contrary_evidence_addressed",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "meaningful_revision",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "affff1391f8689555b36e1291799bd081893bc0e10e0c00701e5ec7c5052badf",
+  "variant": 3
+}

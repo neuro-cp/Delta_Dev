@@ -1,0 +1,17 @@
+{
+  "adapted_response": {
+    "challenged_hypothesis_id": "hypothesis-388055db27a8e021",
+    "contrary_evidence_refs": [
+      "contrary_schema10_challenge_hypothesis_3_c"
+    ],
+    "disconfirming_observation": "Prior cognition-lane attempts failed or weakened the active hypothesis.",
+    "recommended_state_transition": "weaken_hypothesis",
+    "uncertainty": "The reliability of the local evidence is unresolved.",
+    "vulnerability": "The local evidence is incomplete or unreliable, as prior attempts have weakened the active hypothesis."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"challenged_hypothesis_id\":\"hypothesis-388055db27a8e021\",\"vulnerability\":\"The local evidence is incomplete or unreliable, as prior attempts have weakened the active hypothesis.\",\"contrary_evidence_refs\":[\"contrary_schema10_challenge_hypothesis_3_c\"],\"disconfirming_observation\":\"Prior cognition-lane attempts failed or weakened the active hypothesis.\",\"uncertainty\":\"The reliability of the local evidence is unresolved.\",\"recommended_state_transition\":\"weaken_hypothesis\"}",
+  "raw_response_digest": "1ce52c2bebdab29077940caac60ee0377c5a471fb3f1503b9f6b57e56d5ee03c",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

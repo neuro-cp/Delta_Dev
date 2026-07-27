@@ -1,0 +1,25 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "support_interpret_schema_1_a",
+      "useful_interpret_schema_1_b",
+      "contrary_interpret_schema_1_c"
+    ],
+    "recommended_next_operation": "formulate_hypothesis",
+    "salient_observations": [
+      "Runtime evidence available",
+      "The next cognitive operation must be selected without claiming success",
+      "The universal template caused blank fields or evidence prose in earlier interpret_state attempts"
+    ],
+    "state_summary": "Progress observed in hypothesis formulation but unresolved issues remain",
+    "uncertainty": "Uncertainty about the sufficiency of the evidence for a definitive hypothesis",
+    "unresolved_questions": [
+      "Is the available evidence sufficient to formulate a hypothesis?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"evidence_refs\":[\"support_interpret_schema_1_a\",\"useful_interpret_schema_1_b\",\"contrary_interpret_schema_1_c\"],\"recommended_next_operation\":\"formulate_hypothesis\",\"salient_observations\":[\"Runtime evidence available\",\"The next cognitive operation must be selected without claiming success\",\"The universal template caused blank fields or evidence prose in earlier interpret_state attempts\"],\"state_summary\":\"Progress observed in hypothesis formulation but unresolved issues remain\",\"uncertainty\":\"Uncertainty about the sufficiency of the evidence for a definitive hypothesis\",\"unresolved_questions\":[\"Is the available evidence sufficient to formulate a hypothesis?\"]}",
+  "raw_response_digest": "3a97aa7917286fd2205499d6c0c4ad1ea4e0cddb8a45c178766e0c4f36af52db",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

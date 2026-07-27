@@ -1,0 +1,14 @@
+{
+  "blocked_remaining_defect": "identify_evidence_need still produces generic/non-useful evidence_gap or request text under local model qualification",
+  "defect": "single broad compare-compatible response contract caused operations such as interpret_state to fill irrelevant comparison/revision/action fields",
+  "resolution": "typed CognitiveOperationSchema registry keyed by operation_type; declared operations now fail registry completeness if omitted",
+  "universal_fields_removed_from_irrelevant_operations": [
+    "operation_result_type",
+    "interpretation",
+    "contrary_evidence_considered",
+    "recommended_state_transition",
+    "recommended_action",
+    "next_evidence_need",
+    "next_focus_proposal"
+  ]
+}

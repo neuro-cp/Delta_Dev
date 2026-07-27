@@ -1,0 +1,80 @@
+{
+  "authority_constraints": [
+    "no network",
+    "no protected paths",
+    "no commit",
+    "bounded local actions only"
+  ],
+  "contrary_evidence_ids_supplied": [
+    "contrary_schema2_prioritize_focus_1_c"
+  ],
+  "cycle_id": "active-cognitive-cycle-807be6296da8d9f6",
+  "evidence_ids_supplied": [
+    "support_schema2_prioritize_focus_1_a",
+    "useful_schema2_prioritize_focus_1_b"
+  ],
+  "expected_response_schema": {
+    "recommended_state_transition": "one allowed transition",
+    "rejected_focus_ids": [
+      "focus IDs not selected"
+    ],
+    "selected_focus_id": "focus ID selected from candidates",
+    "selection_reason": "nonempty reason for focus selection",
+    "supporting_evidence_refs": [
+      "IDs only from supplied evidence"
+    ],
+    "uncertainty": "nonempty uncertainty phrase"
+  },
+  "focus_id": "focus-c0ce702394aa4e53",
+  "goal_id": "active-cognitive-goal-8623fb5db5b27127",
+  "model_identity": "ledger",
+  "operation_request": {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-807be6296da8d9f6",
+    "evidence_constraints": [
+      "support_schema2_prioritize_focus_1_a",
+      "useful_schema2_prioritize_focus_1_b",
+      "contrary_schema2_prioritize_focus_1_c"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-c0ce702394aa4e53",
+    "goal_id": "active-cognitive-goal-8623fb5db5b27127",
+    "model_identity": "ledger",
+    "operation_id": "cognitive-operation-32f7fffaa9082e36",
+    "operation_type": "prioritize_focus",
+    "provenance": [
+      "working-memory-packet-a71e6185ee3bf161"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform prioritize_focus for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "b15f817f4c3a48f55333aad5de7ea88111316de9e5ddff4e87bb914e4b541a87"
+  },
+  "operation_type": "prioritize_focus",
+  "prompt_byte_digest": "0fe5ce596c740b101dd0c2fd90679dd990cc7d106ee137e58aee1332d24ac22f",
+  "prompt_length": 4540,
+  "prompt_schema_version": "active_cognitive_prompt_qualification_1_v1",
+  "prompt_snapshot_id": "active-cognitive-prompt-2afbf12c028580d1",
+  "prompt_text": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- selected_focus_id: nonempty string\n- selection_reason: nonempty string\n- supporting_evidence_refs: array[string]\n- rejected_focus_ids: array[string]\n- uncertainty: nonempty string\n- recommended_state_transition: nonempty string\nTASK: perform only operation prioritize_focus. Allowed transition/next-operation values: select_next_focus, continue_focus, request_operator_resolution. Use evidence_refs only from evidence_for IDs: support_schema2_prioritize_focus_1_a, useful_schema2_prioritize_focus_1_b. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied.\nCONTEXT_JSON:\n{\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":2,\"description\":\"Resolve discrepancy for goal: qualify operation family prioritize_focus\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"support_schema2_prioritize_focus_1_a\",\"useful_schema2_prioritize_focus_1_b\",\"contrary_schema2_prioritize_focus_1_c\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-c0ce702394aa4e53\",\"related_goal_ids\":[\"active-cognitive-goal-8623fb5db5b27127\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"Prior cognition-lane attempts failed or weakened the active hypothesis.\",\"evidence_id\":\"contrary_schema2_prioritize_focus_1_c\",\"source\":\"matrix\",\"summary\":\"Contrary evidence\"}],\"current_goal\":{\"expected_state\":\"qualified structured response produced\",\"goal_id\":\"active-cognitive-goal-8623fb5db5b27127\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"qualify operation family prioritize_focus\"},\"current_hypotheses\":[{\"assumptions\":[\"local evidence is complete for this bounded episode\"],\"confidence_state\":\"plausible\",\"created_at\":\"2026-07-26T06:26:07+00:00\",\"disposition\":\"needs_challenge\",\"evidence_against\":[\"contrary_schema2_prioritize_focus_1_c\"],\"evidence_for\":[\"support_schema2_prioritize_focus_1_a\",\"useful_schema2_prioritize_focus_1_b\"],\"expected_observations\":[\"local evidence should support a bounded useful step\"],\"hypothesis_id\":\"hypothesis-54babd5467ff9b63\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-420bc220f30e586f\",\"originating_goal_id\":\"active-cognitive-goal-8623fb5db5b27127\",\"provenance\":[\"cognitive-operation-5a705bfaafd75a77\"],\"revised_at\":\"\",\"revision_parent_id\":\"\",\"revision_reason\":\"\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: qualify operation family prioritize_focus\",\"statement\":\"A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family prioritize_focus can progress using the available local evidence.\"}],\"evidence_for\":[{\"content\":\"Runtime state and local ledger are available for this bounded operation.\",\"evidence_id\":\"support_schema2_prioritize_focus_1_a\",\"source\":\"matrix\",\"summary\":\"Supporting evidence\"},{\"content\":\"The operation must produce a bounded next cognitive action without declaring success.\",\"evidence_id\":\"useful_schema2_prioritize_focus_1_b\",\"source\":\"matrix\",\"summary\":\"Useful target\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-26T06:26:07+00:00\",\"discrepancy\":\"progress_observed\",\"expected\":\"Perform formulate_hypothesis for the active focus using only referenced evidence.\",\"observed\":\"A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family prioritize_focus can progress using the available local evidence.\",\"operation_id\":\"cognitive-operation-5a705bfaafd75a77\",\"outcome_id\":\"outcome-8439e03983b9c176\"}]}",
+  "request_identity": "active-cognitive-ledger-request-cde89ef8083f7880",
+  "retry_sequence": 1,
+  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+  "working_memory_packet_digest": "b15f817f4c3a48f55333aad5de7ea88111316de9e5ddff4e87bb914e4b541a87",
+  "working_memory_packet_id": "working-memory-packet-a71e6185ee3bf161"
+}

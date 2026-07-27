@@ -1,0 +1,26 @@
+{
+  "adapted_response": {
+    "attempted_evidence_refs": [
+      "support_schema15_declare_blocked_capability_1_a",
+      "useful_schema15_declare_blocked_capability_1_b"
+    ],
+    "blocking_reason": "Insufficient evidence to support a bounded next cognitive action",
+    "bounded_next_action": "declare_blocked_capability",
+    "capability_gap": "Resolve discrepancy for goal: qualify operation family declare_blocked_capability",
+    "recommended_state_transition": "declare_blocked_capability",
+    "uncertainty": "Insufficient local evidence to conclusively support the hypothesis"
+  },
+  "elapsed_seconds": 18.907,
+  "failure_classifications": [],
+  "operation": "declare_blocked_capability",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "fe28b721a7813b8720a2debb68f986e07653c79b8f572d1e0d65b50494e54409",
+  "variant": 1
+}

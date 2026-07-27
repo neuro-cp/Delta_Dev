@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "useful_schema15_revise_plan_2_b",
+      "support_schema15_revise_plan_2_a"
+    ],
+    "prior_plan_id": "plan-1234567890123456",
+    "recommended_state_transition": "revise_plan",
+    "revised_plan_summary": "Adjust constraints to ensure bounded progress",
+    "revision_reason": "Prior cognition-lane attempts failed or weakened the active hypothesis",
+    "uncertainty": "Unclear if constraints can be adjusted effectively"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"prior_plan_id\":\"plan-1234567890123456\",\"revised_plan_summary\":\"Adjust constraints to ensure bounded progress\",\"evidence_refs\":[\"useful_schema15_revise_plan_2_b\",\"support_schema15_revise_plan_2_a\"],\"revision_reason\":\"Prior cognition-lane attempts failed or weakened the active hypothesis\",\"uncertainty\":\"Unclear if constraints can be adjusted effectively\",\"recommended_state_transition\":\"revise_plan\"}",
+  "raw_response_digest": "001fb4e6398ddcb1532a2b70c817e008c358802d404e48bcc46dc3e0166074d5",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

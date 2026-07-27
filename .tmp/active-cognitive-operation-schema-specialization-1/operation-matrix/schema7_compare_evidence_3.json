@@ -1,0 +1,37 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "local evidence is complete for this bounded episode"
+    ],
+    "contrary_evidence_considered": [
+      "contrary_schema7_compare_evidence_3_c"
+    ],
+    "evidence_refs": [
+      "support_schema7_compare_evidence_3_a",
+      "useful_schema7_compare_evidence_3_b"
+    ],
+    "interpretation": "The local evidence supports the hypothesis that the operation can progress, but the prior failures of similar operations cast doubt on the reliability of this evidence.",
+    "next_evidence_need": "Further evidence to confirm the reliability of the local evidence.",
+    "next_focus_proposal": "Formulate a hypothesis based on the local evidence and consider the contrary evidence.",
+    "operation_result_type": "compare_evidence_result",
+    "recommended_action": "Consider the contrary evidence and gather further evidence to confirm the reliability of the local evidence.",
+    "recommended_state_transition": "weaken_hypothesis",
+    "uncertainty": "The reliability of the local evidence is uncertain given the history of similar operations."
+  },
+  "elapsed_seconds": 38.759,
+  "failure_classifications": [],
+  "operation": "compare_evidence",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "contrary_evidence_addressed",
+    "uncertainty_explicit",
+    "assumptions_explicit",
+    "operation_matched",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "e4d71aca85b7a8de26120763a227932e76f414b9cdcd65acb0fcb6897f7b8731",
+  "variant": 3
+}

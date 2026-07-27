@@ -1,0 +1,27 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Local model ledger and operation-specific grammars are available for analysis.",
+      "Persistently active loop state and typed operation requests are present.",
+      "Episode aims to produce a useful outcome."
+    ],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "episode_a_runtime_support",
+      "episode_a_useful_target",
+      "episode_a_contrary_prior_block"
+    ],
+    "interpretation": "Interpreting local model ledger and operation-specific grammars to resolve discrepancy.",
+    "next_evidence_need": "Further evidence to challenge or support the hypothesis.",
+    "next_focus_proposal": "Weigh evidence and revise hypothesis if necessary.",
+    "operation_result_type": "compare_evidence_result",
+    "recommended_action": "Weigh evidence and revise hypothesis if necessary.",
+    "recommended_state_transition": "weaken_hypothesis",
+    "uncertainty": "Whether the evidence supports or contradicts the hypothesis."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{ \"assumptions\": [ \"Local model ledger and operation-specific grammars are available for analysis.\", \"Persistently active loop state and typed operation requests are present.\", \"Episode aims to produce a useful outcome.\" ], \"contrary_evidence_considered\": [], \"evidence_refs\": [ \"episode_a_runtime_support\", \"episode_a_useful_target\", \"episode_a_contrary_prior_block\" ], \"interpretation\": \"Interpreting local model ledger and operation-specific grammars to resolve discrepancy.\", \"next_evidence_need\": \"Further evidence to challenge or support the hypothesis.\", \"next_focus_proposal\": \"Weigh evidence and revise hypothesis if necessary.\", \"operation_result_type\": \"compare_evidence_result\", \"recommended_action\": \"Weigh evidence and revise hypothesis if necessary.\", \"recommended_state_transition\": \"weaken_hypothesis\", \"uncertainty\": \"Whether the evidence supports or contradicts the hypothesis.\" }",
+  "raw_response_digest": "ad0700f629308ec21906c658242c3ad97c163d53323c8a4955de0e900ad79af9",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

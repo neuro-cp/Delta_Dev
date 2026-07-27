@@ -1,0 +1,103 @@
+{
+  "attempt_label": "schema14_propose_plan",
+  "completed_calls": 3,
+  "failed_family": "",
+  "operation": "propose_plan",
+  "passed_calls": 3,
+  "results": [
+    {
+      "adapted_response": {
+        "plan_summary": "Resolve discrepancy for goal: qualify operation family propose_plan using available local evidence.",
+        "planned_steps": [
+          "Analyze local evidence for propose_plan",
+          "Formulate a plan based on the analysis"
+        ],
+        "recommended_state_transition": "propose_plan",
+        "risks": [
+          "Contrary evidence suggests past failures",
+          "Uncertainty in the local evidence"
+        ],
+        "supporting_evidence_refs": [
+          "support_schema14_propose_plan_1_a",
+          "useful_schema14_propose_plan_1_b"
+        ],
+        "uncertainty": "Reliance on local evidence and potential past failures"
+      },
+      "elapsed_seconds": 26.411,
+      "failure_classifications": [],
+      "operation": "propose_plan",
+      "passed": true,
+      "positive_observations": [
+        "schema_valid",
+        "evidence_grounded",
+        "uncertainty_explicit",
+        "state_transition_valid",
+        "useful_next_action"
+      ],
+      "raw_response_digest": "bd0d72de8f9a04d06cf49b3e587dba5700dc74882d5183e1c8ea59215b5976bc",
+      "variant": 1
+    },
+    {
+      "adapted_response": {
+        "plan_summary": "Propose a plan to resolve the discrepancy by formulating a hypothesis using the available local evidence.",
+        "planned_steps": [
+          "Formulate a hypothesis based on the available local evidence."
+        ],
+        "recommended_state_transition": "propose_plan",
+        "risks": [
+          "The hypothesis may not accurately resolve the discrepancy."
+        ],
+        "supporting_evidence_refs": [
+          "useful_schema14_propose_plan_2_b",
+          "support_schema14_propose_plan_2_a"
+        ],
+        "uncertainty": "The exact nature of the discrepancy remains unresolved."
+      },
+      "elapsed_seconds": 21.403,
+      "failure_classifications": [],
+      "operation": "propose_plan",
+      "passed": true,
+      "positive_observations": [
+        "schema_valid",
+        "evidence_grounded",
+        "uncertainty_explicit",
+        "state_transition_valid",
+        "useful_next_action"
+      ],
+      "raw_response_digest": "a7cd10c07a4522ef2f495da7aa573d4765b5bb6b2471fd5344e0653c1372909e",
+      "variant": 2
+    },
+    {
+      "adapted_response": {
+        "plan_summary": "Resolve discrepancy for goal: qualify operation family propose_plan using available local evidence.",
+        "planned_steps": [
+          "Analyze local evidence to identify a plausible next step",
+          "Propose a plan based on the analysis"
+        ],
+        "recommended_state_transition": "propose_plan",
+        "risks": [
+          "Prior attempts may have weakened the active hypothesis",
+          "Insufficient evidence could lead to an incorrect plan"
+        ],
+        "supporting_evidence_refs": [
+          "support_schema14_propose_plan_3_a",
+          "useful_schema14_propose_plan_3_b"
+        ],
+        "uncertainty": "The effectiveness of the proposed plan in resolving the discrepancy"
+      },
+      "elapsed_seconds": 25.053,
+      "failure_classifications": [],
+      "operation": "propose_plan",
+      "passed": true,
+      "positive_observations": [
+        "schema_valid",
+        "evidence_grounded",
+        "uncertainty_explicit",
+        "state_transition_valid",
+        "useful_next_action"
+      ],
+      "raw_response_digest": "963fee2c13e0dc33bc3734841065aba009acb730c3b59b66d89fdd2087ab488f",
+      "variant": 3
+    }
+  ]
+}

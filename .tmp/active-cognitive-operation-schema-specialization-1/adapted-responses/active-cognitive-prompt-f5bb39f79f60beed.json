@@ -1,0 +1,19 @@
+{
+  "adapted_response": {
+    "discrepancy": "progress_observed",
+    "evidence_refs": [
+      "support_schema10_reflect_on_outcome_1_a",
+      "useful_schema10_reflect_on_outcome_1_b"
+    ],
+    "expected_outcome": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family reflect_on_outcome can progress using the available local evidence.",
+    "lesson": "The local evidence supports a useful next step.",
+    "observed_outcome": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family reflect_on_outcome can progress using the available local evidence.",
+    "recommended_state_transition": "reflect_on_outcome",
+    "uncertainty": "The contrary evidence suggests past attempts have failed or weakened the active hypothesis."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"expected_outcome\":\"A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family reflect_on_outcome can progress using the available local evidence.\",\"observed_outcome\":\"A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family reflect_on_outcome can progress using the available local evidence.\",\"discrepancy\":\"progress_observed\",\"evidence_refs\":[\"support_schema10_reflect_on_outcome_1_a\",\"useful_schema10_reflect_on_outcome_1_b\"],\"lesson\":\"The local evidence supports a useful next step.\",\"uncertainty\":\"The contrary evidence suggests past attempts have failed or weakened the active hypothesis.\",\"recommended_state_transition\":\"reflect_on_outcome\"}",
+  "raw_response_digest": "179bd262104d5b9a7a5706d976abf658407c1a6b76411d88ff4eb2d81f3612b6",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

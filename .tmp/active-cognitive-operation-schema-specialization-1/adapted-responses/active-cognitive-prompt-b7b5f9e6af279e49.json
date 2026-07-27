@@ -1,0 +1,21 @@
+{
+  "adapted_response": {
+    "deferred_focus_ids": [],
+    "evidence_refs": [
+      "support_schema10_select_next_focus_1_a",
+      "useful_schema10_select_next_focus_1_b"
+    ],
+    "recommended_state_transition": "select_next_focus",
+    "related_goal_ids": [
+      "active-cognitive-goal-9888370b09b66f03"
+    ],
+    "salience_reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+    "selected_focus_id": "focus-e69aea1624bf2b94",
+    "uncertainty": "Outcome of the operation family select_next_focus is unresolved."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{ \"selected_focus_id\": \"focus-e69aea1624bf2b94\", \"salience_reason\": \"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\", \"related_goal_ids\": [ \"active-cognitive-goal-9888370b09b66f03\" ], \"evidence_refs\": [ \"support_schema10_select_next_focus_1_a\", \"useful_schema10_select_next_focus_1_b\" ], \"deferred_focus_ids\": [], \"uncertainty\": \"Outcome of the operation family select_next_focus is unresolved.\", \"recommended_state_transition\": \"select_next_focus\" }",
+  "raw_response_digest": "a799df51ca3e326b3b5dc8c3bc6bdff6e21a61c2cf1451cab0e6c0b5f7e81641",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

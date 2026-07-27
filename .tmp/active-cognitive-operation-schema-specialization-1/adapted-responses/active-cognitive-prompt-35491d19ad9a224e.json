@@ -1,0 +1,24 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "support_interpret_aligned_1_a",
+      "useful_interpret_aligned_1_b",
+      "contrary_interpret_aligned_1_c"
+    ],
+    "recommended_next_operation": "formulate_hypothesis",
+    "salient_observations": [
+      "Runtime evidence available",
+      "The next cognitive operation must be selected without claiming success"
+    ],
+    "state_summary": "Persistent state, local ledger, and operator command path exist.",
+    "uncertainty": "How the available local evidence will support a bounded useful step.",
+    "unresolved_questions": [
+      "How can the universal template be adapted to avoid blank fields or evidence prose in future interpret_state attempts?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"state_summary\":\"Persistent state, local ledger, and operator command path exist.\",\"salient_observations\":[\"Runtime evidence available\",\"The next cognitive operation must be selected without claiming success\"],\"evidence_refs\":[\"support_interpret_aligned_1_a\",\"useful_interpret_aligned_1_b\",\"contrary_interpret_aligned_1_c\"],\"unresolved_questions\":[\"How can the universal template be adapted to avoid blank fields or evidence prose in future interpret_state attempts?\"],\"uncertainty\":\"How the available local evidence will support a bounded useful step.\",\"recommended_next_operation\":\"formulate_hypothesis\"}",
+  "raw_response_digest": "16e55e1cf74dde05a8900f68980d299ab38b16fa4f1ccf761b3fcbba9825352d",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

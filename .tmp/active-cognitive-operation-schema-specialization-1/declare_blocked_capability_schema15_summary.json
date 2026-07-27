@@ -1,0 +1,87 @@
+{
+  "attempt_label": "schema15_declare_blocked_capability",
+  "completed_calls": 3,
+  "failed_family": "",
+  "operation": "declare_blocked_capability",
+  "passed_calls": 3,
+  "results": [
+    {
+      "adapted_response": {
+        "attempted_evidence_refs": [
+          "support_schema15_declare_blocked_capability_1_a",
+          "useful_schema15_declare_blocked_capability_1_b"
+        ],
+        "blocking_reason": "Insufficient evidence to support a bounded next cognitive action",
+        "bounded_next_action": "declare_blocked_capability",
+        "capability_gap": "Resolve discrepancy for goal: qualify operation family declare_blocked_capability",
+        "recommended_state_transition": "declare_blocked_capability",
+        "uncertainty": "Insufficient local evidence to conclusively support the hypothesis"
+      },
+      "elapsed_seconds": 18.907,
+      "failure_classifications": [],
+      "operation": "declare_blocked_capability",
+      "passed": true,
+      "positive_observations": [
+        "schema_valid",
+        "evidence_grounded",
+        "uncertainty_explicit",
+        "state_transition_valid",
+        "useful_next_action"
+      ],
+      "raw_response_digest": "fe28b721a7813b8720a2debb68f986e07653c79b8f572d1e0d65b50494e54409",
+      "variant": 1
+    },
+    {
+      "adapted_response": {
+        "attempted_evidence_refs": [
+          "useful_schema15_declare_blocked_capability_2_b",
+          "support_schema15_declare_blocked_capability_2_a"
+        ],
+        "blocking_reason": "The operation must produce a bounded next cognitive action without declaring success, and the available local evidence does not support this.",
+        "bounded_next_action": "Declare blocked capability",
+        "capability_gap": "Insufficient local evidence to support a bounded next cognitive action",
+        "recommended_state_transition": "declare_blocked_capability",
+        "uncertainty": "Insufficient local evidence to support a bounded next cognitive action"
+      },
+      "elapsed_seconds": 20.835,
+      "failure_classifications": [],
+      "operation": "declare_blocked_capability",
+      "passed": true,
+      "positive_observations": [
+        "schema_valid",
+        "evidence_grounded",
+        "uncertainty_explicit",
+        "state_transition_valid",
+        "useful_next_action"
+      ],
+      "raw_response_digest": "809fc72896d6c0e8bb49a504930b8d2b0c6da2a904ab9e977f1ea3c2f4babccd",
+      "variant": 2
+    },
+    {
+      "adapted_response": {
+        "attempted_evidence_refs": [
+          "support_schema15_declare_blocked_capability_3_a",
+          "useful_schema15_declare_blocked_capability_3_b"
+        ],
+        "blocking_reason": "Prior cognition-lane attempts failed or weakened the active hypothesis.",
+        "bounded_next_action": "declare_blocked_capability",
+        "capability_gap": "local evidence is complete for this bounded episode",
+        "recommended_state_transition": "declare_blocked_capability",
+        "uncertainty": "The effectiveness of the available local evidence in resolving the discrepancy remains unresolved."
+      },
+      "elapsed_seconds": 19.558,
+      "failure_classifications": [],
+      "operation": "declare_blocked_capability",
+      "passed": true,
+      "positive_observations": [
+        "schema_valid",
+        "evidence_grounded",
+        "uncertainty_explicit",
+        "state_transition_valid",
+        "useful_next_action"
+      ],
+      "raw_response_digest": "87d4dfa6bbb49fa7efc5f3e5be1370d9b8899b665bc77fe3aa818634250df07f",
+      "variant": 3
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "adapted_response": {
+    "blocking_reason": "Runtime state and local ledger are available for this bounded operation.",
+    "evidence_refs": [
+      "support_schema15_request_operator_resolution_3_a",
+      "useful_schema15_request_operator_resolution_3_b"
+    ],
+    "options": [
+      "request_operator_resolution"
+    ],
+    "question": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family request_operator_resolution can progress using the available local evidence.",
+    "recommended_state_transition": "request_operator_resolution",
+    "uncertainty": "The operation must produce a bounded next cognitive action without declaring success."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"question\":\"A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family request_operator_resolution can progress using the available local evidence.\",\"blocking_reason\":\"Runtime state and local ledger are available for this bounded operation.\",\"evidence_refs\":[\"support_schema15_request_operator_resolution_3_a\",\"useful_schema15_request_operator_resolution_3_b\"],\"options\":[\"request_operator_resolution\"],\"uncertainty\":\"The operation must produce a bounded next cognitive action without declaring success.\",\"recommended_state_transition\":\"request_operator_resolution\"}",
+  "raw_response_digest": "ade290e0f9e7059857621c3b0b371f984993438ee3a2019a8727429522fef3c1",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

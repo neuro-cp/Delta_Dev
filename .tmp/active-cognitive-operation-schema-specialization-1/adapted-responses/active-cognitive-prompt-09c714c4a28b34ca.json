@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "support_schema15_revise_plan_1_a",
+      "useful_schema15_revise_plan_1_b"
+    ],
+    "prior_plan_id": "hypothesis-b2a36c5d9f20aab5",
+    "recommended_state_transition": "revise_plan",
+    "revised_plan_summary": "Adjust the operation's constraints to prioritize local evidence and runtime state over external factors.",
+    "revision_reason": "Prior cognition-lane attempts failed or weakened the active hypothesis.",
+    "uncertainty": "The exact constraints for prioritizing local evidence need clarification."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{ \"prior_plan_id\": \"hypothesis-b2a36c5d9f20aab5\", \"revised_plan_summary\": \"Adjust the operation's constraints to prioritize local evidence and runtime state over external factors.\", \"evidence_refs\": [ \"support_schema15_revise_plan_1_a\", \"useful_schema15_revise_plan_1_b\" ], \"revision_reason\": \"Prior cognition-lane attempts failed or weakened the active hypothesis.\", \"uncertainty\": \"The exact constraints for prioritizing local evidence need clarification.\", \"recommended_state_transition\": \"revise_plan\" }",
+  "raw_response_digest": "0f339e46faf84fe16ba178f1fab8ba663191b7baf03c50c7126d8f8730f2195c",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

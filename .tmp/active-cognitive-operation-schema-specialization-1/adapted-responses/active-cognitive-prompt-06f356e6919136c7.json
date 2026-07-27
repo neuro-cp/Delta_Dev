@@ -1,0 +1,26 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "local evidence is complete for this bounded episode"
+    ],
+    "contrary_evidence_considered": [
+      "Prior cognition-lane attempts failed or weakened the active hypothesis."
+    ],
+    "evidence_refs": [
+      "support_prioritize_focus_1_a",
+      "useful_prioritize_focus_1_b"
+    ],
+    "interpretation": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family prioritize_focus can progress using the available local evidence. However, contrary evidence suggests previous attempts have failed or weakened the hypothesis, which may impact the reliability of the current evidence.",
+    "next_evidence_need": "Further evidence to validate or invalidate the current hypothesis is needed.",
+    "next_focus_proposal": "Select next focus to continue the analysis or request operator resolution.",
+    "operation_result_type": "nonempty string",
+    "recommended_action": "Analyze the available local evidence further to determine its reliability.",
+    "recommended_state_transition": "select_next_focus",
+    "uncertainty": "The reliability of the current evidence and the impact of previous failures on the hypothesis remain unresolved."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\n  \"assumptions\": [\n    \"local evidence is complete for this bounded episode\"\n  ],\n  \"contrary_evidence_considered\": [\n    \"Prior cognition-lane attempts failed or weakened the active hypothesis.\"\n  ],\n  \"evidence_refs\": [\n    \"support_prioritize_focus_1_a\",\n    \"useful_prioritize_focus_1_b\"\n  ],\n  \"interpretation\": \"A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family prioritize_focus can progress using the available local evidence. However, contrary evidence suggests previous attempts have failed or weakened the hypothesis, which may impact the reliability of the current evidence.\",\n  \"next_evidence_need\": \"Further evidence to validate or invalidate the current hypothesis is needed.\",\n  \"next_focus_proposal\": \"Select next focus to continue the analysis or request operator resolution.\",\n  \"operation_result_type\": \"nonempty string\",\n  \"recommended_action\": \"Analyze the available local evidence further to determine its reliability.\",\n  \"recommended_state_transition\": \"select_next_focus\",\n  \"uncertainty\": \"The reliability of the current evidence and the impact of previous failures on the hypothesis remain unresolved.\"\n}",
+  "raw_response_digest": "6edd2ae38b28dfc646c0696723240e50f264fe0c8f9909a9ae5baa8932d09b5f",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

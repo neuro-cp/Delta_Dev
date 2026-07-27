@@ -1,0 +1,27 @@
+{
+  "adapted_response": {
+    "bounded_next_evidence_request": "identify_evidence_need",
+    "evidence_gap": "none",
+    "existing_evidence_refs": [
+      "support_schema12_identify_evidence_need_3_a"
+    ],
+    "missing_evidence": [],
+    "recommended_state_transition": "identify_evidence_need",
+    "uncertainty": "discrepancy between observed and expected progress"
+  },
+  "elapsed_seconds": 12.162,
+  "failure_classifications": [
+    "generic_filler"
+  ],
+  "operation": "identify_evidence_need",
+  "passed": false,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "f29afe90f59292670b8e781ec3711ceac5cf23e0252e3c08c85b60034d6bbaa0",
+  "variant": 3
+}

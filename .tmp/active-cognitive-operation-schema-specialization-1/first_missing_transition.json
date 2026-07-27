@@ -1,0 +1,4 @@
+﻿{
+    "first_missing_transition":  "the cognition lane reaches the local model and can produce valid grounded JSON for compare_evidence -\u003e all cognitive operations currently share one broad response template and grammar -\u003e interpret_state is asked to fill fields designed for comparison, revision, and action operations -\u003e the model copies empty template values or misplaces evidence content -\u003e a locally capable model response is rejected because the operation contract is semantically overgeneralized",
+    "required_transition":  "operation type -\u003e minimum required semantic fields -\u003e exact operation-specific schema -\u003e exact operation-specific grammar -\u003e model response -\u003e shared provenance validation -\u003e operation-specific evaluator -\u003e actual state consumer"
+}

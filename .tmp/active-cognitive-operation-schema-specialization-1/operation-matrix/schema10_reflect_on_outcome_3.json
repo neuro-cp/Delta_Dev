@@ -1,0 +1,28 @@
+{
+  "adapted_response": {
+    "discrepancy": "progress_observed",
+    "evidence_refs": [
+      "support_schema10_reflect_on_outcome_3_a",
+      "useful_schema10_reflect_on_outcome_3_b"
+    ],
+    "expected_outcome": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family reflect_on_outcome can progress using the available local evidence.",
+    "lesson": "The operation family reflect_on_outcome can utilize the available local evidence to make progress.",
+    "observed_outcome": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family reflect_on_outcome can progress using the available local evidence.",
+    "recommended_state_transition": "revise_hypothesis",
+    "uncertainty": "The outcome may not be sufficient to qualify the operation."
+  },
+  "elapsed_seconds": 26.819,
+  "failure_classifications": [],
+  "operation": "reflect_on_outcome",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "contrary_evidence_addressed",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "58b4d85332d720798b91d13ee8cd4fda8a1fc132189593eb5fdb7bd69c40a3de",
+  "variant": 3
+}

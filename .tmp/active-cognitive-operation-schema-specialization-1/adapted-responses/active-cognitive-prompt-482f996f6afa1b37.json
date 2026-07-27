@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "recommended_state_transition": "continue_focus",
+    "rejected_focus_ids": [],
+    "selected_focus_id": "focus-fc2ffc6deae16a04",
+    "selection_reason": "Available local evidence supports progress towards the goal.",
+    "supporting_evidence_refs": [
+      "useful_schema3_prioritize_focus_2_b",
+      "support_schema3_prioritize_focus_2_a"
+    ],
+    "uncertainty": "Uncertainty remains regarding the outcome of the bounded operation."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{ \"selected_focus_id\": \"focus-fc2ffc6deae16a04\", \"selection_reason\": \"Available local evidence supports progress towards the goal.\", \"supporting_evidence_refs\": [\"useful_schema3_prioritize_focus_2_b\", \"support_schema3_prioritize_focus_2_a\"], \"rejected_focus_ids\": [], \"uncertainty\": \"Uncertainty remains regarding the outcome of the bounded operation.\", \"recommended_state_transition\": \"continue_focus\" }",
+  "raw_response_digest": "ccbc62b361af67f66b2cf29fcb0a8d0f57c3966734fdb7ee99f46a68366d2363",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

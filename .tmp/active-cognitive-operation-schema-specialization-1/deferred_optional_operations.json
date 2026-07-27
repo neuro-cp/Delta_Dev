@@ -1,0 +1,83 @@
+{
+  "identify_evidence_need": {
+    "checkpoint_required": false,
+    "latest_failed_qualification": {
+      "attempt_label": "schema13_identify_evidence_need",
+      "completed_calls": 1,
+      "failed_family": "identify_evidence_need",
+      "operation": "identify_evidence_need",
+      "passed_calls": 0,
+      "results": [
+        {
+          "adapted_response": {
+            "bounded_next_evidence_request": "support_schema13_identify_evidence_need_1_a",
+            "evidence_gap": "local evidence supporting or challenging the goal",
+            "existing_evidence_refs": [
+              "support_schema13_identify_evidence_need_1_a",
+              "useful_schema13_identify_evidence_need_1_b"
+            ],
+            "missing_evidence": [
+              "contrary_schema13_identify_evidence_need_1_c"
+            ],
+            "recommended_state_transition": "identify_evidence_need",
+            "uncertainty": "the extent to which local evidence supports or challenges the goal"
+          },
+          "elapsed_seconds": 24.731,
+          "failure_classifications": [
+            "generic_filler"
+          ],
+          "operation": "identify_evidence_need",
+          "passed": false,
+          "positive_observations": [
+            "schema_valid",
+            "evidence_grounded",
+            "uncertainty_explicit",
+            "state_transition_valid",
+            "useful_next_action"
+          ],
+          "raw_response_digest": "e9a5478c87471a5775992478da76b2c67200872b47562bef5fb6aeda3ed9fbe4",
+          "variant": 1
+        }
+      ]
+    },
+    "reason": "Explicit optional/deferred evidence-acquisition operation; declare_insufficient_evidence is the required blocking insufficiency path for this checkpoint.",
+    "schema": {
+      "allowed_transitions": [
+        "request_evidence"
+      ],
+      "checkpoint_required": false,
+      "evidence_fields": [
+        "known_evidence_refs"
+      ],
+      "nonempty_string_fields": [
+        "target_claim_or_decision",
+        "missing_fact",
+        "why_missing_fact_matters",
+        "acceptable_evidence_source",
+        "bounded_retrieval_action",
+        "stop_condition",
+        "uncertainty",
+        "recommended_state_transition"
+      ],
+      "operation_type": "identify_evidence_need",
+      "optional_fields": [],
+      "recommended_operation_field": "",
+      "required_fields": [
+        "target_claim_or_decision",
+        "known_evidence_refs",
+        "missing_fact",
+        "why_missing_fact_matters",
+        "acceptable_evidence_source",
+        "bounded_retrieval_action",
+        "stop_condition",
+        "uncertainty",
+        "recommended_state_transition"
+      ],
+      "schema_id": "operation-schema-identify-evidence-need-v1",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "string_array_fields": [
+        "known_evidence_refs"
+      ]
+    }
+  }
+}

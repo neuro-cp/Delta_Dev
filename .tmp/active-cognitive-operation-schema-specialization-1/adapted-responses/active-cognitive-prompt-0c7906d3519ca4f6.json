@@ -1,0 +1,26 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "local evidence is complete for this bounded episode"
+    ],
+    "contrary_evidence_considered": [
+      "Prior cognition-lane attempts failed or weakened the active hypothesis."
+    ],
+    "evidence_refs": [
+      "support_schema4_compare_evidence_1_a",
+      "useful_schema4_compare_evidence_1_b"
+    ],
+    "interpretation": "The local evidence supports the hypothesis that the operation can progress using the available local evidence, but the prior failed attempts cast doubt on the reliability of this evidence.",
+    "next_evidence_need": "additional evidence to confirm the reliability of the local evidence",
+    "next_focus_proposal": "continue to refine the hypothesis with the current evidence and seek additional supporting evidence",
+    "operation_result_type": "compare_evidence",
+    "recommended_action": "continue to gather evidence to support the hypothesis",
+    "recommended_state_transition": "weaken_hypothesis",
+    "uncertainty": "the reliability of the local evidence"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{ \"assumptions\": [ \"local evidence is complete for this bounded episode\" ], \"contrary_evidence_considered\": [ \"Prior cognition-lane attempts failed or weakened the active hypothesis.\" ], \"evidence_refs\": [ \"support_schema4_compare_evidence_1_a\", \"useful_schema4_compare_evidence_1_b\" ], \"interpretation\": \"The local evidence supports the hypothesis that the operation can progress using the available local evidence, but the prior failed attempts cast doubt on the reliability of this evidence.\", \"next_evidence_need\": \"additional evidence to confirm the reliability of the local evidence\", \"next_focus_proposal\": \"continue to refine the hypothesis with the current evidence and seek additional supporting evidence\", \"operation_result_type\": \"compare_evidence\", \"recommended_action\": \"continue to gather evidence to support the hypothesis\", \"recommended_state_transition\": \"weaken_hypothesis\", \"uncertainty\": \"the reliability of the local evidence\" }",
+  "raw_response_digest": "119e693d02cf3a9ab0464d38bc42e8f13c8c45d79dc2c626061f438b0abe7d12",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

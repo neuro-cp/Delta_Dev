@@ -1,0 +1,23 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "IDs only from supplied evidence"
+    ],
+    "recommended_next_operation": "formulate_hypothesis",
+    "salient_observations": [
+      "Runtime evidence available",
+      "The next cognitive operation must be selected without claiming success",
+      "The universal template caused blank fields or evidence prose in earlier interpret_state attempts"
+    ],
+    "state_summary": "Resolving discrepancy for goal: qualify interpret_state specialized schema variant 1",
+    "uncertainty": "Outcome of the hypothesis remains uncertain",
+    "unresolved_questions": [
+      "How will the hypothesis resolve the discrepancy?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"evidence_refs\":[\"IDs only from supplied evidence\"],\"recommended_next_operation\":\"formulate_hypothesis\",\"salient_observations\":[\"Runtime evidence available\",\"The next cognitive operation must be selected without claiming success\",\"The universal template caused blank fields or evidence prose in earlier interpret_state attempts\"],\"state_summary\":\"Resolving discrepancy for goal: qualify interpret_state specialized schema variant 1\",\"uncertainty\":\"Outcome of the hypothesis remains uncertain\",\"unresolved_questions\":[\"How will the hypothesis resolve the discrepancy?\"]}",
+  "raw_response_digest": "4e8ab95d07a3abd8687b74b68be1ea9ae7970509e5f07c0dcff8e6278f6712e1",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

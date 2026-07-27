@@ -1,0 +1,20 @@
+{
+  "adapted_response": {
+    "bounded_next_evidence_request": "additional local evidence to resolve the discrepancy",
+    "evidence_gap": "local evidence is incomplete for the bounded operation",
+    "existing_evidence_refs": [
+      "support_schema12_identify_evidence_need_1_a",
+      "useful_schema12_identify_evidence_need_1_b"
+    ],
+    "missing_evidence": [
+      "contrary_schema12_identify_evidence_need_1_c"
+    ],
+    "recommended_state_transition": "identify_evidence_need",
+    "uncertainty": "the outcome of the bounded operation is uncertain"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{ \"evidence_gap\": \"local evidence is incomplete for the bounded operation\", \"existing_evidence_refs\": [ \"support_schema12_identify_evidence_need_1_a\", \"useful_schema12_identify_evidence_need_1_b\" ], \"missing_evidence\": [ \"contrary_schema12_identify_evidence_need_1_c\" ], \"bounded_next_evidence_request\": \"additional local evidence to resolve the discrepancy\", \"uncertainty\": \"the outcome of the bounded operation is uncertain\", \"recommended_state_transition\": \"identify_evidence_need\" }",
+  "raw_response_digest": "59b841273a5ff1c9919b1f7700a4f5c6d33498997ebb1c57e2c107cdb8d04e3c",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

@@ -1,0 +1,76 @@
+{
+  "ledger_request_id": "shared-local-model-request-82484cf8300f3355",
+  "ledger_result_id": "shared-local-model-result-a514e395ea81c044",
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "prompt_snapshot_id": "active-cognitive-prompt-6faabc644ca3eb4d",
+  "raw_response": "{\n\n\"state_summary\": \"Interpreting local model ledger and operation-specific grammars to resolve discrepancy.\",\n\"salient_observations\": [\n    \"Local model ledger and operation-specific grammars are available.\",\n    \"Fresh episode requires producing an evidence-linked revision and a grounded next-focus or decision packet.\",\n    \"Earlier attempt to identify evidence need produced generic text.\"\n],\n\"evidence_refs\": [\n    \"episode_a_runtime_support\",\n    \"episode_a_useful_target\",\n    \"episode_a_contrary_prior_block\"\n],\n\"unresolved_questions\": [\n    \"How will the current operation contribute to resolving the discrepancy?\"\n],\n\"uncertainty\": \"Outcome of local model ledger and operation-specific grammars interpretation is uncertain.\",\n\"recommended_next_operation\": \"compare_evidence\"\n}",
+  "raw_response_digest": "ee0dac06b5ef73b92ded3430f3b21f2c0ab875238f7374bd9be575a8b249937e",
+  "terminal_status": {
+    "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+    "approved_at": "2026-07-26T07:16:08+00:00",
+    "authority_state": "operator_authorized_active_cognitive_loop",
+    "claimed_at": "2026-07-26T07:16:08+00:00",
+    "completed_at": "2026-07-26T07:16:36+00:00",
+    "consumed_state": "terminal",
+    "created_at": "2026-07-26T07:16:08+00:00",
+    "execution_attempt_count": 1,
+    "execution_claim_id": "shared-local-model-execution-claim-0cf2b436121fa3a7",
+    "failure_classification": "",
+    "lifecycle_state": "completed",
+    "mission_id": "active-cognitive-goal-c9b26ad28164ffb2",
+    "mission_information_need_identity": "focus-1f1c2c68fe63488b",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - state_summary: nonempty string - salient_observations: array[string] - evidence_refs: array[string] - unresolved_questions: array[string] - uncertainty: nonempty string - recommended_next_operation: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - evidence_refs values must be chosen from: episode_a_runtime_support, episode_a_useful_target, episode_a_contrary_prior_block TASK: perform only operation interpret_state. Allowed transition/next-operation values: prioritize_focus, formulate_hypothesis, identify_evidence_need, compare_evidence, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: episode_a_runtime_support, episode_a_useful_target, episode_a_contrary_prior_block. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":1,\"description\":\"Resolve discrepancy for goal: exercise active cognition through interpretation, evidence comparison, revision, focus selection, and learning artifact\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"episode_a_runtime_support\",\"episode_a_useful_target\",\"episode_a_contrary_prior_block\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-1f1c2c68fe63488b\",\"related_goal_ids\":[\"active-cognitive-goal-c9b26ad28164ffb2\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[],\"current_goal\":{\"expected_state\":\"useful evidence-linked cognitive outcome produced\",\"goal_id\":\"active-cognitive-goal-c9b26ad28164ffb2\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"exercise active cognition through interpretation, evidence comparison, revision, focus selection, and learning artifact\"},\"current_hypotheses\":[],\"evidence_for\":[{\"content\":\"Persistent active-loop state, typed operation requests, local model ledger execution, and operation-specific grammars are available.\",\"evidence_id\":\"episode_a_runtime_support\",\"source\":\"episode_a\",\"summary\":\"Runtime support exists\"},{\"content\":\"The fresh episode must produce an evidence-linked revision and a grounded next-focus or decision packet.\",\"evidence_id\":\"episode_a_useful_target\",\"source\":\"episode_a\",\"summary\":\"Useful target\"},{\"content\":\"Earlier checkpoint work blocked because identify_evidence_need produced generic evidence-gap text.\",\"evidence_id\":\"episode_a_contrary_prior_block\",\"source\":\"episode_a\",\"summary\":\"Prior blocker\"}],\"recent_outcomes\":[]}",
+    "question_objective": "interpret_state",
+    "record_digest": "5877d587d128b4c0cb9adf59a26e4d25c42e529e5fcaf55807413fad090050d7",
+    "record_version": 1,
+    "request_digest": "79e2aaf42d96c3b5bd3e32bd48a31932c0f3ef549c6fed8bdde7094bd49bb56a",
+    "request_id": "shared-local-model-request-82484cf8300f3355",
+    "requester_reference": "cognitive-operation-48f5262f29537a57",
+    "requester_type": "active_cognitive_loop",
+    "result_id": "shared-local-model-result-a514e395ea81c044",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    },
+    "semantic_identity": "active-cognitive-ledger-request-fd0fa13a9712c39d",
+    "session_reference": "active-cognitive-cycle-cb3198659ce58803"
+  }
+}

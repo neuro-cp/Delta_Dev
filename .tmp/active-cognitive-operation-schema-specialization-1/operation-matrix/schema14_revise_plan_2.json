@@ -1,0 +1,28 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "useful_schema14_revise_plan_2_b",
+      "support_schema14_revise_plan_2_a"
+    ],
+    "prior_plan_id": "hypothesis-9610ec235428d3d3",
+    "recommended_state_transition": "revise_plan",
+    "revised_plan_summary": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family revise_plan can progress using the available local evidence.",
+    "revision_reason": "Local evidence supports progress.",
+    "uncertainty": "The exact next cognitive action is unresolved."
+  },
+  "elapsed_seconds": 21.122,
+  "failure_classifications": [
+    "generic_filler"
+  ],
+  "operation": "revise_plan",
+  "passed": false,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "9cadab6560fb298583a2055d60f66972f904aaa673ecf9a222c728c161a0bbea",
+  "variant": 2
+}

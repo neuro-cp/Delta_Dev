@@ -1,0 +1,31 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Runtime state and local ledger are available for this bounded operation"
+    ],
+    "expected_observations": [
+      "The operation will produce a bounded next cognitive action without declaring success"
+    ],
+    "hypothesis_statement": "The schema4 operation family can formulate a hypothesis based on available evidence, even if prior attempts have failed or weakened the active hypothesis.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "Runtime state and local ledger",
+    "supporting_evidence_refs": [
+      "support_schema4_formulate_hypothesis_3_a"
+    ],
+    "uncertainty": "The effectiveness of the hypothesis in guiding subsequent operations remains unresolved."
+  },
+  "elapsed_seconds": 21.523,
+  "failure_classifications": [],
+  "operation": "formulate_hypothesis",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "uncertainty_explicit",
+    "assumptions_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "eaf01177f17f547447d50257c80f4d6c9e49c4f434ccd9d659b9dd5bca23ca9c",
+  "variant": 3
+}

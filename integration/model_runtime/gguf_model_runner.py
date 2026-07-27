@@ -30,6 +30,7 @@ from integration.model_runtime.model_registry import get_model_spec
 from integration.model_runtime.model_session import ModelSession
 from integration.model_runtime.prompt_builder import build_prompt
 from integration.model_runtime.inference_types import CanonicalInferenceResult
+from integration.model_runtime.execution_lanes import ModelExecutionLane, normalize_execution_lane
 
 
 class GGUFModelRunner(ExternalModelInterface):
@@ -165,6 +166,11 @@ class GGUFModelRunner(ExternalModelInterface):
     def produce_output(self, input_payload: Dict[str, Any]) -> AIOutputBundle:
         model_spec = get_model_spec(self.model_name)
         prompt = build_prompt(input_payload)
+        execution_lane = normalize_execution_lane(
+            input_payload.get("execution_lane"),
+            task_type=str(input_payload.get("task_type") or ""),
+        )
+        metadata = dict(input_payload.get("metadata") or {})
 
         model_id = self._model_id(model_spec)
 
@@ -177,7 +183,12 @@ class GGUFModelRunner(ExternalModelInterface):
 
         try:
             self.session.load(model_spec)
-            raw_output = self.session.generate(prompt)
+            raw_output = self.session.generate(
+                prompt,
+                structured_json=execution_lane != ModelExecutionLane.COGNITIVE_OPERATION,
+                cognitive_json=execution_lane == ModelExecutionLane.COGNITIVE_OPERATION,
+                cognitive_operation_type=str(metadata.get("operation_type") or ""),
+            )
 
             #print("MODEL OUTPUT:\n")
             #print(raw_output)

@@ -1,0 +1,28 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "support_schema15_summarize_learning_1_a",
+      "useful_schema15_summarize_learning_1_b"
+    ],
+    "lesson": "The operation can progress using the available local evidence.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "The operation's handling of contrary evidence remains uncertain.",
+    "unresolved_questions": [
+      "How will the operation handle contrary evidence?"
+    ]
+  },
+  "elapsed_seconds": 16.979,
+  "failure_classifications": [],
+  "operation": "summarize_learning",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "contrary_evidence_addressed",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "bf3385b820aa7440a234535e64aa2cc3d44e7a2030f03b36011ca11714f1a14f",
+  "variant": 1
+}

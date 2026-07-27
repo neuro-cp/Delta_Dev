@@ -1,0 +1,17 @@
+{
+  "adapted_response": {
+    "attempted_evidence_refs": [],
+    "bounded_next_evidence_request": "Provide evidence supporting or challenging the goal.",
+    "missing_evidence": [
+      "evidence-1"
+    ],
+    "recommended_state_transition": "declare_insufficient_evidence",
+    "uncertainty": "Insufficient evidence to qualify the operation family.",
+    "why_existing_evidence_is_insufficient": "No evidence provided to support or challenge the goal."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"missing_evidence\":[\"evidence-1\"],\"attempted_evidence_refs\":[],\"why_existing_evidence_is_insufficient\":\"No evidence provided to support or challenge the goal.\",\"bounded_next_evidence_request\":\"Provide evidence supporting or challenging the goal.\",\"uncertainty\":\"Insufficient evidence to qualify the operation family.\",\"recommended_state_transition\":\"declare_insufficient_evidence\"}",
+  "raw_response_digest": "8fa26688d1d283167e98bb6abf25175d7e3911f2508dbfa0e953a52fab53ce73",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

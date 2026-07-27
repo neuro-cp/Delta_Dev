@@ -1,0 +1,433 @@
+{
+  "challenge_hypothesis": {
+    "allowed_transitions": [
+      "weaken_hypothesis",
+      "revise_hypothesis",
+      "reject_hypothesis",
+      "falsify_hypothesis"
+    ],
+    "evidence_fields": [
+      "contrary_evidence_refs"
+    ],
+    "nonempty_string_fields": [
+      "challenged_hypothesis_id",
+      "vulnerability",
+      "disconfirming_observation",
+      "uncertainty",
+      "recommended_state_transition"
+    ],
+    "required_fields": [
+      "challenged_hypothesis_id",
+      "vulnerability",
+      "contrary_evidence_refs",
+      "disconfirming_observation",
+      "uncertainty",
+      "recommended_state_transition"
+    ],
+    "string_array_fields": [
+      "contrary_evidence_refs"
+    ]
+  },
+  "compare_evidence": {
+    "allowed_transitions": [
+      "add_supporting_evidence",
+      "add_conflicting_evidence",
+      "weaken_hypothesis",
+      "revise_hypothesis"
+    ],
+    "evidence_fields": [
+      "evidence_refs",
+      "contrary_evidence_considered"
+    ],
+    "nonempty_string_fields": [
+      "operation_result_type",
+      "interpretation",
+      "uncertainty",
+      "recommended_state_transition",
+      "recommended_action"
+    ],
+    "required_fields": [
+      "operation_result_type",
+      "interpretation",
+      "evidence_refs",
+      "contrary_evidence_considered",
+      "uncertainty",
+      "assumptions",
+      "recommended_state_transition",
+      "recommended_action",
+      "next_evidence_need",
+      "next_focus_proposal"
+    ],
+    "string_array_fields": [
+      "evidence_refs",
+      "contrary_evidence_considered",
+      "assumptions"
+    ]
+  },
+  "declare_blocked_capability": {
+    "allowed_transitions": [
+      "declare_blocked_capability"
+    ],
+    "evidence_fields": [
+      "attempted_evidence_refs"
+    ],
+    "nonempty_string_fields": [
+      "capability_gap",
+      "blocking_reason",
+      "bounded_next_action",
+      "uncertainty",
+      "recommended_state_transition"
+    ],
+    "required_fields": [
+      "capability_gap",
+      "attempted_evidence_refs",
+      "blocking_reason",
+      "bounded_next_action",
+      "uncertainty",
+      "recommended_state_transition"
+    ],
+    "string_array_fields": [
+      "attempted_evidence_refs"
+    ]
+  },
+  "declare_insufficient_evidence": {
+    "allowed_transitions": [
+      "declare_insufficient_evidence"
+    ],
+    "evidence_fields": [
+      "attempted_evidence_refs"
+    ],
+    "nonempty_string_fields": [
+      "why_existing_evidence_is_insufficient",
+      "bounded_next_evidence_request",
+      "uncertainty",
+      "recommended_state_transition"
+    ],
+    "required_fields": [
+      "missing_evidence",
+      "attempted_evidence_refs",
+      "why_existing_evidence_is_insufficient",
+      "bounded_next_evidence_request",
+      "uncertainty",
+      "recommended_state_transition"
+    ],
+    "string_array_fields": [
+      "missing_evidence",
+      "attempted_evidence_refs"
+    ]
+  },
+  "formulate_hypothesis": {
+    "allowed_transitions": [
+      "propose_hypothesis",
+      "declare_insufficient_evidence"
+    ],
+    "evidence_fields": [
+      "supporting_evidence_refs"
+    ],
+    "nonempty_string_fields": [
+      "hypothesis_statement",
+      "scope",
+      "uncertainty",
+      "recommended_state_transition"
+    ],
+    "required_fields": [
+      "hypothesis_statement",
+      "scope",
+      "supporting_evidence_refs",
+      "assumptions",
+      "expected_observations",
+      "uncertainty",
+      "recommended_state_transition"
+    ],
+    "string_array_fields": [
+      "supporting_evidence_refs",
+      "assumptions",
+      "expected_observations"
+    ]
+  },
+  "identify_evidence_need": {
+    "allowed_transitions": [
+      "identify_evidence_need",
+      "declare_insufficient_evidence"
+    ],
+    "evidence_fields": [
+      "existing_evidence_refs"
+    ],
+    "nonempty_string_fields": [
+      "evidence_gap",
+      "bounded_next_evidence_request",
+      "uncertainty",
+      "recommended_state_transition"
+    ],
+    "required_fields": [
+      "evidence_gap",
+      "existing_evidence_refs",
+      "missing_evidence",
+      "bounded_next_evidence_request",
+      "uncertainty",
+      "recommended_state_transition"
+    ],
+    "string_array_fields": [
+      "existing_evidence_refs",
+      "missing_evidence"
+    ]
+  },
+  "interpret_state": {
+    "allowed_transitions": [
+      "prioritize_focus",
+      "formulate_hypothesis",
+      "identify_evidence_need",
+      "compare_evidence",
+      "declare_insufficient_evidence"
+    ],
+    "evidence_fields": [
+      "evidence_refs"
+    ],
+    "nonempty_string_fields": [
+      "state_summary",
+      "uncertainty",
+      "recommended_next_operation"
+    ],
+    "required_fields": [
+      "state_summary",
+      "salient_observations",
+      "evidence_refs",
+      "unresolved_questions",
+      "uncertainty",
+      "recommended_next_operation"
+    ],
+    "string_array_fields": [
+      "salient_observations",
+      "evidence_refs",
+      "unresolved_questions"
+    ]
+  },
+  "prioritize_focus": {
+    "allowed_transitions": [
+      "select_next_focus",
+      "continue_focus",
+      "request_operator_resolution"
+    ],
+    "evidence_fields": [
+      "supporting_evidence_refs"
+    ],
+    "nonempty_string_fields": [
+      "selected_focus_id",
+      "selection_reason",
+      "uncertainty",
+      "recommended_state_transition"
+    ],
+    "required_fields": [
+      "selected_focus_id",
+      "selection_reason",
+      "supporting_evidence_refs",
+      "rejected_focus_ids",
+      "uncertainty",
+      "recommended_state_transition"
+    ],
+    "string_array_fields": [
+      "supporting_evidence_refs",
+      "rejected_focus_ids"
+    ]
+  },
+  "propose_plan": {
+    "allowed_transitions": [
+      "propose_plan",
+      "request_operator_resolution",
+      "declare_insufficient_evidence"
+    ],
+    "evidence_fields": [
+      "supporting_evidence_refs"
+    ],
+    "nonempty_string_fields": [
+      "plan_summary",
+      "uncertainty",
+      "recommended_state_transition"
+    ],
+    "required_fields": [
+      "plan_summary",
+      "supporting_evidence_refs",
+      "planned_steps",
+      "risks",
+      "uncertainty",
+      "recommended_state_transition"
+    ],
+    "string_array_fields": [
+      "supporting_evidence_refs",
+      "planned_steps",
+      "risks"
+    ]
+  },
+  "reflect_on_outcome": {
+    "allowed_transitions": [
+      "reflect_on_outcome",
+      "weaken_hypothesis",
+      "revise_hypothesis",
+      "summarize_learning"
+    ],
+    "evidence_fields": [
+      "evidence_refs"
+    ],
+    "nonempty_string_fields": [
+      "expected_outcome",
+      "observed_outcome",
+      "discrepancy",
+      "lesson",
+      "uncertainty",
+      "recommended_state_transition"
+    ],
+    "required_fields": [
+      "expected_outcome",
+      "observed_outcome",
+      "discrepancy",
+      "evidence_refs",
+      "lesson",
+      "uncertainty",
+      "recommended_state_transition"
+    ],
+    "string_array_fields": [
+      "evidence_refs"
+    ]
+  },
+  "request_operator_resolution": {
+    "allowed_transitions": [
+      "request_operator_resolution"
+    ],
+    "evidence_fields": [
+      "evidence_refs"
+    ],
+    "nonempty_string_fields": [
+      "question",
+      "blocking_reason",
+      "uncertainty",
+      "recommended_state_transition"
+    ],
+    "required_fields": [
+      "question",
+      "blocking_reason",
+      "evidence_refs",
+      "options",
+      "uncertainty",
+      "recommended_state_transition"
+    ],
+    "string_array_fields": [
+      "evidence_refs",
+      "options"
+    ]
+  },
+  "revise_hypothesis": {
+    "allowed_transitions": [
+      "revise_hypothesis",
+      "reject_hypothesis",
+      "falsify_hypothesis"
+    ],
+    "evidence_fields": [
+      "evidence_refs",
+      "contrary_evidence_considered"
+    ],
+    "nonempty_string_fields": [
+      "prior_hypothesis_id",
+      "revised_statement",
+      "revision_reason",
+      "new_confidence_state",
+      "uncertainty",
+      "recommended_state_transition"
+    ],
+    "required_fields": [
+      "prior_hypothesis_id",
+      "revised_statement",
+      "evidence_refs",
+      "contrary_evidence_considered",
+      "revision_reason",
+      "new_confidence_state",
+      "uncertainty",
+      "recommended_state_transition"
+    ],
+    "string_array_fields": [
+      "evidence_refs",
+      "contrary_evidence_considered"
+    ]
+  },
+  "revise_plan": {
+    "allowed_transitions": [
+      "revise_plan",
+      "request_operator_resolution",
+      "declare_insufficient_evidence"
+    ],
+    "evidence_fields": [
+      "evidence_refs"
+    ],
+    "nonempty_string_fields": [
+      "prior_plan_id",
+      "revised_plan_summary",
+      "revision_reason",
+      "uncertainty",
+      "recommended_state_transition"
+    ],
+    "required_fields": [
+      "prior_plan_id",
+      "revised_plan_summary",
+      "evidence_refs",
+      "revision_reason",
+      "uncertainty",
+      "recommended_state_transition"
+    ],
+    "string_array_fields": [
+      "evidence_refs"
+    ]
+  },
+  "select_next_focus": {
+    "allowed_transitions": [
+      "select_next_focus",
+      "request_operator_resolution"
+    ],
+    "evidence_fields": [
+      "evidence_refs"
+    ],
+    "nonempty_string_fields": [
+      "selected_focus_id",
+      "salience_reason",
+      "uncertainty",
+      "recommended_state_transition"
+    ],
+    "required_fields": [
+      "selected_focus_id",
+      "salience_reason",
+      "related_goal_ids",
+      "evidence_refs",
+      "deferred_focus_ids",
+      "uncertainty",
+      "recommended_state_transition"
+    ],
+    "string_array_fields": [
+      "related_goal_ids",
+      "evidence_refs",
+      "deferred_focus_ids"
+    ]
+  },
+  "summarize_learning": {
+    "allowed_transitions": [
+      "summarize_learning",
+      "select_next_focus"
+    ],
+    "evidence_fields": [
+      "evidence_refs"
+    ],
+    "nonempty_string_fields": [
+      "lesson",
+      "uncertainty",
+      "recommended_state_transition"
+    ],
+    "required_fields": [
+      "lesson",
+      "evidence_refs",
+      "unresolved_questions",
+      "uncertainty",
+      "recommended_state_transition"
+    ],
+    "string_array_fields": [
+      "evidence_refs",
+      "unresolved_questions"
+    ]
+  }
+}

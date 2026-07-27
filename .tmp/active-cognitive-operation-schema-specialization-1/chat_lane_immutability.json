@@ -1,0 +1,9 @@
+{
+  "notes": [
+    "chat prompt wrapper remains in chat lane",
+    "answer/confidence grammar remains chat-only",
+    "legacy/non-Qwen chat smoke passed with phi4 test fixture",
+    "cognitive lane bypasses chat naturalization"
+  ],
+  "preserved": true
+}

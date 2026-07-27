@@ -1,0 +1,47 @@
+{
+  "attempt_label": "schema5_compare_evidence_id_array_rules",
+  "completed_calls": 1,
+  "failed_family": "compare_evidence",
+  "operation": "compare_evidence",
+  "passed_calls": 0,
+  "results": [
+    {
+      "adapted_response": {
+        "assumptions": [
+          "local evidence is complete for this bounded episode"
+        ],
+        "contrary_evidence_considered": [
+          "contrary_schema5_compare_evidence_1_c"
+        ],
+        "evidence_refs": [
+          "support_schema5_compare_evidence_1_a",
+          "useful_schema5_compare_evidence_1_b"
+        ],
+        "interpretation": "The local evidence supports a bounded next cognitive action, but the prior failures in similar contexts suggest the hypothesis may be overly optimistic.",
+        "next_evidence_need": "more detailed local ledger information",
+        "next_focus_proposal": "continue with the current hypothesis",
+        "operation_result_type": "compare_evidence",
+        "recommended_action": "continue with the current hypothesis",
+        "recommended_state_transition": "continue_with_hypothesis",
+        "uncertainty": "How the prior failures will impact the current hypothesis"
+      },
+      "elapsed_seconds": 30.852,
+      "failure_classifications": [
+        "invalid_state_transition"
+      ],
+      "operation": "compare_evidence",
+      "passed": false,
+      "positive_observations": [
+        "schema_valid",
+        "evidence_grounded",
+        "contrary_evidence_addressed",
+        "uncertainty_explicit",
+        "assumptions_explicit",
+        "operation_matched",
+        "useful_next_action"
+      ],
+      "raw_response_digest": "13b80e5569693dbbf7ac9e11c5e133c474454c8916dac8f84ec3535816aa527e",
+      "variant": 1
+    }
+  ]
+}

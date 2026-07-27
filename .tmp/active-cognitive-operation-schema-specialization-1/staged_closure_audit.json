@@ -1,0 +1,197 @@
+{
+  "checkpoint": "ACTIVE_COGNITIVE_OPERATION_SCHEMA_SPECIALIZATION_1",
+  "episode_a_artifact_count": 1,
+  "episode_a_flags": {
+    "accepted_all_requested": true,
+    "final_completed": true,
+    "has_compare_evidence": true,
+    "has_interpret_state": true,
+    "has_next_focus_selection": true,
+    "has_revision": true,
+    "has_useful_artifact": true
+  },
+  "episode_a_learning_update_count": 1,
+  "episode_a_used_evidence_refs": [
+    "episode_a_contrary_prior_block",
+    "episode_a_runtime_support",
+    "episode_a_useful_target"
+  ],
+  "errors": [],
+  "evaluator_digest_sha256": "ebb4c91fb962a24a224dec355e95227ab88d80e32afb5c13578e1c5caeb79fbc",
+  "git_diff_cached_check": {
+    "returncode": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  "identify_evidence_need_deferred": {
+    "checkpoint_required": false,
+    "latest_failed_qualification": {
+      "attempt_label": "schema13_identify_evidence_need",
+      "completed_calls": 1,
+      "failed_family": "identify_evidence_need",
+      "operation": "identify_evidence_need",
+      "passed_calls": 0,
+      "results": [
+        {
+          "adapted_response": {
+            "bounded_next_evidence_request": "support_schema13_identify_evidence_need_1_a",
+            "evidence_gap": "local evidence supporting or challenging the goal",
+            "existing_evidence_refs": [
+              "support_schema13_identify_evidence_need_1_a",
+              "useful_schema13_identify_evidence_need_1_b"
+            ],
+            "missing_evidence": [
+              "contrary_schema13_identify_evidence_need_1_c"
+            ],
+            "recommended_state_transition": "identify_evidence_need",
+            "uncertainty": "the extent to which local evidence supports or challenges the goal"
+          },
+          "elapsed_seconds": 24.731,
+          "failure_classifications": [
+            "generic_filler"
+          ],
+          "operation": "identify_evidence_need",
+          "passed": false,
+          "positive_observations": [
+            "schema_valid",
+            "evidence_grounded",
+            "uncertainty_explicit",
+            "state_transition_valid",
+            "useful_next_action"
+          ],
+          "raw_response_digest": "e9a5478c87471a5775992478da76b2c67200872b47562bef5fb6aeda3ed9fbe4",
+          "variant": 1
+        }
+      ]
+    },
+    "reason": "Explicit optional/deferred evidence-acquisition operation; declare_insufficient_evidence is the required blocking insufficiency path for this checkpoint.",
+    "schema": {
+      "allowed_transitions": [
+        "request_evidence"
+      ],
+      "checkpoint_required": false,
+      "evidence_fields": [
+        "known_evidence_refs"
+      ],
+      "nonempty_string_fields": [
+        "target_claim_or_decision",
+        "missing_fact",
+        "why_missing_fact_matters",
+        "acceptable_evidence_source",
+        "bounded_retrieval_action",
+        "stop_condition",
+        "uncertainty",
+        "recommended_state_transition"
+      ],
+      "operation_type": "identify_evidence_need",
+      "optional_fields": [],
+      "recommended_operation_field": "",
+      "required_fields": [
+        "target_claim_or_decision",
+        "known_evidence_refs",
+        "missing_fact",
+        "why_missing_fact_matters",
+        "acceptable_evidence_source",
+        "bounded_retrieval_action",
+        "stop_condition",
+        "uncertainty",
+        "recommended_state_transition"
+      ],
+      "schema_id": "operation-schema-identify-evidence-need-v1",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "string_array_fields": [
+        "known_evidence_refs"
+      ]
+    }
+  },
+  "ledger_file_count": 44,
+  "ledger_request_count": 76,
+  "protected_paths_staged": [],
+  "required_operation_acceptance_counts": {
+    "challenge_hypothesis": {
+      "accepted_or_passed": 3,
+      "completed": 3,
+      "matched": 3
+    },
+    "compare_evidence": {
+      "accepted_or_passed": 3,
+      "completed": 3,
+      "matched": 3
+    },
+    "declare_blocked_capability": {
+      "accepted_or_passed": 3,
+      "completed": 3,
+      "matched": 3
+    },
+    "declare_insufficient_evidence": {
+      "accepted_or_passed": 3,
+      "completed": 3,
+      "matched": 3
+    },
+    "formulate_hypothesis": {
+      "accepted_or_passed": 3,
+      "completed": 3,
+      "matched": 3
+    },
+    "interpret_state": {
+      "accepted_or_passed": 3,
+      "completed": 3,
+      "matched": 3
+    },
+    "prioritize_focus": {
+      "accepted_or_passed": 3,
+      "completed": 3,
+      "matched": 3
+    },
+    "propose_plan": {
+      "accepted_or_passed": 3,
+      "completed": 3,
+      "matched": 3
+    },
+    "reflect_on_outcome": {
+      "accepted_or_passed": 3,
+      "completed": 3,
+      "matched": 3
+    },
+    "request_operator_resolution": {
+      "accepted_or_passed": 3,
+      "completed": 3,
+      "matched": 3
+    },
+    "revise_hypothesis": {
+      "accepted_or_passed": 3,
+      "completed": 3,
+      "matched": 3
+    },
+    "revise_plan": {
+      "accepted_or_passed": 3,
+      "completed": 3,
+      "matched": 3
+    },
+    "select_next_focus": {
+      "accepted_or_passed": 3,
+      "completed": 3,
+      "matched": 3
+    },
+    "summarize_learning": {
+      "accepted_or_passed": 3,
+      "completed": 3,
+      "matched": 3
+    }
+  },
+  "staged_evidence_file_count": 394,
+  "staged_file_count": 403,
+  "staged_source_files": [
+    "DELTA.py",
+    "integration/model_runtime/execution_lanes.py",
+    "integration/model_runtime/gguf_model_runner.py",
+    "integration/model_runtime/model_session.py",
+    "integration/model_runtime/prompt_builder.py",
+    "integration/model_runtime/provider_manager.py",
+    "orchestration/runtime/active_cognitive_loop.py",
+    "tests/runtime_gsr/test_active_cognitive_loop.py",
+    "tests/runtime_gsr/test_model_execution_lane_isolation.py"
+  ],
+  "status": "PASSED",
+  "unexpected_paths_staged": []
+}

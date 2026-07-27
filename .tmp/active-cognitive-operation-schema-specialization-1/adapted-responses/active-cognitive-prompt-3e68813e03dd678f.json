@@ -1,0 +1,17 @@
+{
+  "adapted_response": {
+    "challenged_hypothesis_id": "hypothesis-088da8ee876414c0",
+    "contrary_evidence_refs": [
+      "contrary_schema8_challenge_hypothesis_2_c"
+    ],
+    "disconfirming_observation": "Prior attempts weakened active hypothesis",
+    "recommended_state_transition": "weaken_hypothesis",
+    "uncertainty": "local evidence may not fully support the hypothesis",
+    "vulnerability": "local evidence is incomplete"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"challenged_hypothesis_id\":\"hypothesis-088da8ee876414c0\",\"vulnerability\":\"local evidence is incomplete\",\"contrary_evidence_refs\":[\"contrary_schema8_challenge_hypothesis_2_c\"],\"disconfirming_observation\":\"Prior attempts weakened active hypothesis\",\"uncertainty\":\"local evidence may not fully support the hypothesis\",\"recommended_state_transition\":\"weaken_hypothesis\"}",
+  "raw_response_digest": "6a5d9c74bdbc5b88a8bcf1157fad15097336c49c1ac22872f69453adc6b2e051",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

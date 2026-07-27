@@ -1,0 +1,71 @@
+{
+  "authority_constraints": [
+    "no network",
+    "no protected paths",
+    "no commit",
+    "bounded local actions only"
+  ],
+  "contrary_evidence_ids_supplied": [],
+  "cycle_id": "active-cognitive-cycle-d0a8a2d5dfafbde1",
+  "evidence_ids_supplied": [],
+  "expected_response_schema": {
+    "attempted_evidence_refs": [
+      "IDs only from supplied evidence already attempted"
+    ],
+    "bounded_next_evidence_request": "bounded request for evidence",
+    "missing_evidence": [
+      "missing evidence descriptions"
+    ],
+    "recommended_state_transition": "one allowed transition",
+    "uncertainty": "nonempty uncertainty phrase",
+    "why_existing_evidence_is_insufficient": "nonempty insufficiency reason"
+  },
+  "focus_id": "focus-80f6507c02d655cc",
+  "goal_id": "active-cognitive-goal-8fea836fb5b4ab62",
+  "model_identity": "schema10-local-model",
+  "operation_request": {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-d0a8a2d5dfafbde1",
+    "evidence_constraints": [],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-80f6507c02d655cc",
+    "goal_id": "active-cognitive-goal-8fea836fb5b4ab62",
+    "model_identity": "schema10-local-model",
+    "operation_id": "cognitive-operation-0c2a914e8bb88704",
+    "operation_type": "declare_insufficient_evidence",
+    "provenance": [
+      "working-memory-packet-c2db8261f8e05547"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform declare_insufficient_evidence for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "7093f303c664151b7266b5973aed1c23d5a05340a07c22ad4f222d0a8ce8ccd4"
+  },
+  "operation_type": "declare_insufficient_evidence",
+  "prompt_byte_digest": "acee8f6300b276f7f547846334a1862c0a4c4a63b2fc66f58fce9f0b004a3610",
+  "prompt_length": 4277,
+  "prompt_schema_version": "active_cognitive_prompt_qualification_1_v1",
+  "prompt_snapshot_id": "active-cognitive-prompt-57bdd4f20d1b22ce",
+  "prompt_text": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- missing_evidence: array[string]\n- attempted_evidence_refs: array[string]\n- why_existing_evidence_is_insufficient: nonempty string\n- bounded_next_evidence_request: nonempty string\n- uncertainty: nonempty string\n- recommended_state_transition: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- attempted_evidence_refs values must be chosen from: none\nOPERATION RULE: use this only when supplied evidence is genuinely insufficient and name the bounded missing evidence\nTASK: perform only operation declare_insufficient_evidence. Allowed transition/next-operation values: declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: . Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied.\nCONTEXT_JSON:\n{\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":1,\"description\":\"Resolve discrepancy for goal: qualify operation family declare_insufficient_evidence with missing evidence variant 1\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-80f6507c02d655cc\",\"related_goal_ids\":[\"active-cognitive-goal-8fea836fb5b4ab62\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[],\"current_goal\":{\"expected_state\":\"bounded evidence request produced\",\"goal_id\":\"active-cognitive-goal-8fea836fb5b4ab62\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"qualify operation family declare_insufficient_evidence with missing evidence variant 1\"},\"current_hypotheses\":[{\"assumptions\":[\"local evidence is complete for this bounded episode\"],\"confidence_state\":\"tentative\",\"created_at\":\"2026-07-26T06:53:03+00:00\",\"disposition\":\"needs_challenge\",\"evidence_against\":[],\"evidence_for\":[],\"expected_observations\":[\"local evidence should support a bounded useful step\"],\"hypothesis_id\":\"hypothesis-4e6d4cd05ed01247\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-80f6507c02d655cc\",\"originating_goal_id\":\"active-cognitive-goal-8fea836fb5b4ab62\",\"provenance\":[\"cognitive-operation-eb09ecfaa363c2d3\"],\"revised_at\":\"\",\"revision_parent_id\":\"\",\"revision_reason\":\"\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: qualify operation family declare_insufficient_evidence with missing evidence variant 1\",\"statement\":\"For Resolve discrepancy for goal: qualify operation family declare_insufficient_evidence with missing evidence variant 1, the next useful operation is to compare evidence and choose one bounded step.\"}],\"evidence_for\":[],\"recent_outcomes\":[{\"created_at\":\"2026-07-26T06:53:03+00:00\",\"discrepancy\":\"progress_observed\",\"expected\":\"Perform interpret_state for the active focus using only referenced evidence.\",\"observed\":\"For Resolve discrepancy for goal: qualify operation family declare_insufficient_evidence with missing evidence variant 1, the next useful operation is to compare evidence and choose one bounded step.\",\"operation_id\":\"cognitive-operation-eb09ecfaa363c2d3\",\"outcome_id\":\"outcome-e35dcee73a4b35e4\"}]}",
+  "request_identity": "active-cognitive-ledger-request-be30dc891e37370c",
+  "retry_sequence": 0,
+  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+  "working_memory_packet_digest": "7093f303c664151b7266b5973aed1c23d5a05340a07c22ad4f222d0a8ce8ccd4",
+  "working_memory_packet_id": "working-memory-packet-c2db8261f8e05547"
+}

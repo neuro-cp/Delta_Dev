@@ -1,0 +1,120 @@
+{
+  "attempt_label": "schema7_compare_evidence_enum_transitions",
+  "completed_calls": 3,
+  "failed_family": "",
+  "operation": "compare_evidence",
+  "passed_calls": 3,
+  "results": [
+    {
+      "adapted_response": {
+        "assumptions": [
+          "local evidence is complete for this bounded episode"
+        ],
+        "contrary_evidence_considered": [
+          "contrary_schema7_compare_evidence_1_c"
+        ],
+        "evidence_refs": [
+          "support_schema7_compare_evidence_1_a",
+          "useful_schema7_compare_evidence_1_b"
+        ],
+        "interpretation": "The supporting evidence and useful target are consistent with the hypothesis, but prior attempts have weakened the active hypothesis.",
+        "next_evidence_need": "additional evidence to strengthen the hypothesis",
+        "next_focus_proposal": "continue with the current hypothesis",
+        "operation_result_type": "compare_evidence_result",
+        "recommended_action": "continue with the current hypothesis",
+        "recommended_state_transition": "add_supporting_evidence",
+        "uncertainty": "how the prior failures will impact the current progress"
+      },
+      "elapsed_seconds": 29.45,
+      "failure_classifications": [],
+      "operation": "compare_evidence",
+      "passed": true,
+      "positive_observations": [
+        "schema_valid",
+        "evidence_grounded",
+        "contrary_evidence_addressed",
+        "uncertainty_explicit",
+        "assumptions_explicit",
+        "operation_matched",
+        "state_transition_valid",
+        "useful_next_action"
+      ],
+      "raw_response_digest": "5233ff09642e9b6c2f88d87841b2e7172d22ed3eb0687f611ac28ff2afda8201",
+      "variant": 1
+    },
+    {
+      "adapted_response": {
+        "assumptions": [
+          "local evidence is complete for this bounded episode"
+        ],
+        "contrary_evidence_considered": [
+          "contrary_schema7_compare_evidence_2_c"
+        ],
+        "evidence_refs": [
+          "useful_schema7_compare_evidence_2_b",
+          "support_schema7_compare_evidence_2_a"
+        ],
+        "interpretation": "The operation must produce a bounded next cognitive action without declaring success. Runtime state and local ledger are available for this bounded operation. However, prior attempts have weakened the active hypothesis.",
+        "next_evidence_need": "Further evidence to strengthen or weaken the hypothesis.",
+        "next_focus_proposal": "Re-evaluate the hypothesis based on additional evidence.",
+        "operation_result_type": "compare_evidence_result",
+        "recommended_action": "Re-evaluate the hypothesis based on additional evidence.",
+        "recommended_state_transition": "revise_hypothesis",
+        "uncertainty": "The strength of the hypothesis remains unresolved."
+      },
+      "elapsed_seconds": 35.996,
+      "failure_classifications": [],
+      "operation": "compare_evidence",
+      "passed": true,
+      "positive_observations": [
+        "schema_valid",
+        "evidence_grounded",
+        "contrary_evidence_addressed",
+        "uncertainty_explicit",
+        "assumptions_explicit",
+        "operation_matched",
+        "state_transition_valid",
+        "useful_next_action"
+      ],
+      "raw_response_digest": "685565362b15487de700c317ed2bf6f7b3fc5beec5b75d7fdacfd78793ba695a",
+      "variant": 2
+    },
+    {
+      "adapted_response": {
+        "assumptions": [
+          "local evidence is complete for this bounded episode"
+        ],
+        "contrary_evidence_considered": [
+          "contrary_schema7_compare_evidence_3_c"
+        ],
+        "evidence_refs": [
+          "support_schema7_compare_evidence_3_a",
+          "useful_schema7_compare_evidence_3_b"
+        ],
+        "interpretation": "The local evidence supports the hypothesis that the operation can progress, but the prior failures of similar operations cast doubt on the reliability of this evidence.",
+        "next_evidence_need": "Further evidence to confirm the reliability of the local evidence.",
+        "next_focus_proposal": "Formulate a hypothesis based on the local evidence and consider the contrary evidence.",
+        "operation_result_type": "compare_evidence_result",
+        "recommended_action": "Consider the contrary evidence and gather further evidence to confirm the reliability of the local evidence.",
+        "recommended_state_transition": "weaken_hypothesis",
+        "uncertainty": "The reliability of the local evidence is uncertain given the history of similar operations."
+      },
+      "elapsed_seconds": 38.759,
+      "failure_classifications": [],
+      "operation": "compare_evidence",
+      "passed": true,
+      "positive_observations": [
+        "schema_valid",
+        "evidence_grounded",
+        "contrary_evidence_addressed",
+        "uncertainty_explicit",
+        "assumptions_explicit",
+        "operation_matched",
+        "state_transition_valid",
+        "useful_next_action"
+      ],
+      "raw_response_digest": "e4d71aca85b7a8de26120763a227932e76f414b9cdcd65acb0fcb6897f7b8731",
+      "variant": 3
+    }
+  ]
+}

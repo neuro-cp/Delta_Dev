@@ -1,0 +1,19 @@
+{
+  "adapted_response": {
+    "discrepancy": "The operation must produce a bounded next cognitive action without declaring success but instead declared success.",
+    "evidence_refs": [
+      "useful_schema10_reflect_on_outcome_2_b",
+      "support_schema10_reflect_on_outcome_2_a"
+    ],
+    "expected_outcome": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family reflect_on_outcome can progress using the available local evidence.",
+    "lesson": "The operation should ensure it produces a bounded next cognitive action.",
+    "observed_outcome": "The operation must produce a bounded next cognitive action without declaring success.",
+    "recommended_state_transition": "reflect_on_outcome",
+    "uncertainty": "The specific next cognitive action is unresolved."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"expected_outcome\":\"A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family reflect_on_outcome can progress using the available local evidence.\",\"observed_outcome\":\"The operation must produce a bounded next cognitive action without declaring success.\",\"discrepancy\":\"The operation must produce a bounded next cognitive action without declaring success but instead declared success.\",\"evidence_refs\":[\"useful_schema10_reflect_on_outcome_2_b\",\"support_schema10_reflect_on_outcome_2_a\"],\"lesson\":\"The operation should ensure it produces a bounded next cognitive action.\",\"uncertainty\":\"The specific next cognitive action is unresolved.\",\"recommended_state_transition\":\"reflect_on_outcome\"}",
+  "raw_response_digest": "99e9c7be4809e70c1a6f91dc7a048829ee8d743df44c3da373b9f9ec9f1fedc9",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

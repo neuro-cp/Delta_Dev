@@ -1,0 +1,37 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "local evidence is complete for this bounded episode"
+    ],
+    "contrary_evidence_considered": [
+      "contrary_schema7_compare_evidence_1_c"
+    ],
+    "evidence_refs": [
+      "support_schema7_compare_evidence_1_a",
+      "useful_schema7_compare_evidence_1_b"
+    ],
+    "interpretation": "The supporting evidence and useful target are consistent with the hypothesis, but prior attempts have weakened the active hypothesis.",
+    "next_evidence_need": "additional evidence to strengthen the hypothesis",
+    "next_focus_proposal": "continue with the current hypothesis",
+    "operation_result_type": "compare_evidence_result",
+    "recommended_action": "continue with the current hypothesis",
+    "recommended_state_transition": "add_supporting_evidence",
+    "uncertainty": "how the prior failures will impact the current progress"
+  },
+  "elapsed_seconds": 29.45,
+  "failure_classifications": [],
+  "operation": "compare_evidence",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "contrary_evidence_addressed",
+    "uncertainty_explicit",
+    "assumptions_explicit",
+    "operation_matched",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "5233ff09642e9b6c2f88d87841b2e7172d22ed3eb0687f611ac28ff2afda8201",
+  "variant": 1
+}

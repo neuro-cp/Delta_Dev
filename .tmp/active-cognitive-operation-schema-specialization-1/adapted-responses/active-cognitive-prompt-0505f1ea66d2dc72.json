@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "attempted_evidence_refs": [
+      "useful_schema15_declare_blocked_capability_2_b",
+      "support_schema15_declare_blocked_capability_2_a"
+    ],
+    "blocking_reason": "The operation must produce a bounded next cognitive action without declaring success, and the available local evidence does not support this.",
+    "bounded_next_action": "Declare blocked capability",
+    "capability_gap": "Insufficient local evidence to support a bounded next cognitive action",
+    "recommended_state_transition": "declare_blocked_capability",
+    "uncertainty": "Insufficient local evidence to support a bounded next cognitive action"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{ \"capability_gap\": \"Insufficient local evidence to support a bounded next cognitive action\", \"attempted_evidence_refs\": [ \"useful_schema15_declare_blocked_capability_2_b\", \"support_schema15_declare_blocked_capability_2_a\" ], \"blocking_reason\": \"The operation must produce a bounded next cognitive action without declaring success, and the available local evidence does not support this.\", \"bounded_next_action\": \"Declare blocked capability\", \"uncertainty\": \"Insufficient local evidence to support a bounded next cognitive action\", \"recommended_state_transition\": \"declare_blocked_capability\" }",
+  "raw_response_digest": "9aa27d3e9e0454d9917e5df35df8e7cdf6159d37d6c1d4df1b2784fd6e46369f",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

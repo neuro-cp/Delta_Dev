@@ -1,0 +1,28 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "support_schema15_summarize_learning_3_a",
+      "useful_schema15_summarize_learning_3_b"
+    ],
+    "lesson": "Resolve discrepancy for goal: qualify operation family summarize_learning can progress using the available local evidence.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "How will the local evidence be used to produce a bounded next cognitive action?",
+    "unresolved_questions": [
+      "How will the local evidence be used to produce a bounded next cognitive action?"
+    ]
+  },
+  "elapsed_seconds": 17.514,
+  "failure_classifications": [],
+  "operation": "summarize_learning",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "contrary_evidence_addressed",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "47d26943d057517a569e05e4590daf9e12e8e54809ab931b8372ac7e95d65cce",
+  "variant": 3
+}

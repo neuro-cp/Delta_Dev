@@ -1,0 +1,28 @@
+{
+  "adapted_response": {
+    "blocking_reason": "progress_observed",
+    "evidence_refs": [
+      "useful_schema15_request_operator_resolution_2_b",
+      "support_schema15_request_operator_resolution_2_a"
+    ],
+    "options": [
+      "request_operator_resolution"
+    ],
+    "question": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family request_operator_resolution can progress using the available local evidence.",
+    "recommended_state_transition": "request_operator_resolution",
+    "uncertainty": "The exact next cognitive action is not fully determined."
+  },
+  "elapsed_seconds": 15.986,
+  "failure_classifications": [],
+  "operation": "request_operator_resolution",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "058f8bf1b0311a56767eab5c6c5339c9756ba3130ab6446ca220ea49d347b8cf",
+  "variant": 2
+}

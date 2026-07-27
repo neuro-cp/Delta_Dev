@@ -1,0 +1,26 @@
+{
+  "adapted_response": {
+    "bounded_next_evidence_request": "Determine if local evidence supports the goal or challenges it.",
+    "evidence_gap": "The operation must produce a bounded next cognitive action without declaring success.",
+    "existing_evidence_refs": [
+      "useful_schema12_identify_evidence_need_2_b",
+      "support_schema12_identify_evidence_need_2_a"
+    ],
+    "missing_evidence": [],
+    "recommended_state_transition": "identify_evidence_need",
+    "uncertainty": "The outcome of the bounded next cognitive action is unresolved."
+  },
+  "elapsed_seconds": 17.897,
+  "failure_classifications": [],
+  "operation": "identify_evidence_need",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "ef75da4dff48e1478759ab90e220af6b0537409c68deb4e6a6e0764fb779e831",
+  "variant": 2
+}

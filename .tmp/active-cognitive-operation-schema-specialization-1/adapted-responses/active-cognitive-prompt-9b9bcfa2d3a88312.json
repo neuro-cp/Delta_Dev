@@ -1,0 +1,21 @@
+{
+  "adapted_response": {
+    "blocking_reason": "Runtime state and local ledger are available for this bounded operation, but the operation must produce a bounded next cognitive action without declaring success.",
+    "evidence_refs": [
+      "support_schema15_request_operator_resolution_1_a",
+      "useful_schema15_request_operator_resolution_1_b"
+    ],
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "question": "Can the operation family request_operator_resolution be qualified using the available local evidence?",
+    "recommended_state_transition": "request_operator_resolution",
+    "uncertainty": "Uncertainty remains regarding the sufficiency of the local evidence."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"question\":\"Can the operation family request_operator_resolution be qualified using the available local evidence?\",\"blocking_reason\":\"Runtime state and local ledger are available for this bounded operation, but the operation must produce a bounded next cognitive action without declaring success.\",\"evidence_refs\":[\"support_schema15_request_operator_resolution_1_a\",\"useful_schema15_request_operator_resolution_1_b\"],\"options\":[\"Yes\",\"No\"],\"uncertainty\":\"Uncertainty remains regarding the sufficiency of the local evidence.\",\"recommended_state_transition\":\"request_operator_resolution\"}",
+  "raw_response_digest": "9ee5d3b7aacbb3ba7d341bc875ace3625faee7f5ced165c72cf380bcc527897f",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

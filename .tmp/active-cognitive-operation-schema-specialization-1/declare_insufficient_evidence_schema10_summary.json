@@ -1,0 +1,39 @@
+{
+  "attempt_label": "schema10_declare_insufficient_evidence",
+  "completed_calls": 1,
+  "failed_family": "declare_insufficient_evidence",
+  "operation": "declare_insufficient_evidence",
+  "passed_calls": 0,
+  "results": [
+    {
+      "adapted_response": {
+        "attempted_evidence_refs": [
+          "none"
+        ],
+        "bounded_next_evidence_request": "Request additional evidence to support or challenge the goal.",
+        "missing_evidence": [
+          "evidence-1",
+          "evidence-2"
+        ],
+        "recommended_state_transition": "declare_insufficient_evidence",
+        "uncertainty": "Uncertainty about the current state of the goal.",
+        "why_existing_evidence_is_insufficient": "Insufficient evidence to support or challenge the goal."
+      },
+      "elapsed_seconds": 18.913,
+      "failure_classifications": [
+        "invented_evidence_reference",
+        "evidence_array_contains_non_id:attempted_evidence_refs"
+      ],
+      "operation": "declare_insufficient_evidence",
+      "passed": false,
+      "positive_observations": [
+        "schema_valid",
+        "uncertainty_explicit",
+        "state_transition_valid",
+        "useful_next_action"
+      ],
+      "raw_response_digest": "38decf12f0dc15ecdc9177b9911bbbe11278ee67b3513d07753cdcaf39fd0c4b",
+      "variant": 1
+    }
+  ]
+}

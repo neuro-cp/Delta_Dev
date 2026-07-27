@@ -1,0 +1,27 @@
+{
+  "adapted_response": {
+    "challenged_hypothesis_id": "hypothesis-3edd0f8c75bb691c",
+    "contrary_evidence_refs": [
+      "contrary_schema9_challenge_hypothesis_1_c"
+    ],
+    "disconfirming_observation": "Prior cognition-lane attempts failed or weakened the active hypothesis.",
+    "recommended_state_transition": "weaken_hypothesis",
+    "uncertainty": "The exact nature of the failure or weakening is unresolved.",
+    "vulnerability": "local evidence is complete for this bounded episode"
+  },
+  "elapsed_seconds": 24.222,
+  "failure_classifications": [],
+  "operation": "challenge_hypothesis",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "contrary_evidence_addressed",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "meaningful_revision",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "9d880a3d7562633df657529cc67c91711aa605e71696d9933a61258f4c4ebdb2",
+  "variant": 1
+}

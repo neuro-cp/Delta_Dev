@@ -1,0 +1,25 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "episode_a_runtime_support",
+      "episode_a_useful_target",
+      "episode_a_contrary_prior_block"
+    ],
+    "recommended_next_operation": "compare_evidence",
+    "salient_observations": [
+      "Local model ledger and operation-specific grammars are available.",
+      "Fresh episode requires producing an evidence-linked revision and a grounded next-focus or decision packet.",
+      "Earlier attempt to identify evidence need produced generic text."
+    ],
+    "state_summary": "Interpreting local model ledger and operation-specific grammars to resolve discrepancy.",
+    "uncertainty": "Outcome of local model ledger and operation-specific grammars interpretation is uncertain.",
+    "unresolved_questions": [
+      "How will the current operation contribute to resolving the discrepancy?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\n\n\"state_summary\": \"Interpreting local model ledger and operation-specific grammars to resolve discrepancy.\",\n\"salient_observations\": [\n    \"Local model ledger and operation-specific grammars are available.\",\n    \"Fresh episode requires producing an evidence-linked revision and a grounded next-focus or decision packet.\",\n    \"Earlier attempt to identify evidence need produced generic text.\"\n],\n\"evidence_refs\": [\n    \"episode_a_runtime_support\",\n    \"episode_a_useful_target\",\n    \"episode_a_contrary_prior_block\"\n],\n\"unresolved_questions\": [\n    \"How will the current operation contribute to resolving the discrepancy?\"\n],\n\"uncertainty\": \"Outcome of local model ledger and operation-specific grammars interpretation is uncertain.\",\n\"recommended_next_operation\": \"compare_evidence\"\n}",
+  "raw_response_digest": "ee0dac06b5ef73b92ded3430f3b21f2c0ab875238f7374bd9be575a8b249937e",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

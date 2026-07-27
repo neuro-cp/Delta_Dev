@@ -1,0 +1,4 @@
+{
+  "performed": false,
+  "reason": "interpret_state passed 3/3 after schema-specific repair; comparison condition not reached"
+}

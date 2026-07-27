@@ -1,0 +1,35 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "contrary_interpret_schema_2_c",
+      "useful_interpret_schema_2_b",
+      "support_interpret_schema_2_a"
+    ],
+    "recommended_next_operation": "formulate_hypothesis",
+    "salient_observations": [
+      "The next cognitive operation must be selected without claiming success.",
+      "Persistent state, local ledger, and operator command path exist.",
+      "The universal template caused blank fields or evidence prose in earlier interpret_state attempts."
+    ],
+    "state_summary": "Useful unresolved target and persistent state exist.",
+    "uncertainty": "The next cognitive operation is unresolved.",
+    "unresolved_questions": [
+      "What is the next cognitive operation that should be performed?"
+    ]
+  },
+  "elapsed_seconds": 23.693,
+  "failure_classifications": [
+    "generic_filler"
+  ],
+  "operation": "interpret_state",
+  "passed": false,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "4dadb3db6f4ece192e307f6d20588af5463d45d4e5ac4c86da2bdf98a2410597",
+  "variant": 2
+}

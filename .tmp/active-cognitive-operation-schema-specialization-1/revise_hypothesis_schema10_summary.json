@@ -1,0 +1,105 @@
+{
+  "attempt_label": "schema10_revise_hypothesis",
+  "completed_calls": 3,
+  "failed_family": "",
+  "operation": "revise_hypothesis",
+  "passed_calls": 3,
+  "results": [
+    {
+      "adapted_response": {
+        "contrary_evidence_considered": [
+          "contrary_schema10_revise_hypothesis_1_c"
+        ],
+        "evidence_refs": [
+          "support_schema10_revise_hypothesis_1_a",
+          "useful_schema10_revise_hypothesis_1_b"
+        ],
+        "new_confidence_state": "plausible",
+        "prior_hypothesis_id": "hypothesis-d4f7208ada426341",
+        "recommended_state_transition": "revise_hypothesis",
+        "revised_statement": "The operation family revise_hypothesis can progress using the available local evidence, but the initial attempts have failed or weakened the active hypothesis.",
+        "revision_reason": "Updated to reflect the failure of prior attempts and the weakening of the active hypothesis.",
+        "uncertainty": "The exact nature of the failure and the extent of weakening are unresolved."
+      },
+      "elapsed_seconds": 37.091,
+      "failure_classifications": [],
+      "operation": "revise_hypothesis",
+      "passed": true,
+      "positive_observations": [
+        "schema_valid",
+        "evidence_grounded",
+        "contrary_evidence_addressed",
+        "uncertainty_explicit",
+        "state_transition_valid",
+        "meaningful_revision",
+        "useful_next_action"
+      ],
+      "raw_response_digest": "1cd638b9ad2a6d267c28a987ce4920b1c0bf556ad33b5c16d94a36193916c73e",
+      "variant": 1
+    },
+    {
+      "adapted_response": {
+        "contrary_evidence_considered": [
+          "contrary_schema10_revise_hypothesis_2_c"
+        ],
+        "evidence_refs": [
+          "useful_schema10_revise_hypothesis_2_b",
+          "support_schema10_revise_hypothesis_2_a"
+        ],
+        "new_confidence_state": "plausible",
+        "prior_hypothesis_id": "hypothesis-63d6d890f1875091",
+        "recommended_state_transition": "revise_hypothesis",
+        "revised_statement": "The operation must produce a bounded next cognitive action without declaring success.",
+        "revision_reason": "The original statement was too broad and did not align with the specific requirement of producing a bounded next cognitive action.",
+        "uncertainty": "How the operation will handle complex scenarios without declaring success."
+      },
+      "elapsed_seconds": 31.072,
+      "failure_classifications": [],
+      "operation": "revise_hypothesis",
+      "passed": true,
+      "positive_observations": [
+        "schema_valid",
+        "evidence_grounded",
+        "contrary_evidence_addressed",
+        "uncertainty_explicit",
+        "state_transition_valid",
+        "meaningful_revision",
+        "useful_next_action"
+      ],
+      "raw_response_digest": "f14023f14cd5ba5944cd5f7ff706bfc4dd956b505d242569eb0c5bb7112e794b",
+      "variant": 2
+    },
+    {
+      "adapted_response": {
+        "contrary_evidence_considered": [
+          "contrary_schema10_revise_hypothesis_3_c"
+        ],
+        "evidence_refs": [
+          "support_schema10_revise_hypothesis_3_a",
+          "useful_schema10_revise_hypothesis_3_b"
+        ],
+        "new_confidence_state": "plausible",
+        "prior_hypothesis_id": "hypothesis-8314240ee188a5a9",
+        "recommended_state_transition": "revise_hypothesis",
+        "revised_statement": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family revise_hypothesis can progress using the available local evidence.",
+        "revision_reason": "Contrary evidence suggests that previous attempts have failed or weakened the hypothesis.",
+        "uncertainty": "The extent of the discrepancy remains unresolved."
+      },
+      "elapsed_seconds": 28.705,
+      "failure_classifications": [],
+      "operation": "revise_hypothesis",
+      "passed": true,
+      "positive_observations": [
+        "schema_valid",
+        "evidence_grounded",
+        "contrary_evidence_addressed",
+        "uncertainty_explicit",
+        "state_transition_valid",
+        "meaningful_revision",
+        "useful_next_action"
+      ],
+      "raw_response_digest": "82963bca854ad6922571766fd0450e43f724d547ca0ab06d11195c6567aab731",
+      "variant": 3
+    }
+  ]
+}

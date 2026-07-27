@@ -1,0 +1,26 @@
+{
+  "adapted_response": {
+    "attempted_evidence_refs": [
+      "support_schema15_declare_blocked_capability_3_a",
+      "useful_schema15_declare_blocked_capability_3_b"
+    ],
+    "blocking_reason": "Prior cognition-lane attempts failed or weakened the active hypothesis.",
+    "bounded_next_action": "declare_blocked_capability",
+    "capability_gap": "local evidence is complete for this bounded episode",
+    "recommended_state_transition": "declare_blocked_capability",
+    "uncertainty": "The effectiveness of the available local evidence in resolving the discrepancy remains unresolved."
+  },
+  "elapsed_seconds": 19.558,
+  "failure_classifications": [],
+  "operation": "declare_blocked_capability",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "87d4dfa6bbb49fa7efc5f3e5be1370d9b8899b665bc77fe3aa818634250df07f",
+  "variant": 3
+}

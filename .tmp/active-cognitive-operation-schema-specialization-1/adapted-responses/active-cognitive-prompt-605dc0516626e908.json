@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "attempted_evidence_refs": [
+      "support_schema15_declare_blocked_capability_1_a",
+      "useful_schema15_declare_blocked_capability_1_b"
+    ],
+    "blocking_reason": "Insufficient evidence to support a bounded next cognitive action",
+    "bounded_next_action": "declare_blocked_capability",
+    "capability_gap": "Resolve discrepancy for goal: qualify operation family declare_blocked_capability",
+    "recommended_state_transition": "declare_blocked_capability",
+    "uncertainty": "Insufficient local evidence to conclusively support the hypothesis"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{ \"capability_gap\": \"Resolve discrepancy for goal: qualify operation family declare_blocked_capability\", \"attempted_evidence_refs\": [ \"support_schema15_declare_blocked_capability_1_a\", \"useful_schema15_declare_blocked_capability_1_b\" ], \"blocking_reason\": \"Insufficient evidence to support a bounded next cognitive action\", \"bounded_next_action\": \"declare_blocked_capability\", \"uncertainty\": \"Insufficient local evidence to conclusively support the hypothesis\", \"recommended_state_transition\": \"declare_blocked_capability\" }",
+  "raw_response_digest": "84a767fc516c613ceab318bb4ce6fd2f24e13ab4f325579b7b0abe1bd9176cba",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

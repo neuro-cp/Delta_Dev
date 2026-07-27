@@ -1,0 +1,35 @@
+{
+  "allowed_transitions": [
+    "prioritize_focus",
+    "formulate_hypothesis",
+    "identify_evidence_need",
+    "compare_evidence",
+    "declare_insufficient_evidence"
+  ],
+  "evidence_fields": [
+    "evidence_refs"
+  ],
+  "nonempty_string_fields": [
+    "state_summary",
+    "uncertainty",
+    "recommended_next_operation"
+  ],
+  "operation_type": "interpret_state",
+  "optional_fields": [],
+  "recommended_operation_field": "recommended_next_operation",
+  "required_fields": [
+    "state_summary",
+    "salient_observations",
+    "evidence_refs",
+    "unresolved_questions",
+    "uncertainty",
+    "recommended_next_operation"
+  ],
+  "schema_id": "operation-schema-interpret-state-v1",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+  "string_array_fields": [
+    "salient_observations",
+    "evidence_refs",
+    "unresolved_questions"
+  ]
+}

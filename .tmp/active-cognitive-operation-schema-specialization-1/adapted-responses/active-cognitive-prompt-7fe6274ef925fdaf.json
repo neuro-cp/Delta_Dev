@@ -1,0 +1,23 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Runtime state and local ledger are available for this bounded operation."
+    ],
+    "expected_observations": [
+      "A hypothesis will be produced that is supported by the available evidence and bounded by the need for a next cognitive action."
+    ],
+    "hypothesis_statement": "The operation will produce a hypothesis that is supported by the available evidence and bounded by the need for a next cognitive action.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "Formulate a hypothesis for the operation family formulate_hypothesis.",
+    "supporting_evidence_refs": [
+      "useful_schema4_formulate_hypothesis_2_b",
+      "support_schema4_formulate_hypothesis_2_a"
+    ],
+    "uncertainty": "The success of the hypothesis in guiding the next cognitive action remains unresolved."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\n\n\"hypothesis_statement\":\"The operation will produce a hypothesis that is supported by the available evidence and bounded by the need for a next cognitive action.\",\n\"scope\":\"Formulate a hypothesis for the operation family formulate_hypothesis.\",\n\"supporting_evidence_refs\":[\"useful_schema4_formulate_hypothesis_2_b\",\"support_schema4_formulate_hypothesis_2_a\"],\n\"assumptions\":[\"Runtime state and local ledger are available for this bounded operation.\"],\n\"expected_observations\":[\"A hypothesis will be produced that is supported by the available evidence and bounded by the need for a next cognitive action.\"],\n\"uncertainty\":\"The success of the hypothesis in guiding the next cognitive action remains unresolved.\",\n\"recommended_state_transition\":\"propose_hypothesis\"\n}",
+  "raw_response_digest": "e6b29e70618bd6c5a0ade65ec67af02e8977ac4eb165adebcd8612050ac84c89",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

@@ -1,0 +1,76 @@
+{
+  "ledger_request_id": "shared-local-model-request-49376b2d05f1155e",
+  "ledger_result_id": "shared-local-model-result-d20dcc4ca084e556",
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "prompt_snapshot_id": "active-cognitive-prompt-b5ad1dd8f9d7f339",
+  "raw_response": "{\"lesson\":\"Understand the local model's ledger and operation-specific grammars to resolve discrepancies and support active focus\",\"evidence_refs\":[\"episode_a_runtime_support\",\"episode_a_useful_target\",\"episode_a_contrary_prior_block\"],\"unresolved_questions\":[\"How to effectively integrate local model ledger and operation-specific grammars for resolving discrepancies?\"],\"uncertainty\":\"Uncertainty remains about the most effective approach to integrate these elements for resolving discrepancies.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "8d6e8de74e98631f860d8c8e3c33db53acc419016af4fffe66b63b0bc22f22eb",
+  "terminal_status": {
+    "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+    "approved_at": "2026-07-26T07:17:51+00:00",
+    "authority_state": "operator_authorized_active_cognitive_loop",
+    "claimed_at": "2026-07-26T07:17:51+00:00",
+    "completed_at": "2026-07-26T07:18:08+00:00",
+    "consumed_state": "terminal",
+    "created_at": "2026-07-26T07:17:51+00:00",
+    "execution_attempt_count": 1,
+    "execution_claim_id": "shared-local-model-execution-claim-c7a10f9e8591dc3a",
+    "failure_classification": "",
+    "lifecycle_state": "completed",
+    "mission_id": "active-cognitive-goal-c9b26ad28164ffb2",
+    "mission_information_need_identity": "focus-b57e481e4a366aa2",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - lesson: nonempty string - evidence_refs: array[string] - unresolved_questions: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - evidence_refs values must be chosen from: episode_a_runtime_support, episode_a_useful_target, episode_a_contrary_prior_block TASK: perform only operation summarize_learning. Allowed transition/next-operation values: summarize_learning, select_next_focus. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: episode_a_runtime_support, episode_a_useful_target, episode_a_contrary_prior_block. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":5,\"description\":\"Resolve discrepancy for goal: exercise active cognition through interpretation, evidence comparison, revision, focus selection, and learning artifact\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"episode_a_runtime_support\",\"episode_a_useful_target\",\"episode_a_contrary_prior_block\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-b57e481e4a366aa2\",\"related_goal_ids\":[\"active-cognitive-goal-c9b26ad28164ffb2\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[],\"current_goal\":{\"expected_state\":\"useful evidence-linked cognitive outcome produced\",\"goal_id\":\"active-cognitive-goal-c9b26ad28164ffb2\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"exercise active cognition through interpretation, evidence comparison, revision, focus selection, and learning artifact\"},\"current_hypotheses\":[{\"assumptions\":[],\"confidence_state\":\"supported\",\"created_at\":\"2026-07-26T07:17:30+00:00\",\"disposition\":\"revised_from_evidence\",\"evidence_against\":[],\"evidence_for\":[\"episode_a_runtime_support\",\"episode_a_useful_target\",\"episode_a_contrary_prior_block\"],\"expected_observations\":[\"revised smaller step should match local evidence\"],\"hypothesis_id\":\"hypothesis-cda56037684cce6d\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-1f1c2c68fe63488b\",\"originating_goal_id\":\"active-cognitive-goal-c9b26ad28164ffb2\",\"provenance\":[\"cognitive-operation-60d68d339f4d3256\"],\"revised_at\":\"2026-07-26T07:17:30+00:00\",\"revision_parent_id\":\"hypothesis-f0f59e57e049237c\",\"revision_reason\":\"Interpreting local model ledger and operation-specific grammars to resolve discrepancy and support active focus\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: exercise active cognition through interpretation, evidence comparison, revision, focus selection, and learning artifact\",\"statement\":\"Interpreting local model ledger and operation-specific grammars to resolve discrepancy and support active focus\"}],\"evidence_for\":[{\"content\":\"Persistent active-loop state, typed operation requests, local model ledger execution, and operation-specific grammars are available.\",\"evidence_id\":\"episode_a_runtime_support\",\"source\":\"episode_a\",\"summary\":\"Runtime support exists\"},{\"content\":\"The fresh episode must produce an evidence-linked revision and a grounded next-focus or decision packet.\",\"evidence_id\":\"episode_a_useful_target\",\"source\":\"episode_a\",\"summary\":\"Useful target\"},{\"content\":\"Earlier checkpoint work blocked because identify_evidence_need produced generic evidence-gap text.\",\"evidence_id\":\"episode_a_contrary_prior_block\",\"source\":\"episode_a\",\"summary\":\"Prior blocker\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-26T07:17:51+00:00\",\"discrepancy\":\"progress_observed\",\"expected\":\"Perform select_next_focus for the active focus using only referenced evidence.\",\"observed\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"operation_id\":\"cognitive-operation-aa9d2a07cfb0be27\",\"outcome_id\":\"outcome-90b8eacbe7595b14\"}]}",
+    "question_objective": "summarize_learning",
+    "record_digest": "73dcd234f0039b870b45a33a3ad87e27256e38953b735e65c709f5793bb0e784",
+    "record_version": 1,
+    "request_digest": "97a2f60ad8a4324bf94c58d47b835ed9567859636f415fc327eaa867a1ff9d90",
+    "request_id": "shared-local-model-request-49376b2d05f1155e",
+    "requester_reference": "cognitive-operation-798e8086f3f212ba",
+    "requester_type": "active_cognitive_loop",
+    "result_id": "shared-local-model-result-d20dcc4ca084e556",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    },
+    "semantic_identity": "active-cognitive-ledger-request-bd5ae2cc1c254066",
+    "session_reference": "active-cognitive-cycle-2c8e4b34d1c26839"
+  }
+}

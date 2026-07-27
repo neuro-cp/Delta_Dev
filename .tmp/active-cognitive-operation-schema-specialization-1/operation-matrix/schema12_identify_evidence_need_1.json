@@ -1,0 +1,28 @@
+{
+  "adapted_response": {
+    "bounded_next_evidence_request": "additional local evidence to resolve the discrepancy",
+    "evidence_gap": "local evidence is incomplete for the bounded operation",
+    "existing_evidence_refs": [
+      "support_schema12_identify_evidence_need_1_a",
+      "useful_schema12_identify_evidence_need_1_b"
+    ],
+    "missing_evidence": [
+      "contrary_schema12_identify_evidence_need_1_c"
+    ],
+    "recommended_state_transition": "identify_evidence_need",
+    "uncertainty": "the outcome of the bounded operation is uncertain"
+  },
+  "elapsed_seconds": 22.458,
+  "failure_classifications": [],
+  "operation": "identify_evidence_need",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "0942db062769bb6457685bbe34e85f3690ce9f84164b4638c583aa38e4b280ba",
+  "variant": 1
+}

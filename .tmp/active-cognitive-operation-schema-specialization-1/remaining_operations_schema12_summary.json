@@ -1,0 +1,89 @@
+{
+  "attempt_label": "schema12_remaining_operations",
+  "completed_calls": 3,
+  "failed_family": "identify_evidence_need",
+  "passed_calls": 2,
+  "results": [
+    {
+      "adapted_response": {
+        "bounded_next_evidence_request": "additional local evidence to resolve the discrepancy",
+        "evidence_gap": "local evidence is incomplete for the bounded operation",
+        "existing_evidence_refs": [
+          "support_schema12_identify_evidence_need_1_a",
+          "useful_schema12_identify_evidence_need_1_b"
+        ],
+        "missing_evidence": [
+          "contrary_schema12_identify_evidence_need_1_c"
+        ],
+        "recommended_state_transition": "identify_evidence_need",
+        "uncertainty": "the outcome of the bounded operation is uncertain"
+      },
+      "elapsed_seconds": 22.458,
+      "failure_classifications": [],
+      "operation": "identify_evidence_need",
+      "passed": true,
+      "positive_observations": [
+        "schema_valid",
+        "evidence_grounded",
+        "uncertainty_explicit",
+        "state_transition_valid",
+        "useful_next_action"
+      ],
+      "raw_response_digest": "0942db062769bb6457685bbe34e85f3690ce9f84164b4638c583aa38e4b280ba",
+      "variant": 1
+    },
+    {
+      "adapted_response": {
+        "bounded_next_evidence_request": "Determine if local evidence supports the goal or challenges it.",
+        "evidence_gap": "The operation must produce a bounded next cognitive action without declaring success.",
+        "existing_evidence_refs": [
+          "useful_schema12_identify_evidence_need_2_b",
+          "support_schema12_identify_evidence_need_2_a"
+        ],
+        "missing_evidence": [],
+        "recommended_state_transition": "identify_evidence_need",
+        "uncertainty": "The outcome of the bounded next cognitive action is unresolved."
+      },
+      "elapsed_seconds": 17.897,
+      "failure_classifications": [],
+      "operation": "identify_evidence_need",
+      "passed": true,
+      "positive_observations": [
+        "schema_valid",
+        "evidence_grounded",
+        "uncertainty_explicit",
+        "state_transition_valid",
+        "useful_next_action"
+      ],
+      "raw_response_digest": "ef75da4dff48e1478759ab90e220af6b0537409c68deb4e6a6e0764fb779e831",
+      "variant": 2
+    },
+    {
+      "adapted_response": {
+        "bounded_next_evidence_request": "identify_evidence_need",
+        "evidence_gap": "none",
+        "existing_evidence_refs": [
+          "support_schema12_identify_evidence_need_3_a"
+        ],
+        "missing_evidence": [],
+        "recommended_state_transition": "identify_evidence_need",
+        "uncertainty": "discrepancy between observed and expected progress"
+      },
+      "elapsed_seconds": 12.162,
+      "failure_classifications": [
+        "generic_filler"
+      ],
+      "operation": "identify_evidence_need",
+      "passed": false,
+      "positive_observations": [
+        "schema_valid",
+        "evidence_grounded",
+        "uncertainty_explicit",
+        "state_transition_valid",
+        "useful_next_action"
+      ],
+      "raw_response_digest": "f29afe90f59292670b8e781ec3711ceac5cf23e0252e3c08c85b60034d6bbaa0",
+      "variant": 3
+    }
+  ]
+}

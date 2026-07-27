@@ -1,0 +1,37 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "local evidence is complete for this bounded episode"
+    ],
+    "contrary_evidence_considered": [
+      "contrary_schema7_compare_evidence_2_c"
+    ],
+    "evidence_refs": [
+      "useful_schema7_compare_evidence_2_b",
+      "support_schema7_compare_evidence_2_a"
+    ],
+    "interpretation": "The operation must produce a bounded next cognitive action without declaring success. Runtime state and local ledger are available for this bounded operation. However, prior attempts have weakened the active hypothesis.",
+    "next_evidence_need": "Further evidence to strengthen or weaken the hypothesis.",
+    "next_focus_proposal": "Re-evaluate the hypothesis based on additional evidence.",
+    "operation_result_type": "compare_evidence_result",
+    "recommended_action": "Re-evaluate the hypothesis based on additional evidence.",
+    "recommended_state_transition": "revise_hypothesis",
+    "uncertainty": "The strength of the hypothesis remains unresolved."
+  },
+  "elapsed_seconds": 35.996,
+  "failure_classifications": [],
+  "operation": "compare_evidence",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "contrary_evidence_addressed",
+    "uncertainty_explicit",
+    "assumptions_explicit",
+    "operation_matched",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "685565362b15487de700c317ed2bf6f7b3fc5beec5b75d7fdacfd78793ba695a",
+  "variant": 2
+}

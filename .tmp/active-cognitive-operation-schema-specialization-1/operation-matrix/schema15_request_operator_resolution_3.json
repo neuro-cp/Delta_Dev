@@ -1,0 +1,28 @@
+{
+  "adapted_response": {
+    "blocking_reason": "Runtime state and local ledger are available for this bounded operation.",
+    "evidence_refs": [
+      "support_schema15_request_operator_resolution_3_a",
+      "useful_schema15_request_operator_resolution_3_b"
+    ],
+    "options": [
+      "request_operator_resolution"
+    ],
+    "question": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family request_operator_resolution can progress using the available local evidence.",
+    "recommended_state_transition": "request_operator_resolution",
+    "uncertainty": "The operation must produce a bounded next cognitive action without declaring success."
+  },
+  "elapsed_seconds": 19.112,
+  "failure_classifications": [],
+  "operation": "request_operator_resolution",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "df6471c727a240a9edcabcaf06e10476ed56762120a73dcb1197a0bd3c8a904d",
+  "variant": 3
+}

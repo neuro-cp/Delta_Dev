@@ -1,0 +1,32 @@
+{
+  "adapted_response": {
+    "contrary_evidence_considered": [
+      "contrary_schema10_revise_hypothesis_2_c"
+    ],
+    "evidence_refs": [
+      "useful_schema10_revise_hypothesis_2_b",
+      "support_schema10_revise_hypothesis_2_a"
+    ],
+    "new_confidence_state": "plausible",
+    "prior_hypothesis_id": "hypothesis-63d6d890f1875091",
+    "recommended_state_transition": "revise_hypothesis",
+    "revised_statement": "The operation must produce a bounded next cognitive action without declaring success.",
+    "revision_reason": "The original statement was too broad and did not align with the specific requirement of producing a bounded next cognitive action.",
+    "uncertainty": "How the operation will handle complex scenarios without declaring success."
+  },
+  "elapsed_seconds": 31.072,
+  "failure_classifications": [],
+  "operation": "revise_hypothesis",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "contrary_evidence_addressed",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "meaningful_revision",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "f14023f14cd5ba5944cd5f7ff706bfc4dd956b505d242569eb0c5bb7112e794b",
+  "variant": 2
+}

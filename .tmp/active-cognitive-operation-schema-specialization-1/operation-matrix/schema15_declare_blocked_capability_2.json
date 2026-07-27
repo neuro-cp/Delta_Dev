@@ -1,0 +1,26 @@
+{
+  "adapted_response": {
+    "attempted_evidence_refs": [
+      "useful_schema15_declare_blocked_capability_2_b",
+      "support_schema15_declare_blocked_capability_2_a"
+    ],
+    "blocking_reason": "The operation must produce a bounded next cognitive action without declaring success, and the available local evidence does not support this.",
+    "bounded_next_action": "Declare blocked capability",
+    "capability_gap": "Insufficient local evidence to support a bounded next cognitive action",
+    "recommended_state_transition": "declare_blocked_capability",
+    "uncertainty": "Insufficient local evidence to support a bounded next cognitive action"
+  },
+  "elapsed_seconds": 20.835,
+  "failure_classifications": [],
+  "operation": "declare_blocked_capability",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "809fc72896d6c0e8bb49a504930b8d2b0c6da2a904ab9e977f1ea3c2f4babccd",
+  "variant": 2
+}

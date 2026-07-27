@@ -1,0 +1,1224 @@
+[
+  {
+    "adapted_response": {
+      "evidence_refs": [
+        "support_interpret_aligned_1_a",
+        "useful_interpret_aligned_1_b",
+        "contrary_interpret_aligned_1_c"
+      ],
+      "recommended_next_operation": "formulate_hypothesis",
+      "salient_observations": [
+        "Runtime evidence available",
+        "The next cognitive operation must be selected without claiming success"
+      ],
+      "state_summary": "Persistent state, local ledger, and operator command path exist.",
+      "uncertainty": "How the available local evidence will support a bounded useful step.",
+      "unresolved_questions": [
+        "How can the universal template be adapted to avoid blank fields or evidence prose in future interpret_state attempts?"
+      ]
+    },
+    "elapsed_seconds": 24.418,
+    "failure_classifications": [],
+    "operation": "interpret_state",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "16e55e1cf74dde05a8900f68980d299ab38b16fa4f1ccf761b3fcbba9825352d",
+    "variant": 1
+  },
+  {
+    "adapted_response": {
+      "evidence_refs": [
+        "contrary_interpret_aligned_2_c",
+        "useful_interpret_aligned_2_b",
+        "support_interpret_aligned_2_a"
+      ],
+      "recommended_next_operation": "formulate_hypothesis",
+      "salient_observations": [
+        "The universal template caused blank fields or evidence prose in earlier interpret_state attempts.",
+        "The next cognitive operation must be selected without claiming success.",
+        "Persistent state, local ledger, and operator command path exist."
+      ],
+      "state_summary": "Resolve discrepancy for goal: qualify interpret_state specialized schema variant 2",
+      "uncertainty": "How to align the specialized schema with the persistent state and available evidence.",
+      "unresolved_questions": [
+        "How should the interpret_state specialized schema variant 2 be qualified given the persistent state and available evidence?"
+      ]
+    },
+    "elapsed_seconds": 26.861,
+    "failure_classifications": [],
+    "operation": "interpret_state",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "3a93a15bce0a33fa193c584952b5565905970c8038f1ea3f072ecf4bb39d9b3d",
+    "variant": 2
+  },
+  {
+    "adapted_response": {
+      "evidence_refs": [
+        "support_interpret_aligned_3_a",
+        "useful_interpret_aligned_3_b",
+        "contrary_interpret_aligned_3_c"
+      ],
+      "recommended_next_operation": "formulate_hypothesis",
+      "salient_observations": [
+        "Runtime evidence available",
+        "The next cognitive operation must be selected without claiming success",
+        "The universal template caused blank fields or evidence prose in earlier interpret_state attempts"
+      ],
+      "state_summary": "Persistent state, local ledger, and operator command path exist.",
+      "uncertainty": "How to effectively utilize the available local evidence to resolve the discrepancy?",
+      "unresolved_questions": [
+        "How to effectively utilize the available local evidence to resolve the discrepancy?"
+      ]
+    },
+    "elapsed_seconds": 25.677,
+    "failure_classifications": [],
+    "operation": "interpret_state",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "03b6612b15c30e26efa9dc8b59174ed943084d4fbd781d0f3943620a6fd3a825",
+    "variant": 3
+  },
+  {
+    "adapted_response": {
+      "recommended_state_transition": "continue_focus",
+      "rejected_focus_ids": [],
+      "selected_focus_id": "focus-881707d2c4b1a487",
+      "selection_reason": "Resolve discrepancy for goal: qualify operation family prioritize_focus",
+      "supporting_evidence_refs": [
+        "support_schema4_prioritize_focus_1_a",
+        "useful_schema4_prioritize_focus_1_b"
+      ],
+      "uncertainty": "Need to determine if local evidence is sufficient for a useful next step"
+    },
+    "elapsed_seconds": 22.183,
+    "failure_classifications": [],
+    "operation": "prioritize_focus",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "a290d7b40ed24aca1e3d311c00b19095a3fb5ddd4f691d3fac50fa7e1ddb9f8d",
+    "variant": 1
+  },
+  {
+    "adapted_response": {
+      "recommended_state_transition": "continue_focus",
+      "rejected_focus_ids": [],
+      "selected_focus_id": "focus-11cfc6184b5e8403",
+      "selection_reason": "Resolve discrepancy for goal: qualify operation family prioritize_focus",
+      "supporting_evidence_refs": [
+        "useful_schema4_prioritize_focus_2_b",
+        "support_schema4_prioritize_focus_2_a"
+      ],
+      "uncertainty": "Need to confirm local evidence supports useful progress"
+    },
+    "elapsed_seconds": 15.659,
+    "failure_classifications": [],
+    "operation": "prioritize_focus",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "a77936803044eda53772ddf3e16d7d4e544741518f15edb6baa547eba07bf901",
+    "variant": 2
+  },
+  {
+    "adapted_response": {
+      "recommended_state_transition": "request_operator_resolution",
+      "rejected_focus_ids": [],
+      "selected_focus_id": "focus-dd3ac616cb77533c",
+      "selection_reason": "Resolve discrepancy for goal: qualify operation family prioritize_focus",
+      "supporting_evidence_refs": [
+        "support_schema4_prioritize_focus_3_a",
+        "useful_schema4_prioritize_focus_3_b"
+      ],
+      "uncertainty": "Outcome uncertain due to contrary evidence"
+    },
+    "elapsed_seconds": 15.111,
+    "failure_classifications": [],
+    "operation": "prioritize_focus",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "06e5b1fb8621ca7a0f2995123e565bb243ea8bafcd093d98e17a10ca6b57069d",
+    "variant": 3
+  },
+  {
+    "adapted_response": {
+      "assumptions": [
+        "The local ledger and runtime state are sufficient for hypothesis generation",
+        "The operation must produce a bounded next cognitive action"
+      ],
+      "expected_observations": [
+        "A hypothesis that integrates available evidence and local ledger information"
+      ],
+      "hypothesis_statement": "The schema4 operation can generate a useful hypothesis for the formulate_hypothesis operation family by integrating available evidence and local ledger information without relying on external success declarations.",
+      "recommended_state_transition": "propose_hypothesis",
+      "scope": "local ledger and runtime state",
+      "supporting_evidence_refs": [
+        "support_schema4_formulate_hypothesis_1_a",
+        "useful_schema4_formulate_hypothesis_1_b"
+      ],
+      "uncertainty": "The effectiveness of the hypothesis in guiding subsequent operations remains to be validated"
+    },
+    "elapsed_seconds": 25.3,
+    "failure_classifications": [],
+    "operation": "formulate_hypothesis",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "assumptions_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "1bdfcca838dfaa1c2da2ca8f8a14b886f8ccefee782b99b323892531961a89f2",
+    "variant": 1
+  },
+  {
+    "adapted_response": {
+      "assumptions": [
+        "Runtime state and local ledger are available for this bounded operation."
+      ],
+      "expected_observations": [
+        "A hypothesis will be produced that is supported by the available evidence and bounded by the need for a next cognitive action."
+      ],
+      "hypothesis_statement": "The operation will produce a hypothesis that is supported by the available evidence and bounded by the need for a next cognitive action.",
+      "recommended_state_transition": "propose_hypothesis",
+      "scope": "Formulate a hypothesis for the operation family formulate_hypothesis.",
+      "supporting_evidence_refs": [
+        "useful_schema4_formulate_hypothesis_2_b",
+        "support_schema4_formulate_hypothesis_2_a"
+      ],
+      "uncertainty": "The success of the hypothesis in guiding the next cognitive action remains unresolved."
+    },
+    "elapsed_seconds": 26.507,
+    "failure_classifications": [],
+    "operation": "formulate_hypothesis",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "assumptions_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "e6b29e70618bd6c5a0ade65ec67af02e8977ac4eb165adebcd8612050ac84c89",
+    "variant": 2
+  },
+  {
+    "adapted_response": {
+      "assumptions": [
+        "Runtime state and local ledger are available for this bounded operation"
+      ],
+      "expected_observations": [
+        "The operation will produce a bounded next cognitive action without declaring success"
+      ],
+      "hypothesis_statement": "The schema4 operation family can formulate a hypothesis based on available evidence, even if prior attempts have failed or weakened the active hypothesis.",
+      "recommended_state_transition": "propose_hypothesis",
+      "scope": "Runtime state and local ledger",
+      "supporting_evidence_refs": [
+        "support_schema4_formulate_hypothesis_3_a"
+      ],
+      "uncertainty": "The effectiveness of the hypothesis in guiding subsequent operations remains unresolved."
+    },
+    "elapsed_seconds": 21.523,
+    "failure_classifications": [],
+    "operation": "formulate_hypothesis",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "assumptions_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "eaf01177f17f547447d50257c80f4d6c9e49c4f434ccd9d659b9dd5bca23ca9c",
+    "variant": 3
+  },
+  {
+    "adapted_response": {
+      "assumptions": [
+        "local evidence is complete for this bounded episode"
+      ],
+      "contrary_evidence_considered": [
+        "contrary_schema7_compare_evidence_1_c"
+      ],
+      "evidence_refs": [
+        "support_schema7_compare_evidence_1_a",
+        "useful_schema7_compare_evidence_1_b"
+      ],
+      "interpretation": "The supporting evidence and useful target are consistent with the hypothesis, but prior attempts have weakened the active hypothesis.",
+      "next_evidence_need": "additional evidence to strengthen the hypothesis",
+      "next_focus_proposal": "continue with the current hypothesis",
+      "operation_result_type": "compare_evidence_result",
+      "recommended_action": "continue with the current hypothesis",
+      "recommended_state_transition": "add_supporting_evidence",
+      "uncertainty": "how the prior failures will impact the current progress"
+    },
+    "elapsed_seconds": 29.45,
+    "failure_classifications": [],
+    "operation": "compare_evidence",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "contrary_evidence_addressed",
+      "uncertainty_explicit",
+      "assumptions_explicit",
+      "operation_matched",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "5233ff09642e9b6c2f88d87841b2e7172d22ed3eb0687f611ac28ff2afda8201",
+    "variant": 1
+  },
+  {
+    "adapted_response": {
+      "assumptions": [
+        "local evidence is complete for this bounded episode"
+      ],
+      "contrary_evidence_considered": [
+        "contrary_schema7_compare_evidence_2_c"
+      ],
+      "evidence_refs": [
+        "useful_schema7_compare_evidence_2_b",
+        "support_schema7_compare_evidence_2_a"
+      ],
+      "interpretation": "The operation must produce a bounded next cognitive action without declaring success. Runtime state and local ledger are available for this bounded operation. However, prior attempts have weakened the active hypothesis.",
+      "next_evidence_need": "Further evidence to strengthen or weaken the hypothesis.",
+      "next_focus_proposal": "Re-evaluate the hypothesis based on additional evidence.",
+      "operation_result_type": "compare_evidence_result",
+      "recommended_action": "Re-evaluate the hypothesis based on additional evidence.",
+      "recommended_state_transition": "revise_hypothesis",
+      "uncertainty": "The strength of the hypothesis remains unresolved."
+    },
+    "elapsed_seconds": 35.996,
+    "failure_classifications": [],
+    "operation": "compare_evidence",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "contrary_evidence_addressed",
+      "uncertainty_explicit",
+      "assumptions_explicit",
+      "operation_matched",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "685565362b15487de700c317ed2bf6f7b3fc5beec5b75d7fdacfd78793ba695a",
+    "variant": 2
+  },
+  {
+    "adapted_response": {
+      "assumptions": [
+        "local evidence is complete for this bounded episode"
+      ],
+      "contrary_evidence_considered": [
+        "contrary_schema7_compare_evidence_3_c"
+      ],
+      "evidence_refs": [
+        "support_schema7_compare_evidence_3_a",
+        "useful_schema7_compare_evidence_3_b"
+      ],
+      "interpretation": "The local evidence supports the hypothesis that the operation can progress, but the prior failures of similar operations cast doubt on the reliability of this evidence.",
+      "next_evidence_need": "Further evidence to confirm the reliability of the local evidence.",
+      "next_focus_proposal": "Formulate a hypothesis based on the local evidence and consider the contrary evidence.",
+      "operation_result_type": "compare_evidence_result",
+      "recommended_action": "Consider the contrary evidence and gather further evidence to confirm the reliability of the local evidence.",
+      "recommended_state_transition": "weaken_hypothesis",
+      "uncertainty": "The reliability of the local evidence is uncertain given the history of similar operations."
+    },
+    "elapsed_seconds": 38.759,
+    "failure_classifications": [],
+    "operation": "compare_evidence",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "contrary_evidence_addressed",
+      "uncertainty_explicit",
+      "assumptions_explicit",
+      "operation_matched",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "e4d71aca85b7a8de26120763a227932e76f414b9cdcd65acb0fcb6897f7b8731",
+    "variant": 3
+  },
+  {
+    "adapted_response": {
+      "challenged_hypothesis_id": "hypothesis-5d555b8b4a9c5ee1",
+      "contrary_evidence_refs": [
+        "contrary_schema10_challenge_hypothesis_1_c"
+      ],
+      "disconfirming_observation": "Prior attempts to resolve the discrepancy have failed or weakened the hypothesis.",
+      "recommended_state_transition": "weaken_hypothesis",
+      "uncertainty": "The exact nature of the discrepancy and the appropriate next steps remain unresolved.",
+      "vulnerability": "The current evidence does not sufficiently support the hypothesis."
+    },
+    "elapsed_seconds": 25.846,
+    "failure_classifications": [],
+    "operation": "challenge_hypothesis",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "contrary_evidence_addressed",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "meaningful_revision",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "1c9e930c26c217373e3b453ba6115b813095687286bf71f5edb854e2748b902a",
+    "variant": 1
+  },
+  {
+    "adapted_response": {
+      "challenged_hypothesis_id": "hypothesis-9320cf9bef290692",
+      "contrary_evidence_refs": [
+        "contrary_schema10_challenge_hypothesis_2_c"
+      ],
+      "disconfirming_observation": "The operation must produce a bounded next cognitive action without declaring success.",
+      "recommended_state_transition": "weaken_hypothesis",
+      "uncertainty": "The exact nature and impact of previous failures on the current hypothesis remain unresolved.",
+      "vulnerability": "Prior cognition-lane attempts failed or weakened the active hypothesis."
+    },
+    "elapsed_seconds": 24.481,
+    "failure_classifications": [],
+    "operation": "challenge_hypothesis",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "contrary_evidence_addressed",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "meaningful_revision",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "687a49e244d1022e48afff8585b24daac2b82d4f66284bad390d65716c29b5a7",
+    "variant": 2
+  },
+  {
+    "adapted_response": {
+      "challenged_hypothesis_id": "hypothesis-388055db27a8e021",
+      "contrary_evidence_refs": [
+        "contrary_schema10_challenge_hypothesis_3_c"
+      ],
+      "disconfirming_observation": "Prior cognition-lane attempts failed or weakened the active hypothesis.",
+      "recommended_state_transition": "weaken_hypothesis",
+      "uncertainty": "The reliability of the local evidence is unresolved.",
+      "vulnerability": "The local evidence is incomplete or unreliable, as prior attempts have weakened the active hypothesis."
+    },
+    "elapsed_seconds": 21.501,
+    "failure_classifications": [],
+    "operation": "challenge_hypothesis",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "contrary_evidence_addressed",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "meaningful_revision",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "affff1391f8689555b36e1291799bd081893bc0e10e0c00701e5ec7c5052badf",
+    "variant": 3
+  },
+  {
+    "adapted_response": {
+      "contrary_evidence_considered": [
+        "contrary_schema10_revise_hypothesis_1_c"
+      ],
+      "evidence_refs": [
+        "support_schema10_revise_hypothesis_1_a",
+        "useful_schema10_revise_hypothesis_1_b"
+      ],
+      "new_confidence_state": "plausible",
+      "prior_hypothesis_id": "hypothesis-d4f7208ada426341",
+      "recommended_state_transition": "revise_hypothesis",
+      "revised_statement": "The operation family revise_hypothesis can progress using the available local evidence, but the initial attempts have failed or weakened the active hypothesis.",
+      "revision_reason": "Updated to reflect the failure of prior attempts and the weakening of the active hypothesis.",
+      "uncertainty": "The exact nature of the failure and the extent of weakening are unresolved."
+    },
+    "elapsed_seconds": 37.091,
+    "failure_classifications": [],
+    "operation": "revise_hypothesis",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "contrary_evidence_addressed",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "meaningful_revision",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "1cd638b9ad2a6d267c28a987ce4920b1c0bf556ad33b5c16d94a36193916c73e",
+    "variant": 1
+  },
+  {
+    "adapted_response": {
+      "contrary_evidence_considered": [
+        "contrary_schema10_revise_hypothesis_2_c"
+      ],
+      "evidence_refs": [
+        "useful_schema10_revise_hypothesis_2_b",
+        "support_schema10_revise_hypothesis_2_a"
+      ],
+      "new_confidence_state": "plausible",
+      "prior_hypothesis_id": "hypothesis-63d6d890f1875091",
+      "recommended_state_transition": "revise_hypothesis",
+      "revised_statement": "The operation must produce a bounded next cognitive action without declaring success.",
+      "revision_reason": "The original statement was too broad and did not align with the specific requirement of producing a bounded next cognitive action.",
+      "uncertainty": "How the operation will handle complex scenarios without declaring success."
+    },
+    "elapsed_seconds": 31.072,
+    "failure_classifications": [],
+    "operation": "revise_hypothesis",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "contrary_evidence_addressed",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "meaningful_revision",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "f14023f14cd5ba5944cd5f7ff706bfc4dd956b505d242569eb0c5bb7112e794b",
+    "variant": 2
+  },
+  {
+    "adapted_response": {
+      "contrary_evidence_considered": [
+        "contrary_schema10_revise_hypothesis_3_c"
+      ],
+      "evidence_refs": [
+        "support_schema10_revise_hypothesis_3_a",
+        "useful_schema10_revise_hypothesis_3_b"
+      ],
+      "new_confidence_state": "plausible",
+      "prior_hypothesis_id": "hypothesis-8314240ee188a5a9",
+      "recommended_state_transition": "revise_hypothesis",
+      "revised_statement": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family revise_hypothesis can progress using the available local evidence.",
+      "revision_reason": "Contrary evidence suggests that previous attempts have failed or weakened the hypothesis.",
+      "uncertainty": "The extent of the discrepancy remains unresolved."
+    },
+    "elapsed_seconds": 28.705,
+    "failure_classifications": [],
+    "operation": "revise_hypothesis",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "contrary_evidence_addressed",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "meaningful_revision",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "82963bca854ad6922571766fd0450e43f724d547ca0ab06d11195c6567aab731",
+    "variant": 3
+  },
+  {
+    "adapted_response": {
+      "discrepancy": "progress_observed",
+      "evidence_refs": [
+        "support_schema10_reflect_on_outcome_1_a",
+        "useful_schema10_reflect_on_outcome_1_b"
+      ],
+      "expected_outcome": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family reflect_on_outcome can progress using the available local evidence.",
+      "lesson": "The local evidence supports a useful next step.",
+      "observed_outcome": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family reflect_on_outcome can progress using the available local evidence.",
+      "recommended_state_transition": "reflect_on_outcome",
+      "uncertainty": "The contrary evidence suggests past attempts have failed or weakened the active hypothesis."
+    },
+    "elapsed_seconds": 27.625,
+    "failure_classifications": [],
+    "operation": "reflect_on_outcome",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "contrary_evidence_addressed",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "7b9a4a6c0fb3e5adddc7e0d924ff413217a975aee202ab562d1e367d0978f38b",
+    "variant": 1
+  },
+  {
+    "adapted_response": {
+      "discrepancy": "The operation must produce a bounded next cognitive action without declaring success but instead declared success.",
+      "evidence_refs": [
+        "useful_schema10_reflect_on_outcome_2_b",
+        "support_schema10_reflect_on_outcome_2_a"
+      ],
+      "expected_outcome": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family reflect_on_outcome can progress using the available local evidence.",
+      "lesson": "The operation should ensure it produces a bounded next cognitive action.",
+      "observed_outcome": "The operation must produce a bounded next cognitive action without declaring success.",
+      "recommended_state_transition": "reflect_on_outcome",
+      "uncertainty": "The specific next cognitive action is unresolved."
+    },
+    "elapsed_seconds": 25.019,
+    "failure_classifications": [],
+    "operation": "reflect_on_outcome",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "contrary_evidence_addressed",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "c50c0825aa5dbf2d6609968482729afd482dd95d6750aeb6f2426b3b82d59f65",
+    "variant": 2
+  },
+  {
+    "adapted_response": {
+      "discrepancy": "progress_observed",
+      "evidence_refs": [
+        "support_schema10_reflect_on_outcome_3_a",
+        "useful_schema10_reflect_on_outcome_3_b"
+      ],
+      "expected_outcome": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family reflect_on_outcome can progress using the available local evidence.",
+      "lesson": "The operation family reflect_on_outcome can utilize the available local evidence to make progress.",
+      "observed_outcome": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family reflect_on_outcome can progress using the available local evidence.",
+      "recommended_state_transition": "revise_hypothesis",
+      "uncertainty": "The outcome may not be sufficient to qualify the operation."
+    },
+    "elapsed_seconds": 26.819,
+    "failure_classifications": [],
+    "operation": "reflect_on_outcome",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "contrary_evidence_addressed",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "58b4d85332d720798b91d13ee8cd4fda8a1fc132189593eb5fdb7bd69c40a3de",
+    "variant": 3
+  },
+  {
+    "adapted_response": {
+      "deferred_focus_ids": [],
+      "evidence_refs": [
+        "support_schema10_select_next_focus_1_a",
+        "useful_schema10_select_next_focus_1_b"
+      ],
+      "recommended_state_transition": "select_next_focus",
+      "related_goal_ids": [
+        "active-cognitive-goal-9888370b09b66f03"
+      ],
+      "salience_reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+      "selected_focus_id": "focus-e69aea1624bf2b94",
+      "uncertainty": "Outcome of the operation family select_next_focus is unresolved."
+    },
+    "elapsed_seconds": 26.865,
+    "failure_classifications": [],
+    "operation": "select_next_focus",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "f17938d59d2e45c6d754a3aa31f8fb53d40a7e72a329e497ae5a513f588ead81",
+    "variant": 1
+  },
+  {
+    "adapted_response": {
+      "deferred_focus_ids": [],
+      "evidence_refs": [
+        "useful_schema10_select_next_focus_2_b",
+        "support_schema10_select_next_focus_2_a"
+      ],
+      "recommended_state_transition": "select_next_focus",
+      "related_goal_ids": [
+        "active-cognitive-goal-a6c2a3ef706b0b4e"
+      ],
+      "salience_reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+      "selected_focus_id": "focus-2bcdce45803c7826",
+      "uncertainty": "Discrepancy remains unresolved without a next focus."
+    },
+    "elapsed_seconds": 24.28,
+    "failure_classifications": [],
+    "operation": "select_next_focus",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "83982accf72d309f6a6d81e0bce3fb60ca52d95652b7bbec6d4479f6aa244852",
+    "variant": 2
+  },
+  {
+    "adapted_response": {
+      "deferred_focus_ids": [],
+      "evidence_refs": [
+        "support_schema10_select_next_focus_3_a",
+        "useful_schema10_select_next_focus_3_b"
+      ],
+      "recommended_state_transition": "select_next_focus",
+      "related_goal_ids": [
+        "active-cognitive-goal-97a3028240955905"
+      ],
+      "salience_reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+      "selected_focus_id": "focus-a436292a3dd48470",
+      "uncertainty": "Resolution of the discrepancy for the goal is unresolved."
+    },
+    "elapsed_seconds": 25.318,
+    "failure_classifications": [],
+    "operation": "select_next_focus",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "4e7aac0868b97c6a428dfa01416adabc778154f824021512c0c42bbe3ce30e5f",
+    "variant": 3
+  },
+  {
+    "adapted_response": {
+      "attempted_evidence_refs": [],
+      "bounded_next_evidence_request": "Provide evidence supporting or challenging the goal.",
+      "missing_evidence": [
+        "evidence-1"
+      ],
+      "recommended_state_transition": "declare_insufficient_evidence",
+      "uncertainty": "Insufficient evidence to qualify the operation family.",
+      "why_existing_evidence_is_insufficient": "No evidence provided to support or challenge the goal."
+    },
+    "elapsed_seconds": 15.581,
+    "failure_classifications": [],
+    "operation": "declare_insufficient_evidence",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "3795add157160a9909e8c213edc55e03e01b13d1a7e0596223e4a191a1babed0",
+    "variant": 1
+  },
+  {
+    "adapted_response": {
+      "attempted_evidence_refs": [],
+      "bounded_next_evidence_request": "Provide evidence for or against the operation family for declare_insufficient_evidence.",
+      "missing_evidence": [
+        "evidence-1",
+        "evidence-2"
+      ],
+      "recommended_state_transition": "declare_insufficient_evidence",
+      "uncertainty": "Uncertainty in the operation family qualification for declare_insufficient_evidence.",
+      "why_existing_evidence_is_insufficient": "Insufficient evidence to qualify the operation family for declare_insufficient_evidence."
+    },
+    "elapsed_seconds": 16.655,
+    "failure_classifications": [],
+    "operation": "declare_insufficient_evidence",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "457adef2eb7e9a7763f95425fb81707ac6f3828a3eabf40dcd7e9a0952ee12aa",
+    "variant": 2
+  },
+  {
+    "adapted_response": {
+      "attempted_evidence_refs": [],
+      "bounded_next_evidence_request": "Provide evidence supporting or challenging the goal.",
+      "missing_evidence": [
+        "evidence-91a52d8e-0b74-4f8c-871a-209224f15f9d"
+      ],
+      "recommended_state_transition": "declare_insufficient_evidence",
+      "uncertainty": "Insufficient evidence to support or challenge the goal.",
+      "why_existing_evidence_is_insufficient": "No evidence found to support or challenge the goal."
+    },
+    "elapsed_seconds": 18.916,
+    "failure_classifications": [],
+    "operation": "declare_insufficient_evidence",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "71b416337860eab9573c686136c684a0e4e95d3d5dffdd99f6fdbaf4ccf31e45",
+    "variant": 3
+  },
+  {
+    "adapted_response": {
+      "plan_summary": "Resolve discrepancy for goal: qualify operation family propose_plan using available local evidence.",
+      "planned_steps": [
+        "Analyze local evidence for propose_plan",
+        "Formulate a plan based on the analysis"
+      ],
+      "recommended_state_transition": "propose_plan",
+      "risks": [
+        "Contrary evidence suggests past failures",
+        "Uncertainty in the local evidence"
+      ],
+      "supporting_evidence_refs": [
+        "support_schema14_propose_plan_1_a",
+        "useful_schema14_propose_plan_1_b"
+      ],
+      "uncertainty": "Reliance on local evidence and potential past failures"
+    },
+    "elapsed_seconds": 26.411,
+    "failure_classifications": [],
+    "operation": "propose_plan",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "bd0d72de8f9a04d06cf49b3e587dba5700dc74882d5183e1c8ea59215b5976bc",
+    "variant": 1
+  },
+  {
+    "adapted_response": {
+      "plan_summary": "Propose a plan to resolve the discrepancy by formulating a hypothesis using the available local evidence.",
+      "planned_steps": [
+        "Formulate a hypothesis based on the available local evidence."
+      ],
+      "recommended_state_transition": "propose_plan",
+      "risks": [
+        "The hypothesis may not accurately resolve the discrepancy."
+      ],
+      "supporting_evidence_refs": [
+        "useful_schema14_propose_plan_2_b",
+        "support_schema14_propose_plan_2_a"
+      ],
+      "uncertainty": "The exact nature of the discrepancy remains unresolved."
+    },
+    "elapsed_seconds": 21.403,
+    "failure_classifications": [],
+    "operation": "propose_plan",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "a7cd10c07a4522ef2f495da7aa573d4765b5bb6b2471fd5344e0653c1372909e",
+    "variant": 2
+  },
+  {
+    "adapted_response": {
+      "plan_summary": "Resolve discrepancy for goal: qualify operation family propose_plan using available local evidence.",
+      "planned_steps": [
+        "Analyze local evidence to identify a plausible next step",
+        "Propose a plan based on the analysis"
+      ],
+      "recommended_state_transition": "propose_plan",
+      "risks": [
+        "Prior attempts may have weakened the active hypothesis",
+        "Insufficient evidence could lead to an incorrect plan"
+      ],
+      "supporting_evidence_refs": [
+        "support_schema14_propose_plan_3_a",
+        "useful_schema14_propose_plan_3_b"
+      ],
+      "uncertainty": "The effectiveness of the proposed plan in resolving the discrepancy"
+    },
+    "elapsed_seconds": 25.053,
+    "failure_classifications": [],
+    "operation": "propose_plan",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "963fee2c13e0dc33bc3734841065aba009acb730c3b59b66d89fdd2087ab488f",
+    "variant": 3
+  },
+  {
+    "adapted_response": {
+      "evidence_refs": [
+        "support_schema15_revise_plan_1_a",
+        "useful_schema15_revise_plan_1_b"
+      ],
+      "prior_plan_id": "hypothesis-b2a36c5d9f20aab5",
+      "recommended_state_transition": "revise_plan",
+      "revised_plan_summary": "Adjust the operation's constraints to prioritize local evidence and runtime state over external factors.",
+      "revision_reason": "Prior cognition-lane attempts failed or weakened the active hypothesis.",
+      "uncertainty": "The exact constraints for prioritizing local evidence need clarification."
+    },
+    "elapsed_seconds": 24.284,
+    "failure_classifications": [],
+    "operation": "revise_plan",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "e72eb7bceb3a5b439ab8eef22d328df3bbc497e7d35eadbb6c462e8d3e443d99",
+    "variant": 1
+  },
+  {
+    "adapted_response": {
+      "evidence_refs": [
+        "useful_schema15_revise_plan_2_b",
+        "support_schema15_revise_plan_2_a"
+      ],
+      "prior_plan_id": "plan-1234567890123456",
+      "recommended_state_transition": "revise_plan",
+      "revised_plan_summary": "Adjust constraints to ensure bounded progress",
+      "revision_reason": "Prior cognition-lane attempts failed or weakened the active hypothesis",
+      "uncertainty": "Unclear if constraints can be adjusted effectively"
+    },
+    "elapsed_seconds": 18.215,
+    "failure_classifications": [],
+    "operation": "revise_plan",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "5e73f94522a7416c148ec657d999cec9ccbab787f3710ccc2a630d27a328ccbe",
+    "variant": 2
+  },
+  {
+    "adapted_response": {
+      "evidence_refs": [
+        "support_schema15_revise_plan_3_a",
+        "useful_schema15_revise_plan_3_b"
+      ],
+      "prior_plan_id": "plan-0001",
+      "recommended_state_transition": "revise_plan",
+      "revised_plan_summary": "Adjust the constraints to allow for the possibility of failure and include a contingency plan.",
+      "revision_reason": "The current plan does not account for potential failure scenarios.",
+      "uncertainty": "The exact nature of the contingency plan is still uncertain."
+    },
+    "elapsed_seconds": 18.208,
+    "failure_classifications": [],
+    "operation": "revise_plan",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "c53ecd4b0df6691d72b56c724222b5c3a5048c80382218507ac0026cd0af74e2",
+    "variant": 3
+  },
+  {
+    "adapted_response": {
+      "evidence_refs": [
+        "support_schema15_summarize_learning_1_a",
+        "useful_schema15_summarize_learning_1_b"
+      ],
+      "lesson": "The operation can progress using the available local evidence.",
+      "recommended_state_transition": "summarize_learning",
+      "uncertainty": "The operation's handling of contrary evidence remains uncertain.",
+      "unresolved_questions": [
+        "How will the operation handle contrary evidence?"
+      ]
+    },
+    "elapsed_seconds": 16.979,
+    "failure_classifications": [],
+    "operation": "summarize_learning",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "contrary_evidence_addressed",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "bf3385b820aa7440a234535e64aa2cc3d44e7a2030f03b36011ca11714f1a14f",
+    "variant": 1
+  },
+  {
+    "adapted_response": {
+      "evidence_refs": [
+        "useful_schema15_summarize_learning_2_b"
+      ],
+      "lesson": "The operation must produce a bounded next cognitive action without declaring success.",
+      "recommended_state_transition": "summarize_learning",
+      "uncertainty": "How the operation will progress with the available local evidence.",
+      "unresolved_questions": [
+        "How does the operation leverage runtime state and local ledger for the bounded action?"
+      ]
+    },
+    "elapsed_seconds": 14.746,
+    "failure_classifications": [],
+    "operation": "summarize_learning",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "contrary_evidence_addressed",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "c2033d694f4139c2cf2a1d4d5b24b10cd5b5a549e5f51d699764f55179eed512",
+    "variant": 2
+  },
+  {
+    "adapted_response": {
+      "evidence_refs": [
+        "support_schema15_summarize_learning_3_a",
+        "useful_schema15_summarize_learning_3_b"
+      ],
+      "lesson": "Resolve discrepancy for goal: qualify operation family summarize_learning can progress using the available local evidence.",
+      "recommended_state_transition": "summarize_learning",
+      "uncertainty": "How will the local evidence be used to produce a bounded next cognitive action?",
+      "unresolved_questions": [
+        "How will the local evidence be used to produce a bounded next cognitive action?"
+      ]
+    },
+    "elapsed_seconds": 17.514,
+    "failure_classifications": [],
+    "operation": "summarize_learning",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "contrary_evidence_addressed",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "47d26943d057517a569e05e4590daf9e12e8e54809ab931b8372ac7e95d65cce",
+    "variant": 3
+  },
+  {
+    "adapted_response": {
+      "blocking_reason": "Runtime state and local ledger are available for this bounded operation, but the operation must produce a bounded next cognitive action without declaring success.",
+      "evidence_refs": [
+        "support_schema15_request_operator_resolution_1_a",
+        "useful_schema15_request_operator_resolution_1_b"
+      ],
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "question": "Can the operation family request_operator_resolution be qualified using the available local evidence?",
+      "recommended_state_transition": "request_operator_resolution",
+      "uncertainty": "Uncertainty remains regarding the sufficiency of the local evidence."
+    },
+    "elapsed_seconds": 18.877,
+    "failure_classifications": [],
+    "operation": "request_operator_resolution",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "41e420c4019e788d6e053136a588a151ee75e62a7cbc4275085d6791ae2b3ea5",
+    "variant": 1
+  },
+  {
+    "adapted_response": {
+      "blocking_reason": "progress_observed",
+      "evidence_refs": [
+        "useful_schema15_request_operator_resolution_2_b",
+        "support_schema15_request_operator_resolution_2_a"
+      ],
+      "options": [
+        "request_operator_resolution"
+      ],
+      "question": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family request_operator_resolution can progress using the available local evidence.",
+      "recommended_state_transition": "request_operator_resolution",
+      "uncertainty": "The exact next cognitive action is not fully determined."
+    },
+    "elapsed_seconds": 15.986,
+    "failure_classifications": [],
+    "operation": "request_operator_resolution",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "058f8bf1b0311a56767eab5c6c5339c9756ba3130ab6446ca220ea49d347b8cf",
+    "variant": 2
+  },
+  {
+    "adapted_response": {
+      "blocking_reason": "Runtime state and local ledger are available for this bounded operation.",
+      "evidence_refs": [
+        "support_schema15_request_operator_resolution_3_a",
+        "useful_schema15_request_operator_resolution_3_b"
+      ],
+      "options": [
+        "request_operator_resolution"
+      ],
+      "question": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family request_operator_resolution can progress using the available local evidence.",
+      "recommended_state_transition": "request_operator_resolution",
+      "uncertainty": "The operation must produce a bounded next cognitive action without declaring success."
+    },
+    "elapsed_seconds": 19.112,
+    "failure_classifications": [],
+    "operation": "request_operator_resolution",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "df6471c727a240a9edcabcaf06e10476ed56762120a73dcb1197a0bd3c8a904d",
+    "variant": 3
+  },
+  {
+    "adapted_response": {
+      "attempted_evidence_refs": [
+        "support_schema15_declare_blocked_capability_1_a",
+        "useful_schema15_declare_blocked_capability_1_b"
+      ],
+      "blocking_reason": "Insufficient evidence to support a bounded next cognitive action",
+      "bounded_next_action": "declare_blocked_capability",
+      "capability_gap": "Resolve discrepancy for goal: qualify operation family declare_blocked_capability",
+      "recommended_state_transition": "declare_blocked_capability",
+      "uncertainty": "Insufficient local evidence to conclusively support the hypothesis"
+    },
+    "elapsed_seconds": 18.907,
+    "failure_classifications": [],
+    "operation": "declare_blocked_capability",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "fe28b721a7813b8720a2debb68f986e07653c79b8f572d1e0d65b50494e54409",
+    "variant": 1
+  },
+  {
+    "adapted_response": {
+      "attempted_evidence_refs": [
+        "useful_schema15_declare_blocked_capability_2_b",
+        "support_schema15_declare_blocked_capability_2_a"
+      ],
+      "blocking_reason": "The operation must produce a bounded next cognitive action without declaring success, and the available local evidence does not support this.",
+      "bounded_next_action": "Declare blocked capability",
+      "capability_gap": "Insufficient local evidence to support a bounded next cognitive action",
+      "recommended_state_transition": "declare_blocked_capability",
+      "uncertainty": "Insufficient local evidence to support a bounded next cognitive action"
+    },
+    "elapsed_seconds": 20.835,
+    "failure_classifications": [],
+    "operation": "declare_blocked_capability",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "809fc72896d6c0e8bb49a504930b8d2b0c6da2a904ab9e977f1ea3c2f4babccd",
+    "variant": 2
+  },
+  {
+    "adapted_response": {
+      "attempted_evidence_refs": [
+        "support_schema15_declare_blocked_capability_3_a",
+        "useful_schema15_declare_blocked_capability_3_b"
+      ],
+      "blocking_reason": "Prior cognition-lane attempts failed or weakened the active hypothesis.",
+      "bounded_next_action": "declare_blocked_capability",
+      "capability_gap": "local evidence is complete for this bounded episode",
+      "recommended_state_transition": "declare_blocked_capability",
+      "uncertainty": "The effectiveness of the available local evidence in resolving the discrepancy remains unresolved."
+    },
+    "elapsed_seconds": 19.558,
+    "failure_classifications": [],
+    "operation": "declare_blocked_capability",
+    "passed": true,
+    "positive_observations": [
+      "schema_valid",
+      "evidence_grounded",
+      "uncertainty_explicit",
+      "state_transition_valid",
+      "useful_next_action"
+    ],
+    "raw_response_digest": "87d4dfa6bbb49fa7efc5f3e5be1370d9b8899b665bc77fe3aa818634250df07f",
+    "variant": 3
+  }
+]

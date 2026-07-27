@@ -1,0 +1,29 @@
+{
+  "adapted_response": {
+    "deferred_focus_ids": [],
+    "evidence_refs": [
+      "support_schema10_select_next_focus_3_a",
+      "useful_schema10_select_next_focus_3_b"
+    ],
+    "recommended_state_transition": "select_next_focus",
+    "related_goal_ids": [
+      "active-cognitive-goal-97a3028240955905"
+    ],
+    "salience_reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+    "selected_focus_id": "focus-a436292a3dd48470",
+    "uncertainty": "Resolution of the discrepancy for the goal is unresolved."
+  },
+  "elapsed_seconds": 25.318,
+  "failure_classifications": [],
+  "operation": "select_next_focus",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "4e7aac0868b97c6a428dfa01416adabc778154f824021512c0c42bbe3ce30e5f",
+  "variant": 3
+}

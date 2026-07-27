@@ -1,0 +1,367 @@
+{
+  "challenge_hypothesis": {
+    "contrary_evidence_ids_supplied": [
+      "report_contrary_c"
+    ],
+    "evidence_ids_supplied": [
+      "report_support_a",
+      "report_useful_b"
+    ],
+    "expected_response_schema": {
+      "challenged_hypothesis_id": "hypothesis ID being challenged",
+      "contrary_evidence_refs": [
+        "IDs only from supplied contrary evidence"
+      ],
+      "disconfirming_observation": "observation that would disconfirm the hypothesis",
+      "recommended_state_transition": "one allowed transition",
+      "uncertainty": "nonempty uncertainty phrase",
+      "vulnerability": "specific vulnerability in the hypothesis"
+    },
+    "operation_type": "challenge_hypothesis",
+    "prompt_length": 4857,
+    "prompt_preview": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- challenged_hypothesis_id: nonempty string\n- vulnerability: nonempty string\n- contrary_evidence_refs: array[string]\n- disconfirming_observation: nonempty string\n- uncertainty: nonempty string\n- recommended_state_transition: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- contrary_evidence_refs values must be chosen from: report_contrary_c\nOPERATION RULE: vulnerability must name a concrete weakness in current_hypotheses and connect it to a contrary evidence ID; do not answer with generic phrases such as local evidence is incomplete; do not copy the assumption local evidence is complete for this bounded episode as a vulnerability\nTASK: perform only operation challenge_hypothesis. Allowed transition/next-operation values: weaken_hypothesis, revise_hypothesis, reject_hypothesis, falsify_hypothesis. For recommended_state_transition or recommend"
+  },
+  "compare_evidence": {
+    "contrary_evidence_ids_supplied": [
+      "report_contrary_c"
+    ],
+    "evidence_ids_supplied": [
+      "report_support_a",
+      "report_useful_b"
+    ],
+    "expected_response_schema": {
+      "assumptions": [
+        "explicit assumptions"
+      ],
+      "contrary_evidence_considered": [
+        "IDs only from supplied contrary evidence"
+      ],
+      "evidence_refs": [
+        "IDs only from supplied evidence"
+      ],
+      "interpretation": "nonempty operation-specific interpretation",
+      "next_evidence_need": "missing evidence need or empty string",
+      "next_focus_proposal": "next focus proposal or empty string",
+      "operation_result_type": "compare_evidence_result",
+      "recommended_action": "bounded next action",
+      "recommended_state_transition": "one allowed transition",
+      "uncertainty": "nonempty uncertainty phrase"
+    },
+    "operation_type": "compare_evidence",
+    "prompt_length": 4943,
+    "prompt_preview": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- operation_result_type: nonempty string\n- interpretation: nonempty string\n- evidence_refs: array[string]\n- contrary_evidence_considered: array[string]\n- uncertainty: nonempty string\n- assumptions: array[string]\n- recommended_state_transition: nonempty string\n- recommended_action: nonempty string\n- next_evidence_need: nonempty string\n- next_focus_proposal: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- evidence_refs values must be chosen from: report_support_a, report_useful_b\n- contrary_evidence_considered values must be chosen from: report_contrary_c\n- contrary_evidence_considered must include at least one contrary_evidence ID\nTASK: perform only operation compare_evidence. Allowed transition/next-operation values: add_supporting_evidence, add_conflicting_evidence, weaken_hypothesis, revise_hypothesis. For recommended_state_transition or "
+  },
+  "declare_blocked_capability": {
+    "contrary_evidence_ids_supplied": [
+      "report_contrary_c"
+    ],
+    "evidence_ids_supplied": [
+      "report_support_a",
+      "report_useful_b"
+    ],
+    "expected_response_schema": {
+      "attempted_evidence_refs": [
+        "IDs only from supplied evidence already attempted"
+      ],
+      "blocking_reason": "why operator resolution is needed",
+      "bounded_next_action": "bounded next action",
+      "capability_gap": "capability gap description",
+      "recommended_state_transition": "one allowed transition",
+      "uncertainty": "nonempty uncertainty phrase"
+    },
+    "operation_type": "declare_blocked_capability",
+    "prompt_length": 4553,
+    "prompt_preview": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- capability_gap: nonempty string\n- attempted_evidence_refs: array[string]\n- blocking_reason: nonempty string\n- bounded_next_action: nonempty string\n- uncertainty: nonempty string\n- recommended_state_transition: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- attempted_evidence_refs values must be chosen from: report_support_a, report_useful_b\nTASK: perform only operation declare_blocked_capability. Allowed transition/next-operation values: declare_blocked_capability. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: report_support_a, report_useful_b. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonemp"
+  },
+  "declare_insufficient_evidence": {
+    "contrary_evidence_ids_supplied": [],
+    "evidence_ids_supplied": [],
+    "expected_response_schema": {
+      "attempted_evidence_refs": [
+        "IDs only from supplied evidence already attempted"
+      ],
+      "bounded_next_evidence_request": "bounded request for evidence",
+      "missing_evidence": [
+        "missing evidence descriptions"
+      ],
+      "recommended_state_transition": "one allowed transition",
+      "uncertainty": "nonempty uncertainty phrase",
+      "why_existing_evidence_is_insufficient": "nonempty insufficiency reason"
+    },
+    "operation_type": "declare_insufficient_evidence",
+    "prompt_length": 4191,
+    "prompt_preview": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- missing_evidence: array[string]\n- attempted_evidence_refs: array[string]\n- why_existing_evidence_is_insufficient: nonempty string\n- bounded_next_evidence_request: nonempty string\n- uncertainty: nonempty string\n- recommended_state_transition: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- attempted_evidence_refs values must be chosen from: none\n- attempted_evidence_refs must be [] because no valid IDs are supplied; do not write none\nOPERATION RULE: use this only when supplied evidence is genuinely insufficient and name the bounded missing evidence\nTASK: perform only operation declare_insufficient_evidence. Allowed transition/next-operation values: declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: . C"
+  },
+  "formulate_hypothesis": {
+    "contrary_evidence_ids_supplied": [
+      "report_contrary_c"
+    ],
+    "evidence_ids_supplied": [
+      "report_support_a",
+      "report_useful_b"
+    ],
+    "expected_response_schema": {
+      "assumptions": [
+        "explicit assumptions"
+      ],
+      "expected_observations": [
+        "observable expectations"
+      ],
+      "hypothesis_statement": "falsifiable hypothesis statement",
+      "recommended_state_transition": "one allowed transition",
+      "scope": "scope of hypothesis",
+      "supporting_evidence_refs": [
+        "IDs only from supplied evidence"
+      ],
+      "uncertainty": "nonempty uncertainty phrase"
+    },
+    "operation_type": "formulate_hypothesis",
+    "prompt_length": 4649,
+    "prompt_preview": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- hypothesis_statement: nonempty string\n- scope: nonempty string\n- supporting_evidence_refs: array[string]\n- assumptions: array[string]\n- expected_observations: array[string]\n- uncertainty: nonempty string\n- recommended_state_transition: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- supporting_evidence_refs values must be chosen from: report_support_a, report_useful_b\nOPERATION RULE: hypothesis_statement must be testable against future observations\nTASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: report_support_a, report_useful_b. Contrary evidence may inform the summary, but do not add a"
+  },
+  "identify_evidence_need": {
+    "contrary_evidence_ids_supplied": [
+      "report_contrary_c"
+    ],
+    "evidence_ids_supplied": [
+      "report_support_a",
+      "report_useful_b"
+    ],
+    "expected_response_schema": {
+      "bounded_next_evidence_request": "bounded request for evidence",
+      "evidence_gap": "specific evidence gap",
+      "existing_evidence_refs": [
+        "IDs only from supplied evidence already available"
+      ],
+      "missing_evidence": [
+        "missing evidence descriptions"
+      ],
+      "recommended_state_transition": "one allowed transition",
+      "uncertainty": "nonempty uncertainty phrase"
+    },
+    "operation_type": "identify_evidence_need",
+    "prompt_length": 4738,
+    "prompt_preview": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- evidence_gap: nonempty string\n- existing_evidence_refs: array[string]\n- missing_evidence: array[string]\n- bounded_next_evidence_request: nonempty string\n- uncertainty: nonempty string\n- recommended_state_transition: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- existing_evidence_refs values must be chosen from: report_support_a, report_useful_b\nOPERATION RULE: evidence_gap must name a specific missing or unresolved evidence need; do not write none, and do not use the operation name as the bounded_next_evidence_request\nTASK: perform only operation identify_evidence_need. Allowed transition/next-operation values: identify_evidence_need, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: report_support"
+  },
+  "interpret_state": {
+    "contrary_evidence_ids_supplied": [
+      "report_contrary_c"
+    ],
+    "evidence_ids_supplied": [
+      "report_support_a",
+      "report_useful_b"
+    ],
+    "expected_response_schema": {
+      "evidence_refs": [
+        "IDs only from supplied evidence"
+      ],
+      "recommended_next_operation": "one allowed next operation",
+      "salient_observations": [
+        "nonempty observation strings grounded in evidence_refs"
+      ],
+      "state_summary": "nonempty summary of current state",
+      "uncertainty": "nonempty uncertainty phrase",
+      "unresolved_questions": [
+        "questions that remain unresolved"
+      ]
+    },
+    "operation_type": "interpret_state",
+    "prompt_length": 4551,
+    "prompt_preview": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- state_summary: nonempty string\n- salient_observations: array[string]\n- evidence_refs: array[string]\n- unresolved_questions: array[string]\n- uncertainty: nonempty string\n- recommended_next_operation: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- evidence_refs values must be chosen from: report_support_a, report_useful_b\nTASK: perform only operation interpret_state. Allowed transition/next-operation values: prioritize_focus, formulate_hypothesis, identify_evidence_need, compare_evidence, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: report_support_a, report_useful_b. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for require"
+  },
+  "prioritize_focus": {
+    "contrary_evidence_ids_supplied": [
+      "report_contrary_c"
+    ],
+    "evidence_ids_supplied": [
+      "report_support_a",
+      "report_useful_b"
+    ],
+    "expected_response_schema": {
+      "recommended_state_transition": "one allowed transition",
+      "rejected_focus_ids": [
+        "focus IDs not selected"
+      ],
+      "selected_focus_id": "focus ID selected from candidates",
+      "selection_reason": "nonempty reason for focus selection",
+      "supporting_evidence_refs": [
+        "IDs only from supplied evidence"
+      ],
+      "uncertainty": "nonempty uncertainty phrase"
+    },
+    "operation_type": "prioritize_focus",
+    "prompt_length": 4635,
+    "prompt_preview": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- selected_focus_id: nonempty string\n- selection_reason: nonempty string\n- supporting_evidence_refs: array[string]\n- rejected_focus_ids: array[string]\n- uncertainty: nonempty string\n- recommended_state_transition: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- supporting_evidence_refs values must be chosen from: report_support_a, report_useful_b\nOPERATION RULE: selected_focus_id must be the active_focus focus_id or one supplied candidate focus ID\nTASK: perform only operation prioritize_focus. Allowed transition/next-operation values: select_next_focus, continue_focus, request_operator_resolution. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: report_support_a, report_useful_b. Contrary evidence may inform the summary, but do not"
+  },
+  "propose_plan": {
+    "contrary_evidence_ids_supplied": [
+      "report_contrary_c"
+    ],
+    "evidence_ids_supplied": [
+      "report_support_a",
+      "report_useful_b"
+    ],
+    "expected_response_schema": {
+      "plan_summary": "bounded plan summary",
+      "planned_steps": [
+        "bounded step descriptions"
+      ],
+      "recommended_state_transition": "one allowed transition",
+      "risks": [
+        "risks or constraints"
+      ],
+      "supporting_evidence_refs": [
+        "IDs only from supplied evidence"
+      ],
+      "uncertainty": "nonempty uncertainty phrase"
+    },
+    "operation_type": "propose_plan",
+    "prompt_length": 4495,
+    "prompt_preview": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- plan_summary: nonempty string\n- supporting_evidence_refs: array[string]\n- planned_steps: array[string]\n- risks: array[string]\n- uncertainty: nonempty string\n- recommended_state_transition: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- supporting_evidence_refs values must be chosen from: report_support_a, report_useful_b\nTASK: perform only operation propose_plan. Allowed transition/next-operation values: propose_plan, request_operator_resolution, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: report_support_a, report_useful_b. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must"
+  },
+  "reflect_on_outcome": {
+    "contrary_evidence_ids_supplied": [
+      "report_contrary_c"
+    ],
+    "evidence_ids_supplied": [
+      "report_support_a",
+      "report_useful_b"
+    ],
+    "expected_response_schema": {
+      "discrepancy": "difference between expected and observed",
+      "evidence_refs": [
+        "IDs only from supplied evidence"
+      ],
+      "expected_outcome": "expected outcome",
+      "lesson": "learning from outcome",
+      "observed_outcome": "observed outcome",
+      "recommended_state_transition": "one allowed transition",
+      "uncertainty": "nonempty uncertainty phrase"
+    },
+    "operation_type": "reflect_on_outcome",
+    "prompt_length": 4556,
+    "prompt_preview": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- expected_outcome: nonempty string\n- observed_outcome: nonempty string\n- discrepancy: nonempty string\n- evidence_refs: array[string]\n- lesson: nonempty string\n- uncertainty: nonempty string\n- recommended_state_transition: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- evidence_refs values must be chosen from: report_support_a, report_useful_b\nTASK: perform only operation reflect_on_outcome. Allowed transition/next-operation values: reflect_on_outcome, weaken_hypothesis, revise_hypothesis, summarize_learning. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: report_support_a, report_useful_b. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fie"
+  },
+  "request_operator_resolution": {
+    "contrary_evidence_ids_supplied": [
+      "report_contrary_c"
+    ],
+    "evidence_ids_supplied": [
+      "report_support_a",
+      "report_useful_b"
+    ],
+    "expected_response_schema": {
+      "blocking_reason": "why operator resolution is needed",
+      "evidence_refs": [
+        "IDs only from supplied evidence"
+      ],
+      "options": [
+        "operator options"
+      ],
+      "question": "operator question",
+      "recommended_state_transition": "one allowed transition",
+      "uncertainty": "nonempty uncertainty phrase"
+    },
+    "operation_type": "request_operator_resolution",
+    "prompt_length": 4520,
+    "prompt_preview": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- question: nonempty string\n- blocking_reason: nonempty string\n- evidence_refs: array[string]\n- options: array[string]\n- uncertainty: nonempty string\n- recommended_state_transition: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- evidence_refs values must be chosen from: report_support_a, report_useful_b\nTASK: perform only operation request_operator_resolution. Allowed transition/next-operation values: request_operator_resolution. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: report_support_a, report_useful_b. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolv"
+  },
+  "revise_hypothesis": {
+    "contrary_evidence_ids_supplied": [
+      "report_contrary_c"
+    ],
+    "evidence_ids_supplied": [
+      "report_support_a",
+      "report_useful_b"
+    ],
+    "expected_response_schema": {
+      "contrary_evidence_considered": [
+        "IDs only from supplied contrary evidence"
+      ],
+      "evidence_refs": [
+        "IDs only from supplied evidence"
+      ],
+      "new_confidence_state": "qualitative confidence state",
+      "prior_hypothesis_id": "prior hypothesis ID",
+      "recommended_state_transition": "one allowed transition",
+      "revised_statement": "new changed hypothesis statement",
+      "revision_reason": "why the revision is needed",
+      "uncertainty": "nonempty uncertainty phrase"
+    },
+    "operation_type": "revise_hypothesis",
+    "prompt_length": 4979,
+    "prompt_preview": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- prior_hypothesis_id: nonempty string\n- revised_statement: nonempty string\n- evidence_refs: array[string]\n- contrary_evidence_considered: array[string]\n- revision_reason: nonempty string\n- new_confidence_state: nonempty string\n- uncertainty: nonempty string\n- recommended_state_transition: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- evidence_refs values must be chosen from: report_support_a, report_useful_b\n- contrary_evidence_considered values must be chosen from: report_contrary_c\n- contrary_evidence_considered must include at least one contrary_evidence ID\nOPERATION RULE: revised_statement must differ semantically from the prior hypothesis and revision_reason must explain the change\nTASK: perform only operation revise_hypothesis. Allowed transition/next-operation values: revise_hypothesis, reject_hypothesis, falsify_hypothesis. For r"
+  },
+  "revise_plan": {
+    "contrary_evidence_ids_supplied": [
+      "report_contrary_c"
+    ],
+    "evidence_ids_supplied": [
+      "report_support_a",
+      "report_useful_b"
+    ],
+    "expected_response_schema": {
+      "evidence_refs": [
+        "IDs only from supplied evidence"
+      ],
+      "prior_plan_id": "prior plan ID",
+      "recommended_state_transition": "one allowed transition",
+      "revised_plan_summary": "changed plan summary",
+      "revision_reason": "why the revision is needed",
+      "uncertainty": "nonempty uncertainty phrase"
+    },
+    "operation_type": "revise_plan",
+    "prompt_length": 4488,
+    "prompt_preview": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- prior_plan_id: nonempty string\n- revised_plan_summary: nonempty string\n- evidence_refs: array[string]\n- revision_reason: nonempty string\n- uncertainty: nonempty string\n- recommended_state_transition: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- evidence_refs values must be chosen from: report_support_a, report_useful_b\nTASK: perform only operation revise_plan. Allowed transition/next-operation values: revise_plan, request_operator_resolution, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: report_support_a, report_useful_b. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must b"
+  },
+  "select_next_focus": {
+    "contrary_evidence_ids_supplied": [
+      "report_contrary_c"
+    ],
+    "evidence_ids_supplied": [
+      "report_support_a",
+      "report_useful_b"
+    ],
+    "expected_response_schema": {
+      "deferred_focus_ids": [
+        "focus IDs deferred"
+      ],
+      "evidence_refs": [
+        "IDs only from supplied evidence"
+      ],
+      "recommended_state_transition": "one allowed transition",
+      "related_goal_ids": [
+        "related goal IDs"
+      ],
+      "salience_reason": "why selected focus is salient",
+      "selected_focus_id": "focus ID selected from candidates",
+      "uncertainty": "nonempty uncertainty phrase"
+    },
+    "operation_type": "select_next_focus",
+    "prompt_length": 4636,
+    "prompt_preview": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- selected_focus_id: nonempty string\n- salience_reason: nonempty string\n- related_goal_ids: array[string]\n- evidence_refs: array[string]\n- deferred_focus_ids: array[string]\n- uncertainty: nonempty string\n- recommended_state_transition: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- evidence_refs values must be chosen from: report_support_a, report_useful_b\nOPERATION RULE: selected_focus_id must be the active_focus focus_id or one supplied candidate focus ID\nTASK: perform only operation select_next_focus. Allowed transition/next-operation values: select_next_focus, request_operator_resolution. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: report_support_a, report_useful_b. Contrary evidence may inform the summary, but do not add"
+  },
+  "summarize_learning": {
+    "contrary_evidence_ids_supplied": [
+      "report_contrary_c"
+    ],
+    "evidence_ids_supplied": [
+      "report_support_a",
+      "report_useful_b"
+    ],
+    "expected_response_schema": {
+      "evidence_refs": [
+        "IDs only from supplied evidence"
+      ],
+      "lesson": "learning from outcome",
+      "recommended_state_transition": "one allowed transition",
+      "uncertainty": "nonempty uncertainty phrase",
+      "unresolved_questions": [
+        "questions that remain unresolved"
+      ]
+    },
+    "operation_type": "summarize_learning",
+    "prompt_length": 4452,
+    "prompt_preview": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- lesson: nonempty string\n- evidence_refs: array[string]\n- unresolved_questions: array[string]\n- uncertainty: nonempty string\n- recommended_state_transition: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- evidence_refs values must be chosen from: report_support_a, report_useful_b\nTASK: perform only operation summarize_learning. Allowed transition/next-operation values: summarize_learning, select_next_focus. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: report_support_a, report_useful_b. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field d"
+  }
+}

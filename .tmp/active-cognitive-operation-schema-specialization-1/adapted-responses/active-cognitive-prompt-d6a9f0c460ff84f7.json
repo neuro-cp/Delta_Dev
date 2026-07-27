@@ -1,0 +1,17 @@
+{
+  "adapted_response": {
+    "bounded_next_evidence_request": "identify_evidence_need",
+    "evidence_gap": "none",
+    "existing_evidence_refs": [
+      "support_schema12_identify_evidence_need_3_a"
+    ],
+    "missing_evidence": [],
+    "recommended_state_transition": "identify_evidence_need",
+    "uncertainty": "discrepancy between observed and expected progress"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"evidence_gap\":\"none\",\"existing_evidence_refs\":[\"support_schema12_identify_evidence_need_3_a\"],\"missing_evidence\":[],\"bounded_next_evidence_request\":\"identify_evidence_need\",\"uncertainty\":\"discrepancy between observed and expected progress\",\"recommended_state_transition\":\"identify_evidence_need\"}",
+  "raw_response_digest": "0e7ac8993030610ab08be9b3a030b74bda9d1059b5bc0bb342b2a5ff743f8e6b",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

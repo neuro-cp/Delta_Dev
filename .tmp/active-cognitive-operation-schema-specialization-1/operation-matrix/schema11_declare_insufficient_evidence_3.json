@@ -1,0 +1,24 @@
+{
+  "adapted_response": {
+    "attempted_evidence_refs": [],
+    "bounded_next_evidence_request": "Provide evidence supporting or challenging the goal.",
+    "missing_evidence": [
+      "evidence-91a52d8e-0b74-4f8c-871a-209224f15f9d"
+    ],
+    "recommended_state_transition": "declare_insufficient_evidence",
+    "uncertainty": "Insufficient evidence to support or challenge the goal.",
+    "why_existing_evidence_is_insufficient": "No evidence found to support or challenge the goal."
+  },
+  "elapsed_seconds": 18.916,
+  "failure_classifications": [],
+  "operation": "declare_insufficient_evidence",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "71b416337860eab9573c686136c684a0e4e95d3d5dffdd99f6fdbaf4ccf31e45",
+  "variant": 3
+}

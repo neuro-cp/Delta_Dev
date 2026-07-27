@@ -1,0 +1,39 @@
+{
+  "attempt_label": "schema13_identify_evidence_need",
+  "completed_calls": 1,
+  "failed_family": "identify_evidence_need",
+  "operation": "identify_evidence_need",
+  "passed_calls": 0,
+  "results": [
+    {
+      "adapted_response": {
+        "bounded_next_evidence_request": "support_schema13_identify_evidence_need_1_a",
+        "evidence_gap": "local evidence supporting or challenging the goal",
+        "existing_evidence_refs": [
+          "support_schema13_identify_evidence_need_1_a",
+          "useful_schema13_identify_evidence_need_1_b"
+        ],
+        "missing_evidence": [
+          "contrary_schema13_identify_evidence_need_1_c"
+        ],
+        "recommended_state_transition": "identify_evidence_need",
+        "uncertainty": "the extent to which local evidence supports or challenges the goal"
+      },
+      "elapsed_seconds": 24.731,
+      "failure_classifications": [
+        "generic_filler"
+      ],
+      "operation": "identify_evidence_need",
+      "passed": false,
+      "positive_observations": [
+        "schema_valid",
+        "evidence_grounded",
+        "uncertainty_explicit",
+        "state_transition_valid",
+        "useful_next_action"
+      ],
+      "raw_response_digest": "e9a5478c87471a5775992478da76b2c67200872b47562bef5fb6aeda3ed9fbe4",
+      "variant": 1
+    }
+  ]
+}

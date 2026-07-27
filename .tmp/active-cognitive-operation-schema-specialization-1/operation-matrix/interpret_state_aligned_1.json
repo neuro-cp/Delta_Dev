@@ -1,0 +1,32 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "support_interpret_aligned_1_a",
+      "useful_interpret_aligned_1_b",
+      "contrary_interpret_aligned_1_c"
+    ],
+    "recommended_next_operation": "formulate_hypothesis",
+    "salient_observations": [
+      "Runtime evidence available",
+      "The next cognitive operation must be selected without claiming success"
+    ],
+    "state_summary": "Persistent state, local ledger, and operator command path exist.",
+    "uncertainty": "How the available local evidence will support a bounded useful step.",
+    "unresolved_questions": [
+      "How can the universal template be adapted to avoid blank fields or evidence prose in future interpret_state attempts?"
+    ]
+  },
+  "elapsed_seconds": 24.418,
+  "failure_classifications": [],
+  "operation": "interpret_state",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "16e55e1cf74dde05a8900f68980d299ab38b16fa4f1ccf761b3fcbba9825352d",
+  "variant": 1
+}

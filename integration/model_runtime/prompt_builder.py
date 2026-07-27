@@ -7,6 +7,8 @@ Prompt construction and test harness.
 from typing import Dict, Any
 import json
 
+from integration.model_runtime.execution_lanes import ModelExecutionLane, normalize_execution_lane
+
 
 def build_input_payload(question: str) -> Dict[str, Any]:
     """
@@ -28,6 +30,9 @@ def build_prompt(payload: Dict[str, Any]) -> str:
     """
 
     question = payload.get("question", "").strip()
+    lane = normalize_execution_lane(payload.get("execution_lane"), task_type=str(payload.get("task_type") or ""))
+    if lane == ModelExecutionLane.COGNITIVE_OPERATION:
+        return question
     previous = payload.get("previous_model_output")
     attended_context = payload.get("attended_context") or []
     working_memory = payload.get("working_memory") or []

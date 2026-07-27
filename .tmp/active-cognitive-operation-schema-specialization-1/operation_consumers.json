@@ -1,0 +1,17 @@
+{
+  "challenge_hypothesis": "bridged through contrary_evidence_refs to hypothesis weakening/revision path",
+  "compare_evidence": "adds supporting/conflicting evidence or weakens/revises hypothesis",
+  "declare_blocked_capability": "bridged to blocked capability interpretation/action",
+  "declare_insufficient_evidence": "bridged to bounded evidence request and insufficient evidence state",
+  "formulate_hypothesis": "creates HypothesisRecord through propose_hypothesis transition",
+  "identify_evidence_need": "bridged to next_evidence_need and assumptions/missing evidence, but model qualification blocked",
+  "interpret_state": "bridged to interpretation summary, next evidence need, and next operation proposal",
+  "prioritize_focus": "bridged to selected focus action and focus proposal",
+  "propose_plan": "bridged to planned action text and evidence refs",
+  "reflect_on_outcome": "records outcome discrepancy and learning/revision transitions",
+  "request_operator_resolution": "bridged to operator question/action and blocking interpretation",
+  "revise_hypothesis": "creates revision child and supersedes prior active hypothesis",
+  "revise_plan": "bridged to revised plan interpretation and revision action",
+  "select_next_focus": "bridged to selected focus proposal/action",
+  "summarize_learning": "creates learning update and useful artifact through summarize_learning transition"
+}

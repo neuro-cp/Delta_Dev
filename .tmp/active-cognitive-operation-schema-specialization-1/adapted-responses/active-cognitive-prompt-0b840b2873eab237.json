@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "useful_schema15_summarize_learning_2_b"
+    ],
+    "lesson": "The operation must produce a bounded next cognitive action without declaring success.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "How the operation will progress with the available local evidence.",
+    "unresolved_questions": [
+      "How does the operation leverage runtime state and local ledger for the bounded action?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"The operation must produce a bounded next cognitive action without declaring success.\",\"evidence_refs\":[\"useful_schema15_summarize_learning_2_b\"],\"unresolved_questions\":[\"How does the operation leverage runtime state and local ledger for the bounded action?\"],\"uncertainty\":\"How the operation will progress with the available local evidence.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "f8088c4c719d56b822703567b6a9e803d5be5ffda24a1e6281fb2b2f15554c58",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

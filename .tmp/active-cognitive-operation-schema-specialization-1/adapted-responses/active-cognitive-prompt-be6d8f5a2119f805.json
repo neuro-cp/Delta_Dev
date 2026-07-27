@@ -1,0 +1,25 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "contrary_interpret_final_2_c",
+      "useful_interpret_final_2_b",
+      "support_interpret_final_2_a"
+    ],
+    "recommended_next_operation": "formulate_hypothesis",
+    "salient_observations": [
+      "The universal template caused blank fields or evidence prose in earlier interpret_state attempts.",
+      "The next cognitive operation must be selected without claiming success.",
+      "Persistent state, local ledger, and operator command path exist."
+    ],
+    "state_summary": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify interpret_state specialized schema variant 2 can progress using the available local evidence.",
+    "uncertainty": "The nature of the progress remains uncertain.",
+    "unresolved_questions": [
+      "How will the progress be achieved?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"evidence_refs\":[\"contrary_interpret_final_2_c\",\"useful_interpret_final_2_b\",\"support_interpret_final_2_a\"],\"recommended_next_operation\":\"formulate_hypothesis\",\"salient_observations\":[\"The universal template caused blank fields or evidence prose in earlier interpret_state attempts.\",\"The next cognitive operation must be selected without claiming success.\",\"Persistent state, local ledger, and operator command path exist.\"],\"state_summary\":\"A plausible working hypothesis is that Resolve discrepancy for goal: qualify interpret_state specialized schema variant 2 can progress using the available local evidence.\",\"uncertainty\":\"The nature of the progress remains uncertain.\",\"unresolved_questions\":[\"How will the progress be achieved?\"]}",
+  "raw_response_digest": "d9c9ecbba1f60f475f4884f2d958918508c467304ab6afc1448999bcf74f0c32",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

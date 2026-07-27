@@ -1,0 +1,25 @@
+{
+  "adapted_response": {
+    "attempted_evidence_refs": [],
+    "bounded_next_evidence_request": "Provide evidence for or against the operation family for declare_insufficient_evidence.",
+    "missing_evidence": [
+      "evidence-1",
+      "evidence-2"
+    ],
+    "recommended_state_transition": "declare_insufficient_evidence",
+    "uncertainty": "Uncertainty in the operation family qualification for declare_insufficient_evidence.",
+    "why_existing_evidence_is_insufficient": "Insufficient evidence to qualify the operation family for declare_insufficient_evidence."
+  },
+  "elapsed_seconds": 16.655,
+  "failure_classifications": [],
+  "operation": "declare_insufficient_evidence",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "457adef2eb7e9a7763f95425fb81707ac6f3828a3eabf40dcd7e9a0952ee12aa",
+  "variant": 2
+}

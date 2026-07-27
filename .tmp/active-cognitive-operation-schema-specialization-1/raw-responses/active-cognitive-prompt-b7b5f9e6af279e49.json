@@ -1,0 +1,76 @@
+{
+  "ledger_request_id": "shared-local-model-request-3977522bb5640f00",
+  "ledger_result_id": "shared-local-model-result-63a82e5981342480",
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "prompt_snapshot_id": "active-cognitive-prompt-b7b5f9e6af279e49",
+  "raw_response": "{ \"selected_focus_id\": \"focus-e69aea1624bf2b94\", \"salience_reason\": \"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\", \"related_goal_ids\": [ \"active-cognitive-goal-9888370b09b66f03\" ], \"evidence_refs\": [ \"support_schema10_select_next_focus_1_a\", \"useful_schema10_select_next_focus_1_b\" ], \"deferred_focus_ids\": [], \"uncertainty\": \"Outcome of the operation family select_next_focus is unresolved.\", \"recommended_state_transition\": \"select_next_focus\" }",
+  "raw_response_digest": "a799df51ca3e326b3b5dc8c3bc6bdff6e21a61c2cf1451cab0e6c0b5f7e81641",
+  "terminal_status": {
+    "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+    "approved_at": "2026-07-26T06:51:24+00:00",
+    "authority_state": "operator_authorized_active_cognitive_loop",
+    "claimed_at": "2026-07-26T06:51:24+00:00",
+    "completed_at": "2026-07-26T06:51:50+00:00",
+    "consumed_state": "terminal",
+    "created_at": "2026-07-26T06:51:24+00:00",
+    "execution_attempt_count": 1,
+    "execution_claim_id": "shared-local-model-execution-claim-560a6ac15476f295",
+    "failure_classification": "",
+    "lifecycle_state": "completed",
+    "mission_id": "active-cognitive-goal-9888370b09b66f03",
+    "mission_information_need_identity": "focus-e69aea1624bf2b94",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - selected_focus_id: nonempty string - salience_reason: nonempty string - related_goal_ids: array[string] - evidence_refs: array[string] - deferred_focus_ids: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - evidence_refs values must be chosen from: support_schema10_select_next_focus_1_a, useful_schema10_select_next_focus_1_b OPERATION RULE: selected_focus_id must be the active_focus focus_id or one supplied candidate focus ID TASK: perform only operation select_next_focus. Allowed transition/next-operation values: select_next_focus, request_operator_resolution. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: support_schema10_select_next_focus_1_a, useful_schema10_select_next_focus_1_b. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":1,\"description\":\"Resolve discrepancy for goal: qualify operation family select_next_focus\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"support_schema10_select_next_focus_1_a\",\"useful_schema10_select_next_focus_1_b\",\"contrary_schema10_select_next_focus_1_c\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-e69aea1624bf2b94\",\"related_goal_ids\":[\"active-cognitive-goal-9888370b09b66f03\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"Prior cognition-lane attempts failed or weakened the active hypothesis.\",\"evidence_id\":\"contrary_schema10_select_next_focus_1_c\",\"source\":\"matrix\",\"summary\":\"Contrary evidence\"}],\"current_goal\":{\"expected_state\":\"qualified structured response produced\",\"goal_id\":\"active-cognitive-goal-9888370b09b66f03\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"qualify operation family select_next_focus\"},\"current_hypotheses\":[{\"assumptions\":[\"local evidence is complete for this bounded episode\"],\"confidence_state\":\"plausible\",\"created_at\":\"2026-07-26T06:51:24+00:00\",\"disposition\":\"needs_challenge\",\"evidence_against\":[\"contrary_schema10_select_next_focus_1_c\"],\"evidence_for\":[\"support_schema10_select_next_focus_1_a\",\"useful_schema10_select_next_focus_1_b\"],\"expected_observations\":[\"local evidence should support a bounded useful step\"],\"hypothesis_id\":\"hypothesis-e52162c96bddfa2d\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-e69aea1624bf2b94\",\"originating_goal_id\":\"active-cognitive-goal-9888370b09b66f03\",\"provenance\":[\"cognitive-operation-305375f552006daf\"],\"revised_at\":\"\",\"revision_parent_id\":\"\",\"revision_reason\":\"\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: qualify operation family select_next_focus\",\"statement\":\"A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family select_next_focus can progress using the available local evidence.\"}],\"evidence_for\":[{\"content\":\"Runtime state and local ledger are available for this bounded operation.\",\"evidence_id\":\"support_schema10_select_next_focus_1_a\",\"source\":\"matrix\",\"summary\":\"Supporting evidence\"},{\"content\":\"The operation must produce a bounded next cognitive action without declaring success.\",\"evidence_id\":\"useful_schema10_select_next_focus_1_b\",\"source\":\"matrix\",\"summary\":\"Useful target\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-26T06:51:24+00:00\",\"discrepancy\":\"progress_observed\",\"expected\":\"Perform formulate_hypothesis for the active focus using only referenced evidence.\",\"observed\":\"A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family select_next_focus can progress using the available local evidence.\",\"operation_id\":\"cognitive-operation-305375f552006daf\",\"outcome_id\":\"outcome-c99e8cfe0479c6db\"}]}",
+    "question_objective": "select_next_focus",
+    "record_digest": "da786de5a7e6dc0e17939210bcd5e15032d20ffcb7d95d3fd74917e1fcaa0ab9",
+    "record_version": 1,
+    "request_digest": "b7a67ea2b30d477788bd5ba5498b1e244190dc847a3c687d1af689afd4d59eed",
+    "request_id": "shared-local-model-request-3977522bb5640f00",
+    "requester_reference": "cognitive-operation-ffeeddb9ba3f0ec9",
+    "requester_type": "active_cognitive_loop",
+    "result_id": "shared-local-model-result-63a82e5981342480",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    },
+    "semantic_identity": "active-cognitive-ledger-request-db94e86fddd96a00",
+    "session_reference": "active-cognitive-cycle-a2b6a2e1f5039266"
+  }
+}

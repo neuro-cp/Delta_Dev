@@ -1,0 +1,82 @@
+{
+  "authority_constraints": [
+    "no network",
+    "no protected paths",
+    "no commit",
+    "bounded local actions only"
+  ],
+  "contrary_evidence_ids_supplied": [
+    "contrary_schema10_revise_hypothesis_2_c"
+  ],
+  "cycle_id": "active-cognitive-cycle-0971cc648e59de51",
+  "evidence_ids_supplied": [
+    "useful_schema10_revise_hypothesis_2_b",
+    "support_schema10_revise_hypothesis_2_a"
+  ],
+  "expected_response_schema": {
+    "contrary_evidence_considered": [
+      "IDs only from supplied contrary evidence"
+    ],
+    "evidence_refs": [
+      "IDs only from supplied evidence"
+    ],
+    "new_confidence_state": "qualitative confidence state",
+    "prior_hypothesis_id": "prior hypothesis ID",
+    "recommended_state_transition": "one allowed transition",
+    "revised_statement": "new changed hypothesis statement",
+    "revision_reason": "why the revision is needed",
+    "uncertainty": "nonempty uncertainty phrase"
+  },
+  "focus_id": "focus-2080c7654cdc07c7",
+  "goal_id": "active-cognitive-goal-7f6736985c971c9b",
+  "model_identity": "schema10-local-model",
+  "operation_request": {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-0971cc648e59de51",
+    "evidence_constraints": [
+      "contrary_schema10_revise_hypothesis_2_c",
+      "useful_schema10_revise_hypothesis_2_b",
+      "support_schema10_revise_hypothesis_2_a"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-2080c7654cdc07c7",
+    "goal_id": "active-cognitive-goal-7f6736985c971c9b",
+    "model_identity": "schema10-local-model",
+    "operation_id": "cognitive-operation-158cab391570194b",
+    "operation_type": "revise_hypothesis",
+    "provenance": [
+      "working-memory-packet-681222fd83c49f02"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform revise_hypothesis for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "19676fb7887b70b3f76285c484895a2a6779d46488ad2b32ae4ae9753c93a08f"
+  },
+  "operation_type": "revise_hypothesis",
+  "prompt_byte_digest": "c30dfb9eaef8a5b24bea433d63131556e391b1cca170b08dff752b55a4436709",
+  "prompt_length": 5408,
+  "prompt_schema_version": "active_cognitive_prompt_qualification_1_v1",
+  "prompt_snapshot_id": "active-cognitive-prompt-3591ff73509dc00b",
+  "prompt_text": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- prior_hypothesis_id: nonempty string\n- revised_statement: nonempty string\n- evidence_refs: array[string]\n- contrary_evidence_considered: array[string]\n- revision_reason: nonempty string\n- new_confidence_state: nonempty string\n- uncertainty: nonempty string\n- recommended_state_transition: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- evidence_refs values must be chosen from: useful_schema10_revise_hypothesis_2_b, support_schema10_revise_hypothesis_2_a\n- contrary_evidence_considered values must be chosen from: contrary_schema10_revise_hypothesis_2_c\n- contrary_evidence_considered must include at least one contrary_evidence ID\nOPERATION RULE: revised_statement must differ semantically from the prior hypothesis and revision_reason must explain the change\nTASK: perform only operation revise_hypothesis. Allowed transition/next-operation values: revise_hypothesis, reject_hypothesis, falsify_hypothesis. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: useful_schema10_revise_hypothesis_2_b, support_schema10_revise_hypothesis_2_a. Use contrary_evidence_considered only from contrary_evidence IDs: contrary_schema10_revise_hypothesis_2_c. If contrary_evidence is not empty, the interpretation must state how it changes or weakens the hypothesis Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied.\nCONTEXT_JSON:\n{\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":1,\"description\":\"Resolve discrepancy for goal: qualify operation family revise_hypothesis\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"contrary_schema10_revise_hypothesis_2_c\",\"useful_schema10_revise_hypothesis_2_b\",\"support_schema10_revise_hypothesis_2_a\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-2080c7654cdc07c7\",\"related_goal_ids\":[\"active-cognitive-goal-7f6736985c971c9b\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"Prior cognition-lane attempts failed or weakened the active hypothesis.\",\"evidence_id\":\"contrary_schema10_revise_hypothesis_2_c\",\"source\":\"matrix\",\"summary\":\"Contrary evidence\"}],\"current_goal\":{\"expected_state\":\"qualified structured response produced\",\"goal_id\":\"active-cognitive-goal-7f6736985c971c9b\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"qualify operation family revise_hypothesis\"},\"current_hypotheses\":[{\"assumptions\":[\"local evidence is complete for this bounded episode\"],\"confidence_state\":\"plausible\",\"created_at\":\"2026-07-26T06:48:24+00:00\",\"disposition\":\"needs_challenge\",\"evidence_against\":[\"contrary_schema10_revise_hypothesis_2_c\"],\"evidence_for\":[\"useful_schema10_revise_hypothesis_2_b\",\"support_schema10_revise_hypothesis_2_a\"],\"expected_observations\":[\"local evidence should support a bounded useful step\"],\"hypothesis_id\":\"hypothesis-63d6d890f1875091\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-2080c7654cdc07c7\",\"originating_goal_id\":\"active-cognitive-goal-7f6736985c971c9b\",\"provenance\":[\"cognitive-operation-a10297596138bb08\"],\"revised_at\":\"\",\"revision_parent_id\":\"\",\"revision_reason\":\"\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: qualify operation family revise_hypothesis\",\"statement\":\"A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family revise_hypothesis can progress using the available local evidence.\"}],\"evidence_for\":[{\"content\":\"The operation must produce a bounded next cognitive action without declaring success.\",\"evidence_id\":\"useful_schema10_revise_hypothesis_2_b\",\"source\":\"matrix\",\"summary\":\"Useful target\"},{\"content\":\"Runtime state and local ledger are available for this bounded operation.\",\"evidence_id\":\"support_schema10_revise_hypothesis_2_a\",\"source\":\"matrix\",\"summary\":\"Supporting evidence\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-26T06:48:24+00:00\",\"discrepancy\":\"progress_observed\",\"expected\":\"Perform formulate_hypothesis for the active focus using only referenced evidence.\",\"observed\":\"A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family revise_hypothesis can progress using the available local evidence.\",\"operation_id\":\"cognitive-operation-a10297596138bb08\",\"outcome_id\":\"outcome-9034daf14c05cc12\"}]}",
+  "request_identity": "active-cognitive-ledger-request-95b2c542c53dca44",
+  "retry_sequence": 0,
+  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+  "working_memory_packet_digest": "19676fb7887b70b3f76285c484895a2a6779d46488ad2b32ae4ae9753c93a08f",
+  "working_memory_packet_id": "working-memory-packet-681222fd83c49f02"
+}

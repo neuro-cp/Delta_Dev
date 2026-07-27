@@ -1,0 +1,20 @@
+{
+  "adapted_response": {
+    "blocking_reason": "progress_observed",
+    "evidence_refs": [
+      "useful_schema15_request_operator_resolution_2_b",
+      "support_schema15_request_operator_resolution_2_a"
+    ],
+    "options": [
+      "request_operator_resolution"
+    ],
+    "question": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family request_operator_resolution can progress using the available local evidence.",
+    "recommended_state_transition": "request_operator_resolution",
+    "uncertainty": "The exact next cognitive action is not fully determined."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"question\":\"A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family request_operator_resolution can progress using the available local evidence.\",\"blocking_reason\":\"progress_observed\",\"evidence_refs\":[\"useful_schema15_request_operator_resolution_2_b\",\"support_schema15_request_operator_resolution_2_a\"],\"options\":[\"request_operator_resolution\"],\"uncertainty\":\"The exact next cognitive action is not fully determined.\",\"recommended_state_transition\":\"request_operator_resolution\"}",
+  "raw_response_digest": "26a7845991fc4247c5f28fa300fd82c31bab9ced9d01a958fe2fda1c3ec87ed1",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

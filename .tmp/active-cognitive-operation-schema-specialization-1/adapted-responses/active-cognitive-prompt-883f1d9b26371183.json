@@ -1,0 +1,25 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "support_interpret_schema_3_a",
+      "useful_interpret_schema_3_b",
+      "contrary_interpret_schema_3_c"
+    ],
+    "recommended_next_operation": "formulate_hypothesis",
+    "salient_observations": [
+      "Runtime evidence available",
+      "The next cognitive operation must be selected without claiming success",
+      "The universal template caused blank fields or evidence prose in earlier interpret_state attempts"
+    ],
+    "state_summary": "Resolve discrepancy for goal: qualify interpret_state specialized schema variant 3",
+    "uncertainty": "Outcome of hypothesis formulation is uncertain",
+    "unresolved_questions": [
+      "Can the available evidence resolve the discrepancy?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"evidence_refs\":[\"support_interpret_schema_3_a\",\"useful_interpret_schema_3_b\",\"contrary_interpret_schema_3_c\"],\"recommended_next_operation\":\"formulate_hypothesis\",\"salient_observations\":[\"Runtime evidence available\",\"The next cognitive operation must be selected without claiming success\",\"The universal template caused blank fields or evidence prose in earlier interpret_state attempts\"],\"state_summary\":\"Resolve discrepancy for goal: qualify interpret_state specialized schema variant 3\",\"uncertainty\":\"Outcome of hypothesis formulation is uncertain\",\"unresolved_questions\":[\"Can the available evidence resolve the discrepancy?\"]}",
+  "raw_response_digest": "34fe9616a16fb0d66871f519236be07a1b3bf6ff6669a02fe86b14002b51e0bc",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

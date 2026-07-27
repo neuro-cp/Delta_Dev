@@ -1,0 +1,28 @@
+{
+  "adapted_response": {
+    "discrepancy": "The operation must produce a bounded next cognitive action without declaring success but instead declared success.",
+    "evidence_refs": [
+      "useful_schema10_reflect_on_outcome_2_b",
+      "support_schema10_reflect_on_outcome_2_a"
+    ],
+    "expected_outcome": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family reflect_on_outcome can progress using the available local evidence.",
+    "lesson": "The operation should ensure it produces a bounded next cognitive action.",
+    "observed_outcome": "The operation must produce a bounded next cognitive action without declaring success.",
+    "recommended_state_transition": "reflect_on_outcome",
+    "uncertainty": "The specific next cognitive action is unresolved."
+  },
+  "elapsed_seconds": 25.019,
+  "failure_classifications": [],
+  "operation": "reflect_on_outcome",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "contrary_evidence_addressed",
+    "uncertainty_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "c50c0825aa5dbf2d6609968482729afd482dd95d6750aeb6f2426b3b82d59f65",
+  "variant": 2
+}

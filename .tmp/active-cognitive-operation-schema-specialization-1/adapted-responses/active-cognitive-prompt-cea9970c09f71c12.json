@@ -1,0 +1,22 @@
+{
+  "adapted_response": {
+    "contrary_evidence_considered": [
+      "contrary_schema10_revise_hypothesis_1_c"
+    ],
+    "evidence_refs": [
+      "support_schema10_revise_hypothesis_1_a",
+      "useful_schema10_revise_hypothesis_1_b"
+    ],
+    "new_confidence_state": "plausible",
+    "prior_hypothesis_id": "hypothesis-d4f7208ada426341",
+    "recommended_state_transition": "revise_hypothesis",
+    "revised_statement": "The operation family revise_hypothesis can progress using the available local evidence, but the initial attempts have failed or weakened the active hypothesis.",
+    "revision_reason": "Updated to reflect the failure of prior attempts and the weakening of the active hypothesis.",
+    "uncertainty": "The exact nature of the failure and the extent of weakening are unresolved."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{ \"prior_hypothesis_id\": \"hypothesis-d4f7208ada426341\", \"revised_statement\": \"The operation family revise_hypothesis can progress using the available local evidence, but the initial attempts have failed or weakened the active hypothesis.\", \"evidence_refs\": [ \"support_schema10_revise_hypothesis_1_a\", \"useful_schema10_revise_hypothesis_1_b\" ], \"contrary_evidence_considered\": [ \"contrary_schema10_revise_hypothesis_1_c\" ], \"revision_reason\": \"Updated to reflect the failure of prior attempts and the weakening of the active hypothesis.\", \"new_confidence_state\": \"plausible\", \"uncertainty\": \"The exact nature of the failure and the extent of weakening are unresolved.\", \"recommended_state_transition\": \"revise_hypothesis\" }",
+  "raw_response_digest": "69967c7129dbfd21eb05bb5251ca458e69035abd3c5d3a9d658f977be5492de4",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

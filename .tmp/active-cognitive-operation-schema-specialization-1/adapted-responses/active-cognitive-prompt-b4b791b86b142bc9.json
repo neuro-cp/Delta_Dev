@@ -1,0 +1,27 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "local evidence is complete for this bounded episode"
+    ],
+    "contrary_evidence_considered": [
+      "contrary_prioritize_focus_2_c"
+    ],
+    "evidence_refs": [
+      "useful_prioritize_focus_2_b",
+      "support_prioritize_focus_2_a",
+      "contrary_prioritize_focus_2_c"
+    ],
+    "interpretation": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family prioritize_focus can progress using the available local evidence. However, contrary evidence from prior attempts suggests that the current hypothesis may be less robust than initially thought.",
+    "next_evidence_need": "local evidence that confirms or refutes the current working hypothesis",
+    "next_focus_proposal": "select_next_focus",
+    "operation_result_type": "hypothesis",
+    "recommended_action": "continue_focus",
+    "recommended_state_transition": "continue_focus",
+    "uncertainty": "How robust is the current working hypothesis given the contrary evidence from prior attempts?"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"assumptions\":[\"local evidence is complete for this bounded episode\"],\"contrary_evidence_considered\":[\"contrary_prioritize_focus_2_c\"],\"evidence_refs\":[\"useful_prioritize_focus_2_b\",\"support_prioritize_focus_2_a\",\"contrary_prioritize_focus_2_c\"],\"interpretation\":\"A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family prioritize_focus can progress using the available local evidence. However, contrary evidence from prior attempts suggests that the current hypothesis may be less robust than initially thought.\",\"next_evidence_need\":\"local evidence that confirms or refutes the current working hypothesis\",\"next_focus_proposal\":\"select_next_focus\",\"operation_result_type\":\"hypothesis\",\"recommended_action\":\"continue_focus\",\"recommended_state_transition\":\"continue_focus\",\"uncertainty\":\"How robust is the current working hypothesis given the contrary evidence from prior attempts?\"}",
+  "raw_response_digest": "749445f90753b81b268d6a2c2ce9ea6758cd408eb44dcfb754fb2b6c2fac34d9",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

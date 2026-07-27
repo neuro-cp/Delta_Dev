@@ -1,0 +1,20 @@
+{
+  "adapted_response": {
+    "bounded_next_evidence_request": "support_schema13_identify_evidence_need_1_a",
+    "evidence_gap": "local evidence supporting or challenging the goal",
+    "existing_evidence_refs": [
+      "support_schema13_identify_evidence_need_1_a",
+      "useful_schema13_identify_evidence_need_1_b"
+    ],
+    "missing_evidence": [
+      "contrary_schema13_identify_evidence_need_1_c"
+    ],
+    "recommended_state_transition": "identify_evidence_need",
+    "uncertainty": "the extent to which local evidence supports or challenges the goal"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{ \"evidence_gap\": \"local evidence supporting or challenging the goal\", \"existing_evidence_refs\": [ \"support_schema13_identify_evidence_need_1_a\", \"useful_schema13_identify_evidence_need_1_b\" ], \"missing_evidence\": [ \"contrary_schema13_identify_evidence_need_1_c\" ], \"bounded_next_evidence_request\": \"support_schema13_identify_evidence_need_1_a\", \"uncertainty\": \"the extent to which local evidence supports or challenges the goal\", \"recommended_state_transition\": \"identify_evidence_need\" }",
+  "raw_response_digest": "92e5fbed3380190d82ed7e5962c128e81a354cb3979e2928a9e4dce5b9da0a48",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

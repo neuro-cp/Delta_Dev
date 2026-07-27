@@ -1,0 +1,93 @@
+{
+  "attempt_label": "schema10_reflect_on_outcome",
+  "completed_calls": 3,
+  "failed_family": "",
+  "operation": "reflect_on_outcome",
+  "passed_calls": 3,
+  "results": [
+    {
+      "adapted_response": {
+        "discrepancy": "progress_observed",
+        "evidence_refs": [
+          "support_schema10_reflect_on_outcome_1_a",
+          "useful_schema10_reflect_on_outcome_1_b"
+        ],
+        "expected_outcome": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family reflect_on_outcome can progress using the available local evidence.",
+        "lesson": "The local evidence supports a useful next step.",
+        "observed_outcome": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family reflect_on_outcome can progress using the available local evidence.",
+        "recommended_state_transition": "reflect_on_outcome",
+        "uncertainty": "The contrary evidence suggests past attempts have failed or weakened the active hypothesis."
+      },
+      "elapsed_seconds": 27.625,
+      "failure_classifications": [],
+      "operation": "reflect_on_outcome",
+      "passed": true,
+      "positive_observations": [
+        "schema_valid",
+        "evidence_grounded",
+        "contrary_evidence_addressed",
+        "uncertainty_explicit",
+        "state_transition_valid",
+        "useful_next_action"
+      ],
+      "raw_response_digest": "7b9a4a6c0fb3e5adddc7e0d924ff413217a975aee202ab562d1e367d0978f38b",
+      "variant": 1
+    },
+    {
+      "adapted_response": {
+        "discrepancy": "The operation must produce a bounded next cognitive action without declaring success but instead declared success.",
+        "evidence_refs": [
+          "useful_schema10_reflect_on_outcome_2_b",
+          "support_schema10_reflect_on_outcome_2_a"
+        ],
+        "expected_outcome": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family reflect_on_outcome can progress using the available local evidence.",
+        "lesson": "The operation should ensure it produces a bounded next cognitive action.",
+        "observed_outcome": "The operation must produce a bounded next cognitive action without declaring success.",
+        "recommended_state_transition": "reflect_on_outcome",
+        "uncertainty": "The specific next cognitive action is unresolved."
+      },
+      "elapsed_seconds": 25.019,
+      "failure_classifications": [],
+      "operation": "reflect_on_outcome",
+      "passed": true,
+      "positive_observations": [
+        "schema_valid",
+        "evidence_grounded",
+        "contrary_evidence_addressed",
+        "uncertainty_explicit",
+        "state_transition_valid",
+        "useful_next_action"
+      ],
+      "raw_response_digest": "c50c0825aa5dbf2d6609968482729afd482dd95d6750aeb6f2426b3b82d59f65",
+      "variant": 2
+    },
+    {
+      "adapted_response": {
+        "discrepancy": "progress_observed",
+        "evidence_refs": [
+          "support_schema10_reflect_on_outcome_3_a",
+          "useful_schema10_reflect_on_outcome_3_b"
+        ],
+        "expected_outcome": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family reflect_on_outcome can progress using the available local evidence.",
+        "lesson": "The operation family reflect_on_outcome can utilize the available local evidence to make progress.",
+        "observed_outcome": "A plausible working hypothesis is that Resolve discrepancy for goal: qualify operation family reflect_on_outcome can progress using the available local evidence.",
+        "recommended_state_transition": "revise_hypothesis",
+        "uncertainty": "The outcome may not be sufficient to qualify the operation."
+      },
+      "elapsed_seconds": 26.819,
+      "failure_classifications": [],
+      "operation": "reflect_on_outcome",
+      "passed": true,
+      "positive_observations": [
+        "schema_valid",
+        "evidence_grounded",
+        "contrary_evidence_addressed",
+        "uncertainty_explicit",
+        "state_transition_valid",
+        "useful_next_action"
+      ],
+      "raw_response_digest": "58b4d85332d720798b91d13ee8cd4fda8a1fc132189593eb5fdb7bd69c40a3de",
+      "variant": 3
+    }
+  ]
+}

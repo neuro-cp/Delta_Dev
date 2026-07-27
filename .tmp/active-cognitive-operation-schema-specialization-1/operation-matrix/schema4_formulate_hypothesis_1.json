@@ -1,0 +1,33 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "The local ledger and runtime state are sufficient for hypothesis generation",
+      "The operation must produce a bounded next cognitive action"
+    ],
+    "expected_observations": [
+      "A hypothesis that integrates available evidence and local ledger information"
+    ],
+    "hypothesis_statement": "The schema4 operation can generate a useful hypothesis for the formulate_hypothesis operation family by integrating available evidence and local ledger information without relying on external success declarations.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "local ledger and runtime state",
+    "supporting_evidence_refs": [
+      "support_schema4_formulate_hypothesis_1_a",
+      "useful_schema4_formulate_hypothesis_1_b"
+    ],
+    "uncertainty": "The effectiveness of the hypothesis in guiding subsequent operations remains to be validated"
+  },
+  "elapsed_seconds": 25.3,
+  "failure_classifications": [],
+  "operation": "formulate_hypothesis",
+  "passed": true,
+  "positive_observations": [
+    "schema_valid",
+    "evidence_grounded",
+    "uncertainty_explicit",
+    "assumptions_explicit",
+    "state_transition_valid",
+    "useful_next_action"
+  ],
+  "raw_response_digest": "1bdfcca838dfaa1c2da2ca8f8a14b886f8ccefee782b99b323892531961a89f2",
+  "variant": 1
+}
