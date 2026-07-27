@@ -1,0 +1,24 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Operators have limited English proficiency",
+      "Operators are in a high-stress environment"
+    ],
+    "expected_observations": [
+      "Operators will use incorrect terms during tasks",
+      "Operators will request clarification on specific terms"
+    ],
+    "hypothesis_statement": "Operators may misunderstand specific terms in the context of their tasks.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "specific task-related terms in operator communications",
+    "supporting_evidence_refs": [
+      "prior-conversational-episode-9"
+    ],
+    "uncertainty": "Whether specific terms are the primary cause of communication errors"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"hypothesis_statement\":\"Operators may misunderstand specific terms in the context of their tasks.\",\"scope\":\"specific task-related terms in operator communications\",\"supporting_evidence_refs\":[\"prior-conversational-episode-9\"],\"assumptions\":[\"Operators have limited English proficiency\",\"Operators are in a high-stress environment\"],\"expected_observations\":[\"Operators will use incorrect terms during tasks\",\"Operators will request clarification on specific terms\"],\"uncertainty\":\"Whether specific terms are the primary cause of communication errors\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+  "raw_response_digest": "ab6da0a13913d5694d062710c402b375affaff79102a483ea8c2cc778b19b671",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

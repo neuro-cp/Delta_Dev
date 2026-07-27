@@ -1,0 +1,17 @@
+{
+  "advanced_tabs_after_request": [
+    "Conversation",
+    "Goals",
+    "Activity",
+    "Evaluation",
+    "Memory",
+    "Settings",
+    "Developer"
+  ],
+  "developer_tabs": [
+    "RC3",
+    "RC4",
+    "RC5",
+    "Diagnostics"
+  ]
+}

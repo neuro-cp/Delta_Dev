@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "operator-natural-goal"
+    ],
+    "lesson": "The operator's goal is to improve their English comprehension for better communication. This goal aligns with the hypothesis that engaging in correction-linked strategy revision and subsequent transfer checks will enhance their comprehension.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "The long-term impact of the correction-linked strategy revision on the operator's comprehension is uncertain.",
+    "unresolved_questions": [
+      "How will the operator's engagement in the correction-linked strategy revision process affect their long-term comprehension?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"The operator's goal is to improve their English comprehension for better communication. This goal aligns with the hypothesis that engaging in correction-linked strategy revision and subsequent transfer checks will enhance their comprehension.\",\"evidence_refs\":[\"operator-natural-goal\"],\"unresolved_questions\":[\"How will the operator's engagement in the correction-linked strategy revision process affect their long-term comprehension?\"],\"uncertainty\":\"The long-term impact of the correction-linked strategy revision on the operator's comprehension is uncertain.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "dcc2740b37b7ebd21498ac6130ae828988dd4eedf37beccb0777b5f0673cc660",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

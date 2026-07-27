@@ -1,0 +1,13 @@
+{
+  "default_tabs": [
+    "Conversation"
+  ],
+  "visible_surface": [
+    "chat transcript",
+    "text input",
+    "Send",
+    "subtle runtime status",
+    "Stop",
+    "Advanced"
+  ]
+}

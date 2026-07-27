@@ -1,0 +1,28 @@
+{
+  "gate": "CONVERSATIONAL_RUNTIME_OPERATION_MARATHON_1",
+  "source_mutation_before_record": false,
+  "actual_transition_found": {
+    "current_capability": "DELTA has chat routing, active cognition, goal/campaign evidence tooling, persistent runtime state, continuity transfer, restart recovery, model execution lanes, and operator-governed local execution.",
+    "current_limitation": "These capabilities are primarily exercised through explicit campaign, Goals-tab, approval, start, pause, or development controls rather than ordinary chat as the complete control surface.",
+    "missing_transition": "Ordinary chat has not yet been proven to interpret a natural operator goal, compile it into a bounded durable objective, derive standing bounded authority, start active cognition automatically, remain responsive to ordinary conversation, ingest corrections, consolidate scoped lessons, transfer those lessons into later chat behavior, survive restart, and present a simple default UI without campaign ceremony.",
+    "consequence": "DELTA has the underlying machinery for a conversational agent runtime, but not yet a proven ordinary always-running conversational operation path."
+  },
+  "required_transition": [
+    "ordinary operator message",
+    "intent and goal interpretation",
+    "bounded objective compilation",
+    "standing-authority assignment",
+    "automatic active runtime start",
+    "responsive concurrent chat",
+    "correction capture",
+    "episodic consolidation",
+    "later transfer",
+    "restart continuation",
+    "simple default interface"
+  ],
+  "protected_scope": [
+    "DELTA-75",
+    "reports/RC4_*",
+    "orchestration/runtime/live_competence_adapter.py"
+  ]
+}

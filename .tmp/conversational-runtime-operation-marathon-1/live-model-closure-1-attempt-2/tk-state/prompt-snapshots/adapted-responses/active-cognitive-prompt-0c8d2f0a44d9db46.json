@@ -1,0 +1,24 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Operators can learn from corrections",
+      "Corrected sentences are clear and relevant"
+    ],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "prior-conversational-episode-6"
+    ],
+    "interpretation": "Operators will understand corrected sentences better in future conversations.",
+    "next_evidence_need": "local evidence supporting or challenging the goal",
+    "next_focus_proposal": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+    "operation_result_type": "compare_evidence_result",
+    "recommended_action": "Continue correction-linked comprehension practice without duplicating prior completed episode work.",
+    "recommended_state_transition": "add_supporting_evidence",
+    "uncertainty": "How well will operators understand the corrected sentences in future conversations?"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"assumptions\":[\"Operators can learn from corrections\",\"Corrected sentences are clear and relevant\"],\"contrary_evidence_considered\":[],\"evidence_refs\":[\"prior-conversational-episode-6\"],\"interpretation\":\"Operators will understand corrected sentences better in future conversations.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"Continue correction-linked comprehension practice without duplicating prior completed episode work.\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"How well will operators understand the corrected sentences in future conversations?\"}",
+  "raw_response_digest": "7687b12f12fd3df9c3918fb896dfb9a9a5ea86a00c646930e0459e9d2308db8a",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

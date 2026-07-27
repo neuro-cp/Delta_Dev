@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "prior-conversational-episode-12"
+    ],
+    "lesson": "Operators may misunderstand specific English phrases due to unfamiliarity or lack of context.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "Need more examples and detailed analysis to fully address the issue.",
+    "unresolved_questions": [
+      "How can we effectively address and mitigate misunderstandings in real-time conversations?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"Operators may misunderstand specific English phrases due to unfamiliarity or lack of context.\",\"evidence_refs\":[\"prior-conversational-episode-12\"],\"unresolved_questions\":[\"How can we effectively address and mitigate misunderstandings in real-time conversations?\"],\"uncertainty\":\"Need more examples and detailed analysis to fully address the issue.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "59b5f9d91eca6b148999a4c2fdc238038693ffadeea643e7d88bfcd3cd8877ad",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

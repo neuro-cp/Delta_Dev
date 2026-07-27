@@ -1,0 +1,19 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "prior-conversational-episode-3"
+    ],
+    "lesson": "Operators can retain and apply corrections in real-time during conversations to improve comprehension in future interactions.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "Uncertainty regarding the long-term impact of real-time corrections on comprehension retention.",
+    "unresolved_questions": [
+      "How can corrections be made more explicit to ensure full understanding?",
+      "What are the long-term effects of real-time corrections on comprehension retention?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"Operators can retain and apply corrections in real-time during conversations to improve comprehension in future interactions.\",\"evidence_refs\":[\"prior-conversational-episode-3\"],\"unresolved_questions\":[\"How can corrections be made more explicit to ensure full understanding?\",\"What are the long-term effects of real-time corrections on comprehension retention?\"],\"uncertainty\":\"Uncertainty regarding the long-term impact of real-time corrections on comprehension retention.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "a243df7198252e5100b60deea0f0b448a588ed3440f147260dbc2d2fec5d2e91",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

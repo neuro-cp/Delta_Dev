@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "prior-conversational-episode-6"
+    ],
+    "lesson": "Operators will understand corrected sentences better in future conversations.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "Uncertainty about the exact metrics for measuring improved comprehension.",
+    "unresolved_questions": [
+      "How will the understanding of corrected sentences be measured in future conversations?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{ \"lesson\": \"Operators will understand corrected sentences better in future conversations.\", \"evidence_refs\": [ \"prior-conversational-episode-6\" ], \"unresolved_questions\": [ \"How will the understanding of corrected sentences be measured in future conversations?\" ], \"uncertainty\": \"Uncertainty about the exact metrics for measuring improved comprehension.\", \"recommended_state_transition\": \"summarize_learning\" }",
+  "raw_response_digest": "c5db6066231c8a54ad0eb3492d9644962d912fb6691834eb87266d6cfa630a9b",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

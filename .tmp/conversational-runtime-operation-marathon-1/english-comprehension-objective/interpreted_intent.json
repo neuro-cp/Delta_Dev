@@ -1,0 +1,14 @@
+{
+  "authority_required": [],
+  "confidence": 0.84,
+  "intent_type": "persistent_or_session_goal",
+  "matched_signals": [
+    "explicit_goal_language",
+    "learning_or_improvement_target",
+    "scope_or_duration"
+  ],
+  "persistence_scope": "session",
+  "risk_class": "safe_internal",
+  "schema_version": "conversational_runtime_operation_marathon_1_v1",
+  "target_turn_id": ""
+}

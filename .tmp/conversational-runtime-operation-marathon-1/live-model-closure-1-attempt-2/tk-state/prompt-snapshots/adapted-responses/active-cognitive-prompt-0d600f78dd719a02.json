@@ -1,0 +1,24 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Operators can retain and apply corrections in real-time",
+      "Support staff can provide accurate and relevant corrections"
+    ],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "prior-conversational-episode-3"
+    ],
+    "interpretation": "Operators will understand and use corrections made during conversation to improve comprehension in future interactions.",
+    "next_evidence_need": "local evidence supporting or challenging the goal",
+    "next_focus_proposal": "Continue correction-linked comprehension practice without duplicating prior completed episode work.",
+    "operation_result_type": "compare_evidence_result",
+    "recommended_action": "Continue correction-linked comprehension practice without duplicating prior completed episode work.",
+    "recommended_state_transition": "add_supporting_evidence",
+    "uncertainty": "Whether operators can retain and apply corrections in real-time."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"assumptions\":[\"Operators can retain and apply corrections in real-time\",\"Support staff can provide accurate and relevant corrections\"],\"contrary_evidence_considered\":[],\"evidence_refs\":[\"prior-conversational-episode-3\"],\"interpretation\":\"Operators will understand and use corrections made during conversation to improve comprehension in future interactions.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"Continue correction-linked comprehension practice without duplicating prior completed episode work.\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"Continue correction-linked comprehension practice without duplicating prior completed episode work.\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"Whether operators can retain and apply corrections in real-time.\"}",
+  "raw_response_digest": "f67a99f760a8016a7f912b345d8def5da148af060a027709fbeabdc8197ed664",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

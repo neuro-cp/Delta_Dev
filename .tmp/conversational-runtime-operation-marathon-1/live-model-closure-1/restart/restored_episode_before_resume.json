@@ -1,0 +1,742 @@
+{
+  "actions": [],
+  "attention": {
+    "abandonment_reason": "",
+    "active_focus_id": "focus-d9d9055720107c50",
+    "active_focus_summary": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+    "active_goal_ids": [
+      "active-cognitive-goal-acc1044183eab608"
+    ],
+    "attention_state_id": "active-attention-d27dafdb31432ae6",
+    "candidate_focuses": [
+      {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "local_model_semantic_operation",
+        "creation_sequence": 3,
+        "description": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+        "evidence_need": "local evidence supporting or challenging the goal",
+        "evidence_refs": [
+          "operator-natural-goal"
+        ],
+        "expected_value": "useful_progress",
+        "focus_id": "focus-d9d9055720107c50",
+        "related_goal_ids": [
+          "active-cognitive-goal-acc1044183eab608"
+        ],
+        "salience_categories": [
+          "operator_priority",
+          "goal_discrepancy",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "goal_discrepancy",
+        "urgency": "medium"
+      }
+    ],
+    "continuation_reason": "",
+    "cycle_sequence": 3,
+    "evidence_refs": [
+      "operator-natural-goal"
+    ],
+    "focus_started_at": "2026-07-27T04:32:50+00:00",
+    "interruption_priority": "none",
+    "interruption_reason": "",
+    "last_progress_at": "2026-07-27T04:33:51+00:00",
+    "previous_focus_ids": [
+      "focus-453bb529bd6f2803",
+      "focus-11f2c00f149cc0cf"
+    ],
+    "progress_summary": "selected focus for cognitive operation",
+    "return_condition": "",
+    "salience_reasons": [
+      "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+      "operator_priority",
+      "goal_discrepancy",
+      "expected_useful_progress"
+    ],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "stagnation_count": 0,
+    "switch_reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+    "transition_journal": [
+      {
+        "at": "2026-07-27T04:32:50+00:00",
+        "focus_id": "focus-453bb529bd6f2803",
+        "reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "sequence": 1,
+        "transition": "establish_focus"
+      },
+      {
+        "at": "2026-07-27T04:33:23+00:00",
+        "focus_id": "focus-11f2c00f149cc0cf",
+        "reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "sequence": 2,
+        "transition": "switch_focus"
+      },
+      {
+        "at": "2026-07-27T04:33:51+00:00",
+        "focus_id": "focus-d9d9055720107c50",
+        "reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "sequence": 3,
+        "transition": "switch_focus"
+      }
+    ],
+    "unresolved_questions": []
+  },
+  "budgets": {
+    "max_actions": 4,
+    "max_cycles": 8,
+    "max_model_calls": 6,
+    "max_packet_items": 8
+  },
+  "completed": true,
+  "cycles": [
+    {
+      "completed": true,
+      "cycle_id": "active-cognitive-cycle-c7fed5149b8873bb",
+      "focus_id": "focus-453bb529bd6f2803",
+      "operation_id": "cognitive-operation-1d442b1515706090",
+      "outcome_id": "outcome-dae075e4bf85ab7a",
+      "packet_digest": "3842671abe8a74108f9f3d873dfd42d9ee974a24939499354677d8199205899f",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "sequence": 1,
+      "summary": "The operator will improve their English comprehension by actively engaging in correction-linked strategy revision and subsequent transfer checks."
+    },
+    {
+      "completed": true,
+      "cycle_id": "active-cognitive-cycle-c21be81d6e035da4",
+      "focus_id": "focus-11f2c00f149cc0cf",
+      "operation_id": "cognitive-operation-0b128aec2f0e49ad",
+      "outcome_id": "outcome-bcf3223d0c4b112a",
+      "packet_digest": "3764106dec22f8f60bc973bd03149a59a0ecdf34eac7efd3a1e71391661e0bfd",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "sequence": 2,
+      "summary": "The hypothesis is plausible because it is aligned with the operator's stated goal and the natural language evidence provided."
+    },
+    {
+      "completed": true,
+      "cycle_id": "active-cognitive-cycle-c7b9ccd985947a36",
+      "focus_id": "focus-d9d9055720107c50",
+      "operation_id": "cognitive-operation-03a284d8ae16faa6",
+      "outcome_id": "outcome-980b159063cc3cb3",
+      "packet_digest": "53853225adbe4483166ddf7e653ee9a6fee342defe1724a113e2521ae0f2b01c",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "sequence": 3,
+      "summary": "The operator's goal is to improve their English comprehension for better communication. This goal aligns with the hypothesis that engaging in correction-linked strategy revision and subsequent transfer checks will enhance their comprehensio"
+    }
+  ],
+  "episode_id": "active-cognitive-episode-ae2445a48f4a791e",
+  "evidence": [
+    {
+      "content": "",
+      "evidence_id": "operator-natural-goal",
+      "exists": true,
+      "kind": "local_evidence",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "ordinary_chat",
+      "summary": "Your goal today is to improve your English comprehension so we can communicate better."
+    }
+  ],
+  "goals": [
+    {
+      "expected_state": "Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.",
+      "goal_id": "active-cognitive-goal-acc1044183eab608",
+      "observed_state": "",
+      "priority": "operator_requested",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "summary": "Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer."
+    }
+  ],
+  "hypotheses": [
+    {
+      "assumptions": [
+        "The operator is willing to engage in the correction-linked strategy revision process"
+      ],
+      "confidence_state": "supported",
+      "created_at": "2026-07-27T04:33:22+00:00",
+      "disposition": "needs_challenge",
+      "evidence_against": [],
+      "evidence_for": [
+        "operator-natural-goal"
+      ],
+      "expected_observations": [
+        "local evidence should support a bounded useful step"
+      ],
+      "hypothesis_id": "hypothesis-a4579409b1ee552f",
+      "lifecycle_state": "active",
+      "originating_focus_id": "focus-453bb529bd6f2803",
+      "originating_goal_id": "active-cognitive-goal-acc1044183eab608",
+      "provenance": [
+        "cognitive-operation-1d442b1515706090",
+        "cognitive-operation-0b128aec2f0e49ad"
+      ],
+      "revised_at": "2026-07-27T04:33:51+00:00",
+      "revision_parent_id": "",
+      "revision_reason": "The hypothesis is plausible because it is aligned with the operator's stated goal and the natural language evidence provided.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "scope": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+      "statement": "The operator will improve their English comprehension by actively engaging in correction-linked strategy revision and subsequent transfer checks."
+    }
+  ],
+  "learning_updates": [
+    {
+      "created_at": "2026-07-27T04:34:18+00:00",
+      "evidence_refs": [
+        "operator-natural-goal"
+      ],
+      "learning_id": "learning-980b159063cc3cb3",
+      "summary": "The operator's goal is to improve their English comprehension for better communication. This goal aligns with the hypothesis that engaging in correction-linked strategy revision and subsequent transfer checks will enhance their comprehension."
+    }
+  ],
+  "loop_state": "completed",
+  "model_call_count": 3,
+  "next_focus_candidates": [
+    {
+      "authority_need": "none_for_local_analysis",
+      "blocking_state": "",
+      "capability_need": "local_model_semantic_operation",
+      "creation_sequence": 3,
+      "description": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+      "evidence_need": "local evidence supporting or challenging the goal",
+      "evidence_refs": [
+        "operator-natural-goal"
+      ],
+      "expected_value": "useful_progress",
+      "focus_id": "focus-d9d9055720107c50",
+      "related_goal_ids": [
+        "active-cognitive-goal-acc1044183eab608"
+      ],
+      "salience_categories": [
+        "operator_priority",
+        "goal_discrepancy",
+        "expected_useful_progress"
+      ],
+      "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "goal_discrepancy",
+      "urgency": "medium"
+    }
+  ],
+  "operation_requests": [
+    {
+      "authority_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "budget": {
+        "max_response_words": 220,
+        "max_retries": 1
+      },
+      "cycle_id": "active-cognitive-cycle-c7fed5149b8873bb",
+      "evidence_constraints": [
+        "operator-natural-goal"
+      ],
+      "expected_output_schema": {
+        "contrary_evidence_considered": "list",
+        "evidence_refs": "list",
+        "interpretation": "string",
+        "operation_result_type": "string",
+        "recommended_state_transition": "string",
+        "uncertainty": "string"
+      },
+      "focus_id": "focus-453bb529bd6f2803",
+      "goal_id": "active-cognitive-goal-acc1044183eab608",
+      "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+      "operation_id": "cognitive-operation-1d442b1515706090",
+      "operation_type": "formulate_hypothesis",
+      "provenance": [
+        "working-memory-packet-5edc9e9ad1be84bd"
+      ],
+      "retry_allowance": 1,
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "task": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+      "working_memory_packet_digest": "3842671abe8a74108f9f3d873dfd42d9ee974a24939499354677d8199205899f"
+    },
+    {
+      "authority_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "budget": {
+        "max_response_words": 220,
+        "max_retries": 1
+      },
+      "cycle_id": "active-cognitive-cycle-c21be81d6e035da4",
+      "evidence_constraints": [
+        "operator-natural-goal"
+      ],
+      "expected_output_schema": {
+        "contrary_evidence_considered": "list",
+        "evidence_refs": "list",
+        "interpretation": "string",
+        "operation_result_type": "string",
+        "recommended_state_transition": "string",
+        "uncertainty": "string"
+      },
+      "focus_id": "focus-11f2c00f149cc0cf",
+      "goal_id": "active-cognitive-goal-acc1044183eab608",
+      "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+      "operation_id": "cognitive-operation-0b128aec2f0e49ad",
+      "operation_type": "compare_evidence",
+      "provenance": [
+        "working-memory-packet-0280f47e67db8f3c"
+      ],
+      "retry_allowance": 1,
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "task": "Perform compare_evidence for the active focus using only referenced evidence.",
+      "working_memory_packet_digest": "3764106dec22f8f60bc973bd03149a59a0ecdf34eac7efd3a1e71391661e0bfd"
+    },
+    {
+      "authority_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "budget": {
+        "max_response_words": 220,
+        "max_retries": 1
+      },
+      "cycle_id": "active-cognitive-cycle-c7b9ccd985947a36",
+      "evidence_constraints": [
+        "operator-natural-goal"
+      ],
+      "expected_output_schema": {
+        "contrary_evidence_considered": "list",
+        "evidence_refs": "list",
+        "interpretation": "string",
+        "operation_result_type": "string",
+        "recommended_state_transition": "string",
+        "uncertainty": "string"
+      },
+      "focus_id": "focus-d9d9055720107c50",
+      "goal_id": "active-cognitive-goal-acc1044183eab608",
+      "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+      "operation_id": "cognitive-operation-03a284d8ae16faa6",
+      "operation_type": "summarize_learning",
+      "provenance": [
+        "working-memory-packet-02a3d6f22dd9305c"
+      ],
+      "retry_allowance": 1,
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "task": "Perform summarize_learning for the active focus using only referenced evidence.",
+      "working_memory_packet_digest": "53853225adbe4483166ddf7e653ee9a6fee342defe1724a113e2521ae0f2b01c"
+    }
+  ],
+  "operation_results": [
+    {
+      "accepted": true,
+      "assumptions": [
+        "The operator is willing to engage in the correction-linked strategy revision process"
+      ],
+      "contrary_evidence_considered": [],
+      "evidence_refs": [
+        "operator-natural-goal"
+      ],
+      "interpretation": "The operator will improve their English comprehension by actively engaging in correction-linked strategy revision and subsequent transfer checks.",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "next_evidence_need": "",
+      "next_focus_proposal": "",
+      "operation_id": "cognitive-operation-1d442b1515706090",
+      "operation_result_type": "formulate_hypothesis_result",
+      "raw_model_output": "{\n\"hypothesis_statement\": \"The operator will improve their English comprehension by actively engaging in correction-linked strategy revision and subsequent transfer checks.\",\n\"scope\": \"Operator-specific English comprehension during conversation\",\n\"supporting_evidence_refs\": [\"operator-natural-goal\"],\n\"assumptions\": [\"The operator is willing to engage in the correction-linked strategy revision process\"],\n\"expected_observations\": [\"Operator demonstrates improved comprehension during subsequent conversations\", \"Operator applies corrections learned from previous conversations\"],\n\"uncertainty\": \"Whether the operator will consistently engage in the correction process and apply the learned strategies\",\n\"recommended_state_transition\": \"propose_hypothesis\"\n}",
+      "recommended_action": "Operator-specific English comprehension during conversation",
+      "recommended_state_transition": "propose_hypothesis",
+      "rejection_reasons": [],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "uncertainty": "Whether the operator will consistently engage in the correction process and apply the learned strategies"
+    },
+    {
+      "accepted": true,
+      "assumptions": [
+        "The operator is willing to engage in the correction-linked strategy revision process"
+      ],
+      "contrary_evidence_considered": [],
+      "evidence_refs": [
+        "operator-natural-goal"
+      ],
+      "interpretation": "The hypothesis is plausible because it is aligned with the operator's stated goal and the natural language evidence provided.",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "next_evidence_need": "local evidence supporting or challenging the goal",
+      "next_focus_proposal": "none_for_local_analysis",
+      "operation_id": "cognitive-operation-0b128aec2f0e49ad",
+      "operation_result_type": "compare_evidence_result",
+      "raw_model_output": "{\"assumptions\":[\"The operator is willing to engage in the correction-linked strategy revision process\"],\"contrary_evidence_considered\":[],\"evidence_refs\":[\"operator-natural-goal\"],\"interpretation\":\"The hypothesis is plausible because it is aligned with the operator's stated goal and the natural language evidence provided.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"none_for_local_analysis\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"continue with the current strategy\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"The exact methods for improvement and the operator's willingness to follow through are uncertain.\"}",
+      "recommended_action": "continue with the current strategy",
+      "recommended_state_transition": "add_supporting_evidence",
+      "rejection_reasons": [],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "uncertainty": "The exact methods for improvement and the operator's willingness to follow through are uncertain."
+    },
+    {
+      "accepted": true,
+      "assumptions": [],
+      "contrary_evidence_considered": [],
+      "evidence_refs": [
+        "operator-natural-goal"
+      ],
+      "interpretation": "The operator's goal is to improve their English comprehension for better communication. This goal aligns with the hypothesis that engaging in correction-linked strategy revision and subsequent transfer checks will enhance their comprehension.",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "next_evidence_need": "How will the operator's engagement in the correction-linked strategy revision process affect their long-term comprehension?",
+      "next_focus_proposal": "",
+      "operation_id": "cognitive-operation-03a284d8ae16faa6",
+      "operation_result_type": "summarize_learning_result",
+      "raw_model_output": "{\"lesson\":\"The operator's goal is to improve their English comprehension for better communication. This goal aligns with the hypothesis that engaging in correction-linked strategy revision and subsequent transfer checks will enhance their comprehension.\",\"evidence_refs\":[\"operator-natural-goal\"],\"unresolved_questions\":[\"How will the operator's engagement in the correction-linked strategy revision process affect their long-term comprehension?\"],\"uncertainty\":\"The long-term impact of the correction-linked strategy revision on the operator's comprehension is uncertain.\",\"recommended_state_transition\":\"summarize_learning\"}",
+      "recommended_action": "",
+      "recommended_state_transition": "summarize_learning",
+      "rejection_reasons": [],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "uncertainty": "The long-term impact of the correction-linked strategy revision on the operator's comprehension is uncertain."
+    }
+  ],
+  "outcomes": [
+    {
+      "created_at": "2026-07-27T04:33:22+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+      "observed": "The operator will improve their English comprehension by actively engaging in correction-linked strategy revision and subsequent transfer checks.",
+      "operation_id": "cognitive-operation-1d442b1515706090",
+      "outcome_id": "outcome-dae075e4bf85ab7a"
+    },
+    {
+      "created_at": "2026-07-27T04:33:51+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform compare_evidence for the active focus using only referenced evidence.",
+      "observed": "The hypothesis is plausible because it is aligned with the operator's stated goal and the natural language evidence provided.",
+      "operation_id": "cognitive-operation-0b128aec2f0e49ad",
+      "outcome_id": "outcome-bcf3223d0c4b112a"
+    },
+    {
+      "created_at": "2026-07-27T04:34:18+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform summarize_learning for the active focus using only referenced evidence.",
+      "observed": "The operator's goal is to improve their English comprehension for better communication. This goal aligns with the hypothesis that engaging in correction-linked strategy revision and subsequent transfer checks will enhance their comprehension.",
+      "operation_id": "cognitive-operation-03a284d8ae16faa6",
+      "outcome_id": "outcome-980b159063cc3cb3"
+    }
+  ],
+  "pending_operator_requests": [],
+  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+  "title": "Conversational English comprehension objective",
+  "useful_artifacts": [
+    {
+      "artifact_id": "useful-artifact-980b159063cc3cb3",
+      "artifact_type": "cognitive_episode_summary",
+      "evidence_refs": [
+        "operator-natural-goal"
+      ],
+      "summary": "The operator's goal is to improve their English comprehension for better communication. This goal aligns with the hypothesis that engaging in correction-linked strategy revision and subsequent transfer checks will enhance their comprehension."
+    }
+  ],
+  "working_memory_packets": [
+    {
+      "active_focus": {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "local_model_semantic_operation",
+        "creation_sequence": 1,
+        "description": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+        "evidence_need": "local evidence supporting or challenging the goal",
+        "evidence_refs": [
+          "operator-natural-goal"
+        ],
+        "expected_value": "useful_progress",
+        "focus_id": "focus-453bb529bd6f2803",
+        "related_goal_ids": [
+          "active-cognitive-goal-acc1044183eab608"
+        ],
+        "salience_categories": [
+          "operator_priority",
+          "goal_discrepancy",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "goal_discrepancy",
+        "urgency": "medium"
+      },
+      "active_goal": {
+        "expected_state": "Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.",
+        "goal_id": "active-cognitive-goal-acc1044183eab608",
+        "observed_state": "",
+        "priority": "operator_requested",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "summary": "Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer."
+      },
+      "authority_state": "authorized_for_local_cognitive_marathon",
+      "capability_limits": [
+        "model calls budgeted",
+        "source mutation requires explicit bounded patch authority"
+      ],
+      "conflicting_evidence": [],
+      "construction_rationale": "bounded by active focus, goal discrepancy, recency, evidence provenance, and operation need",
+      "current_hypotheses": [],
+      "cycle_id": "active-cognitive-cycle-c7fed5149b8873bb",
+      "observed_outcomes": [],
+      "omitted_items_summary": "0 older or less relevant items omitted by packet budget",
+      "operator_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "packet_digest": "3842671abe8a74108f9f3d873dfd42d9ee974a24939499354677d8199205899f",
+      "packet_id": "working-memory-packet-5edc9e9ad1be84bd",
+      "prior_cycle_summary": "",
+      "provenance_refs": [
+        "operator-natural-goal"
+      ],
+      "recent_actions": [],
+      "relevant_evidence": [
+        {
+          "content": "",
+          "evidence_id": "operator-natural-goal",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "ordinary_chat",
+          "summary": "Your goal today is to improve your English comprehension so we can communicate better."
+        }
+      ],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "size_budget": 8,
+      "unresolved_questions": []
+    },
+    {
+      "active_focus": {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "local_model_semantic_operation",
+        "creation_sequence": 2,
+        "description": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+        "evidence_need": "local evidence supporting or challenging the goal",
+        "evidence_refs": [
+          "operator-natural-goal"
+        ],
+        "expected_value": "useful_progress",
+        "focus_id": "focus-11f2c00f149cc0cf",
+        "related_goal_ids": [
+          "active-cognitive-goal-acc1044183eab608"
+        ],
+        "salience_categories": [
+          "operator_priority",
+          "goal_discrepancy",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "goal_discrepancy",
+        "urgency": "medium"
+      },
+      "active_goal": {
+        "expected_state": "Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.",
+        "goal_id": "active-cognitive-goal-acc1044183eab608",
+        "observed_state": "",
+        "priority": "operator_requested",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "summary": "Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer."
+      },
+      "authority_state": "authorized_for_local_cognitive_marathon",
+      "capability_limits": [
+        "model calls budgeted",
+        "source mutation requires explicit bounded patch authority"
+      ],
+      "conflicting_evidence": [],
+      "construction_rationale": "bounded by active focus, goal discrepancy, recency, evidence provenance, and operation need",
+      "current_hypotheses": [
+        {
+          "assumptions": [
+            "The operator is willing to engage in the correction-linked strategy revision process"
+          ],
+          "confidence_state": "plausible",
+          "created_at": "2026-07-27T04:33:22+00:00",
+          "disposition": "needs_challenge",
+          "evidence_against": [],
+          "evidence_for": [
+            "operator-natural-goal"
+          ],
+          "expected_observations": [
+            "local evidence should support a bounded useful step"
+          ],
+          "hypothesis_id": "hypothesis-a4579409b1ee552f",
+          "lifecycle_state": "active",
+          "originating_focus_id": "focus-453bb529bd6f2803",
+          "originating_goal_id": "active-cognitive-goal-acc1044183eab608",
+          "provenance": [
+            "cognitive-operation-1d442b1515706090"
+          ],
+          "revised_at": "",
+          "revision_parent_id": "",
+          "revision_reason": "",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "scope": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+          "statement": "The operator will improve their English comprehension by actively engaging in correction-linked strategy revision and subsequent transfer checks."
+        }
+      ],
+      "cycle_id": "active-cognitive-cycle-c21be81d6e035da4",
+      "observed_outcomes": [
+        {
+          "created_at": "2026-07-27T04:33:22+00:00",
+          "discrepancy": "progress_observed",
+          "expected": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+          "observed": "The operator will improve their English comprehension by actively engaging in correction-linked strategy revision and subsequent transfer checks.",
+          "operation_id": "cognitive-operation-1d442b1515706090",
+          "outcome_id": "outcome-dae075e4bf85ab7a"
+        }
+      ],
+      "omitted_items_summary": "0 older or less relevant items omitted by packet budget",
+      "operator_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "packet_digest": "3764106dec22f8f60bc973bd03149a59a0ecdf34eac7efd3a1e71391661e0bfd",
+      "packet_id": "working-memory-packet-0280f47e67db8f3c",
+      "prior_cycle_summary": "The operator will improve their English comprehension by actively engaging in correction-linked strategy revision and subsequent transfer checks.",
+      "provenance_refs": [
+        "operator-natural-goal"
+      ],
+      "recent_actions": [],
+      "relevant_evidence": [
+        {
+          "content": "",
+          "evidence_id": "operator-natural-goal",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "ordinary_chat",
+          "summary": "Your goal today is to improve your English comprehension so we can communicate better."
+        }
+      ],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "size_budget": 8,
+      "unresolved_questions": []
+    },
+    {
+      "active_focus": {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "local_model_semantic_operation",
+        "creation_sequence": 3,
+        "description": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+        "evidence_need": "local evidence supporting or challenging the goal",
+        "evidence_refs": [
+          "operator-natural-goal"
+        ],
+        "expected_value": "useful_progress",
+        "focus_id": "focus-d9d9055720107c50",
+        "related_goal_ids": [
+          "active-cognitive-goal-acc1044183eab608"
+        ],
+        "salience_categories": [
+          "operator_priority",
+          "goal_discrepancy",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "goal_discrepancy",
+        "urgency": "medium"
+      },
+      "active_goal": {
+        "expected_state": "Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.",
+        "goal_id": "active-cognitive-goal-acc1044183eab608",
+        "observed_state": "",
+        "priority": "operator_requested",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "summary": "Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer."
+      },
+      "authority_state": "authorized_for_local_cognitive_marathon",
+      "capability_limits": [
+        "model calls budgeted",
+        "source mutation requires explicit bounded patch authority"
+      ],
+      "conflicting_evidence": [],
+      "construction_rationale": "bounded by active focus, goal discrepancy, recency, evidence provenance, and operation need",
+      "current_hypotheses": [
+        {
+          "assumptions": [
+            "The operator is willing to engage in the correction-linked strategy revision process"
+          ],
+          "confidence_state": "supported",
+          "created_at": "2026-07-27T04:33:22+00:00",
+          "disposition": "needs_challenge",
+          "evidence_against": [],
+          "evidence_for": [
+            "operator-natural-goal"
+          ],
+          "expected_observations": [
+            "local evidence should support a bounded useful step"
+          ],
+          "hypothesis_id": "hypothesis-a4579409b1ee552f",
+          "lifecycle_state": "active",
+          "originating_focus_id": "focus-453bb529bd6f2803",
+          "originating_goal_id": "active-cognitive-goal-acc1044183eab608",
+          "provenance": [
+            "cognitive-operation-1d442b1515706090",
+            "cognitive-operation-0b128aec2f0e49ad"
+          ],
+          "revised_at": "2026-07-27T04:33:51+00:00",
+          "revision_parent_id": "",
+          "revision_reason": "The hypothesis is plausible because it is aligned with the operator's stated goal and the natural language evidence provided.",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "scope": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+          "statement": "The operator will improve their English comprehension by actively engaging in correction-linked strategy revision and subsequent transfer checks."
+        }
+      ],
+      "cycle_id": "active-cognitive-cycle-c7b9ccd985947a36",
+      "observed_outcomes": [
+        {
+          "created_at": "2026-07-27T04:33:22+00:00",
+          "discrepancy": "progress_observed",
+          "expected": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+          "observed": "The operator will improve their English comprehension by actively engaging in correction-linked strategy revision and subsequent transfer checks.",
+          "operation_id": "cognitive-operation-1d442b1515706090",
+          "outcome_id": "outcome-dae075e4bf85ab7a"
+        },
+        {
+          "created_at": "2026-07-27T04:33:51+00:00",
+          "discrepancy": "progress_observed",
+          "expected": "Perform compare_evidence for the active focus using only referenced evidence.",
+          "observed": "The hypothesis is plausible because it is aligned with the operator's stated goal and the natural language evidence provided.",
+          "operation_id": "cognitive-operation-0b128aec2f0e49ad",
+          "outcome_id": "outcome-bcf3223d0c4b112a"
+        }
+      ],
+      "omitted_items_summary": "0 older or less relevant items omitted by packet budget",
+      "operator_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "packet_digest": "53853225adbe4483166ddf7e653ee9a6fee342defe1724a113e2521ae0f2b01c",
+      "packet_id": "working-memory-packet-02a3d6f22dd9305c",
+      "prior_cycle_summary": "The hypothesis is plausible because it is aligned with the operator's stated goal and the natural language evidence provided.",
+      "provenance_refs": [
+        "operator-natural-goal"
+      ],
+      "recent_actions": [],
+      "relevant_evidence": [
+        {
+          "content": "",
+          "evidence_id": "operator-natural-goal",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "ordinary_chat",
+          "summary": "Your goal today is to improve your English comprehension so we can communicate better."
+        }
+      ],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "size_budget": 8,
+      "unresolved_questions": []
+    }
+  ]
+}

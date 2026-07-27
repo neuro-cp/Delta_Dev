@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "prior-conversational-episode-9"
+    ],
+    "lesson": "Operators may misunderstand specific terms in the context of their tasks, leading to performance issues.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "Need more evidence to fully understand the specific terms that cause misunderstandings.",
+    "unresolved_questions": [
+      "How can we ensure operators understand specific terms in their tasks?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"Operators may misunderstand specific terms in the context of their tasks, leading to performance issues.\",\"evidence_refs\":[\"prior-conversational-episode-9\"],\"unresolved_questions\":[\"How can we ensure operators understand specific terms in their tasks?\"],\"uncertainty\":\"Need more evidence to fully understand the specific terms that cause misunderstandings.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "1f873544d8dbe55f55167c18ce06122f013999107df29d9e6e3cdaccb9868a1a",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

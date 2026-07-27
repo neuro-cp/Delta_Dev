@@ -1,0 +1,11 @@
+{
+  "case": {
+    "active_objective_id": "conversational-objective-bdcabaf674357b0b",
+    "conversation_count_after": 6,
+    "conversation_count_before": 6,
+    "elapsed_seconds": 2.092629999970086,
+    "message": "What is angular momentum?",
+    "status": "Chat runtime: active goal - Improve operator-specific English comprehension during con... cycles=8; corrections=1; questions=0"
+  },
+  "false_transfer_detected": true
+}

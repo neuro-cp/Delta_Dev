@@ -1,0 +1,8 @@
+{
+  "correction_ids_unique": true,
+  "cycle_keys_unique": true,
+  "lesson_ids_unique": true,
+  "model_calls_after_resume": 3,
+  "model_calls_before_resume": 3,
+  "no_duplicate_correction_records": true
+}

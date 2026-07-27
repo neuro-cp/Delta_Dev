@@ -1,0 +1,38 @@
+{
+  "behavioral_pass": true,
+  "corrective_live_gate": "CONVERSATIONAL_RUNTIME_LIVE_MODEL_CLOSURE_1",
+  "corrective_live_status": "CONVERSATIONAL_RUNTIME_LIVE_MODEL_CLOSURE_1_PASSED",
+  "gate": "CONVERSATIONAL_RUNTIME_OPERATION_MARATHON_1",
+  "implementation_pass": true,
+  "live_model_validation": {
+    "accepted_lessons": 2,
+    "completed_cycle_count": 16,
+    "duplicate_model_requests_detected": false,
+    "false_transfer_bad_count": 0,
+    "ledger_request_count": 16,
+    "ledger_result_count": 16,
+    "material_authority_boundary_count": 1,
+    "natural_corrections": 2,
+    "objective_restored_after_restart": true,
+    "real_tk_restart": true,
+    "related_transfer_events": 3,
+    "successful_local_model_calls": 16
+  },
+  "notes": "The earlier implementation-only status was corrected by a real Tk and local-Qwen live closure run. No commit, push, or next development gate was started. Active inference now reports working status and completes through a Tk-polled worker queue.",
+  "preserved_exclusions": [
+    "orchestration/runtime/live_competence_adapter.py",
+    "DELTA-75",
+    "reports/RC4_*",
+    "unrelated claim-relation work"
+  ],
+  "status": "CONVERSATIONAL_RUNTIME_OPERATION_MARATHON_1_PASSED",
+  "verification": {
+    "active_python_or_model_process_found": false,
+    "async_inference_status_repair": "passed",
+    "focused_tests": "29 passed",
+    "git_diff_check": "passed with line-ending warnings only",
+    "protected_or_excluded_staged": false,
+    "py_compile": "passed",
+    "staging_empty": true
+  }
+}

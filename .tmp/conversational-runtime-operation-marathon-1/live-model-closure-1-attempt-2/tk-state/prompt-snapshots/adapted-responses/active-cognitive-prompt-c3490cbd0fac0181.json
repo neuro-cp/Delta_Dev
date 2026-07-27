@@ -1,0 +1,24 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Operators have limited English proficiency",
+      "Operators are in a high-stress environment"
+    ],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "prior-conversational-episode-9"
+    ],
+    "interpretation": "Operators may misunderstand specific terms in the context of their tasks, which can lead to performance issues.",
+    "next_evidence_need": "local evidence supporting or challenging the goal",
+    "next_focus_proposal": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+    "operation_result_type": "compare_evidence_result",
+    "recommended_action": "Incorporate corrections during conversations and test later transfer to improve comprehension.",
+    "recommended_state_transition": "add_supporting_evidence",
+    "uncertainty": "How specific terms are misunderstood and in what contexts."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"assumptions\":[\"Operators have limited English proficiency\",\"Operators are in a high-stress environment\"],\"contrary_evidence_considered\":[],\"evidence_refs\":[\"prior-conversational-episode-9\"],\"interpretation\":\"Operators may misunderstand specific terms in the context of their tasks, which can lead to performance issues.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"Incorporate corrections during conversations and test later transfer to improve comprehension.\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"How specific terms are misunderstood and in what contexts.\"}",
+  "raw_response_digest": "de565d3cfd07e0deb441f1b98532c4203c6cad5a8b772fabdfd068781196ce09",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

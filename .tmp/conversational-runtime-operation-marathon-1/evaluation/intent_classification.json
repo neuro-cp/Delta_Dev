@@ -1,0 +1,6 @@
+{
+  "correction": "direct_correction",
+  "goal": "persistent_or_session_goal",
+  "ordinary_chat": "ordinary_conversation",
+  "risky": "authority_changing_or_risky_instruction"
+}

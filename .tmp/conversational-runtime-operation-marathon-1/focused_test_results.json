@@ -1,0 +1,24 @@
+{
+  "combined_command": ".venv311\\Scripts\\python.exe -m pytest tests/runtime_gsr/test_conversational_runtime_operation.py tests/runtime_gsr/test_conversational_runtime_ui.py tests/runtime_gsr/test_operator_ux_1_humanized_runtime.py::test_operator_ux_top_level_tabs_and_rc_diagnostics_consolidated tests/runtime_gsr/test_model_execution_lane_isolation.py tests/runtime_gsr/test_continuity_episodic_learning.py -q",
+  "combined_result": "27 passed in 21.12s",
+  "continuity_episodic_learning": {
+    "passed": true,
+    "tests": 5
+  },
+  "conversational_runtime_operation": {
+    "passed": true,
+    "tests": 8
+  },
+  "conversational_runtime_ui": {
+    "passed": true,
+    "tests": 3
+  },
+  "model_execution_lane_isolation": {
+    "passed": true,
+    "tests": 10
+  },
+  "operator_ux_default_surface": {
+    "passed": true,
+    "tests": 1
+  }
+}

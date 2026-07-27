@@ -1,0 +1,4 @@
+{
+  "id": "conversational-runtime-operation-marathon-1-evaluator-v1",
+  "implementation": "evaluate_conversational_runtime + Tk evidence harness"
+}

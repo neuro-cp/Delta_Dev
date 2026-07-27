@@ -1,0 +1,10 @@
+{
+  "note": "Line-ending warnings were emitted for existing Windows checkout behavior.",
+  "passed": true,
+  "stderr": [
+    "warning: in the working copy of 'DELTA.py', LF will be replaced by CRLF the next time Git touches it",
+    "warning: in the working copy of 'orchestration/runtime/live_competence_adapter.py', LF will be replaced by CRLF the next time Git touches it",
+    "warning: in the working copy of 'tests/runtime_gsr/test_operator_ux_1_humanized_runtime.py', LF will be replaced by CRLF the next time Git touches it"
+  ],
+  "stdout": []
+}

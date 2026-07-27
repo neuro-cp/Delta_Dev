@@ -1,0 +1,7 @@
+{
+  "chat_immediately_usable": true,
+  "default_tabs": [
+    "Conversation"
+  ],
+  "status": "Chat runtime: ready"
+}

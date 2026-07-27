@@ -1,0 +1,23 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "The operator is willing to engage in the correction-linked strategy revision process"
+    ],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "operator-natural-goal"
+    ],
+    "interpretation": "The operator will improve their English comprehension by actively engaging in correction-linked strategy revision and subsequent transfer checks.",
+    "next_evidence_need": "local evidence supporting or challenging the goal",
+    "next_focus_proposal": "local evidence supporting or challenging the goal",
+    "operation_result_type": "compare_evidence_result",
+    "recommended_action": "The operator should actively engage in the correction-linked strategy revision process to improve their English comprehension.",
+    "recommended_state_transition": "add_supporting_evidence",
+    "uncertainty": "How much improvement can be expected from the correction-linked strategy revision process?"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"assumptions\":[\"The operator is willing to engage in the correction-linked strategy revision process\"],\"contrary_evidence_considered\":[],\"evidence_refs\":[\"operator-natural-goal\"],\"interpretation\":\"The operator will improve their English comprehension by actively engaging in correction-linked strategy revision and subsequent transfer checks.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"local evidence supporting or challenging the goal\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"The operator should actively engage in the correction-linked strategy revision process to improve their English comprehension.\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"How much improvement can be expected from the correction-linked strategy revision process?\"}",
+  "raw_response_digest": "5b431ce8e7d89445ccd6b9dfb8db4ab40cc76c18ce51ba86956053d14e5274d9",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

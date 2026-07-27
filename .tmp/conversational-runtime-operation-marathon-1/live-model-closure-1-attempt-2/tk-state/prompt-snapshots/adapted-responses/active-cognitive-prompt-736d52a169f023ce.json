@@ -1,0 +1,23 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "The operator is willing to engage in the correction-linked strategy revision process"
+    ],
+    "expected_observations": [
+      "Operator demonstrates improved comprehension during subsequent conversations",
+      "Operator applies corrections learned from previous conversations"
+    ],
+    "hypothesis_statement": "The operator will improve their English comprehension by actively engaging in correction-linked strategy revision and subsequent transfer checks.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "Operator-specific English comprehension during conversation",
+    "supporting_evidence_refs": [
+      "operator-natural-goal"
+    ],
+    "uncertainty": "Whether the operator will consistently engage in the correction process and apply the learned strategies"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\n\"hypothesis_statement\": \"The operator will improve their English comprehension by actively engaging in correction-linked strategy revision and subsequent transfer checks.\",\n\"scope\": \"Operator-specific English comprehension during conversation\",\n\"supporting_evidence_refs\": [\"operator-natural-goal\"],\n\"assumptions\": [\"The operator is willing to engage in the correction-linked strategy revision process\"],\n\"expected_observations\": [\"Operator demonstrates improved comprehension during subsequent conversations\", \"Operator applies corrections learned from previous conversations\"],\n\"uncertainty\": \"Whether the operator will consistently engage in the correction process and apply the learned strategies\",\n\"recommended_state_transition\": \"propose_hypothesis\"\n}",
+  "raw_response_digest": "4a381ace1249db64821fab6bc3bd912e778f0926b0e4dee35cd0fea2afcd15e8",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

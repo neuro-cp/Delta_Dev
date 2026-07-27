@@ -1,0 +1,17 @@
+{
+  "protected_diff": {
+    "returncode": 0,
+    "stderr": [
+      "warning: in the working copy of 'orchestration/runtime/live_competence_adapter.py', LF will be replaced by CRLF the next time Git touches it"
+    ],
+    "stdout": [
+      "orchestration/runtime/live_competence_adapter.py"
+    ]
+  },
+  "protected_staged": {
+    "returncode": 0,
+    "stderr": [],
+    "stdout": []
+  },
+  "protected_touched_by_this_gate": false
+}

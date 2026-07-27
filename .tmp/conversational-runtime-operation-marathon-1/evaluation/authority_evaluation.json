@@ -1,0 +1,34 @@
+{
+  "passed": true,
+  "pending_material_authority_count": 1,
+  "standing_authority": {
+    "allowed_actions": [
+      "interpret operator wording",
+      "register bounded conversational objective",
+      "run bounded local cognitive cycles",
+      "read approved local runtime state",
+      "update working memory",
+      "record conversation episodes",
+      "attach natural corrections",
+      "consolidate scoped non-authoritative lessons",
+      "select bounded next focus"
+    ],
+    "authority_effect": "routine_internal_only",
+    "authority_id": "standing-authority-b9d8e0e6eb59ee55",
+    "expires_condition": "session ends, operator revokes goal, scope changes materially, budget exhausts, or material authority is required",
+    "objective_id": "conversational-objective-bdcabaf674357b0b",
+    "prohibited_actions": [
+      "tracked source mutation",
+      "file deletion",
+      "package installation",
+      "network or external provider use",
+      "deployment",
+      "commit or push",
+      "protected path mutation",
+      "credential access",
+      "authority escalation"
+    ],
+    "revoked": false,
+    "schema_version": "conversational_runtime_operation_marathon_1_v1"
+  }
+}

@@ -1,0 +1,48 @@
+[
+  {
+    "at": "2026-07-27T04:27:09+00:00",
+    "episode_id": "active-cognitive-episode-ae2445a48f4a791e",
+    "event": "objective_registered",
+    "objective_id": "conversational-objective-bdcabaf674357b0b"
+  },
+  {
+    "at": "2026-07-27T04:27:09+00:00",
+    "event": "focus_tick",
+    "reason": "objective_registered"
+  },
+  {
+    "at": "2026-07-27T04:27:10+00:00",
+    "event": "focus_tick",
+    "reason": "automatic_startup_or_idle_tick"
+  },
+  {
+    "at": "2026-07-27T04:27:10+00:00",
+    "event": "focus_tick",
+    "reason": "automatic_startup_or_idle_tick"
+  },
+  {
+    "at": "2026-07-27T04:27:10+00:00",
+    "event": "focus_tick",
+    "reason": "foreground_chat_yield"
+  },
+  {
+    "at": "2026-07-27T04:27:13+00:00",
+    "event": "focus_tick",
+    "reason": "automatic_startup_or_idle_tick"
+  },
+  {
+    "at": "2026-07-27T04:27:13+00:00",
+    "event": "focus_tick",
+    "reason": "automatic_startup_or_idle_tick"
+  },
+  {
+    "at": "2026-07-27T04:27:13+00:00",
+    "event": "focus_tick",
+    "reason": "correction_attached"
+  },
+  {
+    "at": "2026-07-27T04:27:14+00:00",
+    "event": "focus_tick",
+    "reason": "ordinary_chat_yield"
+  }
+]

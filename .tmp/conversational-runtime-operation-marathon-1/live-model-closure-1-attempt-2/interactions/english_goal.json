@@ -1,0 +1,22 @@
+{
+  "correction_count": 0,
+  "cycle_count": 2,
+  "elapsed_seconds": 53.783020699978806,
+  "episodes": [
+    {
+      "completed": false,
+      "cycle_count": 2,
+      "episode_id": "active-cognitive-episode-ae2445a48f4a791e",
+      "loop_state": "persisting",
+      "model_call_count": 2,
+      "path": "G:\\Delta_Dev\\.tmp\\conversational-runtime-operation-marathon-1\\live-model-closure-1-attempt-2\\tk-state\\active_episode.json"
+    }
+  ],
+  "kind": "chat",
+  "label": "english_goal",
+  "lesson_count": 0,
+  "message": "Your goal today is to improve your English comprehension so we can communicate better.",
+  "model_calls_after": 2,
+  "model_calls_before": 0,
+  "status": "Chat runtime: active goal - Improve operator-specific English comprehension during con... cycles=2; corrections=0; questions=0"
+}

@@ -1,0 +1,76 @@
+{
+  "ledger_request_id": "shared-local-model-request-6b7c39a5d9442d33",
+  "ledger_result_id": "shared-local-model-result-cf9df6154a855461",
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "prompt_snapshot_id": "active-cognitive-prompt-d1bf11ff2f939c52",
+  "raw_response": "{\"lesson\":\"Operators may misunderstand specific terms in the context of their tasks, leading to performance issues.\",\"evidence_refs\":[\"prior-conversational-episode-9\"],\"unresolved_questions\":[\"How can we ensure operators understand specific terms in their tasks?\"],\"uncertainty\":\"Need more evidence to fully understand the specific terms that cause misunderstandings.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "1f873544d8dbe55f55167c18ce06122f013999107df29d9e6e3cdaccb9868a1a",
+  "terminal_status": {
+    "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+    "approved_at": "2026-07-27T04:41:01+00:00",
+    "authority_state": "standing_bounded_authority_conversational_runtime_operation",
+    "claimed_at": "2026-07-27T04:41:01+00:00",
+    "completed_at": "2026-07-27T04:41:16+00:00",
+    "consumed_state": "terminal",
+    "created_at": "2026-07-27T04:41:01+00:00",
+    "execution_attempt_count": 1,
+    "execution_claim_id": "shared-local-model-execution-claim-88e6b8d69ca98315",
+    "failure_classification": "",
+    "lifecycle_state": "completed",
+    "mission_id": "active-cognitive-goal-47f312c8358c3857",
+    "mission_information_need_identity": "focus-79469d3ac68b6402",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - lesson: nonempty string - evidence_refs: array[string] - unresolved_questions: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - evidence_refs values must be chosen from: prior-conversational-episode-9 TASK: perform only operation summarize_learning. Allowed transition/next-operation values: summarize_learning, select_next_focus. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: prior-conversational-episode-9. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":3,\"description\":\"Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"prior-conversational-episode-9\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-79469d3ac68b6402\",\"related_goal_ids\":[\"active-cognitive-goal-47f312c8358c3857\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[],\"current_goal\":{\"expected_state\":\"Continue correction-linked comprehension practice without duplicating prior completed episode work.\",\"goal_id\":\"active-cognitive-goal-47f312c8358c3857\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.\"},\"current_hypotheses\":[{\"assumptions\":[\"Operators have limited English proficiency\",\"Operators are in a high-stress environment\"],\"confidence_state\":\"supported\",\"created_at\":\"2026-07-27T04:40:32+00:00\",\"disposition\":\"needs_challenge\",\"evidence_against\":[],\"evidence_for\":[\"prior-conversational-episode-9\"],\"expected_observations\":[\"local evidence should support a bounded useful step\"],\"hypothesis_id\":\"hypothesis-642a9f0516a67672\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-648c79ea192dfd41\",\"originating_goal_id\":\"active-cognitive-goal-47f312c8358c3857\",\"provenance\":[\"cognitive-operation-c5f42173522d1f57\",\"cognitive-operation-5dccdbb3dece5509\"],\"revised_at\":\"2026-07-27T04:41:01+00:00\",\"revision_parent_id\":\"\",\"revision_reason\":\"Operators may misunderstand specific terms in the context of their tasks, which can lead to performance issues.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.\",\"statement\":\"Operators may misunderstand specific terms in the context of their tasks.\"}],\"evidence_for\":[{\"content\":\"\",\"evidence_id\":\"prior-conversational-episode-9\",\"source\":\"G:\\\\Delta_Dev\\\\.tmp\\\\conversational-runtime-operation-marathon-1\\\\live-model-closure-1-attempt-2\\\\tk-state\\\\active_episode_7.json\",\"summary\":\"Prior bounded active episode completed; continuation keeps the approved conversational objective active.\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-27T04:41:01+00:00\",\"discrepancy\":\"progress_observed\",\"expected\":\"Perform compare_evidence for the active focus using only referenced evidence.\",\"observed\":\"Operators may misunderstand specific terms in the context of their tasks, which can lead to performance issues.\",\"operation_id\":\"cognitive-operation-5dccdbb3dece5509\",\"outcome_id\":\"outcome-a793dc83c70320af\"}]}",
+    "question_objective": "summarize_learning",
+    "record_digest": "bd724767ca426f81788def834e7f51009970c600037698f87d25bfcd060014cd",
+    "record_version": 1,
+    "request_digest": "5cdca9c7f278f1d84568353fada16ba3fd07e0c34e5a10b3e13ab8877ccc8af6",
+    "request_id": "shared-local-model-request-6b7c39a5d9442d33",
+    "requester_reference": "cognitive-operation-0cf3c878cb77ea77",
+    "requester_type": "active_cognitive_loop",
+    "result_id": "shared-local-model-result-cf9df6154a855461",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    },
+    "semantic_identity": "active-cognitive-ledger-request-8d6ea537021010c4",
+    "session_reference": "active-cognitive-cycle-e8f4022b0dbe8487"
+  }
+}

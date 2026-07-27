@@ -1,0 +1,17 @@
+{
+  "adapted_responses": [
+    "prompt-snapshots\\adapted-responses\\active-cognitive-prompt-3545f2fcf66bf0ef.json",
+    "prompt-snapshots\\adapted-responses\\active-cognitive-prompt-41384a94c6767f25.json",
+    "prompt-snapshots\\adapted-responses\\active-cognitive-prompt-736d52a169f023ce.json"
+  ],
+  "prompts": [
+    "prompt-snapshots\\prompts\\active-cognitive-prompt-3545f2fcf66bf0ef.json",
+    "prompt-snapshots\\prompts\\active-cognitive-prompt-41384a94c6767f25.json",
+    "prompt-snapshots\\prompts\\active-cognitive-prompt-736d52a169f023ce.json"
+  ],
+  "raw_responses": [
+    "prompt-snapshots\\raw-responses\\active-cognitive-prompt-3545f2fcf66bf0ef.json",
+    "prompt-snapshots\\raw-responses\\active-cognitive-prompt-41384a94c6767f25.json",
+    "prompt-snapshots\\raw-responses\\active-cognitive-prompt-736d52a169f023ce.json"
+  ]
+}

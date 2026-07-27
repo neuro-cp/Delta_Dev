@@ -1,0 +1,9 @@
+{
+  "checked": true,
+  "note": "Prior transient Python processes were gone by command-line inspection; no model/Tk process remained attributable to the marathon.",
+  "process_probe": {
+    "returncode": 1,
+    "stderr": "",
+    "stdout": "[\n    {\n        \"ProcessName\":  \"python\",\n        \"Id\":  22832,\n        \"Path\":  \"C:\\\\Program Files\\\\Python311\\\\python.exe\"\n    },\n    {\n        \"ProcessName\":  \"python\",\n        \"Id\":  31856,\n        \"Path\":  \"G:\\\\Delta_Dev\\\\.venv311\\\\Scripts\\\\python.exe\"\n    }\n]"
+  }
+}

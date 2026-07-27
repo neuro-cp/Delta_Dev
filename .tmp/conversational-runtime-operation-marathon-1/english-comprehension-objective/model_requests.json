@@ -1,0 +1,4 @@
+{
+  "note": "Foreground UI bridge used existing chat path and active-loop scripted local cycle in this harness; no external provider calls.",
+  "ui_model_requests": []
+}

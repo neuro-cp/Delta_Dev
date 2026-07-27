@@ -1,0 +1,59 @@
+{
+  "cycle_count": 16,
+  "elapsed_seconds": 0.0002704999642446637,
+  "episodes": [
+    {
+      "completed": false,
+      "cycle_count": 1,
+      "episode_id": "active-cognitive-episode-7eaf6a01e28b0c71",
+      "loop_state": "persisting",
+      "model_call_count": 1,
+      "path": "G:\\Delta_Dev\\.tmp\\conversational-runtime-operation-marathon-1\\live-model-closure-1-attempt-2\\tk-state\\active_episode_16.json"
+    },
+    {
+      "completed": true,
+      "cycle_count": 3,
+      "episode_id": "active-cognitive-episode-ae2445a48f4a791e",
+      "loop_state": "completed",
+      "model_call_count": 3,
+      "path": "G:\\Delta_Dev\\.tmp\\conversational-runtime-operation-marathon-1\\live-model-closure-1-attempt-2\\tk-state\\active_episode.json"
+    },
+    {
+      "completed": true,
+      "cycle_count": 3,
+      "episode_id": "active-cognitive-episode-6ecbc10ced5c405d",
+      "loop_state": "completed",
+      "model_call_count": 3,
+      "path": "G:\\Delta_Dev\\.tmp\\conversational-runtime-operation-marathon-1\\live-model-closure-1-attempt-2\\tk-state\\active_episode_10.json"
+    },
+    {
+      "completed": true,
+      "cycle_count": 3,
+      "episode_id": "active-cognitive-episode-e382096154d377ee",
+      "loop_state": "completed",
+      "model_call_count": 3,
+      "path": "G:\\Delta_Dev\\.tmp\\conversational-runtime-operation-marathon-1\\live-model-closure-1-attempt-2\\tk-state\\active_episode_13.json"
+    },
+    {
+      "completed": true,
+      "cycle_count": 3,
+      "episode_id": "active-cognitive-episode-a31a2250e0eb6bbb",
+      "loop_state": "completed",
+      "model_call_count": 3,
+      "path": "G:\\Delta_Dev\\.tmp\\conversational-runtime-operation-marathon-1\\live-model-closure-1-attempt-2\\tk-state\\active_episode_4.json"
+    },
+    {
+      "completed": true,
+      "cycle_count": 3,
+      "episode_id": "active-cognitive-episode-5f4a26aa6fdb0065",
+      "loop_state": "completed",
+      "model_call_count": 3,
+      "path": "G:\\Delta_Dev\\.tmp\\conversational-runtime-operation-marathon-1\\live-model-closure-1-attempt-2\\tk-state\\active_episode_7.json"
+    }
+  ],
+  "kind": "tick",
+  "label": "live_cycle_8",
+  "model_calls_after": 16,
+  "model_calls_before": 16,
+  "status": "Chat runtime: active goal - Improve operator-specific English comprehension during con... cycles=16; corrections=2; questions=1"
+}

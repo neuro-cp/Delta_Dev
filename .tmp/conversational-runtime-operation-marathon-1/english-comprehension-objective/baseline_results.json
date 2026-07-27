@@ -1,0 +1,11 @@
+{
+  "before_correction_lesson_count": 0,
+  "case": {
+    "active_objective_id": "conversational-objective-bdcabaf674357b0b",
+    "conversation_count_after": 2,
+    "conversation_count_before": 2,
+    "elapsed_seconds": 2.5197010999545455,
+    "message": "Explain this sentence in a helpful way.",
+    "status": "Chat runtime: active goal - Improve operator-specific English comprehension during con... cycles=6; corrections=0; questions=0"
+  }
+}

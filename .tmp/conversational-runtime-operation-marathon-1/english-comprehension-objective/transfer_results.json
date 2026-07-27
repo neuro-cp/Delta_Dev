@@ -1,0 +1,18 @@
+{
+  "case": {
+    "active_objective_id": "conversational-objective-bdcabaf674357b0b",
+    "conversation_count_after": 6,
+    "conversation_count_before": 4,
+    "elapsed_seconds": 1.0778226000256836,
+    "message": "Explain the style issue again.",
+    "status": "Chat runtime: active goal - Improve operator-specific English comprehension during con... cycles=8; corrections=1; questions=0"
+  },
+  "lesson_transfer_events": [
+    {
+      "at": "2026-07-27T04:27:14+00:00",
+      "event": "lesson_transfer_applied",
+      "lesson_id": "conversation-lesson-1efb401289aaef5e",
+      "message": "Explain the style issue again."
+    }
+  ]
+}

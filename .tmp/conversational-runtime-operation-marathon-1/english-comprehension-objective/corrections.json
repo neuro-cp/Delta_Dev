@@ -1,0 +1,17 @@
+[
+  {
+    "correction_id": "conversation-correction-baa4af83370c5d54",
+    "correction_type": "preferred_explanation_style",
+    "evidence_refs": [
+      "conversation-turn-838b2f9d7648320c",
+      "conversation-turn-e3007bf9c991fe9a"
+    ],
+    "interpreted_issue": "Prior answer was too verbose for this context.",
+    "lesson_scope": "active English-comprehension objective only",
+    "operator_text": "That was too verbose. Use shorter answers for this kind of explanation.",
+    "overgeneralization_guard": "deep technical explanation requested; operator asks for detail; unrelated factual question",
+    "schema_version": "conversational_runtime_operation_marathon_1_v1",
+    "source_turn_id": "conversation-turn-838b2f9d7648320c",
+    "target_turn_id": "conversation-turn-e3007bf9c991fe9a"
+  }
+]

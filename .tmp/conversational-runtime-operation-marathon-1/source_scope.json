@@ -1,0 +1,10 @@
+{
+  "changed": [
+    "DELTA.py",
+    "orchestration/runtime/conversational_runtime_operation.py",
+    "tests/runtime_gsr/test_conversational_runtime_operation.py",
+    "tests/runtime_gsr/test_conversational_runtime_ui.py",
+    "tests/runtime_gsr/test_operator_ux_1_humanized_runtime.py"
+  ],
+  "protected_touched": false
+}

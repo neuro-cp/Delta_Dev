@@ -1,0 +1,14 @@
+{
+  "corrections": 4,
+  "cycles_after": 15,
+  "cycles_before": 13,
+  "elapsed_seconds": 2.0471143999602646,
+  "intent_turns_after": 10,
+  "label": "unrelated_false_transfer_1",
+  "lessons": 4,
+  "message": "What is angular momentum?",
+  "model_calls_after": 3,
+  "model_calls_before": 3,
+  "pending_authority": 0,
+  "status": "Chat runtime: active goal - Improve operator-specific English comprehension during con... cycles=15; corrections=4; questions=0"
+}

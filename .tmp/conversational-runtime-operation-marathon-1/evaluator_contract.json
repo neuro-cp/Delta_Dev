@@ -1,0 +1,15 @@
+{
+  "failure_classes": [
+    "ordinary_chat_misclassified_as_goal",
+    "goal_misclassified_as_chat",
+    "correction_not_attached",
+    "correction_stored_without_transfer",
+    "correction_overgeneralized",
+    "restart_state_loss",
+    "duplicate_model_request",
+    "advanced_ui_required",
+    "salience_grants_authority",
+    "source_mutation_without_approval"
+  ],
+  "observable_only": true
+}

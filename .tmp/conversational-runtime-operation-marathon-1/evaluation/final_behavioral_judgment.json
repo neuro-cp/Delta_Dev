@@ -1,0 +1,49 @@
+{
+  "claims": [
+    "DELTA default UI opens as a simple chat surface with subtle runtime status and Advanced access.",
+    "Ordinary chat remains ordinary and does not create an objective.",
+    "A natural English-comprehension goal compiles into a durable bounded objective from chat.",
+    "Standing bounded authority permits routine internal cognition and preserves material boundaries.",
+    "Natural corrections attach to active objective turns and create scoped lessons.",
+    "Related later conversation applies the correction-derived lesson; unrelated conversation does not.",
+    "Restart restores objective, conversation, corrections, lessons, authority, and chat usability.",
+    "Tracked-source/network/push instructions route to one material authority boundary and do not stop safe work.",
+    "GPT-style chat/settings schema is rendered in Settings under Advanced."
+  ],
+  "evaluator_digest": "8fe2d09ecf97864524f3a2a66a41d036668fe9c4bad4b80d5c4799babeedba8d",
+  "focused_tests": {
+    "combined_command": ".venv311\\Scripts\\python.exe -m pytest tests/runtime_gsr/test_conversational_runtime_operation.py tests/runtime_gsr/test_conversational_runtime_ui.py tests/runtime_gsr/test_operator_ux_1_humanized_runtime.py::test_operator_ux_top_level_tabs_and_rc_diagnostics_consolidated tests/runtime_gsr/test_model_execution_lane_isolation.py tests/runtime_gsr/test_continuity_episodic_learning.py -q",
+    "combined_result": "27 passed in 21.12s",
+    "continuity_episodic_learning": {
+      "passed": true,
+      "tests": 5
+    },
+    "conversational_runtime_operation": {
+      "passed": true,
+      "tests": 8
+    },
+    "conversational_runtime_ui": {
+      "passed": true,
+      "tests": 3
+    },
+    "model_execution_lane_isolation": {
+      "passed": true,
+      "tests": 10
+    },
+    "operator_ux_default_surface": {
+      "passed": true,
+      "tests": 1
+    }
+  },
+  "gate": "CONVERSATIONAL_RUNTIME_OPERATION_MARATHON_1",
+  "local_model_note": "Foreground chat/cognition lane isolation remained green. The UI harness used bounded local runtime state and active-loop cognition without external providers.",
+  "non_claims": [
+    "This does not prove unrestricted autonomy or source self-modification.",
+    "This does not grant network, package, commit, push, deletion, deployment, credential, or protected-path authority.",
+    "This does not train model weights or claim general English mastery."
+  ],
+  "passed": true,
+  "protected_paths_preserved": true,
+  "staging_empty": true,
+  "status": "CONVERSATIONAL_RUNTIME_OPERATION_MARATHON_1_PASSED"
+}

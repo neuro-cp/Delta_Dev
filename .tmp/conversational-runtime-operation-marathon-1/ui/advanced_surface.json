@@ -1,0 +1,59 @@
+{
+  "developer_tabs": [
+    "RC3",
+    "RC4",
+    "RC5",
+    "Diagnostics"
+  ],
+  "settings_schema": {
+    "conversation": {
+      "allow_natural_corrections": true,
+      "allow_natural_goals": true,
+      "avoid_repetitive_clarification": true,
+      "ordinary_chat_default": true,
+      "show_correction_influence_when_audited": true
+    },
+    "interface": {
+      "advanced_surface": "hidden_until_requested",
+      "default_surface": [
+        "chat_history",
+        "message_input",
+        "send_button",
+        "activity_status",
+        "stop_button"
+      ],
+      "material_authority_prompts": "chat_or_explicit_dialog",
+      "routine_popups": "disabled"
+    },
+    "memory_and_learning": {
+      "continuity_records": "non_authoritative",
+      "correction_learning": "scoped_to_active_objective",
+      "operator_auditable": true,
+      "overgeneralization_guard": true,
+      "session_objectives": true
+    },
+    "profile": {
+      "default_mode": "conversation",
+      "display_name": "DELTA",
+      "response_length": "adaptive",
+      "tone": "natural, concise, companionable"
+    },
+    "schema_version": "conversational_runtime_operation_marathon_1_v1",
+    "tools_and_actions": {
+      "delete_commit_push_deploy": "explicit_approval_required",
+      "network_or_external_provider": "explicit_approval_required",
+      "package_installation": "explicit_approval_required",
+      "routine_local_cognition": "standing_bounded_authority",
+      "tracked_source_mutation": "explicit_approval_required"
+    }
+  },
+  "tabs_after_advanced": [
+    "Conversation",
+    "Goals",
+    "Activity",
+    "Evaluation",
+    "Memory",
+    "Settings",
+    "Developer"
+  ]
+}

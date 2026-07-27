@@ -1,0 +1,14 @@
+{
+  "hidden_by_default": [
+    "Goals",
+    "Activity",
+    "Evaluation",
+    "Memory",
+    "Settings",
+    "Developer",
+    "live runtime controls",
+    "concept review controls",
+    "campaign controls"
+  ],
+  "not_deleted": true
+}

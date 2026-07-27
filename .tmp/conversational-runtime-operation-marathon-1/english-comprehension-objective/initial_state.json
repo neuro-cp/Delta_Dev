@@ -1,0 +1,18 @@
+{
+  "goal": {
+    "active_objective_id": "conversational-objective-bdcabaf674357b0b",
+    "conversation_count_after": 2,
+    "conversation_count_before": 0,
+    "elapsed_seconds": 0.9767093999544159,
+    "message": "Your goal today is to improve your English comprehension so we can communicate better.",
+    "status": "Chat runtime: active goal - Improve operator-specific English comprehension during con... cycles=2; corrections=0; questions=0"
+  },
+  "ordinary_chat": {
+    "active_objective_id": "",
+    "conversation_count_after": 0,
+    "conversation_count_before": 0,
+    "elapsed_seconds": 1.088004400022328,
+    "message": "How are you?",
+    "status": "Chat runtime: ready"
+  }
+}

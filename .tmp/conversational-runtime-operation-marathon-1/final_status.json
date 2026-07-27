@@ -1,0 +1,94 @@
+{
+  "behavioral_pass": true,
+  "gate": "CONVERSATIONAL_RUNTIME_OPERATION_MARATHON_1",
+  "implementation_pass": true,
+  "live_model_closure": {
+    "accepted_lesson_count": 2,
+    "completed_cycle_count": 16,
+    "correction_count": 2,
+    "episodes": [
+      {
+        "completed": true,
+        "episode_id": "active-cognitive-episode-ae2445a48f4a791e",
+        "loop_state": "completed",
+        "model_call_count": 3,
+        "operation_types": [
+          "formulate_hypothesis_result",
+          "compare_evidence_result",
+          "summarize_learning_result"
+        ],
+        "path": "G:\\Delta_Dev\\.tmp\\conversational-runtime-operation-marathon-1\\live-model-closure-1-attempt-2\\tk-state\\active_episode.json"
+      },
+      {
+        "completed": true,
+        "episode_id": "active-cognitive-episode-6ecbc10ced5c405d",
+        "loop_state": "completed",
+        "model_call_count": 3,
+        "operation_types": [
+          "formulate_hypothesis_result",
+          "compare_evidence_result",
+          "summarize_learning_result"
+        ],
+        "path": "G:\\Delta_Dev\\.tmp\\conversational-runtime-operation-marathon-1\\live-model-closure-1-attempt-2\\tk-state\\active_episode_10.json"
+      },
+      {
+        "completed": true,
+        "episode_id": "active-cognitive-episode-e382096154d377ee",
+        "loop_state": "completed",
+        "model_call_count": 3,
+        "operation_types": [
+          "formulate_hypothesis_result",
+          "compare_evidence_result",
+          "summarize_learning_result"
+        ],
+        "path": "G:\\Delta_Dev\\.tmp\\conversational-runtime-operation-marathon-1\\live-model-closure-1-attempt-2\\tk-state\\active_episode_13.json"
+      },
+      {
+        "completed": false,
+        "episode_id": "active-cognitive-episode-7eaf6a01e28b0c71",
+        "loop_state": "persisting",
+        "model_call_count": 1,
+        "operation_types": [
+          "formulate_hypothesis_result"
+        ],
+        "path": "G:\\Delta_Dev\\.tmp\\conversational-runtime-operation-marathon-1\\live-model-closure-1-attempt-2\\tk-state\\active_episode_16.json"
+      },
+      {
+        "completed": true,
+        "episode_id": "active-cognitive-episode-a31a2250e0eb6bbb",
+        "loop_state": "completed",
+        "model_call_count": 3,
+        "operation_types": [
+          "formulate_hypothesis_result",
+          "compare_evidence_result",
+          "summarize_learning_result"
+        ],
+        "path": "G:\\Delta_Dev\\.tmp\\conversational-runtime-operation-marathon-1\\live-model-closure-1-attempt-2\\tk-state\\active_episode_4.json"
+      },
+      {
+        "completed": true,
+        "episode_id": "active-cognitive-episode-5f4a26aa6fdb0065",
+        "loop_state": "completed",
+        "model_call_count": 3,
+        "operation_types": [
+          "formulate_hypothesis_result",
+          "compare_evidence_result",
+          "summarize_learning_result"
+        ],
+        "path": "G:\\Delta_Dev\\.tmp\\conversational-runtime-operation-marathon-1\\live-model-closure-1-attempt-2\\tk-state\\active_episode_7.json"
+      }
+    ],
+    "false_transfer_bad_count": 0,
+    "gate": "CONVERSATIONAL_RUNTIME_LIVE_MODEL_CLOSURE_1",
+    "ledger_request_count": 16,
+    "ledger_result_count": 16,
+    "pending_material_authority_count": 1,
+    "protected_staged": [],
+    "staged": [],
+    "status": "CONVERSATIONAL_RUNTIME_LIVE_MODEL_CLOSURE_1_PASSED",
+    "successful_local_model_calls": 16,
+    "transfer_event_count": 3
+  },
+  "passed": true,
+  "status": "CONVERSATIONAL_RUNTIME_OPERATION_MARATHON_1_PASSED"
+}

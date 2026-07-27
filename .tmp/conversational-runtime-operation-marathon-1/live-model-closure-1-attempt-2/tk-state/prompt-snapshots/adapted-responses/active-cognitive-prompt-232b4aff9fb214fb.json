@@ -1,0 +1,23 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Operators have a basic understanding of English grammar and vocabulary"
+    ],
+    "expected_observations": [
+      "Operators will have difficulty understanding certain phrases",
+      "Operators will request clarification for specific phrases"
+    ],
+    "hypothesis_statement": "Operators may misunderstand specific English phrases due to unfamiliarity or lack of context.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "English comprehension during operator conversations",
+    "supporting_evidence_refs": [
+      "prior-conversational-episode-12"
+    ],
+    "uncertainty": "The exact phrases causing confusion are not yet known"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"hypothesis_statement\":\"Operators may misunderstand specific English phrases due to unfamiliarity or lack of context.\",\"scope\":\"English comprehension during operator conversations\",\"supporting_evidence_refs\":[\"prior-conversational-episode-12\"],\"assumptions\":[\"Operators have a basic understanding of English grammar and vocabulary\"],\"expected_observations\":[\"Operators will have difficulty understanding certain phrases\",\"Operators will request clarification for specific phrases\"],\"uncertainty\":\"The exact phrases causing confusion are not yet known\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+  "raw_response_digest": "ba4b0b4fb74cc8af4a8b3cf4549021f9e05cbbb3c130a0d18298fb365e0b0790",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

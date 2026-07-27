@@ -1,0 +1,67 @@
+{
+  "allowed_actions": [
+    "interpret operator wording",
+    "register bounded conversational objective",
+    "run bounded local cognitive cycles",
+    "read approved local runtime state",
+    "update working memory",
+    "record conversation episodes",
+    "attach natural corrections",
+    "consolidate scoped non-authoritative lessons",
+    "select bounded next focus"
+  ],
+  "authority_boundary": "standing authority covers routine local cognition only; material actions require explicit operator approval",
+  "completion_or_review_condition": "review after at least one correction, one transfer case, one false-transfer guard, and restart restoration",
+  "correction_learning_policy": "attach corrections to exact turns; consolidate only scoped non-authoritative lessons",
+  "cycle_budget": 8,
+  "interpreted_objective": "Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+  "interruption_policy": "foreground chat preempts background objective work",
+  "lifecycle_state": "active",
+  "local_evidence_sources": [
+    "conversation turns",
+    "operator corrections",
+    "active cognitive episode state",
+    "continuity lessons"
+  ],
+  "model_call_budget": 4,
+  "objective_id": "conversational-objective-bdcabaf674357b0b",
+  "operator_wording": "Your goal today is to improve your English comprehension so we can communicate better.",
+  "persistence_scope": "session",
+  "practical_success_indicators": [
+    "operator corrections attach to exact turns",
+    "strategy revisions reduce repeated misunderstanding",
+    "later related cases use the scoped lesson",
+    "unrelated cases do not receive false transfer",
+    "ordinary chat remains responsive"
+  ],
+  "prohibited_actions": [
+    "tracked source mutation",
+    "file deletion",
+    "package installation",
+    "network or external provider use",
+    "deployment",
+    "commit or push",
+    "protected path mutation",
+    "credential access",
+    "authority escalation"
+  ],
+  "provenance": {
+    "compiler": "conversational_runtime_operation",
+    "intent": {
+      "authority_required": [],
+      "confidence": 0.84,
+      "intent_type": "persistent_or_session_goal",
+      "matched_signals": [
+        "explicit_goal_language",
+        "learning_or_improvement_target",
+        "scope_or_duration"
+      ],
+      "persistence_scope": "session",
+      "risk_class": "safe_internal",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "target_turn_id": ""
+    },
+    "source": "ordinary_chat"
+  },
+  "schema_version": "conversational_runtime_operation_marathon_1_v1"
+}

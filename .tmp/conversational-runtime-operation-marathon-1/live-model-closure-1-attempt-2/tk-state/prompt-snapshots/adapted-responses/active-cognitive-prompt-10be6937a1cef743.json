@@ -1,0 +1,24 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Operators can retain and apply corrections in real-time",
+      "Support staff can provide accurate and relevant corrections"
+    ],
+    "expected_observations": [
+      "Operators will use corrections in future conversations",
+      "Operators will demonstrate improved comprehension"
+    ],
+    "hypothesis_statement": "Operators will understand and use corrections made during conversation to improve comprehension in future interactions.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "English conversation between operators and support staff",
+    "supporting_evidence_refs": [
+      "prior-conversational-episode-3"
+    ],
+    "uncertainty": "Whether the corrections will be retained and effectively used by operators in subsequent conversations"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"hypothesis_statement\":\"Operators will understand and use corrections made during conversation to improve comprehension in future interactions.\",\"scope\":\"English conversation between operators and support staff\",\"supporting_evidence_refs\":[\"prior-conversational-episode-3\"],\"assumptions\":[\"Operators can retain and apply corrections in real-time\",\"Support staff can provide accurate and relevant corrections\"],\"expected_observations\":[\"Operators will use corrections in future conversations\",\"Operators will demonstrate improved comprehension\"],\"uncertainty\":\"Whether the corrections will be retained and effectively used by operators in subsequent conversations\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+  "raw_response_digest": "138eb5771050059d192f7f61d15f6d46aaeb3e6cdcf2526a22eb1200f331d737",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

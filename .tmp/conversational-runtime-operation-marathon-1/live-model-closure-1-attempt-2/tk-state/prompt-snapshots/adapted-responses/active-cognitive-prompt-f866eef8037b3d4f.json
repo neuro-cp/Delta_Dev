@@ -1,0 +1,23 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Operators have a basic understanding of English grammar and vocabulary"
+    ],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "prior-conversational-episode-12"
+    ],
+    "interpretation": "Operators may misunderstand specific English phrases due to unfamiliarity or lack of context.",
+    "next_evidence_need": "local evidence supporting or challenging the goal",
+    "next_focus_proposal": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+    "operation_result_type": "compare_evidence_result",
+    "recommended_action": "Continue correction-linked comprehension practice without duplicating prior completed episode work.",
+    "recommended_state_transition": "add_supporting_evidence",
+    "uncertainty": "Specific phrases and contexts remain unresolved."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"assumptions\":[\"Operators have a basic understanding of English grammar and vocabulary\"],\"contrary_evidence_considered\":[],\"evidence_refs\":[\"prior-conversational-episode-12\"],\"interpretation\":\"Operators may misunderstand specific English phrases due to unfamiliarity or lack of context.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"Continue correction-linked comprehension practice without duplicating prior completed episode work.\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"Specific phrases and contexts remain unresolved.\"}",
+  "raw_response_digest": "b76afcc743358303b7d1ae5a2103875f5c2d25d3d539b4ff752dde29916389ad",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

@@ -1,0 +1,14 @@
+{
+  "corrections": 0,
+  "cycles_after": 2,
+  "cycles_before": 0,
+  "elapsed_seconds": 61.449402400059626,
+  "intent_turns_after": 2,
+  "label": "goal",
+  "lessons": 0,
+  "message": "Your goal today is to improve your English comprehension so we can communicate better.",
+  "model_calls_after": 2,
+  "model_calls_before": 0,
+  "pending_authority": 0,
+  "status": "Chat runtime: active goal - Improve operator-specific English comprehension during con... cycles=2; corrections=0; questions=0"
+}

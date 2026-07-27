@@ -1,0 +1,4 @@
+{
+  "command": ".venv311\\Scripts\\python.exe -m py_compile DELTA.py orchestration/runtime/conversational_runtime_operation.py",
+  "passed": true
+}

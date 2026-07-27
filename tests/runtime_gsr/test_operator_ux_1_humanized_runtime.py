@@ -178,6 +178,9 @@ def test_operator_ux_top_level_tabs_and_rc_diagnostics_consolidated(monkeypatch,
     root, app = _app(monkeypatch, tmp_path)
     try:
         tabs = [app.notebook.tab(tab_id, "text") for tab_id in app.notebook.tabs()]
+        assert tabs == ["Conversation"]
+        app._open_developer_diagnostics()
+        tabs = [app.notebook.tab(tab_id, "text") for tab_id in app.notebook.tabs()]
         developer_tabs = [app.developer_notebook.tab(tab_id, "text") for tab_id in app.developer_notebook.tabs()]
         assert tabs == ["Conversation", "Goals", "Activity", "Evaluation", "Memory", "Settings", "Developer"]
         assert developer_tabs == ["RC3", "RC4", "RC5", "Diagnostics"]

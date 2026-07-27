@@ -1,0 +1,9 @@
+﻿{
+    "gate":  "CONVERSATIONAL_RUNTIME_OPERATION_MARATHON_1",
+    "remote":  "b6132b237d62871f35fd4a2bbce0691c6d68b278\trefs/heads/codex/delta-cognitive-core",
+    "branch":  "codex/delta-cognitive-core",
+    "aligned":  true,
+    "head":  "b6132b237d62871f35fd4a2bbce0691c6d68b278",
+    "baseline_commit":  "b6132b237d62871f35fd4a2bbce0691c6d68b278",
+    "upstream":  "b6132b237d62871f35fd4a2bbce0691c6d68b278"
+}

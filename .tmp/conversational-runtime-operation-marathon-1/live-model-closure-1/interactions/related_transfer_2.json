@@ -1,0 +1,14 @@
+{
+  "corrections": 3,
+  "cycles_after": 11,
+  "cycles_before": 10,
+  "elapsed_seconds": 0.9944154999684542,
+  "intent_turns_after": 8,
+  "label": "related_transfer_2",
+  "lessons": 3,
+  "message": "Give me a quick read on why that sentence sounds off.",
+  "model_calls_after": 3,
+  "model_calls_before": 3,
+  "pending_authority": 0,
+  "status": "Chat runtime: active goal - Improve operator-specific English comprehension during con... cycles=11; corrections=3; questions=0"
+}

@@ -1,0 +1,4 @@
+{
+  "method": "git diff --check",
+  "passed": true
+}

@@ -1,0 +1,23 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Operators can learn from corrections",
+      "Corrected sentences are clear and relevant"
+    ],
+    "expected_observations": [
+      "Operators will recall corrected sentences during future conversations"
+    ],
+    "hypothesis_statement": "Operators will understand corrected sentences better in future conversations.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "English comprehension during conversation",
+    "supporting_evidence_refs": [
+      "prior-conversational-episode-6"
+    ],
+    "uncertainty": "Whether the correction was effective and long-lasting"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"hypothesis_statement\":\"Operators will understand corrected sentences better in future conversations.\",\"scope\":\"English comprehension during conversation\",\"supporting_evidence_refs\":[\"prior-conversational-episode-6\"],\"assumptions\":[\"Operators can learn from corrections\",\"Corrected sentences are clear and relevant\"],\"expected_observations\":[\"Operators will recall corrected sentences during future conversations\"],\"uncertainty\":\"Whether the correction was effective and long-lasting\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+  "raw_response_digest": "d645f3cf03f007ba3e13c3e4bd42c1948d159a1d1bdba9b5287850342c77f7ca",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

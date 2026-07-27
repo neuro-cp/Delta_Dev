@@ -1,0 +1,4 @@
+{
+  "model_execution_lane_isolation": "10 passed",
+  "ordinary_chat_not_goal": "covered by UI and runtime tests"
+}

@@ -1,0 +1,10 @@
+{
+  "accepted_lesson_count": 2,
+  "background_cycle_count": 16,
+  "correction_count": 2,
+  "failure_reasons": [],
+  "objective_id": "conversational-objective-bdcabaf674357b0b",
+  "passed": true,
+  "pending_material_authority_count": 1,
+  "schema_version": "conversational_runtime_operation_marathon_1_v1"
+}

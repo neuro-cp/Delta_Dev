@@ -1,0 +1,14 @@
+{
+  "corrections": 1,
+  "cycles_after": 4,
+  "cycles_before": 2,
+  "elapsed_seconds": 27.43419780000113,
+  "intent_turns_after": 4,
+  "label": "baseline_case_1",
+  "lessons": 1,
+  "message": "Explain what I mean by the thing before the current one.",
+  "model_calls_after": 3,
+  "model_calls_before": 2,
+  "pending_authority": 0,
+  "status": "Chat runtime: active goal - Improve operator-specific English comprehension during con... cycles=4; corrections=1; questions=0"
+}

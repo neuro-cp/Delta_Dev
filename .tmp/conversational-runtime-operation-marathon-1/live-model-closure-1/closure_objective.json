@@ -1,0 +1,13 @@
+{
+  "gate": "CONVERSATIONAL_RUNTIME_LIVE_MODEL_CLOSURE_1",
+  "minimums": {
+    "cognition_cycles": 10,
+    "natural_corrections": 2,
+    "real_tk_restart": 1,
+    "related_transfer_cases": 3,
+    "successful_local_model_calls": 8,
+    "unrelated_false_transfer_cases": 2
+  },
+  "no_new_architecture": true,
+  "objective": "Validate the existing conversational runtime implementation with real Tk chat path and installed local Qwen model calls."
+}

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import asdict, fields, is_dataclass
+from dataclasses import asdict, fields, is_dataclass, replace
 import json
 import os
 import queue
@@ -30,6 +30,7 @@ LIVE_RUNTIME_3_ROOT = ROOT / ".tmp" / "live-runtime-3-interruption-resumption-v1
 LIVE_RUNTIME_3_ACCEPTED_ROOT = ROOT / ".tmp" / "live-general-3-approved-learning-v1"
 LIVE_RUNTIME_4_ROOT = ROOT / ".tmp" / "live-runtime-4-crash-integrity-v1"
 LIVE_RUNTIME_4_ACCEPTED_ROOT = ROOT / ".tmp" / "live-general-3-approved-learning-v1"
+CONVERSATIONAL_RUNTIME_ROOT = ROOT / "data" / "runtime" / "conversational_runtime_operation"
 
 from orchestration.runtime.rc1_operator_console import (  # noqa: E402
     append_observation,
@@ -71,6 +72,17 @@ from orchestration.runtime.active_cognitive_loop import (  # noqa: E402
     read_episode_state as read_active_cognitive_episode_state,
     run_cognitive_cycle as run_active_cognitive_cycle,
     write_episode_state as write_active_cognitive_episode_state,
+)
+from orchestration.runtime.conversational_runtime_operation import (  # noqa: E402
+    chat_feature_settings_schema,
+    classify_conversational_intent,
+    evaluate_conversational_runtime,
+    handle_conversational_message,
+    infer_lesson_transfer,
+    run_background_objective_cycle as run_conversational_background_cycle,
+    save_runtime_state as save_conversational_runtime_state,
+    start_or_restore_runtime as start_or_restore_conversational_runtime,
+    stop_active_objective as stop_conversational_objective,
 )
 from orchestration.runtime.goal_oriented_ui_campaign import (  # noqa: E402
     CAMPAIGN_ID as GOAL_UI_CAMPAIGN_ID,
@@ -1659,6 +1671,12 @@ class DeltaApp:
         self.resident_model_id: str | None = None
         self.resident_lane: str | None = None
         self.model_residency_status = "not_warmed"
+        self.conversational_runtime_root = CONVERSATIONAL_RUNTIME_ROOT
+        self.conversational_runtime_state = start_or_restore_conversational_runtime(self.conversational_runtime_root)
+        self.conversational_runtime_status = tk.StringVar(value=self._conversational_runtime_status_text())
+        self.conversational_runtime_inference_in_flight = False
+        self.conversational_runtime_result_queue: queue.Queue = queue.Queue()
+        self.simple_default_surface_enabled = tk.BooleanVar(value=True)
         self.goal_ui_campaign_status = tk.StringVar(value="Goal UI campaign: not started")
         self.goal_ui_campaign_selected_id = tk.StringVar(value="")
         self.goal_ui_campaign_buttons: dict[str, ttk.Button] = {}
@@ -1671,10 +1689,13 @@ class DeltaApp:
         self._load_live_runtime_3_state()
         self._load_live_runtime_4_state()
         self._refresh_operator_ux_views()
+        self._apply_simple_default_surface()
         self.root.after(50, self._poll_live_runtime_worker_results)
+        self.root.after(50, self._poll_conversational_runtime_worker_results)
+        self.root.after(250, self._tick_conversational_objective_runtime)
         self._refresh_state_cards()
-        self._warm_default_model()
         self._show_welcome()
+        self.root.after(10, self._warm_default_model)
 
     def _build(self) -> None:
         outer = ttk.Frame(self.root, padding=10)
@@ -1721,6 +1742,7 @@ class DeltaApp:
 
     def _build_conversation_tab(self) -> None:
         header = ttk.LabelFrame(self.conversation_tab, text="Cognitive State")
+        self.cognitive_state_frame = header
         header.pack(fill=tk.X)
         self.state_vars: dict[str, tk.StringVar] = {}
         for index, (label, key) in enumerate([
@@ -1739,7 +1761,15 @@ class DeltaApp:
             self.state_vars[key] = tk.StringVar(value="-")
             ttk.Label(card, textvariable=self.state_vars[key], font=("Segoe UI", 11, "bold")).pack()
 
+        status_bar = ttk.Frame(self.conversation_tab)
+        self.conversational_status_frame = status_bar
+        status_bar.pack(fill=tk.X, pady=(0, 8))
+        ttk.Label(status_bar, textvariable=self.conversational_runtime_status).pack(side=tk.LEFT)
+        ttk.Button(status_bar, text="Stop", command=self._stop_conversational_objective).pack(side=tk.RIGHT)
+        ttk.Button(status_bar, text="Advanced", command=self._open_developer_diagnostics).pack(side=tk.RIGHT, padx=(0, 8))
+
         mode_bar = ttk.Frame(self.conversation_tab)
+        self.mode_bar = mode_bar
         mode_bar.pack(fill=tk.X, pady=(8, 0))
         ttk.Label(mode_bar, text="Mode").pack(side=tk.LEFT)
         self.mode = ttk.Combobox(mode_bar, values=DISPLAY_MODES, width=22, state="readonly")
@@ -1749,6 +1779,7 @@ class DeltaApp:
         ttk.Button(mode_bar, text="Advanced Operator Console", command=self._open_developer_diagnostics).pack(side=tk.RIGHT)
 
         live_bar = ttk.Frame(self.conversation_tab)
+        self.live_bar = live_bar
         live_bar.pack(fill=tk.X, pady=(8, 0))
         ttk.Button(live_bar, text="Start Live Runtime", command=self._start_live_runtime).pack(side=tk.LEFT)
         ttk.Button(live_bar, text="Stop", command=self._stop_live_runtime).pack(side=tk.LEFT, padx=(8, 0))
@@ -1770,6 +1801,7 @@ class DeltaApp:
         self.chat_input.bind("<Return>", lambda _event: self._send_chat())
 
         memory_bar = ttk.Frame(self.conversation_tab)
+        self.memory_bar = memory_bar
         memory_bar.pack(fill=tk.X, pady=(6, 0))
         ttk.Button(memory_bar, text="Accept Selected Concept", command=self._accept_selected_concept).pack(side=tk.LEFT)
         ttk.Button(memory_bar, text="Reject Selected Concept", command=self._reject_selected_concept).pack(side=tk.LEFT, padx=(8, 0))
@@ -1778,6 +1810,7 @@ class DeltaApp:
         ttk.Button(memory_bar, text="Open Operator Console", command=self._open_developer_diagnostics).pack(side=tk.RIGHT)
 
         review = ttk.LabelFrame(self.conversation_tab, text="Concept Review")
+        self.concept_review_frame = review
         review.pack(fill=tk.X, pady=(8, 0))
         self.concept_review = ttk.Treeview(review, columns=("concept", "source", "status"), show="headings", height=3)
         self.concept_review.heading("concept", text="Potential Concept")
@@ -1792,11 +1825,68 @@ class DeltaApp:
             self.conversation_tab,
             text="Default mode is natural conversation. Possible concepts appear in Concept Review and are stored only if you press Accept.",
         )
+        self.conversation_hint = hint
         hint.pack(anchor=tk.W, pady=(6, 0))
 
     def _open_developer_diagnostics(self) -> None:
+        self._show_advanced_surface()
         self.notebook.select(self.developer_tab)
         self.developer_notebook.select(self.advanced_tab)
+
+    def _apply_simple_default_surface(self) -> None:
+        self._advanced_surface_visible = False
+        for frame_name in (
+            "cognitive_state_frame",
+            "mode_bar",
+            "live_bar",
+            "memory_bar",
+            "concept_review_frame",
+            "conversation_hint",
+        ):
+            frame = getattr(self, frame_name, None)
+            if frame is not None:
+                frame.pack_forget()
+        for tab in (
+            self.goals_tab,
+            self.activity_tab,
+            self.evaluation_tab,
+            self.database_tab,
+            self.settings_tab,
+            self.developer_tab,
+        ):
+            try:
+                self.notebook.forget(tab)
+            except tk.TclError:
+                pass
+        self.notebook.select(self.conversation_tab)
+
+    def _show_advanced_surface(self) -> None:
+        if getattr(self, "_advanced_surface_visible", False):
+            return
+        tab_specs = (
+            (self.goals_tab, "Goals"),
+            (self.activity_tab, "Activity"),
+            (self.evaluation_tab, "Evaluation"),
+            (self.database_tab, "Memory"),
+            (self.settings_tab, "Settings"),
+            (self.developer_tab, "Developer"),
+        )
+        existing = set(self.notebook.tabs())
+        for tab, label in tab_specs:
+            if str(tab) not in existing:
+                self.notebook.add(tab, text=label)
+        for frame_name in (
+            "cognitive_state_frame",
+            "mode_bar",
+            "live_bar",
+            "memory_bar",
+            "concept_review_frame",
+            "conversation_hint",
+        ):
+            frame = getattr(self, frame_name, None)
+            if frame is not None:
+                frame.pack(fill=tk.X, pady=(6, 0))
+        self._advanced_surface_visible = True
 
     def _build_goals_tab(self) -> None:
         top = ttk.Frame(self.goals_tab)
@@ -2244,15 +2334,19 @@ class DeltaApp:
         self.activity_items.pack(fill=tk.BOTH, expand=True, pady=(8, 0))
 
     def _build_settings_tab(self) -> None:
-        ttk.Label(self.settings_tab, text="Settings").pack(anchor=tk.W)
+        ttk.Label(self.settings_tab, text="Chat Features / Settings Schema").pack(anchor=tk.W)
         ttk.Label(
             self.settings_tab,
             text=(
-                "Developer diagnostics are available in the Developer tab. "
-                "Normal operation uses Conversation, Goals, Activity, Evaluation, and Memory."
+                "Default operation follows a GPT-style chat surface. Settings describe behavior and authority boundaries; "
+                "they do not grant new authority by themselves."
             ),
             wraplength=900,
         ).pack(anchor=tk.W, pady=(8, 0))
+        self.chat_settings_detail = scrolledtext.ScrolledText(self.settings_tab, wrap=tk.WORD, height=26)
+        self.chat_settings_detail.pack(fill=tk.BOTH, expand=True, pady=(8, 0))
+        self.chat_settings_detail.insert(tk.END, json.dumps(chat_feature_settings_schema(), indent=2, sort_keys=True))
+        self.chat_settings_detail.configure(state=tk.DISABLED)
 
     def _operator_ux_current_runtime_state(self) -> dict[str, object]:
         for root in (LIVE_RUNTIME_4_ROOT, LIVE_RUNTIME_3_ROOT, LIVE_RUNTIME_2_ROOT, LIVE_RUNTIME_1B_ROOT):
@@ -5278,6 +5372,155 @@ class DeltaApp:
         if len(self.session_history) > 24:
             self.session_history = self.session_history[-24:]
 
+    def _conversational_runtime_status_text(self) -> str:
+        state = getattr(self, "conversational_runtime_state", None)
+        if state is None:
+            return "Chat runtime: starting"
+        objective = state.active_objective
+        if objective is None:
+            return "Chat runtime: ready"
+        evaluation = evaluate_conversational_runtime(state)
+        return (
+            f"Chat runtime: active goal - {objective.interpreted_objective[:58]}... "
+            f"cycles={evaluation['background_cycle_count']}; corrections={evaluation['correction_count']}; "
+            f"questions={evaluation['pending_material_authority_count']}"
+        )
+
+    def _refresh_conversational_runtime_status(self) -> None:
+        if hasattr(self, "conversational_runtime_status"):
+            self.conversational_runtime_status.set(self._conversational_runtime_status_text())
+
+    def _set_conversational_runtime_working(self) -> None:
+        if hasattr(self, "conversational_runtime_status"):
+            self.conversational_runtime_status.set("Chat runtime: working on the active goal...")
+
+    def _conversational_cognitive_model_runner(self) -> LedgerBackedCognitiveModelRunner:
+        return LedgerBackedCognitiveModelRunner(
+            ledger=LocalModelRequestResultLedger(self.conversational_runtime_root / "model-ledger"),
+            provider_manager=self.provider_manager,
+            authority_reason="standing_bounded_authority_conversational_runtime_operation",
+            snapshot_root=self.conversational_runtime_root / "prompt-snapshots",
+            request_identity_suffix="conversational-runtime-live",
+        )
+
+    def _stop_conversational_objective(self) -> None:
+        state = self.conversational_runtime_state
+        if state.active_objective is None:
+            self._refresh_conversational_runtime_status()
+            return
+        self.conversational_runtime_state = stop_conversational_objective(state)
+        save_conversational_runtime_state(self.conversational_runtime_root, self.conversational_runtime_state)
+        self._refresh_conversational_runtime_status()
+        self._append_chat("DELTA", "I stopped the active conversational objective. Ordinary chat is still available.")
+        self._append_session("assistant", "I stopped the active conversational objective. Ordinary chat is still available.")
+
+    def _merge_conversational_background_result(self, prior_state, worker_state):
+        current = self.conversational_runtime_state
+        current_objective = current.active_objective.objective_id if current.active_objective else ""
+        prior_objective = prior_state.active_objective.objective_id if prior_state.active_objective else ""
+        worker_objective = worker_state.active_objective.objective_id if worker_state.active_objective else ""
+        if current_objective != prior_objective or worker_objective != prior_objective:
+            return current
+        progress_delta = worker_state.objective_progress[len(prior_state.objective_progress):]
+        focus_delta = worker_state.focus_history[len(prior_state.focus_history):]
+        cycle_delta = tuple(
+            key for key in worker_state.completed_cycle_keys
+            if key not in current.completed_cycle_keys
+        )
+        return replace(
+            current,
+            lifecycle_state=worker_state.lifecycle_state,
+            active_episode_path=worker_state.active_episode_path,
+            completed_cycle_keys=current.completed_cycle_keys + cycle_delta,
+            objective_progress=current.objective_progress + progress_delta,
+            focus_history=current.focus_history + focus_delta,
+        )
+
+    def _poll_conversational_runtime_worker_results(self) -> None:
+        while True:
+            try:
+                item = self.conversational_runtime_result_queue.get_nowait()
+            except queue.Empty:
+                break
+            prior_state, worker_state, error = item
+            self.conversational_runtime_inference_in_flight = False
+            if error is not None:
+                self.conversational_runtime_status.set(f"Chat runtime: safe pause after {type(error).__name__}")
+                continue
+            self.conversational_runtime_state = self._merge_conversational_background_result(prior_state, worker_state)
+            save_conversational_runtime_state(self.conversational_runtime_root, self.conversational_runtime_state)
+            self._refresh_conversational_runtime_status()
+        self.root.after(100, self._poll_conversational_runtime_worker_results)
+
+    def _start_conversational_background_cycle(self, reason: str) -> bool:
+        state = self.conversational_runtime_state
+        if not state.active_objective or state.lifecycle_state != "running":
+            self._refresh_conversational_runtime_status()
+            return False
+        if self.conversational_runtime_inference_in_flight or self.live_runtime_request_in_flight:
+            self._set_conversational_runtime_working()
+            return False
+        prior_state = state
+        self.conversational_runtime_inference_in_flight = True
+        self._set_conversational_runtime_working()
+
+        def worker() -> None:
+            try:
+                worker_state = run_conversational_background_cycle(
+                    prior_state,
+                    runtime_root=self.conversational_runtime_root,
+                    reason=reason,
+                    model_runner=self._conversational_cognitive_model_runner(),
+                )
+                error: Exception | None = None
+            except Exception as exc:  # noqa: BLE001 - foreground chat must remain usable.
+                worker_state = prior_state
+                error = exc
+            self.conversational_runtime_result_queue.put((prior_state, worker_state, error))
+
+        threading.Thread(target=worker, name="delta-conversational-runtime-cycle", daemon=True).start()
+        return True
+
+    def _tick_conversational_objective_runtime(self) -> None:
+        self._start_conversational_background_cycle("automatic_startup_or_idle_tick")
+        self.root.after(2000, self._tick_conversational_objective_runtime)
+
+    def _handle_conversational_runtime_message(self, message: str) -> bool:
+        state = self.conversational_runtime_state
+        intent = classify_conversational_intent(
+            message,
+            active_objective=state.active_objective,
+            recent_turns=state.conversation,
+        )
+        transfer = infer_lesson_transfer(state, message) if state.active_objective else {"applied": False}
+        if intent.intent_type not in {
+            "persistent_or_session_goal",
+            "direct_correction",
+            "authority_changing_or_risky_instruction",
+        } and not transfer.get("applied"):
+            if state.active_objective and state.lifecycle_state == "running":
+                self._start_conversational_background_cycle("foreground_chat_yield")
+            return False
+        result = handle_conversational_message(
+            state,
+            message,
+            runtime_root=self.conversational_runtime_root,
+            run_background_cycle=False,
+        )
+        self.conversational_runtime_state = result.state
+        self._append_chat("DELTA", result.reply)
+        self._append_session("user", message)
+        self._append_session("assistant", result.reply)
+        self._refresh_conversational_runtime_status()
+        self._refresh_state_cards()
+        if result.objective_created:
+            self._start_conversational_background_cycle("objective_registered")
+        elif result.correction_attached:
+            self._start_conversational_background_cycle("correction_attached")
+        elif result.transfer_applied:
+            self._start_conversational_background_cycle("ordinary_chat_yield")
+        return True
+
     def _recent_history_for_router(self) -> list[dict[str, str]]:
         history = self.session_history[-10:]
         if self.active_topic_anchor:
@@ -5632,6 +5875,8 @@ class DeltaApp:
             if self._consume_operator_ux_intent(intent, response_source="conversation"):
                 self._refresh_state_cards()
                 return
+        if self._handle_conversational_runtime_message(message):
+            return
         if lower == "create operator ux demo goal":
             request = self._create_operator_ux_demo_request()
             self._append_chat("DELTA", "I created a demo goal and need your approval before the next bounded step.")

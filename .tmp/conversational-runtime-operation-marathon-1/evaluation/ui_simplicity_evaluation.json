@@ -1,0 +1,14 @@
+{
+  "campaign_tabs_required": false,
+  "normal_controls": [
+    "chat transcript",
+    "message input",
+    "Send",
+    "activity status",
+    "Stop",
+    "Advanced"
+  ],
+  "tabs": [
+    "Conversation"
+  ]
+}

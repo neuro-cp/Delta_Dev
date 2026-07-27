@@ -1,0 +1,26 @@
+{
+  "branch": [
+    "codex/delta-cognitive-core"
+  ],
+  "head": [
+    "b6132b237d62871f35fd4a2bbce0691c6d68b278"
+  ],
+  "staged": [],
+  "status": [
+    " M DELTA.py",
+    " M orchestration/runtime/live_competence_adapter.py",
+    " M tests/runtime_gsr/test_operator_ux_1_humanized_runtime.py",
+    "?? orchestration/runtime/cognitive_claim_relation_runtime.py",
+    "?? orchestration/runtime/cognitive_claim_relations.py",
+    "?? orchestration/runtime/cognitive_contradiction_evaluation.py",
+    "?? orchestration/runtime/cognitive_excluded_path_reconciliation.py",
+    "?? orchestration/runtime/conversational_runtime_operation.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relation_runtime.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relations.py",
+    "?? tests/runtime_gsr/test_cognitive_contradiction_evaluation.py",
+    "?? tests/runtime_gsr/test_cognitive_excluded_path_reconciliation.py",
+    "?? tests/runtime_gsr/test_conversational_runtime_operation.py",
+    "?? tests/runtime_gsr/test_conversational_runtime_ui.py"
+  ]
+}
