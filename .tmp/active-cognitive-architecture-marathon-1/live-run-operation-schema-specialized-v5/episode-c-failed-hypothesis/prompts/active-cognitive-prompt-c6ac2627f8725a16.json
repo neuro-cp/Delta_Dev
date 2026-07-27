@@ -1,0 +1,85 @@
+{
+  "authority_constraints": [
+    "no network",
+    "no protected paths",
+    "no commit",
+    "bounded local actions only"
+  ],
+  "contrary_evidence_ids_supplied": [
+    "c_failed_hypothesis_contrary",
+    "c_revision_target"
+  ],
+  "cycle_id": "active-cognitive-cycle-9674787bcf6fbb41",
+  "evidence_ids_supplied": [
+    "c_initial_hypothesis_support",
+    "c_repair_evidence"
+  ],
+  "expected_response_schema": {
+    "assumptions": [
+      "explicit assumptions"
+    ],
+    "expected_observations": [
+      "observable expectations"
+    ],
+    "hypothesis_statement": "falsifiable hypothesis statement",
+    "recommended_state_transition": "one allowed transition",
+    "scope": "scope of hypothesis",
+    "supporting_evidence_refs": [
+      "IDs only from supplied evidence"
+    ],
+    "uncertainty": "nonempty uncertainty phrase"
+  },
+  "focus_id": "focus-17a05b903e1c864b",
+  "goal_id": "active-cognitive-goal-ab6cb13d4fe3f1dd",
+  "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+  "operation_request": {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-9674787bcf6fbb41",
+    "evidence_constraints": [
+      "c_initial_hypothesis_support",
+      "c_failed_hypothesis_contrary",
+      "c_repair_evidence",
+      "c_revision_target"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-17a05b903e1c864b",
+    "goal_id": "active-cognitive-goal-ab6cb13d4fe3f1dd",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-15de74e0b0e89a39",
+    "operation_type": "formulate_hypothesis",
+    "provenance": [
+      "working-memory-packet-757e00699efbb438"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "d543a225207e3213ac0e5114307eb9592b33ed233ad4fdcbf7caa5ed4a3667cc"
+  },
+  "operation_type": "formulate_hypothesis",
+  "prompt_byte_digest": "34cf1a2212e9e05d20a8439bec47dcf384c1889a8efcac9b0cd74aee14edd213",
+  "prompt_length": 4038,
+  "prompt_schema_version": "active_cognitive_prompt_qualification_1_v1",
+  "prompt_snapshot_id": "active-cognitive-prompt-c6ac2627f8725a16",
+  "prompt_text": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- hypothesis_statement: nonempty string\n- scope: nonempty string\n- supporting_evidence_refs: array[string]\n- assumptions: array[string]\n- expected_observations: array[string]\n- uncertainty: nonempty string\n- recommended_state_transition: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- supporting_evidence_refs values must be chosen from: c_initial_hypothesis_support, c_repair_evidence\nOPERATION RULE: hypothesis_statement must be testable against future observations\nTASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: c_initial_hypothesis_support, c_repair_evidence. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied.\nCONTEXT_JSON:\n{\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":1,\"description\":\"Resolve discrepancy for goal: revise a failed hypothesis about the active cognition runtime using contrary evidence\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"c_initial_hypothesis_support\",\"c_failed_hypothesis_contrary\",\"c_repair_evidence\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-17a05b903e1c864b\",\"related_goal_ids\":[\"active-cognitive-goal-ab6cb13d4fe3f1dd\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"Episode B and E were not run; C and D were scripted only; final status was usefulness-blocked.\",\"evidence_id\":\"c_failed_hypothesis_contrary\",\"source\":\"prior evidence\",\"summary\":\"Contrary evidence: the previous marathon claim that live cognition was complete failed.\"},{\"content\":\"The useful outcome is a narrower revised hypothesis about what DELTA can now prove live.\",\"evidence_id\":\"c_revision_target\",\"source\":\"operator\",\"summary\":\"The target is not to preserve the old broad success claim.\"}],\"current_goal\":{\"expected_state\":\"failed hypothesis is weakened or revised from evidence and summarized\",\"goal_id\":\"active-cognitive-goal-ab6cb13d4fe3f1dd\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"revise a failed hypothesis about the active cognition runtime using contrary evidence\"},\"current_hypotheses\":[],\"evidence_for\":[{\"content\":\"The runtime can formulate hypotheses, compare evidence, and write learning artifacts.\",\"evidence_id\":\"c_initial_hypothesis_support\",\"source\":\"repo\",\"summary\":\"Supporting evidence: active cognition runtime exposes focus, hypothesis, and model operation structures.\"},{\"content\":\"The newer checkpoint showed strict model outputs can revise hypotheses and produce useful Episode A artifacts.\",\"evidence_id\":\"c_repair_evidence\",\"source\":\"checkpoint\",\"summary\":\"Operation-specific schema specialization repaired model operation consumption.\"}],\"recent_outcomes\":[]}",
+  "request_identity": "active-cognitive-ledger-request-b356221d4662e315",
+  "retry_sequence": 0,
+  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+  "working_memory_packet_digest": "d543a225207e3213ac0e5114307eb9592b33ed233ad4fdcbf7caa5ed4a3667cc",
+  "working_memory_packet_id": "working-memory-packet-757e00699efbb438"
+}

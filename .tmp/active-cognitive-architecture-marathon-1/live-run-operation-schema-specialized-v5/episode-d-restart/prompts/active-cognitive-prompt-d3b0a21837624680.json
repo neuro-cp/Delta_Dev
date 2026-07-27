@@ -1,0 +1,81 @@
+{
+  "authority_constraints": [
+    "no network",
+    "no protected paths",
+    "no commit",
+    "bounded local actions only"
+  ],
+  "contrary_evidence_ids_supplied": [
+    "d_prior_limitation"
+  ],
+  "cycle_id": "active-cognitive-cycle-fbecd4e7030de455",
+  "evidence_ids_supplied": [
+    "d_persistence_support",
+    "d_restart_requirement",
+    "d_useful_target"
+  ],
+  "expected_response_schema": {
+    "evidence_refs": [
+      "IDs only from supplied evidence"
+    ],
+    "lesson": "learning from outcome",
+    "recommended_state_transition": "one allowed transition",
+    "uncertainty": "nonempty uncertainty phrase",
+    "unresolved_questions": [
+      "questions that remain unresolved"
+    ]
+  },
+  "focus_id": "focus-0e0ad45f47fdeb7b",
+  "goal_id": "active-cognitive-goal-376f7054be6cd147",
+  "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+  "operation_request": {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-fbecd4e7030de455",
+    "evidence_constraints": [
+      "d_persistence_support",
+      "d_restart_requirement",
+      "d_useful_target",
+      "d_prior_limitation"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-0e0ad45f47fdeb7b",
+    "goal_id": "active-cognitive-goal-376f7054be6cd147",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-65f2949aa6186c9e",
+    "operation_type": "summarize_learning",
+    "provenance": [
+      "working-memory-packet-54d8530e896b874d"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform summarize_learning for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "e58869584c164b89071b0d4f03e2ac9c105c84be068fd228ccbec00e776dc435"
+  },
+  "operation_type": "summarize_learning",
+  "prompt_byte_digest": "7c280f7c2aa8676bba4e8505d367b6276b5ae0eadd23d912c1558fe3a813f129",
+  "prompt_length": 5932,
+  "prompt_schema_version": "active_cognitive_prompt_qualification_1_v1",
+  "prompt_snapshot_id": "active-cognitive-prompt-d3b0a21837624680",
+  "prompt_text": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- lesson: nonempty string\n- evidence_refs: array[string]\n- unresolved_questions: array[string]\n- uncertainty: nonempty string\n- recommended_state_transition: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- evidence_refs values must be chosen from: d_persistence_support, d_restart_requirement, d_useful_target, d_prior_limitation\nTASK: perform only operation summarize_learning. Allowed transition/next-operation values: summarize_learning, select_next_focus. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: d_persistence_support, d_restart_requirement, d_useful_target. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied.\nCONTEXT_JSON:\n{\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"semantic comparison\",\"creation_sequence\":3,\"description\":\"Challenge or revise hypothesis: The ActiveCognitiveEpisodeState can be persisted, restored, and resumed with continuity of focus and post-resume learning.\",\"evidence_need\":\"contrary and supporting evidence\",\"evidence_refs\":[\"d_persistence_support\",\"d_restart_requirement\",\"d_useful_target\",\"d_prior_limitation\"],\"expected_value\":\"belief_revision\",\"focus_id\":\"focus-0e0ad45f47fdeb7b\",\"related_goal_ids\":[\"active-cognitive-goal-376f7054be6cd147\"],\"salience_categories\":[\"unresolved_hypothesis\",\"evidence_revision\",\"expected_useful_progress\"],\"salience_explanation\":\"An active hypothesis needs evidence-linked revision before action.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"hypothesis_revision\",\"urgency\":\"high\"},\"contrary_evidence\":[{\"content\":\"The previous final status classified Episode D as covered_by_round_trip_tests_not_live.\",\"evidence_id\":\"d_prior_limitation\",\"source\":\"prior evidence\",\"summary\":\"Contrary evidence: earlier restart coverage was only round-trip tests, not live model episode evidence.\"}],\"current_goal\":{\"expected_state\":\"interrupted state restores and resumes into useful cognitive work\",\"goal_id\":\"active-cognitive-goal-376f7054be6cd147\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"survive interruption, persisted restart, and resume while preserving active focus and evidence-linked cognition\"},\"current_hypotheses\":[{\"assumptions\":[\"The ActiveCognitiveEpisodeState format is consistent and preserved across restarts.\"],\"confidence_state\":\"contested\",\"created_at\":\"2026-07-27T00:58:30+00:00\",\"disposition\":\"needs_challenge\",\"evidence_against\":[\"d_prior_limitation\"],\"evidence_for\":[\"d_persistence_support\",\"d_restart_requirement\",\"d_useful_target\"],\"expected_observations\":[\"local evidence should support a bounded useful step\"],\"hypothesis_id\":\"hypothesis-94778b654a415705\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-bd40a743adf98eab\",\"originating_goal_id\":\"active-cognitive-goal-376f7054be6cd147\",\"provenance\":[\"cognitive-operation-6e71220ef64ca40a\",\"cognitive-operation-0716edca18aaf640\"],\"revised_at\":\"2026-07-27T00:59:09+00:00\",\"revision_parent_id\":\"\",\"revision_reason\":\"The hypothesis is supported by evidence that ActiveCognitiveEpisodeState can be persisted, restored, and resumed with continuity of focus and post-resume learning. However, the previous final status classified Episode D as covered by round-trip tests, not live model episode evidence, which weakens the hypothesis.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: survive interruption, persisted restart, and resume while preserving active focus and evidence-linked cognition\",\"statement\":\"The ActiveCognitiveEpisodeState can be persisted, restored, and resumed with continuity of focus and post-resume learning.\"}],\"evidence_for\":[{\"content\":\"write_episode_state and read_episode_state round-trip ActiveCognitiveEpisodeState.\",\"evidence_id\":\"d_persistence_support\",\"source\":\"repo\",\"summary\":\"State serialization and readback are implemented for active cognitive episodes.\"},{\"content\":\"Episode D must persist an interruption, restore it, resume focus, and continue model operations.\",\"evidence_id\":\"d_restart_requirement\",\"source\":\"operator\",\"summary\":\"The proof requires survival across restart rather than only in-memory scripted tests.\"},{\"content\":\"The episode should show focus ID continuity and post-resume learning.\",\"evidence_id\":\"d_useful_target\",\"source\":\"operator\",\"summary\":\"The useful target is a durable restart/resume artifact with model operations after restoration.\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-27T00:59:09+00:00\",\"discrepancy\":\"progress_observed\",\"expected\":\"Perform compare_evidence for the active focus using only referenced evidence.\",\"observed\":\"The hypothesis is supported by evidence that ActiveCognitiveEpisodeState can be persisted, restored, and resumed with continuity of focus and post-resume learning. However, the previous final status classified Episode D as covered by round-trip tests, not live model episode evidence, which weakens the hypothesis.\",\"operation_id\":\"cognitive-operation-0716edca18aaf640\",\"outcome_id\":\"outcome-eb3c8dd151c981f5\"}]}",
+  "request_identity": "active-cognitive-ledger-request-ca1ed7eb7aba6b9e",
+  "retry_sequence": 0,
+  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+  "working_memory_packet_digest": "e58869584c164b89071b0d4f03e2ac9c105c84be068fd228ccbec00e776dc435",
+  "working_memory_packet_id": "working-memory-packet-54d8530e896b874d"
+}

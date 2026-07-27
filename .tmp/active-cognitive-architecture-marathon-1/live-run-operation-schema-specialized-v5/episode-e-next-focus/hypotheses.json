@@ -1,0 +1,35 @@
+[
+  {
+    "assumptions": [
+      "The system has a defined set of candidate foci"
+    ],
+    "confidence_state": "contested",
+    "created_at": "2026-07-27T00:59:55+00:00",
+    "disposition": "needs_challenge",
+    "evidence_against": [
+      "e_operator_constraint"
+    ],
+    "evidence_for": [
+      "e_completed_prior_work",
+      "e_unresolved_research_need",
+      "e_unresolved_restart_need"
+    ],
+    "expected_observations": [
+      "local evidence should support a bounded useful step"
+    ],
+    "hypothesis_id": "hypothesis-e092c4cef94c6054",
+    "lifecycle_state": "active",
+    "originating_focus_id": "focus-7da3a65a7e73ace4",
+    "originating_goal_id": "active-cognitive-goal-f8f3c7ef02221d29",
+    "provenance": [
+      "cognitive-operation-639142002e6ac510",
+      "cognitive-operation-f611ed9b91df7ebd"
+    ],
+    "revised_at": "2026-07-27T01:00:31+00:00",
+    "revision_parent_id": "",
+    "revision_reason": "The next focus should be selected from unresolved evidence rather than assigned as another schema task. However, the operator constraint indicates that the next focus must remain within the current marathon and defer identify_evidence_need unless genuinely needed.",
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "scope": "Resolve discrepancy for goal: select and begin the next useful focus after completing a prior cognitive episode",
+    "statement": "The next focus should be selected from unresolved evidence rather than assigned as another schema task."
+  }
+]

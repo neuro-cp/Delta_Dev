@@ -967,7 +967,7 @@ def validate_model_result(
     invented = tuple(ref for ref in refs + contrary if ref and ref not in evidence_ids)
     if invented:
         rejection.append("unsupported_evidence_reference:" + ",".join(invented))
-    if packet.conflicting_evidence and request.operation_type in {"compare_evidence", "challenge_hypothesis", "summarize_learning"} and not contrary:
+    if packet.conflicting_evidence and request.operation_type in {"compare_evidence", "challenge_hypothesis"} and not contrary:
         rejection.append("contrary_evidence_not_considered")
     if str(raw.get("recommended_state_transition") or "") == "final_status_success":
         rejection.append("self_certified_success")
@@ -1102,7 +1102,7 @@ def apply_operation_result(
             disposition=transition,
             provenance=tuple(dict.fromkeys(parent.provenance + (request.operation_id,))),
         ),)
-    elif transition == "summarize_learning":
+    elif request.operation_type == "summarize_learning":
         learning = learning + ({
             "learning_id": stable_id("learning", state.episode_id, request.operation_id),
             "summary": result.interpretation,
@@ -1543,6 +1543,10 @@ def _id_array_rules_text(
 ) -> str:
     evidence_ids = ", ".join(item["evidence_id"] for item in supporting) or "none"
     contrary_ids = ", ".join(item["evidence_id"] for item in contrary) or "none"
+    combined_ids = ", ".join(
+        dict.fromkeys([item["evidence_id"] for item in supporting] + [item["evidence_id"] for item in contrary])
+    ) or "none"
+    schema_has_contrary_field = any("contrary" in field for field in schema.evidence_fields)
     lines = [
         "ID ARRAY RULES:",
         "- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose",
@@ -1550,6 +1554,8 @@ def _id_array_rules_text(
     for field in schema.evidence_fields:
         if field in {"contrary_evidence_considered", "contrary_evidence_refs"}:
             allowed = contrary_ids
+        elif field == "evidence_refs" and contrary and not schema_has_contrary_field:
+            allowed = combined_ids
         else:
             allowed = evidence_ids
         lines.append(f"- {field} values must be chosen from: {allowed}")

@@ -1,0 +1,24 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "The system has a defined set of candidate foci"
+    ],
+    "expected_observations": [
+      "The next focus is chosen based on unresolved evidence"
+    ],
+    "hypothesis_statement": "The next focus should be selected from unresolved evidence rather than assigned as another schema task.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "next focus selection process",
+    "supporting_evidence_refs": [
+      "e_completed_prior_work",
+      "e_unresolved_research_need",
+      "e_unresolved_restart_need"
+    ],
+    "uncertainty": "How the system will prioritize and select from multiple unresolved foci"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"hypothesis_statement\":\"The next focus should be selected from unresolved evidence rather than assigned as another schema task.\",\"scope\":\"next focus selection process\",\"supporting_evidence_refs\":[\"e_completed_prior_work\",\"e_unresolved_research_need\",\"e_unresolved_restart_need\"],\"assumptions\":[\"The system has a defined set of candidate foci\"],\"expected_observations\":[\"The next focus is chosen based on unresolved evidence\"],\"uncertainty\":\"How the system will prioritize and select from multiple unresolved foci\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+  "raw_response_digest": "7d9f97de7d56d23f2771daf4b258056f4616391d02026f89aaabedd15b00f191",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

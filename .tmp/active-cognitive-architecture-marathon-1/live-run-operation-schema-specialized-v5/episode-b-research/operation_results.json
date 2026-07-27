@@ -1,0 +1,77 @@
+[
+  {
+    "accepted": true,
+    "assumptions": [
+      "The runtime state is sufficient to maintain focus and operations.",
+      "Operations produce evidence that is useful for the operator's goals."
+    ],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "b_runtime_surface",
+      "b_schema_checkpoint",
+      "b_user_target"
+    ],
+    "interpretation": "The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence.",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "next_evidence_need": "",
+    "next_focus_proposal": "",
+    "operation_id": "cognitive-operation-f64672cdc1a8b826",
+    "operation_result_type": "formulate_hypothesis_result",
+    "raw_model_output": "{\n\n\"hypothesis_statement\":\"The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence.\",\n\"scope\":\"Active cognition runtime and its operations\",\n\"supporting_evidence_refs\":[\"b_runtime_surface\", \"b_schema_checkpoint\", \"b_user_target\"],\n\"assumptions\":[\"The runtime state is sufficient to maintain focus and operations.\", \"Operations produce evidence that is useful for the operator's goals.\"],\n\"expected_observations\":[\"Evidence of persistent state and focus selection.\", \"Execution of multiple operations leading to useful evidence.\"],\n\"uncertainty\":\"Whether the runtime can handle long-term operations without degradation.\",\n\"recommended_state_transition\":\"propose_hypothesis\"\n}",
+    "recommended_action": "Active cognition runtime and its operations",
+    "recommended_state_transition": "propose_hypothesis",
+    "rejection_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "uncertainty": "Whether the runtime can handle long-term operations without degradation."
+  },
+  {
+    "accepted": true,
+    "assumptions": [
+      "The runtime state is sufficient to maintain focus and operations.",
+      "Operations produce evidence that is useful for the operator's goals."
+    ],
+    "contrary_evidence_considered": [
+      "b_prior_block"
+    ],
+    "evidence_refs": [
+      "b_runtime_surface",
+      "b_schema_checkpoint",
+      "b_user_target"
+    ],
+    "interpretation": "The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence. However, the earlier marathon status was usefulness-blocked, indicating that the runtime state may not be sufficient to produce useful evidence.",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "next_evidence_need": "local evidence supporting or challenging the goal",
+    "next_focus_proposal": "continue with current hypothesis",
+    "operation_id": "cognitive-operation-663f134037105958",
+    "operation_result_type": "compare_evidence_result",
+    "raw_model_output": "{\"assumptions\":[\"The runtime state is sufficient to maintain focus and operations.\",\"Operations produce evidence that is useful for the operator's goals.\"],\"contrary_evidence_considered\":[\"b_prior_block\"],\"evidence_refs\":[\"b_runtime_surface\",\"b_schema_checkpoint\",\"b_user_target\"],\"interpretation\":\"The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence. However, the earlier marathon status was usefulness-blocked, indicating that the runtime state may not be sufficient to produce useful evidence.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"continue with current hypothesis\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"continue with current hypothesis\",\"recommended_state_transition\":\"add_conflicting_evidence\",\"uncertainty\":\"The runtime state's sufficiency for producing useful evidence is unresolved.\"}",
+    "recommended_action": "continue with current hypothesis",
+    "recommended_state_transition": "add_conflicting_evidence",
+    "rejection_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "uncertainty": "The runtime state's sufficiency for producing useful evidence is unresolved."
+  },
+  {
+    "accepted": true,
+    "assumptions": [],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "b_runtime_surface",
+      "b_schema_checkpoint",
+      "b_user_target",
+      "b_prior_block"
+    ],
+    "interpretation": "The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence. However, the earlier marathon status was usefulness-blocked, indicating that the runtime state may not be sufficient to produce useful evidence.",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "next_evidence_need": "How can the runtime state be improved to consistently produce useful evidence?",
+    "next_focus_proposal": "",
+    "operation_id": "cognitive-operation-700f630da596a8ed",
+    "operation_result_type": "summarize_learning_result",
+    "raw_model_output": "{\"lesson\":\"The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence. However, the earlier marathon status was usefulness-blocked, indicating that the runtime state may not be sufficient to produce useful evidence.\",\"evidence_refs\":[\"b_runtime_surface\",\"b_schema_checkpoint\",\"b_user_target\",\"b_prior_block\"],\"unresolved_questions\":[\"How can the runtime state be improved to consistently produce useful evidence?\"],\"uncertainty\":\"The runtime state may not be sufficient to produce useful evidence.\",\"recommended_state_transition\":\"summarize_learning\"}",
+    "recommended_action": "",
+    "recommended_state_transition": "summarize_learning",
+    "rejection_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "uncertainty": "The runtime state may not be sufficient to produce useful evidence."
+  }
+]

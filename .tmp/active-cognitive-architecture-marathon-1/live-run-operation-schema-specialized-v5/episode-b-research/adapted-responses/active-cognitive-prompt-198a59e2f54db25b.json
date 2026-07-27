@@ -1,0 +1,26 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "The runtime state is sufficient to maintain focus and operations.",
+      "Operations produce evidence that is useful for the operator's goals."
+    ],
+    "expected_observations": [
+      "Evidence of persistent state and focus selection.",
+      "Execution of multiple operations leading to useful evidence."
+    ],
+    "hypothesis_statement": "The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "Active cognition runtime and its operations",
+    "supporting_evidence_refs": [
+      "b_runtime_surface",
+      "b_schema_checkpoint",
+      "b_user_target"
+    ],
+    "uncertainty": "Whether the runtime can handle long-term operations without degradation."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\n\n\"hypothesis_statement\":\"The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence.\",\n\"scope\":\"Active cognition runtime and its operations\",\n\"supporting_evidence_refs\":[\"b_runtime_surface\", \"b_schema_checkpoint\", \"b_user_target\"],\n\"assumptions\":[\"The runtime state is sufficient to maintain focus and operations.\", \"Operations produce evidence that is useful for the operator's goals.\"],\n\"expected_observations\":[\"Evidence of persistent state and focus selection.\", \"Execution of multiple operations leading to useful evidence.\"],\n\"uncertainty\":\"Whether the runtime can handle long-term operations without degradation.\",\n\"recommended_state_transition\":\"propose_hypothesis\"\n}",
+  "raw_response_digest": "613e775a85a6d29a99365e43597da8f0148799e36c0d09d9fd1f1e3e238c80eb",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

@@ -1,0 +1,76 @@
+{
+  "cycle_count": 3,
+  "failure_classifications": [],
+  "model_call_count": 3,
+  "observable": {
+    "blocked_authority_state": {},
+    "budget_remaining": {
+      "cycles": 5,
+      "model_calls": 3
+    },
+    "completed": true,
+    "current_focus": "Challenge or revise hypothesis: The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence.",
+    "current_goal": "research and synthesize whether the current active cognition runtime can support sustained local repository work",
+    "current_operation": "summarize_learning",
+    "episode_id": "active-cognitive-episode-d602ba6a60e69ac1",
+    "evidence_considered": [
+      "b_runtime_surface",
+      "b_schema_checkpoint",
+      "b_prior_block",
+      "b_user_target"
+    ],
+    "hypothesis_state": {
+      "assumptions": [
+        "The runtime state is sufficient to maintain focus and operations.",
+        "Operations produce evidence that is useful for the operator's goals."
+      ],
+      "confidence_state": "contested",
+      "created_at": "2026-07-27T00:56:03+00:00",
+      "disposition": "needs_challenge",
+      "evidence_against": [
+        "b_prior_block"
+      ],
+      "evidence_for": [
+        "b_runtime_surface",
+        "b_schema_checkpoint",
+        "b_user_target"
+      ],
+      "expected_observations": [
+        "local evidence should support a bounded useful step"
+      ],
+      "hypothesis_id": "hypothesis-904ff9267195eff7",
+      "lifecycle_state": "active",
+      "originating_focus_id": "focus-61b8c232d08b08c4",
+      "originating_goal_id": "active-cognitive-goal-389cf200140bb48b",
+      "provenance": [
+        "cognitive-operation-f64672cdc1a8b826",
+        "cognitive-operation-663f134037105958"
+      ],
+      "revised_at": "2026-07-27T00:56:37+00:00",
+      "revision_parent_id": "",
+      "revision_reason": "The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence. However, the earlier marathon status was usefulness-blocked, indicating that the runtime state may not be sufficient to produce useful evidence.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "scope": "Resolve discrepancy for goal: research and synthesize whether the current active cognition runtime can support sustained local repository work",
+      "statement": "The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence."
+    },
+    "last_observed_outcome": {
+      "created_at": "2026-07-27T00:57:00+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform summarize_learning for the active focus using only referenced evidence.",
+      "observed": "The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence. However, the earlier marathon status was usefulness-blocked, indicating that the runtime state may not be sufficient to produce useful evidence.",
+      "operation_id": "cognitive-operation-700f630da596a8ed",
+      "outcome_id": "outcome-ed45c91031ca87eb"
+    },
+    "loop_state": "completed",
+    "next_intended_step": "inspect useful artifact and select next focus",
+    "title": "Episode B research and synthesis",
+    "why_focus": [
+      "An active hypothesis needs evidence-linked revision before action.",
+      "unresolved_hypothesis",
+      "evidence_revision",
+      "expected_useful_progress"
+    ]
+  },
+  "passed": true,
+  "useful_artifact_count": 1
+}

@@ -1,0 +1,25 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "The ActiveCognitiveEpisodeState format is consistent and preserved across restarts."
+    ],
+    "expected_observations": [
+      "Focus ID continuity during and after restoration.",
+      "Continued model operations post-resumption."
+    ],
+    "hypothesis_statement": "The ActiveCognitiveEpisodeState can be persisted, restored, and resumed with continuity of focus and post-resume learning.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "ActiveCognitiveEpisodeState persistence, restoration, and resumption with focus and learning continuity.",
+    "supporting_evidence_refs": [
+      "d_persistence_support",
+      "d_restart_requirement",
+      "d_useful_target"
+    ],
+    "uncertainty": "The exact nature of focus continuity and post-resume learning."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"hypothesis_statement\":\"The ActiveCognitiveEpisodeState can be persisted, restored, and resumed with continuity of focus and post-resume learning.\",\"scope\":\"ActiveCognitiveEpisodeState persistence, restoration, and resumption with focus and learning continuity.\",\"supporting_evidence_refs\":[\"d_persistence_support\",\"d_restart_requirement\",\"d_useful_target\"],\"assumptions\":[\"The ActiveCognitiveEpisodeState format is consistent and preserved across restarts.\"],\"expected_observations\":[\"Focus ID continuity during and after restoration.\",\"Continued model operations post-resumption.\"],\"uncertainty\":\"The exact nature of focus continuity and post-resume learning.\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+  "raw_response_digest": "15f33ece9ce51095cdc3f2ff5fc6d7b0f1549b786901ba8e085744811685c758",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

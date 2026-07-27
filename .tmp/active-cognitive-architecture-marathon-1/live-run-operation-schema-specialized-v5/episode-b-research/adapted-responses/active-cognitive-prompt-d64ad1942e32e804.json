@@ -1,0 +1,28 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "The runtime state is sufficient to maintain focus and operations.",
+      "Operations produce evidence that is useful for the operator's goals."
+    ],
+    "contrary_evidence_considered": [
+      "b_prior_block"
+    ],
+    "evidence_refs": [
+      "b_runtime_surface",
+      "b_schema_checkpoint",
+      "b_user_target"
+    ],
+    "interpretation": "The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence. However, the earlier marathon status was usefulness-blocked, indicating that the runtime state may not be sufficient to produce useful evidence.",
+    "next_evidence_need": "local evidence supporting or challenging the goal",
+    "next_focus_proposal": "continue with current hypothesis",
+    "operation_result_type": "compare_evidence_result",
+    "recommended_action": "continue with current hypothesis",
+    "recommended_state_transition": "add_conflicting_evidence",
+    "uncertainty": "The runtime state's sufficiency for producing useful evidence is unresolved."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"assumptions\":[\"The runtime state is sufficient to maintain focus and operations.\",\"Operations produce evidence that is useful for the operator's goals.\"],\"contrary_evidence_considered\":[\"b_prior_block\"],\"evidence_refs\":[\"b_runtime_surface\",\"b_schema_checkpoint\",\"b_user_target\"],\"interpretation\":\"The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence. However, the earlier marathon status was usefulness-blocked, indicating that the runtime state may not be sufficient to produce useful evidence.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"continue with current hypothesis\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"continue with current hypothesis\",\"recommended_state_transition\":\"add_conflicting_evidence\",\"uncertainty\":\"The runtime state's sufficiency for producing useful evidence is unresolved.\"}",
+  "raw_response_digest": "b21b8f04ad6d71ef9d6c2d18b713484333724db95a77c37c351eccb2e750fa53",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

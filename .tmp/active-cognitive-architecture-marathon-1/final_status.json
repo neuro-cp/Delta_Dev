@@ -1,0 +1,7 @@
+{
+  "identify_evidence_need_used": false,
+  "reason": "Live Episodes B-E passed with real local-model cognitive operations, evidence revision, durable artifacts, restart/resume, and successor next-focus selection; identify_evidence_need remained deferred.",
+  "run_root": ".tmp\\active-cognitive-architecture-marathon-1\\live-run-operation-schema-specialized-v5",
+  "staging_empty": true,
+  "status": "ACTIVE_COGNITIVE_ARCHITECTURE_MARATHON_1_LIVE_EPISODES_B_TO_E_PASSED"
+}

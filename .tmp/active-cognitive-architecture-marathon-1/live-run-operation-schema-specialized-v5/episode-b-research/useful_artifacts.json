@@ -1,0 +1,13 @@
+[
+  {
+    "artifact_id": "useful-artifact-ed45c91031ca87eb",
+    "artifact_type": "cognitive_episode_summary",
+    "evidence_refs": [
+      "b_runtime_surface",
+      "b_schema_checkpoint",
+      "b_user_target",
+      "b_prior_block"
+    ],
+    "summary": "The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence. However, the earlier marathon status was usefulness-blocked, indicating that the runtime state may not be sufficient to produce useful evidence."
+  }
+]

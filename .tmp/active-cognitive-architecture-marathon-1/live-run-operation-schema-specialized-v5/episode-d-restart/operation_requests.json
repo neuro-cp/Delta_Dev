@@ -1,0 +1,119 @@
+[
+  {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-3e23e1ac90cc2790",
+    "evidence_constraints": [
+      "d_persistence_support",
+      "d_restart_requirement",
+      "d_prior_limitation",
+      "d_useful_target"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-bd40a743adf98eab",
+    "goal_id": "active-cognitive-goal-376f7054be6cd147",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-6e71220ef64ca40a",
+    "operation_type": "formulate_hypothesis",
+    "provenance": [
+      "working-memory-packet-101d75507001a5db"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "ede4e5088aba417a6de116c7a0835104d6905285d25a7183fc9a3707be7acf5a"
+  },
+  {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-2c419a41155c5aec",
+    "evidence_constraints": [
+      "d_persistence_support",
+      "d_restart_requirement",
+      "d_prior_limitation",
+      "d_useful_target"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-485fd181480c5e49",
+    "goal_id": "active-cognitive-goal-376f7054be6cd147",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-0716edca18aaf640",
+    "operation_type": "compare_evidence",
+    "provenance": [
+      "working-memory-packet-cd698bf0df59d35a"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform compare_evidence for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "5756170b09c8fa2272f83e773ccd01cd9db610356508dfd13c397061dc7fa4fa"
+  },
+  {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-fbecd4e7030de455",
+    "evidence_constraints": [
+      "d_persistence_support",
+      "d_restart_requirement",
+      "d_useful_target",
+      "d_prior_limitation"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-0e0ad45f47fdeb7b",
+    "goal_id": "active-cognitive-goal-376f7054be6cd147",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-65f2949aa6186c9e",
+    "operation_type": "summarize_learning",
+    "provenance": [
+      "working-memory-packet-54d8530e896b874d"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform summarize_learning for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "e58869584c164b89071b0d4f03e2ac9c105c84be068fd228ccbec00e776dc435"
+  }
+]

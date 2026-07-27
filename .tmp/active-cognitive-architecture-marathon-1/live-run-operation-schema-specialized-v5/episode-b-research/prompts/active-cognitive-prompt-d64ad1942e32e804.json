@@ -1,0 +1,88 @@
+{
+  "authority_constraints": [
+    "no network",
+    "no protected paths",
+    "no commit",
+    "bounded local actions only"
+  ],
+  "contrary_evidence_ids_supplied": [
+    "b_prior_block"
+  ],
+  "cycle_id": "active-cognitive-cycle-962bac11b7b4d97d",
+  "evidence_ids_supplied": [
+    "b_runtime_surface",
+    "b_schema_checkpoint",
+    "b_user_target"
+  ],
+  "expected_response_schema": {
+    "assumptions": [
+      "explicit assumptions"
+    ],
+    "contrary_evidence_considered": [
+      "IDs only from supplied contrary evidence"
+    ],
+    "evidence_refs": [
+      "IDs only from supplied evidence"
+    ],
+    "interpretation": "nonempty operation-specific interpretation",
+    "next_evidence_need": "missing evidence need or empty string",
+    "next_focus_proposal": "next focus proposal or empty string",
+    "operation_result_type": "compare_evidence_result",
+    "recommended_action": "bounded next action",
+    "recommended_state_transition": "one allowed transition",
+    "uncertainty": "nonempty uncertainty phrase"
+  },
+  "focus_id": "focus-9db87493a87a2428",
+  "goal_id": "active-cognitive-goal-389cf200140bb48b",
+  "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+  "operation_request": {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-962bac11b7b4d97d",
+    "evidence_constraints": [
+      "b_runtime_surface",
+      "b_schema_checkpoint",
+      "b_prior_block",
+      "b_user_target"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-9db87493a87a2428",
+    "goal_id": "active-cognitive-goal-389cf200140bb48b",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-663f134037105958",
+    "operation_type": "compare_evidence",
+    "provenance": [
+      "working-memory-packet-6c8114380bf2db17"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform compare_evidence for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "ecd29336002646cd60b612bf92339d4b33106850e938806db2bcd2acb9b8c097"
+  },
+  "operation_type": "compare_evidence",
+  "prompt_byte_digest": "4f89ae0f3932380918421b86c27dd851dd03fdf844e0ab72fde543d6783b5533",
+  "prompt_length": 6218,
+  "prompt_schema_version": "active_cognitive_prompt_qualification_1_v1",
+  "prompt_snapshot_id": "active-cognitive-prompt-d64ad1942e32e804",
+  "prompt_text": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- operation_result_type: nonempty string\n- interpretation: nonempty string\n- evidence_refs: array[string]\n- contrary_evidence_considered: array[string]\n- uncertainty: nonempty string\n- assumptions: array[string]\n- recommended_state_transition: nonempty string\n- recommended_action: nonempty string\n- next_evidence_need: nonempty string\n- next_focus_proposal: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- evidence_refs values must be chosen from: b_runtime_surface, b_schema_checkpoint, b_user_target\n- contrary_evidence_considered values must be chosen from: b_prior_block\n- contrary_evidence_considered must include at least one contrary_evidence ID\nTASK: perform only operation compare_evidence. Allowed transition/next-operation values: add_supporting_evidence, add_conflicting_evidence, weaken_hypothesis, revise_hypothesis. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: b_runtime_surface, b_schema_checkpoint, b_user_target. Use contrary_evidence_considered only from contrary_evidence IDs: b_prior_block. If contrary_evidence is not empty, the interpretation must state how it changes or weakens the hypothesis Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied.\nCONTEXT_JSON:\n{\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":2,\"description\":\"Resolve discrepancy for goal: research and synthesize whether the current active cognition runtime can support sustained local repository work\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"b_runtime_surface\",\"b_schema_checkpoint\",\"b_prior_block\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-9db87493a87a2428\",\"related_goal_ids\":[\"active-cognitive-goal-389cf200140bb48b\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\".tmp/active-cognitive-architecture-marathon-1/final_status.json reported live episodes were not qualified and useful Episode A was missing revision/artifact at that time.\",\"evidence_id\":\"b_prior_block\",\"source\":\"prior evidence\",\"summary\":\"Contrary evidence: the earlier marathon status was usefulness-blocked.\"}],\"current_goal\":{\"expected_state\":\"useful research synthesis artifact produced from local evidence\",\"goal_id\":\"active-cognitive-goal-389cf200140bb48b\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"research and synthesize whether the current active cognition runtime can support sustained local repository work\"},\"current_hypotheses\":[{\"assumptions\":[\"The runtime state is sufficient to maintain focus and operations.\",\"Operations produce evidence that is useful for the operator's goals.\"],\"confidence_state\":\"plausible\",\"created_at\":\"2026-07-27T00:56:03+00:00\",\"disposition\":\"needs_challenge\",\"evidence_against\":[],\"evidence_for\":[\"b_runtime_surface\",\"b_schema_checkpoint\",\"b_user_target\"],\"expected_observations\":[\"local evidence should support a bounded useful step\"],\"hypothesis_id\":\"hypothesis-904ff9267195eff7\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-61b8c232d08b08c4\",\"originating_goal_id\":\"active-cognitive-goal-389cf200140bb48b\",\"provenance\":[\"cognitive-operation-f64672cdc1a8b826\"],\"revised_at\":\"\",\"revision_parent_id\":\"\",\"revision_reason\":\"\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: research and synthesize whether the current active cognition runtime can support sustained local repository work\",\"statement\":\"The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence.\"}],\"evidence_for\":[{\"content\":\"orchestration/runtime/active_cognitive_loop.py contains runtime state, focus, working memory, model execution, validation, and learning artifact functions.\",\"evidence_id\":\"b_runtime_surface\",\"source\":\"repo\",\"summary\":\"Active loop runtime has persistent state, focus selection, typed operations, local model ledger, and prompt snapshots.\"},{\"content\":\"Commit eded3528 added operation-specific active cognition and staged closure evidence proving typed operation execution into an active episode.\",\"evidence_id\":\"b_schema_checkpoint\",\"source\":\"checkpoint\",\"summary\":\"Operation-specific schema checkpoint passed and produced durable Episode A evidence.\"},{\"content\":\"Required proof is broad objective -> DELTA selects focus -> multiple operations -> evidence revision -> useful work -> restart survival -> next focus selection.\",\"evidence_id\":\"b_user_target\",\"source\":\"operator\",\"summary\":\"The operator now wants sustained exercisable cognition rather than more schema work.\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-27T00:56:03+00:00\",\"discrepancy\":\"progress_observed\",\"expected\":\"Perform formulate_hypothesis for the active focus using only referenced evidence.\",\"observed\":\"The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence.\",\"operation_id\":\"cognitive-operation-f64672cdc1a8b826\",\"outcome_id\":\"outcome-a7c25d4ab9b7a48e\"}]}",
+  "request_identity": "active-cognitive-ledger-request-8405110497d76c39",
+  "retry_sequence": 0,
+  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+  "working_memory_packet_digest": "ecd29336002646cd60b612bf92339d4b33106850e938806db2bcd2acb9b8c097",
+  "working_memory_packet_id": "working-memory-packet-6c8114380bf2db17"
+}

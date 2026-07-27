@@ -1,0 +1,117 @@
+{
+  "completed": true,
+  "cycle_count": 3,
+  "episode": "episode-e-next-focus",
+  "evaluation": {
+    "cycle_count": 3,
+    "failure_classifications": [],
+    "model_call_count": 3,
+    "observable": {
+      "blocked_authority_state": {},
+      "budget_remaining": {
+        "cycles": 5,
+        "model_calls": 3
+      },
+      "completed": true,
+      "current_focus": "Challenge or revise hypothesis: The next focus should be selected from unresolved evidence rather than assigned as another schema task.",
+      "current_goal": "select and begin the next useful focus after completing a prior cognitive episode",
+      "current_operation": "summarize_learning",
+      "episode_id": "active-cognitive-episode-9a39192b8fd8c161",
+      "evidence_considered": [
+        "e_completed_prior_work",
+        "e_unresolved_research_need",
+        "e_unresolved_restart_need",
+        "e_operator_constraint"
+      ],
+      "hypothesis_state": {
+        "assumptions": [
+          "The system has a defined set of candidate foci"
+        ],
+        "confidence_state": "contested",
+        "created_at": "2026-07-27T00:59:55+00:00",
+        "disposition": "needs_challenge",
+        "evidence_against": [
+          "e_operator_constraint"
+        ],
+        "evidence_for": [
+          "e_completed_prior_work",
+          "e_unresolved_research_need",
+          "e_unresolved_restart_need"
+        ],
+        "expected_observations": [
+          "local evidence should support a bounded useful step"
+        ],
+        "hypothesis_id": "hypothesis-e092c4cef94c6054",
+        "lifecycle_state": "active",
+        "originating_focus_id": "focus-7da3a65a7e73ace4",
+        "originating_goal_id": "active-cognitive-goal-f8f3c7ef02221d29",
+        "provenance": [
+          "cognitive-operation-639142002e6ac510",
+          "cognitive-operation-f611ed9b91df7ebd"
+        ],
+        "revised_at": "2026-07-27T01:00:31+00:00",
+        "revision_parent_id": "",
+        "revision_reason": "The next focus should be selected from unresolved evidence rather than assigned as another schema task. However, the operator constraint indicates that the next focus must remain within the current marathon and defer identify_evidence_need unless genuinely needed.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "scope": "Resolve discrepancy for goal: select and begin the next useful focus after completing a prior cognitive episode",
+        "statement": "The next focus should be selected from unresolved evidence rather than assigned as another schema task."
+      },
+      "last_observed_outcome": {
+        "created_at": "2026-07-27T01:00:51+00:00",
+        "discrepancy": "progress_observed",
+        "expected": "Perform summarize_learning for the active focus using only referenced evidence.",
+        "observed": "The next focus should be selected from unresolved evidence rather than assigned as another schema task.",
+        "operation_id": "cognitive-operation-8c861a3e3829fda2",
+        "outcome_id": "outcome-03657a2fe2223428"
+      },
+      "loop_state": "completed",
+      "next_intended_step": "inspect useful artifact and select next focus",
+      "title": "Episode E autonomous next-focus selection",
+      "why_focus": [
+        "An active hypothesis needs evidence-linked revision before action.",
+        "unresolved_hypothesis",
+        "evidence_revision",
+        "expected_useful_progress"
+      ]
+    },
+    "passed": true,
+    "useful_artifact_count": 1
+  },
+  "events": [
+    {
+      "accepted": true,
+      "cycle": 1,
+      "event": "cycle_completed",
+      "loop_state": "persisting",
+      "operation": "formulate_hypothesis",
+      "rejections": []
+    },
+    {
+      "accepted": true,
+      "cycle": 2,
+      "event": "cycle_completed",
+      "loop_state": "persisting",
+      "operation": "compare_evidence",
+      "rejections": []
+    },
+    {
+      "accepted": true,
+      "cycle": 3,
+      "event": "cycle_completed",
+      "loop_state": "completed",
+      "operation": "summarize_learning",
+      "rejections": []
+    }
+  ],
+  "identify_evidence_need_used": false,
+  "learning_update_count": 1,
+  "model_call_count": 3,
+  "operations": [
+    "formulate_hypothesis",
+    "compare_evidence",
+    "summarize_learning"
+  ],
+  "root": "G:\\Delta_Dev\\.tmp\\active-cognitive-architecture-marathon-1\\live-run-operation-schema-specialized-v5\\episode-e-next-focus",
+  "status": "passed",
+  "useful_artifact_count": 1
+}

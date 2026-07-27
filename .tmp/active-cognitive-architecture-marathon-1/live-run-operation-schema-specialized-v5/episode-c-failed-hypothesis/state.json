@@ -1,0 +1,932 @@
+{
+  "actions": [],
+  "attention": {
+    "abandonment_reason": "",
+    "active_focus_id": "focus-7deda8a269c7f00b",
+    "active_focus_summary": "Challenge or revise hypothesis: The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts.",
+    "active_goal_ids": [
+      "active-cognitive-goal-ab6cb13d4fe3f1dd"
+    ],
+    "attention_state_id": "active-attention-4f4f1e411596287f",
+    "candidate_focuses": [
+      {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "local_model_semantic_operation",
+        "creation_sequence": 3,
+        "description": "Resolve discrepancy for goal: revise a failed hypothesis about the active cognition runtime using contrary evidence",
+        "evidence_need": "local evidence supporting or challenging the goal",
+        "evidence_refs": [
+          "c_initial_hypothesis_support",
+          "c_failed_hypothesis_contrary",
+          "c_repair_evidence"
+        ],
+        "expected_value": "useful_progress",
+        "focus_id": "focus-8f4954d9c244052c",
+        "related_goal_ids": [
+          "active-cognitive-goal-ab6cb13d4fe3f1dd"
+        ],
+        "salience_categories": [
+          "operator_priority",
+          "goal_discrepancy",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "goal_discrepancy",
+        "urgency": "medium"
+      },
+      {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "semantic comparison",
+        "creation_sequence": 3,
+        "description": "Challenge or revise hypothesis: The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts.",
+        "evidence_need": "contrary and supporting evidence",
+        "evidence_refs": [
+          "c_initial_hypothesis_support",
+          "c_failed_hypothesis_contrary"
+        ],
+        "expected_value": "belief_revision",
+        "focus_id": "focus-7deda8a269c7f00b",
+        "related_goal_ids": [
+          "active-cognitive-goal-ab6cb13d4fe3f1dd"
+        ],
+        "salience_categories": [
+          "unresolved_hypothesis",
+          "evidence_revision",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "An active hypothesis needs evidence-linked revision before action.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "hypothesis_revision",
+        "urgency": "high"
+      }
+    ],
+    "continuation_reason": "",
+    "cycle_sequence": 3,
+    "evidence_refs": [
+      "c_initial_hypothesis_support",
+      "c_failed_hypothesis_contrary"
+    ],
+    "focus_started_at": "2026-07-27T00:57:00+00:00",
+    "interruption_priority": "none",
+    "interruption_reason": "",
+    "last_progress_at": "2026-07-27T00:57:42+00:00",
+    "previous_focus_ids": [
+      "focus-17a05b903e1c864b",
+      "focus-625dfbdd4aca4e66"
+    ],
+    "progress_summary": "selected focus for cognitive operation",
+    "return_condition": "",
+    "salience_reasons": [
+      "An active hypothesis needs evidence-linked revision before action.",
+      "unresolved_hypothesis",
+      "evidence_revision",
+      "expected_useful_progress"
+    ],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "stagnation_count": 0,
+    "switch_reason": "An active hypothesis needs evidence-linked revision before action.",
+    "transition_journal": [
+      {
+        "at": "2026-07-27T00:57:00+00:00",
+        "focus_id": "focus-17a05b903e1c864b",
+        "reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "sequence": 1,
+        "transition": "establish_focus"
+      },
+      {
+        "at": "2026-07-27T00:57:15+00:00",
+        "focus_id": "focus-625dfbdd4aca4e66",
+        "reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "sequence": 2,
+        "transition": "switch_focus"
+      },
+      {
+        "at": "2026-07-27T00:57:42+00:00",
+        "focus_id": "focus-7deda8a269c7f00b",
+        "reason": "An active hypothesis needs evidence-linked revision before action.",
+        "sequence": 3,
+        "transition": "switch_focus"
+      }
+    ],
+    "unresolved_questions": []
+  },
+  "budgets": {
+    "max_actions": 4,
+    "max_cycles": 8,
+    "max_model_calls": 6,
+    "max_packet_items": 8
+  },
+  "completed": true,
+  "cycles": [
+    {
+      "completed": true,
+      "cycle_id": "active-cognitive-cycle-9674787bcf6fbb41",
+      "focus_id": "focus-17a05b903e1c864b",
+      "operation_id": "cognitive-operation-15de74e0b0e89a39",
+      "outcome_id": "outcome-70f40479c10251c9",
+      "packet_digest": "d543a225207e3213ac0e5114307eb9592b33ed233ad4fdcbf7caa5ed4a3667cc",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "sequence": 1,
+      "summary": "The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts."
+    },
+    {
+      "completed": true,
+      "cycle_id": "active-cognitive-cycle-18f613d6e9445388",
+      "focus_id": "focus-625dfbdd4aca4e66",
+      "operation_id": "cognitive-operation-ab2813a6a40e6979",
+      "outcome_id": "outcome-9771cd61f291950b",
+      "packet_digest": "aa23913cb3d27407062b2344c13f2145a0c518dfa1ac9163210ee1e84592780b",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "sequence": 2,
+      "summary": "The initial hypothesis supports the runtime's ability to formulate and compare hypotheses, but the contrary evidence suggests the previous claim of complete live cognition was incorrect."
+    },
+    {
+      "completed": true,
+      "cycle_id": "active-cognitive-cycle-0acfdc586cd9baf1",
+      "focus_id": "focus-7deda8a269c7f00b",
+      "operation_id": "cognitive-operation-0c75459264230e00",
+      "outcome_id": "outcome-3ff96309b00f83fd",
+      "packet_digest": "86fd7260e2b3f3e8f05e845c7ee33d0b9db22d747124776af870fece9f1e94c0",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "sequence": 3,
+      "summary": "The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts. However, contrary evidence suggests the previous claim of complete live cognition was incorrect, necessitating a revis"
+    }
+  ],
+  "episode_id": "active-cognitive-episode-3aabaabe12b0d962",
+  "evidence": [
+    {
+      "content": "The runtime can formulate hypotheses, compare evidence, and write learning artifacts.",
+      "evidence_id": "c_initial_hypothesis_support",
+      "exists": true,
+      "kind": "local_evidence",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "repo",
+      "summary": "Supporting evidence: active cognition runtime exposes focus, hypothesis, and model operation structures."
+    },
+    {
+      "content": "Episode B and E were not run; C and D were scripted only; final status was usefulness-blocked.",
+      "evidence_id": "c_failed_hypothesis_contrary",
+      "exists": true,
+      "kind": "local_evidence",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "prior evidence",
+      "summary": "Contrary evidence: the previous marathon claim that live cognition was complete failed."
+    },
+    {
+      "content": "The newer checkpoint showed strict model outputs can revise hypotheses and produce useful Episode A artifacts.",
+      "evidence_id": "c_repair_evidence",
+      "exists": true,
+      "kind": "local_evidence",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "checkpoint",
+      "summary": "Operation-specific schema specialization repaired model operation consumption."
+    },
+    {
+      "content": "The useful outcome is a narrower revised hypothesis about what DELTA can now prove live.",
+      "evidence_id": "c_revision_target",
+      "exists": true,
+      "kind": "local_evidence",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "operator",
+      "summary": "The target is not to preserve the old broad success claim."
+    }
+  ],
+  "goals": [
+    {
+      "expected_state": "failed hypothesis is weakened or revised from evidence and summarized",
+      "goal_id": "active-cognitive-goal-ab6cb13d4fe3f1dd",
+      "observed_state": "",
+      "priority": "operator_requested",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "summary": "revise a failed hypothesis about the active cognition runtime using contrary evidence"
+    }
+  ],
+  "hypotheses": [
+    {
+      "assumptions": [],
+      "confidence_state": "contested",
+      "created_at": "2026-07-27T00:57:15+00:00",
+      "disposition": "needs_challenge",
+      "evidence_against": [
+        "c_failed_hypothesis_contrary"
+      ],
+      "evidence_for": [
+        "c_initial_hypothesis_support"
+      ],
+      "expected_observations": [
+        "local evidence should support a bounded useful step"
+      ],
+      "hypothesis_id": "hypothesis-be3c41633310f350",
+      "lifecycle_state": "active",
+      "originating_focus_id": "focus-17a05b903e1c864b",
+      "originating_goal_id": "active-cognitive-goal-ab6cb13d4fe3f1dd",
+      "provenance": [
+        "cognitive-operation-15de74e0b0e89a39",
+        "cognitive-operation-ab2813a6a40e6979"
+      ],
+      "revised_at": "2026-07-27T00:57:42+00:00",
+      "revision_parent_id": "",
+      "revision_reason": "The initial hypothesis supports the runtime's ability to formulate and compare hypotheses, but the contrary evidence suggests the previous claim of complete live cognition was incorrect.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "scope": "Resolve discrepancy for goal: revise a failed hypothesis about the active cognition runtime using contrary evidence",
+      "statement": "The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts."
+    }
+  ],
+  "learning_updates": [
+    {
+      "created_at": "2026-07-27T00:58:04+00:00",
+      "evidence_refs": [
+        "c_initial_hypothesis_support",
+        "c_failed_hypothesis_contrary"
+      ],
+      "learning_id": "learning-3ff96309b00f83fd",
+      "summary": "The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts. However, contrary evidence suggests the previous claim of complete live cognition was incorrect, necessitating a revised hypothesis focusing on useful steps."
+    }
+  ],
+  "loop_state": "completed",
+  "model_call_count": 3,
+  "next_focus_candidates": [
+    {
+      "authority_need": "none_for_local_analysis",
+      "blocking_state": "",
+      "capability_need": "local_model_semantic_operation",
+      "creation_sequence": 3,
+      "description": "Resolve discrepancy for goal: revise a failed hypothesis about the active cognition runtime using contrary evidence",
+      "evidence_need": "local evidence supporting or challenging the goal",
+      "evidence_refs": [
+        "c_initial_hypothesis_support",
+        "c_failed_hypothesis_contrary",
+        "c_repair_evidence"
+      ],
+      "expected_value": "useful_progress",
+      "focus_id": "focus-8f4954d9c244052c",
+      "related_goal_ids": [
+        "active-cognitive-goal-ab6cb13d4fe3f1dd"
+      ],
+      "salience_categories": [
+        "operator_priority",
+        "goal_discrepancy",
+        "expected_useful_progress"
+      ],
+      "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "goal_discrepancy",
+      "urgency": "medium"
+    },
+    {
+      "authority_need": "none_for_local_analysis",
+      "blocking_state": "",
+      "capability_need": "semantic comparison",
+      "creation_sequence": 3,
+      "description": "Challenge or revise hypothesis: The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts.",
+      "evidence_need": "contrary and supporting evidence",
+      "evidence_refs": [
+        "c_initial_hypothesis_support",
+        "c_failed_hypothesis_contrary"
+      ],
+      "expected_value": "belief_revision",
+      "focus_id": "focus-7deda8a269c7f00b",
+      "related_goal_ids": [
+        "active-cognitive-goal-ab6cb13d4fe3f1dd"
+      ],
+      "salience_categories": [
+        "unresolved_hypothesis",
+        "evidence_revision",
+        "expected_useful_progress"
+      ],
+      "salience_explanation": "An active hypothesis needs evidence-linked revision before action.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "hypothesis_revision",
+      "urgency": "high"
+    }
+  ],
+  "operation_requests": [
+    {
+      "authority_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "budget": {
+        "max_response_words": 220,
+        "max_retries": 1
+      },
+      "cycle_id": "active-cognitive-cycle-9674787bcf6fbb41",
+      "evidence_constraints": [
+        "c_initial_hypothesis_support",
+        "c_failed_hypothesis_contrary",
+        "c_repair_evidence",
+        "c_revision_target"
+      ],
+      "expected_output_schema": {
+        "contrary_evidence_considered": "list",
+        "evidence_refs": "list",
+        "interpretation": "string",
+        "operation_result_type": "string",
+        "recommended_state_transition": "string",
+        "uncertainty": "string"
+      },
+      "focus_id": "focus-17a05b903e1c864b",
+      "goal_id": "active-cognitive-goal-ab6cb13d4fe3f1dd",
+      "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+      "operation_id": "cognitive-operation-15de74e0b0e89a39",
+      "operation_type": "formulate_hypothesis",
+      "provenance": [
+        "working-memory-packet-757e00699efbb438"
+      ],
+      "retry_allowance": 1,
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "task": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+      "working_memory_packet_digest": "d543a225207e3213ac0e5114307eb9592b33ed233ad4fdcbf7caa5ed4a3667cc"
+    },
+    {
+      "authority_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "budget": {
+        "max_response_words": 220,
+        "max_retries": 1
+      },
+      "cycle_id": "active-cognitive-cycle-18f613d6e9445388",
+      "evidence_constraints": [
+        "c_initial_hypothesis_support",
+        "c_failed_hypothesis_contrary",
+        "c_repair_evidence",
+        "c_revision_target"
+      ],
+      "expected_output_schema": {
+        "contrary_evidence_considered": "list",
+        "evidence_refs": "list",
+        "interpretation": "string",
+        "operation_result_type": "string",
+        "recommended_state_transition": "string",
+        "uncertainty": "string"
+      },
+      "focus_id": "focus-625dfbdd4aca4e66",
+      "goal_id": "active-cognitive-goal-ab6cb13d4fe3f1dd",
+      "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+      "operation_id": "cognitive-operation-ab2813a6a40e6979",
+      "operation_type": "compare_evidence",
+      "provenance": [
+        "working-memory-packet-c2d315aad9b887fe"
+      ],
+      "retry_allowance": 1,
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "task": "Perform compare_evidence for the active focus using only referenced evidence.",
+      "working_memory_packet_digest": "aa23913cb3d27407062b2344c13f2145a0c518dfa1ac9163210ee1e84592780b"
+    },
+    {
+      "authority_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "budget": {
+        "max_response_words": 220,
+        "max_retries": 1
+      },
+      "cycle_id": "active-cognitive-cycle-0acfdc586cd9baf1",
+      "evidence_constraints": [
+        "c_initial_hypothesis_support",
+        "c_failed_hypothesis_contrary",
+        "c_repair_evidence",
+        "c_revision_target"
+      ],
+      "expected_output_schema": {
+        "contrary_evidence_considered": "list",
+        "evidence_refs": "list",
+        "interpretation": "string",
+        "operation_result_type": "string",
+        "recommended_state_transition": "string",
+        "uncertainty": "string"
+      },
+      "focus_id": "focus-7deda8a269c7f00b",
+      "goal_id": "active-cognitive-goal-ab6cb13d4fe3f1dd",
+      "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+      "operation_id": "cognitive-operation-0c75459264230e00",
+      "operation_type": "summarize_learning",
+      "provenance": [
+        "working-memory-packet-383ed0d32a240a70"
+      ],
+      "retry_allowance": 1,
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "task": "Perform summarize_learning for the active focus using only referenced evidence.",
+      "working_memory_packet_digest": "86fd7260e2b3f3e8f05e845c7ee33d0b9db22d747124776af870fece9f1e94c0"
+    }
+  ],
+  "operation_results": [
+    {
+      "accepted": true,
+      "assumptions": [],
+      "contrary_evidence_considered": [],
+      "evidence_refs": [
+        "c_initial_hypothesis_support"
+      ],
+      "interpretation": "The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts.",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "next_evidence_need": "",
+      "next_focus_proposal": "",
+      "operation_id": "cognitive-operation-15de74e0b0e89a39",
+      "operation_result_type": "formulate_hypothesis_result",
+      "raw_model_output": "{\"hypothesis_statement\":\"The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts.\",\"scope\":\"active cognition runtime\",\"supporting_evidence_refs\":[\"c_initial_hypothesis_support\"],\"assumptions\":[],\"expected_observations\":[],\"uncertainty\":\"the extent to which the runtime can revise hypotheses based on evidence\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+      "recommended_action": "active cognition runtime",
+      "recommended_state_transition": "propose_hypothesis",
+      "rejection_reasons": [],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "uncertainty": "the extent to which the runtime can revise hypotheses based on evidence"
+    },
+    {
+      "accepted": true,
+      "assumptions": [],
+      "contrary_evidence_considered": [
+        "c_failed_hypothesis_contrary"
+      ],
+      "evidence_refs": [
+        "c_initial_hypothesis_support"
+      ],
+      "interpretation": "The initial hypothesis supports the runtime's ability to formulate and compare hypotheses, but the contrary evidence suggests the previous claim of complete live cognition was incorrect.",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "next_evidence_need": "local evidence showing the current state of live cognition",
+      "next_focus_proposal": "focus on the current state of live cognition",
+      "operation_id": "cognitive-operation-ab2813a6a40e6979",
+      "operation_result_type": "compare_evidence_result",
+      "raw_model_output": "{\"assumptions\":[],\"contrary_evidence_considered\":[\"c_failed_hypothesis_contrary\"],\"evidence_refs\":[\"c_initial_hypothesis_support\"],\"interpretation\":\"The initial hypothesis supports the runtime's ability to formulate and compare hypotheses, but the contrary evidence suggests the previous claim of complete live cognition was incorrect.\",\"next_evidence_need\":\"local evidence showing the current state of live cognition\",\"next_focus_proposal\":\"focus on the current state of live cognition\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"continue to gather evidence on the current state of live cognition\",\"recommended_state_transition\":\"add_conflicting_evidence\",\"uncertainty\":\"How the current state of live cognition aligns with the previous claim.\"}",
+      "recommended_action": "continue to gather evidence on the current state of live cognition",
+      "recommended_state_transition": "add_conflicting_evidence",
+      "rejection_reasons": [],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "uncertainty": "How the current state of live cognition aligns with the previous claim."
+    },
+    {
+      "accepted": true,
+      "assumptions": [],
+      "contrary_evidence_considered": [],
+      "evidence_refs": [
+        "c_initial_hypothesis_support",
+        "c_failed_hypothesis_contrary"
+      ],
+      "interpretation": "The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts. However, contrary evidence suggests the previous claim of complete live cognition was incorrect, necessitating a revised hypothesis focusing on useful steps.",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "next_evidence_need": "How can the runtime effectively incorporate live feedback to refine its hypotheses?",
+      "next_focus_proposal": "",
+      "operation_id": "cognitive-operation-0c75459264230e00",
+      "operation_result_type": "summarize_learning_result",
+      "raw_model_output": "{\"lesson\":\"The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts. However, contrary evidence suggests the previous claim of complete live cognition was incorrect, necessitating a revised hypothesis focusing on useful steps.\",\"evidence_refs\":[\"c_initial_hypothesis_support\",\"c_failed_hypothesis_contrary\"],\"unresolved_questions\":[\"How can the runtime effectively incorporate live feedback to refine its hypotheses?\"],\"uncertainty\":\"The exact boundaries of what the runtime can prove live remain unclear.\",\"recommended_state_transition\":\"summarize_learning\"}",
+      "recommended_action": "",
+      "recommended_state_transition": "summarize_learning",
+      "rejection_reasons": [],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "uncertainty": "The exact boundaries of what the runtime can prove live remain unclear."
+    }
+  ],
+  "outcomes": [
+    {
+      "created_at": "2026-07-27T00:57:15+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+      "observed": "The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts.",
+      "operation_id": "cognitive-operation-15de74e0b0e89a39",
+      "outcome_id": "outcome-70f40479c10251c9"
+    },
+    {
+      "created_at": "2026-07-27T00:57:42+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform compare_evidence for the active focus using only referenced evidence.",
+      "observed": "The initial hypothesis supports the runtime's ability to formulate and compare hypotheses, but the contrary evidence suggests the previous claim of complete live cognition was incorrect.",
+      "operation_id": "cognitive-operation-ab2813a6a40e6979",
+      "outcome_id": "outcome-9771cd61f291950b"
+    },
+    {
+      "created_at": "2026-07-27T00:58:04+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform summarize_learning for the active focus using only referenced evidence.",
+      "observed": "The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts. However, contrary evidence suggests the previous claim of complete live cognition was incorrect, necessitating a revised hypothesis focusing on useful steps.",
+      "operation_id": "cognitive-operation-0c75459264230e00",
+      "outcome_id": "outcome-3ff96309b00f83fd"
+    }
+  ],
+  "pending_operator_requests": [],
+  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+  "title": "Episode C failed hypothesis revision",
+  "useful_artifacts": [
+    {
+      "artifact_id": "useful-artifact-3ff96309b00f83fd",
+      "artifact_type": "cognitive_episode_summary",
+      "evidence_refs": [
+        "c_initial_hypothesis_support",
+        "c_failed_hypothesis_contrary"
+      ],
+      "summary": "The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts. However, contrary evidence suggests the previous claim of complete live cognition was incorrect, necessitating a revised hypothesis focusing on useful steps."
+    }
+  ],
+  "working_memory_packets": [
+    {
+      "active_focus": {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "local_model_semantic_operation",
+        "creation_sequence": 1,
+        "description": "Resolve discrepancy for goal: revise a failed hypothesis about the active cognition runtime using contrary evidence",
+        "evidence_need": "local evidence supporting or challenging the goal",
+        "evidence_refs": [
+          "c_initial_hypothesis_support",
+          "c_failed_hypothesis_contrary",
+          "c_repair_evidence"
+        ],
+        "expected_value": "useful_progress",
+        "focus_id": "focus-17a05b903e1c864b",
+        "related_goal_ids": [
+          "active-cognitive-goal-ab6cb13d4fe3f1dd"
+        ],
+        "salience_categories": [
+          "operator_priority",
+          "goal_discrepancy",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "goal_discrepancy",
+        "urgency": "medium"
+      },
+      "active_goal": {
+        "expected_state": "failed hypothesis is weakened or revised from evidence and summarized",
+        "goal_id": "active-cognitive-goal-ab6cb13d4fe3f1dd",
+        "observed_state": "",
+        "priority": "operator_requested",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "summary": "revise a failed hypothesis about the active cognition runtime using contrary evidence"
+      },
+      "authority_state": "authorized_for_local_cognitive_marathon",
+      "capability_limits": [
+        "model calls budgeted",
+        "source mutation requires explicit bounded patch authority"
+      ],
+      "conflicting_evidence": [
+        {
+          "content": "Episode B and E were not run; C and D were scripted only; final status was usefulness-blocked.",
+          "evidence_id": "c_failed_hypothesis_contrary",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "prior evidence",
+          "summary": "Contrary evidence: the previous marathon claim that live cognition was complete failed."
+        },
+        {
+          "content": "The useful outcome is a narrower revised hypothesis about what DELTA can now prove live.",
+          "evidence_id": "c_revision_target",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "operator",
+          "summary": "The target is not to preserve the old broad success claim."
+        }
+      ],
+      "construction_rationale": "bounded by active focus, goal discrepancy, recency, evidence provenance, and operation need",
+      "current_hypotheses": [],
+      "cycle_id": "active-cognitive-cycle-9674787bcf6fbb41",
+      "observed_outcomes": [],
+      "omitted_items_summary": "0 older or less relevant items omitted by packet budget",
+      "operator_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "packet_digest": "d543a225207e3213ac0e5114307eb9592b33ed233ad4fdcbf7caa5ed4a3667cc",
+      "packet_id": "working-memory-packet-757e00699efbb438",
+      "prior_cycle_summary": "",
+      "provenance_refs": [
+        "c_initial_hypothesis_support",
+        "c_failed_hypothesis_contrary",
+        "c_repair_evidence",
+        "c_revision_target"
+      ],
+      "recent_actions": [],
+      "relevant_evidence": [
+        {
+          "content": "The runtime can formulate hypotheses, compare evidence, and write learning artifacts.",
+          "evidence_id": "c_initial_hypothesis_support",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "repo",
+          "summary": "Supporting evidence: active cognition runtime exposes focus, hypothesis, and model operation structures."
+        },
+        {
+          "content": "The newer checkpoint showed strict model outputs can revise hypotheses and produce useful Episode A artifacts.",
+          "evidence_id": "c_repair_evidence",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "checkpoint",
+          "summary": "Operation-specific schema specialization repaired model operation consumption."
+        }
+      ],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "size_budget": 8,
+      "unresolved_questions": []
+    },
+    {
+      "active_focus": {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "local_model_semantic_operation",
+        "creation_sequence": 2,
+        "description": "Resolve discrepancy for goal: revise a failed hypothesis about the active cognition runtime using contrary evidence",
+        "evidence_need": "local evidence supporting or challenging the goal",
+        "evidence_refs": [
+          "c_initial_hypothesis_support",
+          "c_failed_hypothesis_contrary",
+          "c_repair_evidence"
+        ],
+        "expected_value": "useful_progress",
+        "focus_id": "focus-625dfbdd4aca4e66",
+        "related_goal_ids": [
+          "active-cognitive-goal-ab6cb13d4fe3f1dd"
+        ],
+        "salience_categories": [
+          "operator_priority",
+          "goal_discrepancy",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "goal_discrepancy",
+        "urgency": "medium"
+      },
+      "active_goal": {
+        "expected_state": "failed hypothesis is weakened or revised from evidence and summarized",
+        "goal_id": "active-cognitive-goal-ab6cb13d4fe3f1dd",
+        "observed_state": "",
+        "priority": "operator_requested",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "summary": "revise a failed hypothesis about the active cognition runtime using contrary evidence"
+      },
+      "authority_state": "authorized_for_local_cognitive_marathon",
+      "capability_limits": [
+        "model calls budgeted",
+        "source mutation requires explicit bounded patch authority"
+      ],
+      "conflicting_evidence": [
+        {
+          "content": "Episode B and E were not run; C and D were scripted only; final status was usefulness-blocked.",
+          "evidence_id": "c_failed_hypothesis_contrary",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "prior evidence",
+          "summary": "Contrary evidence: the previous marathon claim that live cognition was complete failed."
+        },
+        {
+          "content": "The useful outcome is a narrower revised hypothesis about what DELTA can now prove live.",
+          "evidence_id": "c_revision_target",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "operator",
+          "summary": "The target is not to preserve the old broad success claim."
+        }
+      ],
+      "construction_rationale": "bounded by active focus, goal discrepancy, recency, evidence provenance, and operation need",
+      "current_hypotheses": [
+        {
+          "assumptions": [],
+          "confidence_state": "plausible",
+          "created_at": "2026-07-27T00:57:15+00:00",
+          "disposition": "needs_challenge",
+          "evidence_against": [],
+          "evidence_for": [
+            "c_initial_hypothesis_support"
+          ],
+          "expected_observations": [
+            "local evidence should support a bounded useful step"
+          ],
+          "hypothesis_id": "hypothesis-be3c41633310f350",
+          "lifecycle_state": "active",
+          "originating_focus_id": "focus-17a05b903e1c864b",
+          "originating_goal_id": "active-cognitive-goal-ab6cb13d4fe3f1dd",
+          "provenance": [
+            "cognitive-operation-15de74e0b0e89a39"
+          ],
+          "revised_at": "",
+          "revision_parent_id": "",
+          "revision_reason": "",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "scope": "Resolve discrepancy for goal: revise a failed hypothesis about the active cognition runtime using contrary evidence",
+          "statement": "The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts."
+        }
+      ],
+      "cycle_id": "active-cognitive-cycle-18f613d6e9445388",
+      "observed_outcomes": [
+        {
+          "created_at": "2026-07-27T00:57:15+00:00",
+          "discrepancy": "progress_observed",
+          "expected": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+          "observed": "The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts.",
+          "operation_id": "cognitive-operation-15de74e0b0e89a39",
+          "outcome_id": "outcome-70f40479c10251c9"
+        }
+      ],
+      "omitted_items_summary": "0 older or less relevant items omitted by packet budget",
+      "operator_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "packet_digest": "aa23913cb3d27407062b2344c13f2145a0c518dfa1ac9163210ee1e84592780b",
+      "packet_id": "working-memory-packet-c2d315aad9b887fe",
+      "prior_cycle_summary": "The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts.",
+      "provenance_refs": [
+        "c_initial_hypothesis_support",
+        "c_failed_hypothesis_contrary",
+        "c_repair_evidence",
+        "c_revision_target"
+      ],
+      "recent_actions": [],
+      "relevant_evidence": [
+        {
+          "content": "The runtime can formulate hypotheses, compare evidence, and write learning artifacts.",
+          "evidence_id": "c_initial_hypothesis_support",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "repo",
+          "summary": "Supporting evidence: active cognition runtime exposes focus, hypothesis, and model operation structures."
+        },
+        {
+          "content": "The newer checkpoint showed strict model outputs can revise hypotheses and produce useful Episode A artifacts.",
+          "evidence_id": "c_repair_evidence",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "checkpoint",
+          "summary": "Operation-specific schema specialization repaired model operation consumption."
+        }
+      ],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "size_budget": 8,
+      "unresolved_questions": []
+    },
+    {
+      "active_focus": {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "semantic comparison",
+        "creation_sequence": 3,
+        "description": "Challenge or revise hypothesis: The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts.",
+        "evidence_need": "contrary and supporting evidence",
+        "evidence_refs": [
+          "c_initial_hypothesis_support",
+          "c_failed_hypothesis_contrary"
+        ],
+        "expected_value": "belief_revision",
+        "focus_id": "focus-7deda8a269c7f00b",
+        "related_goal_ids": [
+          "active-cognitive-goal-ab6cb13d4fe3f1dd"
+        ],
+        "salience_categories": [
+          "unresolved_hypothesis",
+          "evidence_revision",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "An active hypothesis needs evidence-linked revision before action.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "hypothesis_revision",
+        "urgency": "high"
+      },
+      "active_goal": {
+        "expected_state": "failed hypothesis is weakened or revised from evidence and summarized",
+        "goal_id": "active-cognitive-goal-ab6cb13d4fe3f1dd",
+        "observed_state": "",
+        "priority": "operator_requested",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "summary": "revise a failed hypothesis about the active cognition runtime using contrary evidence"
+      },
+      "authority_state": "authorized_for_local_cognitive_marathon",
+      "capability_limits": [
+        "model calls budgeted",
+        "source mutation requires explicit bounded patch authority"
+      ],
+      "conflicting_evidence": [
+        {
+          "content": "Episode B and E were not run; C and D were scripted only; final status was usefulness-blocked.",
+          "evidence_id": "c_failed_hypothesis_contrary",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "prior evidence",
+          "summary": "Contrary evidence: the previous marathon claim that live cognition was complete failed."
+        },
+        {
+          "content": "The useful outcome is a narrower revised hypothesis about what DELTA can now prove live.",
+          "evidence_id": "c_revision_target",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "operator",
+          "summary": "The target is not to preserve the old broad success claim."
+        }
+      ],
+      "construction_rationale": "bounded by active focus, goal discrepancy, recency, evidence provenance, and operation need",
+      "current_hypotheses": [
+        {
+          "assumptions": [],
+          "confidence_state": "contested",
+          "created_at": "2026-07-27T00:57:15+00:00",
+          "disposition": "needs_challenge",
+          "evidence_against": [
+            "c_failed_hypothesis_contrary"
+          ],
+          "evidence_for": [
+            "c_initial_hypothesis_support"
+          ],
+          "expected_observations": [
+            "local evidence should support a bounded useful step"
+          ],
+          "hypothesis_id": "hypothesis-be3c41633310f350",
+          "lifecycle_state": "active",
+          "originating_focus_id": "focus-17a05b903e1c864b",
+          "originating_goal_id": "active-cognitive-goal-ab6cb13d4fe3f1dd",
+          "provenance": [
+            "cognitive-operation-15de74e0b0e89a39",
+            "cognitive-operation-ab2813a6a40e6979"
+          ],
+          "revised_at": "2026-07-27T00:57:42+00:00",
+          "revision_parent_id": "",
+          "revision_reason": "The initial hypothesis supports the runtime's ability to formulate and compare hypotheses, but the contrary evidence suggests the previous claim of complete live cognition was incorrect.",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "scope": "Resolve discrepancy for goal: revise a failed hypothesis about the active cognition runtime using contrary evidence",
+          "statement": "The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts."
+        }
+      ],
+      "cycle_id": "active-cognitive-cycle-0acfdc586cd9baf1",
+      "observed_outcomes": [
+        {
+          "created_at": "2026-07-27T00:57:15+00:00",
+          "discrepancy": "progress_observed",
+          "expected": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+          "observed": "The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts.",
+          "operation_id": "cognitive-operation-15de74e0b0e89a39",
+          "outcome_id": "outcome-70f40479c10251c9"
+        },
+        {
+          "created_at": "2026-07-27T00:57:42+00:00",
+          "discrepancy": "progress_observed",
+          "expected": "Perform compare_evidence for the active focus using only referenced evidence.",
+          "observed": "The initial hypothesis supports the runtime's ability to formulate and compare hypotheses, but the contrary evidence suggests the previous claim of complete live cognition was incorrect.",
+          "operation_id": "cognitive-operation-ab2813a6a40e6979",
+          "outcome_id": "outcome-9771cd61f291950b"
+        }
+      ],
+      "omitted_items_summary": "0 older or less relevant items omitted by packet budget",
+      "operator_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "packet_digest": "86fd7260e2b3f3e8f05e845c7ee33d0b9db22d747124776af870fece9f1e94c0",
+      "packet_id": "working-memory-packet-383ed0d32a240a70",
+      "prior_cycle_summary": "The initial hypothesis supports the runtime's ability to formulate and compare hypotheses, but the contrary evidence suggests the previous claim of complete live cognition was incorrect.",
+      "provenance_refs": [
+        "c_initial_hypothesis_support",
+        "c_failed_hypothesis_contrary",
+        "c_repair_evidence",
+        "c_revision_target"
+      ],
+      "recent_actions": [],
+      "relevant_evidence": [
+        {
+          "content": "The runtime can formulate hypotheses, compare evidence, and write learning artifacts.",
+          "evidence_id": "c_initial_hypothesis_support",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "repo",
+          "summary": "Supporting evidence: active cognition runtime exposes focus, hypothesis, and model operation structures."
+        },
+        {
+          "content": "The newer checkpoint showed strict model outputs can revise hypotheses and produce useful Episode A artifacts.",
+          "evidence_id": "c_repair_evidence",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "checkpoint",
+          "summary": "Operation-specific schema specialization repaired model operation consumption."
+        }
+      ],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "size_budget": 8,
+      "unresolved_questions": []
+    }
+  ]
+}

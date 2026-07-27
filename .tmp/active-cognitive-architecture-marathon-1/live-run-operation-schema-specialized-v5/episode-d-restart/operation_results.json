@@ -1,0 +1,74 @@
+[
+  {
+    "accepted": true,
+    "assumptions": [
+      "The ActiveCognitiveEpisodeState format is consistent and preserved across restarts."
+    ],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "d_persistence_support",
+      "d_restart_requirement",
+      "d_useful_target"
+    ],
+    "interpretation": "The ActiveCognitiveEpisodeState can be persisted, restored, and resumed with continuity of focus and post-resume learning.",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "next_evidence_need": "",
+    "next_focus_proposal": "",
+    "operation_id": "cognitive-operation-6e71220ef64ca40a",
+    "operation_result_type": "formulate_hypothesis_result",
+    "raw_model_output": "{\"hypothesis_statement\":\"The ActiveCognitiveEpisodeState can be persisted, restored, and resumed with continuity of focus and post-resume learning.\",\"scope\":\"ActiveCognitiveEpisodeState persistence, restoration, and resumption with focus and learning continuity.\",\"supporting_evidence_refs\":[\"d_persistence_support\",\"d_restart_requirement\",\"d_useful_target\"],\"assumptions\":[\"The ActiveCognitiveEpisodeState format is consistent and preserved across restarts.\"],\"expected_observations\":[\"Focus ID continuity during and after restoration.\",\"Continued model operations post-resumption.\"],\"uncertainty\":\"The exact nature of focus continuity and post-resume learning.\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+    "recommended_action": "ActiveCognitiveEpisodeState persistence, restoration, and resumption with focus and learning continuity.",
+    "recommended_state_transition": "propose_hypothesis",
+    "rejection_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "uncertainty": "The exact nature of focus continuity and post-resume learning."
+  },
+  {
+    "accepted": true,
+    "assumptions": [
+      "The ActiveCognitiveEpisodeState format is consistent and preserved across restarts."
+    ],
+    "contrary_evidence_considered": [
+      "d_prior_limitation"
+    ],
+    "evidence_refs": [
+      "d_persistence_support",
+      "d_restart_requirement",
+      "d_useful_target"
+    ],
+    "interpretation": "The hypothesis is supported by evidence that ActiveCognitiveEpisodeState can be persisted, restored, and resumed with continuity of focus and post-resume learning. However, the previous final status classified Episode D as covered by round-trip tests, not live model episode evidence, which weakens the hypothesis.",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "next_evidence_need": "Further evidence to confirm the hypothesis in live model episode context.",
+    "next_focus_proposal": "Formulate a hypothesis based on live model episode evidence.",
+    "operation_id": "cognitive-operation-0716edca18aaf640",
+    "operation_result_type": "compare_evidence_result",
+    "raw_model_output": "{ \"assumptions\":[\"The ActiveCognitiveEpisodeState format is consistent and preserved across restarts.\"], \"contrary_evidence_considered\":[\"d_prior_limitation\"], \"evidence_refs\":[\"d_persistence_support\",\"d_restart_requirement\",\"d_useful_target\"], \"interpretation\":\"The hypothesis is supported by evidence that ActiveCognitiveEpisodeState can be persisted, restored, and resumed with continuity of focus and post-resume learning. However, the previous final status classified Episode D as covered by round-trip tests, not live model episode evidence, which weakens the hypothesis.\", \"next_evidence_need\":\"Further evidence to confirm the hypothesis in live model episode context.\", \"next_focus_proposal\":\"Formulate a hypothesis based on live model episode evidence.\", \"operation_result_type\":\"compare_evidence_result\", \"recommended_action\":\"Formulate a hypothesis based on live model episode evidence.\", \"recommended_state_transition\":\"add_conflicting_evidence\", \"uncertainty\":\"The hypothesis remains unresolved due to the conflicting evidence from the previous final status.\"}",
+    "recommended_action": "Formulate a hypothesis based on live model episode evidence.",
+    "recommended_state_transition": "add_conflicting_evidence",
+    "rejection_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "uncertainty": "The hypothesis remains unresolved due to the conflicting evidence from the previous final status."
+  },
+  {
+    "accepted": true,
+    "assumptions": [],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "d_persistence_support",
+      "d_restart_requirement",
+      "d_useful_target"
+    ],
+    "interpretation": "The ActiveCognitiveEpisodeState can be persisted, restored, and resumed with continuity of focus and post-resume learning, but the previous final status classified Episode D as covered by round-trip tests, not live model episode evidence.",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "next_evidence_need": "How does the round-trip test evidence compare to live model episode evidence?",
+    "next_focus_proposal": "",
+    "operation_id": "cognitive-operation-65f2949aa6186c9e",
+    "operation_result_type": "summarize_learning_result",
+    "raw_model_output": "{ \"lesson\": \"The ActiveCognitiveEpisodeState can be persisted, restored, and resumed with continuity of focus and post-resume learning, but the previous final status classified Episode D as covered by round-trip tests, not live model episode evidence.\", \"evidence_refs\": [ \"d_persistence_support\", \"d_restart_requirement\", \"d_useful_target\" ], \"unresolved_questions\": [ \"How does the round-trip test evidence compare to live model episode evidence?\" ], \"uncertainty\": \"The exact nature of the live model episode evidence is unresolved.\", \"recommended_state_transition\": \"summarize_learning\" }",
+    "recommended_action": "",
+    "recommended_state_transition": "summarize_learning",
+    "rejection_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "uncertainty": "The exact nature of the live model episode evidence is unresolved."
+  }
+]

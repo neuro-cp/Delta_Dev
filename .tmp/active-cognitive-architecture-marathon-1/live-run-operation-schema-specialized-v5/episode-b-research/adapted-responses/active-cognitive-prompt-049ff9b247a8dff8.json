@@ -1,0 +1,21 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "b_runtime_surface",
+      "b_schema_checkpoint",
+      "b_user_target",
+      "b_prior_block"
+    ],
+    "lesson": "The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence. However, the earlier marathon status was usefulness-blocked, indicating that the runtime state may not be sufficient to produce useful evidence.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "The runtime state may not be sufficient to produce useful evidence.",
+    "unresolved_questions": [
+      "How can the runtime state be improved to consistently produce useful evidence?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence. However, the earlier marathon status was usefulness-blocked, indicating that the runtime state may not be sufficient to produce useful evidence.\",\"evidence_refs\":[\"b_runtime_surface\",\"b_schema_checkpoint\",\"b_user_target\",\"b_prior_block\"],\"unresolved_questions\":[\"How can the runtime state be improved to consistently produce useful evidence?\"],\"uncertainty\":\"The runtime state may not be sufficient to produce useful evidence.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "94f0011a7203c59a9be31b2f70082a60acbd13e1a48f7bf283e345563270013b",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

@@ -1,0 +1,76 @@
+{
+  "ledger_request_id": "shared-local-model-request-a839a573fd78d1a6",
+  "ledger_result_id": "shared-local-model-result-acc1a2d498cb2627",
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "prompt_snapshot_id": "active-cognitive-prompt-049ff9b247a8dff8",
+  "raw_response": "{\"lesson\":\"The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence. However, the earlier marathon status was usefulness-blocked, indicating that the runtime state may not be sufficient to produce useful evidence.\",\"evidence_refs\":[\"b_runtime_surface\",\"b_schema_checkpoint\",\"b_user_target\",\"b_prior_block\"],\"unresolved_questions\":[\"How can the runtime state be improved to consistently produce useful evidence?\"],\"uncertainty\":\"The runtime state may not be sufficient to produce useful evidence.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "94f0011a7203c59a9be31b2f70082a60acbd13e1a48f7bf283e345563270013b",
+  "terminal_status": {
+    "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+    "approved_at": "2026-07-27T00:56:37+00:00",
+    "authority_state": "operator_authorized_active_cognitive_architecture_marathon_1_live_episodes",
+    "claimed_at": "2026-07-27T00:56:37+00:00",
+    "completed_at": "2026-07-27T00:56:59+00:00",
+    "consumed_state": "terminal",
+    "created_at": "2026-07-27T00:56:37+00:00",
+    "execution_attempt_count": 1,
+    "execution_claim_id": "shared-local-model-execution-claim-a13ce3cae7ed4b23",
+    "failure_classification": "",
+    "lifecycle_state": "completed",
+    "mission_id": "active-cognitive-goal-389cf200140bb48b",
+    "mission_information_need_identity": "focus-3382d4f1b24be828",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - lesson: nonempty string - evidence_refs: array[string] - unresolved_questions: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - evidence_refs values must be chosen from: b_runtime_surface, b_schema_checkpoint, b_user_target, b_prior_block TASK: perform only operation summarize_learning. Allowed transition/next-operation values: summarize_learning, select_next_focus. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: b_runtime_surface, b_schema_checkpoint, b_user_target. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"semantic comparison\",\"creation_sequence\":3,\"description\":\"Challenge or revise hypothesis: The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence.\",\"evidence_need\":\"contrary and supporting evidence\",\"evidence_refs\":[\"b_runtime_surface\",\"b_schema_checkpoint\",\"b_user_target\",\"b_prior_block\"],\"expected_value\":\"belief_revision\",\"focus_id\":\"focus-3382d4f1b24be828\",\"related_goal_ids\":[\"active-cognitive-goal-389cf200140bb48b\"],\"salience_categories\":[\"unresolved_hypothesis\",\"evidence_revision\",\"expected_useful_progress\"],\"salience_explanation\":\"An active hypothesis needs evidence-linked revision before action.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"hypothesis_revision\",\"urgency\":\"high\"},\"contrary_evidence\":[{\"content\":\".tmp/active-cognitive-architecture-marathon-1/final_status.json reported live episodes were not qualified and useful Episode A was missing revision/artifact at that time.\",\"evidence_id\":\"b_prior_block\",\"source\":\"prior evidence\",\"summary\":\"Contrary evidence: the earlier marathon status was usefulness-blocked.\"}],\"current_goal\":{\"expected_state\":\"useful research synthesis artifact produced from local evidence\",\"goal_id\":\"active-cognitive-goal-389cf200140bb48b\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"research and synthesize whether the current active cognition runtime can support sustained local repository work\"},\"current_hypotheses\":[{\"assumptions\":[\"The runtime state is sufficient to maintain focus and operations.\",\"Operations produce evidence that is useful for the operator's goals.\"],\"confidence_state\":\"contested\",\"created_at\":\"2026-07-27T00:56:03+00:00\",\"disposition\":\"needs_challenge\",\"evidence_against\":[\"b_prior_block\"],\"evidence_for\":[\"b_runtime_surface\",\"b_schema_checkpoint\",\"b_user_target\"],\"expected_observations\":[\"local evidence should support a bounded useful step\"],\"hypothesis_id\":\"hypothesis-904ff9267195eff7\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-61b8c232d08b08c4\",\"originating_goal_id\":\"active-cognitive-goal-389cf200140bb48b\",\"provenance\":[\"cognitive-operation-f64672cdc1a8b826\",\"cognitive-operation-663f134037105958\"],\"revised_at\":\"2026-07-27T00:56:37+00:00\",\"revision_parent_id\":\"\",\"revision_reason\":\"The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence. However, the earlier marathon status was usefulness-blocked, indicating that the runtime state may not be sufficient to produce useful evidence.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: research and synthesize whether the current active cognition runtime can support sustained local repository work\",\"statement\":\"The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence.\"}],\"evidence_for\":[{\"content\":\"orchestration/runtime/active_cognitive_loop.py contains runtime state, focus, working memory, model execution, validation, and learning artifact functions.\",\"evidence_id\":\"b_runtime_surface\",\"source\":\"repo\",\"summary\":\"Active loop runtime has persistent state, focus selection, typed operations, local model ledger, and prompt snapshots.\"},{\"content\":\"Commit eded3528 added operation-specific active cognition and staged closure evidence proving typed operation execution into an active episode.\",\"evidence_id\":\"b_schema_checkpoint\",\"source\":\"checkpoint\",\"summary\":\"Operation-specific schema checkpoint passed and produced durable Episode A evidence.\"},{\"content\":\"Required proof is broad objective -> DELTA selects focus -> multiple operations -> evidence revision -> useful work -> restart survival -> next focus selection.\",\"evidence_id\":\"b_user_target\",\"source\":\"operator\",\"summary\":\"The operator now wants sustained exercisable cognition rather than more schema work.\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-27T00:56:37+00:00\",\"discrepancy\":\"progress_observed\",\"expected\":\"Perform compare_evidence for the active focus using only referenced evidence.\",\"observed\":\"The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence. However, the earlier marathon status was usefulness-blocked, indicating that the runtime state may not be sufficient to produce useful evidence.\",\"operation_id\":\"cognitive-operation-663f134037105958\",\"outcome_id\":\"outcome-2db00872e7ce72f4\"}]}",
+    "question_objective": "summarize_learning",
+    "record_digest": "781395297e9fb128f2b54d5ed0ef541e343e8eb19f4c6cb6a0a46288c1b08618",
+    "record_version": 1,
+    "request_digest": "3334322e43adb7deab69f5c7da1a7d55fa75511aa5fe5fa153a889e95d56d6c5",
+    "request_id": "shared-local-model-request-a839a573fd78d1a6",
+    "requester_reference": "cognitive-operation-700f630da596a8ed",
+    "requester_type": "active_cognitive_loop",
+    "result_id": "shared-local-model-result-acc1a2d498cb2627",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    },
+    "semantic_identity": "active-cognitive-ledger-request-ac4a9ef87697250c",
+    "session_reference": "active-cognitive-cycle-c1ae4138c4fa2b0a"
+  }
+}

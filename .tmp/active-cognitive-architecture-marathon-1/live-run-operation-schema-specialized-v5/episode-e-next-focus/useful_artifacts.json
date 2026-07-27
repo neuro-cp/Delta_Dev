@@ -1,0 +1,12 @@
+[
+  {
+    "artifact_id": "useful-artifact-03657a2fe2223428",
+    "artifact_type": "cognitive_episode_summary",
+    "evidence_refs": [
+      "e_completed_prior_work",
+      "e_unresolved_research_need",
+      "e_unresolved_restart_need"
+    ],
+    "summary": "The next focus should be selected from unresolved evidence rather than assigned as another schema task."
+  }
+]

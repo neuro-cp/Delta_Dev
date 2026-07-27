@@ -1,0 +1,27 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "The ActiveCognitiveEpisodeState format is consistent and preserved across restarts."
+    ],
+    "contrary_evidence_considered": [
+      "d_prior_limitation"
+    ],
+    "evidence_refs": [
+      "d_persistence_support",
+      "d_restart_requirement",
+      "d_useful_target"
+    ],
+    "interpretation": "The hypothesis is supported by evidence that ActiveCognitiveEpisodeState can be persisted, restored, and resumed with continuity of focus and post-resume learning. However, the previous final status classified Episode D as covered by round-trip tests, not live model episode evidence, which weakens the hypothesis.",
+    "next_evidence_need": "Further evidence to confirm the hypothesis in live model episode context.",
+    "next_focus_proposal": "Formulate a hypothesis based on live model episode evidence.",
+    "operation_result_type": "compare_evidence_result",
+    "recommended_action": "Formulate a hypothesis based on live model episode evidence.",
+    "recommended_state_transition": "add_conflicting_evidence",
+    "uncertainty": "The hypothesis remains unresolved due to the conflicting evidence from the previous final status."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{ \"assumptions\":[\"The ActiveCognitiveEpisodeState format is consistent and preserved across restarts.\"], \"contrary_evidence_considered\":[\"d_prior_limitation\"], \"evidence_refs\":[\"d_persistence_support\",\"d_restart_requirement\",\"d_useful_target\"], \"interpretation\":\"The hypothesis is supported by evidence that ActiveCognitiveEpisodeState can be persisted, restored, and resumed with continuity of focus and post-resume learning. However, the previous final status classified Episode D as covered by round-trip tests, not live model episode evidence, which weakens the hypothesis.\", \"next_evidence_need\":\"Further evidence to confirm the hypothesis in live model episode context.\", \"next_focus_proposal\":\"Formulate a hypothesis based on live model episode evidence.\", \"operation_result_type\":\"compare_evidence_result\", \"recommended_action\":\"Formulate a hypothesis based on live model episode evidence.\", \"recommended_state_transition\":\"add_conflicting_evidence\", \"uncertainty\":\"The hypothesis remains unresolved due to the conflicting evidence from the previous final status.\"}",
+  "raw_response_digest": "b8811ba54709700ccc838cbc6c87240acb179fc07aafe9ab38be37ecfc5c7ff1",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

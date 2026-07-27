@@ -1,0 +1,119 @@
+[
+  {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-3b82547fcf13554b",
+    "evidence_constraints": [
+      "e_completed_prior_work",
+      "e_unresolved_research_need",
+      "e_unresolved_restart_need",
+      "e_operator_constraint"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-7da3a65a7e73ace4",
+    "goal_id": "active-cognitive-goal-f8f3c7ef02221d29",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-639142002e6ac510",
+    "operation_type": "formulate_hypothesis",
+    "provenance": [
+      "working-memory-packet-eb6f688a348be798"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "a6baa7458ba849e7881fc4f360bf3ebcb4e50e8e0b3079c2e77b73d67c51bfa3"
+  },
+  {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-5c5038a8cf847da1",
+    "evidence_constraints": [
+      "e_completed_prior_work",
+      "e_unresolved_research_need",
+      "e_unresolved_restart_need",
+      "e_operator_constraint"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-51267880d6c60495",
+    "goal_id": "active-cognitive-goal-f8f3c7ef02221d29",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-f611ed9b91df7ebd",
+    "operation_type": "compare_evidence",
+    "provenance": [
+      "working-memory-packet-b4a80c62b78c34e9"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform compare_evidence for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "42fefbe643b0ba95f492b4832e8daaa2d98774819c6fd67ba0a1247a20675762"
+  },
+  {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-e3f1838a84167923",
+    "evidence_constraints": [
+      "e_completed_prior_work",
+      "e_unresolved_research_need",
+      "e_unresolved_restart_need",
+      "e_operator_constraint"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-77082a027ca7c6ac",
+    "goal_id": "active-cognitive-goal-f8f3c7ef02221d29",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-8c861a3e3829fda2",
+    "operation_type": "summarize_learning",
+    "provenance": [
+      "working-memory-packet-b22cc511174ddc67"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform summarize_learning for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "b713097dac20c1f9ed2dbb0091c6330aa5c284a7dedbdb9094c0a018e1295cb7"
+  }
+]

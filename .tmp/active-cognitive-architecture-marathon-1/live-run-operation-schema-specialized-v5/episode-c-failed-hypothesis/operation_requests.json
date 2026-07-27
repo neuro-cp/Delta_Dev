@@ -1,0 +1,119 @@
+[
+  {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-9674787bcf6fbb41",
+    "evidence_constraints": [
+      "c_initial_hypothesis_support",
+      "c_failed_hypothesis_contrary",
+      "c_repair_evidence",
+      "c_revision_target"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-17a05b903e1c864b",
+    "goal_id": "active-cognitive-goal-ab6cb13d4fe3f1dd",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-15de74e0b0e89a39",
+    "operation_type": "formulate_hypothesis",
+    "provenance": [
+      "working-memory-packet-757e00699efbb438"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "d543a225207e3213ac0e5114307eb9592b33ed233ad4fdcbf7caa5ed4a3667cc"
+  },
+  {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-18f613d6e9445388",
+    "evidence_constraints": [
+      "c_initial_hypothesis_support",
+      "c_failed_hypothesis_contrary",
+      "c_repair_evidence",
+      "c_revision_target"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-625dfbdd4aca4e66",
+    "goal_id": "active-cognitive-goal-ab6cb13d4fe3f1dd",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-ab2813a6a40e6979",
+    "operation_type": "compare_evidence",
+    "provenance": [
+      "working-memory-packet-c2d315aad9b887fe"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform compare_evidence for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "aa23913cb3d27407062b2344c13f2145a0c518dfa1ac9163210ee1e84592780b"
+  },
+  {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-0acfdc586cd9baf1",
+    "evidence_constraints": [
+      "c_initial_hypothesis_support",
+      "c_failed_hypothesis_contrary",
+      "c_repair_evidence",
+      "c_revision_target"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-7deda8a269c7f00b",
+    "goal_id": "active-cognitive-goal-ab6cb13d4fe3f1dd",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-0c75459264230e00",
+    "operation_type": "summarize_learning",
+    "provenance": [
+      "working-memory-packet-383ed0d32a240a70"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform summarize_learning for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "86fd7260e2b3f3e8f05e845c7ee33d0b9db22d747124776af870fece9f1e94c0"
+  }
+]

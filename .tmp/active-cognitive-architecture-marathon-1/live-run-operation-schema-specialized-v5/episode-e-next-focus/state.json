@@ -1,0 +1,963 @@
+{
+  "actions": [],
+  "attention": {
+    "abandonment_reason": "",
+    "active_focus_id": "focus-77082a027ca7c6ac",
+    "active_focus_summary": "Challenge or revise hypothesis: The next focus should be selected from unresolved evidence rather than assigned as another schema task.",
+    "active_goal_ids": [
+      "active-cognitive-goal-f8f3c7ef02221d29"
+    ],
+    "attention_state_id": "active-attention-630409f6f76498fa",
+    "candidate_focuses": [
+      {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "local_model_semantic_operation",
+        "creation_sequence": 3,
+        "description": "Resolve discrepancy for goal: select and begin the next useful focus after completing a prior cognitive episode",
+        "evidence_need": "local evidence supporting or challenging the goal",
+        "evidence_refs": [
+          "e_completed_prior_work",
+          "e_unresolved_research_need",
+          "e_unresolved_restart_need"
+        ],
+        "expected_value": "useful_progress",
+        "focus_id": "focus-e52dabb64f9e58df",
+        "related_goal_ids": [
+          "active-cognitive-goal-f8f3c7ef02221d29"
+        ],
+        "salience_categories": [
+          "operator_priority",
+          "goal_discrepancy",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "goal_discrepancy",
+        "urgency": "medium"
+      },
+      {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "semantic comparison",
+        "creation_sequence": 3,
+        "description": "Challenge or revise hypothesis: The next focus should be selected from unresolved evidence rather than assigned as another schema task.",
+        "evidence_need": "contrary and supporting evidence",
+        "evidence_refs": [
+          "e_completed_prior_work",
+          "e_unresolved_research_need",
+          "e_unresolved_restart_need",
+          "e_operator_constraint"
+        ],
+        "expected_value": "belief_revision",
+        "focus_id": "focus-77082a027ca7c6ac",
+        "related_goal_ids": [
+          "active-cognitive-goal-f8f3c7ef02221d29"
+        ],
+        "salience_categories": [
+          "unresolved_hypothesis",
+          "evidence_revision",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "An active hypothesis needs evidence-linked revision before action.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "hypothesis_revision",
+        "urgency": "high"
+      }
+    ],
+    "continuation_reason": "",
+    "cycle_sequence": 3,
+    "evidence_refs": [
+      "e_completed_prior_work",
+      "e_unresolved_research_need",
+      "e_unresolved_restart_need",
+      "e_operator_constraint"
+    ],
+    "focus_started_at": "2026-07-27T00:59:34+00:00",
+    "interruption_priority": "none",
+    "interruption_reason": "",
+    "last_progress_at": "2026-07-27T01:00:31+00:00",
+    "previous_focus_ids": [
+      "focus-7da3a65a7e73ace4",
+      "focus-51267880d6c60495"
+    ],
+    "progress_summary": "selected focus for cognitive operation",
+    "return_condition": "",
+    "salience_reasons": [
+      "An active hypothesis needs evidence-linked revision before action.",
+      "unresolved_hypothesis",
+      "evidence_revision",
+      "expected_useful_progress"
+    ],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "stagnation_count": 0,
+    "switch_reason": "An active hypothesis needs evidence-linked revision before action.",
+    "transition_journal": [
+      {
+        "at": "2026-07-27T00:59:34+00:00",
+        "focus_id": "focus-7da3a65a7e73ace4",
+        "reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "sequence": 1,
+        "transition": "establish_focus"
+      },
+      {
+        "at": "2026-07-27T00:59:55+00:00",
+        "focus_id": "focus-51267880d6c60495",
+        "reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "sequence": 2,
+        "transition": "switch_focus"
+      },
+      {
+        "at": "2026-07-27T01:00:31+00:00",
+        "focus_id": "focus-77082a027ca7c6ac",
+        "reason": "An active hypothesis needs evidence-linked revision before action.",
+        "sequence": 3,
+        "transition": "switch_focus"
+      }
+    ],
+    "unresolved_questions": []
+  },
+  "budgets": {
+    "max_actions": 4,
+    "max_cycles": 8,
+    "max_model_calls": 6,
+    "max_packet_items": 8
+  },
+  "completed": true,
+  "cycles": [
+    {
+      "completed": true,
+      "cycle_id": "active-cognitive-cycle-3b82547fcf13554b",
+      "focus_id": "focus-7da3a65a7e73ace4",
+      "operation_id": "cognitive-operation-639142002e6ac510",
+      "outcome_id": "outcome-471a1fe076c72821",
+      "packet_digest": "a6baa7458ba849e7881fc4f360bf3ebcb4e50e8e0b3079c2e77b73d67c51bfa3",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "sequence": 1,
+      "summary": "The next focus should be selected from unresolved evidence rather than assigned as another schema task."
+    },
+    {
+      "completed": true,
+      "cycle_id": "active-cognitive-cycle-5c5038a8cf847da1",
+      "focus_id": "focus-51267880d6c60495",
+      "operation_id": "cognitive-operation-f611ed9b91df7ebd",
+      "outcome_id": "outcome-a444b4623c42a1c9",
+      "packet_digest": "42fefbe643b0ba95f492b4832e8daaa2d98774819c6fd67ba0a1247a20675762",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "sequence": 2,
+      "summary": "The next focus should be selected from unresolved evidence rather than assigned as another schema task. However, the operator constraint indicates that the next focus must remain within the current marathon and defer identify_evidence_need "
+    },
+    {
+      "completed": true,
+      "cycle_id": "active-cognitive-cycle-e3f1838a84167923",
+      "focus_id": "focus-77082a027ca7c6ac",
+      "operation_id": "cognitive-operation-8c861a3e3829fda2",
+      "outcome_id": "outcome-03657a2fe2223428",
+      "packet_digest": "b713097dac20c1f9ed2dbb0091c6330aa5c284a7dedbdb9094c0a018e1295cb7",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "sequence": 3,
+      "summary": "The next focus should be selected from unresolved evidence rather than assigned as another schema task."
+    }
+  ],
+  "episode_id": "active-cognitive-episode-9a39192b8fd8c161",
+  "evidence": [
+    {
+      "content": "The next focus should be selected from unresolved evidence rather than assigned as another schema task.",
+      "evidence_id": "e_completed_prior_work",
+      "exists": true,
+      "kind": "local_evidence",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "prior episode",
+      "summary": "Prior live episodes produced research, revision, and restart evidence."
+    },
+    {
+      "content": "The useful follow-up is to choose what remaining runtime behavior needs direct exercise or repair.",
+      "evidence_id": "e_unresolved_research_need",
+      "exists": true,
+      "kind": "local_evidence",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "repo",
+      "summary": "Research synthesis still needs translation into an implementation-facing closure decision."
+    },
+    {
+      "content": "After resume, DELTA should choose a next focus from active candidates and begin it.",
+      "evidence_id": "e_unresolved_restart_need",
+      "exists": true,
+      "kind": "local_evidence",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "repo",
+      "summary": "Restart evidence needs to be connected to autonomous continuation policy."
+    },
+    {
+      "content": "Next-focus selection must remain within the current marathon and keep identify_evidence_need deferred unless genuinely needed.",
+      "evidence_id": "e_operator_constraint",
+      "exists": true,
+      "kind": "local_evidence",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "operator",
+      "summary": "Do not begin another architecture gate; stay within ACTIVE_COGNITIVE_ARCHITECTURE_MARATHON_1."
+    }
+  ],
+  "goals": [
+    {
+      "expected_state": "autonomous next focus is selected and begun from evidence without operator choosing it",
+      "goal_id": "active-cognitive-goal-f8f3c7ef02221d29",
+      "observed_state": "",
+      "priority": "operator_requested",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "summary": "select and begin the next useful focus after completing a prior cognitive episode"
+    }
+  ],
+  "hypotheses": [
+    {
+      "assumptions": [
+        "The system has a defined set of candidate foci"
+      ],
+      "confidence_state": "contested",
+      "created_at": "2026-07-27T00:59:55+00:00",
+      "disposition": "needs_challenge",
+      "evidence_against": [
+        "e_operator_constraint"
+      ],
+      "evidence_for": [
+        "e_completed_prior_work",
+        "e_unresolved_research_need",
+        "e_unresolved_restart_need"
+      ],
+      "expected_observations": [
+        "local evidence should support a bounded useful step"
+      ],
+      "hypothesis_id": "hypothesis-e092c4cef94c6054",
+      "lifecycle_state": "active",
+      "originating_focus_id": "focus-7da3a65a7e73ace4",
+      "originating_goal_id": "active-cognitive-goal-f8f3c7ef02221d29",
+      "provenance": [
+        "cognitive-operation-639142002e6ac510",
+        "cognitive-operation-f611ed9b91df7ebd"
+      ],
+      "revised_at": "2026-07-27T01:00:31+00:00",
+      "revision_parent_id": "",
+      "revision_reason": "The next focus should be selected from unresolved evidence rather than assigned as another schema task. However, the operator constraint indicates that the next focus must remain within the current marathon and defer identify_evidence_need unless genuinely needed.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "scope": "Resolve discrepancy for goal: select and begin the next useful focus after completing a prior cognitive episode",
+      "statement": "The next focus should be selected from unresolved evidence rather than assigned as another schema task."
+    }
+  ],
+  "learning_updates": [
+    {
+      "created_at": "2026-07-27T01:00:51+00:00",
+      "evidence_refs": [
+        "e_completed_prior_work",
+        "e_unresolved_research_need",
+        "e_unresolved_restart_need"
+      ],
+      "learning_id": "learning-03657a2fe2223428",
+      "summary": "The next focus should be selected from unresolved evidence rather than assigned as another schema task."
+    }
+  ],
+  "loop_state": "completed",
+  "model_call_count": 3,
+  "next_focus_candidates": [
+    {
+      "authority_need": "none_for_local_analysis",
+      "blocking_state": "",
+      "capability_need": "local_model_semantic_operation",
+      "creation_sequence": 3,
+      "description": "Resolve discrepancy for goal: select and begin the next useful focus after completing a prior cognitive episode",
+      "evidence_need": "local evidence supporting or challenging the goal",
+      "evidence_refs": [
+        "e_completed_prior_work",
+        "e_unresolved_research_need",
+        "e_unresolved_restart_need"
+      ],
+      "expected_value": "useful_progress",
+      "focus_id": "focus-e52dabb64f9e58df",
+      "related_goal_ids": [
+        "active-cognitive-goal-f8f3c7ef02221d29"
+      ],
+      "salience_categories": [
+        "operator_priority",
+        "goal_discrepancy",
+        "expected_useful_progress"
+      ],
+      "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "goal_discrepancy",
+      "urgency": "medium"
+    },
+    {
+      "authority_need": "none_for_local_analysis",
+      "blocking_state": "",
+      "capability_need": "semantic comparison",
+      "creation_sequence": 3,
+      "description": "Challenge or revise hypothesis: The next focus should be selected from unresolved evidence rather than assigned as another schema task.",
+      "evidence_need": "contrary and supporting evidence",
+      "evidence_refs": [
+        "e_completed_prior_work",
+        "e_unresolved_research_need",
+        "e_unresolved_restart_need",
+        "e_operator_constraint"
+      ],
+      "expected_value": "belief_revision",
+      "focus_id": "focus-77082a027ca7c6ac",
+      "related_goal_ids": [
+        "active-cognitive-goal-f8f3c7ef02221d29"
+      ],
+      "salience_categories": [
+        "unresolved_hypothesis",
+        "evidence_revision",
+        "expected_useful_progress"
+      ],
+      "salience_explanation": "An active hypothesis needs evidence-linked revision before action.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "hypothesis_revision",
+      "urgency": "high"
+    }
+  ],
+  "operation_requests": [
+    {
+      "authority_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "budget": {
+        "max_response_words": 220,
+        "max_retries": 1
+      },
+      "cycle_id": "active-cognitive-cycle-3b82547fcf13554b",
+      "evidence_constraints": [
+        "e_completed_prior_work",
+        "e_unresolved_research_need",
+        "e_unresolved_restart_need",
+        "e_operator_constraint"
+      ],
+      "expected_output_schema": {
+        "contrary_evidence_considered": "list",
+        "evidence_refs": "list",
+        "interpretation": "string",
+        "operation_result_type": "string",
+        "recommended_state_transition": "string",
+        "uncertainty": "string"
+      },
+      "focus_id": "focus-7da3a65a7e73ace4",
+      "goal_id": "active-cognitive-goal-f8f3c7ef02221d29",
+      "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+      "operation_id": "cognitive-operation-639142002e6ac510",
+      "operation_type": "formulate_hypothesis",
+      "provenance": [
+        "working-memory-packet-eb6f688a348be798"
+      ],
+      "retry_allowance": 1,
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "task": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+      "working_memory_packet_digest": "a6baa7458ba849e7881fc4f360bf3ebcb4e50e8e0b3079c2e77b73d67c51bfa3"
+    },
+    {
+      "authority_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "budget": {
+        "max_response_words": 220,
+        "max_retries": 1
+      },
+      "cycle_id": "active-cognitive-cycle-5c5038a8cf847da1",
+      "evidence_constraints": [
+        "e_completed_prior_work",
+        "e_unresolved_research_need",
+        "e_unresolved_restart_need",
+        "e_operator_constraint"
+      ],
+      "expected_output_schema": {
+        "contrary_evidence_considered": "list",
+        "evidence_refs": "list",
+        "interpretation": "string",
+        "operation_result_type": "string",
+        "recommended_state_transition": "string",
+        "uncertainty": "string"
+      },
+      "focus_id": "focus-51267880d6c60495",
+      "goal_id": "active-cognitive-goal-f8f3c7ef02221d29",
+      "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+      "operation_id": "cognitive-operation-f611ed9b91df7ebd",
+      "operation_type": "compare_evidence",
+      "provenance": [
+        "working-memory-packet-b4a80c62b78c34e9"
+      ],
+      "retry_allowance": 1,
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "task": "Perform compare_evidence for the active focus using only referenced evidence.",
+      "working_memory_packet_digest": "42fefbe643b0ba95f492b4832e8daaa2d98774819c6fd67ba0a1247a20675762"
+    },
+    {
+      "authority_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "budget": {
+        "max_response_words": 220,
+        "max_retries": 1
+      },
+      "cycle_id": "active-cognitive-cycle-e3f1838a84167923",
+      "evidence_constraints": [
+        "e_completed_prior_work",
+        "e_unresolved_research_need",
+        "e_unresolved_restart_need",
+        "e_operator_constraint"
+      ],
+      "expected_output_schema": {
+        "contrary_evidence_considered": "list",
+        "evidence_refs": "list",
+        "interpretation": "string",
+        "operation_result_type": "string",
+        "recommended_state_transition": "string",
+        "uncertainty": "string"
+      },
+      "focus_id": "focus-77082a027ca7c6ac",
+      "goal_id": "active-cognitive-goal-f8f3c7ef02221d29",
+      "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+      "operation_id": "cognitive-operation-8c861a3e3829fda2",
+      "operation_type": "summarize_learning",
+      "provenance": [
+        "working-memory-packet-b22cc511174ddc67"
+      ],
+      "retry_allowance": 1,
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "task": "Perform summarize_learning for the active focus using only referenced evidence.",
+      "working_memory_packet_digest": "b713097dac20c1f9ed2dbb0091c6330aa5c284a7dedbdb9094c0a018e1295cb7"
+    }
+  ],
+  "operation_results": [
+    {
+      "accepted": true,
+      "assumptions": [
+        "The system has a defined set of candidate foci"
+      ],
+      "contrary_evidence_considered": [],
+      "evidence_refs": [
+        "e_completed_prior_work",
+        "e_unresolved_research_need",
+        "e_unresolved_restart_need"
+      ],
+      "interpretation": "The next focus should be selected from unresolved evidence rather than assigned as another schema task.",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "next_evidence_need": "",
+      "next_focus_proposal": "",
+      "operation_id": "cognitive-operation-639142002e6ac510",
+      "operation_result_type": "formulate_hypothesis_result",
+      "raw_model_output": "{\"hypothesis_statement\":\"The next focus should be selected from unresolved evidence rather than assigned as another schema task.\",\"scope\":\"next focus selection process\",\"supporting_evidence_refs\":[\"e_completed_prior_work\",\"e_unresolved_research_need\",\"e_unresolved_restart_need\"],\"assumptions\":[\"The system has a defined set of candidate foci\"],\"expected_observations\":[\"The next focus is chosen based on unresolved evidence\"],\"uncertainty\":\"How the system will prioritize and select from multiple unresolved foci\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+      "recommended_action": "next focus selection process",
+      "recommended_state_transition": "propose_hypothesis",
+      "rejection_reasons": [],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "uncertainty": "How the system will prioritize and select from multiple unresolved foci"
+    },
+    {
+      "accepted": true,
+      "assumptions": [
+        "The system has a defined set of candidate foci"
+      ],
+      "contrary_evidence_considered": [
+        "e_operator_constraint"
+      ],
+      "evidence_refs": [
+        "e_completed_prior_work",
+        "e_unresolved_research_need",
+        "e_unresolved_restart_need"
+      ],
+      "interpretation": "The next focus should be selected from unresolved evidence rather than assigned as another schema task. However, the operator constraint indicates that the next focus must remain within the current marathon and defer identify_evidence_need unless genuinely needed.",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "next_evidence_need": "local evidence supporting or challenging the goal",
+      "next_focus_proposal": "select and begin the next useful focus after completing a prior cognitive episode",
+      "operation_id": "cognitive-operation-f611ed9b91df7ebd",
+      "operation_result_type": "compare_evidence_result",
+      "raw_model_output": "{\"assumptions\":[\"The system has a defined set of candidate foci\"],\"contrary_evidence_considered\":[\"e_operator_constraint\"],\"evidence_refs\":[\"e_completed_prior_work\",\"e_unresolved_research_need\",\"e_unresolved_restart_need\"],\"interpretation\":\"The next focus should be selected from unresolved evidence rather than assigned as another schema task. However, the operator constraint indicates that the next focus must remain within the current marathon and defer identify_evidence_need unless genuinely needed.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"select and begin the next useful focus after completing a prior cognitive episode\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"select and begin the next useful focus after completing a prior cognitive episode\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"How the operator constraint will be reconciled with the need for a useful next focus.\"}",
+      "recommended_action": "select and begin the next useful focus after completing a prior cognitive episode",
+      "recommended_state_transition": "add_supporting_evidence",
+      "rejection_reasons": [],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "uncertainty": "How the operator constraint will be reconciled with the need for a useful next focus."
+    },
+    {
+      "accepted": true,
+      "assumptions": [],
+      "contrary_evidence_considered": [],
+      "evidence_refs": [
+        "e_completed_prior_work",
+        "e_unresolved_research_need",
+        "e_unresolved_restart_need"
+      ],
+      "interpretation": "The next focus should be selected from unresolved evidence rather than assigned as another schema task.",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "next_evidence_need": "How to ensure the next focus remains within the current marathon and defers identify_evidence_need unless genuinely needed?",
+      "next_focus_proposal": "",
+      "operation_id": "cognitive-operation-8c861a3e3829fda2",
+      "operation_result_type": "summarize_learning_result",
+      "raw_model_output": "{\"lesson\":\"The next focus should be selected from unresolved evidence rather than assigned as another schema task.\",\"evidence_refs\":[\"e_completed_prior_work\",\"e_unresolved_research_need\",\"e_unresolved_restart_need\"],\"unresolved_questions\":[\"How to ensure the next focus remains within the current marathon and defers identify_evidence_need unless genuinely needed?\"],\"uncertainty\":\"The specific criteria for selecting the next focus from unresolved evidence are not yet clear.\",\"recommended_state_transition\":\"summarize_learning\"}",
+      "recommended_action": "",
+      "recommended_state_transition": "summarize_learning",
+      "rejection_reasons": [],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "uncertainty": "The specific criteria for selecting the next focus from unresolved evidence are not yet clear."
+    }
+  ],
+  "outcomes": [
+    {
+      "created_at": "2026-07-27T00:59:55+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+      "observed": "The next focus should be selected from unresolved evidence rather than assigned as another schema task.",
+      "operation_id": "cognitive-operation-639142002e6ac510",
+      "outcome_id": "outcome-471a1fe076c72821"
+    },
+    {
+      "created_at": "2026-07-27T01:00:31+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform compare_evidence for the active focus using only referenced evidence.",
+      "observed": "The next focus should be selected from unresolved evidence rather than assigned as another schema task. However, the operator constraint indicates that the next focus must remain within the current marathon and defer identify_evidence_need unless genuinely needed.",
+      "operation_id": "cognitive-operation-f611ed9b91df7ebd",
+      "outcome_id": "outcome-a444b4623c42a1c9"
+    },
+    {
+      "created_at": "2026-07-27T01:00:51+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform summarize_learning for the active focus using only referenced evidence.",
+      "observed": "The next focus should be selected from unresolved evidence rather than assigned as another schema task.",
+      "operation_id": "cognitive-operation-8c861a3e3829fda2",
+      "outcome_id": "outcome-03657a2fe2223428"
+    }
+  ],
+  "pending_operator_requests": [],
+  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+  "title": "Episode E autonomous next-focus selection",
+  "useful_artifacts": [
+    {
+      "artifact_id": "useful-artifact-03657a2fe2223428",
+      "artifact_type": "cognitive_episode_summary",
+      "evidence_refs": [
+        "e_completed_prior_work",
+        "e_unresolved_research_need",
+        "e_unresolved_restart_need"
+      ],
+      "summary": "The next focus should be selected from unresolved evidence rather than assigned as another schema task."
+    }
+  ],
+  "working_memory_packets": [
+    {
+      "active_focus": {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "local_model_semantic_operation",
+        "creation_sequence": 1,
+        "description": "Resolve discrepancy for goal: select and begin the next useful focus after completing a prior cognitive episode",
+        "evidence_need": "local evidence supporting or challenging the goal",
+        "evidence_refs": [
+          "e_completed_prior_work",
+          "e_unresolved_research_need",
+          "e_unresolved_restart_need"
+        ],
+        "expected_value": "useful_progress",
+        "focus_id": "focus-7da3a65a7e73ace4",
+        "related_goal_ids": [
+          "active-cognitive-goal-f8f3c7ef02221d29"
+        ],
+        "salience_categories": [
+          "operator_priority",
+          "goal_discrepancy",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "goal_discrepancy",
+        "urgency": "medium"
+      },
+      "active_goal": {
+        "expected_state": "autonomous next focus is selected and begun from evidence without operator choosing it",
+        "goal_id": "active-cognitive-goal-f8f3c7ef02221d29",
+        "observed_state": "",
+        "priority": "operator_requested",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "summary": "select and begin the next useful focus after completing a prior cognitive episode"
+      },
+      "authority_state": "authorized_for_local_cognitive_marathon",
+      "capability_limits": [
+        "model calls budgeted",
+        "source mutation requires explicit bounded patch authority"
+      ],
+      "conflicting_evidence": [
+        {
+          "content": "Next-focus selection must remain within the current marathon and keep identify_evidence_need deferred unless genuinely needed.",
+          "evidence_id": "e_operator_constraint",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "operator",
+          "summary": "Do not begin another architecture gate; stay within ACTIVE_COGNITIVE_ARCHITECTURE_MARATHON_1."
+        }
+      ],
+      "construction_rationale": "bounded by active focus, goal discrepancy, recency, evidence provenance, and operation need",
+      "current_hypotheses": [],
+      "cycle_id": "active-cognitive-cycle-3b82547fcf13554b",
+      "observed_outcomes": [],
+      "omitted_items_summary": "0 older or less relevant items omitted by packet budget",
+      "operator_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "packet_digest": "a6baa7458ba849e7881fc4f360bf3ebcb4e50e8e0b3079c2e77b73d67c51bfa3",
+      "packet_id": "working-memory-packet-eb6f688a348be798",
+      "prior_cycle_summary": "",
+      "provenance_refs": [
+        "e_completed_prior_work",
+        "e_unresolved_research_need",
+        "e_unresolved_restart_need",
+        "e_operator_constraint"
+      ],
+      "recent_actions": [],
+      "relevant_evidence": [
+        {
+          "content": "The next focus should be selected from unresolved evidence rather than assigned as another schema task.",
+          "evidence_id": "e_completed_prior_work",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "prior episode",
+          "summary": "Prior live episodes produced research, revision, and restart evidence."
+        },
+        {
+          "content": "The useful follow-up is to choose what remaining runtime behavior needs direct exercise or repair.",
+          "evidence_id": "e_unresolved_research_need",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "repo",
+          "summary": "Research synthesis still needs translation into an implementation-facing closure decision."
+        },
+        {
+          "content": "After resume, DELTA should choose a next focus from active candidates and begin it.",
+          "evidence_id": "e_unresolved_restart_need",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "repo",
+          "summary": "Restart evidence needs to be connected to autonomous continuation policy."
+        }
+      ],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "size_budget": 8,
+      "unresolved_questions": []
+    },
+    {
+      "active_focus": {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "local_model_semantic_operation",
+        "creation_sequence": 2,
+        "description": "Resolve discrepancy for goal: select and begin the next useful focus after completing a prior cognitive episode",
+        "evidence_need": "local evidence supporting or challenging the goal",
+        "evidence_refs": [
+          "e_completed_prior_work",
+          "e_unresolved_research_need",
+          "e_unresolved_restart_need"
+        ],
+        "expected_value": "useful_progress",
+        "focus_id": "focus-51267880d6c60495",
+        "related_goal_ids": [
+          "active-cognitive-goal-f8f3c7ef02221d29"
+        ],
+        "salience_categories": [
+          "operator_priority",
+          "goal_discrepancy",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "goal_discrepancy",
+        "urgency": "medium"
+      },
+      "active_goal": {
+        "expected_state": "autonomous next focus is selected and begun from evidence without operator choosing it",
+        "goal_id": "active-cognitive-goal-f8f3c7ef02221d29",
+        "observed_state": "",
+        "priority": "operator_requested",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "summary": "select and begin the next useful focus after completing a prior cognitive episode"
+      },
+      "authority_state": "authorized_for_local_cognitive_marathon",
+      "capability_limits": [
+        "model calls budgeted",
+        "source mutation requires explicit bounded patch authority"
+      ],
+      "conflicting_evidence": [
+        {
+          "content": "Next-focus selection must remain within the current marathon and keep identify_evidence_need deferred unless genuinely needed.",
+          "evidence_id": "e_operator_constraint",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "operator",
+          "summary": "Do not begin another architecture gate; stay within ACTIVE_COGNITIVE_ARCHITECTURE_MARATHON_1."
+        }
+      ],
+      "construction_rationale": "bounded by active focus, goal discrepancy, recency, evidence provenance, and operation need",
+      "current_hypotheses": [
+        {
+          "assumptions": [
+            "The system has a defined set of candidate foci"
+          ],
+          "confidence_state": "plausible",
+          "created_at": "2026-07-27T00:59:55+00:00",
+          "disposition": "needs_challenge",
+          "evidence_against": [],
+          "evidence_for": [
+            "e_completed_prior_work",
+            "e_unresolved_research_need",
+            "e_unresolved_restart_need"
+          ],
+          "expected_observations": [
+            "local evidence should support a bounded useful step"
+          ],
+          "hypothesis_id": "hypothesis-e092c4cef94c6054",
+          "lifecycle_state": "active",
+          "originating_focus_id": "focus-7da3a65a7e73ace4",
+          "originating_goal_id": "active-cognitive-goal-f8f3c7ef02221d29",
+          "provenance": [
+            "cognitive-operation-639142002e6ac510"
+          ],
+          "revised_at": "",
+          "revision_parent_id": "",
+          "revision_reason": "",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "scope": "Resolve discrepancy for goal: select and begin the next useful focus after completing a prior cognitive episode",
+          "statement": "The next focus should be selected from unresolved evidence rather than assigned as another schema task."
+        }
+      ],
+      "cycle_id": "active-cognitive-cycle-5c5038a8cf847da1",
+      "observed_outcomes": [
+        {
+          "created_at": "2026-07-27T00:59:55+00:00",
+          "discrepancy": "progress_observed",
+          "expected": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+          "observed": "The next focus should be selected from unresolved evidence rather than assigned as another schema task.",
+          "operation_id": "cognitive-operation-639142002e6ac510",
+          "outcome_id": "outcome-471a1fe076c72821"
+        }
+      ],
+      "omitted_items_summary": "0 older or less relevant items omitted by packet budget",
+      "operator_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "packet_digest": "42fefbe643b0ba95f492b4832e8daaa2d98774819c6fd67ba0a1247a20675762",
+      "packet_id": "working-memory-packet-b4a80c62b78c34e9",
+      "prior_cycle_summary": "The next focus should be selected from unresolved evidence rather than assigned as another schema task.",
+      "provenance_refs": [
+        "e_completed_prior_work",
+        "e_unresolved_research_need",
+        "e_unresolved_restart_need",
+        "e_operator_constraint"
+      ],
+      "recent_actions": [],
+      "relevant_evidence": [
+        {
+          "content": "The next focus should be selected from unresolved evidence rather than assigned as another schema task.",
+          "evidence_id": "e_completed_prior_work",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "prior episode",
+          "summary": "Prior live episodes produced research, revision, and restart evidence."
+        },
+        {
+          "content": "The useful follow-up is to choose what remaining runtime behavior needs direct exercise or repair.",
+          "evidence_id": "e_unresolved_research_need",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "repo",
+          "summary": "Research synthesis still needs translation into an implementation-facing closure decision."
+        },
+        {
+          "content": "After resume, DELTA should choose a next focus from active candidates and begin it.",
+          "evidence_id": "e_unresolved_restart_need",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "repo",
+          "summary": "Restart evidence needs to be connected to autonomous continuation policy."
+        }
+      ],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "size_budget": 8,
+      "unresolved_questions": []
+    },
+    {
+      "active_focus": {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "semantic comparison",
+        "creation_sequence": 3,
+        "description": "Challenge or revise hypothesis: The next focus should be selected from unresolved evidence rather than assigned as another schema task.",
+        "evidence_need": "contrary and supporting evidence",
+        "evidence_refs": [
+          "e_completed_prior_work",
+          "e_unresolved_research_need",
+          "e_unresolved_restart_need",
+          "e_operator_constraint"
+        ],
+        "expected_value": "belief_revision",
+        "focus_id": "focus-77082a027ca7c6ac",
+        "related_goal_ids": [
+          "active-cognitive-goal-f8f3c7ef02221d29"
+        ],
+        "salience_categories": [
+          "unresolved_hypothesis",
+          "evidence_revision",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "An active hypothesis needs evidence-linked revision before action.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "hypothesis_revision",
+        "urgency": "high"
+      },
+      "active_goal": {
+        "expected_state": "autonomous next focus is selected and begun from evidence without operator choosing it",
+        "goal_id": "active-cognitive-goal-f8f3c7ef02221d29",
+        "observed_state": "",
+        "priority": "operator_requested",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "summary": "select and begin the next useful focus after completing a prior cognitive episode"
+      },
+      "authority_state": "authorized_for_local_cognitive_marathon",
+      "capability_limits": [
+        "model calls budgeted",
+        "source mutation requires explicit bounded patch authority"
+      ],
+      "conflicting_evidence": [
+        {
+          "content": "Next-focus selection must remain within the current marathon and keep identify_evidence_need deferred unless genuinely needed.",
+          "evidence_id": "e_operator_constraint",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "operator",
+          "summary": "Do not begin another architecture gate; stay within ACTIVE_COGNITIVE_ARCHITECTURE_MARATHON_1."
+        }
+      ],
+      "construction_rationale": "bounded by active focus, goal discrepancy, recency, evidence provenance, and operation need",
+      "current_hypotheses": [
+        {
+          "assumptions": [
+            "The system has a defined set of candidate foci"
+          ],
+          "confidence_state": "contested",
+          "created_at": "2026-07-27T00:59:55+00:00",
+          "disposition": "needs_challenge",
+          "evidence_against": [
+            "e_operator_constraint"
+          ],
+          "evidence_for": [
+            "e_completed_prior_work",
+            "e_unresolved_research_need",
+            "e_unresolved_restart_need"
+          ],
+          "expected_observations": [
+            "local evidence should support a bounded useful step"
+          ],
+          "hypothesis_id": "hypothesis-e092c4cef94c6054",
+          "lifecycle_state": "active",
+          "originating_focus_id": "focus-7da3a65a7e73ace4",
+          "originating_goal_id": "active-cognitive-goal-f8f3c7ef02221d29",
+          "provenance": [
+            "cognitive-operation-639142002e6ac510",
+            "cognitive-operation-f611ed9b91df7ebd"
+          ],
+          "revised_at": "2026-07-27T01:00:31+00:00",
+          "revision_parent_id": "",
+          "revision_reason": "The next focus should be selected from unresolved evidence rather than assigned as another schema task. However, the operator constraint indicates that the next focus must remain within the current marathon and defer identify_evidence_need unless genuinely needed.",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "scope": "Resolve discrepancy for goal: select and begin the next useful focus after completing a prior cognitive episode",
+          "statement": "The next focus should be selected from unresolved evidence rather than assigned as another schema task."
+        }
+      ],
+      "cycle_id": "active-cognitive-cycle-e3f1838a84167923",
+      "observed_outcomes": [
+        {
+          "created_at": "2026-07-27T00:59:55+00:00",
+          "discrepancy": "progress_observed",
+          "expected": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+          "observed": "The next focus should be selected from unresolved evidence rather than assigned as another schema task.",
+          "operation_id": "cognitive-operation-639142002e6ac510",
+          "outcome_id": "outcome-471a1fe076c72821"
+        },
+        {
+          "created_at": "2026-07-27T01:00:31+00:00",
+          "discrepancy": "progress_observed",
+          "expected": "Perform compare_evidence for the active focus using only referenced evidence.",
+          "observed": "The next focus should be selected from unresolved evidence rather than assigned as another schema task. However, the operator constraint indicates that the next focus must remain within the current marathon and defer identify_evidence_need unless genuinely needed.",
+          "operation_id": "cognitive-operation-f611ed9b91df7ebd",
+          "outcome_id": "outcome-a444b4623c42a1c9"
+        }
+      ],
+      "omitted_items_summary": "0 older or less relevant items omitted by packet budget",
+      "operator_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "packet_digest": "b713097dac20c1f9ed2dbb0091c6330aa5c284a7dedbdb9094c0a018e1295cb7",
+      "packet_id": "working-memory-packet-b22cc511174ddc67",
+      "prior_cycle_summary": "The next focus should be selected from unresolved evidence rather than assigned as another schema task. However, the operator constraint indicates that the next focus must remain within the current marathon and defer identify_evidence_need ",
+      "provenance_refs": [
+        "e_completed_prior_work",
+        "e_unresolved_research_need",
+        "e_unresolved_restart_need",
+        "e_operator_constraint"
+      ],
+      "recent_actions": [],
+      "relevant_evidence": [
+        {
+          "content": "The next focus should be selected from unresolved evidence rather than assigned as another schema task.",
+          "evidence_id": "e_completed_prior_work",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "prior episode",
+          "summary": "Prior live episodes produced research, revision, and restart evidence."
+        },
+        {
+          "content": "The useful follow-up is to choose what remaining runtime behavior needs direct exercise or repair.",
+          "evidence_id": "e_unresolved_research_need",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "repo",
+          "summary": "Research synthesis still needs translation into an implementation-facing closure decision."
+        },
+        {
+          "content": "After resume, DELTA should choose a next focus from active candidates and begin it.",
+          "evidence_id": "e_unresolved_restart_need",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "repo",
+          "summary": "Restart evidence needs to be connected to autonomous continuation policy."
+        }
+      ],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "size_budget": 8,
+      "unresolved_questions": []
+    }
+  ]
+}

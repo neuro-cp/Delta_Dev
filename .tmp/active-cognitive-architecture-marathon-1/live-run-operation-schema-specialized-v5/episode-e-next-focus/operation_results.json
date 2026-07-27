@@ -1,0 +1,74 @@
+[
+  {
+    "accepted": true,
+    "assumptions": [
+      "The system has a defined set of candidate foci"
+    ],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "e_completed_prior_work",
+      "e_unresolved_research_need",
+      "e_unresolved_restart_need"
+    ],
+    "interpretation": "The next focus should be selected from unresolved evidence rather than assigned as another schema task.",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "next_evidence_need": "",
+    "next_focus_proposal": "",
+    "operation_id": "cognitive-operation-639142002e6ac510",
+    "operation_result_type": "formulate_hypothesis_result",
+    "raw_model_output": "{\"hypothesis_statement\":\"The next focus should be selected from unresolved evidence rather than assigned as another schema task.\",\"scope\":\"next focus selection process\",\"supporting_evidence_refs\":[\"e_completed_prior_work\",\"e_unresolved_research_need\",\"e_unresolved_restart_need\"],\"assumptions\":[\"The system has a defined set of candidate foci\"],\"expected_observations\":[\"The next focus is chosen based on unresolved evidence\"],\"uncertainty\":\"How the system will prioritize and select from multiple unresolved foci\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+    "recommended_action": "next focus selection process",
+    "recommended_state_transition": "propose_hypothesis",
+    "rejection_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "uncertainty": "How the system will prioritize and select from multiple unresolved foci"
+  },
+  {
+    "accepted": true,
+    "assumptions": [
+      "The system has a defined set of candidate foci"
+    ],
+    "contrary_evidence_considered": [
+      "e_operator_constraint"
+    ],
+    "evidence_refs": [
+      "e_completed_prior_work",
+      "e_unresolved_research_need",
+      "e_unresolved_restart_need"
+    ],
+    "interpretation": "The next focus should be selected from unresolved evidence rather than assigned as another schema task. However, the operator constraint indicates that the next focus must remain within the current marathon and defer identify_evidence_need unless genuinely needed.",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "next_evidence_need": "local evidence supporting or challenging the goal",
+    "next_focus_proposal": "select and begin the next useful focus after completing a prior cognitive episode",
+    "operation_id": "cognitive-operation-f611ed9b91df7ebd",
+    "operation_result_type": "compare_evidence_result",
+    "raw_model_output": "{\"assumptions\":[\"The system has a defined set of candidate foci\"],\"contrary_evidence_considered\":[\"e_operator_constraint\"],\"evidence_refs\":[\"e_completed_prior_work\",\"e_unresolved_research_need\",\"e_unresolved_restart_need\"],\"interpretation\":\"The next focus should be selected from unresolved evidence rather than assigned as another schema task. However, the operator constraint indicates that the next focus must remain within the current marathon and defer identify_evidence_need unless genuinely needed.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"select and begin the next useful focus after completing a prior cognitive episode\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"select and begin the next useful focus after completing a prior cognitive episode\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"How the operator constraint will be reconciled with the need for a useful next focus.\"}",
+    "recommended_action": "select and begin the next useful focus after completing a prior cognitive episode",
+    "recommended_state_transition": "add_supporting_evidence",
+    "rejection_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "uncertainty": "How the operator constraint will be reconciled with the need for a useful next focus."
+  },
+  {
+    "accepted": true,
+    "assumptions": [],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "e_completed_prior_work",
+      "e_unresolved_research_need",
+      "e_unresolved_restart_need"
+    ],
+    "interpretation": "The next focus should be selected from unresolved evidence rather than assigned as another schema task.",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "next_evidence_need": "How to ensure the next focus remains within the current marathon and defers identify_evidence_need unless genuinely needed?",
+    "next_focus_proposal": "",
+    "operation_id": "cognitive-operation-8c861a3e3829fda2",
+    "operation_result_type": "summarize_learning_result",
+    "raw_model_output": "{\"lesson\":\"The next focus should be selected from unresolved evidence rather than assigned as another schema task.\",\"evidence_refs\":[\"e_completed_prior_work\",\"e_unresolved_research_need\",\"e_unresolved_restart_need\"],\"unresolved_questions\":[\"How to ensure the next focus remains within the current marathon and defers identify_evidence_need unless genuinely needed?\"],\"uncertainty\":\"The specific criteria for selecting the next focus from unresolved evidence are not yet clear.\",\"recommended_state_transition\":\"summarize_learning\"}",
+    "recommended_action": "",
+    "recommended_state_transition": "summarize_learning",
+    "rejection_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "uncertainty": "The specific criteria for selecting the next focus from unresolved evidence are not yet clear."
+  }
+]

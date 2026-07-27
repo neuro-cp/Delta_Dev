@@ -1,0 +1,480 @@
+{
+  "completed_at": "2026-07-27T01:01:12+00:00",
+  "episodes": [
+    {
+      "completed": true,
+      "cycle_count": 3,
+      "episode": "episode-b-research",
+      "evaluation": {
+        "cycle_count": 3,
+        "failure_classifications": [],
+        "model_call_count": 3,
+        "observable": {
+          "blocked_authority_state": {},
+          "budget_remaining": {
+            "cycles": 5,
+            "model_calls": 3
+          },
+          "completed": true,
+          "current_focus": "Challenge or revise hypothesis: The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence.",
+          "current_goal": "research and synthesize whether the current active cognition runtime can support sustained local repository work",
+          "current_operation": "summarize_learning",
+          "episode_id": "active-cognitive-episode-d602ba6a60e69ac1",
+          "evidence_considered": [
+            "b_runtime_surface",
+            "b_schema_checkpoint",
+            "b_prior_block",
+            "b_user_target"
+          ],
+          "hypothesis_state": {
+            "assumptions": [
+              "The runtime state is sufficient to maintain focus and operations.",
+              "Operations produce evidence that is useful for the operator's goals."
+            ],
+            "confidence_state": "contested",
+            "created_at": "2026-07-27T00:56:03+00:00",
+            "disposition": "needs_challenge",
+            "evidence_against": [
+              "b_prior_block"
+            ],
+            "evidence_for": [
+              "b_runtime_surface",
+              "b_schema_checkpoint",
+              "b_user_target"
+            ],
+            "expected_observations": [
+              "local evidence should support a bounded useful step"
+            ],
+            "hypothesis_id": "hypothesis-904ff9267195eff7",
+            "lifecycle_state": "active",
+            "originating_focus_id": "focus-61b8c232d08b08c4",
+            "originating_goal_id": "active-cognitive-goal-389cf200140bb48b",
+            "provenance": [
+              "cognitive-operation-f64672cdc1a8b826",
+              "cognitive-operation-663f134037105958"
+            ],
+            "revised_at": "2026-07-27T00:56:37+00:00",
+            "revision_parent_id": "",
+            "revision_reason": "The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence. However, the earlier marathon status was usefulness-blocked, indicating that the runtime state may not be sufficient to produce useful evidence.",
+            "schema_version": "active_cognitive_architecture_marathon_1_v1",
+            "scope": "Resolve discrepancy for goal: research and synthesize whether the current active cognition runtime can support sustained local repository work",
+            "statement": "The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence."
+          },
+          "last_observed_outcome": {
+            "created_at": "2026-07-27T00:57:00+00:00",
+            "discrepancy": "progress_observed",
+            "expected": "Perform summarize_learning for the active focus using only referenced evidence.",
+            "observed": "The current active cognition runtime supports sustained local repository work by maintaining persistent state, executing typed operations, and generating useful evidence. However, the earlier marathon status was usefulness-blocked, indicating that the runtime state may not be sufficient to produce useful evidence.",
+            "operation_id": "cognitive-operation-700f630da596a8ed",
+            "outcome_id": "outcome-ed45c91031ca87eb"
+          },
+          "loop_state": "completed",
+          "next_intended_step": "inspect useful artifact and select next focus",
+          "title": "Episode B research and synthesis",
+          "why_focus": [
+            "An active hypothesis needs evidence-linked revision before action.",
+            "unresolved_hypothesis",
+            "evidence_revision",
+            "expected_useful_progress"
+          ]
+        },
+        "passed": true,
+        "useful_artifact_count": 1
+      },
+      "events": [
+        {
+          "accepted": true,
+          "cycle": 1,
+          "event": "cycle_completed",
+          "loop_state": "persisting",
+          "operation": "formulate_hypothesis",
+          "rejections": []
+        },
+        {
+          "accepted": true,
+          "cycle": 2,
+          "event": "cycle_completed",
+          "loop_state": "persisting",
+          "operation": "compare_evidence",
+          "rejections": []
+        },
+        {
+          "accepted": true,
+          "cycle": 3,
+          "event": "cycle_completed",
+          "loop_state": "completed",
+          "operation": "summarize_learning",
+          "rejections": []
+        }
+      ],
+      "identify_evidence_need_used": false,
+      "learning_update_count": 1,
+      "model_call_count": 3,
+      "operations": [
+        "formulate_hypothesis",
+        "compare_evidence",
+        "summarize_learning"
+      ],
+      "root": "G:\\Delta_Dev\\.tmp\\active-cognitive-architecture-marathon-1\\live-run-operation-schema-specialized-v5\\episode-b-research",
+      "status": "passed",
+      "useful_artifact_count": 1
+    },
+    {
+      "completed": true,
+      "cycle_count": 3,
+      "episode": "episode-c-failed-hypothesis",
+      "evaluation": {
+        "cycle_count": 3,
+        "failure_classifications": [],
+        "model_call_count": 3,
+        "observable": {
+          "blocked_authority_state": {},
+          "budget_remaining": {
+            "cycles": 5,
+            "model_calls": 3
+          },
+          "completed": true,
+          "current_focus": "Challenge or revise hypothesis: The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts.",
+          "current_goal": "revise a failed hypothesis about the active cognition runtime using contrary evidence",
+          "current_operation": "summarize_learning",
+          "episode_id": "active-cognitive-episode-3aabaabe12b0d962",
+          "evidence_considered": [
+            "c_initial_hypothesis_support",
+            "c_failed_hypothesis_contrary",
+            "c_repair_evidence",
+            "c_revision_target"
+          ],
+          "hypothesis_state": {
+            "assumptions": [],
+            "confidence_state": "contested",
+            "created_at": "2026-07-27T00:57:15+00:00",
+            "disposition": "needs_challenge",
+            "evidence_against": [
+              "c_failed_hypothesis_contrary"
+            ],
+            "evidence_for": [
+              "c_initial_hypothesis_support"
+            ],
+            "expected_observations": [
+              "local evidence should support a bounded useful step"
+            ],
+            "hypothesis_id": "hypothesis-be3c41633310f350",
+            "lifecycle_state": "active",
+            "originating_focus_id": "focus-17a05b903e1c864b",
+            "originating_goal_id": "active-cognitive-goal-ab6cb13d4fe3f1dd",
+            "provenance": [
+              "cognitive-operation-15de74e0b0e89a39",
+              "cognitive-operation-ab2813a6a40e6979"
+            ],
+            "revised_at": "2026-07-27T00:57:42+00:00",
+            "revision_parent_id": "",
+            "revision_reason": "The initial hypothesis supports the runtime's ability to formulate and compare hypotheses, but the contrary evidence suggests the previous claim of complete live cognition was incorrect.",
+            "schema_version": "active_cognitive_architecture_marathon_1_v1",
+            "scope": "Resolve discrepancy for goal: revise a failed hypothesis about the active cognition runtime using contrary evidence",
+            "statement": "The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts."
+          },
+          "last_observed_outcome": {
+            "created_at": "2026-07-27T00:58:04+00:00",
+            "discrepancy": "progress_observed",
+            "expected": "Perform summarize_learning for the active focus using only referenced evidence.",
+            "observed": "The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts. However, contrary evidence suggests the previous claim of complete live cognition was incorrect, necessitating a revised hypothesis focusing on useful steps.",
+            "operation_id": "cognitive-operation-0c75459264230e00",
+            "outcome_id": "outcome-3ff96309b00f83fd"
+          },
+          "loop_state": "completed",
+          "next_intended_step": "inspect useful artifact and select next focus",
+          "title": "Episode C failed hypothesis revision",
+          "why_focus": [
+            "An active hypothesis needs evidence-linked revision before action.",
+            "unresolved_hypothesis",
+            "evidence_revision",
+            "expected_useful_progress"
+          ]
+        },
+        "passed": true,
+        "useful_artifact_count": 1
+      },
+      "events": [
+        {
+          "accepted": true,
+          "cycle": 1,
+          "event": "cycle_completed",
+          "loop_state": "persisting",
+          "operation": "formulate_hypothesis",
+          "rejections": []
+        },
+        {
+          "accepted": true,
+          "cycle": 2,
+          "event": "cycle_completed",
+          "loop_state": "persisting",
+          "operation": "compare_evidence",
+          "rejections": []
+        },
+        {
+          "accepted": true,
+          "cycle": 3,
+          "event": "cycle_completed",
+          "loop_state": "completed",
+          "operation": "summarize_learning",
+          "rejections": []
+        }
+      ],
+      "identify_evidence_need_used": false,
+      "learning_update_count": 1,
+      "model_call_count": 3,
+      "operations": [
+        "formulate_hypothesis",
+        "compare_evidence",
+        "summarize_learning"
+      ],
+      "root": "G:\\Delta_Dev\\.tmp\\active-cognitive-architecture-marathon-1\\live-run-operation-schema-specialized-v5\\episode-c-failed-hypothesis",
+      "status": "passed",
+      "useful_artifact_count": 1
+    },
+    {
+      "completed": true,
+      "cycle_count": 3,
+      "episode": "episode-d-restart",
+      "evaluation": {
+        "cycle_count": 3,
+        "failure_classifications": [],
+        "model_call_count": 3,
+        "observable": {
+          "blocked_authority_state": {},
+          "budget_remaining": {
+            "cycles": 5,
+            "model_calls": 3
+          },
+          "completed": true,
+          "current_focus": "Challenge or revise hypothesis: The ActiveCognitiveEpisodeState can be persisted, restored, and resumed with continuity of focus and post-resume learning.",
+          "current_goal": "survive interruption, persisted restart, and resume while preserving active focus and evidence-linked cognition",
+          "current_operation": "summarize_learning",
+          "episode_id": "active-cognitive-episode-87cc56583fc03e58",
+          "evidence_considered": [
+            "d_persistence_support",
+            "d_restart_requirement",
+            "d_prior_limitation",
+            "d_useful_target"
+          ],
+          "hypothesis_state": {
+            "assumptions": [
+              "The ActiveCognitiveEpisodeState format is consistent and preserved across restarts."
+            ],
+            "confidence_state": "contested",
+            "created_at": "2026-07-27T00:58:30+00:00",
+            "disposition": "needs_challenge",
+            "evidence_against": [
+              "d_prior_limitation"
+            ],
+            "evidence_for": [
+              "d_persistence_support",
+              "d_restart_requirement",
+              "d_useful_target"
+            ],
+            "expected_observations": [
+              "local evidence should support a bounded useful step"
+            ],
+            "hypothesis_id": "hypothesis-94778b654a415705",
+            "lifecycle_state": "active",
+            "originating_focus_id": "focus-bd40a743adf98eab",
+            "originating_goal_id": "active-cognitive-goal-376f7054be6cd147",
+            "provenance": [
+              "cognitive-operation-6e71220ef64ca40a",
+              "cognitive-operation-0716edca18aaf640"
+            ],
+            "revised_at": "2026-07-27T00:59:09+00:00",
+            "revision_parent_id": "",
+            "revision_reason": "The hypothesis is supported by evidence that ActiveCognitiveEpisodeState can be persisted, restored, and resumed with continuity of focus and post-resume learning. However, the previous final status classified Episode D as covered by round-trip tests, not live model episode evidence, which weakens the hypothesis.",
+            "schema_version": "active_cognitive_architecture_marathon_1_v1",
+            "scope": "Resolve discrepancy for goal: survive interruption, persisted restart, and resume while preserving active focus and evidence-linked cognition",
+            "statement": "The ActiveCognitiveEpisodeState can be persisted, restored, and resumed with continuity of focus and post-resume learning."
+          },
+          "last_observed_outcome": {
+            "created_at": "2026-07-27T00:59:34+00:00",
+            "discrepancy": "progress_observed",
+            "expected": "Perform summarize_learning for the active focus using only referenced evidence.",
+            "observed": "The ActiveCognitiveEpisodeState can be persisted, restored, and resumed with continuity of focus and post-resume learning, but the previous final status classified Episode D as covered by round-trip tests, not live model episode evidence.",
+            "operation_id": "cognitive-operation-65f2949aa6186c9e",
+            "outcome_id": "outcome-d3a8d8aea7bca67d"
+          },
+          "loop_state": "completed",
+          "next_intended_step": "inspect useful artifact and select next focus",
+          "title": "Episode D interruption restart and resume",
+          "why_focus": [
+            "An active hypothesis needs evidence-linked revision before action.",
+            "unresolved_hypothesis",
+            "evidence_revision",
+            "expected_useful_progress"
+          ]
+        },
+        "passed": true,
+        "useful_artifact_count": 1
+      },
+      "events": [
+        {
+          "accepted": true,
+          "cycle": 1,
+          "event": "cycle_completed",
+          "loop_state": "persisting",
+          "operation": "formulate_hypothesis",
+          "rejections": []
+        },
+        {
+          "event": "interrupt_persist_restore_resume",
+          "interrupted_focus_id": "focus-bd40a743adf98eab",
+          "restored_focus_id": "focus-bd40a743adf98eab",
+          "resumed_focus_id": "focus-bd40a743adf98eab"
+        },
+        {
+          "accepted": true,
+          "cycle": 2,
+          "event": "cycle_completed",
+          "loop_state": "persisting",
+          "operation": "compare_evidence",
+          "rejections": []
+        },
+        {
+          "accepted": true,
+          "cycle": 3,
+          "event": "cycle_completed",
+          "loop_state": "completed",
+          "operation": "summarize_learning",
+          "rejections": []
+        }
+      ],
+      "identify_evidence_need_used": false,
+      "learning_update_count": 1,
+      "model_call_count": 3,
+      "operations": [
+        "formulate_hypothesis",
+        "compare_evidence",
+        "summarize_learning"
+      ],
+      "root": "G:\\Delta_Dev\\.tmp\\active-cognitive-architecture-marathon-1\\live-run-operation-schema-specialized-v5\\episode-d-restart",
+      "status": "passed",
+      "useful_artifact_count": 1
+    },
+    {
+      "completed": true,
+      "cycle_count": 3,
+      "episode": "episode-e-next-focus",
+      "evaluation": {
+        "cycle_count": 3,
+        "failure_classifications": [],
+        "model_call_count": 3,
+        "observable": {
+          "blocked_authority_state": {},
+          "budget_remaining": {
+            "cycles": 5,
+            "model_calls": 3
+          },
+          "completed": true,
+          "current_focus": "Challenge or revise hypothesis: The next focus should be selected from unresolved evidence rather than assigned as another schema task.",
+          "current_goal": "select and begin the next useful focus after completing a prior cognitive episode",
+          "current_operation": "summarize_learning",
+          "episode_id": "active-cognitive-episode-9a39192b8fd8c161",
+          "evidence_considered": [
+            "e_completed_prior_work",
+            "e_unresolved_research_need",
+            "e_unresolved_restart_need",
+            "e_operator_constraint"
+          ],
+          "hypothesis_state": {
+            "assumptions": [
+              "The system has a defined set of candidate foci"
+            ],
+            "confidence_state": "contested",
+            "created_at": "2026-07-27T00:59:55+00:00",
+            "disposition": "needs_challenge",
+            "evidence_against": [
+              "e_operator_constraint"
+            ],
+            "evidence_for": [
+              "e_completed_prior_work",
+              "e_unresolved_research_need",
+              "e_unresolved_restart_need"
+            ],
+            "expected_observations": [
+              "local evidence should support a bounded useful step"
+            ],
+            "hypothesis_id": "hypothesis-e092c4cef94c6054",
+            "lifecycle_state": "active",
+            "originating_focus_id": "focus-7da3a65a7e73ace4",
+            "originating_goal_id": "active-cognitive-goal-f8f3c7ef02221d29",
+            "provenance": [
+              "cognitive-operation-639142002e6ac510",
+              "cognitive-operation-f611ed9b91df7ebd"
+            ],
+            "revised_at": "2026-07-27T01:00:31+00:00",
+            "revision_parent_id": "",
+            "revision_reason": "The next focus should be selected from unresolved evidence rather than assigned as another schema task. However, the operator constraint indicates that the next focus must remain within the current marathon and defer identify_evidence_need unless genuinely needed.",
+            "schema_version": "active_cognitive_architecture_marathon_1_v1",
+            "scope": "Resolve discrepancy for goal: select and begin the next useful focus after completing a prior cognitive episode",
+            "statement": "The next focus should be selected from unresolved evidence rather than assigned as another schema task."
+          },
+          "last_observed_outcome": {
+            "created_at": "2026-07-27T01:00:51+00:00",
+            "discrepancy": "progress_observed",
+            "expected": "Perform summarize_learning for the active focus using only referenced evidence.",
+            "observed": "The next focus should be selected from unresolved evidence rather than assigned as another schema task.",
+            "operation_id": "cognitive-operation-8c861a3e3829fda2",
+            "outcome_id": "outcome-03657a2fe2223428"
+          },
+          "loop_state": "completed",
+          "next_intended_step": "inspect useful artifact and select next focus",
+          "title": "Episode E autonomous next-focus selection",
+          "why_focus": [
+            "An active hypothesis needs evidence-linked revision before action.",
+            "unresolved_hypothesis",
+            "evidence_revision",
+            "expected_useful_progress"
+          ]
+        },
+        "passed": true,
+        "useful_artifact_count": 1
+      },
+      "events": [
+        {
+          "accepted": true,
+          "cycle": 1,
+          "event": "cycle_completed",
+          "loop_state": "persisting",
+          "operation": "formulate_hypothesis",
+          "rejections": []
+        },
+        {
+          "accepted": true,
+          "cycle": 2,
+          "event": "cycle_completed",
+          "loop_state": "persisting",
+          "operation": "compare_evidence",
+          "rejections": []
+        },
+        {
+          "accepted": true,
+          "cycle": 3,
+          "event": "cycle_completed",
+          "loop_state": "completed",
+          "operation": "summarize_learning",
+          "rejections": []
+        }
+      ],
+      "identify_evidence_need_used": false,
+      "learning_update_count": 1,
+      "model_call_count": 3,
+      "operations": [
+        "formulate_hypothesis",
+        "compare_evidence",
+        "summarize_learning"
+      ],
+      "root": "G:\\Delta_Dev\\.tmp\\active-cognitive-architecture-marathon-1\\live-run-operation-schema-specialized-v5\\episode-e-next-focus",
+      "status": "passed",
+      "useful_artifact_count": 1
+    }
+  ],
+  "identify_evidence_need_used": false,
+  "run_id": "live-run-operation-schema-specialized-v5",
+  "started_at": "2026-07-27T00:55:35+00:00",
+  "status": "passed"
+}

@@ -1,0 +1,119 @@
+[
+  {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-1aedf27a3d84b458",
+    "evidence_constraints": [
+      "b_runtime_surface",
+      "b_schema_checkpoint",
+      "b_prior_block",
+      "b_user_target"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-61b8c232d08b08c4",
+    "goal_id": "active-cognitive-goal-389cf200140bb48b",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-f64672cdc1a8b826",
+    "operation_type": "formulate_hypothesis",
+    "provenance": [
+      "working-memory-packet-7f1e20b4e5084e25"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "a5024aef57bd7b3780d740dc1cba1d69bb5cd8cc373a9003b7447b748c3c12d0"
+  },
+  {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-962bac11b7b4d97d",
+    "evidence_constraints": [
+      "b_runtime_surface",
+      "b_schema_checkpoint",
+      "b_prior_block",
+      "b_user_target"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-9db87493a87a2428",
+    "goal_id": "active-cognitive-goal-389cf200140bb48b",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-663f134037105958",
+    "operation_type": "compare_evidence",
+    "provenance": [
+      "working-memory-packet-6c8114380bf2db17"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform compare_evidence for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "ecd29336002646cd60b612bf92339d4b33106850e938806db2bcd2acb9b8c097"
+  },
+  {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-c1ae4138c4fa2b0a",
+    "evidence_constraints": [
+      "b_runtime_surface",
+      "b_schema_checkpoint",
+      "b_user_target",
+      "b_prior_block"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-3382d4f1b24be828",
+    "goal_id": "active-cognitive-goal-389cf200140bb48b",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-700f630da596a8ed",
+    "operation_type": "summarize_learning",
+    "provenance": [
+      "working-memory-packet-58ebb9d964705ad2"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform summarize_learning for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "4e72ef41e0ebf8b303d0bb3e5e8740fe4768b45925167d57fc49a44696700d28"
+  }
+]

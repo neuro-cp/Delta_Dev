@@ -1,0 +1,85 @@
+{
+  "authority_constraints": [
+    "no network",
+    "no protected paths",
+    "no commit",
+    "bounded local actions only"
+  ],
+  "contrary_evidence_ids_supplied": [
+    "e_operator_constraint"
+  ],
+  "cycle_id": "active-cognitive-cycle-3b82547fcf13554b",
+  "evidence_ids_supplied": [
+    "e_completed_prior_work",
+    "e_unresolved_research_need",
+    "e_unresolved_restart_need"
+  ],
+  "expected_response_schema": {
+    "assumptions": [
+      "explicit assumptions"
+    ],
+    "expected_observations": [
+      "observable expectations"
+    ],
+    "hypothesis_statement": "falsifiable hypothesis statement",
+    "recommended_state_transition": "one allowed transition",
+    "scope": "scope of hypothesis",
+    "supporting_evidence_refs": [
+      "IDs only from supplied evidence"
+    ],
+    "uncertainty": "nonempty uncertainty phrase"
+  },
+  "focus_id": "focus-7da3a65a7e73ace4",
+  "goal_id": "active-cognitive-goal-f8f3c7ef02221d29",
+  "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+  "operation_request": {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-3b82547fcf13554b",
+    "evidence_constraints": [
+      "e_completed_prior_work",
+      "e_unresolved_research_need",
+      "e_unresolved_restart_need",
+      "e_operator_constraint"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-7da3a65a7e73ace4",
+    "goal_id": "active-cognitive-goal-f8f3c7ef02221d29",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-639142002e6ac510",
+    "operation_type": "formulate_hypothesis",
+    "provenance": [
+      "working-memory-packet-eb6f688a348be798"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "a6baa7458ba849e7881fc4f360bf3ebcb4e50e8e0b3079c2e77b73d67c51bfa3"
+  },
+  "operation_type": "formulate_hypothesis",
+  "prompt_byte_digest": "b13d0f40f462d132d7984779e0cfcd03d911af4c4aacf0ad193ef73d7f3161ad",
+  "prompt_length": 4136,
+  "prompt_schema_version": "active_cognitive_prompt_qualification_1_v1",
+  "prompt_snapshot_id": "active-cognitive-prompt-f0a61b2e74ad252d",
+  "prompt_text": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- hypothesis_statement: nonempty string\n- scope: nonempty string\n- supporting_evidence_refs: array[string]\n- assumptions: array[string]\n- expected_observations: array[string]\n- uncertainty: nonempty string\n- recommended_state_transition: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- supporting_evidence_refs values must be chosen from: e_completed_prior_work, e_unresolved_research_need, e_unresolved_restart_need\nOPERATION RULE: hypothesis_statement must be testable against future observations\nTASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: e_completed_prior_work, e_unresolved_research_need, e_unresolved_restart_need. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied.\nCONTEXT_JSON:\n{\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":1,\"description\":\"Resolve discrepancy for goal: select and begin the next useful focus after completing a prior cognitive episode\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"e_completed_prior_work\",\"e_unresolved_research_need\",\"e_unresolved_restart_need\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-7da3a65a7e73ace4\",\"related_goal_ids\":[\"active-cognitive-goal-f8f3c7ef02221d29\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"Next-focus selection must remain within the current marathon and keep identify_evidence_need deferred unless genuinely needed.\",\"evidence_id\":\"e_operator_constraint\",\"source\":\"operator\",\"summary\":\"Do not begin another architecture gate; stay within ACTIVE_COGNITIVE_ARCHITECTURE_MARATHON_1.\"}],\"current_goal\":{\"expected_state\":\"autonomous next focus is selected and begun from evidence without operator choosing it\",\"goal_id\":\"active-cognitive-goal-f8f3c7ef02221d29\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"select and begin the next useful focus after completing a prior cognitive episode\"},\"current_hypotheses\":[],\"evidence_for\":[{\"content\":\"The next focus should be selected from unresolved evidence rather than assigned as another schema task.\",\"evidence_id\":\"e_completed_prior_work\",\"source\":\"prior episode\",\"summary\":\"Prior live episodes produced research, revision, and restart evidence.\"},{\"content\":\"The useful follow-up is to choose what remaining runtime behavior needs direct exercise or repair.\",\"evidence_id\":\"e_unresolved_research_need\",\"source\":\"repo\",\"summary\":\"Research synthesis still needs translation into an implementation-facing closure decision.\"},{\"content\":\"After resume, DELTA should choose a next focus from active candidates and begin it.\",\"evidence_id\":\"e_unresolved_restart_need\",\"source\":\"repo\",\"summary\":\"Restart evidence needs to be connected to autonomous continuation policy.\"}],\"recent_outcomes\":[]}",
+  "request_identity": "active-cognitive-ledger-request-b075a57f27a64ede",
+  "retry_sequence": 0,
+  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+  "working_memory_packet_digest": "a6baa7458ba849e7881fc4f360bf3ebcb4e50e8e0b3079c2e77b73d67c51bfa3",
+  "working_memory_packet_id": "working-memory-packet-eb6f688a348be798"
+}

@@ -1,0 +1,34 @@
+{
+  "events": [
+    {
+      "accepted": true,
+      "cycle": 1,
+      "event": "cycle_completed",
+      "loop_state": "persisting",
+      "operation": "formulate_hypothesis",
+      "rejections": []
+    },
+    {
+      "event": "interrupt_persist_restore_resume",
+      "interrupted_focus_id": "focus-bd40a743adf98eab",
+      "restored_focus_id": "focus-bd40a743adf98eab",
+      "resumed_focus_id": "focus-bd40a743adf98eab"
+    },
+    {
+      "accepted": true,
+      "cycle": 2,
+      "event": "cycle_completed",
+      "loop_state": "persisting",
+      "operation": "compare_evidence",
+      "rejections": []
+    },
+    {
+      "accepted": true,
+      "cycle": 3,
+      "event": "cycle_completed",
+      "loop_state": "completed",
+      "operation": "summarize_learning",
+      "rejections": []
+    }
+  ]
+}

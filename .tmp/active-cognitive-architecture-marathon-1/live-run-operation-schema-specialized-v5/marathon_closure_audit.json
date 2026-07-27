@@ -1,0 +1,99 @@
+{
+  "chat_lane_regression_command": ".venv311/Scripts/python.exe -m pytest tests/runtime_gsr/test_active_cognitive_loop.py tests/runtime_gsr/test_model_execution_lane_isolation.py tests/delta_1_3/test_behavioral_maturation.py tests/runtime_v30/test_v30_conversational_answer_formatter.py -q",
+  "chat_lane_regression_result": "45 passed",
+  "checkpoint": "ACTIVE_COGNITIVE_ARCHITECTURE_MARATHON_1_LIVE_EPISODES_B_TO_E",
+  "digests": {
+    "all_schema_identity_digest_matches_closed_checkpoint": false,
+    "closed_checkpoint_all_schema_identity_digest": "41f15c6d8fd733c982d007dc067d056e4cf70a3c698d17e8a2c66db21a1feeb6",
+    "closed_checkpoint_evaluator_digest": "ebb4c91fb962a24a224dec355e95227ab88d80e32afb5c13578e1c5caeb79fbc",
+    "closed_checkpoint_required_live_schema_identity_digest": "7f27765be6b29d7deaa2c519809d4f82857df069192d3a7fec8d79b0c5e2a994",
+    "current_all_schema_identity_digest": "f1fe940eabff9822773ae2bbe170ffc85af479db9928debbb73bb86466f8d979",
+    "current_evaluator_digest": "ebb4c91fb962a24a224dec355e95227ab88d80e32afb5c13578e1c5caeb79fbc",
+    "current_required_live_schema_identity_digest": "7f27765be6b29d7deaa2c519809d4f82857df069192d3a7fec8d79b0c5e2a994",
+    "evaluator_digest_matches_closed_checkpoint": true,
+    "required_live_schema_identity_digest_matches_closed_checkpoint": true,
+    "schema_digest_note": "Digest uses schema identity fields; dataclass-only checkpoint_required defaults are ignored. identify_evidence_need remains deferred and outside live pass arithmetic."
+  },
+  "dirty_status": [
+    " M orchestration/runtime/active_cognitive_loop.py",
+    " M orchestration/runtime/live_competence_adapter.py",
+    " M tests/runtime_gsr/test_active_cognitive_loop.py",
+    "?? orchestration/runtime/cognitive_claim_relation_integration_audit.py",
+    "?? orchestration/runtime/cognitive_claim_relation_runtime.py",
+    "?? orchestration/runtime/cognitive_claim_relations.py",
+    "?? orchestration/runtime/cognitive_contradiction_evaluation.py",
+    "?? orchestration/runtime/cognitive_excluded_path_reconciliation.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relation_integration_audit.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relation_runtime.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relations.py",
+    "?? tests/runtime_gsr/test_cognitive_contradiction_evaluation.py",
+    "?? tests/runtime_gsr/test_cognitive_excluded_path_reconciliation.py"
+  ],
+  "episode_c_material_revision": true,
+  "episode_d_duplicate_semantic_model_request": false,
+  "episode_d_ledger_request_count": 3,
+  "episode_d_restart_focus_preserved": true,
+  "episode_e_successor": {
+    "accepted": true,
+    "operation": "select_next_focus",
+    "started_focus": "focus-8dffd789c652ca48"
+  },
+  "episode_reports": [
+    {
+      "accepted_result_count": 3,
+      "artifact_count": 1,
+      "episode": "episode-b-research",
+      "learning_count": 1,
+      "model_call_count": 3,
+      "operations": [
+        "formulate_hypothesis",
+        "compare_evidence",
+        "summarize_learning"
+      ]
+    },
+    {
+      "accepted_result_count": 3,
+      "artifact_count": 1,
+      "episode": "episode-c-failed-hypothesis",
+      "learning_count": 1,
+      "model_call_count": 3,
+      "operations": [
+        "formulate_hypothesis",
+        "compare_evidence",
+        "summarize_learning"
+      ]
+    },
+    {
+      "accepted_result_count": 3,
+      "artifact_count": 1,
+      "episode": "episode-d-restart",
+      "learning_count": 1,
+      "model_call_count": 3,
+      "operations": [
+        "formulate_hypothesis",
+        "compare_evidence",
+        "summarize_learning"
+      ]
+    },
+    {
+      "accepted_result_count": 3,
+      "artifact_count": 1,
+      "episode": "episode-e-next-focus",
+      "learning_count": 1,
+      "model_call_count": 3,
+      "operations": [
+        "formulate_hypothesis",
+        "compare_evidence",
+        "summarize_learning"
+      ]
+    }
+  ],
+  "errors": [],
+  "identify_evidence_need_used": false,
+  "live_runner_scope": "evidence tooling only; not production runtime truth",
+  "protected_paths_staged": [],
+  "run_root": "G:\\Delta_Dev\\.tmp\\active-cognitive-architecture-marathon-1\\live-run-operation-schema-specialized-v5",
+  "staging_empty": true,
+  "status": "PASSED"
+}

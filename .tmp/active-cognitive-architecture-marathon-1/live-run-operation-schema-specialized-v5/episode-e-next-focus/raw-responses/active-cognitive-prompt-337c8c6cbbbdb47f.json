@@ -1,0 +1,76 @@
+{
+  "ledger_request_id": "shared-local-model-request-70c7417ce87fe423",
+  "ledger_result_id": "shared-local-model-result-68c687ef3bf4aeb0",
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "prompt_snapshot_id": "active-cognitive-prompt-337c8c6cbbbdb47f",
+  "raw_response": "{\"lesson\":\"The next focus should be selected from unresolved evidence rather than assigned as another schema task.\",\"evidence_refs\":[\"e_completed_prior_work\",\"e_unresolved_research_need\",\"e_unresolved_restart_need\"],\"unresolved_questions\":[\"How to ensure the next focus remains within the current marathon and defers identify_evidence_need unless genuinely needed?\"],\"uncertainty\":\"The specific criteria for selecting the next focus from unresolved evidence are not yet clear.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "fe1a30456f56c197b7e1012c288178750f86d52bf7d5e35be4395a4ca4bba1e8",
+  "terminal_status": {
+    "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+    "approved_at": "2026-07-27T01:00:31+00:00",
+    "authority_state": "operator_authorized_active_cognitive_architecture_marathon_1_live_episodes",
+    "claimed_at": "2026-07-27T01:00:31+00:00",
+    "completed_at": "2026-07-27T01:00:51+00:00",
+    "consumed_state": "terminal",
+    "created_at": "2026-07-27T01:00:31+00:00",
+    "execution_attempt_count": 1,
+    "execution_claim_id": "shared-local-model-execution-claim-0ddfe8ef330aeaac",
+    "failure_classification": "",
+    "lifecycle_state": "completed",
+    "mission_id": "active-cognitive-goal-f8f3c7ef02221d29",
+    "mission_information_need_identity": "focus-77082a027ca7c6ac",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - lesson: nonempty string - evidence_refs: array[string] - unresolved_questions: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - evidence_refs values must be chosen from: e_completed_prior_work, e_unresolved_research_need, e_unresolved_restart_need, e_operator_constraint TASK: perform only operation summarize_learning. Allowed transition/next-operation values: summarize_learning, select_next_focus. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: e_completed_prior_work, e_unresolved_research_need, e_unresolved_restart_need. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"semantic comparison\",\"creation_sequence\":3,\"description\":\"Challenge or revise hypothesis: The next focus should be selected from unresolved evidence rather than assigned as another schema task.\",\"evidence_need\":\"contrary and supporting evidence\",\"evidence_refs\":[\"e_completed_prior_work\",\"e_unresolved_research_need\",\"e_unresolved_restart_need\",\"e_operator_constraint\"],\"expected_value\":\"belief_revision\",\"focus_id\":\"focus-77082a027ca7c6ac\",\"related_goal_ids\":[\"active-cognitive-goal-f8f3c7ef02221d29\"],\"salience_categories\":[\"unresolved_hypothesis\",\"evidence_revision\",\"expected_useful_progress\"],\"salience_explanation\":\"An active hypothesis needs evidence-linked revision before action.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"hypothesis_revision\",\"urgency\":\"high\"},\"contrary_evidence\":[{\"content\":\"Next-focus selection must remain within the current marathon and keep identify_evidence_need deferred unless genuinely needed.\",\"evidence_id\":\"e_operator_constraint\",\"source\":\"operator\",\"summary\":\"Do not begin another architecture gate; stay within ACTIVE_COGNITIVE_ARCHITECTURE_MARATHON_1.\"}],\"current_goal\":{\"expected_state\":\"autonomous next focus is selected and begun from evidence without operator choosing it\",\"goal_id\":\"active-cognitive-goal-f8f3c7ef02221d29\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"select and begin the next useful focus after completing a prior cognitive episode\"},\"current_hypotheses\":[{\"assumptions\":[\"The system has a defined set of candidate foci\"],\"confidence_state\":\"contested\",\"created_at\":\"2026-07-27T00:59:55+00:00\",\"disposition\":\"needs_challenge\",\"evidence_against\":[\"e_operator_constraint\"],\"evidence_for\":[\"e_completed_prior_work\",\"e_unresolved_research_need\",\"e_unresolved_restart_need\"],\"expected_observations\":[\"local evidence should support a bounded useful step\"],\"hypothesis_id\":\"hypothesis-e092c4cef94c6054\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-7da3a65a7e73ace4\",\"originating_goal_id\":\"active-cognitive-goal-f8f3c7ef02221d29\",\"provenance\":[\"cognitive-operation-639142002e6ac510\",\"cognitive-operation-f611ed9b91df7ebd\"],\"revised_at\":\"2026-07-27T01:00:31+00:00\",\"revision_parent_id\":\"\",\"revision_reason\":\"The next focus should be selected from unresolved evidence rather than assigned as another schema task. However, the operator constraint indicates that the next focus must remain within the current marathon and defer identify_evidence_need unless genuinely needed.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: select and begin the next useful focus after completing a prior cognitive episode\",\"statement\":\"The next focus should be selected from unresolved evidence rather than assigned as another schema task.\"}],\"evidence_for\":[{\"content\":\"The next focus should be selected from unresolved evidence rather than assigned as another schema task.\",\"evidence_id\":\"e_completed_prior_work\",\"source\":\"prior episode\",\"summary\":\"Prior live episodes produced research, revision, and restart evidence.\"},{\"content\":\"The useful follow-up is to choose what remaining runtime behavior needs direct exercise or repair.\",\"evidence_id\":\"e_unresolved_research_need\",\"source\":\"repo\",\"summary\":\"Research synthesis still needs translation into an implementation-facing closure decision.\"},{\"content\":\"After resume, DELTA should choose a next focus from active candidates and begin it.\",\"evidence_id\":\"e_unresolved_restart_need\",\"source\":\"repo\",\"summary\":\"Restart evidence needs to be connected to autonomous continuation policy.\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-27T01:00:31+00:00\",\"discrepancy\":\"progress_observed\",\"expected\":\"Perform compare_evidence for the active focus using only referenced evidence.\",\"observed\":\"The next focus should be selected from unresolved evidence rather than assigned as another schema task. However, the operator constraint indicates that the next focus must remain within the current marathon and defer identify_evidence_need unless genuinely needed.\",\"operation_id\":\"cognitive-operation-f611ed9b91df7ebd\",\"outcome_id\":\"outcome-a444b4623c42a1c9\"}]}",
+    "question_objective": "summarize_learning",
+    "record_digest": "1ff916439182474865065faeff9b4fec0ead7efa44d34a24fd93e358f5b18367",
+    "record_version": 1,
+    "request_digest": "cc43f36c0b0d2ea73654562cd469fd18b3c9a337248e2c851c73b3fea11bb184",
+    "request_id": "shared-local-model-request-70c7417ce87fe423",
+    "requester_reference": "cognitive-operation-8c861a3e3829fda2",
+    "requester_type": "active_cognitive_loop",
+    "result_id": "shared-local-model-result-68c687ef3bf4aeb0",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    },
+    "semantic_identity": "active-cognitive-ledger-request-3dcd98be1e6240eb",
+    "session_reference": "active-cognitive-cycle-e3f1838a84167923"
+  }
+}

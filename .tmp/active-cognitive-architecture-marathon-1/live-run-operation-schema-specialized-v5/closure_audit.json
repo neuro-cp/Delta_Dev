@@ -1,0 +1,163 @@
+{
+  "checkpoint": "ACTIVE_COGNITIVE_ARCHITECTURE_MARATHON_1_live_episodes_B_to_E",
+  "dirty_status": [
+    " M orchestration/runtime/active_cognitive_loop.py",
+    " M orchestration/runtime/live_competence_adapter.py",
+    " M tests/runtime_gsr/test_active_cognitive_loop.py",
+    "?? orchestration/runtime/cognitive_claim_relation_integration_audit.py",
+    "?? orchestration/runtime/cognitive_claim_relation_runtime.py",
+    "?? orchestration/runtime/cognitive_claim_relations.py",
+    "?? orchestration/runtime/cognitive_contradiction_evaluation.py",
+    "?? orchestration/runtime/cognitive_excluded_path_reconciliation.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relation_integration_audit.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relation_runtime.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relations.py",
+    "?? tests/runtime_gsr/test_cognitive_contradiction_evaluation.py",
+    "?? tests/runtime_gsr/test_cognitive_excluded_path_reconciliation.py"
+  ],
+  "episode_d_restart_event": {
+    "event": "interrupt_persist_restore_resume",
+    "interrupted_focus_id": "focus-bd40a743adf98eab",
+    "restored_focus_id": "focus-bd40a743adf98eab",
+    "resumed_focus_id": "focus-bd40a743adf98eab"
+  },
+  "episode_e_successor": {
+    "accepted": true,
+    "evaluation": {
+      "cycle_count": 1,
+      "failure_classifications": [
+        "no_model_cognition",
+        "no_evidence_revision",
+        "no_useful_outcome"
+      ],
+      "model_call_count": 1,
+      "observable": {
+        "blocked_authority_state": {},
+        "budget_remaining": {
+          "cycles": 7,
+          "model_calls": 5
+        },
+        "completed": false,
+        "current_focus": "Resolve discrepancy for goal: begin the next useful focus selected from Episode E evidence after completion",
+        "current_goal": "begin the next useful focus selected from Episode E evidence after completion",
+        "current_operation": "select_next_focus",
+        "episode_id": "active-cognitive-episode-111aa025a2725d63",
+        "evidence_considered": [
+          "e_completed_prior_work",
+          "e_unresolved_research_need",
+          "e_unresolved_restart_need",
+          "e_operator_constraint"
+        ],
+        "hypothesis_state": {
+          "assumptions": [],
+          "confidence_state": "plausible",
+          "created_at": "2026-07-27T01:01:12+00:00",
+          "disposition": "needs_challenge",
+          "evidence_against": [],
+          "evidence_for": [
+            "e_completed_prior_work",
+            "e_unresolved_research_need",
+            "e_unresolved_restart_need"
+          ],
+          "expected_observations": [
+            "local evidence should support a bounded useful step"
+          ],
+          "hypothesis_id": "hypothesis-98258cdecdcc0325",
+          "lifecycle_state": "active",
+          "originating_focus_id": "focus-8dffd789c652ca48",
+          "originating_goal_id": "active-cognitive-goal-98a950a1a8aca22c",
+          "provenance": [
+            "cognitive-operation-0314782d73e6cd90"
+          ],
+          "revised_at": "",
+          "revision_parent_id": "",
+          "revision_reason": "",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "scope": "Resolve discrepancy for goal: begin the next useful focus selected from Episode E evidence after completion",
+          "statement": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome."
+        },
+        "last_observed_outcome": {
+          "created_at": "2026-07-27T01:01:12+00:00",
+          "discrepancy": "progress_observed",
+          "expected": "Perform select_next_focus for the active focus using only referenced evidence.",
+          "observed": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+          "operation_id": "cognitive-operation-0314782d73e6cd90",
+          "outcome_id": "outcome-13d876d9d9fe5e77"
+        },
+        "loop_state": "persisting",
+        "next_intended_step": "challenge the active hypothesis with contrary evidence",
+        "title": "Episode E autonomous next-focus selection successor focus begin",
+        "why_focus": [
+          "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+          "operator_priority",
+          "goal_discrepancy",
+          "expected_useful_progress"
+        ]
+      },
+      "passed": false,
+      "useful_artifact_count": 0
+    },
+    "operation": "select_next_focus",
+    "started_focus": "focus-8dffd789c652ca48"
+  },
+  "episodes": [
+    {
+      "episode": "episode-b-research",
+      "failures": [],
+      "learning_update_count": 1,
+      "model_call_count": 3,
+      "operations": [
+        "formulate_hypothesis",
+        "compare_evidence",
+        "summarize_learning"
+      ],
+      "status": "passed",
+      "useful_artifact_count": 1
+    },
+    {
+      "episode": "episode-c-failed-hypothesis",
+      "failures": [],
+      "learning_update_count": 1,
+      "model_call_count": 3,
+      "operations": [
+        "formulate_hypothesis",
+        "compare_evidence",
+        "summarize_learning"
+      ],
+      "status": "passed",
+      "useful_artifact_count": 1
+    },
+    {
+      "episode": "episode-d-restart",
+      "failures": [],
+      "learning_update_count": 1,
+      "model_call_count": 3,
+      "operations": [
+        "formulate_hypothesis",
+        "compare_evidence",
+        "summarize_learning"
+      ],
+      "status": "passed",
+      "useful_artifact_count": 1
+    },
+    {
+      "episode": "episode-e-next-focus",
+      "failures": [],
+      "learning_update_count": 1,
+      "model_call_count": 3,
+      "operations": [
+        "formulate_hypothesis",
+        "compare_evidence",
+        "summarize_learning"
+      ],
+      "status": "passed",
+      "useful_artifact_count": 1
+    }
+  ],
+  "errors": [],
+  "identify_evidence_need_used": false,
+  "run_root": ".tmp\\active-cognitive-architecture-marathon-1\\live-run-operation-schema-specialized-v5",
+  "staging_empty": true,
+  "status": "PASSED"
+}

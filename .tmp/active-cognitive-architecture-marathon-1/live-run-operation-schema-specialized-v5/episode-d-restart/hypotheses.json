@@ -1,0 +1,35 @@
+[
+  {
+    "assumptions": [
+      "The ActiveCognitiveEpisodeState format is consistent and preserved across restarts."
+    ],
+    "confidence_state": "contested",
+    "created_at": "2026-07-27T00:58:30+00:00",
+    "disposition": "needs_challenge",
+    "evidence_against": [
+      "d_prior_limitation"
+    ],
+    "evidence_for": [
+      "d_persistence_support",
+      "d_restart_requirement",
+      "d_useful_target"
+    ],
+    "expected_observations": [
+      "local evidence should support a bounded useful step"
+    ],
+    "hypothesis_id": "hypothesis-94778b654a415705",
+    "lifecycle_state": "active",
+    "originating_focus_id": "focus-bd40a743adf98eab",
+    "originating_goal_id": "active-cognitive-goal-376f7054be6cd147",
+    "provenance": [
+      "cognitive-operation-6e71220ef64ca40a",
+      "cognitive-operation-0716edca18aaf640"
+    ],
+    "revised_at": "2026-07-27T00:59:09+00:00",
+    "revision_parent_id": "",
+    "revision_reason": "The hypothesis is supported by evidence that ActiveCognitiveEpisodeState can be persisted, restored, and resumed with continuity of focus and post-resume learning. However, the previous final status classified Episode D as covered by round-trip tests, not live model episode evidence, which weakens the hypothesis.",
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "scope": "Resolve discrepancy for goal: survive interruption, persisted restart, and resume while preserving active focus and evidence-linked cognition",
+    "statement": "The ActiveCognitiveEpisodeState can be persisted, restored, and resumed with continuity of focus and post-resume learning."
+  }
+]

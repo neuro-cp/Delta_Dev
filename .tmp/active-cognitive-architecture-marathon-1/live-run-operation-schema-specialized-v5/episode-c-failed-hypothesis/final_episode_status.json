@@ -1,0 +1,113 @@
+{
+  "completed": true,
+  "cycle_count": 3,
+  "episode": "episode-c-failed-hypothesis",
+  "evaluation": {
+    "cycle_count": 3,
+    "failure_classifications": [],
+    "model_call_count": 3,
+    "observable": {
+      "blocked_authority_state": {},
+      "budget_remaining": {
+        "cycles": 5,
+        "model_calls": 3
+      },
+      "completed": true,
+      "current_focus": "Challenge or revise hypothesis: The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts.",
+      "current_goal": "revise a failed hypothesis about the active cognition runtime using contrary evidence",
+      "current_operation": "summarize_learning",
+      "episode_id": "active-cognitive-episode-3aabaabe12b0d962",
+      "evidence_considered": [
+        "c_initial_hypothesis_support",
+        "c_failed_hypothesis_contrary",
+        "c_repair_evidence",
+        "c_revision_target"
+      ],
+      "hypothesis_state": {
+        "assumptions": [],
+        "confidence_state": "contested",
+        "created_at": "2026-07-27T00:57:15+00:00",
+        "disposition": "needs_challenge",
+        "evidence_against": [
+          "c_failed_hypothesis_contrary"
+        ],
+        "evidence_for": [
+          "c_initial_hypothesis_support"
+        ],
+        "expected_observations": [
+          "local evidence should support a bounded useful step"
+        ],
+        "hypothesis_id": "hypothesis-be3c41633310f350",
+        "lifecycle_state": "active",
+        "originating_focus_id": "focus-17a05b903e1c864b",
+        "originating_goal_id": "active-cognitive-goal-ab6cb13d4fe3f1dd",
+        "provenance": [
+          "cognitive-operation-15de74e0b0e89a39",
+          "cognitive-operation-ab2813a6a40e6979"
+        ],
+        "revised_at": "2026-07-27T00:57:42+00:00",
+        "revision_parent_id": "",
+        "revision_reason": "The initial hypothesis supports the runtime's ability to formulate and compare hypotheses, but the contrary evidence suggests the previous claim of complete live cognition was incorrect.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "scope": "Resolve discrepancy for goal: revise a failed hypothesis about the active cognition runtime using contrary evidence",
+        "statement": "The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts."
+      },
+      "last_observed_outcome": {
+        "created_at": "2026-07-27T00:58:04+00:00",
+        "discrepancy": "progress_observed",
+        "expected": "Perform summarize_learning for the active focus using only referenced evidence.",
+        "observed": "The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts. However, contrary evidence suggests the previous claim of complete live cognition was incorrect, necessitating a revised hypothesis focusing on useful steps.",
+        "operation_id": "cognitive-operation-0c75459264230e00",
+        "outcome_id": "outcome-3ff96309b00f83fd"
+      },
+      "loop_state": "completed",
+      "next_intended_step": "inspect useful artifact and select next focus",
+      "title": "Episode C failed hypothesis revision",
+      "why_focus": [
+        "An active hypothesis needs evidence-linked revision before action.",
+        "unresolved_hypothesis",
+        "evidence_revision",
+        "expected_useful_progress"
+      ]
+    },
+    "passed": true,
+    "useful_artifact_count": 1
+  },
+  "events": [
+    {
+      "accepted": true,
+      "cycle": 1,
+      "event": "cycle_completed",
+      "loop_state": "persisting",
+      "operation": "formulate_hypothesis",
+      "rejections": []
+    },
+    {
+      "accepted": true,
+      "cycle": 2,
+      "event": "cycle_completed",
+      "loop_state": "persisting",
+      "operation": "compare_evidence",
+      "rejections": []
+    },
+    {
+      "accepted": true,
+      "cycle": 3,
+      "event": "cycle_completed",
+      "loop_state": "completed",
+      "operation": "summarize_learning",
+      "rejections": []
+    }
+  ],
+  "identify_evidence_need_used": false,
+  "learning_update_count": 1,
+  "model_call_count": 3,
+  "operations": [
+    "formulate_hypothesis",
+    "compare_evidence",
+    "summarize_learning"
+  ],
+  "root": "G:\\Delta_Dev\\.tmp\\active-cognitive-architecture-marathon-1\\live-run-operation-schema-specialized-v5\\episode-c-failed-hypothesis",
+  "status": "passed",
+  "useful_artifact_count": 1
+}

@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "assumptions": [],
+    "expected_observations": [],
+    "hypothesis_statement": "The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "active cognition runtime",
+    "supporting_evidence_refs": [
+      "c_initial_hypothesis_support"
+    ],
+    "uncertainty": "the extent to which the runtime can revise hypotheses based on evidence"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"hypothesis_statement\":\"The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts.\",\"scope\":\"active cognition runtime\",\"supporting_evidence_refs\":[\"c_initial_hypothesis_support\"],\"assumptions\":[],\"expected_observations\":[],\"uncertainty\":\"the extent to which the runtime can revise hypotheses based on evidence\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+  "raw_response_digest": "3925fbd7349a60b95c944a10c9868cd9e2c32642f8f345041d5e22b9ddff28c3",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

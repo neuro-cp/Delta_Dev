@@ -1,0 +1,20 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "e_completed_prior_work",
+      "e_unresolved_research_need",
+      "e_unresolved_restart_need"
+    ],
+    "lesson": "The next focus should be selected from unresolved evidence rather than assigned as another schema task.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "The specific criteria for selecting the next focus from unresolved evidence are not yet clear.",
+    "unresolved_questions": [
+      "How to ensure the next focus remains within the current marathon and defers identify_evidence_need unless genuinely needed?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"The next focus should be selected from unresolved evidence rather than assigned as another schema task.\",\"evidence_refs\":[\"e_completed_prior_work\",\"e_unresolved_research_need\",\"e_unresolved_restart_need\"],\"unresolved_questions\":[\"How to ensure the next focus remains within the current marathon and defers identify_evidence_need unless genuinely needed?\"],\"uncertainty\":\"The specific criteria for selecting the next focus from unresolved evidence are not yet clear.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "fe1a30456f56c197b7e1012c288178750f86d52bf7d5e35be4395a4ca4bba1e8",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

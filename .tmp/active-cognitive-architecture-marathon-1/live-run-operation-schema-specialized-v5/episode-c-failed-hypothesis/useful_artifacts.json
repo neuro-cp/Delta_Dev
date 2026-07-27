@@ -1,0 +1,11 @@
+[
+  {
+    "artifact_id": "useful-artifact-3ff96309b00f83fd",
+    "artifact_type": "cognitive_episode_summary",
+    "evidence_refs": [
+      "c_initial_hypothesis_support",
+      "c_failed_hypothesis_contrary"
+    ],
+    "summary": "The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts. However, contrary evidence suggests the previous claim of complete live cognition was incorrect, necessitating a revised hypothesis focusing on useful steps."
+  }
+]

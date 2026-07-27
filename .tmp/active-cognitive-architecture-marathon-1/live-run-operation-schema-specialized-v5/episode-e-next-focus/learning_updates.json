@@ -1,0 +1,12 @@
+[
+  {
+    "created_at": "2026-07-27T01:00:51+00:00",
+    "evidence_refs": [
+      "e_completed_prior_work",
+      "e_unresolved_research_need",
+      "e_unresolved_restart_need"
+    ],
+    "learning_id": "learning-03657a2fe2223428",
+    "summary": "The next focus should be selected from unresolved evidence rather than assigned as another schema task."
+  }
+]

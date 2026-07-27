@@ -1,0 +1,20 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "d_persistence_support",
+      "d_restart_requirement",
+      "d_useful_target"
+    ],
+    "lesson": "The ActiveCognitiveEpisodeState can be persisted, restored, and resumed with continuity of focus and post-resume learning, but the previous final status classified Episode D as covered by round-trip tests, not live model episode evidence.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "The exact nature of the live model episode evidence is unresolved.",
+    "unresolved_questions": [
+      "How does the round-trip test evidence compare to live model episode evidence?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{ \"lesson\": \"The ActiveCognitiveEpisodeState can be persisted, restored, and resumed with continuity of focus and post-resume learning, but the previous final status classified Episode D as covered by round-trip tests, not live model episode evidence.\", \"evidence_refs\": [ \"d_persistence_support\", \"d_restart_requirement\", \"d_useful_target\" ], \"unresolved_questions\": [ \"How does the round-trip test evidence compare to live model episode evidence?\" ], \"uncertainty\": \"The exact nature of the live model episode evidence is unresolved.\", \"recommended_state_transition\": \"summarize_learning\" }",
+  "raw_response_digest": "8ea4817f347e1b15bc6b847ae574f1492195a248bf7e11b7c641423980ac7314",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

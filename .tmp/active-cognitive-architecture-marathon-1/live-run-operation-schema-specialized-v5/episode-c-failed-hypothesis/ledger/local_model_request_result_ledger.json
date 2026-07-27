@@ -1,0 +1,392 @@
+{
+  "ledger_version": 1,
+  "requests": {
+    "shared-local-model-request-40890290d6c294d4": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-27T00:57:15+00:00",
+      "authority_state": "operator_authorized_active_cognitive_architecture_marathon_1_live_episodes",
+      "claimed_at": "2026-07-27T00:57:15+00:00",
+      "completed_at": "2026-07-27T00:57:42+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-27T00:57:15+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-03f7915f6833060a",
+      "failure_classification": "",
+      "lifecycle_state": "completed",
+      "mission_id": "active-cognitive-goal-ab6cb13d4fe3f1dd",
+      "mission_information_need_identity": "focus-625dfbdd4aca4e66",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - operation_result_type: nonempty string - interpretation: nonempty string - evidence_refs: array[string] - contrary_evidence_considered: array[string] - uncertainty: nonempty string - assumptions: array[string] - recommended_state_transition: nonempty string - recommended_action: nonempty string - next_evidence_need: nonempty string - next_focus_proposal: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - evidence_refs values must be chosen from: c_initial_hypothesis_support, c_repair_evidence - contrary_evidence_considered values must be chosen from: c_failed_hypothesis_contrary, c_revision_target - contrary_evidence_considered must include at least one contrary_evidence ID TASK: perform only operation compare_evidence. Allowed transition/next-operation values: add_supporting_evidence, add_conflicting_evidence, weaken_hypothesis, revise_hypothesis. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: c_initial_hypothesis_support, c_repair_evidence. Use contrary_evidence_considered only from contrary_evidence IDs: c_failed_hypothesis_contrary, c_revision_target. If contrary_evidence is not empty, the interpretation must state how it changes or weakens the hypothesis Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":2,\"description\":\"Resolve discrepancy for goal: revise a failed hypothesis about the active cognition runtime using contrary evidence\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"c_initial_hypothesis_support\",\"c_failed_hypothesis_contrary\",\"c_repair_evidence\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-625dfbdd4aca4e66\",\"related_goal_ids\":[\"active-cognitive-goal-ab6cb13d4fe3f1dd\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"Episode B and E were not run; C and D were scripted only; final status was usefulness-blocked.\",\"evidence_id\":\"c_failed_hypothesis_contrary\",\"source\":\"prior evidence\",\"summary\":\"Contrary evidence: the previous marathon claim that live cognition was complete failed.\"},{\"content\":\"The useful outcome is a narrower revised hypothesis about what DELTA can now prove live.\",\"evidence_id\":\"c_revision_target\",\"source\":\"operator\",\"summary\":\"The target is not to preserve the old broad success claim.\"}],\"current_goal\":{\"expected_state\":\"failed hypothesis is weakened or revised from evidence and summarized\",\"goal_id\":\"active-cognitive-goal-ab6cb13d4fe3f1dd\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"revise a failed hypothesis about the active cognition runtime using contrary evidence\"},\"current_hypotheses\":[{\"assumptions\":[],\"confidence_state\":\"plausible\",\"created_at\":\"2026-07-27T00:57:15+00:00\",\"disposition\":\"needs_challenge\",\"evidence_against\":[],\"evidence_for\":[\"c_initial_hypothesis_support\"],\"expected_observations\":[\"local evidence should support a bounded useful step\"],\"hypothesis_id\":\"hypothesis-be3c41633310f350\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-17a05b903e1c864b\",\"originating_goal_id\":\"active-cognitive-goal-ab6cb13d4fe3f1dd\",\"provenance\":[\"cognitive-operation-15de74e0b0e89a39\"],\"revised_at\":\"\",\"revision_parent_id\":\"\",\"revision_reason\":\"\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: revise a failed hypothesis about the active cognition runtime using contrary evidence\",\"statement\":\"The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts.\"}],\"evidence_for\":[{\"content\":\"The runtime can formulate hypotheses, compare evidence, and write learning artifacts.\",\"evidence_id\":\"c_initial_hypothesis_support\",\"source\":\"repo\",\"summary\":\"Supporting evidence: active cognition runtime exposes focus, hypothesis, and model operation structures.\"},{\"content\":\"The newer checkpoint showed strict model outputs can revise hypotheses and produce useful Episode A artifacts.\",\"evidence_id\":\"c_repair_evidence\",\"source\":\"checkpoint\",\"summary\":\"Operation-specific schema specialization repaired model operation consumption.\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-27T00:57:15+00:00\",\"discrepancy\":\"progress_observed\",\"expected\":\"Perform formulate_hypothesis for the active focus using only referenced evidence.\",\"observed\":\"The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts.\",\"operation_id\":\"cognitive-operation-15de74e0b0e89a39\",\"outcome_id\":\"outcome-70f40479c10251c9\"}]}",
+      "question_objective": "compare_evidence",
+      "record_digest": "59d1fa1931749a69dd6cfbf8008ad8b68f522b62e5492e88dab9132110eac631",
+      "record_version": 1,
+      "request_digest": "797dd3308faf6aef7870a462faa01d0b29c8265761150a998acc61ae13c79471",
+      "request_id": "shared-local-model-request-40890290d6c294d4",
+      "requester_reference": "cognitive-operation-ab2813a6a40e6979",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "shared-local-model-result-ba851387aa06dff7",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-8ce1c4fde63f6baa",
+      "session_reference": "active-cognitive-cycle-18f613d6e9445388"
+    },
+    "shared-local-model-request-5a4072b754eb4819": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-27T00:57:42+00:00",
+      "authority_state": "operator_authorized_active_cognitive_architecture_marathon_1_live_episodes",
+      "claimed_at": "2026-07-27T00:57:42+00:00",
+      "completed_at": "2026-07-27T00:58:04+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-27T00:57:42+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-829fe386e1c8fa34",
+      "failure_classification": "",
+      "lifecycle_state": "completed",
+      "mission_id": "active-cognitive-goal-ab6cb13d4fe3f1dd",
+      "mission_information_need_identity": "focus-7deda8a269c7f00b",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - lesson: nonempty string - evidence_refs: array[string] - unresolved_questions: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - evidence_refs values must be chosen from: c_initial_hypothesis_support, c_repair_evidence, c_failed_hypothesis_contrary, c_revision_target TASK: perform only operation summarize_learning. Allowed transition/next-operation values: summarize_learning, select_next_focus. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: c_initial_hypothesis_support, c_repair_evidence. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"semantic comparison\",\"creation_sequence\":3,\"description\":\"Challenge or revise hypothesis: The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts.\",\"evidence_need\":\"contrary and supporting evidence\",\"evidence_refs\":[\"c_initial_hypothesis_support\",\"c_failed_hypothesis_contrary\"],\"expected_value\":\"belief_revision\",\"focus_id\":\"focus-7deda8a269c7f00b\",\"related_goal_ids\":[\"active-cognitive-goal-ab6cb13d4fe3f1dd\"],\"salience_categories\":[\"unresolved_hypothesis\",\"evidence_revision\",\"expected_useful_progress\"],\"salience_explanation\":\"An active hypothesis needs evidence-linked revision before action.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"hypothesis_revision\",\"urgency\":\"high\"},\"contrary_evidence\":[{\"content\":\"Episode B and E were not run; C and D were scripted only; final status was usefulness-blocked.\",\"evidence_id\":\"c_failed_hypothesis_contrary\",\"source\":\"prior evidence\",\"summary\":\"Contrary evidence: the previous marathon claim that live cognition was complete failed.\"},{\"content\":\"The useful outcome is a narrower revised hypothesis about what DELTA can now prove live.\",\"evidence_id\":\"c_revision_target\",\"source\":\"operator\",\"summary\":\"The target is not to preserve the old broad success claim.\"}],\"current_goal\":{\"expected_state\":\"failed hypothesis is weakened or revised from evidence and summarized\",\"goal_id\":\"active-cognitive-goal-ab6cb13d4fe3f1dd\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"revise a failed hypothesis about the active cognition runtime using contrary evidence\"},\"current_hypotheses\":[{\"assumptions\":[],\"confidence_state\":\"contested\",\"created_at\":\"2026-07-27T00:57:15+00:00\",\"disposition\":\"needs_challenge\",\"evidence_against\":[\"c_failed_hypothesis_contrary\"],\"evidence_for\":[\"c_initial_hypothesis_support\"],\"expected_observations\":[\"local evidence should support a bounded useful step\"],\"hypothesis_id\":\"hypothesis-be3c41633310f350\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-17a05b903e1c864b\",\"originating_goal_id\":\"active-cognitive-goal-ab6cb13d4fe3f1dd\",\"provenance\":[\"cognitive-operation-15de74e0b0e89a39\",\"cognitive-operation-ab2813a6a40e6979\"],\"revised_at\":\"2026-07-27T00:57:42+00:00\",\"revision_parent_id\":\"\",\"revision_reason\":\"The initial hypothesis supports the runtime's ability to formulate and compare hypotheses, but the contrary evidence suggests the previous claim of complete live cognition was incorrect.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: revise a failed hypothesis about the active cognition runtime using contrary evidence\",\"statement\":\"The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts.\"}],\"evidence_for\":[{\"content\":\"The runtime can formulate hypotheses, compare evidence, and write learning artifacts.\",\"evidence_id\":\"c_initial_hypothesis_support\",\"source\":\"repo\",\"summary\":\"Supporting evidence: active cognition runtime exposes focus, hypothesis, and model operation structures.\"},{\"content\":\"The newer checkpoint showed strict model outputs can revise hypotheses and produce useful Episode A artifacts.\",\"evidence_id\":\"c_repair_evidence\",\"source\":\"checkpoint\",\"summary\":\"Operation-specific schema specialization repaired model operation consumption.\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-27T00:57:42+00:00\",\"discrepancy\":\"progress_observed\",\"expected\":\"Perform compare_evidence for the active focus using only referenced evidence.\",\"observed\":\"The initial hypothesis supports the runtime's ability to formulate and compare hypotheses, but the contrary evidence suggests the previous claim of complete live cognition was incorrect.\",\"operation_id\":\"cognitive-operation-ab2813a6a40e6979\",\"outcome_id\":\"outcome-9771cd61f291950b\"}]}",
+      "question_objective": "summarize_learning",
+      "record_digest": "973dbe114367d1230ed1ae5c4a3243efe9cfea61f71b1e9cea5d24c60c87476e",
+      "record_version": 1,
+      "request_digest": "5100ad9a47a9e8679fa2c8cad5707c7dc028f1610e775bece31ebd87905b51d8",
+      "request_id": "shared-local-model-request-5a4072b754eb4819",
+      "requester_reference": "cognitive-operation-0c75459264230e00",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "shared-local-model-result-0e8e057ba68a2eb6",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-88c2d3e33c6ec5a5",
+      "session_reference": "active-cognitive-cycle-0acfdc586cd9baf1"
+    },
+    "shared-local-model-request-8e053af8c4a96f96": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-27T00:57:00+00:00",
+      "authority_state": "operator_authorized_active_cognitive_architecture_marathon_1_live_episodes",
+      "claimed_at": "2026-07-27T00:57:00+00:00",
+      "completed_at": "2026-07-27T00:57:15+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-27T00:57:00+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-fef19e50dbe1fca3",
+      "failure_classification": "",
+      "lifecycle_state": "completed",
+      "mission_id": "active-cognitive-goal-ab6cb13d4fe3f1dd",
+      "mission_information_need_identity": "focus-17a05b903e1c864b",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: c_initial_hypothesis_support, c_repair_evidence OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: c_initial_hypothesis_support, c_repair_evidence. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":1,\"description\":\"Resolve discrepancy for goal: revise a failed hypothesis about the active cognition runtime using contrary evidence\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"c_initial_hypothesis_support\",\"c_failed_hypothesis_contrary\",\"c_repair_evidence\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-17a05b903e1c864b\",\"related_goal_ids\":[\"active-cognitive-goal-ab6cb13d4fe3f1dd\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"Episode B and E were not run; C and D were scripted only; final status was usefulness-blocked.\",\"evidence_id\":\"c_failed_hypothesis_contrary\",\"source\":\"prior evidence\",\"summary\":\"Contrary evidence: the previous marathon claim that live cognition was complete failed.\"},{\"content\":\"The useful outcome is a narrower revised hypothesis about what DELTA can now prove live.\",\"evidence_id\":\"c_revision_target\",\"source\":\"operator\",\"summary\":\"The target is not to preserve the old broad success claim.\"}],\"current_goal\":{\"expected_state\":\"failed hypothesis is weakened or revised from evidence and summarized\",\"goal_id\":\"active-cognitive-goal-ab6cb13d4fe3f1dd\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"revise a failed hypothesis about the active cognition runtime using contrary evidence\"},\"current_hypotheses\":[],\"evidence_for\":[{\"content\":\"The runtime can formulate hypotheses, compare evidence, and write learning artifacts.\",\"evidence_id\":\"c_initial_hypothesis_support\",\"source\":\"repo\",\"summary\":\"Supporting evidence: active cognition runtime exposes focus, hypothesis, and model operation structures.\"},{\"content\":\"The newer checkpoint showed strict model outputs can revise hypotheses and produce useful Episode A artifacts.\",\"evidence_id\":\"c_repair_evidence\",\"source\":\"checkpoint\",\"summary\":\"Operation-specific schema specialization repaired model operation consumption.\"}],\"recent_outcomes\":[]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "8d8d63b68539fd4acffd1f240d5066f5057df40c1b0368528431680ba8e620d5",
+      "record_version": 1,
+      "request_digest": "26d2bb332e0ff2e2e2ed122c513776b389b5eda8ebe951aff8564d62ea3c3154",
+      "request_id": "shared-local-model-request-8e053af8c4a96f96",
+      "requester_reference": "cognitive-operation-15de74e0b0e89a39",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "shared-local-model-result-6efe6b1e6a58356c",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-b356221d4662e315",
+      "session_reference": "active-cognitive-cycle-9674787bcf6fbb41"
+    }
+  },
+  "results": {
+    "shared-local-model-result-0e8e057ba68a2eb6": {
+      "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+      "availability_state": "available",
+      "execution_completed_at": "2026-07-27T00:58:04+00:00",
+      "execution_started_at": "2026-07-27T00:57:42+00:00",
+      "failure_classification": "",
+      "failure_detail": "",
+      "latency_seconds": 21.9771,
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "provenance": {
+        "execution_claim_id": "shared-local-model-execution-claim-829fe386e1c8fa34",
+        "selected_lane": {
+          "available": true,
+          "candidate_models": [
+            {
+              "capabilities": [
+                "text"
+              ],
+              "family": "qwen",
+              "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+              "reason": "registered_alias",
+              "registry_key": "qwen",
+              "tier": 3
+            }
+          ],
+          "capabilities": [
+            "text"
+          ],
+          "context_size": 32768,
+          "cost_latency_class": "medium_to_high_local",
+          "display_name": "Reasoning / Analysis Lane",
+          "executed": false,
+          "execution_gate": "not_executed_by_default",
+          "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+          "expected_weakness": "external facts need gated supporting information",
+          "fallback_priority": 3,
+          "lane": "reasoning_analysis",
+          "model_family": "qwen",
+          "preferred_task_lanes": [
+            "analysis",
+            "research",
+            "investigation",
+            "external_knowledge_request"
+          ],
+          "provider_calls_performed": false,
+          "rejected_models": [],
+          "selected_model": "qwen",
+          "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+          "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+          "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+        }
+      },
+      "request_id": "shared-local-model-request-5a4072b754eb4819",
+      "response_digest": "666c0ea9c9a87d8f74ddcc2590da992a3c4407f51c92008091d62911385f4b2f",
+      "response_reference": "{\"lesson\":\"The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts. However, contrary evidence suggests the previous claim of complete live cognition was incorrect, necessitating a revised hypothesis focusing on useful steps.\",\"evidence_refs\":[\"c_initial_hypothesis_support\",\"c_failed_hypothesis_contrary\"],\"unresolved_questions\":[\"How can the runtime effectively incorporate live feedback to refine its hypotheses?\"],\"uncertainty\":\"The exact boundaries of what the runtime can prove live remain unclear.\",\"recommended_state_transition\":\"summarize_learning\"}",
+      "result_digest": "d347959161ababce7f2c313b274a0bec426cd78b580bdb1bf74ceed5d888400d",
+      "result_id": "shared-local-model-result-0e8e057ba68a2eb6",
+      "terminal_state": "completed"
+    },
+    "shared-local-model-result-6efe6b1e6a58356c": {
+      "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+      "availability_state": "available",
+      "execution_completed_at": "2026-07-27T00:57:15+00:00",
+      "execution_started_at": "2026-07-27T00:57:00+00:00",
+      "failure_classification": "",
+      "failure_detail": "",
+      "latency_seconds": 15.2064,
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "provenance": {
+        "execution_claim_id": "shared-local-model-execution-claim-fef19e50dbe1fca3",
+        "selected_lane": {
+          "available": true,
+          "candidate_models": [
+            {
+              "capabilities": [
+                "text"
+              ],
+              "family": "qwen",
+              "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+              "reason": "registered_alias",
+              "registry_key": "qwen",
+              "tier": 3
+            }
+          ],
+          "capabilities": [
+            "text"
+          ],
+          "context_size": 32768,
+          "cost_latency_class": "medium_to_high_local",
+          "display_name": "Reasoning / Analysis Lane",
+          "executed": false,
+          "execution_gate": "not_executed_by_default",
+          "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+          "expected_weakness": "external facts need gated supporting information",
+          "fallback_priority": 3,
+          "lane": "reasoning_analysis",
+          "model_family": "qwen",
+          "preferred_task_lanes": [
+            "analysis",
+            "research",
+            "investigation",
+            "external_knowledge_request"
+          ],
+          "provider_calls_performed": false,
+          "rejected_models": [],
+          "selected_model": "qwen",
+          "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+          "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+          "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+        }
+      },
+      "request_id": "shared-local-model-request-8e053af8c4a96f96",
+      "response_digest": "6197cb2e5dda3f1604de6f307b6cc7b5d5a8843f1bf73fc12de1093c3cb0f75c",
+      "response_reference": "{\"hypothesis_statement\":\"The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts.\",\"scope\":\"active cognition runtime\",\"supporting_evidence_refs\":[\"c_initial_hypothesis_support\"],\"assumptions\":[],\"expected_observations\":[],\"uncertainty\":\"the extent to which the runtime can revise hypotheses based on evidence\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+      "result_digest": "ca2538da6589d32ad24ffc60bb0d1a16d28f19ec6d4d56f281b300aa34cc53fc",
+      "result_id": "shared-local-model-result-6efe6b1e6a58356c",
+      "terminal_state": "completed"
+    },
+    "shared-local-model-result-ba851387aa06dff7": {
+      "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+      "availability_state": "available",
+      "execution_completed_at": "2026-07-27T00:57:42+00:00",
+      "execution_started_at": "2026-07-27T00:57:15+00:00",
+      "failure_classification": "",
+      "failure_detail": "",
+      "latency_seconds": 27.4567,
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "provenance": {
+        "execution_claim_id": "shared-local-model-execution-claim-03f7915f6833060a",
+        "selected_lane": {
+          "available": true,
+          "candidate_models": [
+            {
+              "capabilities": [
+                "text"
+              ],
+              "family": "qwen",
+              "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+              "reason": "registered_alias",
+              "registry_key": "qwen",
+              "tier": 3
+            }
+          ],
+          "capabilities": [
+            "text"
+          ],
+          "context_size": 32768,
+          "cost_latency_class": "medium_to_high_local",
+          "display_name": "Reasoning / Analysis Lane",
+          "executed": false,
+          "execution_gate": "not_executed_by_default",
+          "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+          "expected_weakness": "external facts need gated supporting information",
+          "fallback_priority": 3,
+          "lane": "reasoning_analysis",
+          "model_family": "qwen",
+          "preferred_task_lanes": [
+            "analysis",
+            "research",
+            "investigation",
+            "external_knowledge_request"
+          ],
+          "provider_calls_performed": false,
+          "rejected_models": [],
+          "selected_model": "qwen",
+          "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+          "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+          "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+        }
+      },
+      "request_id": "shared-local-model-request-40890290d6c294d4",
+      "response_digest": "4d99274bc3db25090095bda6c630b9c773dc26d6933711b027d497cc5e7c5f6b",
+      "response_reference": "{\"assumptions\":[],\"contrary_evidence_considered\":[\"c_failed_hypothesis_contrary\"],\"evidence_refs\":[\"c_initial_hypothesis_support\"],\"interpretation\":\"The initial hypothesis supports the runtime's ability to formulate and compare hypotheses, but the contrary evidence suggests the previous claim of complete live cognition was incorrect.\",\"next_evidence_need\":\"local evidence showing the current state of live cognition\",\"next_focus_proposal\":\"focus on the current state of live cognition\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"continue to gather evidence on the current state of live cognition\",\"recommended_state_transition\":\"add_conflicting_evidence\",\"uncertainty\":\"How the current state of live cognition aligns with the previous claim.\"}",
+      "result_digest": "baac1782a67d2375158589fba8b98bb2c630543f49497cb05e4282264432b549",
+      "result_id": "shared-local-model-result-ba851387aa06dff7",
+      "terminal_state": "completed"
+    }
+  },
+  "state_digest": "952e2c46adbeb79e1115499602e81e5214bdd03513e679e9c7cf0809b13773d0"
+}

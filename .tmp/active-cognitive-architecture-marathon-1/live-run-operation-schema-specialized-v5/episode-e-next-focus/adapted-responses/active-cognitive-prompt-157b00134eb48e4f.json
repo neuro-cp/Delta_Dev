@@ -1,0 +1,27 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "The system has a defined set of candidate foci"
+    ],
+    "contrary_evidence_considered": [
+      "e_operator_constraint"
+    ],
+    "evidence_refs": [
+      "e_completed_prior_work",
+      "e_unresolved_research_need",
+      "e_unresolved_restart_need"
+    ],
+    "interpretation": "The next focus should be selected from unresolved evidence rather than assigned as another schema task. However, the operator constraint indicates that the next focus must remain within the current marathon and defer identify_evidence_need unless genuinely needed.",
+    "next_evidence_need": "local evidence supporting or challenging the goal",
+    "next_focus_proposal": "select and begin the next useful focus after completing a prior cognitive episode",
+    "operation_result_type": "compare_evidence_result",
+    "recommended_action": "select and begin the next useful focus after completing a prior cognitive episode",
+    "recommended_state_transition": "add_supporting_evidence",
+    "uncertainty": "How the operator constraint will be reconciled with the need for a useful next focus."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"assumptions\":[\"The system has a defined set of candidate foci\"],\"contrary_evidence_considered\":[\"e_operator_constraint\"],\"evidence_refs\":[\"e_completed_prior_work\",\"e_unresolved_research_need\",\"e_unresolved_restart_need\"],\"interpretation\":\"The next focus should be selected from unresolved evidence rather than assigned as another schema task. However, the operator constraint indicates that the next focus must remain within the current marathon and defer identify_evidence_need unless genuinely needed.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"select and begin the next useful focus after completing a prior cognitive episode\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"select and begin the next useful focus after completing a prior cognitive episode\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"How the operator constraint will be reconciled with the need for a useful next focus.\"}",
+  "raw_response_digest": "5a40f7764f4d8f9076e1d044877d2e5e944a02c992525def5f345186a21f329f",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

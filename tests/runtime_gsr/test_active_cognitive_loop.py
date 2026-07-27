@@ -10,6 +10,7 @@ from orchestration.runtime.active_cognitive_loop import (
     operation_schema_registry,
     adapt_operation_response,
     abandon_focus,
+    apply_operation_result,
     build_operation_request,
     build_working_memory_packet,
     compile_operation_prompt_snapshot,
@@ -368,6 +369,54 @@ def test_response_evaluator_requires_real_revision_for_revision_family():
     accepted = evaluate_operation_response(request, packet, revision)
     assert accepted.passed is True
     assert "meaningful_revision" in accepted.positive_observations
+
+
+def test_summarize_learning_consumes_contrary_evidence_through_evidence_refs():
+    request, packet = _request_and_packet("summarize_learning")
+    raw = {
+        "operation_result_type": "summarize_learning_result",
+        "lesson": "The runtime can progress, but the prior gap evidence narrows the claim.",
+        "evidence_refs": ["repo_runtime", "repo_gap"],
+        "unresolved_questions": ["Which live episode should run next?"],
+        "uncertainty": "bounded to supplied repository evidence",
+        "recommended_state_transition": "summarize_learning",
+    }
+
+    result = validate_model_result(request, packet, _runtime_payload_from_operation_response("summarize_learning", raw))
+
+    assert result.accepted is True
+    assert result.rejection_reasons == ()
+
+
+def test_summarize_learning_prompt_allows_contrary_ids_in_evidence_refs():
+    request, packet = _request_and_packet("summarize_learning")
+
+    snapshot = compile_operation_prompt_snapshot(request, packet)
+
+    assert "evidence_refs values must be chosen from: repo_runtime, repo_useful, repo_gap" in snapshot.prompt_text
+    assert "contrary_evidence_considered" not in snapshot.expected_response_schema
+
+
+def test_summarize_learning_select_next_focus_still_creates_artifact():
+    state = run_cognitive_cycle(_episode())
+    state = run_cognitive_cycle(state)
+    packet = build_working_memory_packet(state, sequence=len(state.cycles) + 1)
+    request = build_operation_request(state, packet, operation_type="summarize_learning", model_identity="test")
+    raw = {
+        "lesson": "The loop can progress, but prior gap evidence keeps the next focus bounded.",
+        "evidence_refs": ["repo_runtime", "repo_useful", "repo_gap"],
+        "unresolved_questions": ["Which next focus should begin?"],
+        "uncertainty": "bounded to supplied repository evidence",
+        "recommended_state_transition": "select_next_focus",
+    }
+    result = validate_model_result(request, packet, _runtime_payload_from_operation_response("summarize_learning", raw))
+
+    updated = apply_operation_result(state, packet, request, result, sequence=len(state.cycles) + 1)
+
+    assert result.accepted is True
+    assert updated.completed is True
+    assert updated.learning_updates
+    assert updated.useful_artifacts
 
 
 def test_evaluator_rejects_fixture_name_dependent_generic_filler():

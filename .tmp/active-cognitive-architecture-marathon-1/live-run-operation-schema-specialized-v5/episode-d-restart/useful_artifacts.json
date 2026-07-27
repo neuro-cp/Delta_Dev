@@ -1,0 +1,12 @@
+[
+  {
+    "artifact_id": "useful-artifact-d3a8d8aea7bca67d",
+    "artifact_type": "cognitive_episode_summary",
+    "evidence_refs": [
+      "d_persistence_support",
+      "d_restart_requirement",
+      "d_useful_target"
+    ],
+    "summary": "The ActiveCognitiveEpisodeState can be persisted, restored, and resumed with continuity of focus and post-resume learning, but the previous final status classified Episode D as covered by round-trip tests, not live model episode evidence."
+  }
+]

@@ -1,0 +1,76 @@
+{
+  "ledger_request_id": "shared-local-model-request-b66c091da7eab6ba",
+  "ledger_result_id": "shared-local-model-result-1fd4b77e2953df47",
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "prompt_snapshot_id": "active-cognitive-prompt-f36cfc192505fc87",
+  "raw_response": "{\"hypothesis_statement\":\"The ActiveCognitiveEpisodeState can be persisted, restored, and resumed with continuity of focus and post-resume learning.\",\"scope\":\"ActiveCognitiveEpisodeState persistence, restoration, and resumption with focus and learning continuity.\",\"supporting_evidence_refs\":[\"d_persistence_support\",\"d_restart_requirement\",\"d_useful_target\"],\"assumptions\":[\"The ActiveCognitiveEpisodeState format is consistent and preserved across restarts.\"],\"expected_observations\":[\"Focus ID continuity during and after restoration.\",\"Continued model operations post-resumption.\"],\"uncertainty\":\"The exact nature of focus continuity and post-resume learning.\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+  "raw_response_digest": "15f33ece9ce51095cdc3f2ff5fc6d7b0f1549b786901ba8e085744811685c758",
+  "terminal_status": {
+    "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+    "approved_at": "2026-07-27T00:58:04+00:00",
+    "authority_state": "operator_authorized_active_cognitive_architecture_marathon_1_live_episodes",
+    "claimed_at": "2026-07-27T00:58:04+00:00",
+    "completed_at": "2026-07-27T00:58:30+00:00",
+    "consumed_state": "terminal",
+    "created_at": "2026-07-27T00:58:04+00:00",
+    "execution_attempt_count": 1,
+    "execution_claim_id": "shared-local-model-execution-claim-ec02dca487a3bc77",
+    "failure_classification": "",
+    "lifecycle_state": "completed",
+    "mission_id": "active-cognitive-goal-376f7054be6cd147",
+    "mission_information_need_identity": "focus-bd40a743adf98eab",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: d_persistence_support, d_restart_requirement, d_useful_target OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: d_persistence_support, d_restart_requirement, d_useful_target. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":1,\"description\":\"Resolve discrepancy for goal: survive interruption, persisted restart, and resume while preserving active focus and evidence-linked cognition\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"d_persistence_support\",\"d_restart_requirement\",\"d_prior_limitation\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-bd40a743adf98eab\",\"related_goal_ids\":[\"active-cognitive-goal-376f7054be6cd147\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"The previous final status classified Episode D as covered_by_round_trip_tests_not_live.\",\"evidence_id\":\"d_prior_limitation\",\"source\":\"prior evidence\",\"summary\":\"Contrary evidence: earlier restart coverage was only round-trip tests, not live model episode evidence.\"}],\"current_goal\":{\"expected_state\":\"interrupted state restores and resumes into useful cognitive work\",\"goal_id\":\"active-cognitive-goal-376f7054be6cd147\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"survive interruption, persisted restart, and resume while preserving active focus and evidence-linked cognition\"},\"current_hypotheses\":[],\"evidence_for\":[{\"content\":\"write_episode_state and read_episode_state round-trip ActiveCognitiveEpisodeState.\",\"evidence_id\":\"d_persistence_support\",\"source\":\"repo\",\"summary\":\"State serialization and readback are implemented for active cognitive episodes.\"},{\"content\":\"Episode D must persist an interruption, restore it, resume focus, and continue model operations.\",\"evidence_id\":\"d_restart_requirement\",\"source\":\"operator\",\"summary\":\"The proof requires survival across restart rather than only in-memory scripted tests.\"},{\"content\":\"The episode should show focus ID continuity and post-resume learning.\",\"evidence_id\":\"d_useful_target\",\"source\":\"operator\",\"summary\":\"The useful target is a durable restart/resume artifact with model operations after restoration.\"}],\"recent_outcomes\":[]}",
+    "question_objective": "formulate_hypothesis",
+    "record_digest": "3b8288b02578a199d639bf058223993a297f56621be08284789e2fd243ccf317",
+    "record_version": 1,
+    "request_digest": "07de6de046d8a2fbbb637dfab9fdd0ca15e9a761fba716bc857fef382722d483",
+    "request_id": "shared-local-model-request-b66c091da7eab6ba",
+    "requester_reference": "cognitive-operation-6e71220ef64ca40a",
+    "requester_type": "active_cognitive_loop",
+    "result_id": "shared-local-model-result-1fd4b77e2953df47",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    },
+    "semantic_identity": "active-cognitive-ledger-request-6aa162e8a9f61012",
+    "session_reference": "active-cognitive-cycle-3e23e1ac90cc2790"
+  }
+}

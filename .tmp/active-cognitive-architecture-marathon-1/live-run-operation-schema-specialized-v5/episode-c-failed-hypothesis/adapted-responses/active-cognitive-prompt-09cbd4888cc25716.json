@@ -1,0 +1,19 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "c_initial_hypothesis_support",
+      "c_failed_hypothesis_contrary"
+    ],
+    "lesson": "The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts. However, contrary evidence suggests the previous claim of complete live cognition was incorrect, necessitating a revised hypothesis focusing on useful steps.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "The exact boundaries of what the runtime can prove live remain unclear.",
+    "unresolved_questions": [
+      "How can the runtime effectively incorporate live feedback to refine its hypotheses?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"The active cognition runtime can formulate and compare hypotheses about its own operations, and write learning artifacts. However, contrary evidence suggests the previous claim of complete live cognition was incorrect, necessitating a revised hypothesis focusing on useful steps.\",\"evidence_refs\":[\"c_initial_hypothesis_support\",\"c_failed_hypothesis_contrary\"],\"unresolved_questions\":[\"How can the runtime effectively incorporate live feedback to refine its hypotheses?\"],\"uncertainty\":\"The exact boundaries of what the runtime can prove live remain unclear.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "0bea2f0e13e476c3e87c47a7c99a24981d4b9dee67ff1d22be76f6d990ddc00c",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}
