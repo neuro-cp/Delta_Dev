@@ -1,0 +1,50 @@
+{
+  "related_reference_corrections": [
+    {
+      "correction_id": "conversation-correction-da6b4b04722703a0",
+      "correction_type": "misunderstood_meaning",
+      "evidence_refs": [
+        "conversation-turn-adae536dfcb581ef",
+        "conversation-turn-efca9ee0e1cbde76"
+      ],
+      "interpreted_issue": "Operator supplied a local meaning clarification.",
+      "lesson_scope": "active English-comprehension objective only",
+      "operator_text": "Related check: when I say that thing from before now, what should you inspect before answering?",
+      "overgeneralization_guard": "different term; unrelated topic; explicitly new context",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_turn_id": "conversation-turn-adae536dfcb581ef",
+      "target_turn_id": "conversation-turn-efca9ee0e1cbde76"
+    },
+    {
+      "correction_id": "conversation-correction-0c4f9f4e4c811abd",
+      "correction_type": "misunderstood_meaning",
+      "evidence_refs": [
+        "conversation-turn-50fef5d427b87fe5",
+        "conversation-turn-67bf0729f04ad219"
+      ],
+      "interpreted_issue": "Operator supplied a local meaning clarification.",
+      "lesson_scope": "active English-comprehension objective only",
+      "operator_text": "while you are thinking, when I say that thing from before, I usually mean the previous user message unless I switched topics.",
+      "overgeneralization_guard": "different term; unrelated topic; explicitly new context",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_turn_id": "conversation-turn-50fef5d427b87fe5",
+      "target_turn_id": "conversation-turn-67bf0729f04ad219"
+    },
+    {
+      "correction_id": "conversation-correction-1b9f248db94d443f",
+      "correction_type": "incorrect_contextual_interpretation",
+      "evidence_refs": [
+        "conversation-turn-1cdf02e29c3e8231",
+        "conversation-turn-4fe36e148ea64e23"
+      ],
+      "interpreted_issue": "Prior interpretation did not match operator intent.",
+      "lesson_scope": "active English-comprehension objective only",
+      "operator_text": "No, if I say that thing from before after switching topics, inspect the last user-mentioned object first.",
+      "overgeneralization_guard": "unrelated case; operator changes topic; insufficient similarity",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_turn_id": "conversation-turn-1cdf02e29c3e8231",
+      "target_turn_id": "conversation-turn-4fe36e148ea64e23"
+    }
+  ],
+  "style_transfer_tests_green": true
+}

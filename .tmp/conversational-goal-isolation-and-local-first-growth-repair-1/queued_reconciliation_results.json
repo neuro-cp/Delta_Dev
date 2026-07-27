@@ -1,0 +1,7 @@
+{
+  "covered_by_tests": [
+    "message_during_active_inference_is_acknowledged_and_preserved",
+    "goal_like_message_during_inference_is_queued_not_recompiled",
+    "pending_authority_reply_resolves_while_inference_busy"
+  ]
+}

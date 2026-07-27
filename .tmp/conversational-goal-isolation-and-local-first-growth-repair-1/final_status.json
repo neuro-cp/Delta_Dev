@@ -1,0 +1,9 @@
+{
+  "commit_ready": true,
+  "foreground_isolation_passed": true,
+  "goal_review_chat_output": true,
+  "live_rerun": "LIVE_GOVERNED_CAPABILITY_GROWTH_1_LOCAL_EVIDENCE_SUFFICIENT",
+  "local_qwen_status": "locally_sufficient",
+  "provider_calls": 0,
+  "repair_gate": "CONVERSATIONAL_GOAL_ISOLATION_AND_LOCAL_FIRST_GROWTH_REPAIR_1_PASSED"
+}

@@ -43,6 +43,20 @@ def _pump_until(root, predicate, timeout=3.0):
     assert predicate()
 
 
+def _add_local_insufficiency(app):
+    from orchestration.runtime.conversational_runtime_operation import record_local_semantic_attempt
+
+    app.conversational_runtime_state, evaluation = record_local_semantic_attempt(
+        app.conversational_runtime_state,
+        runtime_root=app.conversational_runtime_root,
+        target_gap="queued implied references across topic switches",
+        local_model="qwen-test",
+        local_prompt="Generate topic-switch counterexamples.",
+        raw_response="One vague reference note only.",
+    )
+    assert evaluation["status"] == "locally_insufficient"
+
+
 def test_default_surface_is_simple_and_advanced_is_inspectable(monkeypatch, tmp_path):
     root, app = _app(monkeypatch, tmp_path)
     try:
@@ -146,6 +160,84 @@ def test_goal_like_message_during_inference_is_queued_not_recompiled(monkeypatch
         assert app.conversational_runtime_state.conversation[-1].intent_type == "goal_or_priority_queued"
         transcript = app.chat_history.get("1.0", tk.END)
         assert "possible goal or priority update" in transcript
+    finally:
+        root.destroy()
+
+
+def test_provider_request_and_natural_approval_bind_inside_chat(monkeypatch, tmp_path):
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, ENGLISH_GOAL)
+        _pump_until(root, lambda: bool(app.conversational_runtime_state.completed_cycle_keys))
+        _add_local_insufficiency(app)
+
+        _send(app, "Please request a provider learning packet for implied references.")
+        assert app.conversational_runtime_state.pending_chat_requests
+        transcript = app.chat_history.get("1.0", tk.END)
+        assert "[Goal update · Language understanding]" in transcript
+        assert "Approve?" in transcript
+
+        _send(app, "Approve, but do not send my actual messages.")
+        assert app.conversational_runtime_state.pending_chat_requests == ()
+        assert len(app.conversational_runtime_state.provider_authorities) == 1
+        authority = app.conversational_runtime_state.provider_authorities[0]
+        assert authority["status"] == "authorized_not_executed"
+        assert "actual operator messages" in authority["prohibited_data"]
+    finally:
+        root.destroy()
+
+
+def test_pending_authority_reply_resolves_while_inference_busy(monkeypatch, tmp_path):
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, ENGLISH_GOAL)
+        _pump_until(root, lambda: bool(app.conversational_runtime_state.completed_cycle_keys))
+        _add_local_insufficiency(app)
+        _send(app, "Please request a provider learning packet for implied references.")
+        app.conversational_runtime_inference_in_flight = True
+
+        _send(app, "Use only one call.")
+
+        assert app.conversational_runtime_state.pending_chat_requests == ()
+        assert len(app.conversational_runtime_state.provider_authorities) == 1
+        assert app.conversational_runtime_state.provider_authorities[0]["max_calls"] == 1
+        assert app.conversational_runtime_state.conversation[-2].intent_type == "chat_request_resolution"
+    finally:
+        root.destroy()
+
+
+def test_pending_authority_denial_uses_chat_without_popup(monkeypatch, tmp_path):
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, ENGLISH_GOAL)
+        _pump_until(root, lambda: bool(app.conversational_runtime_state.completed_cycle_keys))
+        _add_local_insufficiency(app)
+        _send(app, "Please request a provider learning packet for implied references.")
+
+        _send(app, "No, continue locally.")
+
+        assert app.conversational_runtime_state.pending_chat_requests == ()
+        assert app.conversational_runtime_state.provider_authorities == ()
+        assert app.conversational_runtime_state.resolved_chat_requests[0].status == "denied"
+        transcript = app.chat_history.get("1.0", tk.END)
+        assert "continue the goal locally" in transcript
+    finally:
+        root.destroy()
+
+
+def test_goal_review_renders_in_chat(monkeypatch, tmp_path):
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, ENGLISH_GOAL)
+        _pump_until(root, lambda: bool(app.conversational_runtime_state.completed_cycle_keys))
+
+        _send(app, "review the active goal")
+
+        transcript = app.chat_history.get("1.0", tk.END)
+        assert "[Goal review" in transcript
+        assert "I retained:" in transcript
+        assert "Provider use:" in transcript
+        assert app.conversational_runtime_state.goal_reviews
     finally:
         root.destroy()
 

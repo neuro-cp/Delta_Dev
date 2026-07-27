@@ -1,0 +1,29 @@
+{
+  "local_evidence_sufficient": true,
+  "new_provider_call_performed": false,
+  "provider_authorities": [
+    {
+      "authority_effect": "provider_learning_packet_only",
+      "authority_id": "provider-authority-b2c72d83d1eb646d",
+      "consumed_call_count": 0,
+      "created_at": "2026-07-27T16:50:15+00:00",
+      "expires_condition": "after the bounded learning packet completes, budget is exhausted, operator revokes approval, or scope changes",
+      "max_calls": 1,
+      "max_spend_usd": 1.0,
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "permitted_data": [
+        "synthetic examples"
+      ],
+      "prohibited_data": [
+        "raw transcript export",
+        "credentials",
+        "protected paths",
+        "source mutation",
+        "actual operator messages"
+      ],
+      "provider": "openai",
+      "request_id": "chat-provider-request-28b46177608e757e",
+      "status": "authorized_not_executed"
+    }
+  ]
+}

@@ -99,10 +99,14 @@ from orchestration.runtime.conversational_runtime_operation import (  # noqa: E4
     apply_stop_or_redirect as apply_conversational_stop_or_redirect,
     chat_feature_settings_schema,
     classify_conversational_intent,
+    decide_turn_relation,
     evaluate_conversational_runtime,
     handle_conversational_message,
     infer_lesson_transfer,
     record_foreground_message_for_reconciliation,
+    render_goal_review,
+    request_provider_learning_packet,
+    resolve_pending_chat_request,
     run_background_objective_cycle as run_conversational_background_cycle,
     save_runtime_state as save_conversational_runtime_state,
     start_or_restore_runtime as start_or_restore_conversational_runtime,
@@ -5479,6 +5483,13 @@ class DeltaApp:
                 self.conversational_runtime_status.set(f"Chat runtime: safe pause after {type(error).__name__}")
                 continue
             self.conversational_runtime_state = self._merge_conversational_background_result(prior_state, worker_state)
+            if self.conversational_runtime_state.lifecycle_state == "paused_budget" and not self.conversational_runtime_state.goal_reviews:
+                self.conversational_runtime_state, review = render_goal_review(
+                    self.conversational_runtime_state,
+                    status="implementation_review_required",
+                )
+                self._append_chat("DELTA", review)
+                self._append_session("assistant", review)
             save_conversational_runtime_state(self.conversational_runtime_root, self.conversational_runtime_state)
             self._refresh_conversational_runtime_status()
         self.root.after(100, self._poll_conversational_runtime_worker_results)
@@ -5518,12 +5529,69 @@ class DeltaApp:
 
     def _handle_conversational_runtime_message(self, message: str) -> bool:
         state = self.conversational_runtime_state
+        resolved = resolve_pending_chat_request(
+            state,
+            message,
+            runtime_root=self.conversational_runtime_root,
+        )
+        if resolved is not None:
+            self.conversational_runtime_state = resolved.state
+            self._append_chat("DELTA", resolved.reply)
+            self._append_session("user", message)
+            self._append_session("assistant", resolved.reply)
+            self._refresh_conversational_runtime_status()
+            self._refresh_state_cards()
+            return True
+        lower_message = " ".join(message.lower().split())
+        if state.active_objective and any(term in lower_message for term in ("provider", "openai", "gpt", "external example", "outside example", "learning packet")) and any(term in lower_message for term in ("request", "ask", "recommend", "need", "use")):
+            result = request_provider_learning_packet(
+                state,
+                message,
+                runtime_root=self.conversational_runtime_root,
+            )
+            self.conversational_runtime_state = result.state
+            self._append_chat("DELTA", result.reply)
+            self._append_session("user", message)
+            self._append_session("assistant", result.reply)
+            self._refresh_conversational_runtime_status()
+            self._refresh_state_cards()
+            return True
+        if state.active_objective and "review" in lower_message and "goal" in lower_message:
+            self.conversational_runtime_state, review = render_goal_review(
+                state,
+                status="implementation_review_required" if state.lifecycle_state in {"paused_budget", "running"} else state.lifecycle_state,
+            )
+            save_conversational_runtime_state(self.conversational_runtime_root, self.conversational_runtime_state)
+            self._append_chat("DELTA", review)
+            self._append_session("user", message)
+            self._append_session("assistant", review)
+            self._refresh_conversational_runtime_status()
+            self._refresh_state_cards()
+            return True
         intent = classify_conversational_intent(
             message,
             active_objective=state.active_objective,
             recent_turns=state.conversation,
         )
-        transfer = infer_lesson_transfer(state, message) if state.active_objective else {"applied": False}
+        provisional_turn_id = f"ui-provisional-{len(state.conversation) + 1}"
+        relation = decide_turn_relation(state, message, turn_id=provisional_turn_id) if state.active_objective else None
+        transfer = infer_lesson_transfer(state, message, relation=relation) if state.active_objective else {"applied": False}
+        if relation and relation.relation_class == "unrelated_foreground_topic":
+            result = handle_conversational_message(
+                state,
+                message,
+                runtime_root=self.conversational_runtime_root,
+                run_background_cycle=False,
+            )
+            self.conversational_runtime_state = result.state
+            self._append_chat("DELTA", result.reply)
+            self._append_session("user", message)
+            self._append_session("assistant", result.reply)
+            self._refresh_conversational_runtime_status()
+            self._refresh_state_cards()
+            if state.active_objective and state.lifecycle_state == "running":
+                self._start_conversational_background_cycle("foreground_chat_yield")
+            return True
         if intent.intent_type not in {
             "persistent_or_session_goal",
             "direct_correction",

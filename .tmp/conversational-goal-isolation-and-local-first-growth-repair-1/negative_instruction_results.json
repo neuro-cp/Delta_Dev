@@ -1,0 +1,39 @@
+{
+  "negative_tokens_recorded": [
+    {
+      "active_goal_id": "conversational-objective-1892984d921a665c",
+      "confidence": 0.84,
+      "evidence": [
+        "factual_question_topic_not_active_goal"
+      ],
+      "foreground_topic": "angular_momentum",
+      "lesson_ids_applied": [],
+      "lesson_ids_considered": [
+        "conversation-lesson-1b60aa0ff4848024",
+        "conversation-lesson-a8e02426f265f0be",
+        "conversation-lesson-b9ad3eb51c1686a6",
+        "conversation-lesson-389e4e562ad58041",
+        "conversation-lesson-c112e91c364826ab",
+        "conversation-lesson-9055dd91529d8cfe"
+      ],
+      "lesson_ids_rejected": [
+        "conversation-lesson-1b60aa0ff4848024",
+        "conversation-lesson-a8e02426f265f0be",
+        "conversation-lesson-b9ad3eb51c1686a6",
+        "conversation-lesson-389e4e562ad58041",
+        "conversation-lesson-c112e91c364826ab",
+        "conversation-lesson-9055dd91529d8cfe"
+      ],
+      "negative_instruction_tokens": [
+        "do not use",
+        "unless it actually matters"
+      ],
+      "rejection_reason": "foreground_topic_is_unrelated_to_active_goal",
+      "relation_class": "unrelated_foreground_topic",
+      "routing_decision": "foreground_answer_without_goal_lesson",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "side_thread_request_id": "",
+      "turn_id": "conversation-turn-ee8ab0d0d42d36dd"
+    }
+  ]
+}

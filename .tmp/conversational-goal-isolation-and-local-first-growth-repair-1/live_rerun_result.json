@@ -1,0 +1,7 @@
+{
+  "foreground_normal": true,
+  "goal_review_visible": true,
+  "local_qwen_attempted": true,
+  "provider_request_suppressed_after_sufficient_qwen": true,
+  "status": "LIVE_GOVERNED_CAPABILITY_GROWTH_1_LOCAL_EVIDENCE_SUFFICIENT"
+}

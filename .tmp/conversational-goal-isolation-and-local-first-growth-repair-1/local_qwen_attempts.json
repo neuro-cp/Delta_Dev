@@ -1,0 +1,21 @@
+{
+  "evaluation": {
+    "checks": {
+      "counterexamples": true,
+      "example_diversity": true,
+      "negative_guard": false,
+      "queued_turn": true,
+      "relevance": true,
+      "topic_switch": true
+    },
+    "score": 5,
+    "status": "locally_sufficient",
+    "target_gap": "queued implied references across topic switches"
+  },
+  "insufficiencies": [],
+  "local_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "local_prompt": "Generate a compact synthetic-only packet for evaluating queued implied references across topic switches. Include examples, counterexamples, false-transfer guards, queued-turn handling, correction applicability, and ambiguity handling. Do not use actual operator messages.",
+  "local_raw_response": "{\"answer\":\"Compact synthetic-only packet for evaluating queued implied references across topic switches:\n\nExample: \n- Topic A: 'The cat is on the mat.'\n- Topic B: 'The dog is under the table.'\n- Topic C: 'The cat and the dog are friends.'\n- Topic D: 'The cat chased the dog.'\n\nQueued Implied References:\n- Topic A to Topic B: 'The cat' -> 'The dog'\n- Topic B to Topic C: 'The dog' -> 'The cat and the dog'\n- Topic C to Topic D: 'The cat and the dog' -> 'The cat chased the dog'\n\nCounterexamples:\n- Topic A to Topic C: 'The cat' -> 'The cat and the dog' (ambiguous)\n- Topic B to Topic D: 'The dog' -> 'The cat chased the dog' (false transfer)\n\nFalse-Transfer Guards:\n- Topic A to Topic D: 'The cat' -> 'The cat chased the dog' (incorrect, no direct relation)\n\nQueued-Turn Handling:\n- Topic A to Topic B: 'The cat' -> 'The dog' (correct)\n- Topic B to Topic C: 'The dog' -> 'The cat and the dog' (correct, implied reference)\n\nCorrection Applicability:\n- Topic A to Topic B: 'The cat' -> 'The dog' (applicable)\n- Topic B to Topic D: 'The dog' -> 'The cat chased the dog' (not applicable, no direct action)\n\nAmbiguity Handling:\n- Topic A to Topic C: 'The cat' -> 'The cat and the dog' (ambiguous, multiple possible subjects)\n\nThis packet provides a comprehensive evaluation of queued implied references across topic switches, covering examples, counterexamples, false-transfer guards, queued-turn handling, correction applicability, and ambiguity handling, without using actual operator messages.\",\"confidence\":1.0}",
+  "pending_chat_requests": [],
+  "provider_result_reply": "[Goal update \u00b7 Language understanding]\nI cannot ask for an external learning packet yet. I need to test local Qwen and existing local evidence first, then record an exact semantic insufficiency if that local evidence is not enough."
+}

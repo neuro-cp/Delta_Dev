@@ -1,0 +1,4 @@
+{
+  "no_duplicate_authority": true,
+  "queued_turns": "persist immediately; reconcile after current model operation; bind correction/goal/side-thread/ordinary/authority separately"
+}

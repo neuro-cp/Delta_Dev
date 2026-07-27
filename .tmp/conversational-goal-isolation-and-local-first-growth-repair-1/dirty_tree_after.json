@@ -1,0 +1,37 @@
+{
+  "status": [
+    "## codex/delta-cognitive-core...origin/codex/delta-cognitive-core",
+    " M DELTA.py",
+    " M orchestration/runtime/conversational_runtime_operation.py",
+    " M orchestration/runtime/live_competence_adapter.py",
+    " M tests/runtime_gsr/test_conversational_runtime_operation.py",
+    " M tests/runtime_gsr/test_conversational_runtime_ui.py",
+    "?? orchestration/runtime/cognitive_claim_relation_runtime.py",
+    "?? orchestration/runtime/cognitive_claim_relations.py",
+    "?? orchestration/runtime/cognitive_contradiction_evaluation.py",
+    "?? orchestration/runtime/cognitive_excluded_path_reconciliation.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relation_runtime.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relations.py",
+    "?? tests/runtime_gsr/test_cognitive_contradiction_evaluation.py",
+    "?? tests/runtime_gsr/test_cognitive_excluded_path_reconciliation.py"
+  ],
+  "diff_names": [
+    "DELTA.py",
+    "orchestration/runtime/conversational_runtime_operation.py",
+    "orchestration/runtime/live_competence_adapter.py",
+    "tests/runtime_gsr/test_conversational_runtime_operation.py",
+    "tests/runtime_gsr/test_conversational_runtime_ui.py"
+  ],
+  "untracked": [
+    "orchestration/runtime/cognitive_claim_relation_runtime.py",
+    "orchestration/runtime/cognitive_claim_relations.py",
+    "orchestration/runtime/cognitive_contradiction_evaluation.py",
+    "orchestration/runtime/cognitive_excluded_path_reconciliation.py",
+    "tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py",
+    "tests/runtime_gsr/test_cognitive_claim_relation_runtime.py",
+    "tests/runtime_gsr/test_cognitive_claim_relations.py",
+    "tests/runtime_gsr/test_cognitive_contradiction_evaluation.py",
+    "tests/runtime_gsr/test_cognitive_excluded_path_reconciliation.py"
+  ]
+}

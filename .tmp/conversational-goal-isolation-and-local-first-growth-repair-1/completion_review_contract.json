@@ -1,0 +1,12 @@
+{
+  "must_distinguish_authority_from_retained_lessons": true,
+  "sections": [
+    "I completed",
+    "I learned",
+    "I retained",
+    "I rejected",
+    "Still unresolved",
+    "Provider use",
+    "Next recommended step"
+  ]
+}

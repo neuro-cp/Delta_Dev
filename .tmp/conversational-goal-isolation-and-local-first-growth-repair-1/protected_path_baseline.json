@@ -1,0 +1,8 @@
+{
+  "live_adapter_dirty": true,
+  "protected": [
+    "DELTA-75",
+    "reports/RC4_*",
+    "orchestration/runtime/live_competence_adapter.py"
+  ]
+}

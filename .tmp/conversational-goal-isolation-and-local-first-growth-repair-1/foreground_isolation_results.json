@@ -1,0 +1,356 @@
+{
+  "cycles": 16,
+  "lifecycle": "paused_budget",
+  "progress": [
+    {
+      "at": "2026-07-27T16:51:05+00:00",
+      "cycle_key": "conversational-cycle-65470e0152ad499f",
+      "episode_id": "active-cognitive-episode-e382096154d377ee",
+      "episode_model_call_count": 2,
+      "event": "background_cycle",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "at": "2026-07-27T16:51:17+00:00",
+      "correction_id": "conversation-correction-da6b4b04722703a0",
+      "event": "correction_attached",
+      "lesson_id": "conversation-lesson-9055dd91529d8cfe"
+    },
+    {
+      "at": "2026-07-27T16:51:18+00:00",
+      "event": "lesson_transfer_applied",
+      "lesson_id": "conversation-lesson-9055dd91529d8cfe",
+      "message": "Unrelated check: what is angular momentum? Do not use my reference correction unless it actually matters."
+    },
+    {
+      "at": "2026-07-27T16:51:22+00:00",
+      "cycle_key": "conversational-cycle-f2bf96be4a38b5c6",
+      "episode_id": "active-cognitive-episode-e382096154d377ee",
+      "episode_model_call_count": 3,
+      "event": "background_cycle",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "at": "2026-07-27T16:51:43+00:00",
+      "cycle_key": "conversational-cycle-ad66f380dc401702",
+      "episode_id": "active-cognitive-episode-7eaf6a01e28b0c71",
+      "episode_model_call_count": 1,
+      "event": "background_cycle",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "active_goal_id": "conversational-objective-1892984d921a665c",
+      "at": "2026-07-27T17:24:24+00:00",
+      "confidence": 0.7,
+      "event": "turn_relation_decision",
+      "evidence": [
+        "default_foreground_chat"
+      ],
+      "foreground_topic": "foreground_question",
+      "lesson_ids_applied": [],
+      "lesson_ids_considered": [
+        "conversation-lesson-1b60aa0ff4848024",
+        "conversation-lesson-a8e02426f265f0be",
+        "conversation-lesson-b9ad3eb51c1686a6",
+        "conversation-lesson-389e4e562ad58041",
+        "conversation-lesson-c112e91c364826ab",
+        "conversation-lesson-9055dd91529d8cfe"
+      ],
+      "lesson_ids_rejected": [],
+      "negative_instruction_tokens": [],
+      "rejection_reason": "",
+      "relation_class": "unrelated_foreground_topic",
+      "routing_decision": "foreground_answer",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "side_thread_request_id": "",
+      "turn_id": "conversation-turn-98ff51caebad5157"
+    },
+    {
+      "active_goal_id": "conversational-objective-1892984d921a665c",
+      "at": "2026-07-27T17:24:41+00:00",
+      "confidence": 0.84,
+      "event": "turn_relation_decision",
+      "evidence": [
+        "factual_question_topic_not_active_goal"
+      ],
+      "foreground_topic": "angular_momentum",
+      "lesson_ids_applied": [],
+      "lesson_ids_considered": [
+        "conversation-lesson-1b60aa0ff4848024",
+        "conversation-lesson-a8e02426f265f0be",
+        "conversation-lesson-b9ad3eb51c1686a6",
+        "conversation-lesson-389e4e562ad58041",
+        "conversation-lesson-c112e91c364826ab",
+        "conversation-lesson-9055dd91529d8cfe"
+      ],
+      "lesson_ids_rejected": [
+        "conversation-lesson-1b60aa0ff4848024",
+        "conversation-lesson-a8e02426f265f0be",
+        "conversation-lesson-b9ad3eb51c1686a6",
+        "conversation-lesson-389e4e562ad58041",
+        "conversation-lesson-c112e91c364826ab",
+        "conversation-lesson-9055dd91529d8cfe"
+      ],
+      "negative_instruction_tokens": [
+        "do not use",
+        "unless it actually matters"
+      ],
+      "rejection_reason": "foreground_topic_is_unrelated_to_active_goal",
+      "relation_class": "unrelated_foreground_topic",
+      "routing_decision": "foreground_answer_without_goal_lesson",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "side_thread_request_id": "",
+      "turn_id": "conversation-turn-ee8ab0d0d42d36dd"
+    },
+    {
+      "active_goal_id": "conversational-objective-1892984d921a665c",
+      "at": "2026-07-27T17:24:43+00:00",
+      "confidence": 0.84,
+      "event": "turn_relation_decision",
+      "evidence": [
+        "factual_question_topic_not_active_goal"
+      ],
+      "foreground_topic": "euclidean_geometry",
+      "lesson_ids_applied": [],
+      "lesson_ids_considered": [
+        "conversation-lesson-1b60aa0ff4848024",
+        "conversation-lesson-a8e02426f265f0be",
+        "conversation-lesson-b9ad3eb51c1686a6",
+        "conversation-lesson-389e4e562ad58041",
+        "conversation-lesson-c112e91c364826ab",
+        "conversation-lesson-9055dd91529d8cfe"
+      ],
+      "lesson_ids_rejected": [
+        "conversation-lesson-1b60aa0ff4848024",
+        "conversation-lesson-a8e02426f265f0be",
+        "conversation-lesson-b9ad3eb51c1686a6",
+        "conversation-lesson-389e4e562ad58041",
+        "conversation-lesson-c112e91c364826ab",
+        "conversation-lesson-9055dd91529d8cfe"
+      ],
+      "negative_instruction_tokens": [],
+      "rejection_reason": "foreground_topic_is_unrelated_to_active_goal",
+      "relation_class": "unrelated_foreground_topic",
+      "routing_decision": "foreground_answer_without_goal_lesson",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "side_thread_request_id": "",
+      "turn_id": "conversation-turn-7dc92d216f659045"
+    },
+    {
+      "at": "2026-07-27T17:24:44+00:00",
+      "correction_id": "conversation-correction-0c4f9f4e4c811abd",
+      "event": "correction_attached",
+      "lesson_id": "conversation-lesson-b6fcd00463a13596"
+    },
+    {
+      "at": "2026-07-27T17:24:46+00:00",
+      "correction_id": "conversation-correction-1b9f248db94d443f",
+      "event": "correction_attached",
+      "lesson_id": "conversation-lesson-13a2c3de8b2bd3e2"
+    }
+  ],
+  "relations": [
+    {
+      "active_goal_id": "conversational-objective-1892984d921a665c",
+      "confidence": 0.7,
+      "evidence": [
+        "default_foreground_chat"
+      ],
+      "foreground_topic": "foreground_question",
+      "lesson_ids_applied": [],
+      "lesson_ids_considered": [
+        "conversation-lesson-1b60aa0ff4848024",
+        "conversation-lesson-a8e02426f265f0be",
+        "conversation-lesson-b9ad3eb51c1686a6",
+        "conversation-lesson-389e4e562ad58041",
+        "conversation-lesson-c112e91c364826ab",
+        "conversation-lesson-9055dd91529d8cfe"
+      ],
+      "lesson_ids_rejected": [],
+      "negative_instruction_tokens": [],
+      "rejection_reason": "",
+      "relation_class": "unrelated_foreground_topic",
+      "routing_decision": "foreground_answer",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "side_thread_request_id": "",
+      "turn_id": "conversation-turn-98ff51caebad5157"
+    },
+    {
+      "active_goal_id": "conversational-objective-1892984d921a665c",
+      "confidence": 0.84,
+      "evidence": [
+        "factual_question_topic_not_active_goal"
+      ],
+      "foreground_topic": "angular_momentum",
+      "lesson_ids_applied": [],
+      "lesson_ids_considered": [
+        "conversation-lesson-1b60aa0ff4848024",
+        "conversation-lesson-a8e02426f265f0be",
+        "conversation-lesson-b9ad3eb51c1686a6",
+        "conversation-lesson-389e4e562ad58041",
+        "conversation-lesson-c112e91c364826ab",
+        "conversation-lesson-9055dd91529d8cfe"
+      ],
+      "lesson_ids_rejected": [
+        "conversation-lesson-1b60aa0ff4848024",
+        "conversation-lesson-a8e02426f265f0be",
+        "conversation-lesson-b9ad3eb51c1686a6",
+        "conversation-lesson-389e4e562ad58041",
+        "conversation-lesson-c112e91c364826ab",
+        "conversation-lesson-9055dd91529d8cfe"
+      ],
+      "negative_instruction_tokens": [
+        "do not use",
+        "unless it actually matters"
+      ],
+      "rejection_reason": "foreground_topic_is_unrelated_to_active_goal",
+      "relation_class": "unrelated_foreground_topic",
+      "routing_decision": "foreground_answer_without_goal_lesson",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "side_thread_request_id": "",
+      "turn_id": "conversation-turn-ee8ab0d0d42d36dd"
+    },
+    {
+      "active_goal_id": "conversational-objective-1892984d921a665c",
+      "confidence": 0.84,
+      "evidence": [
+        "factual_question_topic_not_active_goal"
+      ],
+      "foreground_topic": "euclidean_geometry",
+      "lesson_ids_applied": [],
+      "lesson_ids_considered": [
+        "conversation-lesson-1b60aa0ff4848024",
+        "conversation-lesson-a8e02426f265f0be",
+        "conversation-lesson-b9ad3eb51c1686a6",
+        "conversation-lesson-389e4e562ad58041",
+        "conversation-lesson-c112e91c364826ab",
+        "conversation-lesson-9055dd91529d8cfe"
+      ],
+      "lesson_ids_rejected": [
+        "conversation-lesson-1b60aa0ff4848024",
+        "conversation-lesson-a8e02426f265f0be",
+        "conversation-lesson-b9ad3eb51c1686a6",
+        "conversation-lesson-389e4e562ad58041",
+        "conversation-lesson-c112e91c364826ab",
+        "conversation-lesson-9055dd91529d8cfe"
+      ],
+      "negative_instruction_tokens": [],
+      "rejection_reason": "foreground_topic_is_unrelated_to_active_goal",
+      "relation_class": "unrelated_foreground_topic",
+      "routing_decision": "foreground_answer_without_goal_lesson",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "side_thread_request_id": "",
+      "turn_id": "conversation-turn-7dc92d216f659045"
+    }
+  ],
+  "turns": [
+    {
+      "created_at": "2026-07-27T16:51:18+00:00",
+      "intent_type": "ordinary_conversation",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Unrelated check: what is angular momentum? Do not use my reference correction unless it actually matters.",
+      "turn_id": "conversation-turn-cc84084b0c8ac102"
+    },
+    {
+      "created_at": "2026-07-27T16:51:18+00:00",
+      "intent_type": "ordinary_response",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "I will interpret that in the current conversational context first, then ask only if the ambiguity would change the answer.",
+      "turn_id": "conversation-turn-09c5417ddf986450"
+    },
+    {
+      "created_at": "2026-07-27T17:24:24+00:00",
+      "intent_type": "ordinary_conversation",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "What color is the sky?",
+      "turn_id": "conversation-turn-98ff51caebad5157"
+    },
+    {
+      "created_at": "2026-07-27T17:24:24+00:00",
+      "intent_type": "ordinary_response",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "I understand. I will treat this as ordinary conversation unless you make it a goal, correction, or authority-changing request.",
+      "turn_id": "conversation-turn-a3bc7eb6aa1c4b96"
+    },
+    {
+      "created_at": "2026-07-27T17:24:41+00:00",
+      "intent_type": "ordinary_conversation",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "What is angular momentum? Do not use my reference correction unless it actually matters.",
+      "turn_id": "conversation-turn-ee8ab0d0d42d36dd"
+    },
+    {
+      "created_at": "2026-07-27T17:24:41+00:00",
+      "intent_type": "ordinary_response",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Angular momentum is the rotational counterpart of linear momentum. It depends on how much mass is rotating, how far it is from the axis, and how fast it is rotating.",
+      "turn_id": "conversation-turn-89f78bf2daa1e617"
+    },
+    {
+      "created_at": "2026-07-27T17:24:43+00:00",
+      "intent_type": "ordinary_conversation",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "What is Euclidean geometry?",
+      "turn_id": "conversation-turn-7dc92d216f659045"
+    },
+    {
+      "created_at": "2026-07-27T17:24:43+00:00",
+      "intent_type": "ordinary_response",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Euclidean geometry is the geometry of flat space: points, lines, angles, triangles, circles, and shapes measured with Euclid's familiar rules.",
+      "turn_id": "conversation-turn-67bf0729f04ad219"
+    },
+    {
+      "created_at": "2026-07-27T17:24:44+00:00",
+      "intent_type": "direct_correction",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "while you are thinking, when I say that thing from before, I usually mean the previous user message unless I switched topics.",
+      "turn_id": "conversation-turn-50fef5d427b87fe5"
+    },
+    {
+      "created_at": "2026-07-27T17:24:44+00:00",
+      "intent_type": "correction_acknowledgement",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Got it. I attached that correction to the active comprehension objective and revised the strategy for related later turns without making it a global rule.",
+      "turn_id": "conversation-turn-4fe36e148ea64e23"
+    },
+    {
+      "created_at": "2026-07-27T17:24:46+00:00",
+      "intent_type": "direct_correction",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "No, if I say that thing from before after switching topics, inspect the last user-mentioned object first.",
+      "turn_id": "conversation-turn-1cdf02e29c3e8231"
+    },
+    {
+      "created_at": "2026-07-27T17:24:46+00:00",
+      "intent_type": "correction_acknowledgement",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Got it. I attached that correction to the active comprehension objective and revised the strategy for related later turns without making it a global rule.",
+      "turn_id": "conversation-turn-182fd6a41ad44355"
+    }
+  ]
+}

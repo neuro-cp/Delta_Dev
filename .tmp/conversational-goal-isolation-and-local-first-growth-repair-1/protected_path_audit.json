@@ -1,0 +1,11 @@
+{
+  "protected": [
+    "DELTA-75",
+    "reports/RC4_*",
+    "orchestration/runtime/live_competence_adapter.py"
+  ],
+  "protected_changed_before_stage": [
+    "orchestration/runtime/live_competence_adapter.py"
+  ],
+  "will_not_stage_protected": true
+}

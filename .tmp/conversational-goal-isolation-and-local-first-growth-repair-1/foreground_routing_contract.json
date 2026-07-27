@@ -1,0 +1,22 @@
+{
+  "relation_classes": [
+    "active_goal_related",
+    "side_thread_reply",
+    "unrelated_foreground_topic"
+  ],
+  "required_fields": [
+    "turn_id",
+    "foreground_topic",
+    "active_goal_id",
+    "relation_class",
+    "evidence",
+    "confidence",
+    "negative_instruction_tokens",
+    "side_thread_request_id",
+    "routing_decision",
+    "lesson_ids_considered",
+    "lesson_ids_applied",
+    "lesson_ids_rejected",
+    "rejection_reason"
+  ]
+}

@@ -1,0 +1,1022 @@
+[
+  {
+    "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+    "availability_state": "available",
+    "execution_completed_at": "2026-07-27T16:50:11+00:00",
+    "execution_started_at": "2026-07-27T16:49:52+00:00",
+    "failure_classification": "",
+    "failure_detail": "",
+    "latency_seconds": 18.8871,
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "provenance": {
+      "execution_claim_id": "shared-local-model-execution-claim-4195b348f581f189",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      }
+    },
+    "request_id": "shared-local-model-request-7bb9dbf900c7503c",
+    "response_digest": "265047f8e9b96e782d33fc5583c6e062118756b21844f35316a20aa7ef9498a7",
+    "response_reference": "{ \"lesson\": \"Understanding of implied references, queued messages, informal phrasing, and context across turns will improve with corrections and transfer checks.\", \"evidence_refs\": [ \"operator-natural-goal\" ], \"unresolved_questions\": [ \"How can we ensure consistent improvement in the operator's comprehension?\" ], \"uncertainty\": \"Need more data to fully assess the effectiveness of the current strategy.\", \"recommended_state_transition\": \"summarize_learning\" }",
+    "result_digest": "1ac02c9142cff28f1ee44791b9a4f59e8e6c62529e145e99d1a39219aab3f7af",
+    "result_id": "shared-local-model-result-018b51d6508a5b58",
+    "terminal_state": "completed"
+  },
+  {
+    "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+    "availability_state": "available",
+    "execution_completed_at": "2026-07-27T16:32:30+00:00",
+    "execution_started_at": "2026-07-27T16:31:57+00:00",
+    "failure_classification": "",
+    "failure_detail": "",
+    "latency_seconds": 32.8304,
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "provenance": {
+      "execution_claim_id": "shared-local-model-execution-claim-726b65bfb3fd6602",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      }
+    },
+    "request_id": "shared-local-model-request-35d88211455f02f4",
+    "response_digest": "333d0171cdbe27e0371e6ac4368f0286f65340ca813af6b42af11dd6ad1518be",
+    "response_reference": "{\"assumptions\":[\"Operators are familiar with general English conversation structure\",\"Operators may have varying levels of English fluency\"],\"contrary_evidence_considered\":[],\"evidence_refs\":[\"prior-conversational-episode-6\"],\"interpretation\":\"Operators may misunderstand specific English phrases due to lack of context or familiarity. This hypothesis is plausible and needs challenge.\",\"next_evidence_need\":\"local evidence supporting or challenging the hypothesis\",\"next_focus_proposal\":\"Continue correction-linked comprehension practice without duplicating prior completed episode work.\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"Continue correction-linked comprehension practice without duplicating prior completed episode work.\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"Specific phrases and contexts that lead to misunderstandings are unresolved.\"}",
+    "result_digest": "2600b871c395a407171d50a67cfa63707c4c95c8bb4ad725e7e3d50570909335",
+    "result_id": "shared-local-model-result-0f4324f00c17adab",
+    "terminal_state": "completed"
+  },
+  {
+    "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+    "availability_state": "available",
+    "execution_completed_at": "2026-07-27T16:51:22+00:00",
+    "execution_started_at": "2026-07-27T16:51:05+00:00",
+    "failure_classification": "",
+    "failure_detail": "",
+    "latency_seconds": 16.9214,
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "provenance": {
+      "execution_claim_id": "shared-local-model-execution-claim-3b5a48f2a4a47b8c",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      }
+    },
+    "request_id": "shared-local-model-request-423b8012ecf3c7bd",
+    "response_digest": "b4bc9709d4f2d92aa57f33e383b1f24ef36aaf2eb71949188bb8ebd69a57bb1a",
+    "response_reference": "{\"lesson\":\"Operators may misunderstand the 'verify' command in system status checks.\",\"evidence_refs\":[\"prior-conversational-episode-12\"],\"unresolved_questions\":[\"How can we ensure operators correctly understand 'verify' in system status checks?\"],\"uncertainty\":\"Uncertainty remains regarding the specific misunderstandings and effective corrective measures.\",\"recommended_state_transition\":\"summarize_learning\"}",
+    "result_digest": "ebb608a3d145199521b563eb0e3ecd0735e2078cacb42319d6d37b83d69b5689",
+    "result_id": "shared-local-model-result-1ad48bfa050248fc",
+    "terminal_state": "completed"
+  },
+  {
+    "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+    "availability_state": "available",
+    "execution_completed_at": "2026-07-27T16:51:43+00:00",
+    "execution_started_at": "2026-07-27T16:51:22+00:00",
+    "failure_classification": "",
+    "failure_detail": "",
+    "latency_seconds": 21.195,
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "provenance": {
+      "execution_claim_id": "shared-local-model-execution-claim-83caab7024544ddd",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      }
+    },
+    "request_id": "shared-local-model-request-b730bf4e4a2df639",
+    "response_digest": "0b405b8d7c197eaed04c3c612c82011d13d3c54d96c37823cd445d48c01d7313",
+    "response_reference": "{\"hypothesis_statement\":\"Operators may misunderstand specific technical terms during conversations.\",\"scope\":\"Technical terms in operator-specific communication.\",\"supporting_evidence_refs\":[\"prior-conversational-episode-15\"],\"assumptions\":[\"Operators have a limited vocabulary of technical terms.\",\"Technical terms are frequently used in operator-specific communication.\"],\"expected_observations\":[\"Operators will use technical terms incorrectly or incompletely.\",\"Operators will request clarification on technical terms.\"],\"uncertainty\":\"The specific terms and frequency of misunderstanding are not yet clear.\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+    "result_digest": "0891d4b808bf12a2cce74a853953db451900175e8cc6008d22cddea8dab2e3e1",
+    "result_id": "shared-local-model-result-1d79b76218436733",
+    "terminal_state": "completed"
+  },
+  {
+    "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+    "availability_state": "available",
+    "execution_completed_at": "2026-07-27T16:50:35+00:00",
+    "execution_started_at": "2026-07-27T16:50:12+00:00",
+    "failure_classification": "",
+    "failure_detail": "",
+    "latency_seconds": 22.9615,
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "provenance": {
+      "execution_claim_id": "shared-local-model-execution-claim-c4467166357e5560",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      }
+    },
+    "request_id": "shared-local-model-request-b1a63d60f531a787",
+    "response_digest": "b8e8dfb365221c7a832c7641bf636caf1d8b6c3e5d1659907573158b377774cd",
+    "response_reference": "{\"hypothesis_statement\":\"Operators will misunderstand the command 'verify' in the context of a system status check.\",\"scope\":\"Command verification during system status checks\",\"supporting_evidence_refs\":[\"prior-conversational-episode-12\"],\"assumptions\":[\"Operators are familiar with the command 'verify' in other contexts\"],\"expected_observations\":[\"Operators might interpret 'verify' as 'validate' or 'confirm'\"],\"uncertainty\":\"Whether the misinterpretation will occur in the specific context of system status checks\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+    "result_digest": "eee2dfe1dcd178f027468dd6952ed7822b2e8fc235bf6f51f71cda1366ca5f65",
+    "result_id": "shared-local-model-result-4a2672527ede9f40",
+    "terminal_state": "completed"
+  },
+  {
+    "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+    "availability_state": "available",
+    "execution_completed_at": "2026-07-27T16:49:09+00:00",
+    "execution_started_at": "2026-07-27T16:48:34+00:00",
+    "failure_classification": "",
+    "failure_detail": "",
+    "latency_seconds": 34.3171,
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "provenance": {
+      "execution_claim_id": "shared-local-model-execution-claim-9f4b046e8db5456d",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      }
+    },
+    "request_id": "shared-local-model-request-29f0abaf8d78a839",
+    "response_digest": "1397097626a13c27f5262e21288aefa87e4b2d699d906bd66c1c675ed89fd4bc",
+    "response_reference": "{\n\n\"hypothesis_statement\":\"Understanding of implied references, queued messages, informal phrasing, and context across turns will improve with corrections and transfer checks.\",\n\"scope\":\"Operator-specific English comprehension during conversation\",\n\"supporting_evidence_refs\":[\"operator-natural-goal\"],\n\"assumptions\":[\"Corrections are effective for learning new language features.\",\n\"Context and turn-based communication are key to understanding.\",\n\"Repetition and transfer of learned concepts are beneficial for retention.\"],\n\"expected_observations\":[\"Increased ability to understand implied references.\",\n\"Better handling of queued messages.\",\n\"Improved comprehension of informal phrasing.\",\n\"Enhanced understanding of context across turns.\"],\n\"uncertainty\":\"Whether the specific strategies employed will fully address the observed gaps in comprehension.\",\n\"recommended_state_transition\":\"propose_hypothesis\"\n}",
+    "result_digest": "a4086c04c8faefeb17ffc9ec47417413b21268aef7d111f57bbd066a411ef83d",
+    "result_id": "shared-local-model-result-619e36dbdff59921",
+    "terminal_state": "completed"
+  },
+  {
+    "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+    "availability_state": "available",
+    "execution_completed_at": "2026-07-27T16:33:06+00:00",
+    "execution_started_at": "2026-07-27T16:32:47+00:00",
+    "failure_classification": "",
+    "failure_detail": "",
+    "latency_seconds": 18.5318,
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "provenance": {
+      "execution_claim_id": "shared-local-model-execution-claim-812e910f4b978d54",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      }
+    },
+    "request_id": "shared-local-model-request-cdfa0326f519a16e",
+    "response_digest": "e0a9a4405709fea8e3a69344a7545577a421b1297c9bb47a80ffa3cd55cd8c4c",
+    "response_reference": "{\"hypothesis_statement\":\"Operators may misunderstand specific English phrases related to equipment operation.\",\"scope\":\"Equipment operation instructions and procedures\",\"supporting_evidence_refs\":[\"prior-conversational-episode-9\"],\"assumptions\":[\"Operators are familiar with basic English grammar and vocabulary\"],\"expected_observations\":[\"Operators will have difficulty understanding certain technical terms and phrases\"],\"uncertainty\":\"Whether specific phrases will cause consistent misunderstandings\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+    "result_digest": "79430b7f18f6aa5e8adb794eacdac653bc4e0bd99fc4f59ea3bc4119a5848c76",
+    "result_id": "shared-local-model-result-6488d7d487c47900",
+    "terminal_state": "completed"
+  },
+  {
+    "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+    "availability_state": "available",
+    "execution_completed_at": "2026-07-27T16:29:13+00:00",
+    "execution_started_at": "2026-07-27T16:28:37+00:00",
+    "failure_classification": "",
+    "failure_detail": "",
+    "latency_seconds": 36.2907,
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "provenance": {
+      "execution_claim_id": "shared-local-model-execution-claim-cd522bdf587bf929",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      }
+    },
+    "request_id": "shared-local-model-request-365ba79cc5123084",
+    "response_digest": "1397097626a13c27f5262e21288aefa87e4b2d699d906bd66c1c675ed89fd4bc",
+    "response_reference": "{\n\n\"hypothesis_statement\":\"Understanding of implied references, queued messages, informal phrasing, and context across turns will improve with corrections and transfer checks.\",\n\"scope\":\"Operator-specific English comprehension during conversation\",\n\"supporting_evidence_refs\":[\"operator-natural-goal\"],\n\"assumptions\":[\"Corrections are effective for learning new language features.\",\n\"Context and turn-based communication are key to understanding.\",\n\"Repetition and transfer of learned concepts are beneficial for retention.\"],\n\"expected_observations\":[\"Increased ability to understand implied references.\",\n\"Better handling of queued messages.\",\n\"Improved comprehension of informal phrasing.\",\n\"Enhanced understanding of context across turns.\"],\n\"uncertainty\":\"Whether the specific strategies employed will fully address the observed gaps in comprehension.\",\n\"recommended_state_transition\":\"propose_hypothesis\"\n}",
+    "result_digest": "d710ac55c578370665f1e1e039f9373bc34a02c67ddb182223f0c3f688956673",
+    "result_id": "shared-local-model-result-7116c700cfaf45f2",
+    "terminal_state": "completed"
+  },
+  {
+    "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+    "availability_state": "available",
+    "execution_completed_at": "2026-07-27T16:31:15+00:00",
+    "execution_started_at": "2026-07-27T16:30:44+00:00",
+    "failure_classification": "",
+    "failure_detail": "",
+    "latency_seconds": 31.6998,
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "provenance": {
+      "execution_claim_id": "shared-local-model-execution-claim-2ed0b6e81e89fd35",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      }
+    },
+    "request_id": "shared-local-model-request-93fcdee30a441b41",
+    "response_digest": "3fb5e8a4ba48684b5e40a6c2220f9f636108fae03f2c2cbcccb4851fcb1fa495",
+    "response_reference": "{\"assumptions\":[\"Operators can benefit from contextual information.\",\"Contextual information can improve understanding.\"],\"contrary_evidence_considered\":[],\"evidence_refs\":[\"prior-conversational-episode-3\"],\"interpretation\":\"Operators will understand corrections better if given in context of prior conversation.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"Continue correction-linked comprehension practice without duplicating prior completed episode work.\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"How much context is necessary for optimal understanding?\"}",
+    "result_digest": "860329cf52921f199b362d1c23e3882618c13e0b79f8f0a22d6b41828dd6a5ca",
+    "result_id": "shared-local-model-result-73e8b92cd0c261d7",
+    "terminal_state": "completed"
+  },
+  {
+    "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+    "availability_state": "available",
+    "execution_completed_at": "2026-07-27T16:31:57+00:00",
+    "execution_started_at": "2026-07-27T16:31:35+00:00",
+    "failure_classification": "",
+    "failure_detail": "",
+    "latency_seconds": 21.712,
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "provenance": {
+      "execution_claim_id": "shared-local-model-execution-claim-7d94ddf00a3ec6c2",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      }
+    },
+    "request_id": "shared-local-model-request-4df12eb3bd8fea44",
+    "response_digest": "5d1bbd0114638a4690a0d3a3cad3addcc6edec4a9f653cdd32e0f6a2bf67c66c",
+    "response_reference": "{\"hypothesis_statement\":\"Operators may misunderstand specific English phrases due to lack of context or familiarity.\",\"scope\":\"English language comprehension during operator conversations\",\"supporting_evidence_refs\":[\"prior-conversational-episode-6\"],\"assumptions\":[\"Operators are familiar with general English conversation structure\",\"Operators may have varying levels of English fluency\"],\"expected_observations\":[\"Operators might misinterpret certain phrases\",\"Clarifications might resolve misunderstandings\"],\"uncertainty\":\"The specific phrases causing confusion are not yet identified.\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+    "result_digest": "8117fc72d1909bdd48a8ae72574871a9c5de9392e1ec11170825c3ddceb1967d",
+    "result_id": "shared-local-model-result-874bd050474dba6f",
+    "terminal_state": "completed"
+  },
+  {
+    "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+    "availability_state": "available",
+    "execution_completed_at": "2026-07-27T16:49:51+00:00",
+    "execution_started_at": "2026-07-27T16:49:09+00:00",
+    "failure_classification": "",
+    "failure_detail": "",
+    "latency_seconds": 41.4666,
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "provenance": {
+      "execution_claim_id": "shared-local-model-execution-claim-e0c1827294b2323e",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      }
+    },
+    "request_id": "shared-local-model-request-2af8891c7b03d1b9",
+    "response_digest": "8fcde845b9842bd2fda17618a175a61894f765dbe5e7feff73a97ed219ed3138",
+    "response_reference": "{\"assumptions\":[\"Corrections are effective for learning new language features.\",\"Context and turn-based communication are key to understanding.\",\"Repetition and transfer of learned concepts are beneficial for retention.\"],\"contrary_evidence_considered\":[],\"evidence_refs\":[\"operator-natural-goal\"],\"interpretation\":\"Understanding of implied references, queued messages, informal phrasing, and context across turns will improve with corrections and transfer checks. This hypothesis is supported by the natural goal of improving communication effectiveness. There is no conflicting evidence to consider.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"Perform formulate_hypothesis for the active focus using only referenced evidence.\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"How effective are corrections in long-term retention and transfer of learned concepts?\"}",
+    "result_digest": "6007cca170df36eb1969eb7d5287d3c667e943dfda92ef37f3753f2ed30ac4a1",
+    "result_id": "shared-local-model-result-8babca8bf4e2a54f",
+    "terminal_state": "completed"
+  },
+  {
+    "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+    "availability_state": "available",
+    "execution_completed_at": "2026-07-27T16:51:05+00:00",
+    "execution_started_at": "2026-07-27T16:50:37+00:00",
+    "failure_classification": "",
+    "failure_detail": "",
+    "latency_seconds": 27.9769,
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "provenance": {
+      "execution_claim_id": "shared-local-model-execution-claim-d2927cc4980391a1",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      }
+    },
+    "request_id": "shared-local-model-request-890f7fb5b7344c8a",
+    "response_digest": "12f8228aa719cf45abaf61fd3da35648c15ba133db1e415a3b5e19275a0cd737",
+    "response_reference": "{\"assumptions\":[\"Operators are familiar with the command 'verify' in other contexts\"],\"contrary_evidence_considered\":[],\"evidence_refs\":[\"prior-conversational-episode-12\"],\"interpretation\":\"The prior episode supports the hypothesis that operators will misunderstand the command 'verify' in the context of a system status check.\",\"next_evidence_need\":\"local evidence supporting or challenging the hypothesis\",\"next_focus_proposal\":\"Continue correction-linked comprehension practice without duplicating prior completed episode work.\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"Continue correction-linked comprehension practice without duplicating prior completed episode work.\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"The exact nature of the misunderstanding remains unresolved.\"}",
+    "result_digest": "9d3f38c8d3672610192ab60db933d66e87896ac032e2f89f7a04f24a25f0a650",
+    "result_id": "shared-local-model-result-907d0f9f9d0d2578",
+    "terminal_state": "completed"
+  },
+  {
+    "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+    "availability_state": "available",
+    "execution_completed_at": "2026-07-27T16:30:21+00:00",
+    "execution_started_at": "2026-07-27T16:29:54+00:00",
+    "failure_classification": "",
+    "failure_detail": "",
+    "latency_seconds": 26.245,
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "provenance": {
+      "execution_claim_id": "shared-local-model-execution-claim-a05e5fd018a4f5d0",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      }
+    },
+    "request_id": "shared-local-model-request-1400e9e1cee852ea",
+    "response_digest": "20890f00b537d5bb5c13113cf510eaa07b2bc688d456bf38b59e26fb69b7b5d1",
+    "response_reference": "{\"lesson\":\"Understanding implied references, queued messages, informal phrasing, and context across turns is crucial for effective communication. Corrections and transfer checks are beneficial for learning new language features.\",\"evidence_refs\":[\"operator-natural-goal\"],\"unresolved_questions\":[\"How can we ensure the operator fully grasps the nuances of informal phrasing and context across turns?\"],\"uncertainty\":\"The extent to which informal phrasing and context across turns are understood by the operator remains unclear.\",\"recommended_state_transition\":\"summarize_learning\"}",
+    "result_digest": "41fe55a90aa482736fa2af832d71725244035ff8babfe9bcc4043b3e3d072491",
+    "result_id": "shared-local-model-result-a1b5eae20fd22f3a",
+    "terminal_state": "completed"
+  },
+  {
+    "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+    "availability_state": "available",
+    "execution_completed_at": "2026-07-27T16:30:42+00:00",
+    "execution_started_at": "2026-07-27T16:30:22+00:00",
+    "failure_classification": "",
+    "failure_detail": "",
+    "latency_seconds": 20.4169,
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "provenance": {
+      "execution_claim_id": "shared-local-model-execution-claim-ea09e770977380a0",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      }
+    },
+    "request_id": "shared-local-model-request-da93f20dea1ac770",
+    "response_digest": "6862b16cc60789966e6163f1dc8be6149e8d44e5cd370bde6b3248ca991f0a5b",
+    "response_reference": "{\"hypothesis_statement\":\"Operators will understand corrections better if given in context of prior conversation.\",\"scope\":\"English comprehension during conversation\",\"supporting_evidence_refs\":[\"prior-conversational-episode-3\"],\"assumptions\":[\"Operators can benefit from contextual information.\",\"Contextual information can improve understanding.\"],\"expected_observations\":[\"Operators will retain corrections better.\",\"Operators will apply corrections more accurately.\"],\"uncertainty\":\"How much context is necessary for optimal understanding?\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+    "result_digest": "eac6a247ce1cfc4aa55184bcc4872defb190337267ae313514a6780022910732",
+    "result_id": "shared-local-model-result-cdb76aab4f0cc1c7",
+    "terminal_state": "completed"
+  },
+  {
+    "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+    "availability_state": "available",
+    "execution_completed_at": "2026-07-27T16:29:53+00:00",
+    "execution_started_at": "2026-07-27T16:29:14+00:00",
+    "failure_classification": "",
+    "failure_detail": "",
+    "latency_seconds": 38.5979,
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "provenance": {
+      "execution_claim_id": "shared-local-model-execution-claim-41855fb6abcde140",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      }
+    },
+    "request_id": "shared-local-model-request-2411403fa6d50c81",
+    "response_digest": "e9deaa9395c4db6bff740523675adf1a6b7b3539e6f00737b8a4b66b833480a0",
+    "response_reference": "{\"assumptions\":[\"Corrections are effective for learning new language features.\",\"Context and turn-based communication are key to understanding.\",\"Repetition and transfer of learned concepts are beneficial for retention.\"],\"contrary_evidence_considered\":[],\"evidence_refs\":[\"operator-natural-goal\"],\"interpretation\":\"The hypothesis is supported by the natural goal, which emphasizes the importance of understanding implied references, queued messages, informal phrasing, and context across turns. The evidence does not provide conflicting information.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"Continue with the current strategy of observing and incorporating corrections.\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"How effective are the corrections in the long term?\"}",
+    "result_digest": "46875942cb3d4abc141e217f80619b8e57dc17d05d2c474023f0012cd5de8931",
+    "result_id": "shared-local-model-result-d6241bfd8404c53a",
+    "terminal_state": "completed"
+  },
+  {
+    "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+    "availability_state": "available",
+    "execution_completed_at": "2026-07-27T16:31:34+00:00",
+    "execution_started_at": "2026-07-27T16:31:17+00:00",
+    "failure_classification": "",
+    "failure_detail": "",
+    "latency_seconds": 17.2204,
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "provenance": {
+      "execution_claim_id": "shared-local-model-execution-claim-53a04744c8f74a99",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      }
+    },
+    "request_id": "shared-local-model-request-320fab3769e2aba1",
+    "response_digest": "9b85b3b7be6d2895243edb10b1d4cb1b3572a6bc6aeb92b46e88206eb788712d",
+    "response_reference": "{\"lesson\":\"Operators can benefit from contextual information during comprehension practice.\",\"evidence_refs\":[\"prior-conversational-episode-3\"],\"unresolved_questions\":[\"How can we ensure that context is always relevant and useful?\",\"How can we measure the impact of context on comprehension?\"],\"uncertainty\":\"The effectiveness of context in improving comprehension is not fully understood.\",\"recommended_state_transition\":\"summarize_learning\"}",
+    "result_digest": "b918e9efcea8ce4a2663b486b1783d16a19396d9af7744db63253f0ca635032f",
+    "result_id": "shared-local-model-result-d6eb64ed6640aa0c",
+    "terminal_state": "completed"
+  },
+  {
+    "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+    "availability_state": "available",
+    "execution_completed_at": "2026-07-27T16:32:47+00:00",
+    "execution_started_at": "2026-07-27T16:32:31+00:00",
+    "failure_classification": "",
+    "failure_detail": "",
+    "latency_seconds": 15.7708,
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "provenance": {
+      "execution_claim_id": "shared-local-model-execution-claim-c1d8e3eb7d5206bb",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      }
+    },
+    "request_id": "shared-local-model-request-3d1e18320fa0eb89",
+    "response_digest": "e783ca1beecd6805393e92ef420492d5c5e4ed243c3823df5791ae0aea99fe49",
+    "response_reference": "{\"lesson\":\"Operators may misunderstand specific English phrases due to lack of context or familiarity.\",\"evidence_refs\":[\"prior-conversational-episode-6\"],\"unresolved_questions\":[\"How can we ensure operators fully understand complex English phrases?\"],\"uncertainty\":\"How can we ensure operators fully understand complex English phrases?\",\"recommended_state_transition\":\"summarize_learning\"}",
+    "result_digest": "f8292f7cb6c309b6c99ef57ef39a5b567fc92f273d2cafb843154b821df2c7ae",
+    "result_id": "shared-local-model-result-df88aa5d6c89c989",
+    "terminal_state": "completed"
+  }
+]

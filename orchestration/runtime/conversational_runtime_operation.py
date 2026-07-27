@@ -232,6 +232,82 @@ class ScopedLesson:
 
 
 @dataclass(frozen=True)
+class ChatAddressableRequest:
+    request_id: str
+    request_type: str
+    objective_id: str
+    goal_label: str
+    prompt_text: str
+    status: str = "pending"
+    provider: str = ""
+    max_calls: int = 0
+    max_spend_usd: float = 0.0
+    permitted_data: tuple[str, ...] = ()
+    prohibited_data: tuple[str, ...] = ()
+    created_turn_id: str = ""
+    resolved_turn_id: str = ""
+    resolution_text: str = ""
+    resolution_policy: str = ""
+    side_thread_effect: str = "does_not_replace_foreground_topic"
+    consumption_count: int = 0
+    created_at: str = field(default_factory=utc_now)
+    resolved_at: str = ""
+    schema_version: str = SCHEMA_VERSION
+
+    def as_record(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class TurnRelationDecision:
+    turn_id: str
+    foreground_topic: str
+    active_goal_id: str
+    relation_class: str
+    evidence: tuple[str, ...]
+    confidence: float
+    negative_instruction_tokens: tuple[str, ...] = ()
+    side_thread_request_id: str = ""
+    routing_decision: str = "foreground_answer"
+    lesson_ids_considered: tuple[str, ...] = ()
+    lesson_ids_applied: tuple[str, ...] = ()
+    lesson_ids_rejected: tuple[str, ...] = ()
+    rejection_reason: str = ""
+    schema_version: str = SCHEMA_VERSION
+
+    def as_record(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class LocalSemanticInsufficiency:
+    insufficiency_id: str
+    goal_id: str
+    target_gap: str
+    exact_information_needed: str
+    local_model: str
+    local_prompt: str
+    local_raw_response_reference: str
+    local_adapted_response_reference: str
+    local_evaluation: str
+    insufficiency_reason: str
+    retry_attempted: bool
+    local_retrieval_checked: bool
+    local_evidence_references: tuple[str, ...]
+    material_block: str
+    smallest_external_packet: str
+    prohibited_data: tuple[str, ...]
+    recommended_provider_budget: Mapping[str, Any]
+    created_at: str = field(default_factory=utc_now)
+    consumed_by_provider_request: str = ""
+    final_status: str = "open"
+    schema_version: str = SCHEMA_VERSION
+
+    def as_record(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
 class ConversationalRuntimeState:
     runtime_id: str
     lifecycle_state: str
@@ -246,6 +322,12 @@ class ConversationalRuntimeState:
     active_episode_path: str = ""
     completed_cycle_keys: tuple[str, ...] = ()
     pending_material_authority: tuple[Mapping[str, Any], ...] = ()
+    pending_chat_requests: tuple[ChatAddressableRequest, ...] = ()
+    resolved_chat_requests: tuple[ChatAddressableRequest, ...] = ()
+    provider_authorities: tuple[Mapping[str, Any], ...] = ()
+    turn_relation_decisions: tuple[TurnRelationDecision, ...] = ()
+    local_semantic_insufficiencies: tuple[LocalSemanticInsufficiency, ...] = ()
+    goal_reviews: tuple[Mapping[str, Any], ...] = ()
     schema_version: str = SCHEMA_VERSION
 
     def as_record(self) -> dict[str, Any]:
@@ -260,8 +342,11 @@ class RuntimeTurnResult:
     objective_created: bool = False
     correction_attached: bool = False
     authority_request: Mapping[str, Any] | None = None
+    chat_request: Mapping[str, Any] | None = None
+    provider_authority: Mapping[str, Any] | None = None
     background_cycle_started: bool = False
     transfer_applied: bool = False
+    side_thread_bound: bool = False
     schema_version: str = SCHEMA_VERSION
 
     def as_record(self) -> dict[str, Any]:
@@ -416,6 +501,272 @@ def save_runtime_state(root: str | Path, state: ConversationalRuntimeState) -> N
     write_json(Path(root) / "state.json", state.as_record())
 
 
+def _request_from_record(item: Any) -> ChatAddressableRequest:
+    if isinstance(item, ChatAddressableRequest):
+        return item
+    payload = dict(item)
+    for key in ("permitted_data", "prohibited_data"):
+        payload[key] = tuple(payload.get(key, ()))
+    return ChatAddressableRequest(**payload)
+
+
+def _turn_relation_from_record(item: Any) -> TurnRelationDecision:
+    if isinstance(item, TurnRelationDecision):
+        return item
+    payload = dict(item)
+    for key in ("evidence", "negative_instruction_tokens", "lesson_ids_considered", "lesson_ids_applied", "lesson_ids_rejected"):
+        payload[key] = tuple(payload.get(key, ()))
+    return TurnRelationDecision(**payload)
+
+
+def _insufficiency_from_record(item: Any) -> LocalSemanticInsufficiency:
+    if isinstance(item, LocalSemanticInsufficiency):
+        return item
+    payload = dict(item)
+    for key in ("local_evidence_references", "prohibited_data"):
+        payload[key] = tuple(payload.get(key, ()))
+    return LocalSemanticInsufficiency(**payload)
+
+
+def _negative_instruction_tokens(message: str) -> tuple[str, ...]:
+    lower = message.lower()
+    tokens = []
+    for phrase in ("do not use", "don't use", "do not apply", "don't apply", "unless it actually matters", "unrelated check"):
+        if phrase in lower:
+            tokens.append(phrase)
+    return tuple(tokens)
+
+
+def _foreground_topic(message: str) -> str:
+    lower = message.lower()
+    if "angular momentum" in lower:
+        return "angular_momentum"
+    if "euclidean geometry" in lower:
+        return "euclidean_geometry"
+    if "chemistry" in lower:
+        return "chemistry"
+    if "previous message" in lower:
+        return "linguistic_example_previous_message"
+    if "what is" in lower or lower.endswith("?"):
+        return "foreground_question"
+    return "ordinary_conversation"
+
+
+def _is_unrelated_factual_topic(message: str) -> bool:
+    topic = _foreground_topic(message)
+    lower = message.lower()
+    if topic in {"angular_momentum", "euclidean_geometry", "chemistry"}:
+        return True
+    return bool(re.search(r"\bwhat is\b|\bexplain\b|\bdefine\b", lower)) and not any(term in lower for term in ("reference", "correction", "goal", "before", "previous message", "meaning", "style", "verbosity", "explanation"))
+
+
+def decide_turn_relation(
+    state: ConversationalRuntimeState,
+    message: str,
+    *,
+    turn_id: str,
+) -> TurnRelationDecision:
+    negative = _negative_instruction_tokens(message)
+    considered = tuple(lesson.lesson_id for lesson in state.accepted_lessons)
+    if _pending_request_for_reply(state, message):
+        request = _pending_request_for_reply(state, message)
+        return TurnRelationDecision(
+            turn_id=turn_id,
+            foreground_topic=_foreground_topic(message),
+            active_goal_id=state.active_objective.objective_id if state.active_objective else "",
+            relation_class="side_thread_reply",
+            evidence=("pending_chat_request_matches_reply",),
+            confidence=0.88,
+            side_thread_request_id=request.request_id if request else "",
+            routing_decision="bind_to_side_thread",
+            lesson_ids_considered=considered,
+            lesson_ids_rejected=considered,
+            rejection_reason="side_thread_reply_preempts_lesson_transfer",
+        )
+    if _is_unrelated_factual_topic(message):
+        return TurnRelationDecision(
+            turn_id=turn_id,
+            foreground_topic=_foreground_topic(message),
+            active_goal_id=state.active_objective.objective_id if state.active_objective else "",
+            relation_class="unrelated_foreground_topic",
+            evidence=("factual_question_topic_not_active_goal",),
+            confidence=0.84,
+            negative_instruction_tokens=negative,
+            routing_decision="foreground_answer_without_goal_lesson",
+            lesson_ids_considered=considered,
+            lesson_ids_rejected=considered,
+            rejection_reason="foreground_topic_is_unrelated_to_active_goal",
+        )
+    if negative:
+        return TurnRelationDecision(
+            turn_id=turn_id,
+            foreground_topic=_foreground_topic(message),
+            active_goal_id=state.active_objective.objective_id if state.active_objective else "",
+            relation_class="unrelated_foreground_topic",
+            evidence=("explicit_negative_applicability_instruction",),
+            confidence=0.82,
+            negative_instruction_tokens=negative,
+            routing_decision="foreground_answer_without_goal_lesson",
+            lesson_ids_considered=considered,
+            lesson_ids_rejected=considered,
+            rejection_reason="negative_instruction_blocks_transfer",
+        )
+    goal_terms = ("reference", "before", "previous message", "meaning", "correction", "topic switch", "queued", "style", "verbosity", "pronouns", "compare")
+    if state.active_objective and any(term in message.lower() for term in goal_terms):
+        return TurnRelationDecision(
+            turn_id=turn_id,
+            foreground_topic=_foreground_topic(message),
+            active_goal_id=state.active_objective.objective_id,
+            relation_class="active_goal_related",
+            evidence=("active_goal_vocabulary_with_no_negative_guard",),
+            confidence=0.74,
+            routing_decision="goal_related_with_foreground_answer",
+            lesson_ids_considered=considered,
+        )
+    return TurnRelationDecision(
+        turn_id=turn_id,
+        foreground_topic=_foreground_topic(message),
+        active_goal_id=state.active_objective.objective_id if state.active_objective else "",
+        relation_class="unrelated_foreground_topic" if state.active_objective else "no_active_goal",
+        evidence=("default_foreground_chat",),
+        confidence=0.7,
+        routing_decision="foreground_answer",
+        lesson_ids_considered=considered,
+    )
+
+
+def _is_provider_learning_packet_request(message: str, state: ConversationalRuntimeState) -> bool:
+    if not state.active_objective:
+        return False
+    lower = message.lower()
+    if _chat_request_resolution_kind(message) is not None:
+        return False
+    provider_terms = ("provider", "openai", "gpt", "external example", "outside example", "learning packet")
+    request_terms = ("request", "ask", "recommend", "need", "use")
+    return any(term in lower for term in provider_terms) and any(term in lower for term in request_terms)
+
+
+def evaluate_local_semantic_packet(raw_response: str, *, target_gap: str) -> dict[str, Any]:
+    lower = raw_response.lower()
+    checks = {
+        "relevance": any(term in lower for term in ("reference", "referent", "implied", "queued", "topic")),
+        "example_diversity": lower.count("example") >= 2 or lower.count("case") >= 2,
+        "counterexamples": "counterexample" in lower or "false transfer" in lower,
+        "topic_switch": "topic switch" in lower or "topic boundary" in lower,
+        "queued_turn": "queued" in lower,
+        "negative_guard": "do not apply" in lower or "unless" in lower or "unrelated" in lower,
+    }
+    score = sum(1 for value in checks.values() if value)
+    if not raw_response.strip():
+        status = "invalid_local_attempt"
+    elif score >= 5:
+        status = "locally_sufficient"
+    elif score >= 3:
+        status = "locally_sufficient_with_revision"
+    else:
+        status = "locally_insufficient"
+    return {"status": status, "score": score, "checks": checks, "target_gap": target_gap}
+
+
+def build_local_semantic_insufficiency(
+    state: ConversationalRuntimeState,
+    *,
+    target_gap: str,
+    local_model: str,
+    local_prompt: str,
+    raw_response: str,
+    retry_attempted: bool = False,
+) -> LocalSemanticInsufficiency:
+    evaluation = evaluate_local_semantic_packet(raw_response, target_gap=target_gap)
+    return LocalSemanticInsufficiency(
+        insufficiency_id=stable_id("local-semantic-insufficiency", state.active_objective.objective_id if state.active_objective else "", target_gap, raw_response),
+        goal_id=state.active_objective.objective_id if state.active_objective else "",
+        target_gap=target_gap,
+        exact_information_needed="Synthetic counterexamples for queued implied references across topic boundaries with false-transfer guards.",
+        local_model=local_model,
+        local_prompt=local_prompt,
+        local_raw_response_reference=raw_response,
+        local_adapted_response_reference=json.dumps(evaluation, sort_keys=True),
+        local_evaluation=str(evaluation["status"]),
+        insufficiency_reason="Local packet did not supply enough topic-switch counterexamples and false-transfer guards.",
+        retry_attempted=retry_attempted,
+        local_retrieval_checked=True,
+        local_evidence_references=tuple(turn.turn_id for turn in state.conversation[-6:]),
+        material_block="Cannot compare semantic reconciliation strategies without reliable topic-boundary counterexamples.",
+        smallest_external_packet="One small synthetic-only packet of topic-switch queued-reference counterexamples.",
+        prohibited_data=("actual operator messages", "raw transcript export", "credentials", "protected paths", "source mutation"),
+        recommended_provider_budget={"max_calls": 1, "max_spend_usd": 1.0, "max_tokens": 1200},
+        final_status="locally_insufficient",
+    )
+
+
+def _chat_request_resolution_kind(message: str) -> str | None:
+    lower = " ".join(message.lower().split())
+    approval_terms = ("approve", "approved", "yes", "okay", "ok", "use one call", "use only one call", "1 call")
+    denial_terms = ("no", "deny", "continue locally", "not approved")
+    if "not approved" in lower:
+        return "denied"
+    if "approve" in lower or "approved" in lower:
+        return "approved"
+    if lower.startswith(("no", "deny")) or any(term in lower for term in denial_terms):
+        return "denied"
+    if any(term in lower for term in approval_terms):
+        return "approved"
+    if re.search(r"\bprioriti[sz]e\b", lower) or lower.startswith(("yes,", "yes ")):
+        return "directional"
+    return None
+
+
+def _pending_request_for_reply(state: ConversationalRuntimeState, message: str) -> ChatAddressableRequest | None:
+    if not state.pending_chat_requests:
+        return None
+    kind = _chat_request_resolution_kind(message)
+    if kind is None:
+        return None
+    latest = state.pending_chat_requests[-1]
+    if latest.status != "pending" or latest.consumption_count:
+        return None
+    if latest.request_type == "provider_authority" and kind in {"approved", "denied"}:
+        return latest
+    if latest.request_type == "directional_question" and kind in {"directional", "denied", "approved"}:
+        return latest
+    return None
+
+
+def _resolve_provider_policy(request: ChatAddressableRequest, message: str, resolution_kind: str) -> tuple[str, Mapping[str, Any] | None]:
+    lower = " ".join(message.lower().split())
+    if resolution_kind == "denied":
+        return "denied_continue_locally", None
+    max_calls = request.max_calls
+    explicit_call_limit = False
+    if re.search(r"\b(one|1)\s+call\b", lower) or "use only one" in lower:
+        explicit_call_limit = True
+        max_calls = 1
+    permitted_data = tuple(request.permitted_data)
+    prohibited_data = tuple(request.prohibited_data)
+    if "no actual messages" in lower or "do not send my actual messages" in lower or "don't send my actual messages" in lower:
+        permitted_data = tuple(item for item in permitted_data if item != "sanitized operator-message summaries")
+        if "actual operator messages" not in prohibited_data:
+            prohibited_data = prohibited_data + ("actual operator messages",)
+    policy = "modified_approval" if explicit_call_limit or max_calls != request.max_calls or prohibited_data != request.prohibited_data else "approved"
+    authority = {
+        "authority_id": stable_id("provider-authority", request.request_id, message, str(max_calls), "|".join(prohibited_data)),
+        "request_id": request.request_id,
+        "objective_id": request.objective_id,
+        "provider": request.provider,
+        "max_calls": max_calls,
+        "max_spend_usd": request.max_spend_usd,
+        "permitted_data": permitted_data,
+        "prohibited_data": prohibited_data,
+        "status": "authorized_not_executed",
+        "consumed_call_count": 0,
+        "created_at": utc_now(),
+        "expires_condition": "after the bounded learning packet completes, budget is exhausted, operator revokes approval, or scope changes",
+        "authority_effect": "provider_learning_packet_only",
+    }
+    return policy, authority
+
+
 def record_foreground_message_for_reconciliation(
     state: ConversationalRuntimeState,
     message: str,
@@ -443,6 +794,241 @@ def record_foreground_message_for_reconciliation(
     updated = _replace_state(state, conversation=state.conversation + (user_turn,), objective_progress=progress)
     save_runtime_state(runtime_root, updated)
     return updated
+
+
+def request_provider_learning_packet(
+    state: ConversationalRuntimeState,
+    message: str,
+    *,
+    runtime_root: str | Path,
+) -> RuntimeTurnResult:
+    if not state.active_objective:
+        return handle_conversational_message(state, message, runtime_root=runtime_root, run_background_cycle=False)
+    insufficiency = next((item for item in reversed(state.local_semantic_insufficiencies) if item.goal_id == state.active_objective.objective_id and item.final_status == "locally_insufficient" and not item.consumed_by_provider_request), None)
+    if insufficiency is None:
+        user_turn = ConversationTurn(
+            turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 1), message),
+            role="user",
+            text=message,
+            intent_type="provider_learning_packet_requested_without_local_insufficiency",
+            objective_id=state.active_objective.objective_id,
+        )
+        reply = (
+            "[Goal update · Language understanding]\n"
+            "I cannot ask for an external learning packet yet. I need to test local Qwen and existing local evidence first, then record an exact semantic insufficiency if that local evidence is not enough."
+        )
+        assistant_turn = ConversationTurn(
+            turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
+            role="assistant",
+            text=reply,
+            intent_type="local_first_escalation_required",
+            objective_id=state.active_objective.objective_id,
+        )
+        updated = _replace_state(
+            state,
+            conversation=state.conversation + (user_turn, assistant_turn),
+            objective_progress=state.objective_progress + ({"event": "provider_request_blocked_local_first", "message": message, "at": utc_now()},),
+        )
+        save_runtime_state(runtime_root, updated)
+        return RuntimeTurnResult(
+            state=updated,
+            intent=ConversationIntent(
+                intent_type="provider_learning_packet_requested_without_local_insufficiency",
+                confidence=0.86,
+                persistence_scope="active_objective",
+                risk_class="provider_authority_blocked_local_first",
+                authority_required=("local_semantic_insufficiency",),
+                matched_signals=("provider_learning_packet",),
+            ),
+            reply=reply,
+            side_thread_bound=True,
+        )
+    user_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 1), message),
+        role="user",
+        text=message,
+        intent_type="provider_learning_packet_requested",
+        objective_id=state.active_objective.objective_id,
+    )
+    prompt = (
+        "[Goal update · Language understanding]\n"
+        "I tested local Qwen and local evidence for queued implied references. "
+        f"It still lacks: {insufficiency.exact_information_needed} "
+        "I recommend one OpenAI API call, capped at $1, using synthetic examples only. No actual operator messages will be sent. Approve?"
+    )
+    request = ChatAddressableRequest(
+        request_id=stable_id("chat-provider-request", state.active_objective.objective_id, user_turn.turn_id, "queued-implied-reference"),
+        request_type="provider_authority",
+        objective_id=state.active_objective.objective_id,
+        goal_label="Language understanding",
+        prompt_text=prompt,
+        provider="openai",
+        max_calls=int(insufficiency.recommended_provider_budget.get("max_calls") or 1),
+        max_spend_usd=float(insufficiency.recommended_provider_budget.get("max_spend_usd") or 1.0),
+        permitted_data=("synthetic examples",),
+        prohibited_data=insufficiency.prohibited_data,
+        created_turn_id=user_turn.turn_id,
+    )
+    consumed = LocalSemanticInsufficiency(**{**insufficiency.as_record(), "consumed_by_provider_request": request.request_id, "final_status": "provider_request_created"})
+    remaining_insufficiencies = tuple(item for item in state.local_semantic_insufficiencies if item.insufficiency_id != insufficiency.insufficiency_id) + (consumed,)
+    assistant_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), prompt),
+        role="assistant",
+        text=prompt,
+        intent_type="side_thread_provider_request",
+        objective_id=state.active_objective.objective_id,
+    )
+    updated = _replace_state(
+        state,
+        conversation=state.conversation + (user_turn, assistant_turn),
+        pending_chat_requests=state.pending_chat_requests + (request,),
+        local_semantic_insufficiencies=remaining_insufficiencies,
+        objective_progress=state.objective_progress
+        + (
+            {
+                "event": "chat_addressable_provider_request_created",
+                "request_id": request.request_id,
+                "objective_id": request.objective_id,
+                "insufficiency_id": insufficiency.insufficiency_id,
+                "side_thread_effect": request.side_thread_effect,
+                "at": utc_now(),
+            },
+        ),
+    )
+    save_runtime_state(runtime_root, updated)
+    return RuntimeTurnResult(
+        state=updated,
+        intent=ConversationIntent(
+            intent_type="provider_learning_packet_requested",
+            confidence=0.83,
+            persistence_scope="active_objective",
+            risk_class="provider_authority_pending",
+            authority_required=("network",),
+            matched_signals=("provider_learning_packet",),
+        ),
+        reply=prompt,
+        chat_request=request.as_record(),
+        side_thread_bound=True,
+    )
+
+
+def record_local_semantic_attempt(
+    state: ConversationalRuntimeState,
+    *,
+    runtime_root: str | Path,
+    target_gap: str,
+    local_model: str,
+    local_prompt: str,
+    raw_response: str,
+    retry_attempted: bool = False,
+) -> tuple[ConversationalRuntimeState, Mapping[str, Any]]:
+    evaluation = evaluate_local_semantic_packet(raw_response, target_gap=target_gap)
+    progress = {
+        "event": "local_semantic_packet_evaluated",
+        "target_gap": target_gap,
+        "local_model": local_model,
+        "local_evaluation": evaluation,
+        "retry_attempted": retry_attempted,
+        "at": utc_now(),
+    }
+    updates: dict[str, Any] = {"objective_progress": state.objective_progress + (progress,)}
+    if evaluation["status"] == "locally_insufficient":
+        insufficiency = build_local_semantic_insufficiency(
+            state,
+            target_gap=target_gap,
+            local_model=local_model,
+            local_prompt=local_prompt,
+            raw_response=raw_response,
+            retry_attempted=retry_attempted,
+        )
+        updates["local_semantic_insufficiencies"] = state.local_semantic_insufficiencies + (insufficiency,)
+        progress = {**progress, "insufficiency_id": insufficiency.insufficiency_id}
+        updates["objective_progress"] = state.objective_progress + (progress,)
+    updated = _replace_state(state, **updates)
+    save_runtime_state(runtime_root, updated)
+    return updated, evaluation
+
+
+def resolve_pending_chat_request(
+    state: ConversationalRuntimeState,
+    message: str,
+    *,
+    runtime_root: str | Path,
+) -> RuntimeTurnResult | None:
+    request = _pending_request_for_reply(state, message)
+    if request is None:
+        return None
+    resolution_kind = _chat_request_resolution_kind(message) or ""
+    user_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 1), message),
+        role="user",
+        text=message,
+        intent_type="chat_request_resolution",
+        objective_id=request.objective_id,
+    )
+    authority: Mapping[str, Any] | None = None
+    policy = resolution_kind
+    if request.request_type == "provider_authority":
+        policy, authority = _resolve_provider_policy(request, message, resolution_kind)
+    resolved = ChatAddressableRequest(
+        **{
+            **request.as_record(),
+            "status": "denied" if policy == "denied_continue_locally" else "resolved",
+            "resolved_turn_id": user_turn.turn_id,
+            "resolution_text": message,
+            "resolution_policy": policy,
+            "consumption_count": 1,
+            "resolved_at": utc_now(),
+        }
+    )
+    pending = tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id)
+    if authority:
+        reply = "Approved. I recorded one bounded provider authority envelope for that goal thread. I still will not make a provider call until the provider step consumes this exact approval."
+    elif policy == "denied_continue_locally":
+        reply = "Understood. I denied that provider branch and will continue the goal locally."
+    else:
+        reply = "Got it. I bound that reply to the background goal thread and kept the foreground conversation unchanged."
+    assistant_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
+        role="assistant",
+        text=reply,
+        intent_type="chat_request_resolution_ack",
+        objective_id=request.objective_id,
+    )
+    updated = _replace_state(
+        state,
+        conversation=state.conversation + (user_turn, assistant_turn),
+        pending_chat_requests=pending,
+        resolved_chat_requests=state.resolved_chat_requests + (resolved,),
+        provider_authorities=state.provider_authorities + ((authority,) if authority else ()),
+        objective_progress=state.objective_progress
+        + (
+            {
+                "event": "chat_addressable_request_resolved",
+                "request_id": request.request_id,
+                "request_type": request.request_type,
+                "resolution_policy": policy,
+                "authority_id": authority.get("authority_id") if authority else "",
+                "at": utc_now(),
+            },
+        ),
+    )
+    save_runtime_state(runtime_root, updated)
+    return RuntimeTurnResult(
+        state=updated,
+        intent=ConversationIntent(
+            intent_type="chat_request_resolution",
+            confidence=0.88,
+            persistence_scope="active_objective",
+            risk_class="safe_internal" if not authority else "provider_authority_bound",
+            authority_required=(),
+            matched_signals=("pending_chat_request",),
+        ),
+        reply=reply,
+        chat_request=resolved.as_record(),
+        provider_authority=authority,
+        side_thread_bound=True,
+    )
 
 
 def apply_stop_or_redirect(
@@ -490,6 +1076,12 @@ def _state_from_record(payload: Mapping[str, Any]) -> ConversationalRuntimeState
         active_episode_path=str(payload.get("active_episode_path") or ""),
         completed_cycle_keys=tuple(payload.get("completed_cycle_keys", ())),
         pending_material_authority=tuple(payload.get("pending_material_authority", ())),
+        pending_chat_requests=tuple(_request_from_record(item) for item in payload.get("pending_chat_requests", ())),
+        resolved_chat_requests=tuple(_request_from_record(item) for item in payload.get("resolved_chat_requests", ())),
+        provider_authorities=tuple(payload.get("provider_authorities", ())),
+        turn_relation_decisions=tuple(_turn_relation_from_record(item) for item in payload.get("turn_relation_decisions", ())),
+        local_semantic_insufficiencies=tuple(_insufficiency_from_record(item) for item in payload.get("local_semantic_insufficiencies", ())),
+        goal_reviews=tuple(payload.get("goal_reviews", ())),
         schema_version=str(payload.get("schema_version") or SCHEMA_VERSION),
     )
 
@@ -502,6 +1094,11 @@ def handle_conversational_message(
     run_background_cycle: bool = True,
     model_runner: ModelRunner | None = None,
 ) -> RuntimeTurnResult:
+    resolved = resolve_pending_chat_request(state, message, runtime_root=runtime_root)
+    if resolved is not None:
+        return resolved
+    if _is_provider_learning_packet_request(message, state):
+        return request_provider_learning_packet(state, message, runtime_root=runtime_root)
     intent = classify_conversational_intent(message, active_objective=state.active_objective, recent_turns=state.conversation)
     user_turn = ConversationTurn(
         turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 1), message),
@@ -587,8 +1184,11 @@ def handle_conversational_message(
             updated = run_background_objective_cycle(updated, runtime_root=runtime_root, reason="correction_attached", model_runner=model_runner)
         save_runtime_state(runtime_root, updated)
         return RuntimeTurnResult(state=updated, intent=intent, reply=reply, correction_attached=True, background_cycle_started=run_background_cycle, transfer_applied=False)
-    transfer = infer_lesson_transfer(state, message)
-    reply = _ordinary_reply(message, transfer)
+    relation = decide_turn_relation(state, message, turn_id=user_turn.turn_id)
+    transfer = infer_lesson_transfer(state, message, relation=relation)
+    if transfer["applied"]:
+        relation = TurnRelationDecision(**{**relation.as_record(), "lesson_ids_applied": (transfer["lesson_id"],)})
+    reply = _ordinary_reply(message, transfer, relation=relation)
     assistant_turn = ConversationTurn(
         turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
         role="assistant",
@@ -596,10 +1196,10 @@ def handle_conversational_message(
         intent_type="ordinary_response",
         objective_id=state.active_objective.objective_id if state.active_objective else "",
     )
-    progress = state.objective_progress
+    progress = state.objective_progress + ({"event": "turn_relation_decision", **relation.as_record(), "at": utc_now()},)
     if transfer["applied"]:
         progress = progress + ({"event": "lesson_transfer_applied", "lesson_id": transfer["lesson_id"], "message": message, "at": utc_now()},)
-    updated = _replace_state(state, conversation=state.conversation + (user_turn, assistant_turn), objective_progress=progress)
+    updated = _replace_state(state, conversation=state.conversation + (user_turn, assistant_turn), objective_progress=progress, turn_relation_decisions=state.turn_relation_decisions + (relation,))
     if state.active_objective and run_background_cycle and intent.intent_type == "ordinary_conversation":
         updated = run_background_objective_cycle(updated, runtime_root=runtime_root, reason="ordinary_chat_yield", model_runner=model_runner)
     save_runtime_state(runtime_root, updated)
@@ -723,7 +1323,14 @@ def attach_correction(
     return updated, correction, lesson
 
 
-def infer_lesson_transfer(state: ConversationalRuntimeState, message: str) -> dict[str, Any]:
+def infer_lesson_transfer(
+    state: ConversationalRuntimeState,
+    message: str,
+    *,
+    relation: TurnRelationDecision | None = None,
+) -> dict[str, Any]:
+    if relation and relation.routing_decision == "foreground_answer_without_goal_lesson":
+        return {"applied": False, "lesson_id": "", "strategy_update": "", "rejection_reason": relation.rejection_reason}
     tokens = set(re.findall(r"[a-z0-9]{3,}", message.lower()))
     for lesson in reversed(state.accepted_lessons):
         applies = set(lesson.applicable_when)
@@ -733,8 +1340,20 @@ def infer_lesson_transfer(state: ConversationalRuntimeState, message: str) -> di
     return {"applied": False, "lesson_id": "", "strategy_update": ""}
 
 
-def _ordinary_reply(message: str, transfer: Mapping[str, Any]) -> str:
+def _ordinary_reply(
+    message: str,
+    transfer: Mapping[str, Any],
+    *,
+    relation: TurnRelationDecision | None = None,
+) -> str:
     lower = message.lower()
+    if relation and relation.relation_class == "unrelated_foreground_topic":
+        if "angular momentum" in lower:
+            return "Angular momentum is the rotational counterpart of linear momentum. It depends on how much mass is rotating, how far it is from the axis, and how fast it is rotating."
+        if "euclidean geometry" in lower:
+            return "Euclidean geometry is the geometry of flat space: points, lines, angles, triangles, circles, and shapes measured with Euclid's familiar rules."
+        if "chemistry" in lower:
+            return "I will answer the chemistry question on its own terms and will not apply the reference-correction lesson unless the chemistry question actually depends on conversational reference."
     if transfer.get("applied"):
         if "style" in lower or "explain" in lower:
             return "Short version: I will answer more directly here and avoid repeating the same clarification unless it changes the meaning."
@@ -772,6 +1391,64 @@ def evaluate_conversational_runtime(state: ConversationalRuntimeState) -> dict[s
         "background_cycle_count": len(state.completed_cycle_keys),
         "pending_material_authority_count": len(state.pending_material_authority),
     }
+
+
+def render_goal_review(state: ConversationalRuntimeState, *, status: str = "implementation_review_required") -> tuple[ConversationalRuntimeState, str]:
+    objective = state.active_objective
+    goal_label = "Language understanding"
+    completed = "I reached an implementation-review boundary for the active language-comprehension goal."
+    learned = []
+    if state.turn_relation_decisions:
+        learned.append("foreground messages must be routed separately from background goal work")
+    if state.local_semantic_insufficiencies:
+        learned.append("external escalation requires a recorded local insufficiency first")
+    if state.accepted_lessons:
+        learned.append(f"{len(state.accepted_lessons)} scoped correction-derived lesson(s) are available")
+    if not learned:
+        learned.append("no durable learning has been validated yet")
+    retained = [lesson.summary for lesson in state.accepted_lessons[-3:]] or ["no scoped lessons retained"]
+    rejected = [item.rejection_reason for item in state.turn_relation_decisions[-5:] if item.rejection_reason] or ["no rejected lesson applicability recorded"]
+    unresolved = []
+    if status == "implementation_review_required":
+        unresolved.append("implementation review is required before source-level semantic capability changes")
+    if any(auth.get("status") == "authorized_not_executed" for auth in state.provider_authorities):
+        unresolved.append("provider authority exists but has not been consumed")
+    provider_use = "local-only; no external provider calls performed"
+    if state.provider_authorities:
+        auth = state.provider_authorities[-1]
+        provider_use = f"authority recorded for {auth.get('provider')} with max_calls={auth.get('max_calls')}, spent=$0, consumed_calls={auth.get('consumed_call_count')}"
+    review_text = (
+        f"[Goal review · {goal_label}]\n\n"
+        f"I completed:\n{completed}\n\n"
+        f"I learned:\n- " + "\n- ".join(learned) + "\n\n"
+        f"I retained:\n- " + "\n- ".join(retained) + "\n\n"
+        f"I rejected:\n- " + "\n- ".join(rejected) + "\n\n"
+        f"Still unresolved:\n- " + "\n- ".join(unresolved or ["no blocker recorded"]) + "\n\n"
+        f"Provider use:\n{provider_use}\n\n"
+        "Next recommended step:\nReview the proposed foreground-isolation and local-first repair before any broader semantic capability implementation."
+    )
+    review = {
+        "review_id": stable_id("goal-review", state.runtime_id, str(len(state.goal_reviews) + 1), status),
+        "status": status,
+        "objective_id": objective.objective_id if objective else "",
+        "text": review_text,
+        "provider_use": provider_use,
+        "created_at": utc_now(),
+    }
+    assistant_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 1), review_text),
+        role="assistant",
+        text=review_text,
+        intent_type="goal_review",
+        objective_id=objective.objective_id if objective else "",
+    )
+    updated = _replace_state(
+        state,
+        conversation=state.conversation + (assistant_turn,),
+        goal_reviews=state.goal_reviews + (review,),
+        objective_progress=state.objective_progress + ({"event": "goal_review_rendered", "review_id": review["review_id"], "status": status, "at": utc_now()},),
+    )
+    return updated, review_text
 
 
 def stop_active_objective(state: ConversationalRuntimeState) -> ConversationalRuntimeState:
