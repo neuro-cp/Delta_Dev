@@ -1,0 +1,60 @@
+{
+  "adapter_identity": "goal_oriented_ui_campaign.ProviderManager.exact_prompt",
+  "availability_state": "available",
+  "execution_completed_at": "2026-07-27T01:47:53+00:00",
+  "execution_started_at": "2026-07-27T01:46:38+00:00",
+  "failure_classification": "",
+  "failure_detail": "",
+  "latency_seconds": 74.8392,
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "provenance": {
+    "execution_claim_id": "shared-local-model-execution-claim-07336982f17bafd6",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    }
+  },
+  "request_id": "shared-local-model-request-c1920ec79a40187d",
+  "response_digest": "5b5a417282dcb9b26537742f46c2c9298021fed35b3c6eb7a67482edaa59b3ad",
+  "response_reference": "{\"assumptions\": [\"Local evidence is available for use.\", \"Contrary evidence is available for consideration.\", \"Required cognitive operations and bounded actions are defined.\", \"Success and failure criteria are clear.\", \"Risk and scope are well-defined.\"], \"contrary_evidence_considered\": [\"Local evidence may not fully represent the global context.\", \"Contrary evidence may exist but is not explicitly known.\", \"Success and failure criteria may need refinement.\", \"Risk and scope may have unaccounted variables.\"], \"evidence_refs\": [\"DELTA.py\", \"orchestration/runtime/active_cognitive_loop.py\", \"tests/runtime_gsr/test_active_cognitive_loop.py\", \"tests/runtime_gsr/test_model_execution_lane_isolation.py\", \".tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/live_episode_summary.json\", \".tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/marathon_closure_audit.json\"], \"interpretation\": \"These experiments are grounded in local evidence and contrary evidence, with clear success and failure criteria, defined cognitive operations, and bounded actions. The risk and scope are well-defined, with an estimated time and model call budget provided.\",\"next_evidence_need\": \"Further evidence may be needed to refine the success and failure criteria.\",\"next_focus_proposal\": \"Enhance the local evidence to include more global context.\",\"operation_result_type\": \"GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1\", \"recommended_action\": \"Proceed with the experiments as defined.\",\"recommended_state_transition\": \"operator_authorized_goal_oriented_ui_experiment_campaign_1\", \"uncertainty\": \"Uncertainty exists but is managed within the defined scope.\"}",
+  "result_digest": "91d2535b70e74ace1bae99a8035fbd98763346738731d327f0065e0e320615d5",
+  "result_id": "shared-local-model-result-602a0d5c86c94a55",
+  "terminal_state": "completed"
+}

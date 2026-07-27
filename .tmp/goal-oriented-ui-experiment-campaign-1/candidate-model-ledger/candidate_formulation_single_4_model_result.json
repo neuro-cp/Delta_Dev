@@ -1,0 +1,60 @@
+{
+  "adapter_identity": "goal_oriented_ui_campaign.ProviderManager.exact_prompt",
+  "availability_state": "available",
+  "execution_completed_at": "2026-07-27T01:58:57+00:00",
+  "execution_started_at": "2026-07-27T01:58:21+00:00",
+  "failure_classification": "",
+  "failure_detail": "",
+  "latency_seconds": 35.2168,
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "provenance": {
+    "execution_claim_id": "shared-local-model-execution-claim-6089667798275687",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    }
+  },
+  "request_id": "shared-local-model-request-f9b06434ef91cf68",
+  "response_digest": "021ca30ec9c805f54501654103274f2652874753e9dd3bd28c778568737e72bd",
+  "response_reference": "{\"assumptions\": [\"Candidate 4 must target a specific UI element or feature\"], \"contrary_evidence_considered\": [\"Previous cycle's user feedback on UI responsiveness\"], \"evidence_refs\": [\"tests/runtime_gsr/test_active_cognitive_loop.py\"], \"interpretation\": \"Candidate 4 focuses on enhancing a specific UI feature's responsiveness, leveraging previous cycle's feedback and tests.\" , \"next_evidence_need\": \"User interaction logs for targeted UI element\", \"next_focus_proposal\": \"Optimize interaction logic for the 'live_episode_summary' feature\", \"operation_result_type\": \"UI performance metrics\", \"recommended_action\": \"Refine and test 'live_episode_summary' feature\", \"recommended_state_transition\": \"Enhanced live episode summary display\", \"uncertainty\": \"User feedback variability\"}",
+  "result_digest": "fba616b0c0fbf46fa28ef30d692ca3b912dda2a5f98d8bdff2d20e80721cdff6",
+  "result_id": "shared-local-model-result-c1f4763780da3c9f",
+  "terminal_state": "completed"
+}

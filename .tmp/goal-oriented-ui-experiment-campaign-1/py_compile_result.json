@@ -1,0 +1,4 @@
+{
+  "command": "py_compile DELTA.py orchestration/runtime/goal_oriented_ui_campaign.py orchestration/runtime/active_cognitive_loop.py",
+  "passed": true
+}

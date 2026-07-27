@@ -1,0 +1,20 @@
+{
+  "adapted_response": {
+    "deferred_focus_ids": [],
+    "evidence_refs": [
+      "exp-d_evidence_1"
+    ],
+    "recommended_state_transition": "select_next_focus",
+    "related_goal_ids": [
+      "active-cognitive-goal-98c1b7e994b7b81f"
+    ],
+    "salience_reason": "An active hypothesis needs evidence-linked revision before action.",
+    "selected_focus_id": "focus-0622c190a9b627a9",
+    "uncertainty": "UI route and usefulness are not yet proven for this candidate."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"selected_focus_id\":\"focus-0622c190a9b627a9\",\"salience_reason\":\"An active hypothesis needs evidence-linked revision before action.\",\"related_goal_ids\":[\"active-cognitive-goal-98c1b7e994b7b81f\"],\"evidence_refs\":[\"exp-d_evidence_1\"],\"deferred_focus_ids\":[],\"uncertainty\":\"UI route and usefulness are not yet proven for this candidate.\",\"recommended_state_transition\":\"select_next_focus\"}",
+  "raw_response_digest": "93bbbd0d56088b6830656b3dcb582b36dc677baa5b97ff6ee09624b6687fe7f5",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

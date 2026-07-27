@@ -1,0 +1,81 @@
+{
+  "authority_constraints": [
+    "no network",
+    "no protected paths",
+    "no commit",
+    "bounded local actions only"
+  ],
+  "contrary_evidence_ids_supplied": [
+    "exp-d_contrary_1"
+  ],
+  "cycle_id": "active-cognitive-cycle-14bc6a83d053402b",
+  "evidence_ids_supplied": [
+    "exp-d_evidence_1"
+  ],
+  "expected_response_schema": {
+    "assumptions": [
+      "explicit assumptions"
+    ],
+    "expected_observations": [
+      "observable expectations"
+    ],
+    "hypothesis_statement": "falsifiable hypothesis statement",
+    "recommended_state_transition": "one allowed transition",
+    "scope": "scope of hypothesis",
+    "supporting_evidence_refs": [
+      "IDs only from supplied evidence"
+    ],
+    "uncertainty": "nonempty uncertainty phrase"
+  },
+  "focus_id": "focus-22fb591d46428403",
+  "goal_id": "active-cognitive-goal-98c1b7e994b7b81f",
+  "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+  "operation_request": {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-14bc6a83d053402b",
+    "evidence_constraints": [
+      "exp-d_evidence_1",
+      "exp-d_contrary_1"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-22fb591d46428403",
+    "goal_id": "active-cognitive-goal-98c1b7e994b7b81f",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-c3a4b497e1adad96",
+    "operation_type": "formulate_hypothesis",
+    "provenance": [
+      "working-memory-packet-51686744d6213fbe"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "bbbebb68368b65f82d195f51b533bcb9ba82a51b78e419fa0a69cd84fe7043bd"
+  },
+  "operation_type": "formulate_hypothesis",
+  "prompt_byte_digest": "030f4e2343a517a09e910fd9b81b2927b87af9558fa887bc3a6df25b1dd54b5e",
+  "prompt_length": 3138,
+  "prompt_schema_version": "active_cognitive_prompt_qualification_1_v1",
+  "prompt_snapshot_id": "active-cognitive-prompt-4a766b36b6c7c33d",
+  "prompt_text": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- hypothesis_statement: nonempty string\n- scope: nonempty string\n- supporting_evidence_refs: array[string]\n- assumptions: array[string]\n- expected_observations: array[string]\n- uncertainty: nonempty string\n- recommended_state_transition: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- supporting_evidence_refs values must be chosen from: exp-d_evidence_1\nOPERATION RULE: hypothesis_statement must be testable against future observations\nTASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: exp-d_evidence_1. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied.\nCONTEXT_JSON:\n{\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":1,\"description\":\"Resolve discrepancy for goal: Check closure audit validity\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"exp-d_evidence_1\",\"exp-d_contrary_1\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-22fb591d46428403\",\"related_goal_ids\":[\"active-cognitive-goal-98c1b7e994b7b81f\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"operator:campaign_uncertainty\",\"evidence_id\":\"exp-d_contrary_1\",\"source\":\"local_uncertainty\",\"summary\":\"Contrary evidence: UI route and usefulness are not yet proven for this candidate.\"}],\"current_goal\":{\"expected_state\":\"Audit validation report\",\"goal_id\":\"active-cognitive-goal-98c1b7e994b7b81f\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Check closure audit validity\"},\"current_hypotheses\":[],\"evidence_for\":[{\"content\":\".tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/marathon_closure_audit.json\",\"evidence_id\":\"exp-d_evidence_1\",\"source\":\"local_repo\",\"summary\":\"Contains closure audit data\"}],\"recent_outcomes\":[]}",
+  "request_identity": "active-cognitive-ledger-request-a2a718d6ca667325",
+  "retry_sequence": 0,
+  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+  "working_memory_packet_digest": "bbbebb68368b65f82d195f51b533bcb9ba82a51b78e419fa0a69cd84fe7043bd",
+  "working_memory_packet_id": "working-memory-packet-51686744d6213fbe"
+}

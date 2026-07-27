@@ -1,0 +1,79 @@
+{
+  "actions": [],
+  "attention": {
+    "abandonment_reason": "",
+    "active_focus_id": "",
+    "active_focus_summary": "",
+    "active_goal_ids": [],
+    "attention_state_id": "active-attention-0acade88ca810d28",
+    "candidate_focuses": [],
+    "continuation_reason": "",
+    "cycle_sequence": 0,
+    "evidence_refs": [],
+    "focus_started_at": "",
+    "interruption_priority": "none",
+    "interruption_reason": "",
+    "last_progress_at": "",
+    "previous_focus_ids": [],
+    "progress_summary": "",
+    "return_condition": "",
+    "salience_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "stagnation_count": 0,
+    "switch_reason": "",
+    "transition_journal": [],
+    "unresolved_questions": []
+  },
+  "budgets": {
+    "max_actions": 4,
+    "max_cycles": 8,
+    "max_model_calls": 6,
+    "max_packet_items": 8
+  },
+  "completed": false,
+  "cycles": [],
+  "episode_id": "active-cognitive-episode-4464581f82318d60",
+  "evidence": [
+    {
+      "content": "tests/runtime_gsr/test_model_execution_lane_isolation.py",
+      "evidence_id": "exp-b_evidence_1",
+      "exists": true,
+      "kind": "local_evidence",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "local_repo",
+      "summary": "Tests model isolation"
+    },
+    {
+      "content": "operator:campaign_uncertainty",
+      "evidence_id": "exp-b_contrary_1",
+      "exists": true,
+      "kind": "local_evidence",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "local_uncertainty",
+      "summary": "Contrary evidence: UI route and usefulness are not yet proven for this candidate."
+    }
+  ],
+  "goals": [
+    {
+      "expected_state": "Isolated model execution results",
+      "goal_id": "active-cognitive-goal-fd468d8588d054de",
+      "observed_state": "",
+      "priority": "operator_requested",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "summary": "Verify model independence"
+    }
+  ],
+  "hypotheses": [],
+  "learning_updates": [],
+  "loop_state": "idle",
+  "model_call_count": 0,
+  "next_focus_candidates": [],
+  "operation_requests": [],
+  "operation_results": [],
+  "outcomes": [],
+  "pending_operator_requests": [],
+  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+  "title": "Test Model Execution Isolation",
+  "useful_artifacts": [],
+  "working_memory_packets": []
+}

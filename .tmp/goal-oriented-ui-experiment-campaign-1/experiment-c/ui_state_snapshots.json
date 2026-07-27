@@ -1,0 +1,221 @@
+[
+  {
+    "blocked_authority_state": {},
+    "budget_remaining": {
+      "cycles": 8,
+      "model_calls": 6
+    },
+    "captured_at": "2026-07-27T01:41:18+00:00",
+    "completed": false,
+    "current_focus": "",
+    "current_goal": "Ensure live run compliance",
+    "current_operation": "",
+    "episode_id": "active-cognitive-episode-681cd9154360e1c0",
+    "evidence_considered": [
+      "exp-c_evidence_1",
+      "exp-c_contrary_1"
+    ],
+    "hypothesis_state": {},
+    "last_observed_outcome": {},
+    "loop_state": "idle",
+    "next_intended_step": "formulate a first hypothesis",
+    "title": "Audit Live Run Operation",
+    "ui_event": "launched",
+    "why_focus": []
+  },
+  {
+    "blocked_authority_state": {},
+    "budget_remaining": {
+      "cycles": 7,
+      "model_calls": 5
+    },
+    "captured_at": "2026-07-27T01:41:36+00:00",
+    "completed": false,
+    "current_focus": "Resolve discrepancy for goal: Ensure live run compliance",
+    "current_goal": "Ensure live run compliance",
+    "current_operation": "formulate_hypothesis",
+    "episode_id": "active-cognitive-episode-681cd9154360e1c0",
+    "evidence_considered": [
+      "exp-c_evidence_1",
+      "exp-c_contrary_1"
+    ],
+    "hypothesis_state": {
+      "assumptions": [
+        "Live run episodes are representative of the system's typical behavior"
+      ],
+      "confidence_state": "plausible",
+      "created_at": "2026-07-27T01:41:36+00:00",
+      "disposition": "needs_challenge",
+      "evidence_against": [],
+      "evidence_for": [
+        "exp-c_evidence_1"
+      ],
+      "expected_observations": [
+        "local evidence should support a bounded useful step"
+      ],
+      "hypothesis_id": "hypothesis-0f19f09129a57e9c",
+      "lifecycle_state": "active",
+      "originating_focus_id": "focus-092571b82ef78794",
+      "originating_goal_id": "active-cognitive-goal-607fe79d22140cdd",
+      "provenance": [
+        "cognitive-operation-fe9c7e38e8d911b5"
+      ],
+      "revised_at": "",
+      "revision_parent_id": "",
+      "revision_reason": "",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "scope": "Resolve discrepancy for goal: Ensure live run compliance",
+      "statement": "Live run episodes show no clear patterns or anomalies that would indicate non-compliance."
+    },
+    "last_observed_outcome": {
+      "created_at": "2026-07-27T01:41:36+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+      "observed": "Live run episodes show no clear patterns or anomalies that would indicate non-compliance.",
+      "operation_id": "cognitive-operation-fe9c7e38e8d911b5",
+      "outcome_id": "outcome-fb0249de550172b6"
+    },
+    "loop_state": "persisting",
+    "next_intended_step": "challenge the active hypothesis with contrary evidence",
+    "title": "Audit Live Run Operation",
+    "ui_event": "cycle",
+    "why_focus": [
+      "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+      "operator_priority",
+      "goal_discrepancy",
+      "expected_useful_progress"
+    ]
+  },
+  {
+    "blocked_authority_state": {},
+    "budget_remaining": {
+      "cycles": 6,
+      "model_calls": 4
+    },
+    "captured_at": "2026-07-27T01:42:14+00:00",
+    "completed": false,
+    "current_focus": "Resolve discrepancy for goal: Ensure live run compliance",
+    "current_goal": "Ensure live run compliance",
+    "current_operation": "compare_evidence",
+    "episode_id": "active-cognitive-episode-681cd9154360e1c0",
+    "evidence_considered": [
+      "exp-c_evidence_1",
+      "exp-c_contrary_1"
+    ],
+    "hypothesis_state": {
+      "assumptions": [
+        "Live run episodes are representative of the system's typical behavior"
+      ],
+      "confidence_state": "contested",
+      "created_at": "2026-07-27T01:41:36+00:00",
+      "disposition": "needs_challenge",
+      "evidence_against": [
+        "exp-c_contrary_1"
+      ],
+      "evidence_for": [
+        "exp-c_evidence_1"
+      ],
+      "expected_observations": [
+        "local evidence should support a bounded useful step"
+      ],
+      "hypothesis_id": "hypothesis-0f19f09129a57e9c",
+      "lifecycle_state": "active",
+      "originating_focus_id": "focus-092571b82ef78794",
+      "originating_goal_id": "active-cognitive-goal-607fe79d22140cdd",
+      "provenance": [
+        "cognitive-operation-fe9c7e38e8d911b5",
+        "cognitive-operation-8eab63df9325ed7b"
+      ],
+      "revised_at": "2026-07-27T01:42:14+00:00",
+      "revision_parent_id": "",
+      "revision_reason": "The live run episodes do not show clear patterns or anomalies that would indicate non-compliance, but the UI route and usefulness are not yet proven for this candidate.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "scope": "Resolve discrepancy for goal: Ensure live run compliance",
+      "statement": "Live run episodes show no clear patterns or anomalies that would indicate non-compliance."
+    },
+    "last_observed_outcome": {
+      "created_at": "2026-07-27T01:42:14+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform compare_evidence for the active focus using only referenced evidence.",
+      "observed": "The live run episodes do not show clear patterns or anomalies that would indicate non-compliance, but the UI route and usefulness are not yet proven for this candidate.",
+      "operation_id": "cognitive-operation-8eab63df9325ed7b",
+      "outcome_id": "outcome-75cda59cb99b5f7f"
+    },
+    "loop_state": "persisting",
+    "next_intended_step": "summarize learning and choose next focus",
+    "title": "Audit Live Run Operation",
+    "ui_event": "cycle",
+    "why_focus": [
+      "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+      "operator_priority",
+      "goal_discrepancy",
+      "expected_useful_progress"
+    ]
+  },
+  {
+    "blocked_authority_state": {},
+    "budget_remaining": {
+      "cycles": 5,
+      "model_calls": 3
+    },
+    "captured_at": "2026-07-27T01:42:35+00:00",
+    "completed": true,
+    "current_focus": "Challenge or revise hypothesis: Live run episodes show no clear patterns or anomalies that would indicate non-compliance.",
+    "current_goal": "Ensure live run compliance",
+    "current_operation": "summarize_learning",
+    "episode_id": "active-cognitive-episode-681cd9154360e1c0",
+    "evidence_considered": [
+      "exp-c_evidence_1",
+      "exp-c_contrary_1"
+    ],
+    "hypothesis_state": {
+      "assumptions": [
+        "Live run episodes are representative of the system's typical behavior"
+      ],
+      "confidence_state": "contested",
+      "created_at": "2026-07-27T01:41:36+00:00",
+      "disposition": "needs_challenge",
+      "evidence_against": [
+        "exp-c_contrary_1"
+      ],
+      "evidence_for": [
+        "exp-c_evidence_1"
+      ],
+      "expected_observations": [
+        "local evidence should support a bounded useful step"
+      ],
+      "hypothesis_id": "hypothesis-0f19f09129a57e9c",
+      "lifecycle_state": "active",
+      "originating_focus_id": "focus-092571b82ef78794",
+      "originating_goal_id": "active-cognitive-goal-607fe79d22140cdd",
+      "provenance": [
+        "cognitive-operation-fe9c7e38e8d911b5",
+        "cognitive-operation-8eab63df9325ed7b"
+      ],
+      "revised_at": "2026-07-27T01:42:14+00:00",
+      "revision_parent_id": "",
+      "revision_reason": "The live run episodes do not show clear patterns or anomalies that would indicate non-compliance, but the UI route and usefulness are not yet proven for this candidate.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "scope": "Resolve discrepancy for goal: Ensure live run compliance",
+      "statement": "Live run episodes show no clear patterns or anomalies that would indicate non-compliance."
+    },
+    "last_observed_outcome": {
+      "created_at": "2026-07-27T01:42:35+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform summarize_learning for the active focus using only referenced evidence.",
+      "observed": "Live run episodes do not show clear patterns or anomalies indicating non-compliance, but the UI route and usefulness are not yet proven.",
+      "operation_id": "cognitive-operation-c2cfa6a9c740663e",
+      "outcome_id": "outcome-cd3df32898587546"
+    },
+    "loop_state": "completed",
+    "next_intended_step": "inspect useful artifact and select next focus",
+    "title": "Audit Live Run Operation",
+    "ui_event": "cycle",
+    "why_focus": [
+      "An active hypothesis needs evidence-linked revision before action.",
+      "unresolved_hypothesis",
+      "evidence_revision",
+      "expected_useful_progress"
+    ]
+  }
+]

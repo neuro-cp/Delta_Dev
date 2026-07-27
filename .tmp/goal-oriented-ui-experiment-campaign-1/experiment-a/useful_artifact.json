@@ -1,0 +1,10 @@
+[
+  {
+    "artifact_id": "useful-artifact-33956bde21106d71",
+    "artifact_type": "cognitive_episode_summary",
+    "evidence_refs": [
+      "exp-a_evidence_1"
+    ],
+    "summary": "The current implementation of the active cognitive loop is sufficient for optimizing cognitive loop efficiency, but the UI route and usefulness are not yet proven for this candidate."
+  }
+]

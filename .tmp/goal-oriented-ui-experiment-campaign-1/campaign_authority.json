@@ -1,0 +1,22 @@
+{
+  "allowed": [
+    "local Tk UI execution",
+    "already-installed local model cognition lane",
+    "bounded evidence tooling under .tmp/goal-oriented-ui-experiment-campaign-1",
+    "focused source repair outside protected paths",
+    "focused and adjacent tests only"
+  ],
+  "authority": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+  "campaign": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1",
+  "forbidden": [
+    "network",
+    "external providers",
+    "package installation",
+    "model download",
+    "protected path mutation",
+    "stage",
+    "commit",
+    "push",
+    "full repository suite"
+  ]
+}

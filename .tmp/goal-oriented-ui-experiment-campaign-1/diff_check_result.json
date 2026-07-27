@@ -1,0 +1,7 @@
+{
+  "command": "git diff --check",
+  "passed": true,
+  "warnings": [
+    "LF will be replaced by CRLF for DELTA.py and protected live_competence_adapter.py"
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+  "approved_at": "2026-07-27T02:06:22+00:00",
+  "authority_state": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+  "claimed_at": "2026-07-27T02:06:22+00:00",
+  "completed_at": "2026-07-27T02:07:14+00:00",
+  "consumed_state": "terminal",
+  "created_at": "2026-07-27T02:06:22+00:00",
+  "execution_attempt_count": 1,
+  "execution_claim_id": "shared-local-model-execution-claim-641d3553b101dd24",
+  "failure_classification": "",
+  "lifecycle_state": "completed",
+  "mission_id": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1",
+  "mission_information_need_identity": "formulate_experiment_candidate",
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "question": "You are DELTA's campaign cognition operation. Return active-cognitive operation JSON only. The grammar fields are the candidate fields; fill each field directly. Task: formulate candidate 3 for GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1 with experiment_id exp-c. The candidate must be useful, local, bounded, non-duplicate, and externally inspectable. Do not propose schema campaigns, report-only work, network work, package installs, model downloads, protected paths, or broad source mutation. Protected paths: DELTA-75, reports/RC4_*, orchestration/runtime/live_competence_adapter.py. Allowed evidence anchors: DELTA.py; orchestration/runtime/active_cognitive_loop.py; tests/runtime_gsr/test_active_cognitive_loop.py; tests/runtime_gsr/test_model_execution_lane_isolation.py; .tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/live_episode_summary.json; .tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/marathon_closure_audit.json. Use exactly these candidate fields: experiment_id, title, practical_objective, why_it_is_useful, related_operator_or_project_goal, expected_artifact_or_outcome, local_evidence_available, contrary_or_uncertainty_evidence, required_cognitive_operations, required_bounded_actions, required_authority, expected_cycle_count, restart_relevance, success_criteria, failure_criteria, risk_and_scope, estimated_time_and_model_call_budget. local_evidence_available and contrary_or_uncertainty_evidence must each be an array with one string formatted 'path | note'. Use required_authority='operator_authorized_goal_oriented_ui_experiment_campaign_1'. Use expected_cycle_count as a number. Use estimated_time_and_model_call_budget like '3 cycles; 3 calls'. Keep each string under 14 words. Accepted candidates to avoid duplicating: [{\"evidence\": [{\"note\": \"Current latency data\", \"path\": \".tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/live_episode_summary.json\"}], \"experiment_id\": \"exp-a\", \"objective\": \"Reduce UI response latency by 20%\", \"title\": \"Optimize DELTA.py UI for faster response times\"}] Return only the operation JSON object.",
+  "question_objective": "formulate_experiment_candidate",
+  "record_digest": "74a688e67706bd736619ed6e070294d02654d4eeb8d6e0e63c45e2c4bf1c064f",
+  "record_version": 1,
+  "request_digest": "cd8e307d3ef8148b3712f94acad9621f8700a2ecc66f79407f18a74e95f96ffd",
+  "request_id": "shared-local-model-request-e951b8000952be6c",
+  "requester_reference": "candidate_formulation_grammar_failsoft_3",
+  "requester_type": "goal_oriented_ui_experiment_campaign",
+  "result_id": "shared-local-model-result-377b9e186aa3d45b",
+  "selected_lane": {
+    "available": true,
+    "candidate_models": [
+      {
+        "capabilities": [
+          "text"
+        ],
+        "family": "qwen",
+        "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "reason": "registered_alias",
+        "registry_key": "qwen",
+        "tier": 3
+      }
+    ],
+    "capabilities": [
+      "text"
+    ],
+    "context_size": 32768,
+    "cost_latency_class": "medium_to_high_local",
+    "display_name": "Reasoning / Analysis Lane",
+    "executed": false,
+    "execution_gate": "not_executed_by_default",
+    "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+    "expected_weakness": "external facts need gated supporting information",
+    "fallback_priority": 3,
+    "lane": "reasoning_analysis",
+    "model_family": "qwen",
+    "preferred_task_lanes": [
+      "analysis",
+      "research",
+      "investigation",
+      "external_knowledge_request"
+    ],
+    "provider_calls_performed": false,
+    "rejected_models": [],
+    "selected_model": "qwen",
+    "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+    "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+    "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+  },
+  "semantic_identity": "campaign-candidate-formulation-single-202d14c4429fe15a",
+  "session_reference": ""
+}

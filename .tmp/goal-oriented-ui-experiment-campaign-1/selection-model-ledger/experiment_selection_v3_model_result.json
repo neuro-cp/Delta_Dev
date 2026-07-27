@@ -1,0 +1,60 @@
+{
+  "adapter_identity": "goal_oriented_ui_campaign.ProviderManager.exact_prompt",
+  "availability_state": "available",
+  "execution_completed_at": "2026-07-27T02:22:59+00:00",
+  "execution_started_at": "2026-07-27T02:22:21+00:00",
+  "failure_classification": "",
+  "failure_detail": "",
+  "latency_seconds": 37.6054,
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "provenance": {
+    "execution_claim_id": "shared-local-model-execution-claim-72efa8a1f5252d97",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    }
+  },
+  "request_id": "shared-local-model-request-6345a422ce3c7289",
+  "response_digest": "785d4cce7b528eae0e0b6ba6403e06a69419e89c6dc0500146781900af33822d",
+  "response_reference": "{ \"selected\": [ \"exp-b\", \"exp-c\", \"exp-d\", \"exp-e\" ], \"ranking\":  \"1. exp-b\\n2. exp-c\\n3. exp-d\\n4. exp-e\", \"rationale\": \"These experiments collectively cover repository diagnosis/development, research synthesis, failed-hypothesis revision, interruption/restart, and autonomous follow-up selection. exp-b focuses on live episode synthesis, exp-c on UI impact validation, exp-d on Tk reload optimization, and exp-e on autonomous focus selection. Each experiment addresses a critical aspect of the campaign's operational needs, ensuring a comprehensive approach to goal-oriented UI experimentation.\" \n\n, \"uncertainty\": \"Uncertainty in operator's current focus and decision-making process\" \n\n, \"recommended_state_transition\": \"select_experiment_set\" \n\n}",
+  "result_digest": "e52d6892f7389e8bd9e130f7e5ab66f17fe1e401034dbbe8e56ad85e3413861a",
+  "result_id": "shared-local-model-result-515e1802aa1a31b1",
+  "terminal_state": "completed"
+}

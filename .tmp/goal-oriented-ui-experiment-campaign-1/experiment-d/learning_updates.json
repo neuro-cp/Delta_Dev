@@ -1,0 +1,10 @@
+[
+  {
+    "created_at": "2026-07-27T01:43:46+00:00",
+    "evidence_refs": [
+      "exp-d_evidence_1"
+    ],
+    "learning_id": "learning-14b4d919aab53877",
+    "summary": "The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate."
+  }
+]

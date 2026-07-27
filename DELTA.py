@@ -72,6 +72,21 @@ from orchestration.runtime.active_cognitive_loop import (  # noqa: E402
     run_cognitive_cycle as run_active_cognitive_cycle,
     write_episode_state as write_active_cognitive_episode_state,
 )
+from orchestration.runtime.goal_oriented_ui_campaign import (  # noqa: E402
+    CAMPAIGN_ID as GOAL_UI_CAMPAIGN_ID,
+    begin_follow_up as begin_goal_ui_campaign_follow_up,
+    campaign_path as goal_ui_campaign_path,
+    formulate_candidate_experiments as formulate_goal_ui_campaign_candidates,
+    launch_experiment as launch_goal_ui_campaign_experiment,
+    pause_experiment as pause_goal_ui_campaign_experiment,
+    read_experiment_state as read_goal_ui_campaign_experiment_state,
+    read_json as read_goal_ui_campaign_json,
+    resume_experiment as resume_goal_ui_campaign_experiment,
+    run_experiment_cycle as run_goal_ui_campaign_experiment_cycle,
+    select_experiments as select_goal_ui_campaign_experiments,
+    summarize_for_ui as summarize_goal_ui_campaign_for_ui,
+    write_json as write_goal_ui_campaign_json,
+)
 from orchestration.runtime.rc3_ui_capability_adapter import (  # noqa: E402
     PANEL_ORDER as RC3_PANEL_ORDER,
     build_rc3_ui_integration_report,
@@ -1644,6 +1659,9 @@ class DeltaApp:
         self.resident_model_id: str | None = None
         self.resident_lane: str | None = None
         self.model_residency_status = "not_warmed"
+        self.goal_ui_campaign_status = tk.StringVar(value="Goal UI campaign: not started")
+        self.goal_ui_campaign_selected_id = tk.StringVar(value="")
+        self.goal_ui_campaign_buttons: dict[str, ttk.Button] = {}
         self.developer_overlay_enabled = tk.BooleanVar(value=False)
         if not validate_console_safe(self.snapshot):
             raise RuntimeError("DELTA console safety validation failed")
@@ -1788,6 +1806,8 @@ class DeltaApp:
 
         self.goals_status = tk.StringVar(value="Human-facing goal cards. Technical identifiers are hidden until View technical details.")
         ttk.Label(self.goals_tab, textvariable=self.goals_status).pack(anchor=tk.W, pady=(8, 0))
+
+        self._build_goal_ui_campaign_panel()
 
         panes = ttk.PanedWindow(self.goals_tab, orient=tk.HORIZONTAL)
         panes.pack(fill=tk.BOTH, expand=True, pady=(8, 0))
@@ -1987,6 +2007,227 @@ class DeltaApp:
         self.goal_detail.pack(fill=tk.BOTH, expand=True)
         self.goal_detail.configure(state=tk.DISABLED)
         self.operator_ux_goal_cards: dict[str, dict[str, object]] = {}
+
+    def _build_goal_ui_campaign_panel(self) -> None:
+        campaign = ttk.LabelFrame(self.goals_tab, text="Goal-Oriented UI Experiments")
+        campaign.pack(fill=tk.X, pady=(8, 0))
+        ttk.Label(campaign, textvariable=self.goal_ui_campaign_status).pack(anchor=tk.W, padx=6, pady=(4, 0))
+
+        controls = ttk.Frame(campaign)
+        controls.pack(fill=tk.X, padx=6, pady=(6, 4))
+        specs = (
+            ("formulate", "Formulate candidates", self._goal_ui_campaign_formulate),
+            ("select", "Select set", self._goal_ui_campaign_select),
+            ("launch", "Launch selected", self._goal_ui_campaign_launch_selected),
+            ("cycle", "Run cycle", self._goal_ui_campaign_run_cycle),
+            ("pause", "Pause", self._goal_ui_campaign_pause),
+            ("resume", "Resume", self._goal_ui_campaign_resume),
+            ("restart", "Reload state", self._goal_ui_campaign_reload),
+            ("follow", "Begin follow-up", self._goal_ui_campaign_follow_up),
+        )
+        for key, label, command in specs:
+            button = ttk.Button(controls, text=label, command=command)
+            button.pack(side=tk.LEFT, padx=(0, 6))
+            self.goal_ui_campaign_buttons[key] = button
+
+        body = ttk.Frame(campaign)
+        body.pack(fill=tk.X, padx=6, pady=(0, 6))
+        self.goal_ui_campaign_tree = ttk.Treeview(
+            body,
+            columns=("selected", "cycles", "status"),
+            show="tree headings",
+            height=4,
+        )
+        self.goal_ui_campaign_tree.heading("#0", text="Experiment")
+        self.goal_ui_campaign_tree.heading("selected", text="Selected")
+        self.goal_ui_campaign_tree.heading("cycles", text="Cycles")
+        self.goal_ui_campaign_tree.heading("status", text="Status")
+        self.goal_ui_campaign_tree.column("#0", width=360)
+        self.goal_ui_campaign_tree.column("selected", width=80, anchor=tk.CENTER)
+        self.goal_ui_campaign_tree.column("cycles", width=70, anchor=tk.CENTER)
+        self.goal_ui_campaign_tree.column("status", width=160)
+        self.goal_ui_campaign_tree.pack(side=tk.LEFT, fill=tk.X, expand=True)
+        self.goal_ui_campaign_tree.bind("<<TreeviewSelect>>", lambda _event: self._goal_ui_campaign_show_selected())
+
+        self.goal_ui_campaign_detail = scrolledtext.ScrolledText(body, wrap=tk.WORD, height=5, width=68)
+        self.goal_ui_campaign_detail.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(8, 0))
+        self.goal_ui_campaign_detail.configure(state=tk.DISABLED)
+        self._goal_ui_campaign_refresh()
+
+    def _goal_ui_campaign_candidates(self) -> list[dict[str, object]]:
+        payload = read_goal_ui_campaign_json(goal_ui_campaign_path("candidate_experiments.json"), {}) or {}
+        return list(dict(payload).get("candidates") or [])
+
+    def _goal_ui_campaign_selection(self) -> list[dict[str, object]]:
+        payload = read_goal_ui_campaign_json(goal_ui_campaign_path("experiment_selection.json"), {}) or {}
+        return list(dict(payload).get("selected") or [])
+
+    def _goal_ui_campaign_current_id(self) -> str:
+        selected = self.goal_ui_campaign_tree.selection()
+        if selected:
+            self.goal_ui_campaign_selected_id.set(str(selected[0]))
+        if self.goal_ui_campaign_selected_id.get():
+            return self.goal_ui_campaign_selected_id.get()
+        selection = self._goal_ui_campaign_selection()
+        if selection:
+            experiment_id = str(selection[0].get("experiment_id") or "")
+            self.goal_ui_campaign_selected_id.set(experiment_id)
+            return experiment_id
+        return ""
+
+    def _goal_ui_campaign_proposal(self, experiment_id: str) -> dict[str, object] | None:
+        for proposal in self._goal_ui_campaign_selection() + self._goal_ui_campaign_candidates():
+            if str(proposal.get("experiment_id") or "") == experiment_id:
+                return proposal
+        return None
+
+    def _goal_ui_campaign_write_detail(self, payload: object) -> None:
+        self.goal_ui_campaign_detail.configure(state=tk.NORMAL)
+        self.goal_ui_campaign_detail.delete("1.0", tk.END)
+        if isinstance(payload, str):
+            text = payload
+        else:
+            text = json.dumps(payload, indent=2, sort_keys=True, default=str)
+        self.goal_ui_campaign_detail.insert(tk.END, text)
+        self.goal_ui_campaign_detail.configure(state=tk.DISABLED)
+
+    def _goal_ui_campaign_refresh(self) -> None:
+        if not hasattr(self, "goal_ui_campaign_tree"):
+            return
+        for item in self.goal_ui_campaign_tree.get_children():
+            self.goal_ui_campaign_tree.delete(item)
+        selected_ids = {str(item.get("experiment_id") or "") for item in self._goal_ui_campaign_selection()}
+        candidates = self._goal_ui_campaign_candidates()
+        for proposal in candidates:
+            experiment_id = str(proposal.get("experiment_id") or "")
+            state = read_goal_ui_campaign_experiment_state(experiment_id)
+            cycles = len(state.cycles) if state is not None else 0
+            status = state.loop_state if state is not None else "candidate"
+            self.goal_ui_campaign_tree.insert(
+                "",
+                tk.END,
+                iid=experiment_id,
+                text=str(proposal.get("title") or experiment_id),
+                values=("yes" if experiment_id in selected_ids else "", cycles, status),
+            )
+        if self.goal_ui_campaign_selected_id.get() in self.goal_ui_campaign_tree.get_children():
+            self.goal_ui_campaign_tree.selection_set(self.goal_ui_campaign_selected_id.get())
+        elif candidates:
+            first = str(candidates[0].get("experiment_id") or "")
+            self.goal_ui_campaign_tree.selection_set(first)
+            self.goal_ui_campaign_selected_id.set(first)
+        self.goal_ui_campaign_status.set(
+            f"{GOAL_UI_CAMPAIGN_ID}: candidates={len(candidates)}; selected={len(selected_ids)}; active={self.goal_ui_campaign_selected_id.get() or 'none'}"
+        )
+
+    def _goal_ui_campaign_show_selected(self) -> None:
+        experiment_id = self._goal_ui_campaign_current_id()
+        proposal = self._goal_ui_campaign_proposal(experiment_id)
+        state = read_goal_ui_campaign_experiment_state(experiment_id) if experiment_id else None
+        summary = summarize_goal_ui_campaign_for_ui(state, proposal)
+        self._goal_ui_campaign_write_detail(summary)
+
+    def _goal_ui_campaign_formulate(self) -> None:
+        try:
+            candidates = formulate_goal_ui_campaign_candidates(self.provider_manager)
+            self.goal_ui_campaign_status.set(f"{GOAL_UI_CAMPAIGN_ID}: formulated {len(candidates)} candidates through cognition lane")
+            write_goal_ui_campaign_json(goal_ui_campaign_path("ui_evidence_index.json"), {
+                "candidate_experiments_visible": True,
+                "last_ui_event": "formulate_candidates",
+            })
+        except Exception as exc:  # noqa: BLE001
+            self.goal_ui_campaign_status.set(f"Goal UI campaign formulation failed: {type(exc).__name__}: {str(exc)[:180]}")
+        self._goal_ui_campaign_refresh()
+        self._goal_ui_campaign_show_selected()
+
+    def _goal_ui_campaign_select(self) -> None:
+        try:
+            candidates = self._goal_ui_campaign_candidates()
+            selected = select_goal_ui_campaign_experiments(candidates, self.provider_manager)
+            self.goal_ui_campaign_status.set(f"{GOAL_UI_CAMPAIGN_ID}: selected {len(selected)} experiments")
+            if selected:
+                self.goal_ui_campaign_selected_id.set(str(selected[0].get("experiment_id") or ""))
+            write_goal_ui_campaign_json(goal_ui_campaign_path("ui_evidence_index.json"), {
+                "candidate_experiments_visible": True,
+                "selected_experiment_visible": True,
+                "last_ui_event": "select_experiments",
+            })
+        except Exception as exc:  # noqa: BLE001
+            self.goal_ui_campaign_status.set(f"Goal UI campaign selection failed: {type(exc).__name__}: {str(exc)[:180]}")
+        self._goal_ui_campaign_refresh()
+        self._goal_ui_campaign_show_selected()
+
+    def _goal_ui_campaign_launch_selected(self) -> None:
+        experiment_id = self._goal_ui_campaign_current_id()
+        proposal = self._goal_ui_campaign_proposal(experiment_id)
+        if not proposal:
+            self.goal_ui_campaign_status.set("Goal UI campaign: select an experiment first")
+            return
+        try:
+            state = launch_goal_ui_campaign_experiment(proposal)
+            self.goal_ui_campaign_status.set(f"{GOAL_UI_CAMPAIGN_ID}: launched {experiment_id}")
+            self._goal_ui_campaign_write_detail(summarize_goal_ui_campaign_for_ui(state, proposal))
+        except Exception as exc:  # noqa: BLE001
+            self.goal_ui_campaign_status.set(f"Goal UI campaign launch failed: {type(exc).__name__}: {str(exc)[:180]}")
+        self._goal_ui_campaign_refresh()
+
+    def _goal_ui_campaign_run_cycle(self) -> None:
+        experiment_id = self._goal_ui_campaign_current_id()
+        if not experiment_id:
+            self.goal_ui_campaign_status.set("Goal UI campaign: select an experiment first")
+            return
+        try:
+            state = run_goal_ui_campaign_experiment_cycle(experiment_id, self.provider_manager)
+            self.goal_ui_campaign_status.set(
+                f"{GOAL_UI_CAMPAIGN_ID}: {experiment_id} cycle complete; calls={state.model_call_count}; state={state.loop_state}"
+            )
+            self._goal_ui_campaign_write_detail(summarize_goal_ui_campaign_for_ui(state, self._goal_ui_campaign_proposal(experiment_id)))
+        except Exception as exc:  # noqa: BLE001
+            self.goal_ui_campaign_status.set(f"Goal UI campaign cycle failed: {type(exc).__name__}: {str(exc)[:180]}")
+        self._goal_ui_campaign_refresh()
+
+    def _goal_ui_campaign_pause(self) -> None:
+        experiment_id = self._goal_ui_campaign_current_id()
+        if not experiment_id:
+            return
+        try:
+            state = pause_goal_ui_campaign_experiment(experiment_id)
+            self.goal_ui_campaign_status.set(f"{GOAL_UI_CAMPAIGN_ID}: paused {experiment_id}")
+            self._goal_ui_campaign_write_detail(summarize_goal_ui_campaign_for_ui(state, self._goal_ui_campaign_proposal(experiment_id)))
+        except Exception as exc:  # noqa: BLE001
+            self.goal_ui_campaign_status.set(f"Goal UI campaign pause failed: {type(exc).__name__}: {str(exc)[:180]}")
+        self._goal_ui_campaign_refresh()
+
+    def _goal_ui_campaign_resume(self) -> None:
+        experiment_id = self._goal_ui_campaign_current_id()
+        if not experiment_id:
+            return
+        try:
+            state = resume_goal_ui_campaign_experiment(experiment_id)
+            self.goal_ui_campaign_status.set(f"{GOAL_UI_CAMPAIGN_ID}: resumed {experiment_id}")
+            self._goal_ui_campaign_write_detail(summarize_goal_ui_campaign_for_ui(state, self._goal_ui_campaign_proposal(experiment_id)))
+        except Exception as exc:  # noqa: BLE001
+            self.goal_ui_campaign_status.set(f"Goal UI campaign resume failed: {type(exc).__name__}: {str(exc)[:180]}")
+        self._goal_ui_campaign_refresh()
+
+    def _goal_ui_campaign_reload(self) -> None:
+        experiment_id = self._goal_ui_campaign_current_id()
+        state = read_goal_ui_campaign_experiment_state(experiment_id) if experiment_id else None
+        self.goal_ui_campaign_status.set(f"{GOAL_UI_CAMPAIGN_ID}: reloaded {experiment_id or 'none'} from durable state")
+        self._goal_ui_campaign_write_detail(summarize_goal_ui_campaign_for_ui(state, self._goal_ui_campaign_proposal(experiment_id)))
+        self._goal_ui_campaign_refresh()
+
+    def _goal_ui_campaign_follow_up(self) -> None:
+        experiment_id = self._goal_ui_campaign_current_id()
+        if not experiment_id:
+            return
+        try:
+            state = begin_goal_ui_campaign_follow_up(experiment_id, self.provider_manager)
+            self.goal_ui_campaign_status.set(f"{GOAL_UI_CAMPAIGN_ID}: began follow-up for {experiment_id}")
+            self._goal_ui_campaign_write_detail(summarize_goal_ui_campaign_for_ui(state, self._goal_ui_campaign_proposal(experiment_id)))
+        except Exception as exc:  # noqa: BLE001
+            self.goal_ui_campaign_status.set(f"Goal UI campaign follow-up failed: {type(exc).__name__}: {str(exc)[:180]}")
+        self._goal_ui_campaign_refresh()
 
     def _build_activity_tab(self) -> None:
         top = ttk.Frame(self.activity_tab)

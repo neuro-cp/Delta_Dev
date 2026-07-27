@@ -1,0 +1,8 @@
+{
+  "chat_regression": {
+    "result": "7 passed"
+  },
+  "claim_relation_contradiction_smoke": {
+    "result": "35 passed"
+  }
+}

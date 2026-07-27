@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "protected_dirty_preserved": [
+    "orchestration/runtime/live_competence_adapter.py"
+  ],
+  "protected_paths_staged": []
+}

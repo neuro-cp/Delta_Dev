@@ -1,0 +1,9 @@
+{
+  "bounded_actions_per_cycle": 1,
+  "campaign": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1",
+  "max_selected_experiments": 4,
+  "stagnation_limit": 2,
+  "suggested_cycles_per_experiment": "3-8",
+  "suggested_model_calls_per_experiment": "2-8",
+  "wall_clock_policy": "bounded local execution only"
+}

@@ -1,0 +1,25 @@
+{
+  "campaign": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1",
+  "diagnosis": "DELTA has a working active cognition loop and has passed bounded live episodes; the capability has not yet been exercised through the actual Tk/operator UI against several self-formulated useful goals, so usefulness, operator visibility, experiment selection, runtime control, and sustained UI behavior remain insufficiently proven.",
+  "current_proven_transition": "working active cognition loop with bounded live episodes",
+  "missing_transition": "actual Tk/operator UI campaign that formulates, selects, launches, observes, repairs, resumes, and evaluates useful goal-oriented experiments",
+  "required_transition": [
+    "current runtime state",
+    "experiment candidate generation",
+    "usefulness and feasibility assessment",
+    "operator-visible experiment proposal",
+    "Tk launch",
+    "live cognitive execution",
+    "observable hypothesis/evidence/action updates",
+    "useful result",
+    "restart/resume",
+    "follow-up focus selection",
+    "independent campaign evaluation"
+  ],
+  "protected_paths": [
+    "DELTA-75",
+    "reports/RC4_*",
+    "orchestration/runtime/live_competence_adapter.py"
+  ],
+  "source_edits_started": false
+}

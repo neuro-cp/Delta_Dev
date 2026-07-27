@@ -1,0 +1,4 @@
+{
+  "basis": "git diff --check reported no whitespace errors",
+  "passed": true
+}

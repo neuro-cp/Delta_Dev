@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "exp-a_evidence_1"
+    ],
+    "lesson": "The current implementation of the active cognitive loop is sufficient for optimizing cognitive loop efficiency, but the UI route and usefulness are not yet proven for this candidate.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "UI route and usefulness are not yet proven for this candidate.",
+    "unresolved_questions": [
+      "Is the UI route and usefulness proven for this candidate?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"The current implementation of the active cognitive loop is sufficient for optimizing cognitive loop efficiency, but the UI route and usefulness are not yet proven for this candidate.\",\"evidence_refs\":[\"exp-a_evidence_1\"],\"unresolved_questions\":[\"Is the UI route and usefulness proven for this candidate?\"],\"uncertainty\":\"UI route and usefulness are not yet proven for this candidate.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "d217f9979f5ad534f71fca5d8e1beaca2f907877134c80cc2a414f933e77e779",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

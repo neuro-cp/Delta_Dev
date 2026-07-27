@@ -1,0 +1,60 @@
+{
+  "adapter_identity": "goal_oriented_ui_campaign.ProviderManager.exact_prompt",
+  "availability_state": "available",
+  "execution_completed_at": "2026-07-27T01:50:09+00:00",
+  "execution_started_at": "2026-07-27T01:47:53+00:00",
+  "failure_classification": "",
+  "failure_detail": "",
+  "latency_seconds": 136.0343,
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "provenance": {
+    "execution_claim_id": "shared-local-model-execution-claim-b3a3212d27c709c8",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    }
+  },
+  "request_id": "shared-local-model-request-3cbb3473d297c6ea",
+  "response_digest": "4664278def579b967387bf0d4f7b57ecc99185fd5df5c2669e8f43e64bbe7a0c",
+  "response_reference": "{ \"assumptions\": [ \"EXPERIMENT_003: repository diagnosis/development\", \"EXPERIMENT_004: research synthesis\", \"EXPERIMENT_005: failed-hypothesis revision\", \"EXPERIMENT_006: interruption/restart\", \"EXPERIMENT_007: autonomous follow-up selection\" ], \"contrary_evidence_considered\": [ \"EXPERIMENT_008: report-only work\", \"EXPERIMENT_009: network dependencies\", \"EXPERIMENT_010: protected-path dependencies\", \"EXPERIMENT_011: work already proven by prior live episodes\" ], \"evidence_refs\": [ \"EXPERIMENT_003: https://github.com/delta-ai/ai-cognition/issues/13\", \"EXPERIMENT_004: https://github.com/delta-ai/ai-cognition/issues/14\", \"EXPERIMENT_005: https://github.com/delta-ai/ai-cognition/issues/15\", \"EXPERIMENT_006: https://github.com/delta-ai/ai-cognition/issues/16\", \"EXPERIMENT_007: https://github.com/delta-ai/ai-cognition/issues/17\", \"EXPERIMENT_008: https://github.com/delta-ai/ai-cognition/issues/18\", \"EXPERIMENT_009: https://github.com/delta-ai/ai-cognition/issues/19\", \"EXPERIMENT_010: https://github.com/delta-ai/ai-cognition/issues/20\", \"EXPERIMENT_011: https://github.com/delta-ai/ai-cognition/issues/21\" ], \"interpretation\": \"{ \\\"selected\\\": [ \\\"EXPERIMENT_003\\\", \\\"EXPERIMENT_004\\\", \\\"EXPERIMENT_005\\\", \\\"EXPERIMENT_006\\\" ], \\\"ranking\\\": [ \\\"EXPERIMENT_003\\\", \\\"EXPERIMENT_004\\\", \\\"EXPERIMENT_005\\\", \\\"EXPERIMENT_006\\\" ], \\\"rationale\\\": \\\"Selected experiments cover repository diagnosis/development, research synthesis, failed-hypothesis revision, and interruption/restart. These are essential for maintaining and improving the system's performance, and their novelty and local executability make them suitable for this campaign. Autonomous follow-up selection is excluded as it is more complex and less directly related to the immediate goals. The other criteria are also met, making these the best choices for this experiment set. \\\" }\" , \"next_evidence_need\": \"Further evidence for the effectiveness of autonomous follow-up selection is needed.\", \"next_focus_proposal\": \"Propose a simpler version of autonomous follow-up selection that can be integrated into the current experiment set for more comprehensive coverage.\" , \"operation_result_type\": \"EXPERIMENT_SET_SELECTION\" , \"recommended_action\": \"Proceed with the selected experiments and monitor their impact on system performance and user experience.\" , \"recommended_state_transition\": \"ONGOING_EXPERIMENT_SET_DEVELOPMENT\" , \"uncertainty\": \"Low\" }",
+  "result_digest": "88dfaf3759966e5725c608233133fe6fa9c1d7d5e7c5aac552a88b0e007abecb",
+  "result_id": "shared-local-model-result-22b36b3dd2c6bbbe",
+  "terminal_state": "completed"
+}

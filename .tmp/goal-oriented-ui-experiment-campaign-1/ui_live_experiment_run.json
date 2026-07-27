@@ -1,0 +1,1595 @@
+{
+  "selected": [
+    "exp-a",
+    "exp-b",
+    "exp-c",
+    "exp-d"
+  ],
+  "snapshots": [
+    {
+      "event": "selected_experiment_visible",
+      "experiment_id": "exp-a",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=6; selected=4; active=exp-a",
+      "selected": [
+        "exp-a"
+      ],
+      "tree_items": [
+        {
+          "iid": "exp-a",
+          "text": "Optimize Active Cognitive Loop",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-b",
+          "text": "Test Model Execution Isolation",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-c",
+          "text": "Audit Live Run Operation",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-d",
+          "text": "Evaluate Live Run Closure Audit",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-e",
+          "text": "Analyze Active Cognitive Architecture",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-f",
+          "text": "Explore Cognitive Operations",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        }
+      ],
+      "detail": "{\n  \"proposal\": {\n    \"contrary_or_uncertainty_evidence\": [\n      {\n        \"note\": \"UI route and usefulness are not yet proven for this candidate.\",\n        \"path\": \"operator:campaign_uncertainty\"\n      }\n    ],\n    \"estimated_time_and_model_call_budget\": \"3 cycles; 3 calls\",\n    \"expected_artifact_or_outcome\": \"Optimized cognitive loop configuration\",\n    \"expected_cycle_count\": 3,\n    \"experiment_id\": \"exp-a\",\n    \"failure_criteria\": \"No useful artifact or no visible UI state.\",\n    \"local_evidence_available\": [\n      {\n        \"note\": \"Contains current loop implementation\",\n        \"path\": \"orchestration/runtime/active_cognitive_loop.py\"\n      }\n    ],\n    \"practical_objective\": \"Improve cognitive loop efficiency\",\n    \"related_operator_or_project_goal\": \"Increase system throughput\",\n    \"required_authority\": \"operator_authorized_goal_oriented_ui_experiment_campaign_1\",\n    \"required_bounded_actions\": [\n      \"inspect local evidence\",\n      \"run bounded cognition\",\n      \"write useful artifact\"\n    ],\n    \"required_cognitive_operations\": [\n      \"formulate_hypothesis\",\n      \"compare_evidence\",\n      \"summarize_learning\"\n    ],\n    \"restart_relevance\": \"Can contribute to campaign restart proof if selected.\",\n    \"risk_and_scope\": \"Local, bounded, non-protected campaign evidence only.\",\n    \"success_criteria\": \"Produces useful artifact grounded in local evidence.\",\n    \"title\": \"Optimize Active Cognitive Loop\",\n    \"validation\": {\n      \"accepted\": true,\n      \"campaign_enriched_fields\": [\n        \"contrary_or_uncertainty_evidence\",\n        \"required_cognitive_operations\",\n        \"required_bounded_actions\",\n        \"required_authority\",\n        \"expected_cycle_count\",\n        \"restart_relevance\",\n        \"success_criteria\",\n        \"failure_criteria\",\n        \"risk_and_scope\",\n        \"estimated_time_and_model_call_budget\"\n      ],\n      \"criteria\": \"local, bounded, useful, non-protected\",\n      \"model_proposed_fields\": [\n        \"expected_artifact_or_outcome\",\n        \"experiment_id\",\n        \"local_evidence_available\",\n        \"practical_objective\",\n        \"related_operator_or_project_goal\",\n        \"title\",\n        \"why_it_is_useful\"\n      ]\n    },\n    \"why_it_is_useful\": \"Enhances overall system performance\"\n  },\n  \"state\": \"not_started\"\n}",
+      "tab": "Goals"
+    },
+    {
+      "event": "experiment_running_launched",
+      "experiment_id": "exp-a",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=6; selected=4; active=exp-a",
+      "selected": [
+        "exp-a"
+      ],
+      "tree_items": [
+        {
+          "iid": "exp-a",
+          "text": "Optimize Active Cognitive Loop",
+          "values": [
+            "yes",
+            "0",
+            "idle"
+          ]
+        },
+        {
+          "iid": "exp-b",
+          "text": "Test Model Execution Isolation",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-c",
+          "text": "Audit Live Run Operation",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-d",
+          "text": "Evaluate Live Run Closure Audit",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-e",
+          "text": "Analyze Active Cognitive Architecture",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-f",
+          "text": "Explore Cognitive Operations",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        }
+      ],
+      "detail": "{\n  \"artifact\": {},\n  \"budget\": {\n    \"cycles\": 8,\n    \"model_calls\": 6\n  },\n  \"completed\": false,\n  \"evidence\": [\n    \"exp-a_evidence_1\",\n    \"exp-a_contrary_1\"\n  ],\n  \"failures\": [\n    \"no_model_cognition\",\n    \"unbounded_context\",\n    \"unsupported_hypothesis\",\n    \"no_evidence_revision\",\n    \"no_useful_outcome\"\n  ],\n  \"focus\": \"\",\n  \"goal\": \"Improve cognitive loop efficiency\",\n  \"hypothesis\": {},\n  \"operation\": \"\",\n  \"outcome\": {},\n  \"state\": \"idle\",\n  \"title\": \"Optimize Active Cognitive Loop\"\n}",
+      "tab": "Goals"
+    },
+    {
+      "event": "focus_operation_hypothesis_visible_cycle_1",
+      "experiment_id": "exp-a",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=6; selected=4; active=exp-a",
+      "selected": [
+        "exp-a"
+      ],
+      "tree_items": [
+        {
+          "iid": "exp-a",
+          "text": "Optimize Active Cognitive Loop",
+          "values": [
+            "yes",
+            "1",
+            "persisting"
+          ]
+        },
+        {
+          "iid": "exp-b",
+          "text": "Test Model Execution Isolation",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-c",
+          "text": "Audit Live Run Operation",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-d",
+          "text": "Evaluate Live Run Closure Audit",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-e",
+          "text": "Analyze Active Cognitive Architecture",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-f",
+          "text": "Explore Cognitive Operations",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        }
+      ],
+      "detail": "{\n  \"artifact\": {},\n  \"budget\": {\n    \"cycles\": 7,\n    \"model_calls\": 5\n  },\n  \"completed\": false,\n  \"evidence\": [\n    \"exp-a_evidence_1\",\n    \"exp-a_contrary_1\"\n  ],\n  \"failures\": [\n    \"no_model_cognition\",\n    \"no_evidence_revision\",\n    \"no_useful_outcome\"\n  ],\n  \"focus\": \"Resolve discrepancy for goal: Improve cognitive loop efficiency\",\n  \"goal\": \"Improve cognitive loop efficiency\",\n  \"hypothesis\": {\n    \"assumptions\": [\n      \"The current implementation is complete and correct\"\n    ],\n    \"confidence_state\": \"plausible\",\n    \"created_at\": \"2026-07-27T01:39:34+00:00\",\n    \"disposition\": \"needs_challenge\",\n    \"evidence_against\": [],\n    \"evidence_for\": [\n      \"exp-a_evidence_1\"\n    ],\n    \"expected_observations\": [\n      \"local evidence should support a bounded useful step\"\n    ],\n    \"hypothesis_id\": \"hypothesis-c5d38ff57776ade0\",\n    \"lifecycle_state\": \"active\",\n    \"originating_focus_id\": \"focus-fb5f2aeeb7bd2abe\",\n    \"originating_goal_id\": \"active-cognitive-goal-098dd508c5ff9808\",\n    \"provenance\": [\n      \"cognitive-operation-bb2ae3ee4b1d0c3e\"\n    ],\n    \"revised_at\": \"\",\n    \"revision_parent_id\": \"\",\n    \"revision_reason\": \"\",\n    \"schema_version\": \"active_cognitive_architecture_marathon_1_v1\",\n    \"scope\": \"Resolve discrepancy for goal: Improve cognitive loop efficiency\",\n    \"statement\": \"The current implementation of the active cognitive loop in orchestration/runtime/active_cognitive_loop.py is sufficient for optimizing cognitive loop efficiency.\"\n  },\n  \"operation\": \"formulate_hypothesis\",\n  \"outcome\": {\n    \"created_at\": \"2026-07-27T01:39:34+00:00\",\n    \"discrepancy\": \"progress_observed\",\n    \"expected\": \"Perform formulate_hypothesis for the active focus using only referenced evidence.\",\n    \"observed\": \"The current implementation of the active cognitive loop in orchestration/runtime/active_cognitive_loop.py is sufficient for optimizing cognitive loop efficiency.\",\n    \"operation_id\": \"cognitive-operation-bb2ae3ee4b1d0c3e\",\n    \"outcome_id\": \"outcome-809beba99aea3289\"\n  },\n  \"state\": \"persisting\",\n  \"title\": \"Optimize Active Cognitive Loop\"\n}",
+      "tab": "Goals"
+    },
+    {
+      "event": "contrary_evidence_or_revision_visible_cycle_2",
+      "experiment_id": "exp-a",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=6; selected=4; active=exp-a",
+      "selected": [
+        "exp-a"
+      ],
+      "tree_items": [
+        {
+          "iid": "exp-a",
+          "text": "Optimize Active Cognitive Loop",
+          "values": [
+            "yes",
+            "2",
+            "persisting"
+          ]
+        },
+        {
+          "iid": "exp-b",
+          "text": "Test Model Execution Isolation",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-c",
+          "text": "Audit Live Run Operation",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-d",
+          "text": "Evaluate Live Run Closure Audit",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-e",
+          "text": "Analyze Active Cognitive Architecture",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-f",
+          "text": "Explore Cognitive Operations",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        }
+      ],
+      "detail": "{\n  \"artifact\": {},\n  \"budget\": {\n    \"cycles\": 6,\n    \"model_calls\": 4\n  },\n  \"completed\": false,\n  \"evidence\": [\n    \"exp-a_evidence_1\",\n    \"exp-a_contrary_1\"\n  ],\n  \"failures\": [\n    \"no_useful_outcome\"\n  ],\n  \"focus\": \"Resolve discrepancy for goal: Improve cognitive loop efficiency\",\n  \"goal\": \"Improve cognitive loop efficiency\",\n  \"hypothesis\": {\n    \"assumptions\": [\n      \"The current implementation is complete and correct\"\n    ],\n    \"confidence_state\": \"contested\",\n    \"created_at\": \"2026-07-27T01:39:34+00:00\",\n    \"disposition\": \"needs_challenge\",\n    \"evidence_against\": [\n      \"exp-a_contrary_1\"\n    ],\n    \"evidence_for\": [\n      \"exp-a_evidence_1\"\n    ],\n    \"expected_observations\": [\n      \"local evidence should support a bounded useful step\"\n    ],\n    \"hypothesis_id\": \"hypothesis-c5d38ff57776ade0\",\n    \"lifecycle_state\": \"active\",\n    \"originating_focus_id\": \"focus-fb5f2aeeb7bd2abe\",\n    \"originating_goal_id\": \"active-cognitive-goal-098dd508c5ff9808\",\n    \"provenance\": [\n      \"cognitive-operation-bb2ae3ee4b1d0c3e\",\n      \"cognitive-operation-e75ff42f3a1849b4\"\n    ],\n    \"revised_at\": \"2026-07-27T01:40:05+00:00\",\n    \"revision_parent_id\": \"\",\n    \"revision_reason\": \"The current implementation of the active cognitive loop is sufficient for optimizing cognitive loop efficiency, but the UI route and usefulness are not yet proven for this candidate.\",\n    \"schema_version\": \"active_cognitive_architecture_marathon_1_v1\",\n    \"scope\": \"Resolve discrepancy for goal: Improve cognitive loop efficiency\",\n    \"statement\": \"The current implementation of the active cognitive loop in orchestration/runtime/active_cognitive_loop.py is sufficient for optimizing cognitive loop efficiency.\"\n  },\n  \"operation\": \"compare_evidence\",\n  \"outcome\": {\n    \"created_at\": \"2026-07-27T01:40:05+00:00\",\n    \"discrepancy\": \"progress_observed\",\n    \"expected\": \"Perform compare_evidence for the active focus using only referenced evidence.\",\n    \"observed\": \"The current implementation of the active cognitive loop is sufficient for optimizing cognitive loop efficiency, but the UI route and usefulness are not yet proven for this candidate.\",\n    \"operation_id\": \"cognitive-operation-e75ff42f3a1849b4\",\n    \"outcome_id\": \"outcome-dcff50b984a073c7\"\n  },\n  \"state\": \"persisting\",\n  \"title\": \"Optimize Active Cognitive Loop\"\n}",
+      "tab": "Goals"
+    },
+    {
+      "event": "useful_artifact_visible_cycle_3",
+      "experiment_id": "exp-a",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=6; selected=4; active=exp-a",
+      "selected": [
+        "exp-a"
+      ],
+      "tree_items": [
+        {
+          "iid": "exp-a",
+          "text": "Optimize Active Cognitive Loop",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-b",
+          "text": "Test Model Execution Isolation",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-c",
+          "text": "Audit Live Run Operation",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-d",
+          "text": "Evaluate Live Run Closure Audit",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-e",
+          "text": "Analyze Active Cognitive Architecture",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-f",
+          "text": "Explore Cognitive Operations",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        }
+      ],
+      "detail": "{\n  \"artifact\": {\n    \"artifact_id\": \"useful-artifact-33956bde21106d71\",\n    \"artifact_type\": \"cognitive_episode_summary\",\n    \"evidence_refs\": [\n      \"exp-a_evidence_1\"\n    ],\n    \"summary\": \"The current implementation of the active cognitive loop is sufficient for optimizing cognitive loop efficiency, but the UI route and usefulness are not yet proven for this candidate.\"\n  },\n  \"budget\": {\n    \"cycles\": 5,\n    \"model_calls\": 3\n  },\n  \"completed\": true,\n  \"evidence\": [\n    \"exp-a_evidence_1\",\n    \"exp-a_contrary_1\"\n  ],\n  \"failures\": [],\n  \"focus\": \"Challenge or revise hypothesis: The current implementation of the active cognitive loop in orchestration/runtime/active_cognitive_loop.py is sufficient for optimizing cognitive loop efficiency.\",\n  \"goal\": \"Improve cognitive loop efficiency\",\n  \"hypothesis\": {\n    \"assumptions\": [\n      \"The current implementation is complete and correct\"\n    ],\n    \"confidence_state\": \"contested\",\n    \"created_at\": \"2026-07-27T01:39:34+00:00\",\n    \"disposition\": \"needs_challenge\",\n    \"evidence_against\": [\n      \"exp-a_contrary_1\"\n    ],\n    \"evidence_for\": [\n      \"exp-a_evidence_1\"\n    ],\n    \"expected_observations\": [\n      \"local evidence should support a bounded useful step\"\n    ],\n    \"hypothesis_id\": \"hypothesis-c5d38ff57776ade0\",\n    \"lifecycle_state\": \"active\",\n    \"originating_focus_id\": \"focus-fb5f2aeeb7bd2abe\",\n    \"originating_goal_id\": \"active-cognitive-goal-098dd508c5ff9808\",\n    \"provenance\": [\n      \"cognitive-operation-bb2ae3ee4b1d0c3e\",\n      \"cognitive-operation-e75ff42f3a1849b4\"\n    ],\n    \"revised_at\": \"2026-07-27T01:40:05+00:00\",\n    \"revision_parent_id\": \"\",\n    \"revision_reason\": \"The current implementation of the active cognitive loop is sufficient for optimizing cognitive loop efficiency, but the UI route and usefulness are not yet proven for this candidate.\",\n    \"schema_version\": \"active_cognitive_architecture_marathon_1_v1\",\n    \"scope\": \"Resolve discrepancy for goal: Improve cognitive loop efficiency\",\n    \"statement\": \"The current implementation of the active cognitive loop in orchestration/runtime/active_cognitive_loop.py is sufficient for optimizing cognitive loop efficiency.\"\n  },\n  \"operation\": \"summarize_learning\",\n  \"outcome\": {\n    \"created_at\": \"2026-07-27T01:40:23+00:00\",\n    \"discrepancy\": \"progress_observed\",\n    \"expected\": \"Perform summarize_learning for the active focus using only referenced evidence.\",\n    \"observed\": \"The current implementation of the active cognitive loop is sufficient for optimizing cognitive loop efficiency, but the UI route and usefulness are not yet proven for this candidate.\",\n    \"operation_id\": \"cognitive-operation-53e85e5e452fc2be\",\n    \"outcome_id\": \"outcome-33956bde21106d71\"\n  },\n  \"state\": \"completed\",\n  \"title\": \"Optimize Active Cognitive Loop\"\n}",
+      "tab": "Goals"
+    },
+    {
+      "event": "selected_experiment_visible",
+      "experiment_id": "exp-b",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=6; selected=4; active=exp-a",
+      "selected": [
+        "exp-b"
+      ],
+      "tree_items": [
+        {
+          "iid": "exp-a",
+          "text": "Optimize Active Cognitive Loop",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-b",
+          "text": "Test Model Execution Isolation",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-c",
+          "text": "Audit Live Run Operation",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-d",
+          "text": "Evaluate Live Run Closure Audit",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-e",
+          "text": "Analyze Active Cognitive Architecture",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-f",
+          "text": "Explore Cognitive Operations",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        }
+      ],
+      "detail": "{\n  \"proposal\": {\n    \"contrary_or_uncertainty_evidence\": [\n      {\n        \"note\": \"UI route and usefulness are not yet proven for this candidate.\",\n        \"path\": \"operator:campaign_uncertainty\"\n      }\n    ],\n    \"estimated_time_and_model_call_budget\": \"3 cycles; 3 calls\",\n    \"expected_artifact_or_outcome\": \"Isolated model execution results\",\n    \"expected_cycle_count\": 3,\n    \"experiment_id\": \"exp-b\",\n    \"failure_criteria\": \"No useful artifact or no visible UI state.\",\n    \"local_evidence_available\": [\n      {\n        \"note\": \"Tests model isolation\",\n        \"path\": \"tests/runtime_gsr/test_model_execution_lane_isolation.py\"\n      }\n    ],\n    \"practical_objective\": \"Verify model independence\",\n    \"related_operator_or_project_goal\": \"Maintain model integrity\",\n    \"required_authority\": \"operator_authorized_goal_oriented_ui_experiment_campaign_1\",\n    \"required_bounded_actions\": [\n      \"inspect local evidence\",\n      \"run bounded cognition\",\n      \"write useful artifact\"\n    ],\n    \"required_cognitive_operations\": [\n      \"formulate_hypothesis\",\n      \"compare_evidence\",\n      \"summarize_learning\"\n    ],\n    \"restart_relevance\": \"Can contribute to campaign restart proof if selected.\",\n    \"risk_and_scope\": \"Local, bounded, non-protected campaign evidence only.\",\n    \"success_criteria\": \"Produces useful artifact grounded in local evidence.\",\n    \"title\": \"Test Model Execution Isolation\",\n    \"validation\": {\n      \"accepted\": true,\n      \"campaign_enriched_fields\": [\n        \"contrary_or_uncertainty_evidence\",\n        \"required_cognitive_operations\",\n        \"required_bounded_actions\",\n        \"required_authority\",\n        \"expected_cycle_count\",\n        \"restart_relevance\",\n        \"success_criteria\",\n        \"failure_criteria\",\n        \"risk_and_scope\",\n        \"estimated_time_and_model_call_budget\"\n      ],\n      \"criteria\": \"local, bounded, useful, non-protected\",\n      \"model_proposed_fields\": [\n        \"expected_artifact_or_outcome\",\n        \"experiment_id\",\n        \"local_evidence_available\",\n        \"practical_objective\",\n        \"related_operator_or_project_goal\",\n        \"title\",\n        \"why_it_is_useful\"\n      ]\n    },\n    \"why_it_is_useful\": \"Ensures models do not interfere\"\n  },\n  \"state\": \"not_started\"\n}",
+      "tab": "Goals"
+    },
+    {
+      "event": "experiment_running_launched",
+      "experiment_id": "exp-b",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=6; selected=4; active=exp-b",
+      "selected": [
+        "exp-b"
+      ],
+      "tree_items": [
+        {
+          "iid": "exp-a",
+          "text": "Optimize Active Cognitive Loop",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-b",
+          "text": "Test Model Execution Isolation",
+          "values": [
+            "yes",
+            "0",
+            "idle"
+          ]
+        },
+        {
+          "iid": "exp-c",
+          "text": "Audit Live Run Operation",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-d",
+          "text": "Evaluate Live Run Closure Audit",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-e",
+          "text": "Analyze Active Cognitive Architecture",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-f",
+          "text": "Explore Cognitive Operations",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        }
+      ],
+      "detail": "{\n  \"artifact\": {},\n  \"budget\": {\n    \"cycles\": 8,\n    \"model_calls\": 6\n  },\n  \"completed\": false,\n  \"evidence\": [\n    \"exp-b_evidence_1\",\n    \"exp-b_contrary_1\"\n  ],\n  \"failures\": [\n    \"no_model_cognition\",\n    \"unbounded_context\",\n    \"unsupported_hypothesis\",\n    \"no_evidence_revision\",\n    \"no_useful_outcome\"\n  ],\n  \"focus\": \"\",\n  \"goal\": \"Verify model independence\",\n  \"hypothesis\": {},\n  \"operation\": \"\",\n  \"outcome\": {},\n  \"state\": \"idle\",\n  \"title\": \"Test Model Execution Isolation\"\n}",
+      "tab": "Goals"
+    },
+    {
+      "event": "focus_operation_hypothesis_visible_cycle_1",
+      "experiment_id": "exp-b",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=6; selected=4; active=exp-b",
+      "selected": [
+        "exp-b"
+      ],
+      "tree_items": [
+        {
+          "iid": "exp-a",
+          "text": "Optimize Active Cognitive Loop",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-b",
+          "text": "Test Model Execution Isolation",
+          "values": [
+            "yes",
+            "1",
+            "persisting"
+          ]
+        },
+        {
+          "iid": "exp-c",
+          "text": "Audit Live Run Operation",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-d",
+          "text": "Evaluate Live Run Closure Audit",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-e",
+          "text": "Analyze Active Cognitive Architecture",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-f",
+          "text": "Explore Cognitive Operations",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        }
+      ],
+      "detail": "{\n  \"artifact\": {},\n  \"budget\": {\n    \"cycles\": 7,\n    \"model_calls\": 5\n  },\n  \"completed\": false,\n  \"evidence\": [\n    \"exp-b_evidence_1\",\n    \"exp-b_contrary_1\"\n  ],\n  \"failures\": [\n    \"no_model_cognition\",\n    \"no_evidence_revision\",\n    \"no_useful_outcome\"\n  ],\n  \"focus\": \"Resolve discrepancy for goal: Verify model independence\",\n  \"goal\": \"Verify model independence\",\n  \"hypothesis\": {\n    \"assumptions\": [\n      \"Model execution does not interact with campaign state\"\n    ],\n    \"confidence_state\": \"plausible\",\n    \"created_at\": \"2026-07-27T01:40:39+00:00\",\n    \"disposition\": \"needs_challenge\",\n    \"evidence_against\": [],\n    \"evidence_for\": [\n      \"exp-b_evidence_1\"\n    ],\n    \"expected_observations\": [\n      \"local evidence should support a bounded useful step\"\n    ],\n    \"hypothesis_id\": \"hypothesis-2feab2037d27b979\",\n    \"lifecycle_state\": \"active\",\n    \"originating_focus_id\": \"focus-79023e06746dcb99\",\n    \"originating_goal_id\": \"active-cognitive-goal-fd468d8588d054de\",\n    \"provenance\": [\n      \"cognitive-operation-43b40bdb84781420\"\n    ],\n    \"revised_at\": \"\",\n    \"revision_parent_id\": \"\",\n    \"revision_reason\": \"\",\n    \"schema_version\": \"active_cognitive_architecture_marathon_1_v1\",\n    \"scope\": \"Resolve discrepancy for goal: Verify model independence\",\n    \"statement\": \"Model execution is isolated from campaign state.\"\n  },\n  \"operation\": \"formulate_hypothesis\",\n  \"outcome\": {\n    \"created_at\": \"2026-07-27T01:40:39+00:00\",\n    \"discrepancy\": \"progress_observed\",\n    \"expected\": \"Perform formulate_hypothesis for the active focus using only referenced evidence.\",\n    \"observed\": \"Model execution is isolated from campaign state.\",\n    \"operation_id\": \"cognitive-operation-43b40bdb84781420\",\n    \"outcome_id\": \"outcome-ba35d74c9be9a9cd\"\n  },\n  \"state\": \"persisting\",\n  \"title\": \"Test Model Execution Isolation\"\n}",
+      "tab": "Goals"
+    },
+    {
+      "event": "contrary_evidence_or_revision_visible_cycle_2",
+      "experiment_id": "exp-b",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=6; selected=4; active=exp-b",
+      "selected": [
+        "exp-b"
+      ],
+      "tree_items": [
+        {
+          "iid": "exp-a",
+          "text": "Optimize Active Cognitive Loop",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-b",
+          "text": "Test Model Execution Isolation",
+          "values": [
+            "yes",
+            "2",
+            "persisting"
+          ]
+        },
+        {
+          "iid": "exp-c",
+          "text": "Audit Live Run Operation",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-d",
+          "text": "Evaluate Live Run Closure Audit",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-e",
+          "text": "Analyze Active Cognitive Architecture",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-f",
+          "text": "Explore Cognitive Operations",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        }
+      ],
+      "detail": "{\n  \"artifact\": {},\n  \"budget\": {\n    \"cycles\": 6,\n    \"model_calls\": 4\n  },\n  \"completed\": false,\n  \"evidence\": [\n    \"exp-b_evidence_1\",\n    \"exp-b_contrary_1\"\n  ],\n  \"failures\": [\n    \"no_useful_outcome\"\n  ],\n  \"focus\": \"Resolve discrepancy for goal: Verify model independence\",\n  \"goal\": \"Verify model independence\",\n  \"hypothesis\": {\n    \"assumptions\": [\n      \"Model execution does not interact with campaign state\"\n    ],\n    \"confidence_state\": \"contested\",\n    \"created_at\": \"2026-07-27T01:40:39+00:00\",\n    \"disposition\": \"needs_challenge\",\n    \"evidence_against\": [\n      \"exp-b_contrary_1\"\n    ],\n    \"evidence_for\": [\n      \"exp-b_evidence_1\"\n    ],\n    \"expected_observations\": [\n      \"local evidence should support a bounded useful step\"\n    ],\n    \"hypothesis_id\": \"hypothesis-2feab2037d27b979\",\n    \"lifecycle_state\": \"active\",\n    \"originating_focus_id\": \"focus-79023e06746dcb99\",\n    \"originating_goal_id\": \"active-cognitive-goal-fd468d8588d054de\",\n    \"provenance\": [\n      \"cognitive-operation-43b40bdb84781420\",\n      \"cognitive-operation-abe231e06982aaac\"\n    ],\n    \"revised_at\": \"2026-07-27T01:41:03+00:00\",\n    \"revision_parent_id\": \"\",\n    \"revision_reason\": \"Evidence supports the hypothesis that the model execution is isolated from the campaign state.\",\n    \"schema_version\": \"active_cognitive_architecture_marathon_1_v1\",\n    \"scope\": \"Resolve discrepancy for goal: Verify model independence\",\n    \"statement\": \"Model execution is isolated from campaign state.\"\n  },\n  \"operation\": \"compare_evidence\",\n  \"outcome\": {\n    \"created_at\": \"2026-07-27T01:41:03+00:00\",\n    \"discrepancy\": \"progress_observed\",\n    \"expected\": \"Perform compare_evidence for the active focus using only referenced evidence.\",\n    \"observed\": \"Evidence supports the hypothesis that the model execution is isolated from the campaign state.\",\n    \"operation_id\": \"cognitive-operation-abe231e06982aaac\",\n    \"outcome_id\": \"outcome-525f1775083629f7\"\n  },\n  \"state\": \"persisting\",\n  \"title\": \"Test Model Execution Isolation\"\n}",
+      "tab": "Goals"
+    },
+    {
+      "event": "useful_artifact_visible_cycle_3",
+      "experiment_id": "exp-b",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=6; selected=4; active=exp-b",
+      "selected": [
+        "exp-b"
+      ],
+      "tree_items": [
+        {
+          "iid": "exp-a",
+          "text": "Optimize Active Cognitive Loop",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-b",
+          "text": "Test Model Execution Isolation",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-c",
+          "text": "Audit Live Run Operation",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-d",
+          "text": "Evaluate Live Run Closure Audit",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-e",
+          "text": "Analyze Active Cognitive Architecture",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-f",
+          "text": "Explore Cognitive Operations",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        }
+      ],
+      "detail": "{\n  \"artifact\": {\n    \"artifact_id\": \"useful-artifact-d0106c863baf95bb\",\n    \"artifact_type\": \"cognitive_episode_summary\",\n    \"evidence_refs\": [\n      \"exp-b_evidence_1\"\n    ],\n    \"summary\": \"Model execution is isolated from campaign state based on supporting evidence.\"\n  },\n  \"budget\": {\n    \"cycles\": 5,\n    \"model_calls\": 3\n  },\n  \"completed\": true,\n  \"evidence\": [\n    \"exp-b_evidence_1\",\n    \"exp-b_contrary_1\"\n  ],\n  \"failures\": [],\n  \"focus\": \"Challenge or revise hypothesis: Model execution is isolated from campaign state.\",\n  \"goal\": \"Verify model independence\",\n  \"hypothesis\": {\n    \"assumptions\": [\n      \"Model execution does not interact with campaign state\"\n    ],\n    \"confidence_state\": \"contested\",\n    \"created_at\": \"2026-07-27T01:40:39+00:00\",\n    \"disposition\": \"needs_challenge\",\n    \"evidence_against\": [\n      \"exp-b_contrary_1\"\n    ],\n    \"evidence_for\": [\n      \"exp-b_evidence_1\"\n    ],\n    \"expected_observations\": [\n      \"local evidence should support a bounded useful step\"\n    ],\n    \"hypothesis_id\": \"hypothesis-2feab2037d27b979\",\n    \"lifecycle_state\": \"active\",\n    \"originating_focus_id\": \"focus-79023e06746dcb99\",\n    \"originating_goal_id\": \"active-cognitive-goal-fd468d8588d054de\",\n    \"provenance\": [\n      \"cognitive-operation-43b40bdb84781420\",\n      \"cognitive-operation-abe231e06982aaac\"\n    ],\n    \"revised_at\": \"2026-07-27T01:41:03+00:00\",\n    \"revision_parent_id\": \"\",\n    \"revision_reason\": \"Evidence supports the hypothesis that the model execution is isolated from the campaign state.\",\n    \"schema_version\": \"active_cognitive_architecture_marathon_1_v1\",\n    \"scope\": \"Resolve discrepancy for goal: Verify model independence\",\n    \"statement\": \"Model execution is isolated from campaign state.\"\n  },\n  \"operation\": \"summarize_learning\",\n  \"outcome\": {\n    \"created_at\": \"2026-07-27T01:41:18+00:00\",\n    \"discrepancy\": \"progress_observed\",\n    \"expected\": \"Perform summarize_learning for the active focus using only referenced evidence.\",\n    \"observed\": \"Model execution is isolated from campaign state based on supporting evidence.\",\n    \"operation_id\": \"cognitive-operation-b7437979bd07f29b\",\n    \"outcome_id\": \"outcome-d0106c863baf95bb\"\n  },\n  \"state\": \"completed\",\n  \"title\": \"Test Model Execution Isolation\"\n}",
+      "tab": "Goals"
+    },
+    {
+      "event": "selected_experiment_visible",
+      "experiment_id": "exp-c",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=6; selected=4; active=exp-b",
+      "selected": [
+        "exp-c"
+      ],
+      "tree_items": [
+        {
+          "iid": "exp-a",
+          "text": "Optimize Active Cognitive Loop",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-b",
+          "text": "Test Model Execution Isolation",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-c",
+          "text": "Audit Live Run Operation",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-d",
+          "text": "Evaluate Live Run Closure Audit",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-e",
+          "text": "Analyze Active Cognitive Architecture",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-f",
+          "text": "Explore Cognitive Operations",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        }
+      ],
+      "detail": "{\n  \"proposal\": {\n    \"contrary_or_uncertainty_evidence\": [\n      {\n        \"note\": \"UI route and usefulness are not yet proven for this candidate.\",\n        \"path\": \"operator:campaign_uncertainty\"\n      }\n    ],\n    \"estimated_time_and_model_call_budget\": \"3 cycles; 3 calls\",\n    \"expected_artifact_or_outcome\": \"Compliance audit report\",\n    \"expected_cycle_count\": 3,\n    \"experiment_id\": \"exp-c\",\n    \"failure_criteria\": \"No useful artifact or no visible UI state.\",\n    \"local_evidence_available\": [\n      {\n        \"note\": \"Summary of live run episodes\",\n        \"path\": \".tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/live_episode_summary.json\"\n      }\n    ],\n    \"practical_objective\": \"Ensure live run compliance\",\n    \"related_operator_or_project_goal\": \"Compliance with operational standards\",\n    \"required_authority\": \"operator_authorized_goal_oriented_ui_experiment_campaign_1\",\n    \"required_bounded_actions\": [\n      \"inspect local evidence\",\n      \"run bounded cognition\",\n      \"write useful artifact\"\n    ],\n    \"required_cognitive_operations\": [\n      \"formulate_hypothesis\",\n      \"compare_evidence\",\n      \"summarize_learning\"\n    ],\n    \"restart_relevance\": \"Can contribute to campaign restart proof if selected.\",\n    \"risk_and_scope\": \"Local, bounded, non-protected campaign evidence only.\",\n    \"success_criteria\": \"Produces useful artifact grounded in local evidence.\",\n    \"title\": \"Audit Live Run Operation\",\n    \"validation\": {\n      \"accepted\": true,\n      \"campaign_enriched_fields\": [\n        \"contrary_or_uncertainty_evidence\",\n        \"required_cognitive_operations\",\n        \"required_bounded_actions\",\n        \"required_authority\",\n        \"expected_cycle_count\",\n        \"restart_relevance\",\n        \"success_criteria\",\n        \"failure_criteria\",\n        \"risk_and_scope\",\n        \"estimated_time_and_model_call_budget\"\n      ],\n      \"criteria\": \"local, bounded, useful, non-protected\",\n      \"model_proposed_fields\": [\n        \"expected_artifact_or_outcome\",\n        \"experiment_id\",\n        \"local_evidence_available\",\n        \"practical_objective\",\n        \"related_operator_or_project_goal\",\n        \"title\",\n        \"why_it_is_useful\"\n      ]\n    },\n    \"why_it_is_useful\": \"Prevents non-compliant operations\"\n  },\n  \"state\": \"not_started\"\n}",
+      "tab": "Goals"
+    },
+    {
+      "event": "experiment_running_launched",
+      "experiment_id": "exp-c",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=6; selected=4; active=exp-c",
+      "selected": [
+        "exp-c"
+      ],
+      "tree_items": [
+        {
+          "iid": "exp-a",
+          "text": "Optimize Active Cognitive Loop",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-b",
+          "text": "Test Model Execution Isolation",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-c",
+          "text": "Audit Live Run Operation",
+          "values": [
+            "yes",
+            "0",
+            "idle"
+          ]
+        },
+        {
+          "iid": "exp-d",
+          "text": "Evaluate Live Run Closure Audit",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-e",
+          "text": "Analyze Active Cognitive Architecture",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-f",
+          "text": "Explore Cognitive Operations",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        }
+      ],
+      "detail": "{\n  \"artifact\": {},\n  \"budget\": {\n    \"cycles\": 8,\n    \"model_calls\": 6\n  },\n  \"completed\": false,\n  \"evidence\": [\n    \"exp-c_evidence_1\",\n    \"exp-c_contrary_1\"\n  ],\n  \"failures\": [\n    \"no_model_cognition\",\n    \"unbounded_context\",\n    \"unsupported_hypothesis\",\n    \"no_evidence_revision\",\n    \"no_useful_outcome\"\n  ],\n  \"focus\": \"\",\n  \"goal\": \"Ensure live run compliance\",\n  \"hypothesis\": {},\n  \"operation\": \"\",\n  \"outcome\": {},\n  \"state\": \"idle\",\n  \"title\": \"Audit Live Run Operation\"\n}",
+      "tab": "Goals"
+    },
+    {
+      "event": "focus_operation_hypothesis_visible_cycle_1",
+      "experiment_id": "exp-c",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=6; selected=4; active=exp-c",
+      "selected": [
+        "exp-c"
+      ],
+      "tree_items": [
+        {
+          "iid": "exp-a",
+          "text": "Optimize Active Cognitive Loop",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-b",
+          "text": "Test Model Execution Isolation",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-c",
+          "text": "Audit Live Run Operation",
+          "values": [
+            "yes",
+            "1",
+            "persisting"
+          ]
+        },
+        {
+          "iid": "exp-d",
+          "text": "Evaluate Live Run Closure Audit",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-e",
+          "text": "Analyze Active Cognitive Architecture",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-f",
+          "text": "Explore Cognitive Operations",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        }
+      ],
+      "detail": "{\n  \"artifact\": {},\n  \"budget\": {\n    \"cycles\": 7,\n    \"model_calls\": 5\n  },\n  \"completed\": false,\n  \"evidence\": [\n    \"exp-c_evidence_1\",\n    \"exp-c_contrary_1\"\n  ],\n  \"failures\": [\n    \"no_model_cognition\",\n    \"no_evidence_revision\",\n    \"no_useful_outcome\"\n  ],\n  \"focus\": \"Resolve discrepancy for goal: Ensure live run compliance\",\n  \"goal\": \"Ensure live run compliance\",\n  \"hypothesis\": {\n    \"assumptions\": [\n      \"Live run episodes are representative of the system's typical behavior\"\n    ],\n    \"confidence_state\": \"plausible\",\n    \"created_at\": \"2026-07-27T01:41:36+00:00\",\n    \"disposition\": \"needs_challenge\",\n    \"evidence_against\": [],\n    \"evidence_for\": [\n      \"exp-c_evidence_1\"\n    ],\n    \"expected_observations\": [\n      \"local evidence should support a bounded useful step\"\n    ],\n    \"hypothesis_id\": \"hypothesis-0f19f09129a57e9c\",\n    \"lifecycle_state\": \"active\",\n    \"originating_focus_id\": \"focus-092571b82ef78794\",\n    \"originating_goal_id\": \"active-cognitive-goal-607fe79d22140cdd\",\n    \"provenance\": [\n      \"cognitive-operation-fe9c7e38e8d911b5\"\n    ],\n    \"revised_at\": \"\",\n    \"revision_parent_id\": \"\",\n    \"revision_reason\": \"\",\n    \"schema_version\": \"active_cognitive_architecture_marathon_1_v1\",\n    \"scope\": \"Resolve discrepancy for goal: Ensure live run compliance\",\n    \"statement\": \"Live run episodes show no clear patterns or anomalies that would indicate non-compliance.\"\n  },\n  \"operation\": \"formulate_hypothesis\",\n  \"outcome\": {\n    \"created_at\": \"2026-07-27T01:41:36+00:00\",\n    \"discrepancy\": \"progress_observed\",\n    \"expected\": \"Perform formulate_hypothesis for the active focus using only referenced evidence.\",\n    \"observed\": \"Live run episodes show no clear patterns or anomalies that would indicate non-compliance.\",\n    \"operation_id\": \"cognitive-operation-fe9c7e38e8d911b5\",\n    \"outcome_id\": \"outcome-fb0249de550172b6\"\n  },\n  \"state\": \"persisting\",\n  \"title\": \"Audit Live Run Operation\"\n}",
+      "tab": "Goals"
+    },
+    {
+      "event": "contrary_evidence_or_revision_visible_cycle_2",
+      "experiment_id": "exp-c",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=6; selected=4; active=exp-c",
+      "selected": [
+        "exp-c"
+      ],
+      "tree_items": [
+        {
+          "iid": "exp-a",
+          "text": "Optimize Active Cognitive Loop",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-b",
+          "text": "Test Model Execution Isolation",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-c",
+          "text": "Audit Live Run Operation",
+          "values": [
+            "yes",
+            "2",
+            "persisting"
+          ]
+        },
+        {
+          "iid": "exp-d",
+          "text": "Evaluate Live Run Closure Audit",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-e",
+          "text": "Analyze Active Cognitive Architecture",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-f",
+          "text": "Explore Cognitive Operations",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        }
+      ],
+      "detail": "{\n  \"artifact\": {},\n  \"budget\": {\n    \"cycles\": 6,\n    \"model_calls\": 4\n  },\n  \"completed\": false,\n  \"evidence\": [\n    \"exp-c_evidence_1\",\n    \"exp-c_contrary_1\"\n  ],\n  \"failures\": [\n    \"no_useful_outcome\"\n  ],\n  \"focus\": \"Resolve discrepancy for goal: Ensure live run compliance\",\n  \"goal\": \"Ensure live run compliance\",\n  \"hypothesis\": {\n    \"assumptions\": [\n      \"Live run episodes are representative of the system's typical behavior\"\n    ],\n    \"confidence_state\": \"contested\",\n    \"created_at\": \"2026-07-27T01:41:36+00:00\",\n    \"disposition\": \"needs_challenge\",\n    \"evidence_against\": [\n      \"exp-c_contrary_1\"\n    ],\n    \"evidence_for\": [\n      \"exp-c_evidence_1\"\n    ],\n    \"expected_observations\": [\n      \"local evidence should support a bounded useful step\"\n    ],\n    \"hypothesis_id\": \"hypothesis-0f19f09129a57e9c\",\n    \"lifecycle_state\": \"active\",\n    \"originating_focus_id\": \"focus-092571b82ef78794\",\n    \"originating_goal_id\": \"active-cognitive-goal-607fe79d22140cdd\",\n    \"provenance\": [\n      \"cognitive-operation-fe9c7e38e8d911b5\",\n      \"cognitive-operation-8eab63df9325ed7b\"\n    ],\n    \"revised_at\": \"2026-07-27T01:42:14+00:00\",\n    \"revision_parent_id\": \"\",\n    \"revision_reason\": \"The live run episodes do not show clear patterns or anomalies that would indicate non-compliance, but the UI route and usefulness are not yet proven for this candidate.\",\n    \"schema_version\": \"active_cognitive_architecture_marathon_1_v1\",\n    \"scope\": \"Resolve discrepancy for goal: Ensure live run compliance\",\n    \"statement\": \"Live run episodes show no clear patterns or anomalies that would indicate non-compliance.\"\n  },\n  \"operation\": \"compare_evidence\",\n  \"outcome\": {\n    \"created_at\": \"2026-07-27T01:42:14+00:00\",\n    \"discrepancy\": \"progress_observed\",\n    \"expected\": \"Perform compare_evidence for the active focus using only referenced evidence.\",\n    \"observed\": \"The live run episodes do not show clear patterns or anomalies that would indicate non-compliance, but the UI route and usefulness are not yet proven for this candidate.\",\n    \"operation_id\": \"cognitive-operation-8eab63df9325ed7b\",\n    \"outcome_id\": \"outcome-75cda59cb99b5f7f\"\n  },\n  \"state\": \"persisting\",\n  \"title\": \"Audit Live Run Operation\"\n}",
+      "tab": "Goals"
+    },
+    {
+      "event": "useful_artifact_visible_cycle_3",
+      "experiment_id": "exp-c",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=6; selected=4; active=exp-c",
+      "selected": [
+        "exp-c"
+      ],
+      "tree_items": [
+        {
+          "iid": "exp-a",
+          "text": "Optimize Active Cognitive Loop",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-b",
+          "text": "Test Model Execution Isolation",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-c",
+          "text": "Audit Live Run Operation",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-d",
+          "text": "Evaluate Live Run Closure Audit",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-e",
+          "text": "Analyze Active Cognitive Architecture",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-f",
+          "text": "Explore Cognitive Operations",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        }
+      ],
+      "detail": "{\n  \"artifact\": {\n    \"artifact_id\": \"useful-artifact-cd3df32898587546\",\n    \"artifact_type\": \"cognitive_episode_summary\",\n    \"evidence_refs\": [\n      \"exp-c_evidence_1\"\n    ],\n    \"summary\": \"Live run episodes do not show clear patterns or anomalies indicating non-compliance, but the UI route and usefulness are not yet proven.\"\n  },\n  \"budget\": {\n    \"cycles\": 5,\n    \"model_calls\": 3\n  },\n  \"completed\": true,\n  \"evidence\": [\n    \"exp-c_evidence_1\",\n    \"exp-c_contrary_1\"\n  ],\n  \"failures\": [],\n  \"focus\": \"Challenge or revise hypothesis: Live run episodes show no clear patterns or anomalies that would indicate non-compliance.\",\n  \"goal\": \"Ensure live run compliance\",\n  \"hypothesis\": {\n    \"assumptions\": [\n      \"Live run episodes are representative of the system's typical behavior\"\n    ],\n    \"confidence_state\": \"contested\",\n    \"created_at\": \"2026-07-27T01:41:36+00:00\",\n    \"disposition\": \"needs_challenge\",\n    \"evidence_against\": [\n      \"exp-c_contrary_1\"\n    ],\n    \"evidence_for\": [\n      \"exp-c_evidence_1\"\n    ],\n    \"expected_observations\": [\n      \"local evidence should support a bounded useful step\"\n    ],\n    \"hypothesis_id\": \"hypothesis-0f19f09129a57e9c\",\n    \"lifecycle_state\": \"active\",\n    \"originating_focus_id\": \"focus-092571b82ef78794\",\n    \"originating_goal_id\": \"active-cognitive-goal-607fe79d22140cdd\",\n    \"provenance\": [\n      \"cognitive-operation-fe9c7e38e8d911b5\",\n      \"cognitive-operation-8eab63df9325ed7b\"\n    ],\n    \"revised_at\": \"2026-07-27T01:42:14+00:00\",\n    \"revision_parent_id\": \"\",\n    \"revision_reason\": \"The live run episodes do not show clear patterns or anomalies that would indicate non-compliance, but the UI route and usefulness are not yet proven for this candidate.\",\n    \"schema_version\": \"active_cognitive_architecture_marathon_1_v1\",\n    \"scope\": \"Resolve discrepancy for goal: Ensure live run compliance\",\n    \"statement\": \"Live run episodes show no clear patterns or anomalies that would indicate non-compliance.\"\n  },\n  \"operation\": \"summarize_learning\",\n  \"outcome\": {\n    \"created_at\": \"2026-07-27T01:42:35+00:00\",\n    \"discrepancy\": \"progress_observed\",\n    \"expected\": \"Perform summarize_learning for the active focus using only referenced evidence.\",\n    \"observed\": \"Live run episodes do not show clear patterns or anomalies indicating non-compliance, but the UI route and usefulness are not yet proven.\",\n    \"operation_id\": \"cognitive-operation-c2cfa6a9c740663e\",\n    \"outcome_id\": \"outcome-cd3df32898587546\"\n  },\n  \"state\": \"completed\",\n  \"title\": \"Audit Live Run Operation\"\n}",
+      "tab": "Goals"
+    },
+    {
+      "event": "selected_experiment_visible",
+      "experiment_id": "exp-d",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=6; selected=4; active=exp-c",
+      "selected": [
+        "exp-d"
+      ],
+      "tree_items": [
+        {
+          "iid": "exp-a",
+          "text": "Optimize Active Cognitive Loop",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-b",
+          "text": "Test Model Execution Isolation",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-c",
+          "text": "Audit Live Run Operation",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-d",
+          "text": "Evaluate Live Run Closure Audit",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-e",
+          "text": "Analyze Active Cognitive Architecture",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-f",
+          "text": "Explore Cognitive Operations",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        }
+      ],
+      "detail": "{\n  \"proposal\": {\n    \"contrary_or_uncertainty_evidence\": [\n      {\n        \"note\": \"UI route and usefulness are not yet proven for this candidate.\",\n        \"path\": \"operator:campaign_uncertainty\"\n      }\n    ],\n    \"estimated_time_and_model_call_budget\": \"3 cycles; 3 calls\",\n    \"expected_artifact_or_outcome\": \"Audit validation report\",\n    \"expected_cycle_count\": 3,\n    \"experiment_id\": \"exp-d\",\n    \"failure_criteria\": \"No useful artifact or no visible UI state.\",\n    \"local_evidence_available\": [\n      {\n        \"note\": \"Contains closure audit data\",\n        \"path\": \".tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/marathon_closure_audit.json\"\n      }\n    ],\n    \"practical_objective\": \"Check closure audit validity\",\n    \"related_operator_or_project_goal\": \"Ensure closure audit accuracy\",\n    \"required_authority\": \"operator_authorized_goal_oriented_ui_experiment_campaign_1\",\n    \"required_bounded_actions\": [\n      \"inspect local evidence\",\n      \"run bounded cognition\",\n      \"write useful artifact\"\n    ],\n    \"required_cognitive_operations\": [\n      \"formulate_hypothesis\",\n      \"compare_evidence\",\n      \"summarize_learning\"\n    ],\n    \"restart_relevance\": \"Can contribute to campaign restart proof if selected.\",\n    \"risk_and_scope\": \"Local, bounded, non-protected campaign evidence only.\",\n    \"success_criteria\": \"Produces useful artifact grounded in local evidence.\",\n    \"title\": \"Evaluate Live Run Closure Audit\",\n    \"validation\": {\n      \"accepted\": true,\n      \"campaign_enriched_fields\": [\n        \"contrary_or_uncertainty_evidence\",\n        \"required_cognitive_operations\",\n        \"required_bounded_actions\",\n        \"required_authority\",\n        \"expected_cycle_count\",\n        \"restart_relevance\",\n        \"success_criteria\",\n        \"failure_criteria\",\n        \"risk_and_scope\",\n        \"estimated_time_and_model_call_budget\"\n      ],\n      \"criteria\": \"local, bounded, useful, non-protected\",\n      \"model_proposed_fields\": [\n        \"expected_artifact_or_outcome\",\n        \"experiment_id\",\n        \"local_evidence_available\",\n        \"practical_objective\",\n        \"related_operator_or_project_goal\",\n        \"title\",\n        \"why_it_is_useful\"\n      ]\n    },\n    \"why_it_is_useful\": \"Validates closure audit process\"\n  },\n  \"state\": \"not_started\"\n}",
+      "tab": "Goals"
+    },
+    {
+      "event": "experiment_running_launched",
+      "experiment_id": "exp-d",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=6; selected=4; active=exp-d",
+      "selected": [
+        "exp-d"
+      ],
+      "tree_items": [
+        {
+          "iid": "exp-a",
+          "text": "Optimize Active Cognitive Loop",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-b",
+          "text": "Test Model Execution Isolation",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-c",
+          "text": "Audit Live Run Operation",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-d",
+          "text": "Evaluate Live Run Closure Audit",
+          "values": [
+            "yes",
+            "0",
+            "idle"
+          ]
+        },
+        {
+          "iid": "exp-e",
+          "text": "Analyze Active Cognitive Architecture",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-f",
+          "text": "Explore Cognitive Operations",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        }
+      ],
+      "detail": "{\n  \"artifact\": {},\n  \"budget\": {\n    \"cycles\": 8,\n    \"model_calls\": 6\n  },\n  \"completed\": false,\n  \"evidence\": [\n    \"exp-d_evidence_1\",\n    \"exp-d_contrary_1\"\n  ],\n  \"failures\": [\n    \"no_model_cognition\",\n    \"unbounded_context\",\n    \"unsupported_hypothesis\",\n    \"no_evidence_revision\",\n    \"no_useful_outcome\"\n  ],\n  \"focus\": \"\",\n  \"goal\": \"Check closure audit validity\",\n  \"hypothesis\": {},\n  \"operation\": \"\",\n  \"outcome\": {},\n  \"state\": \"idle\",\n  \"title\": \"Evaluate Live Run Closure Audit\"\n}",
+      "tab": "Goals"
+    },
+    {
+      "event": "focus_operation_hypothesis_visible_cycle_1",
+      "experiment_id": "exp-d",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=6; selected=4; active=exp-d",
+      "selected": [
+        "exp-d"
+      ],
+      "tree_items": [
+        {
+          "iid": "exp-a",
+          "text": "Optimize Active Cognitive Loop",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-b",
+          "text": "Test Model Execution Isolation",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-c",
+          "text": "Audit Live Run Operation",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-d",
+          "text": "Evaluate Live Run Closure Audit",
+          "values": [
+            "yes",
+            "1",
+            "persisting"
+          ]
+        },
+        {
+          "iid": "exp-e",
+          "text": "Analyze Active Cognitive Architecture",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-f",
+          "text": "Explore Cognitive Operations",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        }
+      ],
+      "detail": "{\n  \"artifact\": {},\n  \"budget\": {\n    \"cycles\": 7,\n    \"model_calls\": 5\n  },\n  \"completed\": false,\n  \"evidence\": [\n    \"exp-d_evidence_1\",\n    \"exp-d_contrary_1\"\n  ],\n  \"failures\": [\n    \"no_model_cognition\",\n    \"no_evidence_revision\",\n    \"no_useful_outcome\"\n  ],\n  \"focus\": \"Resolve discrepancy for goal: Check closure audit validity\",\n  \"goal\": \"Check closure audit validity\",\n  \"hypothesis\": {\n    \"assumptions\": [\n      \"Audit process followed established procedures\",\n      \"Data integrity maintained during audit\"\n    ],\n    \"confidence_state\": \"plausible\",\n    \"created_at\": \"2026-07-27T01:42:56+00:00\",\n    \"disposition\": \"needs_challenge\",\n    \"evidence_against\": [],\n    \"evidence_for\": [\n      \"exp-d_evidence_1\"\n    ],\n    \"expected_observations\": [\n      \"local evidence should support a bounded useful step\"\n    ],\n    \"hypothesis_id\": \"hypothesis-4f95683e2a62612c\",\n    \"lifecycle_state\": \"active\",\n    \"originating_focus_id\": \"focus-22fb591d46428403\",\n    \"originating_goal_id\": \"active-cognitive-goal-98c1b7e994b7b81f\",\n    \"provenance\": [\n      \"cognitive-operation-c3a4b497e1adad96\"\n    ],\n    \"revised_at\": \"\",\n    \"revision_parent_id\": \"\",\n    \"revision_reason\": \"\",\n    \"schema_version\": \"active_cognitive_architecture_marathon_1_v1\",\n    \"scope\": \"Resolve discrepancy for goal: Check closure audit validity\",\n    \"statement\": \"The closure audit report is accurate and valid.\"\n  },\n  \"operation\": \"formulate_hypothesis\",\n  \"outcome\": {\n    \"created_at\": \"2026-07-27T01:42:56+00:00\",\n    \"discrepancy\": \"progress_observed\",\n    \"expected\": \"Perform formulate_hypothesis for the active focus using only referenced evidence.\",\n    \"observed\": \"The closure audit report is accurate and valid.\",\n    \"operation_id\": \"cognitive-operation-c3a4b497e1adad96\",\n    \"outcome_id\": \"outcome-535d890e0e76c6d2\"\n  },\n  \"state\": \"persisting\",\n  \"title\": \"Evaluate Live Run Closure Audit\"\n}",
+      "tab": "Goals"
+    },
+    {
+      "event": "paused_state_visible",
+      "experiment_id": "exp-d",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=6; selected=4; active=exp-d",
+      "selected": [
+        "exp-d"
+      ],
+      "tree_items": [
+        {
+          "iid": "exp-a",
+          "text": "Optimize Active Cognitive Loop",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-b",
+          "text": "Test Model Execution Isolation",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-c",
+          "text": "Audit Live Run Operation",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-d",
+          "text": "Evaluate Live Run Closure Audit",
+          "values": [
+            "yes",
+            "1",
+            "blocked_operator_decision"
+          ]
+        },
+        {
+          "iid": "exp-e",
+          "text": "Analyze Active Cognitive Architecture",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-f",
+          "text": "Explore Cognitive Operations",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        }
+      ],
+      "detail": "{\n  \"artifact\": {},\n  \"budget\": {\n    \"cycles\": 7,\n    \"model_calls\": 5\n  },\n  \"completed\": false,\n  \"evidence\": [\n    \"exp-d_evidence_1\",\n    \"exp-d_contrary_1\"\n  ],\n  \"failures\": [\n    \"no_model_cognition\",\n    \"no_evidence_revision\",\n    \"no_useful_outcome\"\n  ],\n  \"focus\": \"Resolve discrepancy for goal: Check closure audit validity\",\n  \"goal\": \"Check closure audit validity\",\n  \"hypothesis\": {\n    \"assumptions\": [\n      \"Audit process followed established procedures\",\n      \"Data integrity maintained during audit\"\n    ],\n    \"confidence_state\": \"plausible\",\n    \"created_at\": \"2026-07-27T01:42:56+00:00\",\n    \"disposition\": \"needs_challenge\",\n    \"evidence_against\": [],\n    \"evidence_for\": [\n      \"exp-d_evidence_1\"\n    ],\n    \"expected_observations\": [\n      \"local evidence should support a bounded useful step\"\n    ],\n    \"hypothesis_id\": \"hypothesis-4f95683e2a62612c\",\n    \"lifecycle_state\": \"active\",\n    \"originating_focus_id\": \"focus-22fb591d46428403\",\n    \"originating_goal_id\": \"active-cognitive-goal-98c1b7e994b7b81f\",\n    \"provenance\": [\n      \"cognitive-operation-c3a4b497e1adad96\"\n    ],\n    \"revised_at\": \"\",\n    \"revision_parent_id\": \"\",\n    \"revision_reason\": \"\",\n    \"schema_version\": \"active_cognitive_architecture_marathon_1_v1\",\n    \"scope\": \"Resolve discrepancy for goal: Check closure audit validity\",\n    \"statement\": \"The closure audit report is accurate and valid.\"\n  },\n  \"operation\": \"formulate_hypothesis\",\n  \"outcome\": {\n    \"created_at\": \"2026-07-27T01:42:56+00:00\",\n    \"discrepancy\": \"progress_observed\",\n    \"expected\": \"Perform formulate_hypothesis for the active focus using only referenced evidence.\",\n    \"observed\": \"The closure audit report is accurate and valid.\",\n    \"operation_id\": \"cognitive-operation-c3a4b497e1adad96\",\n    \"outcome_id\": \"outcome-535d890e0e76c6d2\"\n  },\n  \"state\": \"blocked_operator_decision\",\n  \"title\": \"Evaluate Live Run Closure Audit\"\n}",
+      "tab": "Goals"
+    },
+    {
+      "event": "restored_state_visible_after_tk_recreate",
+      "experiment_id": "exp-d",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=6; selected=4; active=exp-d",
+      "selected": [
+        "exp-d"
+      ],
+      "tree_items": [
+        {
+          "iid": "exp-a",
+          "text": "Optimize Active Cognitive Loop",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-b",
+          "text": "Test Model Execution Isolation",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-c",
+          "text": "Audit Live Run Operation",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-d",
+          "text": "Evaluate Live Run Closure Audit",
+          "values": [
+            "yes",
+            "1",
+            "blocked_operator_decision"
+          ]
+        },
+        {
+          "iid": "exp-e",
+          "text": "Analyze Active Cognitive Architecture",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-f",
+          "text": "Explore Cognitive Operations",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        }
+      ],
+      "detail": "{\n  \"artifact\": {},\n  \"budget\": {\n    \"cycles\": 7,\n    \"model_calls\": 5\n  },\n  \"completed\": false,\n  \"evidence\": [\n    \"exp-d_evidence_1\",\n    \"exp-d_contrary_1\"\n  ],\n  \"failures\": [\n    \"no_model_cognition\",\n    \"no_evidence_revision\",\n    \"no_useful_outcome\"\n  ],\n  \"focus\": \"Resolve discrepancy for goal: Check closure audit validity\",\n  \"goal\": \"Check closure audit validity\",\n  \"hypothesis\": {\n    \"assumptions\": [\n      \"Audit process followed established procedures\",\n      \"Data integrity maintained during audit\"\n    ],\n    \"confidence_state\": \"plausible\",\n    \"created_at\": \"2026-07-27T01:42:56+00:00\",\n    \"disposition\": \"needs_challenge\",\n    \"evidence_against\": [],\n    \"evidence_for\": [\n      \"exp-d_evidence_1\"\n    ],\n    \"expected_observations\": [\n      \"local evidence should support a bounded useful step\"\n    ],\n    \"hypothesis_id\": \"hypothesis-4f95683e2a62612c\",\n    \"lifecycle_state\": \"active\",\n    \"originating_focus_id\": \"focus-22fb591d46428403\",\n    \"originating_goal_id\": \"active-cognitive-goal-98c1b7e994b7b81f\",\n    \"provenance\": [\n      \"cognitive-operation-c3a4b497e1adad96\"\n    ],\n    \"revised_at\": \"\",\n    \"revision_parent_id\": \"\",\n    \"revision_reason\": \"\",\n    \"schema_version\": \"active_cognitive_architecture_marathon_1_v1\",\n    \"scope\": \"Resolve discrepancy for goal: Check closure audit validity\",\n    \"statement\": \"The closure audit report is accurate and valid.\"\n  },\n  \"operation\": \"formulate_hypothesis\",\n  \"outcome\": {\n    \"created_at\": \"2026-07-27T01:42:56+00:00\",\n    \"discrepancy\": \"progress_observed\",\n    \"expected\": \"Perform formulate_hypothesis for the active focus using only referenced evidence.\",\n    \"observed\": \"The closure audit report is accurate and valid.\",\n    \"operation_id\": \"cognitive-operation-c3a4b497e1adad96\",\n    \"outcome_id\": \"outcome-535d890e0e76c6d2\"\n  },\n  \"state\": \"blocked_operator_decision\",\n  \"title\": \"Evaluate Live Run Closure Audit\"\n}",
+      "tab": "Goals"
+    },
+    {
+      "event": "resumed_state_visible",
+      "experiment_id": "exp-d",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=6; selected=4; active=exp-d",
+      "selected": [
+        "exp-d"
+      ],
+      "tree_items": [
+        {
+          "iid": "exp-a",
+          "text": "Optimize Active Cognitive Loop",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-b",
+          "text": "Test Model Execution Isolation",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-c",
+          "text": "Audit Live Run Operation",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-d",
+          "text": "Evaluate Live Run Closure Audit",
+          "values": [
+            "yes",
+            "1",
+            "selecting_focus"
+          ]
+        },
+        {
+          "iid": "exp-e",
+          "text": "Analyze Active Cognitive Architecture",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-f",
+          "text": "Explore Cognitive Operations",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        }
+      ],
+      "detail": "{\n  \"artifact\": {},\n  \"budget\": {\n    \"cycles\": 7,\n    \"model_calls\": 5\n  },\n  \"completed\": false,\n  \"evidence\": [\n    \"exp-d_evidence_1\",\n    \"exp-d_contrary_1\"\n  ],\n  \"failures\": [\n    \"no_model_cognition\",\n    \"no_evidence_revision\",\n    \"no_useful_outcome\"\n  ],\n  \"focus\": \"Resolve discrepancy for goal: Check closure audit validity\",\n  \"goal\": \"Check closure audit validity\",\n  \"hypothesis\": {\n    \"assumptions\": [\n      \"Audit process followed established procedures\",\n      \"Data integrity maintained during audit\"\n    ],\n    \"confidence_state\": \"plausible\",\n    \"created_at\": \"2026-07-27T01:42:56+00:00\",\n    \"disposition\": \"needs_challenge\",\n    \"evidence_against\": [],\n    \"evidence_for\": [\n      \"exp-d_evidence_1\"\n    ],\n    \"expected_observations\": [\n      \"local evidence should support a bounded useful step\"\n    ],\n    \"hypothesis_id\": \"hypothesis-4f95683e2a62612c\",\n    \"lifecycle_state\": \"active\",\n    \"originating_focus_id\": \"focus-22fb591d46428403\",\n    \"originating_goal_id\": \"active-cognitive-goal-98c1b7e994b7b81f\",\n    \"provenance\": [\n      \"cognitive-operation-c3a4b497e1adad96\"\n    ],\n    \"revised_at\": \"\",\n    \"revision_parent_id\": \"\",\n    \"revision_reason\": \"\",\n    \"schema_version\": \"active_cognitive_architecture_marathon_1_v1\",\n    \"scope\": \"Resolve discrepancy for goal: Check closure audit validity\",\n    \"statement\": \"The closure audit report is accurate and valid.\"\n  },\n  \"operation\": \"formulate_hypothesis\",\n  \"outcome\": {\n    \"created_at\": \"2026-07-27T01:42:56+00:00\",\n    \"discrepancy\": \"progress_observed\",\n    \"expected\": \"Perform formulate_hypothesis for the active focus using only referenced evidence.\",\n    \"observed\": \"The closure audit report is accurate and valid.\",\n    \"operation_id\": \"cognitive-operation-c3a4b497e1adad96\",\n    \"outcome_id\": \"outcome-535d890e0e76c6d2\"\n  },\n  \"state\": \"selecting_focus\",\n  \"title\": \"Evaluate Live Run Closure Audit\"\n}",
+      "tab": "Goals"
+    },
+    {
+      "event": "contrary_evidence_or_revision_visible_cycle_2",
+      "experiment_id": "exp-d",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=6; selected=4; active=exp-d",
+      "selected": [
+        "exp-d"
+      ],
+      "tree_items": [
+        {
+          "iid": "exp-a",
+          "text": "Optimize Active Cognitive Loop",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-b",
+          "text": "Test Model Execution Isolation",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-c",
+          "text": "Audit Live Run Operation",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-d",
+          "text": "Evaluate Live Run Closure Audit",
+          "values": [
+            "yes",
+            "2",
+            "persisting"
+          ]
+        },
+        {
+          "iid": "exp-e",
+          "text": "Analyze Active Cognitive Architecture",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-f",
+          "text": "Explore Cognitive Operations",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        }
+      ],
+      "detail": "{\n  \"artifact\": {},\n  \"budget\": {\n    \"cycles\": 6,\n    \"model_calls\": 4\n  },\n  \"completed\": false,\n  \"evidence\": [\n    \"exp-d_evidence_1\",\n    \"exp-d_contrary_1\"\n  ],\n  \"failures\": [\n    \"no_useful_outcome\"\n  ],\n  \"focus\": \"Resolve discrepancy for goal: Check closure audit validity\",\n  \"goal\": \"Check closure audit validity\",\n  \"hypothesis\": {\n    \"assumptions\": [\n      \"Audit process followed established procedures\",\n      \"Data integrity maintained during audit\"\n    ],\n    \"confidence_state\": \"contested\",\n    \"created_at\": \"2026-07-27T01:43:29+00:00\",\n    \"disposition\": \"revised_from_evidence\",\n    \"evidence_against\": [\n      \"exp-d_contrary_1\"\n    ],\n    \"evidence_for\": [\n      \"exp-d_evidence_1\"\n    ],\n    \"expected_observations\": [\n      \"revised smaller step should match local evidence\"\n    ],\n    \"hypothesis_id\": \"hypothesis-76a17eaa63b8e97a\",\n    \"lifecycle_state\": \"active\",\n    \"originating_focus_id\": \"focus-22fb591d46428403\",\n    \"originating_goal_id\": \"active-cognitive-goal-98c1b7e994b7b81f\",\n    \"provenance\": [\n      \"cognitive-operation-d39a4c10fb4e6d17\"\n    ],\n    \"revised_at\": \"2026-07-27T01:43:29+00:00\",\n    \"revision_parent_id\": \"hypothesis-4f95683e2a62612c\",\n    \"revision_reason\": \"The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.\",\n    \"schema_version\": \"active_cognitive_architecture_marathon_1_v1\",\n    \"scope\": \"Resolve discrepancy for goal: Check closure audit validity\",\n    \"statement\": \"The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.\"\n  },\n  \"operation\": \"compare_evidence\",\n  \"outcome\": {\n    \"created_at\": \"2026-07-27T01:43:29+00:00\",\n    \"discrepancy\": \"revised\",\n    \"expected\": \"Perform compare_evidence for the active focus using only referenced evidence.\",\n    \"observed\": \"The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.\",\n    \"operation_id\": \"cognitive-operation-d39a4c10fb4e6d17\",\n    \"outcome_id\": \"outcome-8383f672c2b25d3e\"\n  },\n  \"state\": \"persisting\",\n  \"title\": \"Evaluate Live Run Closure Audit\"\n}",
+      "tab": "Goals"
+    },
+    {
+      "event": "useful_artifact_visible_cycle_3",
+      "experiment_id": "exp-d",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=6; selected=4; active=exp-d",
+      "selected": [
+        "exp-d"
+      ],
+      "tree_items": [
+        {
+          "iid": "exp-a",
+          "text": "Optimize Active Cognitive Loop",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-b",
+          "text": "Test Model Execution Isolation",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-c",
+          "text": "Audit Live Run Operation",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-d",
+          "text": "Evaluate Live Run Closure Audit",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-e",
+          "text": "Analyze Active Cognitive Architecture",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-f",
+          "text": "Explore Cognitive Operations",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        }
+      ],
+      "detail": "{\n  \"artifact\": {\n    \"artifact_id\": \"useful-artifact-14b4d919aab53877\",\n    \"artifact_type\": \"cognitive_episode_summary\",\n    \"evidence_refs\": [\n      \"exp-d_evidence_1\"\n    ],\n    \"summary\": \"The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.\"\n  },\n  \"budget\": {\n    \"cycles\": 5,\n    \"model_calls\": 3\n  },\n  \"completed\": true,\n  \"evidence\": [\n    \"exp-d_evidence_1\",\n    \"exp-d_contrary_1\"\n  ],\n  \"failures\": [],\n  \"focus\": \"Challenge or revise hypothesis: The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.\",\n  \"goal\": \"Check closure audit validity\",\n  \"hypothesis\": {\n    \"assumptions\": [\n      \"Audit process followed established procedures\",\n      \"Data integrity maintained during audit\"\n    ],\n    \"confidence_state\": \"contested\",\n    \"created_at\": \"2026-07-27T01:43:29+00:00\",\n    \"disposition\": \"revised_from_evidence\",\n    \"evidence_against\": [\n      \"exp-d_contrary_1\"\n    ],\n    \"evidence_for\": [\n      \"exp-d_evidence_1\"\n    ],\n    \"expected_observations\": [\n      \"revised smaller step should match local evidence\"\n    ],\n    \"hypothesis_id\": \"hypothesis-76a17eaa63b8e97a\",\n    \"lifecycle_state\": \"active\",\n    \"originating_focus_id\": \"focus-22fb591d46428403\",\n    \"originating_goal_id\": \"active-cognitive-goal-98c1b7e994b7b81f\",\n    \"provenance\": [\n      \"cognitive-operation-d39a4c10fb4e6d17\"\n    ],\n    \"revised_at\": \"2026-07-27T01:43:29+00:00\",\n    \"revision_parent_id\": \"hypothesis-4f95683e2a62612c\",\n    \"revision_reason\": \"The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.\",\n    \"schema_version\": \"active_cognitive_architecture_marathon_1_v1\",\n    \"scope\": \"Resolve discrepancy for goal: Check closure audit validity\",\n    \"statement\": \"The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.\"\n  },\n  \"operation\": \"summarize_learning\",\n  \"outcome\": {\n    \"created_at\": \"2026-07-27T01:43:46+00:00\",\n    \"discrepancy\": \"progress_observed\",\n    \"expected\": \"Perform summarize_learning for the active focus using only referenced evidence.\",\n    \"observed\": \"The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.\",\n    \"operation_id\": \"cognitive-operation-2daa2dc066c8798e\",\n    \"outcome_id\": \"outcome-14b4d919aab53877\"\n  },\n  \"state\": \"completed\",\n  \"title\": \"Evaluate Live Run Closure Audit\"\n}",
+      "tab": "Goals"
+    },
+    {
+      "event": "autonomous_follow_up_started_visible",
+      "experiment_id": "exp-d",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=6; selected=4; active=exp-d",
+      "selected": [
+        "exp-d"
+      ],
+      "tree_items": [
+        {
+          "iid": "exp-a",
+          "text": "Optimize Active Cognitive Loop",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-b",
+          "text": "Test Model Execution Isolation",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-c",
+          "text": "Audit Live Run Operation",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-d",
+          "text": "Evaluate Live Run Closure Audit",
+          "values": [
+            "yes",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-e",
+          "text": "Analyze Active Cognitive Architecture",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-f",
+          "text": "Explore Cognitive Operations",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        }
+      ],
+      "detail": "{\n  \"artifact\": {\n    \"artifact_id\": \"useful-artifact-14b4d919aab53877\",\n    \"artifact_type\": \"cognitive_episode_summary\",\n    \"evidence_refs\": [\n      \"exp-d_evidence_1\"\n    ],\n    \"summary\": \"The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.\"\n  },\n  \"budget\": {\n    \"cycles\": 5,\n    \"model_calls\": 3\n  },\n  \"completed\": true,\n  \"evidence\": [\n    \"exp-d_evidence_1\",\n    \"exp-d_contrary_1\"\n  ],\n  \"failures\": [],\n  \"focus\": \"Challenge or revise hypothesis: The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.\",\n  \"goal\": \"Check closure audit validity\",\n  \"hypothesis\": {\n    \"assumptions\": [\n      \"Audit process followed established procedures\",\n      \"Data integrity maintained during audit\"\n    ],\n    \"confidence_state\": \"contested\",\n    \"created_at\": \"2026-07-27T01:43:29+00:00\",\n    \"disposition\": \"revised_from_evidence\",\n    \"evidence_against\": [\n      \"exp-d_contrary_1\"\n    ],\n    \"evidence_for\": [\n      \"exp-d_evidence_1\"\n    ],\n    \"expected_observations\": [\n      \"revised smaller step should match local evidence\"\n    ],\n    \"hypothesis_id\": \"hypothesis-76a17eaa63b8e97a\",\n    \"lifecycle_state\": \"active\",\n    \"originating_focus_id\": \"focus-22fb591d46428403\",\n    \"originating_goal_id\": \"active-cognitive-goal-98c1b7e994b7b81f\",\n    \"provenance\": [\n      \"cognitive-operation-d39a4c10fb4e6d17\"\n    ],\n    \"revised_at\": \"2026-07-27T01:43:29+00:00\",\n    \"revision_parent_id\": \"hypothesis-4f95683e2a62612c\",\n    \"revision_reason\": \"The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.\",\n    \"schema_version\": \"active_cognitive_architecture_marathon_1_v1\",\n    \"scope\": \"Resolve discrepancy for goal: Check closure audit validity\",\n    \"statement\": \"The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.\"\n  },\n  \"operation\": \"summarize_learning\",\n  \"outcome\": {\n    \"created_at\": \"2026-07-27T01:43:46+00:00\",\n    \"discrepancy\": \"progress_observed\",\n    \"expected\": \"Perform summarize_learning for the active focus using only referenced evidence.\",\n    \"observed\": \"The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.\",\n    \"operation_id\": \"cognitive-operation-2daa2dc066c8798e\",\n    \"outcome_id\": \"outcome-14b4d919aab53877\"\n  },\n  \"state\": \"completed\",\n  \"title\": \"Evaluate Live Run Closure Audit\"\n}",
+      "tab": "Goals"
+    }
+  ],
+  "snapshot_count": 24
+}

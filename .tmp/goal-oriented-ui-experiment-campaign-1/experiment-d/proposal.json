@@ -1,0 +1,62 @@
+{
+  "contrary_or_uncertainty_evidence": [
+    {
+      "note": "UI route and usefulness are not yet proven for this candidate.",
+      "path": "operator:campaign_uncertainty"
+    }
+  ],
+  "estimated_time_and_model_call_budget": "3 cycles; 3 calls",
+  "expected_artifact_or_outcome": "Audit validation report",
+  "expected_cycle_count": 3,
+  "experiment_id": "exp-d",
+  "failure_criteria": "No useful artifact or no visible UI state.",
+  "local_evidence_available": [
+    {
+      "note": "Contains closure audit data",
+      "path": ".tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/marathon_closure_audit.json"
+    }
+  ],
+  "practical_objective": "Check closure audit validity",
+  "related_operator_or_project_goal": "Ensure closure audit accuracy",
+  "required_authority": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+  "required_bounded_actions": [
+    "inspect local evidence",
+    "run bounded cognition",
+    "write useful artifact"
+  ],
+  "required_cognitive_operations": [
+    "formulate_hypothesis",
+    "compare_evidence",
+    "summarize_learning"
+  ],
+  "restart_relevance": "Can contribute to campaign restart proof if selected.",
+  "risk_and_scope": "Local, bounded, non-protected campaign evidence only.",
+  "success_criteria": "Produces useful artifact grounded in local evidence.",
+  "title": "Evaluate Live Run Closure Audit",
+  "validation": {
+    "accepted": true,
+    "campaign_enriched_fields": [
+      "contrary_or_uncertainty_evidence",
+      "required_cognitive_operations",
+      "required_bounded_actions",
+      "required_authority",
+      "expected_cycle_count",
+      "restart_relevance",
+      "success_criteria",
+      "failure_criteria",
+      "risk_and_scope",
+      "estimated_time_and_model_call_budget"
+    ],
+    "criteria": "local, bounded, useful, non-protected",
+    "model_proposed_fields": [
+      "expected_artifact_or_outcome",
+      "experiment_id",
+      "local_evidence_available",
+      "practical_objective",
+      "related_operator_or_project_goal",
+      "title",
+      "why_it_is_useful"
+    ]
+  },
+  "why_it_is_useful": "Validates closure audit process"
+}

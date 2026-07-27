@@ -1,0 +1,344 @@
+[
+  {
+    "active_focus": {
+      "authority_need": "none_for_local_analysis",
+      "blocking_state": "",
+      "capability_need": "local_model_semantic_operation",
+      "creation_sequence": 1,
+      "description": "Resolve discrepancy for goal: Ensure live run compliance",
+      "evidence_need": "local evidence supporting or challenging the goal",
+      "evidence_refs": [
+        "exp-c_evidence_1",
+        "exp-c_contrary_1"
+      ],
+      "expected_value": "useful_progress",
+      "focus_id": "focus-092571b82ef78794",
+      "related_goal_ids": [
+        "active-cognitive-goal-607fe79d22140cdd"
+      ],
+      "salience_categories": [
+        "operator_priority",
+        "goal_discrepancy",
+        "expected_useful_progress"
+      ],
+      "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "goal_discrepancy",
+      "urgency": "medium"
+    },
+    "active_goal": {
+      "expected_state": "Compliance audit report",
+      "goal_id": "active-cognitive-goal-607fe79d22140cdd",
+      "observed_state": "",
+      "priority": "operator_requested",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "summary": "Ensure live run compliance"
+    },
+    "authority_state": "authorized_for_local_cognitive_marathon",
+    "capability_limits": [
+      "model calls budgeted",
+      "source mutation requires explicit bounded patch authority"
+    ],
+    "conflicting_evidence": [
+      {
+        "content": "operator:campaign_uncertainty",
+        "evidence_id": "exp-c_contrary_1",
+        "exists": true,
+        "kind": "local_evidence",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "local_uncertainty",
+        "summary": "Contrary evidence: UI route and usefulness are not yet proven for this candidate."
+      }
+    ],
+    "construction_rationale": "bounded by active focus, goal discrepancy, recency, evidence provenance, and operation need",
+    "current_hypotheses": [],
+    "cycle_id": "active-cognitive-cycle-608cd604c3537653",
+    "observed_outcomes": [],
+    "omitted_items_summary": "0 older or less relevant items omitted by packet budget",
+    "operator_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "packet_digest": "14010a1e11f9a99373fcc246c77ef61d2ab0aee206b3cc6198fc4f6aa6e7055a",
+    "packet_id": "working-memory-packet-68fe173a426d0e99",
+    "prior_cycle_summary": "",
+    "provenance_refs": [
+      "exp-c_evidence_1",
+      "exp-c_contrary_1"
+    ],
+    "recent_actions": [],
+    "relevant_evidence": [
+      {
+        "content": ".tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/live_episode_summary.json",
+        "evidence_id": "exp-c_evidence_1",
+        "exists": true,
+        "kind": "local_evidence",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "local_repo",
+        "summary": "Summary of live run episodes"
+      }
+    ],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "size_budget": 8,
+    "unresolved_questions": []
+  },
+  {
+    "active_focus": {
+      "authority_need": "none_for_local_analysis",
+      "blocking_state": "",
+      "capability_need": "local_model_semantic_operation",
+      "creation_sequence": 2,
+      "description": "Resolve discrepancy for goal: Ensure live run compliance",
+      "evidence_need": "local evidence supporting or challenging the goal",
+      "evidence_refs": [
+        "exp-c_evidence_1",
+        "exp-c_contrary_1"
+      ],
+      "expected_value": "useful_progress",
+      "focus_id": "focus-ae8a49232d5c6d8f",
+      "related_goal_ids": [
+        "active-cognitive-goal-607fe79d22140cdd"
+      ],
+      "salience_categories": [
+        "operator_priority",
+        "goal_discrepancy",
+        "expected_useful_progress"
+      ],
+      "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "goal_discrepancy",
+      "urgency": "medium"
+    },
+    "active_goal": {
+      "expected_state": "Compliance audit report",
+      "goal_id": "active-cognitive-goal-607fe79d22140cdd",
+      "observed_state": "",
+      "priority": "operator_requested",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "summary": "Ensure live run compliance"
+    },
+    "authority_state": "authorized_for_local_cognitive_marathon",
+    "capability_limits": [
+      "model calls budgeted",
+      "source mutation requires explicit bounded patch authority"
+    ],
+    "conflicting_evidence": [
+      {
+        "content": "operator:campaign_uncertainty",
+        "evidence_id": "exp-c_contrary_1",
+        "exists": true,
+        "kind": "local_evidence",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "local_uncertainty",
+        "summary": "Contrary evidence: UI route and usefulness are not yet proven for this candidate."
+      }
+    ],
+    "construction_rationale": "bounded by active focus, goal discrepancy, recency, evidence provenance, and operation need",
+    "current_hypotheses": [
+      {
+        "assumptions": [
+          "Live run episodes are representative of the system's typical behavior"
+        ],
+        "confidence_state": "plausible",
+        "created_at": "2026-07-27T01:41:36+00:00",
+        "disposition": "needs_challenge",
+        "evidence_against": [],
+        "evidence_for": [
+          "exp-c_evidence_1"
+        ],
+        "expected_observations": [
+          "local evidence should support a bounded useful step"
+        ],
+        "hypothesis_id": "hypothesis-0f19f09129a57e9c",
+        "lifecycle_state": "active",
+        "originating_focus_id": "focus-092571b82ef78794",
+        "originating_goal_id": "active-cognitive-goal-607fe79d22140cdd",
+        "provenance": [
+          "cognitive-operation-fe9c7e38e8d911b5"
+        ],
+        "revised_at": "",
+        "revision_parent_id": "",
+        "revision_reason": "",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "scope": "Resolve discrepancy for goal: Ensure live run compliance",
+        "statement": "Live run episodes show no clear patterns or anomalies that would indicate non-compliance."
+      }
+    ],
+    "cycle_id": "active-cognitive-cycle-ea392b61f6bb8d28",
+    "observed_outcomes": [
+      {
+        "created_at": "2026-07-27T01:41:36+00:00",
+        "discrepancy": "progress_observed",
+        "expected": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+        "observed": "Live run episodes show no clear patterns or anomalies that would indicate non-compliance.",
+        "operation_id": "cognitive-operation-fe9c7e38e8d911b5",
+        "outcome_id": "outcome-fb0249de550172b6"
+      }
+    ],
+    "omitted_items_summary": "0 older or less relevant items omitted by packet budget",
+    "operator_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "packet_digest": "737b234c202b693cd6df75b05064c97f9ff15d60e347165440d61a9dea2ae21c",
+    "packet_id": "working-memory-packet-9a314860f75e55cb",
+    "prior_cycle_summary": "Live run episodes show no clear patterns or anomalies that would indicate non-compliance.",
+    "provenance_refs": [
+      "exp-c_evidence_1",
+      "exp-c_contrary_1"
+    ],
+    "recent_actions": [],
+    "relevant_evidence": [
+      {
+        "content": ".tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/live_episode_summary.json",
+        "evidence_id": "exp-c_evidence_1",
+        "exists": true,
+        "kind": "local_evidence",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "local_repo",
+        "summary": "Summary of live run episodes"
+      }
+    ],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "size_budget": 8,
+    "unresolved_questions": []
+  },
+  {
+    "active_focus": {
+      "authority_need": "none_for_local_analysis",
+      "blocking_state": "",
+      "capability_need": "semantic comparison",
+      "creation_sequence": 3,
+      "description": "Challenge or revise hypothesis: Live run episodes show no clear patterns or anomalies that would indicate non-compliance.",
+      "evidence_need": "contrary and supporting evidence",
+      "evidence_refs": [
+        "exp-c_evidence_1",
+        "exp-c_contrary_1"
+      ],
+      "expected_value": "belief_revision",
+      "focus_id": "focus-2a3751eb8d190d22",
+      "related_goal_ids": [
+        "active-cognitive-goal-607fe79d22140cdd"
+      ],
+      "salience_categories": [
+        "unresolved_hypothesis",
+        "evidence_revision",
+        "expected_useful_progress"
+      ],
+      "salience_explanation": "An active hypothesis needs evidence-linked revision before action.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "hypothesis_revision",
+      "urgency": "high"
+    },
+    "active_goal": {
+      "expected_state": "Compliance audit report",
+      "goal_id": "active-cognitive-goal-607fe79d22140cdd",
+      "observed_state": "",
+      "priority": "operator_requested",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "summary": "Ensure live run compliance"
+    },
+    "authority_state": "authorized_for_local_cognitive_marathon",
+    "capability_limits": [
+      "model calls budgeted",
+      "source mutation requires explicit bounded patch authority"
+    ],
+    "conflicting_evidence": [
+      {
+        "content": "operator:campaign_uncertainty",
+        "evidence_id": "exp-c_contrary_1",
+        "exists": true,
+        "kind": "local_evidence",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "local_uncertainty",
+        "summary": "Contrary evidence: UI route and usefulness are not yet proven for this candidate."
+      }
+    ],
+    "construction_rationale": "bounded by active focus, goal discrepancy, recency, evidence provenance, and operation need",
+    "current_hypotheses": [
+      {
+        "assumptions": [
+          "Live run episodes are representative of the system's typical behavior"
+        ],
+        "confidence_state": "contested",
+        "created_at": "2026-07-27T01:41:36+00:00",
+        "disposition": "needs_challenge",
+        "evidence_against": [
+          "exp-c_contrary_1"
+        ],
+        "evidence_for": [
+          "exp-c_evidence_1"
+        ],
+        "expected_observations": [
+          "local evidence should support a bounded useful step"
+        ],
+        "hypothesis_id": "hypothesis-0f19f09129a57e9c",
+        "lifecycle_state": "active",
+        "originating_focus_id": "focus-092571b82ef78794",
+        "originating_goal_id": "active-cognitive-goal-607fe79d22140cdd",
+        "provenance": [
+          "cognitive-operation-fe9c7e38e8d911b5",
+          "cognitive-operation-8eab63df9325ed7b"
+        ],
+        "revised_at": "2026-07-27T01:42:14+00:00",
+        "revision_parent_id": "",
+        "revision_reason": "The live run episodes do not show clear patterns or anomalies that would indicate non-compliance, but the UI route and usefulness are not yet proven for this candidate.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "scope": "Resolve discrepancy for goal: Ensure live run compliance",
+        "statement": "Live run episodes show no clear patterns or anomalies that would indicate non-compliance."
+      }
+    ],
+    "cycle_id": "active-cognitive-cycle-b8915918eafc1bbb",
+    "observed_outcomes": [
+      {
+        "created_at": "2026-07-27T01:41:36+00:00",
+        "discrepancy": "progress_observed",
+        "expected": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+        "observed": "Live run episodes show no clear patterns or anomalies that would indicate non-compliance.",
+        "operation_id": "cognitive-operation-fe9c7e38e8d911b5",
+        "outcome_id": "outcome-fb0249de550172b6"
+      },
+      {
+        "created_at": "2026-07-27T01:42:14+00:00",
+        "discrepancy": "progress_observed",
+        "expected": "Perform compare_evidence for the active focus using only referenced evidence.",
+        "observed": "The live run episodes do not show clear patterns or anomalies that would indicate non-compliance, but the UI route and usefulness are not yet proven for this candidate.",
+        "operation_id": "cognitive-operation-8eab63df9325ed7b",
+        "outcome_id": "outcome-75cda59cb99b5f7f"
+      }
+    ],
+    "omitted_items_summary": "0 older or less relevant items omitted by packet budget",
+    "operator_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "packet_digest": "f3f76c56897a098db2e953bff17a78fe62be7a8f881cecaf014193f18ba735df",
+    "packet_id": "working-memory-packet-040006bee852299e",
+    "prior_cycle_summary": "The live run episodes do not show clear patterns or anomalies that would indicate non-compliance, but the UI route and usefulness are not yet proven for this candidate.",
+    "provenance_refs": [
+      "exp-c_evidence_1",
+      "exp-c_contrary_1"
+    ],
+    "recent_actions": [],
+    "relevant_evidence": [
+      {
+        "content": ".tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/live_episode_summary.json",
+        "evidence_id": "exp-c_evidence_1",
+        "exists": true,
+        "kind": "local_evidence",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "local_repo",
+        "summary": "Summary of live run episodes"
+      }
+    ],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "size_budget": 8,
+    "unresolved_questions": []
+  }
+]

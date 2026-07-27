@@ -1,0 +1,68 @@
+[
+  {
+    "accepted": true,
+    "assumptions": [
+      "Live run episodes are representative of the system's typical behavior"
+    ],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "exp-c_evidence_1"
+    ],
+    "interpretation": "Live run episodes show no clear patterns or anomalies that would indicate non-compliance.",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "next_evidence_need": "",
+    "next_focus_proposal": "",
+    "operation_id": "cognitive-operation-fe9c7e38e8d911b5",
+    "operation_result_type": "formulate_hypothesis_result",
+    "raw_model_output": "{\"hypothesis_statement\":\"Live run episodes show no clear patterns or anomalies that would indicate non-compliance.\",\"scope\":\"Live run episodes\",\"supporting_evidence_refs\":[\"exp-c_evidence_1\"],\"assumptions\":[\"Live run episodes are representative of the system's typical behavior\"],\"expected_observations\":[\"No significant deviations from expected behavior\"],\"uncertainty\":\"Whether all live run episodes are fully representative of the system's typical behavior\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+    "recommended_action": "Live run episodes",
+    "recommended_state_transition": "propose_hypothesis",
+    "rejection_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "uncertainty": "Whether all live run episodes are fully representative of the system's typical behavior"
+  },
+  {
+    "accepted": true,
+    "assumptions": [
+      "Live run episodes are representative of the system's typical behavior"
+    ],
+    "contrary_evidence_considered": [
+      "exp-c_contrary_1"
+    ],
+    "evidence_refs": [
+      "exp-c_evidence_1"
+    ],
+    "interpretation": "The live run episodes do not show clear patterns or anomalies that would indicate non-compliance, but the UI route and usefulness are not yet proven for this candidate.",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "next_evidence_need": "Further evidence to confirm the UI route and usefulness for this candidate.",
+    "next_focus_proposal": "Propose to gather more data on the UI route and its usefulness.",
+    "operation_id": "cognitive-operation-8eab63df9325ed7b",
+    "operation_result_type": "compare_evidence_result",
+    "raw_model_output": "{ \"assumptions\": [ \"Live run episodes are representative of the system's typical behavior\" ], \"contrary_evidence_considered\": [ \"exp-c_contrary_1\" ], \"evidence_refs\": [ \"exp-c_evidence_1\" ], \"interpretation\": \"The live run episodes do not show clear patterns or anomalies that would indicate non-compliance, but the UI route and usefulness are not yet proven for this candidate.\", \"next_evidence_need\": \"Further evidence to confirm the UI route and usefulness for this candidate.\", \"next_focus_proposal\": \"Propose to gather more data on the UI route and its usefulness.\", \"operation_result_type\": \"compare_evidence_result\", \"recommended_action\": \"Gather additional evidence to confirm the UI route and usefulness for this candidate.\", \"recommended_state_transition\": \"add_conflicting_evidence\", \"uncertainty\": \"The UI route and usefulness for this candidate are not yet proven.\" }",
+    "recommended_action": "Gather additional evidence to confirm the UI route and usefulness for this candidate.",
+    "recommended_state_transition": "add_conflicting_evidence",
+    "rejection_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "uncertainty": "The UI route and usefulness for this candidate are not yet proven."
+  },
+  {
+    "accepted": true,
+    "assumptions": [],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "exp-c_evidence_1"
+    ],
+    "interpretation": "Live run episodes do not show clear patterns or anomalies indicating non-compliance, but the UI route and usefulness are not yet proven.",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "next_evidence_need": "How can we ensure the UI route and usefulness for this candidate?",
+    "next_focus_proposal": "",
+    "operation_id": "cognitive-operation-c2cfa6a9c740663e",
+    "operation_result_type": "summarize_learning_result",
+    "raw_model_output": "{ \"lesson\": \"Live run episodes do not show clear patterns or anomalies indicating non-compliance, but the UI route and usefulness are not yet proven.\", \"evidence_refs\": [ \"exp-c_evidence_1\" ], \"unresolved_questions\": [ \"How can we ensure the UI route and usefulness for this candidate?\" ], \"uncertainty\": \"UI route and usefulness are not yet proven for this candidate.\", \"recommended_state_transition\": \"summarize_learning\" }",
+    "recommended_action": "",
+    "recommended_state_transition": "summarize_learning",
+    "rejection_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "uncertainty": "UI route and usefulness are not yet proven for this candidate."
+  }
+]

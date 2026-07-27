@@ -1,0 +1,60 @@
+{
+  "adapter_identity": "goal_oriented_ui_campaign.ProviderManager.exact_prompt",
+  "availability_state": "available",
+  "execution_completed_at": "2026-07-27T02:21:06+00:00",
+  "execution_started_at": "2026-07-27T02:20:34+00:00",
+  "failure_classification": "",
+  "failure_detail": "",
+  "latency_seconds": 31.9075,
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "provenance": {
+    "execution_claim_id": "shared-local-model-execution-claim-b7992b9df398cb87",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    }
+  },
+  "request_id": "shared-local-model-request-0422b6a064366b12",
+  "response_digest": "a886c7e170d5cb7e2fe9afa09db15776cf605dbedfc91cbe0d2fcf8d0d1afc66",
+  "response_reference": "{ \"selected\": [ \"exp-b\", \"exp-c\", \"exp-d\", \"exp-e\" ], \"ranking\":  \"1: exp-e, 2: exp-b, 3: exp-c, 4: exp-d\", \"rationale\": \"exp-e focuses on autonomous follow-up selection, which is critical for continuous improvement. exp-b synthesizes live episode artifacts, providing actionable insights. exp-c validates UI impact through user interaction metrics, ensuring engagement. exp-d manages Tk reloads to preserve focus and efficiency, addressing interruption/restart needs.\" \n\n, \"uncertainty\": \"uncertain\" \n\n, \"recommended_state_transition\": \"select_experiment_set\" }",
+  "result_digest": "5ad534b056fb5c5c0fb9ea2b75c6563164505a16dd32533d49688fa1513d3ece",
+  "result_id": "shared-local-model-result-7e7ab6267ac9a85f",
+  "terminal_state": "completed"
+}

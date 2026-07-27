@@ -1,0 +1,47 @@
+[
+  {
+    "at": "2026-07-27T01:42:35+00:00",
+    "focus_id": "focus-22fb591d46428403",
+    "reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+    "sequence": 1,
+    "transition": "establish_focus"
+  },
+  {
+    "at": "2026-07-27T01:42:56+00:00",
+    "focus_id": "focus-22fb591d46428403",
+    "priority": "high",
+    "reason": "operator-visible campaign pause through Tk UI",
+    "return_condition": "resume same focus after Tk restart recovery",
+    "sequence": 2,
+    "transition": "interrupt_focus"
+  },
+  {
+    "at": "2026-07-27T01:43:01+00:00",
+    "focus_id": "focus-22fb591d46428403",
+    "reason": "operator-visible campaign resume through Tk UI",
+    "return_condition": "resume same focus after Tk restart recovery",
+    "sequence": 3,
+    "transition": "resume_focus"
+  },
+  {
+    "at": "2026-07-27T01:43:01+00:00",
+    "focus_id": "focus-6f5e844f66346ae3",
+    "reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+    "sequence": 4,
+    "transition": "switch_focus"
+  },
+  {
+    "at": "2026-07-27T01:43:29+00:00",
+    "focus_id": "focus-00688039692a8f9e",
+    "reason": "An active hypothesis needs evidence-linked revision before action.",
+    "sequence": 5,
+    "transition": "switch_focus"
+  },
+  {
+    "at": "2026-07-27T01:44:39+00:00",
+    "focus_id": "focus-0622c190a9b627a9",
+    "reason": "An active hypothesis needs evidence-linked revision before action.",
+    "sequence": 6,
+    "transition": "switch_focus"
+  }
+]

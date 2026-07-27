@@ -1,0 +1,60 @@
+{
+  "adapter_identity": "goal_oriented_ui_campaign.ProviderManager.exact_prompt",
+  "availability_state": "available",
+  "execution_completed_at": "2026-07-27T01:57:46+00:00",
+  "execution_started_at": "2026-07-27T01:56:14+00:00",
+  "failure_classification": "",
+  "failure_detail": "",
+  "latency_seconds": 91.7683,
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "provenance": {
+    "execution_claim_id": "shared-local-model-execution-claim-9363eb615d82313d",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    }
+  },
+  "request_id": "shared-local-model-request-08b670c3f13930ca",
+  "response_digest": "76813e075ad1729334a486ce5228879646ce92da2b207e9e34ea25ca0babbbf3",
+  "response_reference": "{\n  \"assumptions\": [],\n  \"contrary_evidence_considered\": [\n    \"{'path': 'tests/runtime_gsr/test_active_cognitive_loop.py', 'note': 'No direct evidence found.'}\"\n  ],\n  \"evidence_refs\": [\n    \"{'path': '.tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/live_episode_summary.json', 'note': 'Indirect evidence from previous cycles.'}\"\n  ],\n  \"interpretation\": \"{\\\"experiment_id\\\": \\\"exp-b\\\", \\\"title\\\": \\\"Improve UI feedback timing\\\", \\\"practical_objective\\\": \\\"Reduce user wait time for UI updates\\\", \\\"why_it_is_useful\\\": \\\"Enhances user experience and satisfaction\\\", \\\"related_operator_or_project_goal\\\": \\\"Optimize user interface performance\\\", \\\"expected_artifact_or_outcome\\\": \\\"Faster UI update responses\\\", \\\"local_evidence_available\\\": [{\\\"path\\\": \\\"orchestration/runtime/active_cognitive_loop.py\\\", \\\"note\\\": \\\"Previous cycle performance metrics\\\"}], \\\"contrary_or_uncertainty_evidence\\\": [{\\\"path\\\": \\\"tests/runtime_gsr/test_active_cognitive_loop.py\\\", \\\"note\\\": \\\"No direct evidence found.\\\"}], \\\"required_cognitive_operations\\\": [\\\"analyze_user_input\\\", \\\"predict_ui_state_changes\\\"], \\\"required_bounded_actions\\\": [\\\"adjust_ui_update_timing\\\"], \\\"required_authority\\\": \\\"operator_authorized_goal_oriented_ui_experiment_campaign_1\\\", \\\"expected_cycle_count\\\": 5, \\\"restart_relevance\\\": \\\"Medium\\\", \\\"success_criteria\\\": \\\"50% reduction in user wait time\\\", \\\"failure_criteria\\\": \\\"No significant change in user wait time\\\", \\\"risk_and_scope\\\": \\\"Low, localized changes\\\", \\\"estimated_time_and_model_call_budget\\\": \\\"3 cycles; 3 calls\\\"}\",\n  \"next_evidence_need\": \"More user interaction data\",\n  \"next_focus_proposal\": \"Enhance user interaction tracking\"\n  , \"operation_result_type\": \"performance_metrics\"\n  , \"recommended_action\": \"Adjust UI update intervals based on user feedback\"\n  , \"recommended_state_transition\": \"UI optimization phase\"\n  , \"uncertainty\": \"Potential impact on system load\"\n}",
+  "result_digest": "4476c7360eada05111ca9afa496c34dbaf483dfc065d5ff51d46575840c82a01",
+  "result_id": "shared-local-model-result-e10a5683cdf3f6b0",
+  "terminal_state": "completed"
+}

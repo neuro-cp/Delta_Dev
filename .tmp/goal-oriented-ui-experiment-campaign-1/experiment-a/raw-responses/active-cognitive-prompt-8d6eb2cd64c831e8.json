@@ -1,0 +1,76 @@
+{
+  "ledger_request_id": "shared-local-model-request-3069abd62cef05c4",
+  "ledger_result_id": "shared-local-model-result-97dc454f24cb0d46",
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "prompt_snapshot_id": "active-cognitive-prompt-8d6eb2cd64c831e8",
+  "raw_response": "{\"lesson\":\"The current implementation of the active cognitive loop is sufficient for optimizing cognitive loop efficiency, but the UI route and usefulness are not yet proven for this candidate.\",\"evidence_refs\":[\"exp-a_evidence_1\"],\"unresolved_questions\":[\"Is the UI route and usefulness proven for this candidate?\"],\"uncertainty\":\"UI route and usefulness are not yet proven for this candidate.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "d217f9979f5ad534f71fca5d8e1beaca2f907877134c80cc2a414f933e77e779",
+  "terminal_status": {
+    "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+    "approved_at": "2026-07-27T01:40:05+00:00",
+    "authority_state": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+    "claimed_at": "2026-07-27T01:40:05+00:00",
+    "completed_at": "2026-07-27T01:40:23+00:00",
+    "consumed_state": "terminal",
+    "created_at": "2026-07-27T01:40:05+00:00",
+    "execution_attempt_count": 1,
+    "execution_claim_id": "shared-local-model-execution-claim-1a4ac9e3902dfd79",
+    "failure_classification": "",
+    "lifecycle_state": "completed",
+    "mission_id": "active-cognitive-goal-098dd508c5ff9808",
+    "mission_information_need_identity": "focus-ba1a578fe9221aeb",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - lesson: nonempty string - evidence_refs: array[string] - unresolved_questions: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - evidence_refs values must be chosen from: exp-a_evidence_1, exp-a_contrary_1 TASK: perform only operation summarize_learning. Allowed transition/next-operation values: summarize_learning, select_next_focus. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: exp-a_evidence_1. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"semantic comparison\",\"creation_sequence\":3,\"description\":\"Challenge or revise hypothesis: The current implementation of the active cognitive loop in orchestration/runtime/active_cognitive_loop.py is sufficient for optimizing cognitive loop efficiency.\",\"evidence_need\":\"contrary and supporting evidence\",\"evidence_refs\":[\"exp-a_evidence_1\",\"exp-a_contrary_1\"],\"expected_value\":\"belief_revision\",\"focus_id\":\"focus-ba1a578fe9221aeb\",\"related_goal_ids\":[\"active-cognitive-goal-098dd508c5ff9808\"],\"salience_categories\":[\"unresolved_hypothesis\",\"evidence_revision\",\"expected_useful_progress\"],\"salience_explanation\":\"An active hypothesis needs evidence-linked revision before action.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"hypothesis_revision\",\"urgency\":\"high\"},\"contrary_evidence\":[{\"content\":\"operator:campaign_uncertainty\",\"evidence_id\":\"exp-a_contrary_1\",\"source\":\"local_uncertainty\",\"summary\":\"Contrary evidence: UI route and usefulness are not yet proven for this candidate.\"}],\"current_goal\":{\"expected_state\":\"Optimized cognitive loop configuration\",\"goal_id\":\"active-cognitive-goal-098dd508c5ff9808\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Improve cognitive loop efficiency\"},\"current_hypotheses\":[{\"assumptions\":[\"The current implementation is complete and correct\"],\"confidence_state\":\"contested\",\"created_at\":\"2026-07-27T01:39:34+00:00\",\"disposition\":\"needs_challenge\",\"evidence_against\":[\"exp-a_contrary_1\"],\"evidence_for\":[\"exp-a_evidence_1\"],\"expected_observations\":[\"local evidence should support a bounded useful step\"],\"hypothesis_id\":\"hypothesis-c5d38ff57776ade0\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-fb5f2aeeb7bd2abe\",\"originating_goal_id\":\"active-cognitive-goal-098dd508c5ff9808\",\"provenance\":[\"cognitive-operation-bb2ae3ee4b1d0c3e\",\"cognitive-operation-e75ff42f3a1849b4\"],\"revised_at\":\"2026-07-27T01:40:05+00:00\",\"revision_parent_id\":\"\",\"revision_reason\":\"The current implementation of the active cognitive loop is sufficient for optimizing cognitive loop efficiency, but the UI route and usefulness are not yet proven for this candidate.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: Improve cognitive loop efficiency\",\"statement\":\"The current implementation of the active cognitive loop in orchestration/runtime/active_cognitive_loop.py is sufficient for optimizing cognitive loop efficiency.\"}],\"evidence_for\":[{\"content\":\"orchestration/runtime/active_cognitive_loop.py\",\"evidence_id\":\"exp-a_evidence_1\",\"source\":\"local_repo\",\"summary\":\"Contains current loop implementation\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-27T01:40:05+00:00\",\"discrepancy\":\"progress_observed\",\"expected\":\"Perform compare_evidence for the active focus using only referenced evidence.\",\"observed\":\"The current implementation of the active cognitive loop is sufficient for optimizing cognitive loop efficiency, but the UI route and usefulness are not yet proven for this candidate.\",\"operation_id\":\"cognitive-operation-e75ff42f3a1849b4\",\"outcome_id\":\"outcome-dcff50b984a073c7\"}]}",
+    "question_objective": "summarize_learning",
+    "record_digest": "726286673604fddd4d1c10d19481ebde842103b12e2260b4a3bfb97e7bfa045f",
+    "record_version": 1,
+    "request_digest": "86cc75037d60195fa21191260e7be22f41aad793b4839b7cf6e7a23340e73c2b",
+    "request_id": "shared-local-model-request-3069abd62cef05c4",
+    "requester_reference": "cognitive-operation-53e85e5e452fc2be",
+    "requester_type": "active_cognitive_loop",
+    "result_id": "shared-local-model-result-97dc454f24cb0d46",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    },
+    "semantic_identity": "active-cognitive-ledger-request-cd22406db7cfecfb",
+    "session_reference": "active-cognitive-cycle-d06f5dd677dba37a"
+  }
+}

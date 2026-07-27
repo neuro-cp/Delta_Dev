@@ -1,0 +1,15 @@
+{
+  "criteria": [
+    "usefulness",
+    "novelty_relative_to_prior_live_episodes",
+    "local_executability",
+    "behavioral_observability",
+    "opportunity_for_hypothesis_revision",
+    "ui_coverage",
+    "restart_coverage",
+    "bounded_risk",
+    "expected_operator_value"
+  ],
+  "ranking": "1. exp-b\n2. exp-c\n3. exp-d\n4. exp-e",
+  "rationale": "Selected experiments cover repository diagnosis/development, research synthesis, failed-hypothesis revision, and autonomous follow-up selection. exp-f is absent, and exp-g, while useful, does not directly address the specific needs of the campaign."
+}

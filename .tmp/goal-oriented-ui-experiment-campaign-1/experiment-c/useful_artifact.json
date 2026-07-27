@@ -1,0 +1,10 @@
+[
+  {
+    "artifact_id": "useful-artifact-cd3df32898587546",
+    "artifact_type": "cognitive_episode_summary",
+    "evidence_refs": [
+      "exp-c_evidence_1"
+    ],
+    "summary": "Live run episodes do not show clear patterns or anomalies indicating non-compliance, but the UI route and usefulness are not yet proven."
+  }
+]

@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "exp-c_evidence_1"
+    ],
+    "lesson": "Live run episodes do not show clear patterns or anomalies indicating non-compliance, but the UI route and usefulness are not yet proven.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "UI route and usefulness are not yet proven for this candidate.",
+    "unresolved_questions": [
+      "How can we ensure the UI route and usefulness for this candidate?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{ \"lesson\": \"Live run episodes do not show clear patterns or anomalies indicating non-compliance, but the UI route and usefulness are not yet proven.\", \"evidence_refs\": [ \"exp-c_evidence_1\" ], \"unresolved_questions\": [ \"How can we ensure the UI route and usefulness for this candidate?\" ], \"uncertainty\": \"UI route and usefulness are not yet proven for this candidate.\", \"recommended_state_transition\": \"summarize_learning\" }",
+  "raw_response_digest": "9965f9608cf7eb528d16d55af2706c0e4479775594ded7cfb0510cad7956fbdc",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

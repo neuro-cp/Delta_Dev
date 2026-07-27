@@ -1,0 +1,60 @@
+{
+  "adapter_identity": "goal_oriented_ui_campaign.ProviderManager.exact_prompt",
+  "availability_state": "available",
+  "execution_completed_at": "2026-07-27T02:03:20+00:00",
+  "execution_started_at": "2026-07-27T02:02:28+00:00",
+  "failure_classification": "",
+  "failure_detail": "",
+  "latency_seconds": 52.4517,
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "provenance": {
+    "execution_claim_id": "shared-local-model-execution-claim-62a544d00b051ebc",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    }
+  },
+  "request_id": "shared-local-model-request-921284fe126766e4",
+  "response_digest": "269d28743053e7764054f37426c4ad063816fa1fac0cfcd928068d0877bf4880",
+  "response_reference": "{\n  \"experiment_id\": \"exp-b\",\n  \"title\": \"Enhance UI feedback loop for dynamic content loading\",\n  \"practical_objective\": \"Improve user experience by reducing perceived load time for dynamic content\",\n  \"why_it_is_useful\": \"Faster load times increase user satisfaction and engagement\",\n  \"related_operator_or_project_goal\": \"Optimize DELTA.py for real-time user interactions\",\n  \"expected_artifact_or_outcome\": \"Reduced perceived load time for dynamic content\",\n  \"local_evidence_available\": [\"tests/runtime_gsr/test_active_cognitive_loop.py | UI performance tests\"],\n  \"contrary_or_uncertainty_evidence\": [\"orchestration/runtime/live_competence_adapter.py | Competence adapter limitations\"],\n  \"required_cognitive_operations\": [\"model_execution_lane_isolation\"],\n  \"required_bounded_actions\": [\"monitor UI load times\", \"optimize content loading algorithms\"],\n  \"required_authority\": \"operator_authorized_goal_oriented_ui_experiment_campaign_1\",\n  \"expected_cycle_count\":  \",\n  \"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  \n     \n  \n     \n  \n     \n  \n     \n  \n     \n  \n     \n  \n     \n  \n     \n  \t,\n  \"restart_relevance\": \"High\",\n  \"success_criteria\": \"Perceived load time reduced by 30%\",\n  \"failure_criteria\": \"No significant improvement in 3 cycles\",\n  \"risk_and_scope\": \"Limited to dynamic content loading\",\n  \"estimated_time_and_model_call_budget\": \"3 cycles; 3 calls\"\n}",
+  "result_digest": "fe99ead44578ab8aaf151ef1d7ee0114d00e450eeec95615848197c067f793aa",
+  "result_id": "shared-local-model-result-9c7276d1c231fd94",
+  "terminal_state": "completed"
+}

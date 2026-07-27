@@ -1,0 +1,4 @@
+{
+  "command": "pytest tests/runtime_gsr/test_goal_oriented_ui_campaign.py tests/runtime_gsr/test_active_cognitive_loop.py tests/runtime_gsr/test_model_execution_lane_isolation.py tests/runtime_gsr/test_local_model_request_result_ledger.py -q",
+  "result": "51 passed"
+}

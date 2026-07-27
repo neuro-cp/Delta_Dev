@@ -1,0 +1,8 @@
+{
+  "files_changed": [
+    "DELTA.py",
+    "orchestration/runtime/goal_oriented_ui_campaign.py",
+    "tests/runtime_gsr/test_goal_oriented_ui_campaign.py"
+  ],
+  "summary": "Added compact Goals-tab campaign panel and evidence tooling for candidate formulation, selection, launch, cycles, pause/resume/reload, and follow-up."
+}

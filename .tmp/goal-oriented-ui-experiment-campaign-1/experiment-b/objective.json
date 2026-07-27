@@ -1,0 +1,4 @@
+{
+  "expected_artifact_or_outcome": "Isolated model execution results",
+  "objective": "Verify model independence"
+}

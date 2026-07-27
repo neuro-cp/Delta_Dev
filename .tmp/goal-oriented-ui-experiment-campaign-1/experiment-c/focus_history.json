@@ -1,0 +1,23 @@
+[
+  {
+    "at": "2026-07-27T01:41:18+00:00",
+    "focus_id": "focus-092571b82ef78794",
+    "reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+    "sequence": 1,
+    "transition": "establish_focus"
+  },
+  {
+    "at": "2026-07-27T01:41:36+00:00",
+    "focus_id": "focus-ae8a49232d5c6d8f",
+    "reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+    "sequence": 2,
+    "transition": "switch_focus"
+  },
+  {
+    "at": "2026-07-27T01:42:14+00:00",
+    "focus_id": "focus-2a3751eb8d190d22",
+    "reason": "An active hypothesis needs evidence-linked revision before action.",
+    "sequence": 3,
+    "transition": "switch_focus"
+  }
+]

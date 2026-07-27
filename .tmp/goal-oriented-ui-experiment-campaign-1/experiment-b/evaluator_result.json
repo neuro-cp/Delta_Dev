@@ -1,0 +1,71 @@
+{
+  "cycle_count": 3,
+  "failure_classifications": [],
+  "model_call_count": 3,
+  "observable": {
+    "blocked_authority_state": {},
+    "budget_remaining": {
+      "cycles": 5,
+      "model_calls": 3
+    },
+    "completed": true,
+    "current_focus": "Challenge or revise hypothesis: Model execution is isolated from campaign state.",
+    "current_goal": "Verify model independence",
+    "current_operation": "summarize_learning",
+    "episode_id": "active-cognitive-episode-4464581f82318d60",
+    "evidence_considered": [
+      "exp-b_evidence_1",
+      "exp-b_contrary_1"
+    ],
+    "hypothesis_state": {
+      "assumptions": [
+        "Model execution does not interact with campaign state"
+      ],
+      "confidence_state": "contested",
+      "created_at": "2026-07-27T01:40:39+00:00",
+      "disposition": "needs_challenge",
+      "evidence_against": [
+        "exp-b_contrary_1"
+      ],
+      "evidence_for": [
+        "exp-b_evidence_1"
+      ],
+      "expected_observations": [
+        "local evidence should support a bounded useful step"
+      ],
+      "hypothesis_id": "hypothesis-2feab2037d27b979",
+      "lifecycle_state": "active",
+      "originating_focus_id": "focus-79023e06746dcb99",
+      "originating_goal_id": "active-cognitive-goal-fd468d8588d054de",
+      "provenance": [
+        "cognitive-operation-43b40bdb84781420",
+        "cognitive-operation-abe231e06982aaac"
+      ],
+      "revised_at": "2026-07-27T01:41:03+00:00",
+      "revision_parent_id": "",
+      "revision_reason": "Evidence supports the hypothesis that the model execution is isolated from the campaign state.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "scope": "Resolve discrepancy for goal: Verify model independence",
+      "statement": "Model execution is isolated from campaign state."
+    },
+    "last_observed_outcome": {
+      "created_at": "2026-07-27T01:41:18+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform summarize_learning for the active focus using only referenced evidence.",
+      "observed": "Model execution is isolated from campaign state based on supporting evidence.",
+      "operation_id": "cognitive-operation-b7437979bd07f29b",
+      "outcome_id": "outcome-d0106c863baf95bb"
+    },
+    "loop_state": "completed",
+    "next_intended_step": "inspect useful artifact and select next focus",
+    "title": "Test Model Execution Isolation",
+    "why_focus": [
+      "An active hypothesis needs evidence-linked revision before action.",
+      "unresolved_hypothesis",
+      "evidence_revision",
+      "expected_useful_progress"
+    ]
+  },
+  "passed": true,
+  "useful_artifact_count": 1
+}

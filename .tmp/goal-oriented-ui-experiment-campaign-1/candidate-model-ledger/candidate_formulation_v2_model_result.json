@@ -1,0 +1,60 @@
+{
+  "adapter_identity": "goal_oriented_ui_campaign.ProviderManager.exact_prompt",
+  "availability_state": "available",
+  "execution_completed_at": "2026-07-27T01:33:08+00:00",
+  "execution_started_at": "2026-07-27T01:29:54+00:00",
+  "failure_classification": "",
+  "failure_detail": "",
+  "latency_seconds": 194.0604,
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "provenance": {
+    "execution_claim_id": "shared-local-model-execution-claim-cb5384cf30b252d3",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    }
+  },
+  "request_id": "shared-local-model-request-f0fd088ddcaa9d8b",
+  "response_digest": "5a8cb7b5b41374a71bb3efb5c2cb34e21cae44b96f9497a4a407494a9d489665",
+  "response_reference": "{\"answer\":\"{\\\"candidates\\\":[{\\\"experiment_id\\\":\\\"exp-a\\\",\\\"title\\\":\\\"Optimize DELTA.py Execution\\\",\\\"practical_objective\\\":\\\"Improve the performance and efficiency of DELTA.py execution by identifying bottlenecks and optimizing code\\\",\\\"why_it_is_useful\\\":\\\"Enhancing the execution speed and resource utilization of DELTA.py will lead to more efficient processing and faster results, benefiting the overall campaign performance\\\",\\\"related_operator_or_project_goal\\\":\\\"Increase the throughput and efficiency of DELTA operations\\\",\\\"expected_artifact_or_outcome\\\":\\\"Performance metrics and optimized code changes in DELTA.py\\\",\\\"local_evidence_available\\\":[{\\\"path\\\":\\\"DELTA.py\\\",\\\"note\\\":\\\"Current codebase for analysis\\\"},{\\\"path\\\":\\\".tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/live_episode_summary.json\\\",\\\"note\\\":\\\"Performance data from recent runs\\\"}],\\\"contrary_or_uncertainty_evidence\\\":[{\\\"path\\\":\\\".tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/marathon_closure_audit.json\\\",\\\"note\\\":\\\"Potential issues identified in previous runs\\\"}],\\\"required_cognitive_operations\\\":[\\\"Code analysis\\\",\\\"Performance profiling\\\",\\\"Optimization strategies evaluation\\\"],\\\"required_bounded_actions\\\":[\\\"Identify and isolate slow operations\\\",\\\"Implement and test optimizations\\\",\\\"Evaluate performance improvements\\\"],\\\"required_authority\\\":\\\"Technical team\\\",\\\"expected_cycle_count\\\":3,\\\"restart_relevance\\\":\\\"Critical\\\",\\\"success_criteria\\\":\\\"Performance metrics show significant improvement\\\",\\\"failure_criteria\\\":\\\"No significant improvement after optimizations\\\",\\\"risk_and_scope\\\":\\\"Moderate risk of introducing bugs, limited scope to specific code sections\\\",\\\"estimated_time_and_model_call_budget\\\":\\\"2 weeks\\\"},{\\\"experiment_id\\\":\\\"exp-b\\\",\\\"title\\\":\\\"Enhance Active Cognitive Loop\\\",\\\"practical_objective\\\":\\\"Improve the Active Cognitive Loop by refining its decision-making processes\\\",\\\"why_it_is_useful\\\":\\\"A more refined decision-making process will lead to more accurate and timely responses, enhancing the overall effectiveness of the campaign\\\",\\\"related_operator_or_project_goal\\\":\\\"Optimize decision-making in the Active Cognitive Loop\\\",\\\"expected_artifact_or_outcome\\\":\\\"Refined decision-making rules and improved loop performance\\\",\\\"local_evidence_available\\\":[{\\\"path\\\":\\\"orchestration/runtime/active_cognitive_loop.py\\\",\\\"note\\\":\\\"Current decision-making logic for analysis\\\"},{\\\"path\\\":\\\"tests/runtime_gsr/test_active_cognitive_loop.py\\\",\\\"note\\\":\\\"Test cases for decision-making logic\\\"}],\\\"contrary_or_uncertainty_evidence\\\":[{\\\"path\\\":\\\".tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/live_episode_summary.json\\\",\\\"note\\\":\\\"Potential issues in decision-making identified in recent runs\\\"}],\\\"required_cognitive_operations\\\":[\\\"Decision-making rule analysis\\\",\\\"Rule refinement\\\",\\\"Performance testing\\\"],\\\"required_bounded_actions\\\":[\\\"Review and update decision-making rules\\\",\\\"Test updated rules\\\",\\\"Evaluate performance and adjust as needed\\\"],\\\"required_authority\\\":\\\"Technical team\\\",\\\"expected_cycle_count\\\":2,\\\"restart_relevance\\\":\\\"High\\\",\\\"success_criteria\\\":\\\"Improved accuracy and response time\\\",\\\"failure_criteria\\\":\\\"No significant improvement in accuracy or response time\\\",\\\"risk_and_scope\\\":\\\"Low risk, limited scope to decision-making rules\\\",\\\"estimated_time_and_model_call_budget\\\":\\\"1 week\\\"},{\\\"experiment_id\\\":\\\"exp-c\\\",\\\"title\\\":\\\"Test Model Execution Lane Isolation\\\",\\\"practical_objective\\\":\\\"Evaluate the effectiveness of model execution lane isolation in the Active Cognitive Loop\\\",\\\"why_it_is_useful\\\":\\\"Ensuring proper isolation of model execution lanes can prevent interference and improve overall system stability\\\",\\\"related_operator_or_project_goal\\\":\\\"Ensure robust and stable model execution\\\",\\\"expected_artifact_or_outcome\\\":\\\"Isolation strategies and their impact on model performance\\\",\\\"local_evidence_available\\\":[{\\\"path\\\":\\\"tests/runtime_gsr/test_model_execution_lane_isolation.py\\\",\\\"note\\\":\\\"Current isolation strategies for testing\\\"}],\\\"contrary_or_uncertainty_evidence\\\":[{\\\"path\\\":\\\".tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/live_episode_summary.json\\\",\\\"note\\\":\\\"Potential interference issues identified in recent runs\\\"}],\\\"required_cognitive_operations\\\":[\\\"Isolation strategy evaluation\\\",\\\"Performance testing\\\",\\\"Analysis of test results\\\"],\\\"required_bounded_actions\\\":[\\\"Implement and test isolation strategies\\\",\\\"Monitor and evaluate performance\\\",\\\"Adjust strategies as needed\\\"],\\\"required_authority\\\":\\\"Technical team\\\",\\\"expected_cycle_count\\\":2,\\\"restart_relevance\\\":\\\"High\\\",\\\"success_criteria\\\":\\\"No interference between model lanes\\\",\\\"failure_criteria\\\":\\\"Interference between model lanes\\\",\\\"risk_and_scope\\\":\\\"Moderate risk, limited scope to model execution lanes\\\",\\\"estimated_time_and_model_call_budget\\\":\\\"2 weeks\\\"},{\\\"experiment_id\\\":\\\"exp-d\\\",\\\"title\\\":\\\"Analyze Marathon Closure Audit\\\",\\\"practical_objective\\\":\\\"Identify areas for improvement in the Marathon Closure Audit process\\\",\\\"why_it_is_useful\\\":\\\"Improving the audit process will lead to more thorough and effective closure of operations, reducing risks and improving overall campaign management\\\",\\\"related_operator_or_project_goal\\\":\\\"Optimize closure and",
+  "result_digest": "11bf98d88f9ae520e68d4d0e08b326a54e90d13c816eae0e5d0f4837a42eae2a",
+  "result_id": "shared-local-model-result-daea28649ac3909b",
+  "terminal_state": "completed"
+}

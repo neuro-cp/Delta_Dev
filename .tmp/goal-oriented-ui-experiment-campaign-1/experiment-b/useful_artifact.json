@@ -1,0 +1,10 @@
+[
+  {
+    "artifact_id": "useful-artifact-d0106c863baf95bb",
+    "artifact_type": "cognitive_episode_summary",
+    "evidence_refs": [
+      "exp-b_evidence_1"
+    ],
+    "summary": "Model execution is isolated from campaign state based on supporting evidence."
+  }
+]

@@ -1,0 +1,167 @@
+{
+  "tk_application_startup": {
+    "file": "DELTA.py",
+    "symbols": [
+      "main",
+      "DeltaApp.__init__",
+      "DeltaApp._build"
+    ],
+    "evidence": "main creates tk.Tk(), instantiates DeltaApp, and enters root.mainloop()."
+  },
+  "conversation_operator_input": {
+    "file": "DELTA.py",
+    "symbols": [
+      "DeltaApp._build_conversation_tab",
+      "DeltaApp.chat_input",
+      "DeltaApp._send_chat"
+    ],
+    "evidence": "Conversation tab entry and Send button route operator text."
+  },
+  "active_cognition_start": {
+    "file": "DELTA.py",
+    "symbols": [
+      "DeltaApp._start_active_cognitive_loop"
+    ],
+    "evidence": "Initializes an ActiveCognitiveEpisodeState but with prior-marathon hard-coded title and goal."
+  },
+  "active_cognition_status": {
+    "file": "DELTA.py",
+    "symbols": [
+      "DeltaApp._active_cognitive_loop_status",
+      "active_loop_snapshot",
+      "evaluate_cognitive_episode"
+    ],
+    "evidence": "Returns a concise status string through chat command."
+  },
+  "active_cognition_cycle_execution": {
+    "file": "DELTA.py",
+    "symbols": [
+      "DeltaApp._run_active_cognitive_loop_cycle",
+      "LedgerBackedCognitiveModelRunner",
+      "run_active_cognitive_cycle"
+    ],
+    "evidence": "Runs one governed local cognition cycle through ProviderManager and LocalModelRequestResultLedger."
+  },
+  "pause": {
+    "file": "DELTA.py",
+    "symbols": [
+      "DeltaApp._pause_live_initiative",
+      "existing A4/A14/A16 pause controls"
+    ],
+    "campaign_gap": "No pause control for active cognition campaign focus."
+  },
+  "resume": {
+    "file": "DELTA.py",
+    "symbols": [
+      "DeltaApp._resume_live_initiative",
+      "existing A4/A14/A16 resume controls"
+    ],
+    "campaign_gap": "No resume control for active cognition campaign focus."
+  },
+  "stop": {
+    "file": "DELTA.py",
+    "symbols": [
+      "DeltaApp._stop_live_runtime",
+      "existing A4/A14/A16 stop controls"
+    ],
+    "campaign_gap": "No stop control for campaign experiment execution."
+  },
+  "restart_recovery": {
+    "file": "orchestration/runtime/active_cognitive_loop.py",
+    "symbols": [
+      "write_episode_state",
+      "read_episode_state",
+      "interrupt_focus",
+      "resume_focus"
+    ],
+    "campaign_gap": "Runtime primitives exist; Tk campaign restart display/control missing."
+  },
+  "active_goal_display": {
+    "file": "DELTA.py",
+    "symbols": [
+      "Goals tab goal cards",
+      "goal_detail"
+    ],
+    "campaign_gap": "No active cognition campaign goal display."
+  },
+  "active_focus_display": {
+    "file": "orchestration/runtime/active_cognitive_loop.py",
+    "symbols": [
+      "active_loop_snapshot.current_focus"
+    ],
+    "campaign_gap": "Not exposed as structured campaign UI."
+  },
+  "current_operation_display": {
+    "file": "orchestration/runtime/active_cognitive_loop.py",
+    "symbols": [
+      "active_loop_snapshot.current_operation"
+    ],
+    "campaign_gap": "Only available in snapshot/status, not campaign UI."
+  },
+  "hypothesis_display": {
+    "file": "orchestration/runtime/active_cognitive_loop.py",
+    "symbols": [
+      "ActiveCognitiveEpisodeState.hypotheses",
+      "active_loop_snapshot.hypothesis_state"
+    ],
+    "campaign_gap": "No visible campaign panel."
+  },
+  "evidence_display": {
+    "file": "orchestration/runtime/active_cognitive_loop.py",
+    "symbols": [
+      "EvidenceRef",
+      "WorkingMemoryPacket.relevant_evidence",
+      "conflicting_evidence"
+    ],
+    "campaign_gap": "No visible supporting/contrary evidence campaign panel."
+  },
+  "outcome_display": {
+    "file": "orchestration/runtime/active_cognitive_loop.py",
+    "symbols": [
+      "ActiveCognitiveEpisodeState.outcomes",
+      "active_loop_snapshot.last_observed_outcome"
+    ],
+    "campaign_gap": "No visible campaign outcome panel."
+  },
+  "useful_artifact_display": {
+    "file": "orchestration/runtime/active_cognitive_loop.py",
+    "symbols": [
+      "ActiveCognitiveEpisodeState.useful_artifacts"
+    ],
+    "campaign_gap": "No visible artifact summary/link for campaign."
+  },
+  "operator_approval_requests": {
+    "file": "DELTA.py",
+    "symbols": [
+      "Goals tab Approve next step",
+      "_handle_operator_ux_button"
+    ],
+    "campaign_gap": "Existing operator UX approvals are generic and not wired to experiment proposals."
+  },
+  "budget_display": {
+    "file": "orchestration/runtime/active_cognitive_loop.py",
+    "symbols": [
+      "active_loop_snapshot.budget_remaining"
+    ],
+    "campaign_gap": "Not shown in active campaign UI."
+  },
+  "failure_or_blocked_state_display": {
+    "file": "orchestration/runtime/active_cognitive_loop.py",
+    "symbols": [
+      "evaluate_cognitive_episode.failure_classifications",
+      "active_loop_snapshot.blocked_authority_state"
+    ],
+    "campaign_gap": "Not shown in active campaign UI."
+  },
+  "missing_ui_controls_or_visibility_required": [
+    "experiment proposal list",
+    "recommended experiment marker",
+    "launch control",
+    "campaign pause/resume/stop/restart controls",
+    "active goal/focus/current operation labels",
+    "hypothesis/evidence/outcome/artifact summaries",
+    "next-focus recommendation display",
+    "cycle/model-call budget display",
+    "blocked-state reason display"
+  ]
+}

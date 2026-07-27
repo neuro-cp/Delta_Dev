@@ -1,0 +1,80 @@
+{
+  "completed": true,
+  "cycle_count": 3,
+  "evaluation": {
+    "cycle_count": 3,
+    "failure_classifications": [],
+    "model_call_count": 3,
+    "observable": {
+      "blocked_authority_state": {},
+      "budget_remaining": {
+        "cycles": 5,
+        "model_calls": 3
+      },
+      "completed": true,
+      "current_focus": "Challenge or revise hypothesis: The current implementation of the active cognitive loop in orchestration/runtime/active_cognitive_loop.py is sufficient for optimizing cognitive loop efficiency.",
+      "current_goal": "Improve cognitive loop efficiency",
+      "current_operation": "summarize_learning",
+      "episode_id": "active-cognitive-episode-65b64bca43e5fed9",
+      "evidence_considered": [
+        "exp-a_evidence_1",
+        "exp-a_contrary_1"
+      ],
+      "hypothesis_state": {
+        "assumptions": [
+          "The current implementation is complete and correct"
+        ],
+        "confidence_state": "contested",
+        "created_at": "2026-07-27T01:39:34+00:00",
+        "disposition": "needs_challenge",
+        "evidence_against": [
+          "exp-a_contrary_1"
+        ],
+        "evidence_for": [
+          "exp-a_evidence_1"
+        ],
+        "expected_observations": [
+          "local evidence should support a bounded useful step"
+        ],
+        "hypothesis_id": "hypothesis-c5d38ff57776ade0",
+        "lifecycle_state": "active",
+        "originating_focus_id": "focus-fb5f2aeeb7bd2abe",
+        "originating_goal_id": "active-cognitive-goal-098dd508c5ff9808",
+        "provenance": [
+          "cognitive-operation-bb2ae3ee4b1d0c3e",
+          "cognitive-operation-e75ff42f3a1849b4"
+        ],
+        "revised_at": "2026-07-27T01:40:05+00:00",
+        "revision_parent_id": "",
+        "revision_reason": "The current implementation of the active cognitive loop is sufficient for optimizing cognitive loop efficiency, but the UI route and usefulness are not yet proven for this candidate.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "scope": "Resolve discrepancy for goal: Improve cognitive loop efficiency",
+        "statement": "The current implementation of the active cognitive loop in orchestration/runtime/active_cognitive_loop.py is sufficient for optimizing cognitive loop efficiency."
+      },
+      "last_observed_outcome": {
+        "created_at": "2026-07-27T01:40:23+00:00",
+        "discrepancy": "progress_observed",
+        "expected": "Perform summarize_learning for the active focus using only referenced evidence.",
+        "observed": "The current implementation of the active cognitive loop is sufficient for optimizing cognitive loop efficiency, but the UI route and usefulness are not yet proven for this candidate.",
+        "operation_id": "cognitive-operation-53e85e5e452fc2be",
+        "outcome_id": "outcome-33956bde21106d71"
+      },
+      "loop_state": "completed",
+      "next_intended_step": "inspect useful artifact and select next focus",
+      "title": "Optimize Active Cognitive Loop",
+      "why_focus": [
+        "An active hypothesis needs evidence-linked revision before action.",
+        "unresolved_hypothesis",
+        "evidence_revision",
+        "expected_useful_progress"
+      ]
+    },
+    "passed": true,
+    "useful_artifact_count": 1
+  },
+  "experiment_id": "exp-a",
+  "hypothesis_revision_count": 0,
+  "loop_state": "completed",
+  "model_call_count": 3,
+  "useful_artifact_count": 1
+}

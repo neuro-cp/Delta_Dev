@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "exp-d_evidence_1"
+    ],
+    "lesson": "The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "UI route and usefulness are not yet proven for this candidate.",
+    "unresolved_questions": [
+      "Is the UI route and functionality suitable for this candidate?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.\",\"evidence_refs\":[\"exp-d_evidence_1\"],\"unresolved_questions\":[\"Is the UI route and functionality suitable for this candidate?\"],\"uncertainty\":\"UI route and usefulness are not yet proven for this candidate.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "d21262972072c51716b799f196ffacd5a50f811edc519c12a9136a18a710f72a",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

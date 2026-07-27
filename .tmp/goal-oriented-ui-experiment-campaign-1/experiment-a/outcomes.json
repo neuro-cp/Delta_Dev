@@ -1,0 +1,26 @@
+[
+  {
+    "created_at": "2026-07-27T01:39:34+00:00",
+    "discrepancy": "progress_observed",
+    "expected": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+    "observed": "The current implementation of the active cognitive loop in orchestration/runtime/active_cognitive_loop.py is sufficient for optimizing cognitive loop efficiency.",
+    "operation_id": "cognitive-operation-bb2ae3ee4b1d0c3e",
+    "outcome_id": "outcome-809beba99aea3289"
+  },
+  {
+    "created_at": "2026-07-27T01:40:05+00:00",
+    "discrepancy": "progress_observed",
+    "expected": "Perform compare_evidence for the active focus using only referenced evidence.",
+    "observed": "The current implementation of the active cognitive loop is sufficient for optimizing cognitive loop efficiency, but the UI route and usefulness are not yet proven for this candidate.",
+    "operation_id": "cognitive-operation-e75ff42f3a1849b4",
+    "outcome_id": "outcome-dcff50b984a073c7"
+  },
+  {
+    "created_at": "2026-07-27T01:40:23+00:00",
+    "discrepancy": "progress_observed",
+    "expected": "Perform summarize_learning for the active focus using only referenced evidence.",
+    "observed": "The current implementation of the active cognitive loop is sufficient for optimizing cognitive loop efficiency, but the UI route and usefulness are not yet proven for this candidate.",
+    "operation_id": "cognitive-operation-53e85e5e452fc2be",
+    "outcome_id": "outcome-33956bde21106d71"
+  }
+]

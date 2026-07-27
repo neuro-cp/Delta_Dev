@@ -1,0 +1,10 @@
+[
+  {
+    "artifact_id": "useful-artifact-14b4d919aab53877",
+    "artifact_type": "cognitive_episode_summary",
+    "evidence_refs": [
+      "exp-d_evidence_1"
+    ],
+    "summary": "The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate."
+  }
+]

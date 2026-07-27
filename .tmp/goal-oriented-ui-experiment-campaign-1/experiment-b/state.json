@@ -1,0 +1,851 @@
+{
+  "actions": [],
+  "attention": {
+    "abandonment_reason": "",
+    "active_focus_id": "focus-8858f9f57f5377cc",
+    "active_focus_summary": "Challenge or revise hypothesis: Model execution is isolated from campaign state.",
+    "active_goal_ids": [
+      "active-cognitive-goal-fd468d8588d054de"
+    ],
+    "attention_state_id": "active-attention-0acade88ca810d28",
+    "candidate_focuses": [
+      {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "local_model_semantic_operation",
+        "creation_sequence": 3,
+        "description": "Resolve discrepancy for goal: Verify model independence",
+        "evidence_need": "local evidence supporting or challenging the goal",
+        "evidence_refs": [
+          "exp-b_evidence_1",
+          "exp-b_contrary_1"
+        ],
+        "expected_value": "useful_progress",
+        "focus_id": "focus-51e967d2dfb54192",
+        "related_goal_ids": [
+          "active-cognitive-goal-fd468d8588d054de"
+        ],
+        "salience_categories": [
+          "operator_priority",
+          "goal_discrepancy",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "goal_discrepancy",
+        "urgency": "medium"
+      },
+      {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "semantic comparison",
+        "creation_sequence": 3,
+        "description": "Challenge or revise hypothesis: Model execution is isolated from campaign state.",
+        "evidence_need": "contrary and supporting evidence",
+        "evidence_refs": [
+          "exp-b_evidence_1",
+          "exp-b_contrary_1"
+        ],
+        "expected_value": "belief_revision",
+        "focus_id": "focus-8858f9f57f5377cc",
+        "related_goal_ids": [
+          "active-cognitive-goal-fd468d8588d054de"
+        ],
+        "salience_categories": [
+          "unresolved_hypothesis",
+          "evidence_revision",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "An active hypothesis needs evidence-linked revision before action.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "hypothesis_revision",
+        "urgency": "high"
+      }
+    ],
+    "continuation_reason": "",
+    "cycle_sequence": 3,
+    "evidence_refs": [
+      "exp-b_evidence_1",
+      "exp-b_contrary_1"
+    ],
+    "focus_started_at": "2026-07-27T01:40:23+00:00",
+    "interruption_priority": "none",
+    "interruption_reason": "",
+    "last_progress_at": "2026-07-27T01:41:03+00:00",
+    "previous_focus_ids": [
+      "focus-79023e06746dcb99",
+      "focus-f7b0c2bf9936a969"
+    ],
+    "progress_summary": "selected focus for cognitive operation",
+    "return_condition": "",
+    "salience_reasons": [
+      "An active hypothesis needs evidence-linked revision before action.",
+      "unresolved_hypothesis",
+      "evidence_revision",
+      "expected_useful_progress"
+    ],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "stagnation_count": 0,
+    "switch_reason": "An active hypothesis needs evidence-linked revision before action.",
+    "transition_journal": [
+      {
+        "at": "2026-07-27T01:40:23+00:00",
+        "focus_id": "focus-79023e06746dcb99",
+        "reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "sequence": 1,
+        "transition": "establish_focus"
+      },
+      {
+        "at": "2026-07-27T01:40:39+00:00",
+        "focus_id": "focus-f7b0c2bf9936a969",
+        "reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "sequence": 2,
+        "transition": "switch_focus"
+      },
+      {
+        "at": "2026-07-27T01:41:03+00:00",
+        "focus_id": "focus-8858f9f57f5377cc",
+        "reason": "An active hypothesis needs evidence-linked revision before action.",
+        "sequence": 3,
+        "transition": "switch_focus"
+      }
+    ],
+    "unresolved_questions": []
+  },
+  "budgets": {
+    "max_actions": 4,
+    "max_cycles": 8,
+    "max_model_calls": 6,
+    "max_packet_items": 8
+  },
+  "completed": true,
+  "cycles": [
+    {
+      "completed": true,
+      "cycle_id": "active-cognitive-cycle-24370e9ae5526717",
+      "focus_id": "focus-79023e06746dcb99",
+      "operation_id": "cognitive-operation-43b40bdb84781420",
+      "outcome_id": "outcome-ba35d74c9be9a9cd",
+      "packet_digest": "1f36e824c1e7fb1c5a8215cb12cd99a7c1264defb954f70ea38edef0c58b688a",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "sequence": 1,
+      "summary": "Model execution is isolated from campaign state."
+    },
+    {
+      "completed": true,
+      "cycle_id": "active-cognitive-cycle-498467b410cd9e4f",
+      "focus_id": "focus-f7b0c2bf9936a969",
+      "operation_id": "cognitive-operation-abe231e06982aaac",
+      "outcome_id": "outcome-525f1775083629f7",
+      "packet_digest": "39b515326918a73c8ce154921b7dac2f07944ed1924181aec01c02326425ab56",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "sequence": 2,
+      "summary": "Evidence supports the hypothesis that the model execution is isolated from the campaign state."
+    },
+    {
+      "completed": true,
+      "cycle_id": "active-cognitive-cycle-b4132e7c7d066d54",
+      "focus_id": "focus-8858f9f57f5377cc",
+      "operation_id": "cognitive-operation-b7437979bd07f29b",
+      "outcome_id": "outcome-d0106c863baf95bb",
+      "packet_digest": "64d3f1f578f5ee45a63caacb682bae5fb6d55cedd664a7ddbe1df52215b07ddc",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "sequence": 3,
+      "summary": "Model execution is isolated from campaign state based on supporting evidence."
+    }
+  ],
+  "episode_id": "active-cognitive-episode-4464581f82318d60",
+  "evidence": [
+    {
+      "content": "tests/runtime_gsr/test_model_execution_lane_isolation.py",
+      "evidence_id": "exp-b_evidence_1",
+      "exists": true,
+      "kind": "local_evidence",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "local_repo",
+      "summary": "Tests model isolation"
+    },
+    {
+      "content": "operator:campaign_uncertainty",
+      "evidence_id": "exp-b_contrary_1",
+      "exists": true,
+      "kind": "local_evidence",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "local_uncertainty",
+      "summary": "Contrary evidence: UI route and usefulness are not yet proven for this candidate."
+    }
+  ],
+  "goals": [
+    {
+      "expected_state": "Isolated model execution results",
+      "goal_id": "active-cognitive-goal-fd468d8588d054de",
+      "observed_state": "",
+      "priority": "operator_requested",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "summary": "Verify model independence"
+    }
+  ],
+  "hypotheses": [
+    {
+      "assumptions": [
+        "Model execution does not interact with campaign state"
+      ],
+      "confidence_state": "contested",
+      "created_at": "2026-07-27T01:40:39+00:00",
+      "disposition": "needs_challenge",
+      "evidence_against": [
+        "exp-b_contrary_1"
+      ],
+      "evidence_for": [
+        "exp-b_evidence_1"
+      ],
+      "expected_observations": [
+        "local evidence should support a bounded useful step"
+      ],
+      "hypothesis_id": "hypothesis-2feab2037d27b979",
+      "lifecycle_state": "active",
+      "originating_focus_id": "focus-79023e06746dcb99",
+      "originating_goal_id": "active-cognitive-goal-fd468d8588d054de",
+      "provenance": [
+        "cognitive-operation-43b40bdb84781420",
+        "cognitive-operation-abe231e06982aaac"
+      ],
+      "revised_at": "2026-07-27T01:41:03+00:00",
+      "revision_parent_id": "",
+      "revision_reason": "Evidence supports the hypothesis that the model execution is isolated from the campaign state.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "scope": "Resolve discrepancy for goal: Verify model independence",
+      "statement": "Model execution is isolated from campaign state."
+    }
+  ],
+  "learning_updates": [
+    {
+      "created_at": "2026-07-27T01:41:18+00:00",
+      "evidence_refs": [
+        "exp-b_evidence_1"
+      ],
+      "learning_id": "learning-d0106c863baf95bb",
+      "summary": "Model execution is isolated from campaign state based on supporting evidence."
+    }
+  ],
+  "loop_state": "completed",
+  "model_call_count": 3,
+  "next_focus_candidates": [
+    {
+      "authority_need": "none_for_local_analysis",
+      "blocking_state": "",
+      "capability_need": "local_model_semantic_operation",
+      "creation_sequence": 3,
+      "description": "Resolve discrepancy for goal: Verify model independence",
+      "evidence_need": "local evidence supporting or challenging the goal",
+      "evidence_refs": [
+        "exp-b_evidence_1",
+        "exp-b_contrary_1"
+      ],
+      "expected_value": "useful_progress",
+      "focus_id": "focus-51e967d2dfb54192",
+      "related_goal_ids": [
+        "active-cognitive-goal-fd468d8588d054de"
+      ],
+      "salience_categories": [
+        "operator_priority",
+        "goal_discrepancy",
+        "expected_useful_progress"
+      ],
+      "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "goal_discrepancy",
+      "urgency": "medium"
+    },
+    {
+      "authority_need": "none_for_local_analysis",
+      "blocking_state": "",
+      "capability_need": "semantic comparison",
+      "creation_sequence": 3,
+      "description": "Challenge or revise hypothesis: Model execution is isolated from campaign state.",
+      "evidence_need": "contrary and supporting evidence",
+      "evidence_refs": [
+        "exp-b_evidence_1",
+        "exp-b_contrary_1"
+      ],
+      "expected_value": "belief_revision",
+      "focus_id": "focus-8858f9f57f5377cc",
+      "related_goal_ids": [
+        "active-cognitive-goal-fd468d8588d054de"
+      ],
+      "salience_categories": [
+        "unresolved_hypothesis",
+        "evidence_revision",
+        "expected_useful_progress"
+      ],
+      "salience_explanation": "An active hypothesis needs evidence-linked revision before action.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "hypothesis_revision",
+      "urgency": "high"
+    }
+  ],
+  "operation_requests": [
+    {
+      "authority_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "budget": {
+        "max_response_words": 220,
+        "max_retries": 1
+      },
+      "cycle_id": "active-cognitive-cycle-24370e9ae5526717",
+      "evidence_constraints": [
+        "exp-b_evidence_1",
+        "exp-b_contrary_1"
+      ],
+      "expected_output_schema": {
+        "contrary_evidence_considered": "list",
+        "evidence_refs": "list",
+        "interpretation": "string",
+        "operation_result_type": "string",
+        "recommended_state_transition": "string",
+        "uncertainty": "string"
+      },
+      "focus_id": "focus-79023e06746dcb99",
+      "goal_id": "active-cognitive-goal-fd468d8588d054de",
+      "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+      "operation_id": "cognitive-operation-43b40bdb84781420",
+      "operation_type": "formulate_hypothesis",
+      "provenance": [
+        "working-memory-packet-c8e86451fcb31481"
+      ],
+      "retry_allowance": 1,
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "task": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+      "working_memory_packet_digest": "1f36e824c1e7fb1c5a8215cb12cd99a7c1264defb954f70ea38edef0c58b688a"
+    },
+    {
+      "authority_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "budget": {
+        "max_response_words": 220,
+        "max_retries": 1
+      },
+      "cycle_id": "active-cognitive-cycle-498467b410cd9e4f",
+      "evidence_constraints": [
+        "exp-b_evidence_1",
+        "exp-b_contrary_1"
+      ],
+      "expected_output_schema": {
+        "contrary_evidence_considered": "list",
+        "evidence_refs": "list",
+        "interpretation": "string",
+        "operation_result_type": "string",
+        "recommended_state_transition": "string",
+        "uncertainty": "string"
+      },
+      "focus_id": "focus-f7b0c2bf9936a969",
+      "goal_id": "active-cognitive-goal-fd468d8588d054de",
+      "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+      "operation_id": "cognitive-operation-abe231e06982aaac",
+      "operation_type": "compare_evidence",
+      "provenance": [
+        "working-memory-packet-759762916e242bfd"
+      ],
+      "retry_allowance": 1,
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "task": "Perform compare_evidence for the active focus using only referenced evidence.",
+      "working_memory_packet_digest": "39b515326918a73c8ce154921b7dac2f07944ed1924181aec01c02326425ab56"
+    },
+    {
+      "authority_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "budget": {
+        "max_response_words": 220,
+        "max_retries": 1
+      },
+      "cycle_id": "active-cognitive-cycle-b4132e7c7d066d54",
+      "evidence_constraints": [
+        "exp-b_evidence_1",
+        "exp-b_contrary_1"
+      ],
+      "expected_output_schema": {
+        "contrary_evidence_considered": "list",
+        "evidence_refs": "list",
+        "interpretation": "string",
+        "operation_result_type": "string",
+        "recommended_state_transition": "string",
+        "uncertainty": "string"
+      },
+      "focus_id": "focus-8858f9f57f5377cc",
+      "goal_id": "active-cognitive-goal-fd468d8588d054de",
+      "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+      "operation_id": "cognitive-operation-b7437979bd07f29b",
+      "operation_type": "summarize_learning",
+      "provenance": [
+        "working-memory-packet-42a6cc0dc7122d6f"
+      ],
+      "retry_allowance": 1,
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "task": "Perform summarize_learning for the active focus using only referenced evidence.",
+      "working_memory_packet_digest": "64d3f1f578f5ee45a63caacb682bae5fb6d55cedd664a7ddbe1df52215b07ddc"
+    }
+  ],
+  "operation_results": [
+    {
+      "accepted": true,
+      "assumptions": [
+        "Model execution does not interact with campaign state"
+      ],
+      "contrary_evidence_considered": [],
+      "evidence_refs": [
+        "exp-b_evidence_1"
+      ],
+      "interpretation": "Model execution is isolated from campaign state.",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "next_evidence_need": "",
+      "next_focus_proposal": "",
+      "operation_id": "cognitive-operation-43b40bdb84781420",
+      "operation_result_type": "formulate_hypothesis_result",
+      "raw_model_output": "{\"hypothesis_statement\":\"Model execution is isolated from campaign state.\",\"scope\":\"Model execution lane isolation\",\"supporting_evidence_refs\":[\"exp-b_evidence_1\"],\"assumptions\":[\"Model execution does not interact with campaign state\"],\"expected_observations\":[\"Model execution should not modify or access campaign state\"],\"uncertainty\":\"How will this impact model training and validation?\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+      "recommended_action": "Model execution lane isolation",
+      "recommended_state_transition": "propose_hypothesis",
+      "rejection_reasons": [],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "uncertainty": "How will this impact model training and validation?"
+    },
+    {
+      "accepted": true,
+      "assumptions": [
+        "Model execution does not interact with campaign state"
+      ],
+      "contrary_evidence_considered": [
+        "exp-b_contrary_1"
+      ],
+      "evidence_refs": [
+        "exp-b_evidence_1"
+      ],
+      "interpretation": "Evidence supports the hypothesis that the model execution is isolated from the campaign state.",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "next_evidence_need": "Further evidence to confirm model independence",
+      "next_focus_proposal": "Continue hypothesis testing with additional evidence",
+      "operation_id": "cognitive-operation-abe231e06982aaac",
+      "operation_result_type": "compare_evidence_result",
+      "raw_model_output": "{ \"assumptions\":[\"Model execution does not interact with campaign state\"],\"contrary_evidence_considered\":[\"exp-b_contrary_1\"],\"evidence_refs\":[\"exp-b_evidence_1\"],\"interpretation\":\"Evidence supports the hypothesis that the model execution is isolated from the campaign state.\",\"next_evidence_need\":\"Further evidence to confirm model independence\",\"next_focus_proposal\":\"Continue hypothesis testing with additional evidence\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"Continue to gather evidence\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"Uncertainty remains regarding the extent of model independence.\"}",
+      "recommended_action": "Continue to gather evidence",
+      "recommended_state_transition": "add_supporting_evidence",
+      "rejection_reasons": [],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "uncertainty": "Uncertainty remains regarding the extent of model independence."
+    },
+    {
+      "accepted": true,
+      "assumptions": [],
+      "contrary_evidence_considered": [],
+      "evidence_refs": [
+        "exp-b_evidence_1"
+      ],
+      "interpretation": "Model execution is isolated from campaign state based on supporting evidence.",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "next_evidence_need": "How does this isolation impact campaign state updates?",
+      "next_focus_proposal": "",
+      "operation_id": "cognitive-operation-b7437979bd07f29b",
+      "operation_result_type": "summarize_learning_result",
+      "raw_model_output": "{\"lesson\":\"Model execution is isolated from campaign state based on supporting evidence.\",\"evidence_refs\":[\"exp-b_evidence_1\"],\"unresolved_questions\":[\"How does this isolation impact campaign state updates?\"],\"uncertainty\":\"Uncertainty remains regarding the practical implications of model isolation on campaign state updates.\",\"recommended_state_transition\":\"summarize_learning\"}",
+      "recommended_action": "",
+      "recommended_state_transition": "summarize_learning",
+      "rejection_reasons": [],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "uncertainty": "Uncertainty remains regarding the practical implications of model isolation on campaign state updates."
+    }
+  ],
+  "outcomes": [
+    {
+      "created_at": "2026-07-27T01:40:39+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+      "observed": "Model execution is isolated from campaign state.",
+      "operation_id": "cognitive-operation-43b40bdb84781420",
+      "outcome_id": "outcome-ba35d74c9be9a9cd"
+    },
+    {
+      "created_at": "2026-07-27T01:41:03+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform compare_evidence for the active focus using only referenced evidence.",
+      "observed": "Evidence supports the hypothesis that the model execution is isolated from the campaign state.",
+      "operation_id": "cognitive-operation-abe231e06982aaac",
+      "outcome_id": "outcome-525f1775083629f7"
+    },
+    {
+      "created_at": "2026-07-27T01:41:18+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform summarize_learning for the active focus using only referenced evidence.",
+      "observed": "Model execution is isolated from campaign state based on supporting evidence.",
+      "operation_id": "cognitive-operation-b7437979bd07f29b",
+      "outcome_id": "outcome-d0106c863baf95bb"
+    }
+  ],
+  "pending_operator_requests": [],
+  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+  "title": "Test Model Execution Isolation",
+  "useful_artifacts": [
+    {
+      "artifact_id": "useful-artifact-d0106c863baf95bb",
+      "artifact_type": "cognitive_episode_summary",
+      "evidence_refs": [
+        "exp-b_evidence_1"
+      ],
+      "summary": "Model execution is isolated from campaign state based on supporting evidence."
+    }
+  ],
+  "working_memory_packets": [
+    {
+      "active_focus": {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "local_model_semantic_operation",
+        "creation_sequence": 1,
+        "description": "Resolve discrepancy for goal: Verify model independence",
+        "evidence_need": "local evidence supporting or challenging the goal",
+        "evidence_refs": [
+          "exp-b_evidence_1",
+          "exp-b_contrary_1"
+        ],
+        "expected_value": "useful_progress",
+        "focus_id": "focus-79023e06746dcb99",
+        "related_goal_ids": [
+          "active-cognitive-goal-fd468d8588d054de"
+        ],
+        "salience_categories": [
+          "operator_priority",
+          "goal_discrepancy",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "goal_discrepancy",
+        "urgency": "medium"
+      },
+      "active_goal": {
+        "expected_state": "Isolated model execution results",
+        "goal_id": "active-cognitive-goal-fd468d8588d054de",
+        "observed_state": "",
+        "priority": "operator_requested",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "summary": "Verify model independence"
+      },
+      "authority_state": "authorized_for_local_cognitive_marathon",
+      "capability_limits": [
+        "model calls budgeted",
+        "source mutation requires explicit bounded patch authority"
+      ],
+      "conflicting_evidence": [
+        {
+          "content": "operator:campaign_uncertainty",
+          "evidence_id": "exp-b_contrary_1",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "local_uncertainty",
+          "summary": "Contrary evidence: UI route and usefulness are not yet proven for this candidate."
+        }
+      ],
+      "construction_rationale": "bounded by active focus, goal discrepancy, recency, evidence provenance, and operation need",
+      "current_hypotheses": [],
+      "cycle_id": "active-cognitive-cycle-24370e9ae5526717",
+      "observed_outcomes": [],
+      "omitted_items_summary": "0 older or less relevant items omitted by packet budget",
+      "operator_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "packet_digest": "1f36e824c1e7fb1c5a8215cb12cd99a7c1264defb954f70ea38edef0c58b688a",
+      "packet_id": "working-memory-packet-c8e86451fcb31481",
+      "prior_cycle_summary": "",
+      "provenance_refs": [
+        "exp-b_evidence_1",
+        "exp-b_contrary_1"
+      ],
+      "recent_actions": [],
+      "relevant_evidence": [
+        {
+          "content": "tests/runtime_gsr/test_model_execution_lane_isolation.py",
+          "evidence_id": "exp-b_evidence_1",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "local_repo",
+          "summary": "Tests model isolation"
+        }
+      ],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "size_budget": 8,
+      "unresolved_questions": []
+    },
+    {
+      "active_focus": {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "local_model_semantic_operation",
+        "creation_sequence": 2,
+        "description": "Resolve discrepancy for goal: Verify model independence",
+        "evidence_need": "local evidence supporting or challenging the goal",
+        "evidence_refs": [
+          "exp-b_evidence_1",
+          "exp-b_contrary_1"
+        ],
+        "expected_value": "useful_progress",
+        "focus_id": "focus-f7b0c2bf9936a969",
+        "related_goal_ids": [
+          "active-cognitive-goal-fd468d8588d054de"
+        ],
+        "salience_categories": [
+          "operator_priority",
+          "goal_discrepancy",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "goal_discrepancy",
+        "urgency": "medium"
+      },
+      "active_goal": {
+        "expected_state": "Isolated model execution results",
+        "goal_id": "active-cognitive-goal-fd468d8588d054de",
+        "observed_state": "",
+        "priority": "operator_requested",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "summary": "Verify model independence"
+      },
+      "authority_state": "authorized_for_local_cognitive_marathon",
+      "capability_limits": [
+        "model calls budgeted",
+        "source mutation requires explicit bounded patch authority"
+      ],
+      "conflicting_evidence": [
+        {
+          "content": "operator:campaign_uncertainty",
+          "evidence_id": "exp-b_contrary_1",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "local_uncertainty",
+          "summary": "Contrary evidence: UI route and usefulness are not yet proven for this candidate."
+        }
+      ],
+      "construction_rationale": "bounded by active focus, goal discrepancy, recency, evidence provenance, and operation need",
+      "current_hypotheses": [
+        {
+          "assumptions": [
+            "Model execution does not interact with campaign state"
+          ],
+          "confidence_state": "plausible",
+          "created_at": "2026-07-27T01:40:39+00:00",
+          "disposition": "needs_challenge",
+          "evidence_against": [],
+          "evidence_for": [
+            "exp-b_evidence_1"
+          ],
+          "expected_observations": [
+            "local evidence should support a bounded useful step"
+          ],
+          "hypothesis_id": "hypothesis-2feab2037d27b979",
+          "lifecycle_state": "active",
+          "originating_focus_id": "focus-79023e06746dcb99",
+          "originating_goal_id": "active-cognitive-goal-fd468d8588d054de",
+          "provenance": [
+            "cognitive-operation-43b40bdb84781420"
+          ],
+          "revised_at": "",
+          "revision_parent_id": "",
+          "revision_reason": "",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "scope": "Resolve discrepancy for goal: Verify model independence",
+          "statement": "Model execution is isolated from campaign state."
+        }
+      ],
+      "cycle_id": "active-cognitive-cycle-498467b410cd9e4f",
+      "observed_outcomes": [
+        {
+          "created_at": "2026-07-27T01:40:39+00:00",
+          "discrepancy": "progress_observed",
+          "expected": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+          "observed": "Model execution is isolated from campaign state.",
+          "operation_id": "cognitive-operation-43b40bdb84781420",
+          "outcome_id": "outcome-ba35d74c9be9a9cd"
+        }
+      ],
+      "omitted_items_summary": "0 older or less relevant items omitted by packet budget",
+      "operator_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "packet_digest": "39b515326918a73c8ce154921b7dac2f07944ed1924181aec01c02326425ab56",
+      "packet_id": "working-memory-packet-759762916e242bfd",
+      "prior_cycle_summary": "Model execution is isolated from campaign state.",
+      "provenance_refs": [
+        "exp-b_evidence_1",
+        "exp-b_contrary_1"
+      ],
+      "recent_actions": [],
+      "relevant_evidence": [
+        {
+          "content": "tests/runtime_gsr/test_model_execution_lane_isolation.py",
+          "evidence_id": "exp-b_evidence_1",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "local_repo",
+          "summary": "Tests model isolation"
+        }
+      ],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "size_budget": 8,
+      "unresolved_questions": []
+    },
+    {
+      "active_focus": {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "semantic comparison",
+        "creation_sequence": 3,
+        "description": "Challenge or revise hypothesis: Model execution is isolated from campaign state.",
+        "evidence_need": "contrary and supporting evidence",
+        "evidence_refs": [
+          "exp-b_evidence_1",
+          "exp-b_contrary_1"
+        ],
+        "expected_value": "belief_revision",
+        "focus_id": "focus-8858f9f57f5377cc",
+        "related_goal_ids": [
+          "active-cognitive-goal-fd468d8588d054de"
+        ],
+        "salience_categories": [
+          "unresolved_hypothesis",
+          "evidence_revision",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "An active hypothesis needs evidence-linked revision before action.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "hypothesis_revision",
+        "urgency": "high"
+      },
+      "active_goal": {
+        "expected_state": "Isolated model execution results",
+        "goal_id": "active-cognitive-goal-fd468d8588d054de",
+        "observed_state": "",
+        "priority": "operator_requested",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "summary": "Verify model independence"
+      },
+      "authority_state": "authorized_for_local_cognitive_marathon",
+      "capability_limits": [
+        "model calls budgeted",
+        "source mutation requires explicit bounded patch authority"
+      ],
+      "conflicting_evidence": [
+        {
+          "content": "operator:campaign_uncertainty",
+          "evidence_id": "exp-b_contrary_1",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "local_uncertainty",
+          "summary": "Contrary evidence: UI route and usefulness are not yet proven for this candidate."
+        }
+      ],
+      "construction_rationale": "bounded by active focus, goal discrepancy, recency, evidence provenance, and operation need",
+      "current_hypotheses": [
+        {
+          "assumptions": [
+            "Model execution does not interact with campaign state"
+          ],
+          "confidence_state": "contested",
+          "created_at": "2026-07-27T01:40:39+00:00",
+          "disposition": "needs_challenge",
+          "evidence_against": [
+            "exp-b_contrary_1"
+          ],
+          "evidence_for": [
+            "exp-b_evidence_1"
+          ],
+          "expected_observations": [
+            "local evidence should support a bounded useful step"
+          ],
+          "hypothesis_id": "hypothesis-2feab2037d27b979",
+          "lifecycle_state": "active",
+          "originating_focus_id": "focus-79023e06746dcb99",
+          "originating_goal_id": "active-cognitive-goal-fd468d8588d054de",
+          "provenance": [
+            "cognitive-operation-43b40bdb84781420",
+            "cognitive-operation-abe231e06982aaac"
+          ],
+          "revised_at": "2026-07-27T01:41:03+00:00",
+          "revision_parent_id": "",
+          "revision_reason": "Evidence supports the hypothesis that the model execution is isolated from the campaign state.",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "scope": "Resolve discrepancy for goal: Verify model independence",
+          "statement": "Model execution is isolated from campaign state."
+        }
+      ],
+      "cycle_id": "active-cognitive-cycle-b4132e7c7d066d54",
+      "observed_outcomes": [
+        {
+          "created_at": "2026-07-27T01:40:39+00:00",
+          "discrepancy": "progress_observed",
+          "expected": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+          "observed": "Model execution is isolated from campaign state.",
+          "operation_id": "cognitive-operation-43b40bdb84781420",
+          "outcome_id": "outcome-ba35d74c9be9a9cd"
+        },
+        {
+          "created_at": "2026-07-27T01:41:03+00:00",
+          "discrepancy": "progress_observed",
+          "expected": "Perform compare_evidence for the active focus using only referenced evidence.",
+          "observed": "Evidence supports the hypothesis that the model execution is isolated from the campaign state.",
+          "operation_id": "cognitive-operation-abe231e06982aaac",
+          "outcome_id": "outcome-525f1775083629f7"
+        }
+      ],
+      "omitted_items_summary": "0 older or less relevant items omitted by packet budget",
+      "operator_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "packet_digest": "64d3f1f578f5ee45a63caacb682bae5fb6d55cedd664a7ddbe1df52215b07ddc",
+      "packet_id": "working-memory-packet-42a6cc0dc7122d6f",
+      "prior_cycle_summary": "Evidence supports the hypothesis that the model execution is isolated from the campaign state.",
+      "provenance_refs": [
+        "exp-b_evidence_1",
+        "exp-b_contrary_1"
+      ],
+      "recent_actions": [],
+      "relevant_evidence": [
+        {
+          "content": "tests/runtime_gsr/test_model_execution_lane_isolation.py",
+          "evidence_id": "exp-b_evidence_1",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "local_repo",
+          "summary": "Tests model isolation"
+        }
+      ],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "size_budget": 8,
+      "unresolved_questions": []
+    }
+  ]
+}

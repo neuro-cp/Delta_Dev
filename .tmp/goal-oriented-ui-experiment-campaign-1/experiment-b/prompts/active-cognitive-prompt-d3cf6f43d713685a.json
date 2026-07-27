@@ -1,0 +1,77 @@
+{
+  "authority_constraints": [
+    "no network",
+    "no protected paths",
+    "no commit",
+    "bounded local actions only"
+  ],
+  "contrary_evidence_ids_supplied": [
+    "exp-b_contrary_1"
+  ],
+  "cycle_id": "active-cognitive-cycle-b4132e7c7d066d54",
+  "evidence_ids_supplied": [
+    "exp-b_evidence_1"
+  ],
+  "expected_response_schema": {
+    "evidence_refs": [
+      "IDs only from supplied evidence"
+    ],
+    "lesson": "learning from outcome",
+    "recommended_state_transition": "one allowed transition",
+    "uncertainty": "nonempty uncertainty phrase",
+    "unresolved_questions": [
+      "questions that remain unresolved"
+    ]
+  },
+  "focus_id": "focus-8858f9f57f5377cc",
+  "goal_id": "active-cognitive-goal-fd468d8588d054de",
+  "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+  "operation_request": {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-b4132e7c7d066d54",
+    "evidence_constraints": [
+      "exp-b_evidence_1",
+      "exp-b_contrary_1"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-8858f9f57f5377cc",
+    "goal_id": "active-cognitive-goal-fd468d8588d054de",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-b7437979bd07f29b",
+    "operation_type": "summarize_learning",
+    "provenance": [
+      "working-memory-packet-42a6cc0dc7122d6f"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform summarize_learning for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "64d3f1f578f5ee45a63caacb682bae5fb6d55cedd664a7ddbe1df52215b07ddc"
+  },
+  "operation_type": "summarize_learning",
+  "prompt_byte_digest": "3edf6c455c9bd602e3c7e1ea0913aa33b1701fea4bf4eb9a9bfc2503292dde80",
+  "prompt_length": 4246,
+  "prompt_schema_version": "active_cognitive_prompt_qualification_1_v1",
+  "prompt_snapshot_id": "active-cognitive-prompt-d3cf6f43d713685a",
+  "prompt_text": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- lesson: nonempty string\n- evidence_refs: array[string]\n- unresolved_questions: array[string]\n- uncertainty: nonempty string\n- recommended_state_transition: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- evidence_refs values must be chosen from: exp-b_evidence_1, exp-b_contrary_1\nTASK: perform only operation summarize_learning. Allowed transition/next-operation values: summarize_learning, select_next_focus. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: exp-b_evidence_1. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied.\nCONTEXT_JSON:\n{\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"semantic comparison\",\"creation_sequence\":3,\"description\":\"Challenge or revise hypothesis: Model execution is isolated from campaign state.\",\"evidence_need\":\"contrary and supporting evidence\",\"evidence_refs\":[\"exp-b_evidence_1\",\"exp-b_contrary_1\"],\"expected_value\":\"belief_revision\",\"focus_id\":\"focus-8858f9f57f5377cc\",\"related_goal_ids\":[\"active-cognitive-goal-fd468d8588d054de\"],\"salience_categories\":[\"unresolved_hypothesis\",\"evidence_revision\",\"expected_useful_progress\"],\"salience_explanation\":\"An active hypothesis needs evidence-linked revision before action.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"hypothesis_revision\",\"urgency\":\"high\"},\"contrary_evidence\":[{\"content\":\"operator:campaign_uncertainty\",\"evidence_id\":\"exp-b_contrary_1\",\"source\":\"local_uncertainty\",\"summary\":\"Contrary evidence: UI route and usefulness are not yet proven for this candidate.\"}],\"current_goal\":{\"expected_state\":\"Isolated model execution results\",\"goal_id\":\"active-cognitive-goal-fd468d8588d054de\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Verify model independence\"},\"current_hypotheses\":[{\"assumptions\":[\"Model execution does not interact with campaign state\"],\"confidence_state\":\"contested\",\"created_at\":\"2026-07-27T01:40:39+00:00\",\"disposition\":\"needs_challenge\",\"evidence_against\":[\"exp-b_contrary_1\"],\"evidence_for\":[\"exp-b_evidence_1\"],\"expected_observations\":[\"local evidence should support a bounded useful step\"],\"hypothesis_id\":\"hypothesis-2feab2037d27b979\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-79023e06746dcb99\",\"originating_goal_id\":\"active-cognitive-goal-fd468d8588d054de\",\"provenance\":[\"cognitive-operation-43b40bdb84781420\",\"cognitive-operation-abe231e06982aaac\"],\"revised_at\":\"2026-07-27T01:41:03+00:00\",\"revision_parent_id\":\"\",\"revision_reason\":\"Evidence supports the hypothesis that the model execution is isolated from the campaign state.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: Verify model independence\",\"statement\":\"Model execution is isolated from campaign state.\"}],\"evidence_for\":[{\"content\":\"tests/runtime_gsr/test_model_execution_lane_isolation.py\",\"evidence_id\":\"exp-b_evidence_1\",\"source\":\"local_repo\",\"summary\":\"Tests model isolation\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-27T01:41:03+00:00\",\"discrepancy\":\"progress_observed\",\"expected\":\"Perform compare_evidence for the active focus using only referenced evidence.\",\"observed\":\"Evidence supports the hypothesis that the model execution is isolated from the campaign state.\",\"operation_id\":\"cognitive-operation-abe231e06982aaac\",\"outcome_id\":\"outcome-525f1775083629f7\"}]}",
+  "request_identity": "active-cognitive-ledger-request-89ebe1432994190c",
+  "retry_sequence": 0,
+  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+  "working_memory_packet_digest": "64d3f1f578f5ee45a63caacb682bae5fb6d55cedd664a7ddbe1df52215b07ddc",
+  "working_memory_packet_id": "working-memory-packet-42a6cc0dc7122d6f"
+}

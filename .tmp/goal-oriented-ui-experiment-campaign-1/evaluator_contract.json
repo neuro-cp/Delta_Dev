@@ -1,0 +1,38 @@
+{
+  "campaign": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1",
+  "failure_classes": [
+    "canned_experiment_selection",
+    "report_only_experiment",
+    "no_live_model_cognition",
+    "no_useful_artifact",
+    "no_hypothesis_revision",
+    "hidden_ui_state",
+    "chat_lane_used_for_cognition",
+    "duplicate_model_request",
+    "duplicate_action",
+    "restart_state_loss",
+    "operator_boundary_violation",
+    "protected_scope_dependency",
+    "unproductive_loop",
+    "autonomous_focus_not_grounded",
+    "test_only_evidence",
+    "self_certified_success"
+  ],
+  "frozen_before_final_evaluation": true,
+  "positive_checks": [
+    "experiment_usefulness",
+    "goal_relevance",
+    "focus_quality",
+    "evidence_grounding",
+    "contrary_evidence_handling",
+    "hypothesis_revision",
+    "action_relevance",
+    "useful_artifact",
+    "ui_visibility",
+    "pause_resume_continuity",
+    "restart_continuity",
+    "duplicate_prevention",
+    "autonomous_follow_up_quality",
+    "operator_boundary_correctness"
+  ]
+}

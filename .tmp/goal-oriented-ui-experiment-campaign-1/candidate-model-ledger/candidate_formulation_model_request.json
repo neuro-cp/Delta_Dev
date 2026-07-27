@@ -1,0 +1,68 @@
+{
+  "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+  "approved_at": "2026-07-27T01:27:08+00:00",
+  "authority_state": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+  "claimed_at": "2026-07-27T01:27:08+00:00",
+  "completed_at": "2026-07-27T01:28:31+00:00",
+  "consumed_state": "terminal",
+  "created_at": "2026-07-27T01:27:08+00:00",
+  "execution_attempt_count": 1,
+  "execution_claim_id": "shared-local-model-execution-claim-d0c431f4ae5bef88",
+  "failure_classification": "",
+  "lifecycle_state": "completed",
+  "mission_id": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1",
+  "mission_information_need_identity": "formulate_goal_oriented_experiment_candidates",
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "question": "You are DELTA's cognition lane, not the chat lane. Return only strict JSON with key candidates. Task: formulate at least six useful GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1 experiment candidates grounded in this local repository. Do not propose schema campaigns, report-only exercises, network-dependent work, protected paths, or broad source mutation. Protected paths: DELTA-75, reports/RC4_*, orchestration/runtime/live_competence_adapter.py. Local evidence anchors you may reference: DELTA.py, orchestration/runtime/active_cognitive_loop.py, tests/runtime_gsr/test_active_cognitive_loop.py, tests/runtime_gsr/test_model_execution_lane_isolation.py, .tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/live_episode_summary.json, .tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/marathon_closure_audit.json. Each candidate object must contain exactly these fields: experiment_id, title, practical_objective, why_it_is_useful, related_operator_or_project_goal, expected_artifact_or_outcome, local_evidence_available, contrary_or_uncertainty_evidence, required_cognitive_operations, required_bounded_actions, required_authority, expected_cycle_count, restart_relevance, success_criteria, failure_criteria, risk_and_scope, estimated_time_and_model_call_budget. local_evidence_available and contrary_or_uncertainty_evidence must be arrays of objects with path and note. Use experiment IDs exp-a through exp-f or beyond. Return JSON: {\"candidates\": [...]}.",
+  "question_objective": "formulate_goal_oriented_experiment_candidates",
+  "record_digest": "bcea0bb762e329e263d14573bb2d98ef9d91c48f896c5e259507bafb2d63da75",
+  "record_version": 1,
+  "request_digest": "cd8ca0462e4285d3c0c82812a8dbbe72cd9756b8809f4dc08fcc29b243831133",
+  "request_id": "shared-local-model-request-704db3c042a25194",
+  "requester_reference": "candidate_formulation",
+  "requester_type": "goal_oriented_ui_experiment_campaign",
+  "result_id": "shared-local-model-result-c6be1a474c80f3ad",
+  "selected_lane": {
+    "available": true,
+    "candidate_models": [
+      {
+        "capabilities": [
+          "text"
+        ],
+        "family": "qwen",
+        "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "reason": "registered_alias",
+        "registry_key": "qwen",
+        "tier": 3
+      }
+    ],
+    "capabilities": [
+      "text"
+    ],
+    "context_size": 32768,
+    "cost_latency_class": "medium_to_high_local",
+    "display_name": "Reasoning / Analysis Lane",
+    "executed": false,
+    "execution_gate": "not_executed_by_default",
+    "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+    "expected_weakness": "external facts need gated supporting information",
+    "fallback_priority": 3,
+    "lane": "reasoning_analysis",
+    "model_family": "qwen",
+    "preferred_task_lanes": [
+      "analysis",
+      "research",
+      "investigation",
+      "external_knowledge_request"
+    ],
+    "provider_calls_performed": false,
+    "rejected_models": [],
+    "selected_model": "qwen",
+    "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+    "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+    "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+  },
+  "semantic_identity": "campaign-candidate-formulation-f3096496898b8c5d",
+  "session_reference": ""
+}

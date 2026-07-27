@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "exp-b_evidence_1"
+    ],
+    "lesson": "Model execution is isolated from campaign state based on supporting evidence.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "Uncertainty remains regarding the practical implications of model isolation on campaign state updates.",
+    "unresolved_questions": [
+      "How does this isolation impact campaign state updates?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"Model execution is isolated from campaign state based on supporting evidence.\",\"evidence_refs\":[\"exp-b_evidence_1\"],\"unresolved_questions\":[\"How does this isolation impact campaign state updates?\"],\"uncertainty\":\"Uncertainty remains regarding the practical implications of model isolation on campaign state updates.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "1bc34ff174aea585b158397b69758f979827251349bdfd58587e9b28b29c0069",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

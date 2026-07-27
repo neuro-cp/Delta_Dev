@@ -1,0 +1,10 @@
+[
+  {
+    "created_at": "2026-07-27T01:42:35+00:00",
+    "evidence_refs": [
+      "exp-c_evidence_1"
+    ],
+    "learning_id": "learning-cd3df32898587546",
+    "summary": "Live run episodes do not show clear patterns or anomalies indicating non-compliance, but the UI route and usefulness are not yet proven."
+  }
+]

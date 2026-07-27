@@ -1,0 +1,21 @@
+{
+  "snapshots": [
+    {
+      "event": "initial_goals_tab_v3",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=0; selected=0; active=none",
+      "selected": [],
+      "tree_items": [],
+      "detail": "",
+      "goals_tab_visible": "Goals"
+    },
+    {
+      "event": "candidate_experiments_visible_retry_v3",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=0; selected=0; active=none",
+      "selected": [],
+      "tree_items": [],
+      "detail": "{\n  \"proposal\": {},\n  \"state\": \"not_started\"\n}",
+      "goals_tab_visible": "Goals"
+    }
+  ],
+  "candidate_count": 0
+}

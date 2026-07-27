@@ -1,0 +1,76 @@
+{
+  "ledger_request_id": "shared-local-model-request-b0a97b84965385e7",
+  "ledger_result_id": "shared-local-model-result-fdf77404bc66f176",
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "prompt_snapshot_id": "active-cognitive-prompt-4a766b36b6c7c33d",
+  "raw_response": "{\n\"hypothesis_statement\": \"The closure audit report is accurate and valid.\",\n\"scope\": \"Marathon closure audit validation\",\n\"supporting_evidence_refs\": [\"exp-d_evidence_1\"],\n\"assumptions\": [\"Audit process followed established procedures\", \"Data integrity maintained during audit\"],\n\"expected_observations\": [\"All audit findings are documented\", \"Corrective actions for identified issues are implemented\"],\n\"uncertainty\": \"Potential discrepancies in audit findings and corrective actions\",\n\"recommended_state_transition\": \"propose_hypothesis\"\n}",
+  "raw_response_digest": "4cbada57f1610f165932c304efd06a086c9da5419b29ec06526b458f05ecb93c",
+  "terminal_status": {
+    "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+    "approved_at": "2026-07-27T01:42:35+00:00",
+    "authority_state": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+    "claimed_at": "2026-07-27T01:42:35+00:00",
+    "completed_at": "2026-07-27T01:42:56+00:00",
+    "consumed_state": "terminal",
+    "created_at": "2026-07-27T01:42:35+00:00",
+    "execution_attempt_count": 1,
+    "execution_claim_id": "shared-local-model-execution-claim-04b45ac224cc7119",
+    "failure_classification": "",
+    "lifecycle_state": "completed",
+    "mission_id": "active-cognitive-goal-98c1b7e994b7b81f",
+    "mission_information_need_identity": "focus-22fb591d46428403",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: exp-d_evidence_1 OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: exp-d_evidence_1. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":1,\"description\":\"Resolve discrepancy for goal: Check closure audit validity\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"exp-d_evidence_1\",\"exp-d_contrary_1\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-22fb591d46428403\",\"related_goal_ids\":[\"active-cognitive-goal-98c1b7e994b7b81f\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"operator:campaign_uncertainty\",\"evidence_id\":\"exp-d_contrary_1\",\"source\":\"local_uncertainty\",\"summary\":\"Contrary evidence: UI route and usefulness are not yet proven for this candidate.\"}],\"current_goal\":{\"expected_state\":\"Audit validation report\",\"goal_id\":\"active-cognitive-goal-98c1b7e994b7b81f\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Check closure audit validity\"},\"current_hypotheses\":[],\"evidence_for\":[{\"content\":\".tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/marathon_closure_audit.json\",\"evidence_id\":\"exp-d_evidence_1\",\"source\":\"local_repo\",\"summary\":\"Contains closure audit data\"}],\"recent_outcomes\":[]}",
+    "question_objective": "formulate_hypothesis",
+    "record_digest": "f2a3f298fcb8543d9c8b220cc8a7586659480aa6edf556f1f949a19719cae5e8",
+    "record_version": 1,
+    "request_digest": "ad7d77aba0c2e6330f8a792bc4240cd6e71061c871b958e82e13ef8b4b6bcefe",
+    "request_id": "shared-local-model-request-b0a97b84965385e7",
+    "requester_reference": "cognitive-operation-c3a4b497e1adad96",
+    "requester_type": "active_cognitive_loop",
+    "result_id": "shared-local-model-result-fdf77404bc66f176",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    },
+    "semantic_identity": "active-cognitive-ledger-request-a2a718d6ca667325",
+    "session_reference": "active-cognitive-cycle-14bc6a83d053402b"
+  }
+}

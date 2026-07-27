@@ -1,0 +1,90 @@
+[
+  {
+    "accepted": true,
+    "assumptions": [
+      "Audit process followed established procedures",
+      "Data integrity maintained during audit"
+    ],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "exp-d_evidence_1"
+    ],
+    "interpretation": "The closure audit report is accurate and valid.",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "next_evidence_need": "",
+    "next_focus_proposal": "",
+    "operation_id": "cognitive-operation-c3a4b497e1adad96",
+    "operation_result_type": "formulate_hypothesis_result",
+    "raw_model_output": "{\n\"hypothesis_statement\": \"The closure audit report is accurate and valid.\",\n\"scope\": \"Marathon closure audit validation\",\n\"supporting_evidence_refs\": [\"exp-d_evidence_1\"],\n\"assumptions\": [\"Audit process followed established procedures\", \"Data integrity maintained during audit\"],\n\"expected_observations\": [\"All audit findings are documented\", \"Corrective actions for identified issues are implemented\"],\n\"uncertainty\": \"Potential discrepancies in audit findings and corrective actions\",\n\"recommended_state_transition\": \"propose_hypothesis\"\n}",
+    "recommended_action": "Marathon closure audit validation",
+    "recommended_state_transition": "propose_hypothesis",
+    "rejection_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "uncertainty": "Potential discrepancies in audit findings and corrective actions"
+  },
+  {
+    "accepted": true,
+    "assumptions": [
+      "Audit process followed established procedures",
+      "Data integrity maintained during audit"
+    ],
+    "contrary_evidence_considered": [
+      "exp-d_contrary_1"
+    ],
+    "evidence_refs": [
+      "exp-d_evidence_1"
+    ],
+    "interpretation": "The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "next_evidence_need": "Further UI testing and validation",
+    "next_focus_proposal": "Continue with the current hypothesis",
+    "operation_id": "cognitive-operation-d39a4c10fb4e6d17",
+    "operation_result_type": "compare_evidence_result",
+    "raw_model_output": "{ \"assumptions\":[\"Audit process followed established procedures\",\"Data integrity maintained during audit\"],\"contrary_evidence_considered\":[\"exp-d_contrary_1\"],\"evidence_refs\":[\"exp-d_evidence_1\"],\"interpretation\":\"The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.\",\"next_evidence_need\":\"Further UI testing and validation\",\"next_focus_proposal\":\"Continue with the current hypothesis\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"Continue with the current hypothesis\",\"recommended_state_transition\":\"weaken_hypothesis\",\"uncertainty\":\"UI route and usefulness not yet proven for this candidate\"}",
+    "recommended_action": "Continue with the current hypothesis",
+    "recommended_state_transition": "weaken_hypothesis",
+    "rejection_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "uncertainty": "UI route and usefulness not yet proven for this candidate"
+  },
+  {
+    "accepted": true,
+    "assumptions": [],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "exp-d_evidence_1"
+    ],
+    "interpretation": "The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "next_evidence_need": "Is the UI route and functionality suitable for this candidate?",
+    "next_focus_proposal": "",
+    "operation_id": "cognitive-operation-2daa2dc066c8798e",
+    "operation_result_type": "summarize_learning_result",
+    "raw_model_output": "{\"lesson\":\"The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.\",\"evidence_refs\":[\"exp-d_evidence_1\"],\"unresolved_questions\":[\"Is the UI route and functionality suitable for this candidate?\"],\"uncertainty\":\"UI route and usefulness are not yet proven for this candidate.\",\"recommended_state_transition\":\"summarize_learning\"}",
+    "recommended_action": "",
+    "recommended_state_transition": "summarize_learning",
+    "rejection_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "uncertainty": "UI route and usefulness are not yet proven for this candidate."
+  },
+  {
+    "accepted": true,
+    "assumptions": [],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "exp-d_evidence_1"
+    ],
+    "interpretation": "An active hypothesis needs evidence-linked revision before action.",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "next_evidence_need": "",
+    "next_focus_proposal": "focus-0622c190a9b627a9",
+    "operation_id": "cognitive-operation-edfb848812e26655",
+    "operation_result_type": "select_next_focus_result",
+    "raw_model_output": "{\"selected_focus_id\":\"focus-0622c190a9b627a9\",\"salience_reason\":\"An active hypothesis needs evidence-linked revision before action.\",\"related_goal_ids\":[\"active-cognitive-goal-98c1b7e994b7b81f\"],\"evidence_refs\":[\"exp-d_evidence_1\"],\"deferred_focus_ids\":[],\"uncertainty\":\"UI route and usefulness are not yet proven for this candidate.\",\"recommended_state_transition\":\"select_next_focus\"}",
+    "recommended_action": "focus-0622c190a9b627a9",
+    "recommended_state_transition": "select_next_focus",
+    "rejection_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "uncertainty": "UI route and usefulness are not yet proven for this candidate."
+  }
+]

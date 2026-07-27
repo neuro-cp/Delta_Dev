@@ -1,0 +1,60 @@
+{
+  "adapter_identity": "goal_oriented_ui_campaign.ProviderManager.exact_prompt",
+  "availability_state": "available",
+  "execution_completed_at": "2026-07-27T02:13:25+00:00",
+  "execution_started_at": "2026-07-27T02:10:46+00:00",
+  "failure_classification": "",
+  "failure_detail": "",
+  "latency_seconds": 159.7744,
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "provenance": {
+    "execution_claim_id": "shared-local-model-execution-claim-cda868cf0559a2e9",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    }
+  },
+  "request_id": "shared-local-model-request-7565b342a6c78b9a",
+  "response_digest": "78a380173b50ca3fa239a4938afae0ab1c56b641664053c1f8544e17da736f9c",
+  "response_reference": "{\n  \"experiment_id\": \"exp-f\",\n  \"title\": \"Analyze UI performance bottlenecks\",\n  \"practical_objective\": \"Identify and address UI performance issues\",\n  \"why_it_is_useful\": \"Enhances user experience through optimized UI\",\n  \"related_operator_or_project_goal\": \"Improve user engagement\",\n  \"expected_artifact_or_outcome\": \"UI performance profiling report\",\n  \"local_evidence_available\": [\".tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/live_episode_summary.json | UI performance metrics\"],\n  \"contrary_or_uncertainty_evidence\": [\"orchestration/runtime/active_cognitive_loop.py | Potential UI blocking code\"],\n  \"required_cognitive_operations\": [\"analyze_performance_data\", \"identify_bottlenecks\"],\n  \"required_bounded_actions\": [\"profile_UI\", \"optimize_code\"],\n  \"required_authority\": \"operator_authorized_goal_oriented_ui_experiment_campaign_1\",\n  \"expected_cycle_count\":  \",\n  \"",
+  "result_digest": "c1150f05897c10e6c62c2223ab0a31661736d286212afd55ed3de89677ca4ad7",
+  "result_id": "shared-local-model-result-0107687fb09cba37",
+  "terminal_state": "completed"
+}

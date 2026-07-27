@@ -1,0 +1,60 @@
+{
+  "adapter_identity": "goal_oriented_ui_campaign.ProviderManager.exact_prompt",
+  "availability_state": "available",
+  "execution_completed_at": "2026-07-27T02:18:13+00:00",
+  "execution_started_at": "2026-07-27T02:17:31+00:00",
+  "failure_classification": "",
+  "failure_detail": "",
+  "latency_seconds": 42.0126,
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "provenance": {
+    "execution_claim_id": "shared-local-model-execution-claim-144af04b42346099",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    }
+  },
+  "request_id": "shared-local-model-request-2bbd5550681e4e69",
+  "response_digest": "6972d87bc8fe8c71485f5c9e06e129ed451cab0c9e57f31c3e2769ff42d7c7b5",
+  "response_reference": "{\n\"experiment_id\": \"exp-e\",\n\"title\": \"Select next focus autonomously\",\n\"practical_objective\": \"Automate focus selection for next experiment\",\n\"why_it_is_useful\": \"Optimizes resource allocation for continuous improvement\",\n\"related_operator_or_project_goal\": \"Enhance autonomous operation efficiency\",\n\"expected_artifact_or_outcome\": \"Automated focus selection logic\",\n\"local_evidence_available\": [\"tests/runtime_gsr/test_active_cognitive_loop.py | Local test framework\"],\n\"contrary_or_uncertainty_evidence\": [\"operator:campaign_uncertainty | Uncertainty in focus selection\"],\n\"required_cognitive_operations\": [\"Analyze past episodes\", \"Predict future focus\"],\n\"required_bounded_actions\": [\"Implement selection algorithm\", \"Test with scenarios\"],\n\"required_authority\": \"operator_authorized_goal_oriented_ui_experiment_campaign_1\",\n\"expected_cycle_count\": \"3\",\n\"restart_relevance\": \"Yes, for each new episode\",\n\"success_criteria\": \"Automated selection improves focus efficiency\",\n\"failure_criteria\": \"Manual selection remains necessary\",\n\"risk_and_scope\": \"Limited to current episode scope\",\n\"estimated_time_and_model_call_budget\": \"3 cycles; 3 calls\"\n}",
+  "result_digest": "19f000f3ca3fcd762b2339bb4029fd2a64f50abcc04c7867f924d38178ee4ec5",
+  "result_id": "shared-local-model-result-4e7912ad45406d12",
+  "terminal_state": "completed"
+}

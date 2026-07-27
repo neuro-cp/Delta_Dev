@@ -1,0 +1,392 @@
+{
+  "ledger_version": 1,
+  "requests": {
+    "shared-local-model-request-19a239323088e1cb": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-27T01:42:14+00:00",
+      "authority_state": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+      "claimed_at": "2026-07-27T01:42:14+00:00",
+      "completed_at": "2026-07-27T01:42:35+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-27T01:42:14+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-c5bdee08ddcfc25c",
+      "failure_classification": "",
+      "lifecycle_state": "completed",
+      "mission_id": "active-cognitive-goal-607fe79d22140cdd",
+      "mission_information_need_identity": "focus-2a3751eb8d190d22",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - lesson: nonempty string - evidence_refs: array[string] - unresolved_questions: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - evidence_refs values must be chosen from: exp-c_evidence_1, exp-c_contrary_1 TASK: perform only operation summarize_learning. Allowed transition/next-operation values: summarize_learning, select_next_focus. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: exp-c_evidence_1. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"semantic comparison\",\"creation_sequence\":3,\"description\":\"Challenge or revise hypothesis: Live run episodes show no clear patterns or anomalies that would indicate non-compliance.\",\"evidence_need\":\"contrary and supporting evidence\",\"evidence_refs\":[\"exp-c_evidence_1\",\"exp-c_contrary_1\"],\"expected_value\":\"belief_revision\",\"focus_id\":\"focus-2a3751eb8d190d22\",\"related_goal_ids\":[\"active-cognitive-goal-607fe79d22140cdd\"],\"salience_categories\":[\"unresolved_hypothesis\",\"evidence_revision\",\"expected_useful_progress\"],\"salience_explanation\":\"An active hypothesis needs evidence-linked revision before action.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"hypothesis_revision\",\"urgency\":\"high\"},\"contrary_evidence\":[{\"content\":\"operator:campaign_uncertainty\",\"evidence_id\":\"exp-c_contrary_1\",\"source\":\"local_uncertainty\",\"summary\":\"Contrary evidence: UI route and usefulness are not yet proven for this candidate.\"}],\"current_goal\":{\"expected_state\":\"Compliance audit report\",\"goal_id\":\"active-cognitive-goal-607fe79d22140cdd\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Ensure live run compliance\"},\"current_hypotheses\":[{\"assumptions\":[\"Live run episodes are representative of the system's typical behavior\"],\"confidence_state\":\"contested\",\"created_at\":\"2026-07-27T01:41:36+00:00\",\"disposition\":\"needs_challenge\",\"evidence_against\":[\"exp-c_contrary_1\"],\"evidence_for\":[\"exp-c_evidence_1\"],\"expected_observations\":[\"local evidence should support a bounded useful step\"],\"hypothesis_id\":\"hypothesis-0f19f09129a57e9c\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-092571b82ef78794\",\"originating_goal_id\":\"active-cognitive-goal-607fe79d22140cdd\",\"provenance\":[\"cognitive-operation-fe9c7e38e8d911b5\",\"cognitive-operation-8eab63df9325ed7b\"],\"revised_at\":\"2026-07-27T01:42:14+00:00\",\"revision_parent_id\":\"\",\"revision_reason\":\"The live run episodes do not show clear patterns or anomalies that would indicate non-compliance, but the UI route and usefulness are not yet proven for this candidate.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: Ensure live run compliance\",\"statement\":\"Live run episodes show no clear patterns or anomalies that would indicate non-compliance.\"}],\"evidence_for\":[{\"content\":\".tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/live_episode_summary.json\",\"evidence_id\":\"exp-c_evidence_1\",\"source\":\"local_repo\",\"summary\":\"Summary of live run episodes\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-27T01:42:14+00:00\",\"discrepancy\":\"progress_observed\",\"expected\":\"Perform compare_evidence for the active focus using only referenced evidence.\",\"observed\":\"The live run episodes do not show clear patterns or anomalies that would indicate non-compliance, but the UI route and usefulness are not yet proven for this candidate.\",\"operation_id\":\"cognitive-operation-8eab63df9325ed7b\",\"outcome_id\":\"outcome-75cda59cb99b5f7f\"}]}",
+      "question_objective": "summarize_learning",
+      "record_digest": "8bab1eb9522cb237b81f4db19d81ab4896a958753dedaf1ad7b1484fdeac5378",
+      "record_version": 1,
+      "request_digest": "b3d4bd5d8b926a218d653bc57473c047dbd503057f5fa0bcc7b76b3664089745",
+      "request_id": "shared-local-model-request-19a239323088e1cb",
+      "requester_reference": "cognitive-operation-c2cfa6a9c740663e",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "shared-local-model-result-29bf06f27f55e0c8",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-528b57d2215d64c6",
+      "session_reference": "active-cognitive-cycle-b8915918eafc1bbb"
+    },
+    "shared-local-model-request-2573bd4beb9f53e7": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-27T01:41:18+00:00",
+      "authority_state": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+      "claimed_at": "2026-07-27T01:41:18+00:00",
+      "completed_at": "2026-07-27T01:41:36+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-27T01:41:18+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-b5849a9098075395",
+      "failure_classification": "",
+      "lifecycle_state": "completed",
+      "mission_id": "active-cognitive-goal-607fe79d22140cdd",
+      "mission_information_need_identity": "focus-092571b82ef78794",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: exp-c_evidence_1 OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: exp-c_evidence_1. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":1,\"description\":\"Resolve discrepancy for goal: Ensure live run compliance\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"exp-c_evidence_1\",\"exp-c_contrary_1\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-092571b82ef78794\",\"related_goal_ids\":[\"active-cognitive-goal-607fe79d22140cdd\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"operator:campaign_uncertainty\",\"evidence_id\":\"exp-c_contrary_1\",\"source\":\"local_uncertainty\",\"summary\":\"Contrary evidence: UI route and usefulness are not yet proven for this candidate.\"}],\"current_goal\":{\"expected_state\":\"Compliance audit report\",\"goal_id\":\"active-cognitive-goal-607fe79d22140cdd\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Ensure live run compliance\"},\"current_hypotheses\":[],\"evidence_for\":[{\"content\":\".tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/live_episode_summary.json\",\"evidence_id\":\"exp-c_evidence_1\",\"source\":\"local_repo\",\"summary\":\"Summary of live run episodes\"}],\"recent_outcomes\":[]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "248dd74a78a69e2ecd46b993286f0c1c6713d9803e97138234ea771cdbedb10a",
+      "record_version": 1,
+      "request_digest": "d9ef8e6d4889062054858ba78df230bd316e00374270162be39e73bc1f7decec",
+      "request_id": "shared-local-model-request-2573bd4beb9f53e7",
+      "requester_reference": "cognitive-operation-fe9c7e38e8d911b5",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "shared-local-model-result-5fad84b516113eb2",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-b6d695f2b2712498",
+      "session_reference": "active-cognitive-cycle-608cd604c3537653"
+    },
+    "shared-local-model-request-f8d8731138c49996": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-27T01:41:36+00:00",
+      "authority_state": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+      "claimed_at": "2026-07-27T01:41:36+00:00",
+      "completed_at": "2026-07-27T01:42:14+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-27T01:41:36+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-1c6595881646f088",
+      "failure_classification": "",
+      "lifecycle_state": "completed",
+      "mission_id": "active-cognitive-goal-607fe79d22140cdd",
+      "mission_information_need_identity": "focus-ae8a49232d5c6d8f",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - operation_result_type: nonempty string - interpretation: nonempty string - evidence_refs: array[string] - contrary_evidence_considered: array[string] - uncertainty: nonempty string - assumptions: array[string] - recommended_state_transition: nonempty string - recommended_action: nonempty string - next_evidence_need: nonempty string - next_focus_proposal: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - evidence_refs values must be chosen from: exp-c_evidence_1 - contrary_evidence_considered values must be chosen from: exp-c_contrary_1 - contrary_evidence_considered must include at least one contrary_evidence ID TASK: perform only operation compare_evidence. Allowed transition/next-operation values: add_supporting_evidence, add_conflicting_evidence, weaken_hypothesis, revise_hypothesis. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: exp-c_evidence_1. Use contrary_evidence_considered only from contrary_evidence IDs: exp-c_contrary_1. If contrary_evidence is not empty, the interpretation must state how it changes or weakens the hypothesis Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":2,\"description\":\"Resolve discrepancy for goal: Ensure live run compliance\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"exp-c_evidence_1\",\"exp-c_contrary_1\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-ae8a49232d5c6d8f\",\"related_goal_ids\":[\"active-cognitive-goal-607fe79d22140cdd\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"operator:campaign_uncertainty\",\"evidence_id\":\"exp-c_contrary_1\",\"source\":\"local_uncertainty\",\"summary\":\"Contrary evidence: UI route and usefulness are not yet proven for this candidate.\"}],\"current_goal\":{\"expected_state\":\"Compliance audit report\",\"goal_id\":\"active-cognitive-goal-607fe79d22140cdd\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Ensure live run compliance\"},\"current_hypotheses\":[{\"assumptions\":[\"Live run episodes are representative of the system's typical behavior\"],\"confidence_state\":\"plausible\",\"created_at\":\"2026-07-27T01:41:36+00:00\",\"disposition\":\"needs_challenge\",\"evidence_against\":[],\"evidence_for\":[\"exp-c_evidence_1\"],\"expected_observations\":[\"local evidence should support a bounded useful step\"],\"hypothesis_id\":\"hypothesis-0f19f09129a57e9c\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-092571b82ef78794\",\"originating_goal_id\":\"active-cognitive-goal-607fe79d22140cdd\",\"provenance\":[\"cognitive-operation-fe9c7e38e8d911b5\"],\"revised_at\":\"\",\"revision_parent_id\":\"\",\"revision_reason\":\"\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: Ensure live run compliance\",\"statement\":\"Live run episodes show no clear patterns or anomalies that would indicate non-compliance.\"}],\"evidence_for\":[{\"content\":\".tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/live_episode_summary.json\",\"evidence_id\":\"exp-c_evidence_1\",\"source\":\"local_repo\",\"summary\":\"Summary of live run episodes\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-27T01:41:36+00:00\",\"discrepancy\":\"progress_observed\",\"expected\":\"Perform formulate_hypothesis for the active focus using only referenced evidence.\",\"observed\":\"Live run episodes show no clear patterns or anomalies that would indicate non-compliance.\",\"operation_id\":\"cognitive-operation-fe9c7e38e8d911b5\",\"outcome_id\":\"outcome-fb0249de550172b6\"}]}",
+      "question_objective": "compare_evidence",
+      "record_digest": "17e6abd00aaffb42b9a9608720237277e2c03ab9fb58f001107f675ba388c955",
+      "record_version": 1,
+      "request_digest": "6cb1c8e4108541afcf36809a2125a101823f6981d1e29a8577b42ca243962c60",
+      "request_id": "shared-local-model-request-f8d8731138c49996",
+      "requester_reference": "cognitive-operation-8eab63df9325ed7b",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "shared-local-model-result-69da55beb9b08b16",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-764775e382174a34",
+      "session_reference": "active-cognitive-cycle-ea392b61f6bb8d28"
+    }
+  },
+  "results": {
+    "shared-local-model-result-29bf06f27f55e0c8": {
+      "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+      "availability_state": "available",
+      "execution_completed_at": "2026-07-27T01:42:35+00:00",
+      "execution_started_at": "2026-07-27T01:42:14+00:00",
+      "failure_classification": "",
+      "failure_detail": "",
+      "latency_seconds": 20.3334,
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "provenance": {
+        "execution_claim_id": "shared-local-model-execution-claim-c5bdee08ddcfc25c",
+        "selected_lane": {
+          "available": true,
+          "candidate_models": [
+            {
+              "capabilities": [
+                "text"
+              ],
+              "family": "qwen",
+              "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+              "reason": "registered_alias",
+              "registry_key": "qwen",
+              "tier": 3
+            }
+          ],
+          "capabilities": [
+            "text"
+          ],
+          "context_size": 32768,
+          "cost_latency_class": "medium_to_high_local",
+          "display_name": "Reasoning / Analysis Lane",
+          "executed": false,
+          "execution_gate": "not_executed_by_default",
+          "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+          "expected_weakness": "external facts need gated supporting information",
+          "fallback_priority": 3,
+          "lane": "reasoning_analysis",
+          "model_family": "qwen",
+          "preferred_task_lanes": [
+            "analysis",
+            "research",
+            "investigation",
+            "external_knowledge_request"
+          ],
+          "provider_calls_performed": false,
+          "rejected_models": [],
+          "selected_model": "qwen",
+          "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+          "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+          "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+        }
+      },
+      "request_id": "shared-local-model-request-19a239323088e1cb",
+      "response_digest": "deeff3acaf4805e91a0842185f91cc97705e6c31cd3af60e91f22b1adeebf298",
+      "response_reference": "{ \"lesson\": \"Live run episodes do not show clear patterns or anomalies indicating non-compliance, but the UI route and usefulness are not yet proven.\", \"evidence_refs\": [ \"exp-c_evidence_1\" ], \"unresolved_questions\": [ \"How can we ensure the UI route and usefulness for this candidate?\" ], \"uncertainty\": \"UI route and usefulness are not yet proven for this candidate.\", \"recommended_state_transition\": \"summarize_learning\" }",
+      "result_digest": "3369e2fb8bfabce1788dc56a90dc9d94aff0cdf5652670928b12d555972d455f",
+      "result_id": "shared-local-model-result-29bf06f27f55e0c8",
+      "terminal_state": "completed"
+    },
+    "shared-local-model-result-5fad84b516113eb2": {
+      "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+      "availability_state": "available",
+      "execution_completed_at": "2026-07-27T01:41:36+00:00",
+      "execution_started_at": "2026-07-27T01:41:18+00:00",
+      "failure_classification": "",
+      "failure_detail": "",
+      "latency_seconds": 18.766,
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "provenance": {
+        "execution_claim_id": "shared-local-model-execution-claim-b5849a9098075395",
+        "selected_lane": {
+          "available": true,
+          "candidate_models": [
+            {
+              "capabilities": [
+                "text"
+              ],
+              "family": "qwen",
+              "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+              "reason": "registered_alias",
+              "registry_key": "qwen",
+              "tier": 3
+            }
+          ],
+          "capabilities": [
+            "text"
+          ],
+          "context_size": 32768,
+          "cost_latency_class": "medium_to_high_local",
+          "display_name": "Reasoning / Analysis Lane",
+          "executed": false,
+          "execution_gate": "not_executed_by_default",
+          "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+          "expected_weakness": "external facts need gated supporting information",
+          "fallback_priority": 3,
+          "lane": "reasoning_analysis",
+          "model_family": "qwen",
+          "preferred_task_lanes": [
+            "analysis",
+            "research",
+            "investigation",
+            "external_knowledge_request"
+          ],
+          "provider_calls_performed": false,
+          "rejected_models": [],
+          "selected_model": "qwen",
+          "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+          "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+          "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+        }
+      },
+      "request_id": "shared-local-model-request-2573bd4beb9f53e7",
+      "response_digest": "04d718e03e9a6c5736215bb325480908296af5f3a2844616038f2e95ea819f8a",
+      "response_reference": "{\"hypothesis_statement\":\"Live run episodes show no clear patterns or anomalies that would indicate non-compliance.\",\"scope\":\"Live run episodes\",\"supporting_evidence_refs\":[\"exp-c_evidence_1\"],\"assumptions\":[\"Live run episodes are representative of the system's typical behavior\"],\"expected_observations\":[\"No significant deviations from expected behavior\"],\"uncertainty\":\"Whether all live run episodes are fully representative of the system's typical behavior\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+      "result_digest": "04981425057943a8472bd99e35e6b5ea891f3a8d9dff71d7e0293d6b2db4dd1a",
+      "result_id": "shared-local-model-result-5fad84b516113eb2",
+      "terminal_state": "completed"
+    },
+    "shared-local-model-result-69da55beb9b08b16": {
+      "adapter_identity": "active_cognitive_loop.ProviderManager.exact_prompt",
+      "availability_state": "available",
+      "execution_completed_at": "2026-07-27T01:42:14+00:00",
+      "execution_started_at": "2026-07-27T01:41:36+00:00",
+      "failure_classification": "",
+      "failure_detail": "",
+      "latency_seconds": 37.9276,
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "provenance": {
+        "execution_claim_id": "shared-local-model-execution-claim-1c6595881646f088",
+        "selected_lane": {
+          "available": true,
+          "candidate_models": [
+            {
+              "capabilities": [
+                "text"
+              ],
+              "family": "qwen",
+              "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+              "reason": "registered_alias",
+              "registry_key": "qwen",
+              "tier": 3
+            }
+          ],
+          "capabilities": [
+            "text"
+          ],
+          "context_size": 32768,
+          "cost_latency_class": "medium_to_high_local",
+          "display_name": "Reasoning / Analysis Lane",
+          "executed": false,
+          "execution_gate": "not_executed_by_default",
+          "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+          "expected_weakness": "external facts need gated supporting information",
+          "fallback_priority": 3,
+          "lane": "reasoning_analysis",
+          "model_family": "qwen",
+          "preferred_task_lanes": [
+            "analysis",
+            "research",
+            "investigation",
+            "external_knowledge_request"
+          ],
+          "provider_calls_performed": false,
+          "rejected_models": [],
+          "selected_model": "qwen",
+          "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+          "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+          "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+        }
+      },
+      "request_id": "shared-local-model-request-f8d8731138c49996",
+      "response_digest": "a8ae8ef92e98722963d4760edd652eb5628125b56d2eb17ebea8c5922b04d262",
+      "response_reference": "{ \"assumptions\": [ \"Live run episodes are representative of the system's typical behavior\" ], \"contrary_evidence_considered\": [ \"exp-c_contrary_1\" ], \"evidence_refs\": [ \"exp-c_evidence_1\" ], \"interpretation\": \"The live run episodes do not show clear patterns or anomalies that would indicate non-compliance, but the UI route and usefulness are not yet proven for this candidate.\", \"next_evidence_need\": \"Further evidence to confirm the UI route and usefulness for this candidate.\", \"next_focus_proposal\": \"Propose to gather more data on the UI route and its usefulness.\", \"operation_result_type\": \"compare_evidence_result\", \"recommended_action\": \"Gather additional evidence to confirm the UI route and usefulness for this candidate.\", \"recommended_state_transition\": \"add_conflicting_evidence\", \"uncertainty\": \"The UI route and usefulness for this candidate are not yet proven.\" }",
+      "result_digest": "3627da61543ea5fcc3e0edb75ba1fa5586a7ab8a8ad297e174ba12dc26a30c8f",
+      "result_id": "shared-local-model-result-69da55beb9b08b16",
+      "terminal_state": "completed"
+    }
+  },
+  "state_digest": "4485203bbeaadb046006d59301eb610fcb9578fb1bd7b4c0a4bc4938fd9ccc1a"
+}

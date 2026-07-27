@@ -1,0 +1,60 @@
+{
+  "adapter_identity": "goal_oriented_ui_campaign.ProviderManager.exact_prompt",
+  "availability_state": "available",
+  "execution_completed_at": "2026-07-27T02:16:00+00:00",
+  "execution_started_at": "2026-07-27T02:15:13+00:00",
+  "failure_classification": "",
+  "failure_detail": "",
+  "latency_seconds": 46.9811,
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "provenance": {
+    "execution_claim_id": "shared-local-model-execution-claim-ec7490cdf009411f",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    }
+  },
+  "request_id": "shared-local-model-request-ebc4e722a152fccc",
+  "response_digest": "4b691ce1043374292d9e12f388d24f7f248bd248992c1f2db2550ed20e577d37",
+  "response_reference": "{\n  \"experiment_id\": \"exp-b\",\n  \"title\": \"Synthesize live episode artifacts\",\n  \"practical_objective\": \"Identify trends and anomalies in live episode data.\",\n  \"why_it_is_useful\": \"Provides actionable insights for campaign optimization.\",\n  \"related_operator_or_project_goal\": \"Optimize campaign performance.\",\n  \"expected_artifact_or_outcome\": \"Insights on campaign effectiveness.\",\n  \"local_evidence_available\": [\".tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/live_episode_summary.json | Live episode artifacts summary.\"],\n  \"contrary_or_uncertainty_evidence\": [\"operator:campaign_uncertainty | Uncertainty in campaign outcomes.\"],\n  \"required_cognitive_operations\": [\"Analyze live episode data\", \"Identify trends and anomalies\"],\n  \"required_bounded_actions\": [\"Review live episode summary\", \"Document findings\"],\n  \"required_authority\": \"operator_authorized_goal_oriented_ui_experiment_campaign_1\",\n  \"expected_cycle_count\": \"3\",\n  \"restart_relevance\": \"N/A\",\n  \"success_criteria\": \"Clear actionable insights identified.\",\n  \"failure_criteria\": \"No significant trends or anomalies identified.\",\n  \"risk_and_scope\": \"Low, focused on existing data.\",\n  \"estimated_time_and_model_call_budget\": \"3 cycles; 3 calls\"\n}",
+  "result_digest": "f7efbd7d7c846eabf0803182fdaee91644a42267b1019c55af1885a61a980f00",
+  "result_id": "shared-local-model-result-8a52f5641d2e6201",
+  "terminal_state": "completed"
+}

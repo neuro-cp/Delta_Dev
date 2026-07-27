@@ -1,0 +1,68 @@
+{
+  "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+  "approved_at": "2026-07-27T01:47:53+00:00",
+  "authority_state": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+  "claimed_at": "2026-07-27T01:47:53+00:00",
+  "completed_at": "2026-07-27T01:50:09+00:00",
+  "consumed_state": "terminal",
+  "created_at": "2026-07-27T01:47:53+00:00",
+  "execution_attempt_count": 1,
+  "execution_claim_id": "shared-local-model-execution-claim-b3a3212d27c709c8",
+  "failure_classification": "",
+  "lifecycle_state": "completed",
+  "mission_id": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1",
+  "mission_information_need_identity": "select_goal_oriented_experiment_set",
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "question": "You are DELTA's campaign cognition operation selecting a bounded experiment set for GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1. Return active-cognitive operation JSON. Put minified strict JSON with keys selected, ranking, and rationale inside the interpretation string. Select exactly four experiments if possible. Collectively cover: repository diagnosis/development, research synthesis, failed-hypothesis revision, interruption/restart, and autonomous follow-up selection. Criteria: usefulness, novelty_relative_to_prior_live_episodes, local_executability, behavioral_observability, opportunity_for_hypothesis_revision, ui_coverage, restart_coverage, bounded_risk, expected_operator_value. Reject duplicates, protected-path dependencies, network dependencies, report-only work, and work already proven by prior live episodes. Candidate JSON follows: []",
+  "question_objective": "select_goal_oriented_experiment_set",
+  "record_digest": "891473462bd8997bd16dba413fca03947c09821d6b3f715af07ab5fabcfb94b2",
+  "record_version": 1,
+  "request_digest": "d0f2cb14156373e60717d4661a1774256d2c6d1aa03f191d036f27237dc2ba85",
+  "request_id": "shared-local-model-request-3cbb3473d297c6ea",
+  "requester_reference": "experiment_selection",
+  "requester_type": "goal_oriented_ui_experiment_campaign",
+  "result_id": "shared-local-model-result-22b36b3dd2c6bbbe",
+  "selected_lane": {
+    "available": true,
+    "candidate_models": [
+      {
+        "capabilities": [
+          "text"
+        ],
+        "family": "qwen",
+        "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "reason": "registered_alias",
+        "registry_key": "qwen",
+        "tier": 3
+      }
+    ],
+    "capabilities": [
+      "text"
+    ],
+    "context_size": 32768,
+    "cost_latency_class": "medium_to_high_local",
+    "display_name": "Reasoning / Analysis Lane",
+    "executed": false,
+    "execution_gate": "not_executed_by_default",
+    "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+    "expected_weakness": "external facts need gated supporting information",
+    "fallback_priority": 3,
+    "lane": "reasoning_analysis",
+    "model_family": "qwen",
+    "preferred_task_lanes": [
+      "analysis",
+      "research",
+      "investigation",
+      "external_knowledge_request"
+    ],
+    "provider_calls_performed": false,
+    "rejected_models": [],
+    "selected_model": "qwen",
+    "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+    "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+    "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+  },
+  "semantic_identity": "campaign-selection-67ad5e46fe23dbee",
+  "session_reference": ""
+}

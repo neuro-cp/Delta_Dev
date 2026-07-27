@@ -1,0 +1,776 @@
+{
+  "aggregation": "mechanical_after_individual_candidate_validation",
+  "candidate_count": 6,
+  "candidates": [
+    {
+      "contrary_or_uncertainty_evidence": [
+        {
+          "note": "Uncertainty in campaign outcomes.",
+          "path": "operator:campaign_uncertainty"
+        }
+      ],
+      "estimated_time_and_model_call_budget": "3 cycles; 3 calls",
+      "expected_artifact_or_outcome": "Insights on campaign effectiveness.",
+      "expected_cycle_count": "3",
+      "experiment_id": "exp-b",
+      "failure_criteria": "No significant trends or anomalies identified.",
+      "local_evidence_available": [
+        {
+          "note": "Live episode artifacts summary.",
+          "path": ".tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/live_episode_summary.json"
+        }
+      ],
+      "practical_objective": "Identify trends and anomalies in live episode data.",
+      "related_operator_or_project_goal": "Optimize campaign performance.",
+      "required_authority": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+      "required_bounded_actions": [
+        "Review live episode summary",
+        "Document findings"
+      ],
+      "required_cognitive_operations": [
+        "Analyze live episode data",
+        "Identify trends and anomalies"
+      ],
+      "restart_relevance": "N/A",
+      "risk_and_scope": "Low, focused on existing data.",
+      "success_criteria": "Clear actionable insights identified.",
+      "title": "Synthesize live episode artifacts",
+      "validation": {
+        "accepted": true,
+        "campaign_enriched_fields": [],
+        "criteria": "local, bounded, useful, non-protected",
+        "model_proposed_fields": [
+          "contrary_or_uncertainty_evidence",
+          "estimated_time_and_model_call_budget",
+          "expected_artifact_or_outcome",
+          "expected_cycle_count",
+          "experiment_id",
+          "failure_criteria",
+          "local_evidence_available",
+          "practical_objective",
+          "related_operator_or_project_goal",
+          "required_authority",
+          "required_bounded_actions",
+          "required_cognitive_operations",
+          "restart_relevance",
+          "risk_and_scope",
+          "success_criteria",
+          "title",
+          "why_it_is_useful"
+        ]
+      },
+      "why_it_is_useful": "Provides actionable insights for campaign optimization."
+    },
+    {
+      "contrary_or_uncertainty_evidence": [
+        {
+          "note": "Hypothesis uncertain",
+          "path": "operator:campaign_uncertainty"
+        }
+      ],
+      "estimated_time_and_model_call_budget": "3 cycles; 3 calls",
+      "expected_artifact_or_outcome": "Interaction metrics post-UI changes",
+      "expected_cycle_count": "3",
+      "experiment_id": "exp-c",
+      "failure_criteria": "No significant improvement in metrics",
+      "local_evidence_available": [
+        {
+          "note": "Tracks UI interactions",
+          "path": "orchestration/runtime/active_cognitive_loop.py"
+        }
+      ],
+      "practical_objective": "Measure UI changes' effect on user engagement",
+      "related_operator_or_project_goal": "Optimize user engagement and satisfaction",
+      "required_authority": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+      "required_bounded_actions": [
+        "collect_user_interaction_data",
+        "analyze_data"
+      ],
+      "required_cognitive_operations": [
+        "analyze_user_interactions",
+        "compare_pre_post_changes"
+      ],
+      "restart_relevance": "Yes",
+      "risk_and_scope": "Low; focused on interaction data",
+      "success_criteria": "Metrics show significant improvement",
+      "title": "Validate UI impact through user interaction metrics",
+      "validation": {
+        "accepted": true,
+        "campaign_enriched_fields": [],
+        "criteria": "local, bounded, useful, non-protected",
+        "model_proposed_fields": [
+          "contrary_or_uncertainty_evidence",
+          "estimated_time_and_model_call_budget",
+          "expected_artifact_or_outcome",
+          "expected_cycle_count",
+          "experiment_id",
+          "failure_criteria",
+          "local_evidence_available",
+          "practical_objective",
+          "related_operator_or_project_goal",
+          "required_authority",
+          "required_bounded_actions",
+          "required_cognitive_operations",
+          "restart_relevance",
+          "risk_and_scope",
+          "success_criteria",
+          "title",
+          "why_it_is_useful"
+        ]
+      },
+      "why_it_is_useful": "Ensures UI improvements genuinely enhance user experience"
+    },
+    {
+      "contrary_or_uncertainty_evidence": [
+        {
+          "note": "Campaign uncertainty",
+          "path": "operator:campaign_uncertainty"
+        }
+      ],
+      "estimated_time_and_model_call_budget": "3 cycles; 3 calls",
+      "expected_artifact_or_outcome": "Optimized Tk reload strategy",
+      "expected_cycle_count": "3",
+      "experiment_id": "exp-d",
+      "failure_criteria": "Increased model call duplicates by 25%",
+      "local_evidence_available": [
+        {
+          "note": "Live run closure audit",
+          "path": ".tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/marathon_closure_audit.json"
+        }
+      ],
+      "practical_objective": "Ensure uninterrupted UI experience by managing Tk reloads",
+      "related_operator_or_project_goal": "Operator_authorized_goal_oriented_ui_experiment_campaign_1",
+      "required_authority": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+      "required_bounded_actions": [
+        "tk_reload_optimization"
+      ],
+      "required_cognitive_operations": [
+        "tk_management"
+      ],
+      "restart_relevance": "Critical for uninterrupted UI experience",
+      "risk_and_scope": "Low; focuses on local Tk management",
+      "success_criteria": "Reduced model call duplicates by 50%",
+      "title": "Preserve focus and avoid model call duplication",
+      "validation": {
+        "accepted": true,
+        "campaign_enriched_fields": [],
+        "criteria": "local, bounded, useful, non-protected",
+        "model_proposed_fields": [
+          "contrary_or_uncertainty_evidence",
+          "estimated_time_and_model_call_budget",
+          "expected_artifact_or_outcome",
+          "expected_cycle_count",
+          "experiment_id",
+          "failure_criteria",
+          "local_evidence_available",
+          "practical_objective",
+          "related_operator_or_project_goal",
+          "required_authority",
+          "required_bounded_actions",
+          "required_cognitive_operations",
+          "restart_relevance",
+          "risk_and_scope",
+          "success_criteria",
+          "title",
+          "why_it_is_useful"
+        ]
+      },
+      "why_it_is_useful": "Maintains focus and efficiency in active cognitive operations"
+    },
+    {
+      "contrary_or_uncertainty_evidence": [
+        {
+          "note": "Uncertainty in focus selection",
+          "path": "operator:campaign_uncertainty"
+        }
+      ],
+      "estimated_time_and_model_call_budget": "3 cycles; 3 calls",
+      "expected_artifact_or_outcome": "Automated focus selection logic",
+      "expected_cycle_count": "3",
+      "experiment_id": "exp-e",
+      "failure_criteria": "Manual selection remains necessary",
+      "local_evidence_available": [
+        {
+          "note": "Local test framework",
+          "path": "tests/runtime_gsr/test_active_cognitive_loop.py"
+        }
+      ],
+      "practical_objective": "Automate focus selection for next experiment",
+      "related_operator_or_project_goal": "Enhance autonomous operation efficiency",
+      "required_authority": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+      "required_bounded_actions": [
+        "Implement selection algorithm",
+        "Test with scenarios"
+      ],
+      "required_cognitive_operations": [
+        "Analyze past episodes",
+        "Predict future focus"
+      ],
+      "restart_relevance": "Yes, for each new episode",
+      "risk_and_scope": "Limited to current episode scope",
+      "success_criteria": "Automated selection improves focus efficiency",
+      "title": "Select next focus autonomously",
+      "validation": {
+        "accepted": true,
+        "campaign_enriched_fields": [],
+        "criteria": "local, bounded, useful, non-protected",
+        "model_proposed_fields": [
+          "contrary_or_uncertainty_evidence",
+          "estimated_time_and_model_call_budget",
+          "expected_artifact_or_outcome",
+          "expected_cycle_count",
+          "experiment_id",
+          "failure_criteria",
+          "local_evidence_available",
+          "practical_objective",
+          "related_operator_or_project_goal",
+          "required_authority",
+          "required_bounded_actions",
+          "required_cognitive_operations",
+          "restart_relevance",
+          "risk_and_scope",
+          "success_criteria",
+          "title",
+          "why_it_is_useful"
+        ]
+      },
+      "why_it_is_useful": "Optimizes resource allocation for continuous improvement"
+    },
+    {
+      "contrary_or_uncertainty_evidence": [
+        {
+          "note": "Uncertainty in user flow impact",
+          "path": "operator:campaign_uncertainty"
+        }
+      ],
+      "estimated_time_and_model_call_budget": "3 cycles; 3 calls",
+      "expected_artifact_or_outcome": "Passing test case in isolation script",
+      "expected_cycle_count": "3",
+      "experiment_id": "exp-f",
+      "failure_criteria": "Failing test case",
+      "local_evidence_available": [
+        {
+          "note": "Test script for lane isolation",
+          "path": "tests/runtime_gsr/test_model_execution_lane_isolation.py"
+        }
+      ],
+      "practical_objective": "Ensure chat remains conversational while cognition stays structured",
+      "related_operator_or_project_goal": "Improve user satisfaction",
+      "required_authority": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+      "required_bounded_actions": [
+        "Run test script"
+      ],
+      "required_cognitive_operations": [
+        "Model execution"
+      ],
+      "restart_relevance": "N/A",
+      "risk_and_scope": "Low risk, localized test",
+      "success_criteria": "Passing test case",
+      "title": "Verify chat conversational flow with structured cognition",
+      "validation": {
+        "accepted": true,
+        "campaign_enriched_fields": [],
+        "criteria": "local, bounded, useful, non-protected",
+        "model_proposed_fields": [
+          "contrary_or_uncertainty_evidence",
+          "estimated_time_and_model_call_budget",
+          "expected_artifact_or_outcome",
+          "expected_cycle_count",
+          "experiment_id",
+          "failure_criteria",
+          "local_evidence_available",
+          "practical_objective",
+          "related_operator_or_project_goal",
+          "required_authority",
+          "required_bounded_actions",
+          "required_cognitive_operations",
+          "restart_relevance",
+          "risk_and_scope",
+          "success_criteria",
+          "title",
+          "why_it_is_useful"
+        ]
+      },
+      "why_it_is_useful": "Maintains natural user experience"
+    },
+    {
+      "contrary_or_uncertainty_evidence": [
+        {
+          "note": "Tracks operator's current uncertainties",
+          "path": "operator:campaign_uncertainty"
+        }
+      ],
+      "estimated_time_and_model_call_budget": "3 cycles; 3 calls",
+      "expected_artifact_or_outcome": "Operator decision packet with synthesized insights",
+      "expected_cycle_count": "3",
+      "experiment_id": "exp-g",
+      "failure_criteria": "Insights are ambiguous or not actionable",
+      "local_evidence_available": [
+        {
+          "note": "Live run closure audit",
+          "path": "./.tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/marathon_closure_audit.json"
+        }
+      ],
+      "practical_objective": "Generate a report for operator on UI campaign value and uncertainties",
+      "related_operator_or_project_goal": "Deliver actionable insights for UI campaign optimization",
+      "required_authority": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+      "required_bounded_actions": [
+        "Generate operator decision packet",
+        "Summarize findings"
+      ],
+      "required_cognitive_operations": [
+        "Synthesize live episode data",
+        "Analyze UI campaign artifacts"
+      ],
+      "restart_relevance": "N/A",
+      "risk_and_scope": "Low, focuses on internal data",
+      "success_criteria": "Operator receives clear and actionable insights",
+      "title": "Summarize UI campaign value and remaining uncertainty",
+      "validation": {
+        "accepted": true,
+        "campaign_enriched_fields": [],
+        "criteria": "local, bounded, useful, non-protected",
+        "model_proposed_fields": [
+          "contrary_or_uncertainty_evidence",
+          "estimated_time_and_model_call_budget",
+          "expected_artifact_or_outcome",
+          "expected_cycle_count",
+          "experiment_id",
+          "failure_criteria",
+          "local_evidence_available",
+          "practical_objective",
+          "related_operator_or_project_goal",
+          "required_authority",
+          "required_bounded_actions",
+          "required_cognitive_operations",
+          "restart_relevance",
+          "risk_and_scope",
+          "success_criteria",
+          "title",
+          "why_it_is_useful"
+        ]
+      },
+      "why_it_is_useful": "Provides clear insights for decision-making"
+    }
+  ],
+  "failure": "",
+  "operation_type": "formulate_goal_oriented_experiment_candidate_per_call",
+  "operations": [
+    {
+      "index": 1,
+      "model_request_id": "shared-local-model-request-e43dfaf96cddb991",
+      "model_result_id": "shared-local-model-result-47a4afeac5786236",
+      "parsed_candidate": {
+        "contrary_or_uncertainty_evidence": [
+          {
+            "note": "Uncertainty in UI design",
+            "path": "operator:campaign_uncertainty"
+          }
+        ],
+        "estimated_time_and_model_call_budget": "3 cycles; 3 calls",
+        "expected_artifact_or_outcome": "Updated Tk Goals panel with active cognition state",
+        "expected_cycle_count": "3",
+        "experiment_id": "exp-a",
+        "failure_criteria": "User feedback indicates no improvement",
+        "local_evidence_available": [
+          {
+            "note": "Tk Goals panel state",
+            "path": "DELTA.py"
+          }
+        ],
+        "practical_objective": "Improve UI for active cognition state visibility",
+        "related_operator_or_project_goal": "DELTA-75",
+        "required_authority": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+        "required_bounded_actions": [
+          "Tk Goals panel update"
+        ],
+        "required_cognitive_operations": [
+          "state_monitoring",
+          "state_visualization"
+        ],
+        "restart_relevance": "N/A",
+        "risk_and_scope": "Low; limited to UI changes",
+        "success_criteria": "User feedback indicates improved comprehension",
+        "title": "Tk Goals Panel Active Cognition State",
+        "why_it_is_useful": "Enhances user understanding of ongoing cognitive processes"
+      },
+      "parsed_shape": [
+        "experiment_id",
+        "title",
+        "practical_objective",
+        "why_it_is_useful",
+        "related_operator_or_project_goal",
+        "expected_artifact_or_outcome",
+        "local_evidence_available",
+        "contrary_or_uncertainty_evidence",
+        "required_cognitive_operations",
+        "required_bounded_actions",
+        "required_authority",
+        "expected_cycle_count",
+        "restart_relevance",
+        "success_criteria",
+        "failure_criteria",
+        "risk_and_scope",
+        "estimated_time_and_model_call_budget"
+      ],
+      "prompt_digest": "499e9c6b6ea68c891fc363527000562cd7846fc7e3b5ca0128d061ddd1284772"
+    },
+    {
+      "index": 2,
+      "model_request_id": "shared-local-model-request-ebc4e722a152fccc",
+      "model_result_id": "shared-local-model-result-8a52f5641d2e6201",
+      "parsed_candidate": {
+        "contrary_or_uncertainty_evidence": [
+          {
+            "note": "Uncertainty in campaign outcomes.",
+            "path": "operator:campaign_uncertainty"
+          }
+        ],
+        "estimated_time_and_model_call_budget": "3 cycles; 3 calls",
+        "expected_artifact_or_outcome": "Insights on campaign effectiveness.",
+        "expected_cycle_count": "3",
+        "experiment_id": "exp-b",
+        "failure_criteria": "No significant trends or anomalies identified.",
+        "local_evidence_available": [
+          {
+            "note": "Live episode artifacts summary.",
+            "path": ".tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/live_episode_summary.json"
+          }
+        ],
+        "practical_objective": "Identify trends and anomalies in live episode data.",
+        "related_operator_or_project_goal": "Optimize campaign performance.",
+        "required_authority": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+        "required_bounded_actions": [
+          "Review live episode summary",
+          "Document findings"
+        ],
+        "required_cognitive_operations": [
+          "Analyze live episode data",
+          "Identify trends and anomalies"
+        ],
+        "restart_relevance": "N/A",
+        "risk_and_scope": "Low, focused on existing data.",
+        "success_criteria": "Clear actionable insights identified.",
+        "title": "Synthesize live episode artifacts",
+        "why_it_is_useful": "Provides actionable insights for campaign optimization."
+      },
+      "parsed_shape": [
+        "experiment_id",
+        "title",
+        "practical_objective",
+        "why_it_is_useful",
+        "related_operator_or_project_goal",
+        "expected_artifact_or_outcome",
+        "local_evidence_available",
+        "contrary_or_uncertainty_evidence",
+        "required_cognitive_operations",
+        "required_bounded_actions",
+        "required_authority",
+        "expected_cycle_count",
+        "restart_relevance",
+        "success_criteria",
+        "failure_criteria",
+        "risk_and_scope",
+        "estimated_time_and_model_call_budget"
+      ],
+      "prompt_digest": "6c64cf7394299fcdef68488b7916dc4b89d91b267fd7fb27640541238f049b42"
+    },
+    {
+      "index": 3,
+      "model_request_id": "shared-local-model-request-170f5fd015ea9426",
+      "model_result_id": "shared-local-model-result-0b316b8cbae04780",
+      "parsed_candidate": {
+        "contrary_or_uncertainty_evidence": [
+          {
+            "note": "Hypothesis uncertain",
+            "path": "operator:campaign_uncertainty"
+          }
+        ],
+        "estimated_time_and_model_call_budget": "3 cycles; 3 calls",
+        "expected_artifact_or_outcome": "Interaction metrics post-UI changes",
+        "expected_cycle_count": "3",
+        "experiment_id": "exp-c",
+        "failure_criteria": "No significant improvement in metrics",
+        "local_evidence_available": [
+          {
+            "note": "Tracks UI interactions",
+            "path": "orchestration/runtime/active_cognitive_loop.py"
+          }
+        ],
+        "practical_objective": "Measure UI changes' effect on user engagement",
+        "related_operator_or_project_goal": "Optimize user engagement and satisfaction",
+        "required_authority": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+        "required_bounded_actions": [
+          "collect_user_interaction_data",
+          "analyze_data"
+        ],
+        "required_cognitive_operations": [
+          "analyze_user_interactions",
+          "compare_pre_post_changes"
+        ],
+        "restart_relevance": "Yes",
+        "risk_and_scope": "Low; focused on interaction data",
+        "success_criteria": "Metrics show significant improvement",
+        "title": "Validate UI impact through user interaction metrics",
+        "why_it_is_useful": "Ensures UI improvements genuinely enhance user experience"
+      },
+      "parsed_shape": [
+        "experiment_id",
+        "title",
+        "practical_objective",
+        "why_it_is_useful",
+        "related_operator_or_project_goal",
+        "expected_artifact_or_outcome",
+        "local_evidence_available",
+        "contrary_or_uncertainty_evidence",
+        "required_cognitive_operations",
+        "required_bounded_actions",
+        "required_authority",
+        "expected_cycle_count",
+        "restart_relevance",
+        "success_criteria",
+        "failure_criteria",
+        "risk_and_scope",
+        "estimated_time_and_model_call_budget"
+      ],
+      "prompt_digest": "106e0fda0aefabbb6a9d28d2013c49ee0addb0014935adc6cd88da4f4575d1ef"
+    },
+    {
+      "index": 4,
+      "model_request_id": "shared-local-model-request-549d78a9ca2c6bc6",
+      "model_result_id": "shared-local-model-result-e156b8746ee7576f",
+      "parsed_candidate": {
+        "contrary_or_uncertainty_evidence": [
+          {
+            "note": "Campaign uncertainty",
+            "path": "operator:campaign_uncertainty"
+          }
+        ],
+        "estimated_time_and_model_call_budget": "3 cycles; 3 calls",
+        "expected_artifact_or_outcome": "Optimized Tk reload strategy",
+        "expected_cycle_count": "3",
+        "experiment_id": "exp-d",
+        "failure_criteria": "Increased model call duplicates by 25%",
+        "local_evidence_available": [
+          {
+            "note": "Live run closure audit",
+            "path": ".tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/marathon_closure_audit.json"
+          }
+        ],
+        "practical_objective": "Ensure uninterrupted UI experience by managing Tk reloads",
+        "related_operator_or_project_goal": "Operator_authorized_goal_oriented_ui_experiment_campaign_1",
+        "required_authority": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+        "required_bounded_actions": [
+          "tk_reload_optimization"
+        ],
+        "required_cognitive_operations": [
+          "tk_management"
+        ],
+        "restart_relevance": "Critical for uninterrupted UI experience",
+        "risk_and_scope": "Low; focuses on local Tk management",
+        "success_criteria": "Reduced model call duplicates by 50%",
+        "title": "Preserve focus and avoid model call duplication",
+        "why_it_is_useful": "Maintains focus and efficiency in active cognitive operations"
+      },
+      "parsed_shape": [
+        "experiment_id",
+        "title",
+        "practical_objective",
+        "why_it_is_useful",
+        "related_operator_or_project_goal",
+        "expected_artifact_or_outcome",
+        "local_evidence_available",
+        "contrary_or_uncertainty_evidence",
+        "required_cognitive_operations",
+        "required_bounded_actions",
+        "required_authority",
+        "expected_cycle_count",
+        "restart_relevance",
+        "success_criteria",
+        "failure_criteria",
+        "risk_and_scope",
+        "estimated_time_and_model_call_budget"
+      ],
+      "prompt_digest": "2f2a0a37c866e47d7928486269ad436a73d1971f03511ef0016e57e904cfc809"
+    },
+    {
+      "index": 5,
+      "model_request_id": "shared-local-model-request-2bbd5550681e4e69",
+      "model_result_id": "shared-local-model-result-4e7912ad45406d12",
+      "parsed_candidate": {
+        "contrary_or_uncertainty_evidence": [
+          {
+            "note": "Uncertainty in focus selection",
+            "path": "operator:campaign_uncertainty"
+          }
+        ],
+        "estimated_time_and_model_call_budget": "3 cycles; 3 calls",
+        "expected_artifact_or_outcome": "Automated focus selection logic",
+        "expected_cycle_count": "3",
+        "experiment_id": "exp-e",
+        "failure_criteria": "Manual selection remains necessary",
+        "local_evidence_available": [
+          {
+            "note": "Local test framework",
+            "path": "tests/runtime_gsr/test_active_cognitive_loop.py"
+          }
+        ],
+        "practical_objective": "Automate focus selection for next experiment",
+        "related_operator_or_project_goal": "Enhance autonomous operation efficiency",
+        "required_authority": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+        "required_bounded_actions": [
+          "Implement selection algorithm",
+          "Test with scenarios"
+        ],
+        "required_cognitive_operations": [
+          "Analyze past episodes",
+          "Predict future focus"
+        ],
+        "restart_relevance": "Yes, for each new episode",
+        "risk_and_scope": "Limited to current episode scope",
+        "success_criteria": "Automated selection improves focus efficiency",
+        "title": "Select next focus autonomously",
+        "why_it_is_useful": "Optimizes resource allocation for continuous improvement"
+      },
+      "parsed_shape": [
+        "experiment_id",
+        "title",
+        "practical_objective",
+        "why_it_is_useful",
+        "related_operator_or_project_goal",
+        "expected_artifact_or_outcome",
+        "local_evidence_available",
+        "contrary_or_uncertainty_evidence",
+        "required_cognitive_operations",
+        "required_bounded_actions",
+        "required_authority",
+        "expected_cycle_count",
+        "restart_relevance",
+        "success_criteria",
+        "failure_criteria",
+        "risk_and_scope",
+        "estimated_time_and_model_call_budget"
+      ],
+      "prompt_digest": "2bb119abcad467958a6addfe3426c7c0713c2a28bb7a2fd50c3da04479a38ff7"
+    },
+    {
+      "index": 6,
+      "model_request_id": "shared-local-model-request-07e04a7d0c11a07e",
+      "model_result_id": "shared-local-model-result-060295a3a757e8d1",
+      "parsed_candidate": {
+        "contrary_or_uncertainty_evidence": [
+          {
+            "note": "Uncertainty in user flow impact",
+            "path": "operator:campaign_uncertainty"
+          }
+        ],
+        "estimated_time_and_model_call_budget": "3 cycles; 3 calls",
+        "expected_artifact_or_outcome": "Passing test case in isolation script",
+        "expected_cycle_count": "3",
+        "experiment_id": "exp-f",
+        "failure_criteria": "Failing test case",
+        "local_evidence_available": [
+          {
+            "note": "Test script for lane isolation",
+            "path": "tests/runtime_gsr/test_model_execution_lane_isolation.py"
+          }
+        ],
+        "practical_objective": "Ensure chat remains conversational while cognition stays structured",
+        "related_operator_or_project_goal": "Improve user satisfaction",
+        "required_authority": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+        "required_bounded_actions": [
+          "Run test script"
+        ],
+        "required_cognitive_operations": [
+          "Model execution"
+        ],
+        "restart_relevance": "N/A",
+        "risk_and_scope": "Low risk, localized test",
+        "success_criteria": "Passing test case",
+        "title": "Verify chat conversational flow with structured cognition",
+        "why_it_is_useful": "Maintains natural user experience"
+      },
+      "parsed_shape": [
+        "experiment_id",
+        "title",
+        "practical_objective",
+        "why_it_is_useful",
+        "related_operator_or_project_goal",
+        "expected_artifact_or_outcome",
+        "local_evidence_available",
+        "contrary_or_uncertainty_evidence",
+        "required_cognitive_operations",
+        "required_bounded_actions",
+        "required_authority",
+        "expected_cycle_count",
+        "restart_relevance",
+        "success_criteria",
+        "failure_criteria",
+        "risk_and_scope",
+        "estimated_time_and_model_call_budget"
+      ],
+      "prompt_digest": "8ecc95b17612416c371bbf3ef5b750cd660746e4d3706a6b0f63ceca3025d389"
+    },
+    {
+      "index": 7,
+      "model_request_id": "shared-local-model-request-ade9efa6a8815f95",
+      "model_result_id": "shared-local-model-result-73300d3f37ea949a",
+      "parsed_candidate": {
+        "contrary_or_uncertainty_evidence": [
+          {
+            "note": "Tracks operator's current uncertainties",
+            "path": "operator:campaign_uncertainty"
+          }
+        ],
+        "estimated_time_and_model_call_budget": "3 cycles; 3 calls",
+        "expected_artifact_or_outcome": "Operator decision packet with synthesized insights",
+        "expected_cycle_count": "3",
+        "experiment_id": "exp-g",
+        "failure_criteria": "Insights are ambiguous or not actionable",
+        "local_evidence_available": [
+          {
+            "note": "Live run closure audit",
+            "path": "./.tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/marathon_closure_audit.json"
+          }
+        ],
+        "practical_objective": "Generate a report for operator on UI campaign value and uncertainties",
+        "related_operator_or_project_goal": "Deliver actionable insights for UI campaign optimization",
+        "required_authority": "operator_authorized_goal_oriented_ui_experiment_campaign_1",
+        "required_bounded_actions": [
+          "Generate operator decision packet",
+          "Summarize findings"
+        ],
+        "required_cognitive_operations": [
+          "Synthesize live episode data",
+          "Analyze UI campaign artifacts"
+        ],
+        "restart_relevance": "N/A",
+        "risk_and_scope": "Low, focuses on internal data",
+        "success_criteria": "Operator receives clear and actionable insights",
+        "title": "Summarize UI campaign value and remaining uncertainty",
+        "why_it_is_useful": "Provides clear insights for decision-making"
+      },
+      "parsed_shape": [
+        "experiment_id",
+        "title",
+        "practical_objective",
+        "why_it_is_useful",
+        "related_operator_or_project_goal",
+        "expected_artifact_or_outcome",
+        "local_evidence_available",
+        "contrary_or_uncertainty_evidence",
+        "required_cognitive_operations",
+        "required_bounded_actions",
+        "required_authority",
+        "expected_cycle_count",
+        "restart_relevance",
+        "success_criteria",
+        "failure_criteria",
+        "risk_and_scope",
+        "estimated_time_and_model_call_budget"
+      ],
+      "prompt_digest": "e9cf5e5d2ffd94fdcbb40427e376bceed208b5f159cf2701c01d0e8e826b0619"
+    }
+  ],
+  "typed_operation": true
+}

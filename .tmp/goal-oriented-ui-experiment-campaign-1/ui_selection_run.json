@@ -1,0 +1,70 @@
+{
+  "snapshots": [
+    {
+      "event": "selected_experiments_visible",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=6; selected=4; active=exp-a",
+      "selected": [
+        "exp-a"
+      ],
+      "tree_items": [
+        {
+          "iid": "exp-a",
+          "text": "Optimize Active Cognitive Loop",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-b",
+          "text": "Test Model Execution Isolation",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-c",
+          "text": "Audit Live Run Operation",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-d",
+          "text": "Evaluate Live Run Closure Audit",
+          "values": [
+            "yes",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-e",
+          "text": "Analyze Active Cognitive Architecture",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-f",
+          "text": "Explore Cognitive Operations",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        }
+      ],
+      "detail": "{\n  \"proposal\": {\n    \"contrary_or_uncertainty_evidence\": [\n      {\n        \"note\": \"UI route and usefulness are not yet proven for this candidate.\",\n        \"path\": \"operator:campaign_uncertainty\"\n      }\n    ],\n    \"estimated_time_and_model_call_budget\": \"3 cycles; 3 calls\",\n    \"expected_artifact_or_outcome\": \"Optimized cognitive loop configuration\",\n    \"expected_cycle_count\": 3,\n    \"experiment_id\": \"exp-a\",\n    \"failure_criteria\": \"No useful artifact or no visible UI state.\",\n    \"local_evidence_available\": [\n      {\n        \"note\": \"Contains current loop implementation\",\n        \"path\": \"orchestration/runtime/active_cognitive_loop.py\"\n      }\n    ],\n    \"practical_objective\": \"Improve cognitive loop efficiency\",\n    \"related_operator_or_project_goal\": \"Increase system throughput\",\n    \"required_authority\": \"operator_authorized_goal_oriented_ui_experiment_campaign_1\",\n    \"required_bounded_actions\": [\n      \"inspect local evidence\",\n      \"run bounded cognition\",\n      \"write useful artifact\"\n    ],\n    \"required_cognitive_operations\": [\n      \"formulate_hypothesis\",\n      \"compare_evidence\",\n      \"summarize_learning\"\n    ],\n    \"restart_relevance\": \"Can contribute to campaign restart proof if selected.\",\n    \"risk_and_scope\": \"Local, bounded, non-protected campaign evidence only.\",\n    \"success_criteria\": \"Produces useful artifact grounded in local evidence.\",\n    \"title\": \"Optimize Active Cognitive Loop\",\n    \"validation\": {\n      \"accepted\": true,\n      \"campaign_enriched_fields\": [\n        \"contrary_or_uncertainty_evidence\",\n        \"required_cognitive_operations\",\n        \"required_bounded_actions\",\n        \"required_authority\",\n        \"expected_cycle_count\",\n        \"restart_relevance\",\n        \"success_criteria\",\n        \"failure_criteria\",\n        \"risk_and_scope\",\n        \"estimated_time_and_model_call_budget\"\n      ],\n      \"criteria\": \"local, bounded, useful, non-protected\",\n      \"model_proposed_fields\": [\n        \"expected_artifact_or_outcome\",\n        \"experiment_id\",\n        \"local_evidence_available\",\n        \"practical_objective\",\n        \"related_operator_or_project_goal\",\n        \"title\",\n        \"why_it_is_useful\"\n      ]\n    },\n    \"why_it_is_useful\": \"Enhances overall system performance\"\n  },\n  \"state\": \"not_started\"\n}",
+      "tab": "Goals"
+    }
+  ],
+  "candidate_count": 6
+}

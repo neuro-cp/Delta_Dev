@@ -1,0 +1,20 @@
+[
+  {
+    "content": ".tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/marathon_closure_audit.json",
+    "evidence_id": "exp-d_evidence_1",
+    "exists": true,
+    "kind": "local_evidence",
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "source": "local_repo",
+    "summary": "Contains closure audit data"
+  },
+  {
+    "content": "operator:campaign_uncertainty",
+    "evidence_id": "exp-d_contrary_1",
+    "exists": true,
+    "kind": "local_evidence",
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "source": "local_uncertainty",
+    "summary": "Contrary evidence: UI route and usefulness are not yet proven for this candidate."
+  }
+]

@@ -1,0 +1,60 @@
+{
+  "adapter_identity": "goal_oriented_ui_campaign.ProviderManager.exact_prompt",
+  "availability_state": "available",
+  "execution_completed_at": "2026-07-27T01:58:21+00:00",
+  "execution_started_at": "2026-07-27T01:57:46+00:00",
+  "failure_classification": "",
+  "failure_detail": "",
+  "latency_seconds": 35.7737,
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "provenance": {
+    "execution_claim_id": "shared-local-model-execution-claim-e4342942e3366aea",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    }
+  },
+  "request_id": "shared-local-model-request-d5b9f4cfb1c31486",
+  "response_digest": "b1d25653b883e0e66c96f45b568027e535bfd30ecc9613ad51a261ef7b8b31b4",
+  "response_reference": "{\"assumptions\": [\"DELTA.py is the primary codebase for UI operations\"], \"contrary_evidence_considered\": [\"User feedback on current UI performance\"], \"evidence_refs\": [\"orchestration/runtime/active_cognitive_loop.py\"], \"interpretation\": \"Candidate 3: Optimize UI rendering logic for faster updates. Useful for improving user experience. Evidence from DELTA.py. Contrary evidence from user feedback.\" , \"next_evidence_need\": \"User feedback logs\", \"next_focus_proposal\": \"Refine rendering logic\", \"operation_result_type\": \"UI performance metrics\", \"recommended_action\": \"Update DELTA.py with optimized logic\", \"recommended_state_transition\": \"From initial to optimized UI state\", \"uncertainty\": \"User expectations on performance improvements\"}",
+  "result_digest": "a7eeefb7c1170ee2866b4c467da92924cda5dd5ed9e8b5a130c4e82b5cd30942",
+  "result_id": "shared-local-model-result-c7f8e1c6eddcca6c",
+  "terminal_state": "completed"
+}

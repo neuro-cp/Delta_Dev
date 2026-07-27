@@ -1,0 +1,22 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Model execution does not interact with campaign state"
+    ],
+    "expected_observations": [
+      "Model execution should not modify or access campaign state"
+    ],
+    "hypothesis_statement": "Model execution is isolated from campaign state.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "Model execution lane isolation",
+    "supporting_evidence_refs": [
+      "exp-b_evidence_1"
+    ],
+    "uncertainty": "How will this impact model training and validation?"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"hypothesis_statement\":\"Model execution is isolated from campaign state.\",\"scope\":\"Model execution lane isolation\",\"supporting_evidence_refs\":[\"exp-b_evidence_1\"],\"assumptions\":[\"Model execution does not interact with campaign state\"],\"expected_observations\":[\"Model execution should not modify or access campaign state\"],\"uncertainty\":\"How will this impact model training and validation?\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+  "raw_response_digest": "5f441e3925c89f0dd11e3b2e43a7e96752a88434e217d31105fd5c80ca376dba",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

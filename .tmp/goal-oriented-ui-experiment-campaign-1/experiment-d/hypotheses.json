@@ -1,0 +1,62 @@
+[
+  {
+    "assumptions": [
+      "Audit process followed established procedures",
+      "Data integrity maintained during audit"
+    ],
+    "confidence_state": "weakened",
+    "created_at": "2026-07-27T01:42:56+00:00",
+    "disposition": "needs_challenge",
+    "evidence_against": [],
+    "evidence_for": [
+      "exp-d_evidence_1"
+    ],
+    "expected_observations": [
+      "local evidence should support a bounded useful step"
+    ],
+    "hypothesis_id": "hypothesis-4f95683e2a62612c",
+    "lifecycle_state": "revised",
+    "originating_focus_id": "focus-22fb591d46428403",
+    "originating_goal_id": "active-cognitive-goal-98c1b7e994b7b81f",
+    "provenance": [
+      "cognitive-operation-c3a4b497e1adad96"
+    ],
+    "revised_at": "2026-07-27T01:43:29+00:00",
+    "revision_parent_id": "",
+    "revision_reason": "contrary evidence or model challenge required revision",
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "scope": "Resolve discrepancy for goal: Check closure audit validity",
+    "statement": "The closure audit report is accurate and valid."
+  },
+  {
+    "assumptions": [
+      "Audit process followed established procedures",
+      "Data integrity maintained during audit"
+    ],
+    "confidence_state": "contested",
+    "created_at": "2026-07-27T01:43:29+00:00",
+    "disposition": "revised_from_evidence",
+    "evidence_against": [
+      "exp-d_contrary_1"
+    ],
+    "evidence_for": [
+      "exp-d_evidence_1"
+    ],
+    "expected_observations": [
+      "revised smaller step should match local evidence"
+    ],
+    "hypothesis_id": "hypothesis-76a17eaa63b8e97a",
+    "lifecycle_state": "active",
+    "originating_focus_id": "focus-22fb591d46428403",
+    "originating_goal_id": "active-cognitive-goal-98c1b7e994b7b81f",
+    "provenance": [
+      "cognitive-operation-d39a4c10fb4e6d17"
+    ],
+    "revised_at": "2026-07-27T01:43:29+00:00",
+    "revision_parent_id": "hypothesis-4f95683e2a62612c",
+    "revision_reason": "The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.",
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "scope": "Resolve discrepancy for goal: Check closure audit validity",
+    "statement": "The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate."
+  }
+]

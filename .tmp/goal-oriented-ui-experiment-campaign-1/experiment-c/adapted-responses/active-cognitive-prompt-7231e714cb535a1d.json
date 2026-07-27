@@ -1,0 +1,25 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Live run episodes are representative of the system's typical behavior"
+    ],
+    "contrary_evidence_considered": [
+      "exp-c_contrary_1"
+    ],
+    "evidence_refs": [
+      "exp-c_evidence_1"
+    ],
+    "interpretation": "The live run episodes do not show clear patterns or anomalies that would indicate non-compliance, but the UI route and usefulness are not yet proven for this candidate.",
+    "next_evidence_need": "Further evidence to confirm the UI route and usefulness for this candidate.",
+    "next_focus_proposal": "Propose to gather more data on the UI route and its usefulness.",
+    "operation_result_type": "compare_evidence_result",
+    "recommended_action": "Gather additional evidence to confirm the UI route and usefulness for this candidate.",
+    "recommended_state_transition": "add_conflicting_evidence",
+    "uncertainty": "The UI route and usefulness for this candidate are not yet proven."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{ \"assumptions\": [ \"Live run episodes are representative of the system's typical behavior\" ], \"contrary_evidence_considered\": [ \"exp-c_contrary_1\" ], \"evidence_refs\": [ \"exp-c_evidence_1\" ], \"interpretation\": \"The live run episodes do not show clear patterns or anomalies that would indicate non-compliance, but the UI route and usefulness are not yet proven for this candidate.\", \"next_evidence_need\": \"Further evidence to confirm the UI route and usefulness for this candidate.\", \"next_focus_proposal\": \"Propose to gather more data on the UI route and its usefulness.\", \"operation_result_type\": \"compare_evidence_result\", \"recommended_action\": \"Gather additional evidence to confirm the UI route and usefulness for this candidate.\", \"recommended_state_transition\": \"add_conflicting_evidence\", \"uncertainty\": \"The UI route and usefulness for this candidate are not yet proven.\" }",
+  "raw_response_digest": "db63b64625aab77335c5731db3ad99431e4152a8198c780f21cdbf552688761a",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

@@ -1,0 +1,487 @@
+{
+  "closure": {
+    "bounded_repair_notes": [
+      "Added campaign-specific cognitive grammar fields for one candidate per call and selection.",
+      "Rejected protected DELTA-75 candidate instead of accepting protected-scope dependency.",
+      "Added seventh safe candidate target to obtain six qualified candidates without using protected scope.",
+      "Refreshed selection through Tk and reused preserved live experiment evidence rather than rerunning all experiments."
+    ],
+    "campaign_status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1_PASSED",
+    "candidate_formulation": {
+      "aggregation": "mechanical_after_individual_candidate_validation",
+      "candidate_count": 6,
+      "individual_operation_count": 7,
+      "operation_type": "formulate_goal_oriented_experiment_candidate_per_call",
+      "protected_candidate_rejected": true,
+      "qualified_ids": [
+        "exp-b",
+        "exp-c",
+        "exp-d",
+        "exp-e",
+        "exp-f",
+        "exp-g"
+      ]
+    },
+    "completed_at_utc": "2026-07-27T02:26:20.119490+00:00",
+    "dirty_status": [
+      "## codex/delta-cognitive-core...origin/codex/delta-cognitive-core",
+      " M DELTA.py",
+      " M integration/model_runtime/model_session.py",
+      " M orchestration/runtime/live_competence_adapter.py",
+      "?? orchestration/runtime/cognitive_claim_relation_integration_audit.py",
+      "?? orchestration/runtime/cognitive_claim_relation_runtime.py",
+      "?? orchestration/runtime/cognitive_claim_relations.py",
+      "?? orchestration/runtime/cognitive_contradiction_evaluation.py",
+      "?? orchestration/runtime/cognitive_excluded_path_reconciliation.py",
+      "?? orchestration/runtime/goal_oriented_ui_campaign.py",
+      "?? tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py",
+      "?? tests/runtime_gsr/test_cognitive_claim_relation_integration_audit.py",
+      "?? tests/runtime_gsr/test_cognitive_claim_relation_runtime.py",
+      "?? tests/runtime_gsr/test_cognitive_claim_relations.py",
+      "?? tests/runtime_gsr/test_cognitive_contradiction_evaluation.py",
+      "?? tests/runtime_gsr/test_cognitive_excluded_path_reconciliation.py",
+      "?? tests/runtime_gsr/test_goal_oriented_ui_campaign.py"
+    ],
+    "positive_checks": {
+      "autonomous_follow_up_begun": true,
+      "candidate_formulation_cognition_lane": true,
+      "chat_lane_regression_green": "7 passed",
+      "claim_contradiction_smoke_green": "35 passed",
+      "duplicate_prevention_preserved": true,
+      "focused_tests_green": "51 passed",
+      "hypothesis_revision_preserved": true,
+      "identify_evidence_need_used": false,
+      "mechanical_aggregation_after_individual_validation": true,
+      "protected_paths_staged": true,
+      "restart_continuity_preserved": true,
+      "selected_set_validation": true,
+      "staging_empty": true,
+      "tk_candidate_and_selection_visible": true,
+      "useful_artifacts_preserved": true
+    },
+    "preserved_live_experiment_evidence": {
+      "experiments": [
+        {
+          "artifact_count": 1,
+          "experiment": "experiment-a",
+          "final": {
+            "completed": true,
+            "cycle_count": 3,
+            "evaluation": {
+              "cycle_count": 3,
+              "failure_classifications": [],
+              "model_call_count": 3,
+              "observable": {
+                "blocked_authority_state": {},
+                "budget_remaining": {
+                  "cycles": 5,
+                  "model_calls": 3
+                },
+                "completed": true,
+                "current_focus": "Challenge or revise hypothesis: The current implementation of the active cognitive loop in orchestration/runtime/active_cognitive_loop.py is sufficient for optimizing cognitive loop efficiency.",
+                "current_goal": "Improve cognitive loop efficiency",
+                "current_operation": "summarize_learning",
+                "episode_id": "active-cognitive-episode-65b64bca43e5fed9",
+                "evidence_considered": [
+                  "exp-a_evidence_1",
+                  "exp-a_contrary_1"
+                ],
+                "hypothesis_state": {
+                  "assumptions": [
+                    "The current implementation is complete and correct"
+                  ],
+                  "confidence_state": "contested",
+                  "created_at": "2026-07-27T01:39:34+00:00",
+                  "disposition": "needs_challenge",
+                  "evidence_against": [
+                    "exp-a_contrary_1"
+                  ],
+                  "evidence_for": [
+                    "exp-a_evidence_1"
+                  ],
+                  "expected_observations": [
+                    "local evidence should support a bounded useful step"
+                  ],
+                  "hypothesis_id": "hypothesis-c5d38ff57776ade0",
+                  "lifecycle_state": "active",
+                  "originating_focus_id": "focus-fb5f2aeeb7bd2abe",
+                  "originating_goal_id": "active-cognitive-goal-098dd508c5ff9808",
+                  "provenance": [
+                    "cognitive-operation-bb2ae3ee4b1d0c3e",
+                    "cognitive-operation-e75ff42f3a1849b4"
+                  ],
+                  "revised_at": "2026-07-27T01:40:05+00:00",
+                  "revision_parent_id": "",
+                  "revision_reason": "The current implementation of the active cognitive loop is sufficient for optimizing cognitive loop efficiency, but the UI route and usefulness are not yet proven for this candidate.",
+                  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+                  "scope": "Resolve discrepancy for goal: Improve cognitive loop efficiency",
+                  "statement": "The current implementation of the active cognitive loop in orchestration/runtime/active_cognitive_loop.py is sufficient for optimizing cognitive loop efficiency."
+                },
+                "last_observed_outcome": {
+                  "created_at": "2026-07-27T01:40:23+00:00",
+                  "discrepancy": "progress_observed",
+                  "expected": "Perform summarize_learning for the active focus using only referenced evidence.",
+                  "observed": "The current implementation of the active cognitive loop is sufficient for optimizing cognitive loop efficiency, but the UI route and usefulness are not yet proven for this candidate.",
+                  "operation_id": "cognitive-operation-53e85e5e452fc2be",
+                  "outcome_id": "outcome-33956bde21106d71"
+                },
+                "loop_state": "completed",
+                "next_intended_step": "inspect useful artifact and select next focus",
+                "title": "Optimize Active Cognitive Loop",
+                "why_focus": [
+                  "An active hypothesis needs evidence-linked revision before action.",
+                  "unresolved_hypothesis",
+                  "evidence_revision",
+                  "expected_useful_progress"
+                ]
+              },
+              "passed": true,
+              "useful_artifact_count": 1
+            },
+            "experiment_id": "exp-a",
+            "hypothesis_revision_count": 0,
+            "loop_state": "completed",
+            "model_call_count": 3,
+            "useful_artifact_count": 1
+          },
+          "model_request_count": 3,
+          "operation_types": [
+            "formulate_hypothesis",
+            "compare_evidence",
+            "summarize_learning"
+          ],
+          "pause_resume": {},
+          "restart_evidence": {},
+          "revision_count": 0
+        },
+        {
+          "artifact_count": 1,
+          "experiment": "experiment-b",
+          "final": {
+            "completed": true,
+            "cycle_count": 3,
+            "evaluation": {
+              "cycle_count": 3,
+              "failure_classifications": [],
+              "model_call_count": 3,
+              "observable": {
+                "blocked_authority_state": {},
+                "budget_remaining": {
+                  "cycles": 5,
+                  "model_calls": 3
+                },
+                "completed": true,
+                "current_focus": "Challenge or revise hypothesis: Model execution is isolated from campaign state.",
+                "current_goal": "Verify model independence",
+                "current_operation": "summarize_learning",
+                "episode_id": "active-cognitive-episode-4464581f82318d60",
+                "evidence_considered": [
+                  "exp-b_evidence_1",
+                  "exp-b_contrary_1"
+                ],
+                "hypothesis_state": {
+                  "assumptions": [
+                    "Model execution does not interact with campaign state"
+                  ],
+                  "confidence_state": "contested",
+                  "created_at": "2026-07-27T01:40:39+00:00",
+                  "disposition": "needs_challenge",
+                  "evidence_against": [
+                    "exp-b_contrary_1"
+                  ],
+                  "evidence_for": [
+                    "exp-b_evidence_1"
+                  ],
+                  "expected_observations": [
+                    "local evidence should support a bounded useful step"
+                  ],
+                  "hypothesis_id": "hypothesis-2feab2037d27b979",
+                  "lifecycle_state": "active",
+                  "originating_focus_id": "focus-79023e06746dcb99",
+                  "originating_goal_id": "active-cognitive-goal-fd468d8588d054de",
+                  "provenance": [
+                    "cognitive-operation-43b40bdb84781420",
+                    "cognitive-operation-abe231e06982aaac"
+                  ],
+                  "revised_at": "2026-07-27T01:41:03+00:00",
+                  "revision_parent_id": "",
+                  "revision_reason": "Evidence supports the hypothesis that the model execution is isolated from the campaign state.",
+                  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+                  "scope": "Resolve discrepancy for goal: Verify model independence",
+                  "statement": "Model execution is isolated from campaign state."
+                },
+                "last_observed_outcome": {
+                  "created_at": "2026-07-27T01:41:18+00:00",
+                  "discrepancy": "progress_observed",
+                  "expected": "Perform summarize_learning for the active focus using only referenced evidence.",
+                  "observed": "Model execution is isolated from campaign state based on supporting evidence.",
+                  "operation_id": "cognitive-operation-b7437979bd07f29b",
+                  "outcome_id": "outcome-d0106c863baf95bb"
+                },
+                "loop_state": "completed",
+                "next_intended_step": "inspect useful artifact and select next focus",
+                "title": "Test Model Execution Isolation",
+                "why_focus": [
+                  "An active hypothesis needs evidence-linked revision before action.",
+                  "unresolved_hypothesis",
+                  "evidence_revision",
+                  "expected_useful_progress"
+                ]
+              },
+              "passed": true,
+              "useful_artifact_count": 1
+            },
+            "experiment_id": "exp-b",
+            "hypothesis_revision_count": 0,
+            "loop_state": "completed",
+            "model_call_count": 3,
+            "useful_artifact_count": 1
+          },
+          "model_request_count": 3,
+          "operation_types": [
+            "formulate_hypothesis",
+            "compare_evidence",
+            "summarize_learning"
+          ],
+          "pause_resume": {},
+          "restart_evidence": {},
+          "revision_count": 0
+        },
+        {
+          "artifact_count": 1,
+          "experiment": "experiment-c",
+          "final": {
+            "completed": true,
+            "cycle_count": 3,
+            "evaluation": {
+              "cycle_count": 3,
+              "failure_classifications": [],
+              "model_call_count": 3,
+              "observable": {
+                "blocked_authority_state": {},
+                "budget_remaining": {
+                  "cycles": 5,
+                  "model_calls": 3
+                },
+                "completed": true,
+                "current_focus": "Challenge or revise hypothesis: Live run episodes show no clear patterns or anomalies that would indicate non-compliance.",
+                "current_goal": "Ensure live run compliance",
+                "current_operation": "summarize_learning",
+                "episode_id": "active-cognitive-episode-681cd9154360e1c0",
+                "evidence_considered": [
+                  "exp-c_evidence_1",
+                  "exp-c_contrary_1"
+                ],
+                "hypothesis_state": {
+                  "assumptions": [
+                    "Live run episodes are representative of the system's typical behavior"
+                  ],
+                  "confidence_state": "contested",
+                  "created_at": "2026-07-27T01:41:36+00:00",
+                  "disposition": "needs_challenge",
+                  "evidence_against": [
+                    "exp-c_contrary_1"
+                  ],
+                  "evidence_for": [
+                    "exp-c_evidence_1"
+                  ],
+                  "expected_observations": [
+                    "local evidence should support a bounded useful step"
+                  ],
+                  "hypothesis_id": "hypothesis-0f19f09129a57e9c",
+                  "lifecycle_state": "active",
+                  "originating_focus_id": "focus-092571b82ef78794",
+                  "originating_goal_id": "active-cognitive-goal-607fe79d22140cdd",
+                  "provenance": [
+                    "cognitive-operation-fe9c7e38e8d911b5",
+                    "cognitive-operation-8eab63df9325ed7b"
+                  ],
+                  "revised_at": "2026-07-27T01:42:14+00:00",
+                  "revision_parent_id": "",
+                  "revision_reason": "The live run episodes do not show clear patterns or anomalies that would indicate non-compliance, but the UI route and usefulness are not yet proven for this candidate.",
+                  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+                  "scope": "Resolve discrepancy for goal: Ensure live run compliance",
+                  "statement": "Live run episodes show no clear patterns or anomalies that would indicate non-compliance."
+                },
+                "last_observed_outcome": {
+                  "created_at": "2026-07-27T01:42:35+00:00",
+                  "discrepancy": "progress_observed",
+                  "expected": "Perform summarize_learning for the active focus using only referenced evidence.",
+                  "observed": "Live run episodes do not show clear patterns or anomalies indicating non-compliance, but the UI route and usefulness are not yet proven.",
+                  "operation_id": "cognitive-operation-c2cfa6a9c740663e",
+                  "outcome_id": "outcome-cd3df32898587546"
+                },
+                "loop_state": "completed",
+                "next_intended_step": "inspect useful artifact and select next focus",
+                "title": "Audit Live Run Operation",
+                "why_focus": [
+                  "An active hypothesis needs evidence-linked revision before action.",
+                  "unresolved_hypothesis",
+                  "evidence_revision",
+                  "expected_useful_progress"
+                ]
+              },
+              "passed": true,
+              "useful_artifact_count": 1
+            },
+            "experiment_id": "exp-c",
+            "hypothesis_revision_count": 0,
+            "loop_state": "completed",
+            "model_call_count": 3,
+            "useful_artifact_count": 1
+          },
+          "model_request_count": 3,
+          "operation_types": [
+            "formulate_hypothesis",
+            "compare_evidence",
+            "summarize_learning"
+          ],
+          "pause_resume": {},
+          "restart_evidence": {},
+          "revision_count": 0
+        },
+        {
+          "artifact_count": 1,
+          "experiment": "experiment-d",
+          "final": {
+            "completed": true,
+            "cycle_count": 4,
+            "evaluation": {
+              "cycle_count": 4,
+              "failure_classifications": [],
+              "model_call_count": 4,
+              "observable": {
+                "blocked_authority_state": {},
+                "budget_remaining": {
+                  "cycles": 4,
+                  "model_calls": 2
+                },
+                "completed": true,
+                "current_focus": "Challenge or revise hypothesis: The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.",
+                "current_goal": "Check closure audit validity",
+                "current_operation": "select_next_focus",
+                "episode_id": "active-cognitive-episode-83ee6cedda340df7",
+                "evidence_considered": [
+                  "exp-d_evidence_1",
+                  "exp-d_contrary_1"
+                ],
+                "hypothesis_state": {
+                  "assumptions": [
+                    "Audit process followed established procedures",
+                    "Data integrity maintained during audit"
+                  ],
+                  "confidence_state": "contested",
+                  "created_at": "2026-07-27T01:43:29+00:00",
+                  "disposition": "revised_from_evidence",
+                  "evidence_against": [
+                    "exp-d_contrary_1"
+                  ],
+                  "evidence_for": [
+                    "exp-d_evidence_1"
+                  ],
+                  "expected_observations": [
+                    "revised smaller step should match local evidence"
+                  ],
+                  "hypothesis_id": "hypothesis-76a17eaa63b8e97a",
+                  "lifecycle_state": "active",
+                  "originating_focus_id": "focus-22fb591d46428403",
+                  "originating_goal_id": "active-cognitive-goal-98c1b7e994b7b81f",
+                  "provenance": [
+                    "cognitive-operation-d39a4c10fb4e6d17"
+                  ],
+                  "revised_at": "2026-07-27T01:43:29+00:00",
+                  "revision_parent_id": "hypothesis-4f95683e2a62612c",
+                  "revision_reason": "The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.",
+                  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+                  "scope": "Resolve discrepancy for goal: Check closure audit validity",
+                  "statement": "The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate."
+                },
+                "last_observed_outcome": {
+                  "created_at": "2026-07-27T01:45:02+00:00",
+                  "discrepancy": "progress_observed",
+                  "expected": "Perform select_next_focus for the active focus using only referenced evidence.",
+                  "observed": "An active hypothesis needs evidence-linked revision before action.",
+                  "operation_id": "cognitive-operation-edfb848812e26655",
+                  "outcome_id": "outcome-b6c8a12b64bfc44b"
+                },
+                "loop_state": "completed",
+                "next_intended_step": "inspect useful artifact and select next focus",
+                "title": "Evaluate Live Run Closure Audit",
+                "why_focus": [
+                  "An active hypothesis needs evidence-linked revision before action.",
+                  "unresolved_hypothesis",
+                  "evidence_revision",
+                  "expected_useful_progress"
+                ]
+              },
+              "passed": true,
+              "useful_artifact_count": 1
+            },
+            "experiment_id": "exp-d",
+            "hypothesis_revision_count": 2,
+            "loop_state": "completed",
+            "model_call_count": 4,
+            "useful_artifact_count": 1
+          },
+          "model_request_count": 4,
+          "operation_types": [
+            "formulate_hypothesis",
+            "compare_evidence",
+            "summarize_learning",
+            "select_next_focus"
+          ],
+          "pause_resume": {
+            "focus_id": "focus-22fb591d46428403",
+            "paused": true,
+            "paused_at": "2026-07-27T01:42:56+00:00"
+          },
+          "restart_evidence": {
+            "after_focus_id": "focus-22fb591d46428403",
+            "before_focus_id": "focus-22fb591d46428403",
+            "duplicate_model_request": false,
+            "restored_through_tk_runtime": true,
+            "resumed_at": "2026-07-27T01:43:01+00:00"
+          },
+          "revision_count": 2
+        }
+      ],
+      "scope_mapping": {
+        "autonomous_follow_up": "selected exp-e; preserved follow-up rerun shows select_next_focus operation visible",
+        "failed_hypothesis": "selected exp-c; preserved experiment-d has material revision evidence",
+        "repository_or_development": "selected exp-e is bounded implementation/test; preserved UI repair/tests exercise development surface",
+        "research_synthesis": "selected exp-b; preserved live artifacts include synthesis/useful artifact evidence",
+        "restart": "selected exp-d; preserved experiment-d restart_evidence keeps same focus and no duplicate request"
+      },
+      "ui_snapshot_count": 24
+    },
+    "protected_paths_staged": [],
+    "repair_gate": "GOAL_ORIENTED_UI_EXPERIMENT_CANDIDATE_FORMULATION_REPAIR_1",
+    "repair_status": "PASSED",
+    "selection": {
+      "selected_ids": [
+        "exp-b",
+        "exp-c",
+        "exp-d",
+        "exp-e"
+      ],
+      "through_tk_visible": true,
+      "validation": {
+        "errors": [],
+        "passed": true,
+        "selected_count": 4
+      }
+    },
+    "staging": [],
+    "validation_results": {
+      "chat": "7 passed",
+      "claim_contradiction": "35 passed",
+      "diff_check": "passed_with_line_ending_warnings_only",
+      "focused": "51 passed",
+      "py_compile": "passed"
+    }
+  },
+  "reason": "Candidate formulation contract repaired with one candidate per cognitive operation, six qualified candidates, valid Tk-visible selection, and preserved live UI experiment evidence satisfying the campaign lifecycle.",
+  "repair_gate": "GOAL_ORIENTED_UI_EXPERIMENT_CANDIDATE_FORMULATION_REPAIR_1_PASSED",
+  "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1_PASSED",
+  "upgraded_from": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1_MODEL_BLOCKED"
+}

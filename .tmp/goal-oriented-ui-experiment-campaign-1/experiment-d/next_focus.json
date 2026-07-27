@@ -1,0 +1,59 @@
+{
+  "active_focus_id": "focus-0622c190a9b627a9",
+  "begun_through_tk_ui": true,
+  "candidates": [
+    {
+      "authority_need": "none_for_local_analysis",
+      "blocking_state": "",
+      "capability_need": "local_model_semantic_operation",
+      "creation_sequence": 4,
+      "description": "Resolve discrepancy for goal: Check closure audit validity",
+      "evidence_need": "local evidence supporting or challenging the goal",
+      "evidence_refs": [
+        "exp-d_evidence_1",
+        "exp-d_contrary_1"
+      ],
+      "expected_value": "useful_progress",
+      "focus_id": "focus-ef43af3bc5520a9d",
+      "related_goal_ids": [
+        "active-cognitive-goal-98c1b7e994b7b81f"
+      ],
+      "salience_categories": [
+        "operator_priority",
+        "goal_discrepancy",
+        "expected_useful_progress"
+      ],
+      "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "goal_discrepancy",
+      "urgency": "medium"
+    },
+    {
+      "authority_need": "none_for_local_analysis",
+      "blocking_state": "",
+      "capability_need": "semantic comparison",
+      "creation_sequence": 4,
+      "description": "Challenge or revise hypothesis: The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.",
+      "evidence_need": "contrary and supporting evidence",
+      "evidence_refs": [
+        "exp-d_evidence_1",
+        "exp-d_contrary_1"
+      ],
+      "expected_value": "belief_revision",
+      "focus_id": "focus-0622c190a9b627a9",
+      "related_goal_ids": [
+        "active-cognitive-goal-98c1b7e994b7b81f"
+      ],
+      "salience_categories": [
+        "unresolved_hypothesis",
+        "evidence_revision",
+        "expected_useful_progress"
+      ],
+      "salience_explanation": "An active hypothesis needs evidence-linked revision before action.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "hypothesis_revision",
+      "urgency": "high"
+    }
+  ],
+  "operation": "select_next_focus"
+}

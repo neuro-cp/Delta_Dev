@@ -1,0 +1,61 @@
+{
+  "snapshots": [
+    {
+      "event": "candidate_experiments_visible_targeted_grammar_repair",
+      "status": "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1: candidates=5; selected=0; active=exp-b",
+      "selected": [
+        "exp-b"
+      ],
+      "tree_items": [
+        {
+          "iid": "exp-b",
+          "text": "Synthesize live episode artifacts",
+          "values": [
+            "",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-c",
+          "text": "Validate UI impact through user interaction metrics",
+          "values": [
+            "",
+            "3",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-d",
+          "text": "Preserve focus and avoid model call duplication",
+          "values": [
+            "",
+            "4",
+            "completed"
+          ]
+        },
+        {
+          "iid": "exp-e",
+          "text": "Select next focus autonomously",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        },
+        {
+          "iid": "exp-f",
+          "text": "Verify chat conversational flow with structured cognition",
+          "values": [
+            "",
+            "0",
+            "candidate"
+          ]
+        }
+      ],
+      "detail": "{\n  \"artifact\": {\n    \"artifact_id\": \"useful-artifact-d0106c863baf95bb\",\n    \"artifact_type\": \"cognitive_episode_summary\",\n    \"evidence_refs\": [\n      \"exp-b_evidence_1\"\n    ],\n    \"summary\": \"Model execution is isolated from campaign state based on supporting evidence.\"\n  },\n  \"budget\": {\n    \"cycles\": 5,\n    \"model_calls\": 3\n  },\n  \"completed\": true,\n  \"evidence\": [\n    \"exp-b_evidence_1\",\n    \"exp-b_contrary_1\"\n  ],\n  \"failures\": [],\n  \"focus\": \"Challenge or revise hypothesis: Model execution is isolated from campaign state.\",\n  \"goal\": \"Verify model independence\",\n  \"hypothesis\": {\n    \"assumptions\": [\n      \"Model execution does not interact with campaign state\"\n    ],\n    \"confidence_state\": \"contested\",\n    \"created_at\": \"2026-07-27T01:40:39+00:00\",\n    \"disposition\": \"needs_challenge\",\n    \"evidence_against\": [\n      \"exp-b_contrary_1\"\n    ],\n    \"evidence_for\": [\n      \"exp-b_evidence_1\"\n    ],\n    \"expected_observations\": [\n      \"local evidence should support a bounded useful step\"\n    ],\n    \"hypothesis_id\": \"hypothesis-2feab2037d27b979\",\n    \"lifecycle_state\": \"active\",\n    \"originating_focus_id\": \"focus-79023e06746dcb99\",\n    \"originating_goal_id\": \"active-cognitive-goal-fd468d8588d054de\",\n    \"provenance\": [\n      \"cognitive-operation-43b40bdb84781420\",\n      \"cognitive-operation-abe231e06982aaac\"\n    ],\n    \"revised_at\": \"2026-07-27T01:41:03+00:00\",\n    \"revision_parent_id\": \"\",\n    \"revision_reason\": \"Evidence supports the hypothesis that the model execution is isolated from the campaign state.\",\n    \"schema_version\": \"active_cognitive_architecture_marathon_1_v1\",\n    \"scope\": \"Resolve discrepancy for goal: Verify model independence\",\n    \"statement\": \"Model execution is isolated from campaign state.\"\n  },\n  \"operation\": \"summarize_learning\",\n  \"outcome\": {\n    \"created_at\": \"2026-07-27T01:41:18+00:00\",\n    \"discrepancy\": \"progress_observed\",\n    \"expected\": \"Perform summarize_learning for the active focus using only referenced evidence.\",\n    \"observed\": \"Model execution is isolated from campaign state based on supporting evidence.\",\n    \"operation_id\": \"cognitive-operation-b7437979bd07f29b\",\n    \"outcome_id\": \"outcome-d0106c863baf95bb\"\n  },\n  \"state\": \"completed\",\n  \"title\": \"Test Model Execution Isolation\"\n}",
+      "tab": "Goals"
+    }
+  ],
+  "candidate_count": 5
+}

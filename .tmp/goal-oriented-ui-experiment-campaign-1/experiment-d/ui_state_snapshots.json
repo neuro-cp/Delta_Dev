@@ -1,0 +1,482 @@
+[
+  {
+    "blocked_authority_state": {},
+    "budget_remaining": {
+      "cycles": 8,
+      "model_calls": 6
+    },
+    "captured_at": "2026-07-27T01:42:35+00:00",
+    "completed": false,
+    "current_focus": "",
+    "current_goal": "Check closure audit validity",
+    "current_operation": "",
+    "episode_id": "active-cognitive-episode-83ee6cedda340df7",
+    "evidence_considered": [
+      "exp-d_evidence_1",
+      "exp-d_contrary_1"
+    ],
+    "hypothesis_state": {},
+    "last_observed_outcome": {},
+    "loop_state": "idle",
+    "next_intended_step": "formulate a first hypothesis",
+    "title": "Evaluate Live Run Closure Audit",
+    "ui_event": "launched",
+    "why_focus": []
+  },
+  {
+    "blocked_authority_state": {},
+    "budget_remaining": {
+      "cycles": 7,
+      "model_calls": 5
+    },
+    "captured_at": "2026-07-27T01:42:56+00:00",
+    "completed": false,
+    "current_focus": "Resolve discrepancy for goal: Check closure audit validity",
+    "current_goal": "Check closure audit validity",
+    "current_operation": "formulate_hypothesis",
+    "episode_id": "active-cognitive-episode-83ee6cedda340df7",
+    "evidence_considered": [
+      "exp-d_evidence_1",
+      "exp-d_contrary_1"
+    ],
+    "hypothesis_state": {
+      "assumptions": [
+        "Audit process followed established procedures",
+        "Data integrity maintained during audit"
+      ],
+      "confidence_state": "plausible",
+      "created_at": "2026-07-27T01:42:56+00:00",
+      "disposition": "needs_challenge",
+      "evidence_against": [],
+      "evidence_for": [
+        "exp-d_evidence_1"
+      ],
+      "expected_observations": [
+        "local evidence should support a bounded useful step"
+      ],
+      "hypothesis_id": "hypothesis-4f95683e2a62612c",
+      "lifecycle_state": "active",
+      "originating_focus_id": "focus-22fb591d46428403",
+      "originating_goal_id": "active-cognitive-goal-98c1b7e994b7b81f",
+      "provenance": [
+        "cognitive-operation-c3a4b497e1adad96"
+      ],
+      "revised_at": "",
+      "revision_parent_id": "",
+      "revision_reason": "",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "scope": "Resolve discrepancy for goal: Check closure audit validity",
+      "statement": "The closure audit report is accurate and valid."
+    },
+    "last_observed_outcome": {
+      "created_at": "2026-07-27T01:42:56+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+      "observed": "The closure audit report is accurate and valid.",
+      "operation_id": "cognitive-operation-c3a4b497e1adad96",
+      "outcome_id": "outcome-535d890e0e76c6d2"
+    },
+    "loop_state": "persisting",
+    "next_intended_step": "challenge the active hypothesis with contrary evidence",
+    "title": "Evaluate Live Run Closure Audit",
+    "ui_event": "cycle",
+    "why_focus": [
+      "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+      "operator_priority",
+      "goal_discrepancy",
+      "expected_useful_progress"
+    ]
+  },
+  {
+    "blocked_authority_state": {},
+    "budget_remaining": {
+      "cycles": 7,
+      "model_calls": 5
+    },
+    "captured_at": "2026-07-27T01:42:56+00:00",
+    "completed": false,
+    "current_focus": "Resolve discrepancy for goal: Check closure audit validity",
+    "current_goal": "Check closure audit validity",
+    "current_operation": "formulate_hypothesis",
+    "episode_id": "active-cognitive-episode-83ee6cedda340df7",
+    "evidence_considered": [
+      "exp-d_evidence_1",
+      "exp-d_contrary_1"
+    ],
+    "hypothesis_state": {
+      "assumptions": [
+        "Audit process followed established procedures",
+        "Data integrity maintained during audit"
+      ],
+      "confidence_state": "plausible",
+      "created_at": "2026-07-27T01:42:56+00:00",
+      "disposition": "needs_challenge",
+      "evidence_against": [],
+      "evidence_for": [
+        "exp-d_evidence_1"
+      ],
+      "expected_observations": [
+        "local evidence should support a bounded useful step"
+      ],
+      "hypothesis_id": "hypothesis-4f95683e2a62612c",
+      "lifecycle_state": "active",
+      "originating_focus_id": "focus-22fb591d46428403",
+      "originating_goal_id": "active-cognitive-goal-98c1b7e994b7b81f",
+      "provenance": [
+        "cognitive-operation-c3a4b497e1adad96"
+      ],
+      "revised_at": "",
+      "revision_parent_id": "",
+      "revision_reason": "",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "scope": "Resolve discrepancy for goal: Check closure audit validity",
+      "statement": "The closure audit report is accurate and valid."
+    },
+    "last_observed_outcome": {
+      "created_at": "2026-07-27T01:42:56+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+      "observed": "The closure audit report is accurate and valid.",
+      "operation_id": "cognitive-operation-c3a4b497e1adad96",
+      "outcome_id": "outcome-535d890e0e76c6d2"
+    },
+    "loop_state": "blocked_operator_decision",
+    "next_intended_step": "challenge the active hypothesis with contrary evidence",
+    "title": "Evaluate Live Run Closure Audit",
+    "ui_event": "paused",
+    "why_focus": [
+      "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+      "operator_priority",
+      "goal_discrepancy",
+      "expected_useful_progress"
+    ]
+  },
+  {
+    "blocked_authority_state": {},
+    "budget_remaining": {
+      "cycles": 7,
+      "model_calls": 5
+    },
+    "captured_at": "2026-07-27T01:43:01+00:00",
+    "completed": false,
+    "current_focus": "Resolve discrepancy for goal: Check closure audit validity",
+    "current_goal": "Check closure audit validity",
+    "current_operation": "formulate_hypothesis",
+    "episode_id": "active-cognitive-episode-83ee6cedda340df7",
+    "evidence_considered": [
+      "exp-d_evidence_1",
+      "exp-d_contrary_1"
+    ],
+    "hypothesis_state": {
+      "assumptions": [
+        "Audit process followed established procedures",
+        "Data integrity maintained during audit"
+      ],
+      "confidence_state": "plausible",
+      "created_at": "2026-07-27T01:42:56+00:00",
+      "disposition": "needs_challenge",
+      "evidence_against": [],
+      "evidence_for": [
+        "exp-d_evidence_1"
+      ],
+      "expected_observations": [
+        "local evidence should support a bounded useful step"
+      ],
+      "hypothesis_id": "hypothesis-4f95683e2a62612c",
+      "lifecycle_state": "active",
+      "originating_focus_id": "focus-22fb591d46428403",
+      "originating_goal_id": "active-cognitive-goal-98c1b7e994b7b81f",
+      "provenance": [
+        "cognitive-operation-c3a4b497e1adad96"
+      ],
+      "revised_at": "",
+      "revision_parent_id": "",
+      "revision_reason": "",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "scope": "Resolve discrepancy for goal: Check closure audit validity",
+      "statement": "The closure audit report is accurate and valid."
+    },
+    "last_observed_outcome": {
+      "created_at": "2026-07-27T01:42:56+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+      "observed": "The closure audit report is accurate and valid.",
+      "operation_id": "cognitive-operation-c3a4b497e1adad96",
+      "outcome_id": "outcome-535d890e0e76c6d2"
+    },
+    "loop_state": "selecting_focus",
+    "next_intended_step": "challenge the active hypothesis with contrary evidence",
+    "title": "Evaluate Live Run Closure Audit",
+    "ui_event": "resumed",
+    "why_focus": [
+      "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+      "operator_priority",
+      "goal_discrepancy",
+      "expected_useful_progress"
+    ]
+  },
+  {
+    "blocked_authority_state": {},
+    "budget_remaining": {
+      "cycles": 6,
+      "model_calls": 4
+    },
+    "captured_at": "2026-07-27T01:43:29+00:00",
+    "completed": false,
+    "current_focus": "Resolve discrepancy for goal: Check closure audit validity",
+    "current_goal": "Check closure audit validity",
+    "current_operation": "compare_evidence",
+    "episode_id": "active-cognitive-episode-83ee6cedda340df7",
+    "evidence_considered": [
+      "exp-d_evidence_1",
+      "exp-d_contrary_1"
+    ],
+    "hypothesis_state": {
+      "assumptions": [
+        "Audit process followed established procedures",
+        "Data integrity maintained during audit"
+      ],
+      "confidence_state": "contested",
+      "created_at": "2026-07-27T01:43:29+00:00",
+      "disposition": "revised_from_evidence",
+      "evidence_against": [
+        "exp-d_contrary_1"
+      ],
+      "evidence_for": [
+        "exp-d_evidence_1"
+      ],
+      "expected_observations": [
+        "revised smaller step should match local evidence"
+      ],
+      "hypothesis_id": "hypothesis-76a17eaa63b8e97a",
+      "lifecycle_state": "active",
+      "originating_focus_id": "focus-22fb591d46428403",
+      "originating_goal_id": "active-cognitive-goal-98c1b7e994b7b81f",
+      "provenance": [
+        "cognitive-operation-d39a4c10fb4e6d17"
+      ],
+      "revised_at": "2026-07-27T01:43:29+00:00",
+      "revision_parent_id": "hypothesis-4f95683e2a62612c",
+      "revision_reason": "The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "scope": "Resolve discrepancy for goal: Check closure audit validity",
+      "statement": "The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate."
+    },
+    "last_observed_outcome": {
+      "created_at": "2026-07-27T01:43:29+00:00",
+      "discrepancy": "revised",
+      "expected": "Perform compare_evidence for the active focus using only referenced evidence.",
+      "observed": "The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.",
+      "operation_id": "cognitive-operation-d39a4c10fb4e6d17",
+      "outcome_id": "outcome-8383f672c2b25d3e"
+    },
+    "loop_state": "persisting",
+    "next_intended_step": "summarize learning and choose next focus",
+    "title": "Evaluate Live Run Closure Audit",
+    "ui_event": "cycle",
+    "why_focus": [
+      "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+      "operator_priority",
+      "goal_discrepancy",
+      "expected_useful_progress"
+    ]
+  },
+  {
+    "blocked_authority_state": {},
+    "budget_remaining": {
+      "cycles": 5,
+      "model_calls": 3
+    },
+    "captured_at": "2026-07-27T01:43:46+00:00",
+    "completed": true,
+    "current_focus": "Challenge or revise hypothesis: The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.",
+    "current_goal": "Check closure audit validity",
+    "current_operation": "summarize_learning",
+    "episode_id": "active-cognitive-episode-83ee6cedda340df7",
+    "evidence_considered": [
+      "exp-d_evidence_1",
+      "exp-d_contrary_1"
+    ],
+    "hypothesis_state": {
+      "assumptions": [
+        "Audit process followed established procedures",
+        "Data integrity maintained during audit"
+      ],
+      "confidence_state": "contested",
+      "created_at": "2026-07-27T01:43:29+00:00",
+      "disposition": "revised_from_evidence",
+      "evidence_against": [
+        "exp-d_contrary_1"
+      ],
+      "evidence_for": [
+        "exp-d_evidence_1"
+      ],
+      "expected_observations": [
+        "revised smaller step should match local evidence"
+      ],
+      "hypothesis_id": "hypothesis-76a17eaa63b8e97a",
+      "lifecycle_state": "active",
+      "originating_focus_id": "focus-22fb591d46428403",
+      "originating_goal_id": "active-cognitive-goal-98c1b7e994b7b81f",
+      "provenance": [
+        "cognitive-operation-d39a4c10fb4e6d17"
+      ],
+      "revised_at": "2026-07-27T01:43:29+00:00",
+      "revision_parent_id": "hypothesis-4f95683e2a62612c",
+      "revision_reason": "The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "scope": "Resolve discrepancy for goal: Check closure audit validity",
+      "statement": "The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate."
+    },
+    "last_observed_outcome": {
+      "created_at": "2026-07-27T01:43:46+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform summarize_learning for the active focus using only referenced evidence.",
+      "observed": "The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.",
+      "operation_id": "cognitive-operation-2daa2dc066c8798e",
+      "outcome_id": "outcome-14b4d919aab53877"
+    },
+    "loop_state": "completed",
+    "next_intended_step": "inspect useful artifact and select next focus",
+    "title": "Evaluate Live Run Closure Audit",
+    "ui_event": "cycle",
+    "why_focus": [
+      "An active hypothesis needs evidence-linked revision before action.",
+      "unresolved_hypothesis",
+      "evidence_revision",
+      "expected_useful_progress"
+    ]
+  },
+  {
+    "blocked_authority_state": {},
+    "budget_remaining": {
+      "cycles": 5,
+      "model_calls": 3
+    },
+    "captured_at": "2026-07-27T01:43:46+00:00",
+    "completed": true,
+    "current_focus": "Challenge or revise hypothesis: The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.",
+    "current_goal": "Check closure audit validity",
+    "current_operation": "summarize_learning",
+    "episode_id": "active-cognitive-episode-83ee6cedda340df7",
+    "evidence_considered": [
+      "exp-d_evidence_1",
+      "exp-d_contrary_1"
+    ],
+    "hypothesis_state": {
+      "assumptions": [
+        "Audit process followed established procedures",
+        "Data integrity maintained during audit"
+      ],
+      "confidence_state": "contested",
+      "created_at": "2026-07-27T01:43:29+00:00",
+      "disposition": "revised_from_evidence",
+      "evidence_against": [
+        "exp-d_contrary_1"
+      ],
+      "evidence_for": [
+        "exp-d_evidence_1"
+      ],
+      "expected_observations": [
+        "revised smaller step should match local evidence"
+      ],
+      "hypothesis_id": "hypothesis-76a17eaa63b8e97a",
+      "lifecycle_state": "active",
+      "originating_focus_id": "focus-22fb591d46428403",
+      "originating_goal_id": "active-cognitive-goal-98c1b7e994b7b81f",
+      "provenance": [
+        "cognitive-operation-d39a4c10fb4e6d17"
+      ],
+      "revised_at": "2026-07-27T01:43:29+00:00",
+      "revision_parent_id": "hypothesis-4f95683e2a62612c",
+      "revision_reason": "The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "scope": "Resolve discrepancy for goal: Check closure audit validity",
+      "statement": "The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate."
+    },
+    "last_observed_outcome": {
+      "created_at": "2026-07-27T01:43:46+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform summarize_learning for the active focus using only referenced evidence.",
+      "observed": "The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.",
+      "operation_id": "cognitive-operation-2daa2dc066c8798e",
+      "outcome_id": "outcome-14b4d919aab53877"
+    },
+    "loop_state": "completed",
+    "next_intended_step": "inspect useful artifact and select next focus",
+    "title": "Evaluate Live Run Closure Audit",
+    "ui_event": "cycle",
+    "why_focus": [
+      "An active hypothesis needs evidence-linked revision before action.",
+      "unresolved_hypothesis",
+      "evidence_revision",
+      "expected_useful_progress"
+    ]
+  },
+  {
+    "blocked_authority_state": {},
+    "budget_remaining": {
+      "cycles": 4,
+      "model_calls": 2
+    },
+    "captured_at": "2026-07-27T01:45:02+00:00",
+    "completed": true,
+    "current_focus": "Challenge or revise hypothesis: The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.",
+    "current_goal": "Check closure audit validity",
+    "current_operation": "select_next_focus",
+    "episode_id": "active-cognitive-episode-83ee6cedda340df7",
+    "evidence_considered": [
+      "exp-d_evidence_1",
+      "exp-d_contrary_1"
+    ],
+    "hypothesis_state": {
+      "assumptions": [
+        "Audit process followed established procedures",
+        "Data integrity maintained during audit"
+      ],
+      "confidence_state": "contested",
+      "created_at": "2026-07-27T01:43:29+00:00",
+      "disposition": "revised_from_evidence",
+      "evidence_against": [
+        "exp-d_contrary_1"
+      ],
+      "evidence_for": [
+        "exp-d_evidence_1"
+      ],
+      "expected_observations": [
+        "revised smaller step should match local evidence"
+      ],
+      "hypothesis_id": "hypothesis-76a17eaa63b8e97a",
+      "lifecycle_state": "active",
+      "originating_focus_id": "focus-22fb591d46428403",
+      "originating_goal_id": "active-cognitive-goal-98c1b7e994b7b81f",
+      "provenance": [
+        "cognitive-operation-d39a4c10fb4e6d17"
+      ],
+      "revised_at": "2026-07-27T01:43:29+00:00",
+      "revision_parent_id": "hypothesis-4f95683e2a62612c",
+      "revision_reason": "The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "scope": "Resolve discrepancy for goal: Check closure audit validity",
+      "statement": "The closure audit report is accurate and valid, but the UI route and usefulness are not yet proven for this candidate."
+    },
+    "last_observed_outcome": {
+      "created_at": "2026-07-27T01:45:02+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform select_next_focus for the active focus using only referenced evidence.",
+      "observed": "An active hypothesis needs evidence-linked revision before action.",
+      "operation_id": "cognitive-operation-edfb848812e26655",
+      "outcome_id": "outcome-b6c8a12b64bfc44b"
+    },
+    "loop_state": "completed",
+    "next_intended_step": "inspect useful artifact and select next focus",
+    "title": "Evaluate Live Run Closure Audit",
+    "ui_event": "cycle",
+    "why_focus": [
+      "An active hypothesis needs evidence-linked revision before action.",
+      "unresolved_hypothesis",
+      "evidence_revision",
+      "expected_useful_progress"
+    ]
+  }
+]

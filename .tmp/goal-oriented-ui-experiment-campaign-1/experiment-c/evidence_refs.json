@@ -1,0 +1,20 @@
+[
+  {
+    "content": ".tmp/active-cognitive-architecture-marathon-1/live-run-operation-schema-specialized-v5/live_episode_summary.json",
+    "evidence_id": "exp-c_evidence_1",
+    "exists": true,
+    "kind": "local_evidence",
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "source": "local_repo",
+    "summary": "Summary of live run episodes"
+  },
+  {
+    "content": "operator:campaign_uncertainty",
+    "evidence_id": "exp-c_contrary_1",
+    "exists": true,
+    "kind": "local_evidence",
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "source": "local_uncertainty",
+    "summary": "Contrary evidence: UI route and usefulness are not yet proven for this candidate."
+  }
+]

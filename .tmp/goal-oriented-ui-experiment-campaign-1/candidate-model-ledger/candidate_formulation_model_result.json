@@ -1,0 +1,60 @@
+{
+  "adapter_identity": "goal_oriented_ui_campaign.ProviderManager.exact_prompt",
+  "availability_state": "available",
+  "execution_completed_at": "2026-07-27T01:28:31+00:00",
+  "execution_started_at": "2026-07-27T01:27:08+00:00",
+  "failure_classification": "",
+  "failure_detail": "",
+  "latency_seconds": 82.9707,
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "provenance": {
+    "execution_claim_id": "shared-local-model-execution-claim-d0c431f4ae5bef88",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    }
+  },
+  "request_id": "shared-local-model-request-704db3c042a25194",
+  "response_digest": "819cc7f2a18fdf1615bbe4f9cd391f3c012187666e0b01eaf0fbaa7c3af5b4b3",
+  "response_reference": "{\"assumptions\": [\"The local evidence references are to files within the local repository. The cognitive operations and bounded actions are hypothetical and based on the context provided. The success and failure criteria are generic and need to be tailored to the specific experiment. The risk and scope are also generic and need to be refined for each experiment. The estimated time and model call budget are placeholders and should be adjusted based on the actual requirements.\"],\"contrary_evidence_considered\": [\"The contrary or uncertainty evidence is based on the assumption that there might be alternative approaches or uncertainties in the current understanding. This is a placeholder and should be filled with specific evidence or considerations relevant to each experiment.\"],\"evidence_refs\": [\"The local evidence available references specific files within the local repository for each experiment. The references are placeholders and should be replaced with actual paths and notes relevant to each experiment.\"],\"interpretation\": \"This JSON structure is designed to capture the essence of goal-oriented UI experiments, providing a structured approach to defining and executing experiments grounded in local evidence and hypothetical operations.\",\"next_evidence_need\": \"Further specific details and context are needed to fill in the placeholders and tailor the experiments to the specific requirements and environment.\",\"next_focus_proposal\": \"The next focus should be on identifying the specific cognitive operations, bounded actions, success and failure criteria, risk and scope, and other details that are pertinent to each experiment, and to replace the placeholders with actual, relevant information.\",\"operation_result_type\": \"The expected artifact or outcome is a placeholder and should be replaced with the specific type of artifact or outcome expected from each experiment.\",\"recommended_action\": \"The required authority is a placeholder and should be replaced with the specific authority or permissions required to execute each experiment.\",\"recommended_state_transition\": \"The required bounded actions are placeholders and should be replaced with specific actions or states that need to be transitioned for each experiment to be successful.\",\"uncertainty\": \"The contrary or uncertainty evidence is a placeholder and should be replaced with specific uncertainties or alternative approaches that need to be considered for each experiment.\"}",
+  "result_digest": "5ec4e0dca050d6f0da2c3ac462962cf1234a88ed326229c84096914909bc7036",
+  "result_id": "shared-local-model-result-c6be1a474c80f3ad",
+  "terminal_state": "completed"
+}

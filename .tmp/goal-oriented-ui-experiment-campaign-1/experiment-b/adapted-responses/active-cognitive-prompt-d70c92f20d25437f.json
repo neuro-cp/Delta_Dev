@@ -1,0 +1,25 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Model execution does not interact with campaign state"
+    ],
+    "contrary_evidence_considered": [
+      "exp-b_contrary_1"
+    ],
+    "evidence_refs": [
+      "exp-b_evidence_1"
+    ],
+    "interpretation": "Evidence supports the hypothesis that the model execution is isolated from the campaign state.",
+    "next_evidence_need": "Further evidence to confirm model independence",
+    "next_focus_proposal": "Continue hypothesis testing with additional evidence",
+    "operation_result_type": "compare_evidence_result",
+    "recommended_action": "Continue to gather evidence",
+    "recommended_state_transition": "add_supporting_evidence",
+    "uncertainty": "Uncertainty remains regarding the extent of model independence."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{ \"assumptions\":[\"Model execution does not interact with campaign state\"],\"contrary_evidence_considered\":[\"exp-b_contrary_1\"],\"evidence_refs\":[\"exp-b_evidence_1\"],\"interpretation\":\"Evidence supports the hypothesis that the model execution is isolated from the campaign state.\",\"next_evidence_need\":\"Further evidence to confirm model independence\",\"next_focus_proposal\":\"Continue hypothesis testing with additional evidence\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"Continue to gather evidence\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"Uncertainty remains regarding the extent of model independence.\"}",
+  "raw_response_digest": "ce6f188fb873b96561ebf1a169ef2f8c8907a91838abf8e012bedee7bb795738",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

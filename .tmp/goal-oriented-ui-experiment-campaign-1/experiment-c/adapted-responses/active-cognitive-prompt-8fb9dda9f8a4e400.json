@@ -1,0 +1,22 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Live run episodes are representative of the system's typical behavior"
+    ],
+    "expected_observations": [
+      "No significant deviations from expected behavior"
+    ],
+    "hypothesis_statement": "Live run episodes show no clear patterns or anomalies that would indicate non-compliance.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "Live run episodes",
+    "supporting_evidence_refs": [
+      "exp-c_evidence_1"
+    ],
+    "uncertainty": "Whether all live run episodes are fully representative of the system's typical behavior"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"hypothesis_statement\":\"Live run episodes show no clear patterns or anomalies that would indicate non-compliance.\",\"scope\":\"Live run episodes\",\"supporting_evidence_refs\":[\"exp-c_evidence_1\"],\"assumptions\":[\"Live run episodes are representative of the system's typical behavior\"],\"expected_observations\":[\"No significant deviations from expected behavior\"],\"uncertainty\":\"Whether all live run episodes are fully representative of the system's typical behavior\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+  "raw_response_digest": "3daeb4dbb82afe7121f9055d12e52a63c4106d99a207c36f6064df892cf0897e",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

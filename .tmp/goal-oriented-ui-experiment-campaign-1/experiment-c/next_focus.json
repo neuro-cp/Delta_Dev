@@ -1,0 +1,54 @@
+[
+  {
+    "authority_need": "none_for_local_analysis",
+    "blocking_state": "",
+    "capability_need": "local_model_semantic_operation",
+    "creation_sequence": 3,
+    "description": "Resolve discrepancy for goal: Ensure live run compliance",
+    "evidence_need": "local evidence supporting or challenging the goal",
+    "evidence_refs": [
+      "exp-c_evidence_1",
+      "exp-c_contrary_1"
+    ],
+    "expected_value": "useful_progress",
+    "focus_id": "focus-7bf9b25c19e7ef49",
+    "related_goal_ids": [
+      "active-cognitive-goal-607fe79d22140cdd"
+    ],
+    "salience_categories": [
+      "operator_priority",
+      "goal_discrepancy",
+      "expected_useful_progress"
+    ],
+    "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "source": "goal_discrepancy",
+    "urgency": "medium"
+  },
+  {
+    "authority_need": "none_for_local_analysis",
+    "blocking_state": "",
+    "capability_need": "semantic comparison",
+    "creation_sequence": 3,
+    "description": "Challenge or revise hypothesis: Live run episodes show no clear patterns or anomalies that would indicate non-compliance.",
+    "evidence_need": "contrary and supporting evidence",
+    "evidence_refs": [
+      "exp-c_evidence_1",
+      "exp-c_contrary_1"
+    ],
+    "expected_value": "belief_revision",
+    "focus_id": "focus-2a3751eb8d190d22",
+    "related_goal_ids": [
+      "active-cognitive-goal-607fe79d22140cdd"
+    ],
+    "salience_categories": [
+      "unresolved_hypothesis",
+      "evidence_revision",
+      "expected_useful_progress"
+    ],
+    "salience_explanation": "An active hypothesis needs evidence-linked revision before action.",
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "source": "hypothesis_revision",
+    "urgency": "high"
+  }
+]
