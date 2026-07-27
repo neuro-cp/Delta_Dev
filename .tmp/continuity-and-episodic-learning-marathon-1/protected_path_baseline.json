@@ -1,0 +1,11 @@
+{
+  "action": "preserve_only",
+  "matching_dirty": [
+    " M orchestration/runtime/live_competence_adapter.py"
+  ],
+  "protected": [
+    "DELTA-75",
+    "reports/RC4_*",
+    "orchestration/runtime/live_competence_adapter.py"
+  ]
+}

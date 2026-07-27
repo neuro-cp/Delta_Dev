@@ -1,0 +1,22 @@
+{
+  "adapted_response": {
+    "plan_summary": "Propose a plan for the continuity transfer gate based on available evidence.",
+    "planned_steps": [
+      "Analyze the objective evidence",
+      "Propose a plan without access to Campaign A continuity state"
+    ],
+    "recommended_state_transition": "propose_plan",
+    "risks": [
+      "Potential misalignment with Campaign A's intended continuity state"
+    ],
+    "supporting_evidence_refs": [
+      "ev-b-objective-only"
+    ],
+    "uncertainty": "Uncertainty about the exact impact of missing Campaign A continuity state on the transfer evaluation"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\n\"plan_summary\": \"Propose a plan for the continuity transfer gate based on available evidence.\",\n\"supporting_evidence_refs\": [\"ev-b-objective-only\"],\n\"planned_steps\": [\"Analyze the objective evidence\", \"Propose a plan without access to Campaign A continuity state\"],\n\"risks\": [\"Potential misalignment with Campaign A's intended continuity state\"],\n\"uncertainty\": \"Uncertainty about the exact impact of missing Campaign A continuity state on the transfer evaluation\",\n\"recommended_state_transition\": \"propose_plan\"\n}",
+  "raw_response_digest": "7c0c7473611490289d0218cd2a47a5ecb9c63658910e9d20407d1bb34e8a0a70",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

@@ -1,0 +1,76 @@
+{
+  "ledger_request_id": "shared-local-model-request-90754e606dd4db4e",
+  "ledger_result_id": "shared-local-model-result-9ce58f4b6fa7b8f9",
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "prompt_snapshot_id": "active-cognitive-prompt-3790d84be6379b2f",
+  "raw_response": "{\n\n\"lesson\": \"Focused tests and a narrow continuity module support evidence-first transfer and architecture-drift avoidance.\",\n\"evidence_refs\": [\"ev-a-focused-tests\", \"ev-a-artifact\"],\n\"unresolved_questions\": [\"How does the narrow continuity module handle behavioral transfer?\"],\n\"uncertainty\": \"Uncertainty about the module's handling of behavioral transfer remains.\",\n\"recommended_state_transition\": \"summarize_learning\"\n}",
+  "raw_response_digest": "778399d40cabedc1da32e86d4ecaa91e876e6a4902d535baba266d7cc393f8a4",
+  "terminal_status": {
+    "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+    "approved_at": "2026-07-27T04:02:36+00:00",
+    "authority_state": "operator_authorized_continuity_and_episodic_learning_marathon_1",
+    "claimed_at": "2026-07-27T04:02:36+00:00",
+    "completed_at": "2026-07-27T04:02:58+00:00",
+    "consumed_state": "terminal",
+    "created_at": "2026-07-27T04:02:36+00:00",
+    "execution_attempt_count": 1,
+    "execution_claim_id": "shared-local-model-execution-claim-85e83a4124b66d10",
+    "failure_classification": "",
+    "lifecycle_state": "completed",
+    "mission_id": "active-cognitive-goal-0d2c7e5f33ce9ccd",
+    "mission_information_need_identity": "focus-8c3178e8687009f0",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - lesson: nonempty string - evidence_refs: array[string] - unresolved_questions: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - evidence_refs values must be chosen from: ev-a-focused-tests, ev-a-artifact, ev-a-first-missing-transition TASK: perform only operation summarize_learning. Allowed transition/next-operation values: summarize_learning, select_next_focus. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: ev-a-focused-tests, ev-a-artifact. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":1,\"description\":\"Resolve discrepancy for goal: Implement and test a bounded continuity transfer bridge without new UI, schema architecture, or authority expansion.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"ev-a-first-missing-transition\",\"ev-a-focused-tests\",\"ev-a-artifact\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-8c3178e8687009f0\",\"related_goal_ids\":[\"active-cognitive-goal-0d2c7e5f33ce9ccd\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"\",\"evidence_id\":\"ev-a-first-missing-transition\",\"source\":\".tmp/continuity-and-episodic-learning-marathon-1/first_missing_transition.json\",\"summary\":\"The missing transition is behavioral transfer, not another memory framework.\"}],\"current_goal\":{\"expected_state\":\"A narrow artifact exists and yields lessons about evidence-first transfer and architecture-drift avoidance.\",\"goal_id\":\"active-cognitive-goal-0d2c7e5f33ce9ccd\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Implement and test a bounded continuity transfer bridge without new UI, schema architecture, or authority expansion.\"},\"current_hypotheses\":[],\"evidence_for\":[{\"content\":\"\",\"evidence_id\":\"ev-a-focused-tests\",\"source\":\"tests/runtime_gsr/test_continuity_episodic_learning.py\",\"summary\":\"Focused continuity tests reject storage-only learning and salience-as-authority.\"},{\"content\":\"\",\"evidence_id\":\"ev-a-artifact\",\"source\":\"orchestration/runtime/continuity_episodic_learning.py\",\"summary\":\"A narrow continuity module qualifies records, retrieves related continuity, records influence, and evaluates transfer.\"}],\"recent_outcomes\":[]}",
+    "question_objective": "summarize_learning",
+    "record_digest": "b16f195fdfc572d45398bcab51d3b02522e411a9d3bf636c4d7131ce586d6caa",
+    "record_version": 1,
+    "request_digest": "37c642155366e59d10590d972b99c5652830289339653c99ef373e6cd6e07bcd",
+    "request_id": "shared-local-model-request-90754e606dd4db4e",
+    "requester_reference": "cognitive-operation-8c025de11fc04c6a",
+    "requester_type": "active_cognitive_loop",
+    "result_id": "shared-local-model-result-9ce58f4b6fa7b8f9",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    },
+    "semantic_identity": "active-cognitive-ledger-request-bc10529619e91190",
+    "session_reference": "active-cognitive-cycle-613c2ec726d45b58"
+  }
+}

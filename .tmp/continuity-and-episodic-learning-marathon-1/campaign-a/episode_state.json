@@ -1,0 +1,590 @@
+{
+  "actions": [],
+  "attention": {
+    "abandonment_reason": "",
+    "active_focus_id": "focus-f40948f2393232e1",
+    "active_focus_summary": "Resolve discrepancy for goal: Implement and test a bounded continuity transfer bridge without new UI, schema architecture, or authority expansion.",
+    "active_goal_ids": [
+      "active-cognitive-goal-0d2c7e5f33ce9ccd"
+    ],
+    "attention_state_id": "active-attention-8494f7f94aa835ff",
+    "candidate_focuses": [
+      {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "local_model_semantic_operation",
+        "creation_sequence": 2,
+        "description": "Resolve discrepancy for goal: Implement and test a bounded continuity transfer bridge without new UI, schema architecture, or authority expansion.",
+        "evidence_need": "local evidence supporting or challenging the goal",
+        "evidence_refs": [
+          "ev-a-first-missing-transition",
+          "ev-a-focused-tests",
+          "ev-a-artifact"
+        ],
+        "expected_value": "useful_progress",
+        "focus_id": "focus-f40948f2393232e1",
+        "related_goal_ids": [
+          "active-cognitive-goal-0d2c7e5f33ce9ccd"
+        ],
+        "salience_categories": [
+          "operator_priority",
+          "goal_discrepancy",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "goal_discrepancy",
+        "urgency": "medium"
+      }
+    ],
+    "continuation_reason": "",
+    "cycle_sequence": 2,
+    "evidence_refs": [
+      "ev-a-first-missing-transition",
+      "ev-a-focused-tests",
+      "ev-a-artifact"
+    ],
+    "focus_started_at": "2026-07-27T04:02:36+00:00",
+    "interruption_priority": "none",
+    "interruption_reason": "",
+    "last_progress_at": "2026-07-27T04:02:58+00:00",
+    "previous_focus_ids": [
+      "focus-8c3178e8687009f0"
+    ],
+    "progress_summary": "selected focus for cognitive operation",
+    "return_condition": "",
+    "salience_reasons": [
+      "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+      "operator_priority",
+      "goal_discrepancy",
+      "expected_useful_progress"
+    ],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "stagnation_count": 0,
+    "switch_reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+    "transition_journal": [
+      {
+        "at": "2026-07-27T04:02:36+00:00",
+        "focus_id": "focus-8c3178e8687009f0",
+        "reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "sequence": 1,
+        "transition": "establish_focus"
+      },
+      {
+        "at": "2026-07-27T04:02:58+00:00",
+        "focus_id": "focus-f40948f2393232e1",
+        "reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "sequence": 2,
+        "transition": "switch_focus"
+      }
+    ],
+    "unresolved_questions": []
+  },
+  "budgets": {
+    "max_actions": 4,
+    "max_cycles": 3,
+    "max_model_calls": 3,
+    "max_packet_items": 8
+  },
+  "completed": false,
+  "cycles": [
+    {
+      "completed": true,
+      "cycle_id": "active-cognitive-cycle-613c2ec726d45b58",
+      "focus_id": "focus-8c3178e8687009f0",
+      "operation_id": "cognitive-operation-8c025de11fc04c6a",
+      "outcome_id": "outcome-86fbe45b634ef393",
+      "packet_digest": "0c5b3482d4cffe8d50beca7c4719a27eb5daeae656698b44269c802543491be3",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "sequence": 1,
+      "summary": "Focused tests and a narrow continuity module support evidence-first transfer and architecture-drift avoidance."
+    },
+    {
+      "completed": true,
+      "cycle_id": "active-cognitive-cycle-444ee568b57133fb",
+      "focus_id": "focus-f40948f2393232e1",
+      "operation_id": "cognitive-operation-35fdc52419602246",
+      "outcome_id": "outcome-204f25484291fc9b",
+      "packet_digest": "167ce6c253472f2da4d245dbcf64e61b47dc0b2080f9d4fd282dbef19ad125c1",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "sequence": 2,
+      "summary": "Evidence-first transfer and architecture-drift avoidance are supported by focused tests and a narrow continuity module."
+    }
+  ],
+  "episode_id": "active-cognitive-episode-7cbaf8b088855c25",
+  "evidence": [
+    {
+      "content": "",
+      "evidence_id": "ev-a-first-missing-transition",
+      "exists": true,
+      "kind": "local_evidence",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": ".tmp/continuity-and-episodic-learning-marathon-1/first_missing_transition.json",
+      "summary": "The missing transition is behavioral transfer, not another memory framework."
+    },
+    {
+      "content": "",
+      "evidence_id": "ev-a-focused-tests",
+      "exists": true,
+      "kind": "local_evidence",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "tests/runtime_gsr/test_continuity_episodic_learning.py",
+      "summary": "Focused continuity tests reject storage-only learning and salience-as-authority."
+    },
+    {
+      "content": "",
+      "evidence_id": "ev-a-artifact",
+      "exists": true,
+      "kind": "local_evidence",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "orchestration/runtime/continuity_episodic_learning.py",
+      "summary": "A narrow continuity module qualifies records, retrieves related continuity, records influence, and evaluates transfer."
+    }
+  ],
+  "goals": [
+    {
+      "expected_state": "A narrow artifact exists and yields lessons about evidence-first transfer and architecture-drift avoidance.",
+      "goal_id": "active-cognitive-goal-0d2c7e5f33ce9ccd",
+      "observed_state": "",
+      "priority": "operator_requested",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "summary": "Implement and test a bounded continuity transfer bridge without new UI, schema architecture, or authority expansion."
+    }
+  ],
+  "hypotheses": [
+    {
+      "assumptions": [],
+      "confidence_state": "plausible",
+      "created_at": "2026-07-27T04:02:58+00:00",
+      "disposition": "needs_challenge",
+      "evidence_against": [],
+      "evidence_for": [
+        "ev-a-focused-tests",
+        "ev-a-artifact"
+      ],
+      "expected_observations": [
+        "local evidence should support a bounded useful step"
+      ],
+      "hypothesis_id": "hypothesis-553b11b03154489f",
+      "lifecycle_state": "active",
+      "originating_focus_id": "focus-8c3178e8687009f0",
+      "originating_goal_id": "active-cognitive-goal-0d2c7e5f33ce9ccd",
+      "provenance": [
+        "cognitive-operation-8c025de11fc04c6a"
+      ],
+      "revised_at": "",
+      "revision_parent_id": "",
+      "revision_reason": "",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "scope": "Resolve discrepancy for goal: Implement and test a bounded continuity transfer bridge without new UI, schema architecture, or authority expansion.",
+      "statement": "Focused tests and a narrow continuity module support evidence-first transfer and architecture-drift avoidance."
+    }
+  ],
+  "learning_updates": [],
+  "loop_state": "persisting",
+  "model_call_count": 2,
+  "next_focus_candidates": [
+    {
+      "authority_need": "none_for_local_analysis",
+      "blocking_state": "",
+      "capability_need": "local_model_semantic_operation",
+      "creation_sequence": 2,
+      "description": "Resolve discrepancy for goal: Implement and test a bounded continuity transfer bridge without new UI, schema architecture, or authority expansion.",
+      "evidence_need": "local evidence supporting or challenging the goal",
+      "evidence_refs": [
+        "ev-a-first-missing-transition",
+        "ev-a-focused-tests",
+        "ev-a-artifact"
+      ],
+      "expected_value": "useful_progress",
+      "focus_id": "focus-f40948f2393232e1",
+      "related_goal_ids": [
+        "active-cognitive-goal-0d2c7e5f33ce9ccd"
+      ],
+      "salience_categories": [
+        "operator_priority",
+        "goal_discrepancy",
+        "expected_useful_progress"
+      ],
+      "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "goal_discrepancy",
+      "urgency": "medium"
+    }
+  ],
+  "operation_requests": [
+    {
+      "authority_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "budget": {
+        "max_response_words": 220,
+        "max_retries": 1
+      },
+      "cycle_id": "active-cognitive-cycle-613c2ec726d45b58",
+      "evidence_constraints": [
+        "ev-a-first-missing-transition",
+        "ev-a-focused-tests",
+        "ev-a-artifact"
+      ],
+      "expected_output_schema": {
+        "contrary_evidence_considered": "list",
+        "evidence_refs": "list",
+        "interpretation": "string",
+        "operation_result_type": "string",
+        "recommended_state_transition": "string",
+        "uncertainty": "string"
+      },
+      "focus_id": "focus-8c3178e8687009f0",
+      "goal_id": "active-cognitive-goal-0d2c7e5f33ce9ccd",
+      "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+      "operation_id": "cognitive-operation-8c025de11fc04c6a",
+      "operation_type": "summarize_learning",
+      "provenance": [
+        "working-memory-packet-0e45c49bac0276a0"
+      ],
+      "retry_allowance": 1,
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "task": "Perform summarize_learning for the active focus using only referenced evidence.",
+      "working_memory_packet_digest": "0c5b3482d4cffe8d50beca7c4719a27eb5daeae656698b44269c802543491be3"
+    },
+    {
+      "authority_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "budget": {
+        "max_response_words": 220,
+        "max_retries": 1
+      },
+      "cycle_id": "active-cognitive-cycle-444ee568b57133fb",
+      "evidence_constraints": [
+        "ev-a-first-missing-transition",
+        "ev-a-focused-tests",
+        "ev-a-artifact"
+      ],
+      "expected_output_schema": {
+        "contrary_evidence_considered": "list",
+        "evidence_refs": "list",
+        "interpretation": "string",
+        "operation_result_type": "string",
+        "recommended_state_transition": "string",
+        "uncertainty": "string"
+      },
+      "focus_id": "focus-f40948f2393232e1",
+      "goal_id": "active-cognitive-goal-0d2c7e5f33ce9ccd",
+      "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+      "operation_id": "cognitive-operation-35fdc52419602246",
+      "operation_type": "reflect_on_outcome",
+      "provenance": [
+        "working-memory-packet-d1dc3539665456fb"
+      ],
+      "retry_allowance": 1,
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "task": "Perform reflect_on_outcome for the active focus using only referenced evidence.",
+      "working_memory_packet_digest": "167ce6c253472f2da4d245dbcf64e61b47dc0b2080f9d4fd282dbef19ad125c1"
+    }
+  ],
+  "operation_results": [
+    {
+      "accepted": true,
+      "assumptions": [],
+      "contrary_evidence_considered": [],
+      "evidence_refs": [
+        "ev-a-focused-tests",
+        "ev-a-artifact"
+      ],
+      "interpretation": "Focused tests and a narrow continuity module support evidence-first transfer and architecture-drift avoidance.",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "next_evidence_need": "How does the narrow continuity module handle behavioral transfer?",
+      "next_focus_proposal": "",
+      "operation_id": "cognitive-operation-8c025de11fc04c6a",
+      "operation_result_type": "summarize_learning_result",
+      "raw_model_output": "{\n\n\"lesson\": \"Focused tests and a narrow continuity module support evidence-first transfer and architecture-drift avoidance.\",\n\"evidence_refs\": [\"ev-a-focused-tests\", \"ev-a-artifact\"],\n\"unresolved_questions\": [\"How does the narrow continuity module handle behavioral transfer?\"],\n\"uncertainty\": \"Uncertainty about the module's handling of behavioral transfer remains.\",\n\"recommended_state_transition\": \"summarize_learning\"\n}",
+      "recommended_action": "",
+      "recommended_state_transition": "summarize_learning",
+      "rejection_reasons": [],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "uncertainty": "Uncertainty about the module's handling of behavioral transfer remains."
+    },
+    {
+      "accepted": true,
+      "assumptions": [],
+      "contrary_evidence_considered": [],
+      "evidence_refs": [
+        "ev-a-focused-tests",
+        "ev-a-artifact"
+      ],
+      "interpretation": "Evidence-first transfer and architecture-drift avoidance are supported by focused tests and a narrow continuity module.",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "next_evidence_need": "",
+      "next_focus_proposal": "",
+      "operation_id": "cognitive-operation-35fdc52419602246",
+      "operation_result_type": "reflect_on_outcome_result",
+      "raw_model_output": "{\"expected_outcome\":\"Perform summarize_learning for the active focus using only referenced evidence.\",\"observed_outcome\":\"Focused tests and a narrow continuity module support evidence-first transfer and architecture-drift avoidance.\",\"discrepancy\":\"progress_observed\",\"evidence_refs\":[\"ev-a-focused-tests\",\"ev-a-artifact\"],\"lesson\":\"Evidence-first transfer and architecture-drift avoidance are supported by focused tests and a narrow continuity module.\",\"uncertainty\":\"How can we ensure the continuity transfer bridge remains bounded and avoids drift without new UI, schema architecture, or authority expansion?\",\"recommended_state_transition\":\"reflect_on_outcome\"}",
+      "recommended_action": "progress_observed",
+      "recommended_state_transition": "reflect_on_outcome",
+      "rejection_reasons": [],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "uncertainty": "How can we ensure the continuity transfer bridge remains bounded and avoids drift without new UI, schema architecture, or authority expansion?"
+    }
+  ],
+  "outcomes": [
+    {
+      "created_at": "2026-07-27T04:02:58+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform summarize_learning for the active focus using only referenced evidence.",
+      "observed": "Focused tests and a narrow continuity module support evidence-first transfer and architecture-drift avoidance.",
+      "operation_id": "cognitive-operation-8c025de11fc04c6a",
+      "outcome_id": "outcome-86fbe45b634ef393"
+    },
+    {
+      "created_at": "2026-07-27T04:03:28+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform reflect_on_outcome for the active focus using only referenced evidence.",
+      "observed": "Evidence-first transfer and architecture-drift avoidance are supported by focused tests and a narrow continuity module.",
+      "operation_id": "cognitive-operation-35fdc52419602246",
+      "outcome_id": "outcome-204f25484291fc9b"
+    }
+  ],
+  "pending_operator_requests": [],
+  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+  "title": "Campaign A - narrow continuity bridge",
+  "useful_artifacts": [],
+  "working_memory_packets": [
+    {
+      "active_focus": {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "local_model_semantic_operation",
+        "creation_sequence": 1,
+        "description": "Resolve discrepancy for goal: Implement and test a bounded continuity transfer bridge without new UI, schema architecture, or authority expansion.",
+        "evidence_need": "local evidence supporting or challenging the goal",
+        "evidence_refs": [
+          "ev-a-first-missing-transition",
+          "ev-a-focused-tests",
+          "ev-a-artifact"
+        ],
+        "expected_value": "useful_progress",
+        "focus_id": "focus-8c3178e8687009f0",
+        "related_goal_ids": [
+          "active-cognitive-goal-0d2c7e5f33ce9ccd"
+        ],
+        "salience_categories": [
+          "operator_priority",
+          "goal_discrepancy",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "goal_discrepancy",
+        "urgency": "medium"
+      },
+      "active_goal": {
+        "expected_state": "A narrow artifact exists and yields lessons about evidence-first transfer and architecture-drift avoidance.",
+        "goal_id": "active-cognitive-goal-0d2c7e5f33ce9ccd",
+        "observed_state": "",
+        "priority": "operator_requested",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "summary": "Implement and test a bounded continuity transfer bridge without new UI, schema architecture, or authority expansion."
+      },
+      "authority_state": "authorized_for_local_cognitive_marathon",
+      "capability_limits": [
+        "model calls budgeted",
+        "source mutation requires explicit bounded patch authority"
+      ],
+      "conflicting_evidence": [
+        {
+          "content": "",
+          "evidence_id": "ev-a-first-missing-transition",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": ".tmp/continuity-and-episodic-learning-marathon-1/first_missing_transition.json",
+          "summary": "The missing transition is behavioral transfer, not another memory framework."
+        }
+      ],
+      "construction_rationale": "bounded by active focus, goal discrepancy, recency, evidence provenance, and operation need",
+      "current_hypotheses": [],
+      "cycle_id": "active-cognitive-cycle-613c2ec726d45b58",
+      "observed_outcomes": [],
+      "omitted_items_summary": "0 older or less relevant items omitted by packet budget",
+      "operator_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "packet_digest": "0c5b3482d4cffe8d50beca7c4719a27eb5daeae656698b44269c802543491be3",
+      "packet_id": "working-memory-packet-0e45c49bac0276a0",
+      "prior_cycle_summary": "",
+      "provenance_refs": [
+        "ev-a-first-missing-transition",
+        "ev-a-focused-tests",
+        "ev-a-artifact"
+      ],
+      "recent_actions": [],
+      "relevant_evidence": [
+        {
+          "content": "",
+          "evidence_id": "ev-a-focused-tests",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "tests/runtime_gsr/test_continuity_episodic_learning.py",
+          "summary": "Focused continuity tests reject storage-only learning and salience-as-authority."
+        },
+        {
+          "content": "",
+          "evidence_id": "ev-a-artifact",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "orchestration/runtime/continuity_episodic_learning.py",
+          "summary": "A narrow continuity module qualifies records, retrieves related continuity, records influence, and evaluates transfer."
+        }
+      ],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "size_budget": 8,
+      "unresolved_questions": []
+    },
+    {
+      "active_focus": {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "local_model_semantic_operation",
+        "creation_sequence": 2,
+        "description": "Resolve discrepancy for goal: Implement and test a bounded continuity transfer bridge without new UI, schema architecture, or authority expansion.",
+        "evidence_need": "local evidence supporting or challenging the goal",
+        "evidence_refs": [
+          "ev-a-first-missing-transition",
+          "ev-a-focused-tests",
+          "ev-a-artifact"
+        ],
+        "expected_value": "useful_progress",
+        "focus_id": "focus-f40948f2393232e1",
+        "related_goal_ids": [
+          "active-cognitive-goal-0d2c7e5f33ce9ccd"
+        ],
+        "salience_categories": [
+          "operator_priority",
+          "goal_discrepancy",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "goal_discrepancy",
+        "urgency": "medium"
+      },
+      "active_goal": {
+        "expected_state": "A narrow artifact exists and yields lessons about evidence-first transfer and architecture-drift avoidance.",
+        "goal_id": "active-cognitive-goal-0d2c7e5f33ce9ccd",
+        "observed_state": "",
+        "priority": "operator_requested",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "summary": "Implement and test a bounded continuity transfer bridge without new UI, schema architecture, or authority expansion."
+      },
+      "authority_state": "authorized_for_local_cognitive_marathon",
+      "capability_limits": [
+        "model calls budgeted",
+        "source mutation requires explicit bounded patch authority"
+      ],
+      "conflicting_evidence": [
+        {
+          "content": "",
+          "evidence_id": "ev-a-first-missing-transition",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": ".tmp/continuity-and-episodic-learning-marathon-1/first_missing_transition.json",
+          "summary": "The missing transition is behavioral transfer, not another memory framework."
+        }
+      ],
+      "construction_rationale": "bounded by active focus, goal discrepancy, recency, evidence provenance, and operation need",
+      "current_hypotheses": [
+        {
+          "assumptions": [],
+          "confidence_state": "plausible",
+          "created_at": "2026-07-27T04:02:58+00:00",
+          "disposition": "needs_challenge",
+          "evidence_against": [],
+          "evidence_for": [
+            "ev-a-focused-tests",
+            "ev-a-artifact"
+          ],
+          "expected_observations": [
+            "local evidence should support a bounded useful step"
+          ],
+          "hypothesis_id": "hypothesis-553b11b03154489f",
+          "lifecycle_state": "active",
+          "originating_focus_id": "focus-8c3178e8687009f0",
+          "originating_goal_id": "active-cognitive-goal-0d2c7e5f33ce9ccd",
+          "provenance": [
+            "cognitive-operation-8c025de11fc04c6a"
+          ],
+          "revised_at": "",
+          "revision_parent_id": "",
+          "revision_reason": "",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "scope": "Resolve discrepancy for goal: Implement and test a bounded continuity transfer bridge without new UI, schema architecture, or authority expansion.",
+          "statement": "Focused tests and a narrow continuity module support evidence-first transfer and architecture-drift avoidance."
+        }
+      ],
+      "cycle_id": "active-cognitive-cycle-444ee568b57133fb",
+      "observed_outcomes": [
+        {
+          "created_at": "2026-07-27T04:02:58+00:00",
+          "discrepancy": "progress_observed",
+          "expected": "Perform summarize_learning for the active focus using only referenced evidence.",
+          "observed": "Focused tests and a narrow continuity module support evidence-first transfer and architecture-drift avoidance.",
+          "operation_id": "cognitive-operation-8c025de11fc04c6a",
+          "outcome_id": "outcome-86fbe45b634ef393"
+        }
+      ],
+      "omitted_items_summary": "0 older or less relevant items omitted by packet budget",
+      "operator_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "packet_digest": "167ce6c253472f2da4d245dbcf64e61b47dc0b2080f9d4fd282dbef19ad125c1",
+      "packet_id": "working-memory-packet-d1dc3539665456fb",
+      "prior_cycle_summary": "Focused tests and a narrow continuity module support evidence-first transfer and architecture-drift avoidance.",
+      "provenance_refs": [
+        "ev-a-first-missing-transition",
+        "ev-a-focused-tests",
+        "ev-a-artifact"
+      ],
+      "recent_actions": [],
+      "relevant_evidence": [
+        {
+          "content": "",
+          "evidence_id": "ev-a-focused-tests",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "tests/runtime_gsr/test_continuity_episodic_learning.py",
+          "summary": "Focused continuity tests reject storage-only learning and salience-as-authority."
+        },
+        {
+          "content": "",
+          "evidence_id": "ev-a-artifact",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "orchestration/runtime/continuity_episodic_learning.py",
+          "summary": "A narrow continuity module qualifies records, retrieves related continuity, records influence, and evaluates transfer."
+        }
+      ],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "size_budget": 8,
+      "unresolved_questions": []
+    }
+  ]
+}

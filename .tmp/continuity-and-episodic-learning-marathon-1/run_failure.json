@@ -1,0 +1,4 @@
+{
+  "error": "name 'AUTHORITY_EFFECT_NONE' is not defined",
+  "traceback": "Traceback (most recent call last):\n  File \"G:\\Delta_Dev\\.tmp\\continuity-and-episodic-learning-marathon-1\\run_continuity_campaign.py\", line 360, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"G:\\Delta_Dev\\.tmp\\continuity-and-episodic-learning-marathon-1\\run_continuity_campaign.py\", line 351, in main\n    \"authority_effect\": AUTHORITY_EFFECT_NONE,\n                        ^^^^^^^^^^^^^^^^^^^^^\nNameError: name 'AUTHORITY_EFFECT_NONE' is not defined\n"
+}

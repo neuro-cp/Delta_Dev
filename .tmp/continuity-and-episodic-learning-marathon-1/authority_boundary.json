@@ -1,0 +1,6 @@
+{
+  "influence_authority_effect": "none",
+  "packet_authority_effect": "none",
+  "protected_paths_touched": false,
+  "rule": "salience may influence attention; salience may not create permission"
+}

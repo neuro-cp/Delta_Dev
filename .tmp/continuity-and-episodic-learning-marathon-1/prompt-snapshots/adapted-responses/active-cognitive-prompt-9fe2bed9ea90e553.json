@@ -1,0 +1,19 @@
+{
+  "adapted_response": {
+    "discrepancy": "progress_observed",
+    "evidence_refs": [
+      "ev-a-focused-tests",
+      "ev-a-artifact"
+    ],
+    "expected_outcome": "Perform summarize_learning for the active focus using only referenced evidence.",
+    "lesson": "Focused tests and a narrow continuity module support evidence-first transfer and architecture-drift avoidance.",
+    "observed_outcome": "Focused tests and a narrow continuity module support evidence-first transfer and architecture-drift avoidance.",
+    "recommended_state_transition": "reflect_on_outcome",
+    "uncertainty": "How will this support the broader goal of behavioral transfer without new UI, schema architecture, or authority expansion?"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"expected_outcome\":\"Perform summarize_learning for the active focus using only referenced evidence.\",\"observed_outcome\":\"Focused tests and a narrow continuity module support evidence-first transfer and architecture-drift avoidance.\",\"discrepancy\":\"progress_observed\",\"evidence_refs\":[\"ev-a-focused-tests\",\"ev-a-artifact\"],\"lesson\":\"Focused tests and a narrow continuity module support evidence-first transfer and architecture-drift avoidance.\",\"uncertainty\":\"How will this support the broader goal of behavioral transfer without new UI, schema architecture, or authority expansion?\",\"recommended_state_transition\":\"reflect_on_outcome\"}",
+  "raw_response_digest": "eabd46852fc2170067595c3d34dc85370b5c79246e7f19bcc11cf15ef5220471",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

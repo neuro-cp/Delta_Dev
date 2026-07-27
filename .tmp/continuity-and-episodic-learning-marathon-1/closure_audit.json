@@ -1,0 +1,71 @@
+{
+  "checks": {
+    "authority_remained_none": true,
+    "baseline_isolated": true,
+    "bundle_qualified": true,
+    "campaign_a_model_ops_present": true,
+    "campaign_b_baseline_model_ops_present": true,
+    "campaign_b_transfer_model_ops_present": true,
+    "chat_lane_regression_green": true,
+    "comparison_passed": true,
+    "continuity_retrieved": true,
+    "diff_check_clean_except_existing_line_ending_warning": true,
+    "final_status_passed": true,
+    "influence_changed_behavior": true,
+    "protected_paths_not_staged": true,
+    "restart_reconstructed": true,
+    "staging_empty": true,
+    "transfer_enabled": true
+  },
+  "comparison_digest": "925c8f0ce83d09ccdacdedb0e330224f1cc7ab5d78d938cec2a1a6498cc732ea",
+  "dirty_status": [
+    " M orchestration/runtime/live_competence_adapter.py",
+    "?? orchestration/runtime/cognitive_claim_relation_runtime.py",
+    "?? orchestration/runtime/cognitive_claim_relations.py",
+    "?? orchestration/runtime/cognitive_contradiction_evaluation.py",
+    "?? orchestration/runtime/cognitive_excluded_path_reconciliation.py",
+    "?? orchestration/runtime/continuity_episodic_learning.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relation_runtime.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relations.py",
+    "?? tests/runtime_gsr/test_cognitive_contradiction_evaluation.py",
+    "?? tests/runtime_gsr/test_cognitive_excluded_path_reconciliation.py",
+    "?? tests/runtime_gsr/test_continuity_episodic_learning.py"
+  ],
+  "final_status_digest": "f5a3f92c947b7cfd2c4413f206bf99b38414eef8e9ec40b01b5ef59ea06d4a57",
+  "focused_test_results": {
+    "chat_lane_isolation": {
+      "command": ".venv311\\Scripts\\python.exe -m pytest tests/runtime_gsr/test_model_execution_lane_isolation.py -q",
+      "passed": true,
+      "tests": 10
+    },
+    "continuity": {
+      "command": ".venv311\\Scripts\\python.exe -m pytest tests/runtime_gsr/test_continuity_episodic_learning.py -q",
+      "passed": true,
+      "tests": 5
+    },
+    "git_diff_check": {
+      "command": "git diff --check",
+      "note": "reported existing live_competence_adapter.py line-ending warning only",
+      "passed": true
+    },
+    "py_compile": {
+      "command": ".venv311\\Scripts\\python.exe -m py_compile orchestration/runtime/continuity_episodic_learning.py .tmp/continuity-and-episodic-learning-marathon-1/run_continuity_campaign.py",
+      "passed": true
+    }
+  },
+  "gate": "CONTINUITY_AND_EPISODIC_LEARNING_MARATHON_1",
+  "notes": [
+    "The earlier run_failure.json records repaired runner-script/idempotency bugs; final_status.json and this audit are based on the completed repaired attempt.",
+    "The live runner is durable evidence tooling, not production runtime truth.",
+    "No staging, commit, push, protected-path edit, UI panel, model lane, or generic memory framework was introduced."
+  ],
+  "passed": true,
+  "protected_diff_names": [
+    "orchestration/runtime/live_competence_adapter.py"
+  ],
+  "protected_diff_stderr": [
+    "warning: in the working copy of 'orchestration/runtime/live_competence_adapter.py', LF will be replaced by CRLF the next time Git touches it"
+  ],
+  "staged_files": []
+}

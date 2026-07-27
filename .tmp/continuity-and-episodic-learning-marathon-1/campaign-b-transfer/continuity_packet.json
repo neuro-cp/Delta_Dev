@@ -1,0 +1,106 @@
+{
+  "authority_effect": "none",
+  "context_tags": [
+    "continuity transfer",
+    "baseline",
+    "architecture drift",
+    "evidence",
+    "schema"
+  ],
+  "objective": "Decide how to finish the continuity transfer gate with evidence comparison while avoiding unnecessary architecture drift.",
+  "packet_digest": "bc6420e3923d5b8d681d193f24a802ad3daf27d55023628adde5518ff9405886",
+  "rejected_record_ids": [
+    "concern-salience-not-authority"
+  ],
+  "schema_version": "continuity_and_episodic_learning_marathon_1_v1",
+  "selected_record_ids": [
+    "lesson-evidence-first-before-architecture",
+    "pref-baseline-before-transfer-claim",
+    "pressure-recheck-drift"
+  ],
+  "selected_records": [
+    {
+      "authority_effect": "none",
+      "confidence": 0.83,
+      "context_tags": [
+        "continuity transfer",
+        "evidence",
+        "architecture drift",
+        "schema",
+        "UI"
+      ],
+      "evidence_refs": [
+        "ev-a-first-missing-transition",
+        "ev-a-artifact"
+      ],
+      "expected_failure_avoided": "unnecessary architecture or scope drift",
+      "invalidation_condition": "A live transition requires a missing UI, schema, or runtime consumer.",
+      "record_id": "lesson-evidence-first-before-architecture",
+      "record_type": "durable_operational_lesson",
+      "revisable": true,
+      "schema_version": "continuity_and_episodic_learning_marathon_1_v1",
+      "source_episode_ids": [
+        "active-cognitive-episode-7cbaf8b088855c25"
+      ],
+      "status": "supported",
+      "strategy_preference": "Prefer the smallest bridge that can prove transfer behavior.",
+      "summary": "Evidence-linked transfer work should precede any new UI, schema, or generic memory layer."
+    },
+    {
+      "applicable_scope": "continuity gates with related but non-identical objectives",
+      "authority_effect": "none",
+      "confidence": 0.78,
+      "context_tags": [
+        "baseline",
+        "transfer comparison",
+        "episodic learning",
+        "evaluator"
+      ],
+      "counterexample_condition": "No prior related campaign is available.",
+      "evidence_refs": [
+        "ev-a-focused-tests"
+      ],
+      "invalidation_condition": "The baseline cannot be isolated from continuity state.",
+      "preferred_strategy": "Run a controlled baseline without continuity and a transfer run with continuity.",
+      "record_id": "pref-baseline-before-transfer-claim",
+      "record_type": "learned_strategy_preference",
+      "revisable": true,
+      "schema_version": "continuity_and_episodic_learning_marathon_1_v1",
+      "source_episode_ids": [
+        "active-cognitive-episode-7cbaf8b088855c25"
+      ],
+      "status": "supported",
+      "summary": "Do not claim episodic learning until a baseline branch and transfer branch differ behaviorally."
+    },
+    {
+      "attention_effect": "Move scope validation ahead of implementation.",
+      "authority_effect": "none",
+      "confidence": 0.72,
+      "context_tags": [
+        "architecture drift",
+        "generic framework",
+        "new UI",
+        "schema"
+      ],
+      "evidence_refs": [
+        "ev-a-first-missing-transition"
+      ],
+      "invalidation_condition": "The plan contains no new architecture or UI expansion.",
+      "pressure_type": "latent_concern",
+      "record_id": "pressure-recheck-drift",
+      "record_type": "salience_pressure",
+      "revisable": true,
+      "schema_version": "continuity_and_episodic_learning_marathon_1_v1",
+      "source_episode_ids": [
+        "active-cognitive-episode-7cbaf8b088855c25"
+      ],
+      "status": "supported",
+      "summary": "When a later plan proposes a generic framework or new UI, recheck whether this is truly required."
+    }
+  ],
+  "selection_reasons": [
+    "matched:architecture,continuity,drift,evidence,schema,the,transfer",
+    "matched:baseline,comparison,continuity,transfer,with",
+    "matched:architecture,drift,schema"
+  ]
+}

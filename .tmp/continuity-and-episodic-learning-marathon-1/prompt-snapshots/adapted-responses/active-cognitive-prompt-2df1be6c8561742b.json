@@ -1,0 +1,19 @@
+{
+  "adapted_response": {
+    "discrepancy": "progress_observed",
+    "evidence_refs": [
+      "ev-a-focused-tests",
+      "ev-a-artifact"
+    ],
+    "expected_outcome": "Perform summarize_learning for the active focus using only referenced evidence.",
+    "lesson": "Evidence-first transfer and architecture-drift avoidance are supported by focused tests and a narrow continuity module.",
+    "observed_outcome": "Focused tests and a narrow continuity module support evidence-first transfer and architecture-drift avoidance.",
+    "recommended_state_transition": "reflect_on_outcome",
+    "uncertainty": "How can we ensure the continuity transfer bridge remains bounded and avoids drift without new UI, schema architecture, or authority expansion?"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"expected_outcome\":\"Perform summarize_learning for the active focus using only referenced evidence.\",\"observed_outcome\":\"Focused tests and a narrow continuity module support evidence-first transfer and architecture-drift avoidance.\",\"discrepancy\":\"progress_observed\",\"evidence_refs\":[\"ev-a-focused-tests\",\"ev-a-artifact\"],\"lesson\":\"Evidence-first transfer and architecture-drift avoidance are supported by focused tests and a narrow continuity module.\",\"uncertainty\":\"How can we ensure the continuity transfer bridge remains bounded and avoids drift without new UI, schema architecture, or authority expansion?\",\"recommended_state_transition\":\"reflect_on_outcome\"}",
+  "raw_response_digest": "c2799318b0d18e85ececd8e973c7d7746485fb2405d70f8f6f0bfceed374681e",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

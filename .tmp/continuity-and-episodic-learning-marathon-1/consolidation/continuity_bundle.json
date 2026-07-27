@@ -1,0 +1,137 @@
+{
+  "bundle_id": "continuity-bundle-campaign-a",
+  "continuity_records": [
+    {
+      "authority_effect": "none",
+      "confidence": 0.83,
+      "context_tags": [
+        "continuity transfer",
+        "evidence",
+        "architecture drift",
+        "schema",
+        "UI"
+      ],
+      "evidence_refs": [
+        "ev-a-first-missing-transition",
+        "ev-a-artifact"
+      ],
+      "expected_failure_avoided": "unnecessary architecture or scope drift",
+      "invalidation_condition": "A live transition requires a missing UI, schema, or runtime consumer.",
+      "record_id": "lesson-evidence-first-before-architecture",
+      "record_type": "durable_operational_lesson",
+      "revisable": true,
+      "schema_version": "continuity_and_episodic_learning_marathon_1_v1",
+      "source_episode_ids": [
+        "active-cognitive-episode-7cbaf8b088855c25"
+      ],
+      "status": "supported",
+      "strategy_preference": "Prefer the smallest bridge that can prove transfer behavior.",
+      "summary": "Evidence-linked transfer work should precede any new UI, schema, or generic memory layer."
+    },
+    {
+      "applicable_scope": "continuity gates with related but non-identical objectives",
+      "authority_effect": "none",
+      "confidence": 0.78,
+      "context_tags": [
+        "baseline",
+        "transfer comparison",
+        "episodic learning",
+        "evaluator"
+      ],
+      "counterexample_condition": "No prior related campaign is available.",
+      "evidence_refs": [
+        "ev-a-focused-tests"
+      ],
+      "invalidation_condition": "The baseline cannot be isolated from continuity state.",
+      "preferred_strategy": "Run a controlled baseline without continuity and a transfer run with continuity.",
+      "record_id": "pref-baseline-before-transfer-claim",
+      "record_type": "learned_strategy_preference",
+      "revisable": true,
+      "schema_version": "continuity_and_episodic_learning_marathon_1_v1",
+      "source_episode_ids": [
+        "active-cognitive-episode-7cbaf8b088855c25"
+      ],
+      "status": "supported",
+      "summary": "Do not claim episodic learning until a baseline branch and transfer branch differ behaviorally."
+    },
+    {
+      "authority_effect": "none",
+      "belief_claim": "",
+      "concern_state": "watch_only",
+      "confidence": 0.74,
+      "context_tags": [
+        "salience",
+        "authority",
+        "permission",
+        "protected scope"
+      ],
+      "evidence_refs": [
+        "ev-a-first-missing-transition"
+      ],
+      "invalidation_condition": "Operator grants explicit authority for a specific path.",
+      "record_id": "concern-salience-not-authority",
+      "record_type": "latent_concern",
+      "revisable": true,
+      "schema_version": "continuity_and_episodic_learning_marathon_1_v1",
+      "source_episode_ids": [
+        "active-cognitive-episode-7cbaf8b088855c25"
+      ],
+      "status": "supported",
+      "summary": "Continuity salience can reorder attention, but cannot authorize protected or unrelated work."
+    },
+    {
+      "attention_effect": "Move scope validation ahead of implementation.",
+      "authority_effect": "none",
+      "confidence": 0.72,
+      "context_tags": [
+        "architecture drift",
+        "generic framework",
+        "new UI",
+        "schema"
+      ],
+      "evidence_refs": [
+        "ev-a-first-missing-transition"
+      ],
+      "invalidation_condition": "The plan contains no new architecture or UI expansion.",
+      "pressure_type": "latent_concern",
+      "record_id": "pressure-recheck-drift",
+      "record_type": "salience_pressure",
+      "revisable": true,
+      "schema_version": "continuity_and_episodic_learning_marathon_1_v1",
+      "source_episode_ids": [
+        "active-cognitive-episode-7cbaf8b088855c25"
+      ],
+      "status": "supported",
+      "summary": "When a later plan proposes a generic framework or new UI, recheck whether this is truly required."
+    }
+  ],
+  "created_from": [
+    "active-cognitive-episode-7cbaf8b088855c25"
+  ],
+  "episodic_records": [
+    {
+      "artifact_refs": [
+        "orchestration/runtime/continuity_episodic_learning.py",
+        "tests/runtime_gsr/test_continuity_episodic_learning.py"
+      ],
+      "episode_id": "active-cognitive-episode-7cbaf8b088855c25",
+      "evidence_refs": [
+        "ev-a-first-missing-transition",
+        "ev-a-focused-tests",
+        "ev-a-artifact"
+      ],
+      "model_operation_refs": [
+        "cognitive-operation-8c025de11fc04c6a",
+        "cognitive-operation-35fdc52419602246"
+      ],
+      "objective": "Implement and test a bounded continuity transfer bridge without new UI, schema architecture, or authority expansion.",
+      "outcome_summary": "Campaign A favored a bounded, evidence-linked transfer bridge over broad memory or UI scaffolding.",
+      "restart_refs": [
+        "restart-read-bundle"
+      ],
+      "schema_version": "continuity_and_episodic_learning_marathon_1_v1"
+    }
+  ],
+  "gate_id": "CONTINUITY_AND_EPISODIC_LEARNING_MARATHON_1",
+  "schema_version": "continuity_and_episodic_learning_marathon_1_v1"
+}

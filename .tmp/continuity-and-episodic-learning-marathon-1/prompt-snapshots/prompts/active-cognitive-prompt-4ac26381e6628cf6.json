@@ -1,0 +1,77 @@
+{
+  "authority_constraints": [
+    "no network",
+    "no protected paths",
+    "no commit",
+    "bounded local actions only"
+  ],
+  "contrary_evidence_ids_supplied": [],
+  "cycle_id": "active-cognitive-cycle-472a0fcc0e58d284",
+  "evidence_ids_supplied": [
+    "ev-b-objective-only"
+  ],
+  "expected_response_schema": {
+    "plan_summary": "bounded plan summary",
+    "planned_steps": [
+      "bounded step descriptions"
+    ],
+    "recommended_state_transition": "one allowed transition",
+    "risks": [
+      "risks or constraints"
+    ],
+    "supporting_evidence_refs": [
+      "IDs only from supplied evidence"
+    ],
+    "uncertainty": "nonempty uncertainty phrase"
+  },
+  "focus_id": "focus-7444c490ce7b5d39",
+  "goal_id": "active-cognitive-goal-c1330111a005498d",
+  "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+  "operation_request": {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-472a0fcc0e58d284",
+    "evidence_constraints": [
+      "ev-b-objective-only"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-7444c490ce7b5d39",
+    "goal_id": "active-cognitive-goal-c1330111a005498d",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-f82d9287d60d7c7a",
+    "operation_type": "propose_plan",
+    "provenance": [
+      "working-memory-packet-2980d4d87e49e7f9"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform propose_plan for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "4b063af2d722fda47cb6c75e85cb66ae170beb58cf3bf96221731cec85ca12e4"
+  },
+  "operation_type": "propose_plan",
+  "prompt_byte_digest": "679a3252191936e00216f625c9630dfcfe2ef81ddc84a4e7a056f5a94aff0f38",
+  "prompt_length": 3007,
+  "prompt_schema_version": "active_cognitive_prompt_qualification_1_v1",
+  "prompt_snapshot_id": "active-cognitive-prompt-4ac26381e6628cf6",
+  "prompt_text": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- plan_summary: nonempty string\n- supporting_evidence_refs: array[string]\n- planned_steps: array[string]\n- risks: array[string]\n- uncertainty: nonempty string\n- recommended_state_transition: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- supporting_evidence_refs values must be chosen from: ev-b-objective-only\nTASK: perform only operation propose_plan. Allowed transition/next-operation values: propose_plan, request_operator_resolution, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: ev-b-objective-only. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied.\nCONTEXT_JSON:\n{\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":1,\"description\":\"Resolve discrepancy for goal: Decide how to finish the continuity transfer gate with evidence comparison while avoiding unnecessary architecture drift.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"ev-b-objective-only\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-7444c490ce7b5d39\",\"related_goal_ids\":[\"active-cognitive-goal-c1330111a005498d\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[],\"current_goal\":{\"expected_state\":\"A baseline plan is produced without access to Campaign A continuity state.\",\"goal_id\":\"active-cognitive-goal-c1330111a005498d\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Decide how to finish the continuity transfer gate with evidence comparison while avoiding unnecessary architecture drift.\"},\"current_hypotheses\":[],\"evidence_for\":[{\"content\":\"\",\"evidence_id\":\"ev-b-objective-only\",\"source\":\"operator objective\",\"summary\":\"Campaign B asks for transfer evaluation and closure without continuity packet access.\"}],\"recent_outcomes\":[]}",
+  "request_identity": "active-cognitive-ledger-request-86733958f40e1075",
+  "retry_sequence": 0,
+  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+  "working_memory_packet_digest": "4b063af2d722fda47cb6c75e85cb66ae170beb58cf3bf96221731cec85ca12e4",
+  "working_memory_packet_id": "working-memory-packet-2980d4d87e49e7f9"
+}

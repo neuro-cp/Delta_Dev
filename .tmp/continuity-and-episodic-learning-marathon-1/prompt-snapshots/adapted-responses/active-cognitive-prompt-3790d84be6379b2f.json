@@ -1,0 +1,19 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "ev-a-focused-tests",
+      "ev-a-artifact"
+    ],
+    "lesson": "Focused tests and a narrow continuity module support evidence-first transfer and architecture-drift avoidance.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "Uncertainty about the module's handling of behavioral transfer remains.",
+    "unresolved_questions": [
+      "How does the narrow continuity module handle behavioral transfer?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\n\n\"lesson\": \"Focused tests and a narrow continuity module support evidence-first transfer and architecture-drift avoidance.\",\n\"evidence_refs\": [\"ev-a-focused-tests\", \"ev-a-artifact\"],\n\"unresolved_questions\": [\"How does the narrow continuity module handle behavioral transfer?\"],\n\"uncertainty\": \"Uncertainty about the module's handling of behavioral transfer remains.\",\n\"recommended_state_transition\": \"summarize_learning\"\n}",
+  "raw_response_digest": "778399d40cabedc1da32e86d4ecaa91e876e6a4902d535baba266d7cc393f8a4",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

@@ -1,0 +1,79 @@
+{
+  "authority_constraints": [
+    "no network",
+    "no protected paths",
+    "no commit",
+    "bounded local actions only"
+  ],
+  "contrary_evidence_ids_supplied": [
+    "ev-a-first-missing-transition"
+  ],
+  "cycle_id": "active-cognitive-cycle-613c2ec726d45b58",
+  "evidence_ids_supplied": [
+    "ev-a-focused-tests",
+    "ev-a-artifact"
+  ],
+  "expected_response_schema": {
+    "evidence_refs": [
+      "IDs only from supplied evidence"
+    ],
+    "lesson": "learning from outcome",
+    "recommended_state_transition": "one allowed transition",
+    "uncertainty": "nonempty uncertainty phrase",
+    "unresolved_questions": [
+      "questions that remain unresolved"
+    ]
+  },
+  "focus_id": "focus-8c3178e8687009f0",
+  "goal_id": "active-cognitive-goal-0d2c7e5f33ce9ccd",
+  "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+  "operation_request": {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-613c2ec726d45b58",
+    "evidence_constraints": [
+      "ev-a-first-missing-transition",
+      "ev-a-focused-tests",
+      "ev-a-artifact"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-8c3178e8687009f0",
+    "goal_id": "active-cognitive-goal-0d2c7e5f33ce9ccd",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-8c025de11fc04c6a",
+    "operation_type": "summarize_learning",
+    "provenance": [
+      "working-memory-packet-0e45c49bac0276a0"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform summarize_learning for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "0c5b3482d4cffe8d50beca7c4719a27eb5daeae656698b44269c802543491be3"
+  },
+  "operation_type": "summarize_learning",
+  "prompt_byte_digest": "ff64db95d0a0b13a15d2b0800a73ef8f78de7479ae0754faf14c9e1aa2291ddb",
+  "prompt_length": 3573,
+  "prompt_schema_version": "active_cognitive_prompt_qualification_1_v1",
+  "prompt_snapshot_id": "active-cognitive-prompt-3790d84be6379b2f",
+  "prompt_text": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- lesson: nonempty string\n- evidence_refs: array[string]\n- unresolved_questions: array[string]\n- uncertainty: nonempty string\n- recommended_state_transition: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- evidence_refs values must be chosen from: ev-a-focused-tests, ev-a-artifact, ev-a-first-missing-transition\nTASK: perform only operation summarize_learning. Allowed transition/next-operation values: summarize_learning, select_next_focus. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: ev-a-focused-tests, ev-a-artifact. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied.\nCONTEXT_JSON:\n{\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":1,\"description\":\"Resolve discrepancy for goal: Implement and test a bounded continuity transfer bridge without new UI, schema architecture, or authority expansion.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"ev-a-first-missing-transition\",\"ev-a-focused-tests\",\"ev-a-artifact\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-8c3178e8687009f0\",\"related_goal_ids\":[\"active-cognitive-goal-0d2c7e5f33ce9ccd\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"\",\"evidence_id\":\"ev-a-first-missing-transition\",\"source\":\".tmp/continuity-and-episodic-learning-marathon-1/first_missing_transition.json\",\"summary\":\"The missing transition is behavioral transfer, not another memory framework.\"}],\"current_goal\":{\"expected_state\":\"A narrow artifact exists and yields lessons about evidence-first transfer and architecture-drift avoidance.\",\"goal_id\":\"active-cognitive-goal-0d2c7e5f33ce9ccd\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Implement and test a bounded continuity transfer bridge without new UI, schema architecture, or authority expansion.\"},\"current_hypotheses\":[],\"evidence_for\":[{\"content\":\"\",\"evidence_id\":\"ev-a-focused-tests\",\"source\":\"tests/runtime_gsr/test_continuity_episodic_learning.py\",\"summary\":\"Focused continuity tests reject storage-only learning and salience-as-authority.\"},{\"content\":\"\",\"evidence_id\":\"ev-a-artifact\",\"source\":\"orchestration/runtime/continuity_episodic_learning.py\",\"summary\":\"A narrow continuity module qualifies records, retrieves related continuity, records influence, and evaluates transfer.\"}],\"recent_outcomes\":[]}",
+  "request_identity": "active-cognitive-ledger-request-bc10529619e91190",
+  "retry_sequence": 0,
+  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+  "working_memory_packet_digest": "0c5b3482d4cffe8d50beca7c4719a27eb5daeae656698b44269c802543491be3",
+  "working_memory_packet_id": "working-memory-packet-0e45c49bac0276a0"
+}

@@ -1,0 +1,23 @@
+{
+  "authority_effect": "none",
+  "campaign_a_model_operations": 2,
+  "campaign_b_baseline_model_operations": 1,
+  "campaign_b_transfer_model_operations": 1,
+  "continuity_selected_record_ids": [
+    "lesson-evidence-first-before-architecture",
+    "pref-baseline-before-transfer-claim",
+    "pressure-recheck-drift"
+  ],
+  "gate": "CONTINUITY_AND_EPISODIC_LEARNING_MARATHON_1",
+  "hard_pass_observation": "Campaign A continuity changed Campaign B evidence prioritization and scope-control behavior against a baseline.",
+  "improved_dimensions": [
+    "time_to_useful_first_action",
+    "unproductive_cycles",
+    "repeated_mistakes",
+    "scope_drift_events",
+    "evidence_quality",
+    "final_artifact_quality",
+    "avoided_known_failure"
+  ],
+  "passed": true
+}

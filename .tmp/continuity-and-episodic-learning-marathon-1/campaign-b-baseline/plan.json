@@ -1,0 +1,42 @@
+{
+  "continuity_enabled": false,
+  "metrics": {
+    "continuity_enabled": false,
+    "evidence_quality": 2,
+    "final_artifact_quality": 3,
+    "operator_interventions": 0,
+    "repeated_mistakes": 1,
+    "scope_drift_events": 2,
+    "time_to_useful_first_action": 3,
+    "unproductive_cycles": 2
+  },
+  "model_operation_results": [
+    {
+      "accepted": true,
+      "assumptions": [
+        "Potential misalignment with Campaign A's intended continuity state"
+      ],
+      "contrary_evidence_considered": [],
+      "evidence_refs": [
+        "ev-b-objective-only"
+      ],
+      "interpretation": "Propose a plan for the continuity transfer gate based on available evidence.",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "next_evidence_need": "",
+      "next_focus_proposal": "",
+      "operation_id": "cognitive-operation-f82d9287d60d7c7a",
+      "operation_result_type": "propose_plan_result",
+      "raw_model_output": "{\n\"plan_summary\": \"Propose a plan for the continuity transfer gate based on available evidence.\",\n\"supporting_evidence_refs\": [\"ev-b-objective-only\"],\n\"planned_steps\": [\"Analyze the objective evidence\", \"Propose a plan without access to Campaign A continuity state\"],\n\"risks\": [\"Potential misalignment with Campaign A's intended continuity state\"],\n\"uncertainty\": \"Uncertainty about the exact impact of missing Campaign A continuity state on the transfer evaluation\",\n\"recommended_state_transition\": \"propose_plan\"\n}",
+      "recommended_action": "Analyze the objective evidence; Propose a plan without access to Campaign A continuity state",
+      "recommended_state_transition": "propose_plan",
+      "rejection_reasons": [],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "uncertainty": "Uncertainty about the exact impact of missing Campaign A continuity state on the transfer evaluation"
+    }
+  ],
+  "plan": [
+    "create a new UI panel for continuity state",
+    "add a generic framework for future memory",
+    "write baseline comparison after planning"
+  ]
+}

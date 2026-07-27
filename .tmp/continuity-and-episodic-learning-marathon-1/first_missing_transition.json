@@ -1,0 +1,26 @@
+{
+  "gate": "CONTINUITY_AND_EPISODIC_LEARNING_MARATHON_1",
+  "actual_transition_found": {
+    "current_capability": "DELTA can complete sustained objectives, preserve explicit campaign state, revise hypotheses, survive restart, and choose successor focuses.",
+    "current_storage": "Completed experience is preserved as campaign evidence, active cognitive episode state, model ledgers, reports, useful artifacts, and next-focus records.",
+    "missing_transition": "No proven runtime transition metabolizes completed experience into bounded reusable continuity state, retrieves it under relevance controls, and demonstrates changed behavior on a later related but non-identical objective.",
+    "consequence": "DELTA has durable history, but has not yet proven it is behaviorally shaped by history."
+  },
+  "required_transition": [
+    "completed episode",
+    "evidence-grounded episodic extraction",
+    "qualified continuity records",
+    "persistence and restart",
+    "relevance-controlled retrieval",
+    "explicit influence on later cognition",
+    "observable behavioral difference",
+    "independent baseline comparison",
+    "evidence-backed transfer judgment"
+  ],
+  "source_mutation_before_record": false,
+  "protected_scope": [
+    "DELTA-75",
+    "reports/RC4_*",
+    "orchestration/runtime/live_competence_adapter.py"
+  ]
+}

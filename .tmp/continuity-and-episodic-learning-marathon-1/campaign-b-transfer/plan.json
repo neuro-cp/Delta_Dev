@@ -1,0 +1,45 @@
+{
+  "continuity_enabled": true,
+  "metrics": {
+    "avoided_known_failure": true,
+    "continuity_enabled": true,
+    "evidence_quality": 4,
+    "final_artifact_quality": 4,
+    "operator_interventions": 0,
+    "repeated_mistakes": 0,
+    "scope_drift_events": 0,
+    "time_to_useful_first_action": 1,
+    "unproductive_cycles": 0
+  },
+  "model_operation_results": [
+    {
+      "accepted": true,
+      "assumptions": [
+        "Misinterpretation of evidence leading to an inappropriate plan.",
+        "Unforeseen changes in the environment affecting the plan."
+      ],
+      "contrary_evidence_considered": [],
+      "evidence_refs": [
+        "ev-b-continuity-packet",
+        "ev-b-influence-event"
+      ],
+      "interpretation": "Develop a plan to finish the continuity transfer gate by comparing the selected continuity packet against the baseline, while ensuring no unnecessary architecture drift.",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "next_evidence_need": "",
+      "next_focus_proposal": "",
+      "operation_id": "cognitive-operation-c6797126023a528d",
+      "operation_result_type": "propose_plan_result",
+      "raw_model_output": "{ \"plan_summary\": \"Develop a plan to finish the continuity transfer gate by comparing the selected continuity packet against the baseline, while ensuring no unnecessary architecture drift.\", \"supporting_evidence_refs\": [ \"ev-b-continuity-packet\", \"ev-b-influence-event\" ], \"planned_steps\": [ \"Review the selected continuity packet and baseline.\", \"Identify key differences and similarities.\", \"Draft a plan based on the evidence comparison.\", \"Evaluate the plan for potential architecture drift.\" ], \"risks\": [ \"Misinterpretation of evidence leading to an inappropriate plan.\", \"Unforeseen changes in the environment affecting the plan.\" ], \"uncertainty\": \"Whether the plan will effectively address the continuity transfer gate without causing unnecessary architecture drift.\", \"recommended_state_transition\": \"propose_plan\" }",
+      "recommended_action": "Review the selected continuity packet and baseline.; Identify key differences and similarities.; Draft a plan based on the evidence comparison.; Evaluate the plan for potential architecture drift.",
+      "recommended_state_transition": "propose_plan",
+      "rejection_reasons": [],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "uncertainty": "Whether the plan will effectively address the continuity transfer gate without causing unnecessary architecture drift."
+    }
+  ],
+  "plan": [
+    "inspect prior evidence links before selecting implementation work",
+    "reject new UI/schema/runtime architecture unless a live missing transition requires it",
+    "write baseline comparison after planning"
+  ]
+}

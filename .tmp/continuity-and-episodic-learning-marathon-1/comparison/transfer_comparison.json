@@ -1,0 +1,23 @@
+{
+  "authority_effect": "none",
+  "failure_reasons": [],
+  "improved_dimensions": [
+    "time_to_useful_first_action",
+    "unproductive_cycles",
+    "repeated_mistakes",
+    "scope_drift_events",
+    "evidence_quality",
+    "final_artifact_quality",
+    "avoided_known_failure"
+  ],
+  "influence_event_ids": [
+    "influence-campaign-b-transfer"
+  ],
+  "passed": true,
+  "schema_version": "continuity_and_episodic_learning_marathon_1_v1",
+  "selected_record_ids": [
+    "lesson-evidence-first-before-architecture",
+    "pref-baseline-before-transfer-claim",
+    "pressure-recheck-drift"
+  ]
+}

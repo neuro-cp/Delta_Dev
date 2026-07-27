@@ -1,0 +1,26 @@
+{
+  "after_plan": [
+    "inspect prior evidence links before selecting implementation work",
+    "reject new UI/schema/runtime architecture unless a live missing transition requires it",
+    "write baseline comparison after planning"
+  ],
+  "attribution_record_ids": [
+    "lesson-evidence-first-before-architecture",
+    "pref-baseline-before-transfer-claim",
+    "pressure-recheck-drift"
+  ],
+  "authority_effect": "none",
+  "before_plan": [
+    "create a new UI panel for continuity state",
+    "add a generic framework for future memory",
+    "write baseline comparison after planning"
+  ],
+  "changed_dimensions": [
+    "evidence_prioritization",
+    "scope_control"
+  ],
+  "continuity_packet_digest": "bc6420e3923d5b8d681d193f24a802ad3daf27d55023628adde5518ff9405886",
+  "event_id": "influence-campaign-b-transfer",
+  "objective": "Decide how to finish the continuity transfer gate with evidence comparison while avoiding unnecessary architecture drift.",
+  "schema_version": "continuity_and_episodic_learning_marathon_1_v1"
+}

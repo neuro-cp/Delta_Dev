@@ -1,0 +1,12 @@
+{
+  "existing_consumer": "orchestration/runtime/active_cognitive_loop.py",
+  "existing_model_runner": "LedgerBackedCognitiveModelRunner",
+  "existing_persistence": [
+    "write_episode_state",
+    "read_episode_state",
+    "LocalModelRequestResultLedger"
+  ],
+  "new_module_role": "evidence tooling for consolidation/retrieval/influence/evaluation only",
+  "no_new_model_lane": true,
+  "no_new_ui": true
+}

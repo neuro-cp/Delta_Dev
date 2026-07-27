@@ -1,0 +1,20 @@
+{
+  "branch": "codex/delta-cognitive-core",
+  "head": "9cd29d825ff03ca23e38991693875df35c889854",
+  "staged_files": [],
+  "status_short": [
+    " M orchestration/runtime/live_competence_adapter.py",
+    "?? orchestration/runtime/cognitive_claim_relation_runtime.py",
+    "?? orchestration/runtime/cognitive_claim_relations.py",
+    "?? orchestration/runtime/cognitive_contradiction_evaluation.py",
+    "?? orchestration/runtime/cognitive_excluded_path_reconciliation.py",
+    "?? orchestration/runtime/continuity_episodic_learning.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relation_runtime.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relations.py",
+    "?? tests/runtime_gsr/test_cognitive_contradiction_evaluation.py",
+    "?? tests/runtime_gsr/test_cognitive_excluded_path_reconciliation.py",
+    "?? tests/runtime_gsr/test_continuity_episodic_learning.py"
+  ],
+  "upstream": "9cd29d825ff03ca23e38991693875df35c889854"
+}

@@ -1,0 +1,323 @@
+{
+  "actions": [],
+  "attention": {
+    "abandonment_reason": "",
+    "active_focus_id": "focus-7444c490ce7b5d39",
+    "active_focus_summary": "Resolve discrepancy for goal: Decide how to finish the continuity transfer gate with evidence comparison while avoiding unnecessary architecture drift.",
+    "active_goal_ids": [
+      "active-cognitive-goal-c1330111a005498d"
+    ],
+    "attention_state_id": "active-attention-cbb1b41afd80371b",
+    "candidate_focuses": [
+      {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "local_model_semantic_operation",
+        "creation_sequence": 1,
+        "description": "Resolve discrepancy for goal: Decide how to finish the continuity transfer gate with evidence comparison while avoiding unnecessary architecture drift.",
+        "evidence_need": "local evidence supporting or challenging the goal",
+        "evidence_refs": [
+          "ev-b-objective-only"
+        ],
+        "expected_value": "useful_progress",
+        "focus_id": "focus-7444c490ce7b5d39",
+        "related_goal_ids": [
+          "active-cognitive-goal-c1330111a005498d"
+        ],
+        "salience_categories": [
+          "operator_priority",
+          "goal_discrepancy",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "goal_discrepancy",
+        "urgency": "medium"
+      }
+    ],
+    "continuation_reason": "",
+    "cycle_sequence": 1,
+    "evidence_refs": [
+      "ev-b-objective-only"
+    ],
+    "focus_started_at": "2026-07-27T04:03:28+00:00",
+    "interruption_priority": "none",
+    "interruption_reason": "",
+    "last_progress_at": "2026-07-27T04:03:28+00:00",
+    "previous_focus_ids": [],
+    "progress_summary": "selected focus for cognitive operation",
+    "return_condition": "",
+    "salience_reasons": [
+      "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+      "operator_priority",
+      "goal_discrepancy",
+      "expected_useful_progress"
+    ],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "stagnation_count": 0,
+    "switch_reason": "",
+    "transition_journal": [
+      {
+        "at": "2026-07-27T04:03:28+00:00",
+        "focus_id": "focus-7444c490ce7b5d39",
+        "reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "sequence": 1,
+        "transition": "establish_focus"
+      }
+    ],
+    "unresolved_questions": []
+  },
+  "budgets": {
+    "max_actions": 4,
+    "max_cycles": 2,
+    "max_model_calls": 2,
+    "max_packet_items": 8
+  },
+  "completed": false,
+  "cycles": [
+    {
+      "completed": true,
+      "cycle_id": "active-cognitive-cycle-472a0fcc0e58d284",
+      "focus_id": "focus-7444c490ce7b5d39",
+      "operation_id": "cognitive-operation-f82d9287d60d7c7a",
+      "outcome_id": "outcome-597191505dc13096",
+      "packet_digest": "4b063af2d722fda47cb6c75e85cb66ae170beb58cf3bf96221731cec85ca12e4",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "sequence": 1,
+      "summary": "Propose a plan for the continuity transfer gate based on available evidence."
+    }
+  ],
+  "episode_id": "active-cognitive-episode-02f71a3932fb72e5",
+  "evidence": [
+    {
+      "content": "",
+      "evidence_id": "ev-b-objective-only",
+      "exists": true,
+      "kind": "local_evidence",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "operator objective",
+      "summary": "Campaign B asks for transfer evaluation and closure without continuity packet access."
+    }
+  ],
+  "goals": [
+    {
+      "expected_state": "A baseline plan is produced without access to Campaign A continuity state.",
+      "goal_id": "active-cognitive-goal-c1330111a005498d",
+      "observed_state": "",
+      "priority": "operator_requested",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "summary": "Decide how to finish the continuity transfer gate with evidence comparison while avoiding unnecessary architecture drift."
+    }
+  ],
+  "hypotheses": [
+    {
+      "assumptions": [
+        "Potential misalignment with Campaign A's intended continuity state"
+      ],
+      "confidence_state": "plausible",
+      "created_at": "2026-07-27T04:03:54+00:00",
+      "disposition": "needs_challenge",
+      "evidence_against": [],
+      "evidence_for": [
+        "ev-b-objective-only"
+      ],
+      "expected_observations": [
+        "local evidence should support a bounded useful step"
+      ],
+      "hypothesis_id": "hypothesis-441416b0e70699f6",
+      "lifecycle_state": "active",
+      "originating_focus_id": "focus-7444c490ce7b5d39",
+      "originating_goal_id": "active-cognitive-goal-c1330111a005498d",
+      "provenance": [
+        "cognitive-operation-f82d9287d60d7c7a"
+      ],
+      "revised_at": "",
+      "revision_parent_id": "",
+      "revision_reason": "",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "scope": "Resolve discrepancy for goal: Decide how to finish the continuity transfer gate with evidence comparison while avoiding unnecessary architecture drift.",
+      "statement": "Propose a plan for the continuity transfer gate based on available evidence."
+    }
+  ],
+  "learning_updates": [],
+  "loop_state": "persisting",
+  "model_call_count": 1,
+  "next_focus_candidates": [
+    {
+      "authority_need": "none_for_local_analysis",
+      "blocking_state": "",
+      "capability_need": "local_model_semantic_operation",
+      "creation_sequence": 1,
+      "description": "Resolve discrepancy for goal: Decide how to finish the continuity transfer gate with evidence comparison while avoiding unnecessary architecture drift.",
+      "evidence_need": "local evidence supporting or challenging the goal",
+      "evidence_refs": [
+        "ev-b-objective-only"
+      ],
+      "expected_value": "useful_progress",
+      "focus_id": "focus-7444c490ce7b5d39",
+      "related_goal_ids": [
+        "active-cognitive-goal-c1330111a005498d"
+      ],
+      "salience_categories": [
+        "operator_priority",
+        "goal_discrepancy",
+        "expected_useful_progress"
+      ],
+      "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "goal_discrepancy",
+      "urgency": "medium"
+    }
+  ],
+  "operation_requests": [
+    {
+      "authority_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "budget": {
+        "max_response_words": 220,
+        "max_retries": 1
+      },
+      "cycle_id": "active-cognitive-cycle-472a0fcc0e58d284",
+      "evidence_constraints": [
+        "ev-b-objective-only"
+      ],
+      "expected_output_schema": {
+        "contrary_evidence_considered": "list",
+        "evidence_refs": "list",
+        "interpretation": "string",
+        "operation_result_type": "string",
+        "recommended_state_transition": "string",
+        "uncertainty": "string"
+      },
+      "focus_id": "focus-7444c490ce7b5d39",
+      "goal_id": "active-cognitive-goal-c1330111a005498d",
+      "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+      "operation_id": "cognitive-operation-f82d9287d60d7c7a",
+      "operation_type": "propose_plan",
+      "provenance": [
+        "working-memory-packet-2980d4d87e49e7f9"
+      ],
+      "retry_allowance": 1,
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "task": "Perform propose_plan for the active focus using only referenced evidence.",
+      "working_memory_packet_digest": "4b063af2d722fda47cb6c75e85cb66ae170beb58cf3bf96221731cec85ca12e4"
+    }
+  ],
+  "operation_results": [
+    {
+      "accepted": true,
+      "assumptions": [
+        "Potential misalignment with Campaign A's intended continuity state"
+      ],
+      "contrary_evidence_considered": [],
+      "evidence_refs": [
+        "ev-b-objective-only"
+      ],
+      "interpretation": "Propose a plan for the continuity transfer gate based on available evidence.",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "next_evidence_need": "",
+      "next_focus_proposal": "",
+      "operation_id": "cognitive-operation-f82d9287d60d7c7a",
+      "operation_result_type": "propose_plan_result",
+      "raw_model_output": "{\n\"plan_summary\": \"Propose a plan for the continuity transfer gate based on available evidence.\",\n\"supporting_evidence_refs\": [\"ev-b-objective-only\"],\n\"planned_steps\": [\"Analyze the objective evidence\", \"Propose a plan without access to Campaign A continuity state\"],\n\"risks\": [\"Potential misalignment with Campaign A's intended continuity state\"],\n\"uncertainty\": \"Uncertainty about the exact impact of missing Campaign A continuity state on the transfer evaluation\",\n\"recommended_state_transition\": \"propose_plan\"\n}",
+      "recommended_action": "Analyze the objective evidence; Propose a plan without access to Campaign A continuity state",
+      "recommended_state_transition": "propose_plan",
+      "rejection_reasons": [],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "uncertainty": "Uncertainty about the exact impact of missing Campaign A continuity state on the transfer evaluation"
+    }
+  ],
+  "outcomes": [
+    {
+      "created_at": "2026-07-27T04:03:54+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform propose_plan for the active focus using only referenced evidence.",
+      "observed": "Propose a plan for the continuity transfer gate based on available evidence.",
+      "operation_id": "cognitive-operation-f82d9287d60d7c7a",
+      "outcome_id": "outcome-597191505dc13096"
+    }
+  ],
+  "pending_operator_requests": [],
+  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+  "title": "Campaign B baseline - no continuity",
+  "useful_artifacts": [],
+  "working_memory_packets": [
+    {
+      "active_focus": {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "local_model_semantic_operation",
+        "creation_sequence": 1,
+        "description": "Resolve discrepancy for goal: Decide how to finish the continuity transfer gate with evidence comparison while avoiding unnecessary architecture drift.",
+        "evidence_need": "local evidence supporting or challenging the goal",
+        "evidence_refs": [
+          "ev-b-objective-only"
+        ],
+        "expected_value": "useful_progress",
+        "focus_id": "focus-7444c490ce7b5d39",
+        "related_goal_ids": [
+          "active-cognitive-goal-c1330111a005498d"
+        ],
+        "salience_categories": [
+          "operator_priority",
+          "goal_discrepancy",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "goal_discrepancy",
+        "urgency": "medium"
+      },
+      "active_goal": {
+        "expected_state": "A baseline plan is produced without access to Campaign A continuity state.",
+        "goal_id": "active-cognitive-goal-c1330111a005498d",
+        "observed_state": "",
+        "priority": "operator_requested",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "summary": "Decide how to finish the continuity transfer gate with evidence comparison while avoiding unnecessary architecture drift."
+      },
+      "authority_state": "authorized_for_local_cognitive_marathon",
+      "capability_limits": [
+        "model calls budgeted",
+        "source mutation requires explicit bounded patch authority"
+      ],
+      "conflicting_evidence": [],
+      "construction_rationale": "bounded by active focus, goal discrepancy, recency, evidence provenance, and operation need",
+      "current_hypotheses": [],
+      "cycle_id": "active-cognitive-cycle-472a0fcc0e58d284",
+      "observed_outcomes": [],
+      "omitted_items_summary": "0 older or less relevant items omitted by packet budget",
+      "operator_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "packet_digest": "4b063af2d722fda47cb6c75e85cb66ae170beb58cf3bf96221731cec85ca12e4",
+      "packet_id": "working-memory-packet-2980d4d87e49e7f9",
+      "prior_cycle_summary": "",
+      "provenance_refs": [
+        "ev-b-objective-only"
+      ],
+      "recent_actions": [],
+      "relevant_evidence": [
+        {
+          "content": "",
+          "evidence_id": "ev-b-objective-only",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "operator objective",
+          "summary": "Campaign B asks for transfer evaluation and closure without continuity packet access."
+        }
+      ],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "size_budget": 8,
+      "unresolved_questions": []
+    }
+  ]
+}

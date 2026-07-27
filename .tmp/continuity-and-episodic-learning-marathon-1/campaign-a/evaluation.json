@@ -1,0 +1,71 @@
+{
+  "cycle_count": 2,
+  "failure_classifications": [
+    "no_evidence_revision",
+    "no_useful_outcome"
+  ],
+  "model_call_count": 2,
+  "observable": {
+    "blocked_authority_state": {},
+    "budget_remaining": {
+      "cycles": 1,
+      "model_calls": 1
+    },
+    "completed": false,
+    "current_focus": "Resolve discrepancy for goal: Implement and test a bounded continuity transfer bridge without new UI, schema architecture, or authority expansion.",
+    "current_goal": "Implement and test a bounded continuity transfer bridge without new UI, schema architecture, or authority expansion.",
+    "current_operation": "reflect_on_outcome",
+    "episode_id": "active-cognitive-episode-7cbaf8b088855c25",
+    "evidence_considered": [
+      "ev-a-first-missing-transition",
+      "ev-a-focused-tests",
+      "ev-a-artifact"
+    ],
+    "hypothesis_state": {
+      "assumptions": [],
+      "confidence_state": "plausible",
+      "created_at": "2026-07-27T04:02:58+00:00",
+      "disposition": "needs_challenge",
+      "evidence_against": [],
+      "evidence_for": [
+        "ev-a-focused-tests",
+        "ev-a-artifact"
+      ],
+      "expected_observations": [
+        "local evidence should support a bounded useful step"
+      ],
+      "hypothesis_id": "hypothesis-553b11b03154489f",
+      "lifecycle_state": "active",
+      "originating_focus_id": "focus-8c3178e8687009f0",
+      "originating_goal_id": "active-cognitive-goal-0d2c7e5f33ce9ccd",
+      "provenance": [
+        "cognitive-operation-8c025de11fc04c6a"
+      ],
+      "revised_at": "",
+      "revision_parent_id": "",
+      "revision_reason": "",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "scope": "Resolve discrepancy for goal: Implement and test a bounded continuity transfer bridge without new UI, schema architecture, or authority expansion.",
+      "statement": "Focused tests and a narrow continuity module support evidence-first transfer and architecture-drift avoidance."
+    },
+    "last_observed_outcome": {
+      "created_at": "2026-07-27T04:03:28+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform reflect_on_outcome for the active focus using only referenced evidence.",
+      "observed": "Evidence-first transfer and architecture-drift avoidance are supported by focused tests and a narrow continuity module.",
+      "operation_id": "cognitive-operation-35fdc52419602246",
+      "outcome_id": "outcome-204f25484291fc9b"
+    },
+    "loop_state": "persisting",
+    "next_intended_step": "challenge the active hypothesis with contrary evidence",
+    "title": "Campaign A - narrow continuity bridge",
+    "why_focus": [
+      "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+      "operator_priority",
+      "goal_discrepancy",
+      "expected_useful_progress"
+    ]
+  },
+  "passed": false,
+  "useful_artifact_count": 0
+}
