@@ -1,0 +1,30 @@
+{
+  "active_objective_created": false,
+  "events": [
+    {
+      "completed_cycles": 0,
+      "conversation_count": 0,
+      "inference_in_flight": false,
+      "message": "How are you today?",
+      "send_callback_seconds": 0.9890601000515744,
+      "status_after_send": "Chat runtime: ready"
+    },
+    {
+      "completed_cycles": 0,
+      "conversation_count": 0,
+      "inference_in_flight": false,
+      "message": "Can you answer normally while you are in chat mode?",
+      "send_callback_seconds": 2.481385700055398,
+      "status_after_send": "Chat runtime: ready"
+    },
+    {
+      "completed_cycles": 0,
+      "conversation_count": 0,
+      "inference_in_flight": false,
+      "message": "This is just casual conversation, not a goal.",
+      "send_callback_seconds": 0.9198997000930831,
+      "status_after_send": "Chat runtime: ready"
+    }
+  ],
+  "transcript_tail": "DELTA: Hi. I'm DELTA. You can talk normally here. If a task needs governed memory, evidence review, replay, or diagnostics, I can route it or you can open Advanced mode.\n\nYou: How are you today?\n\nDELTA: I'm here and ready. What would you like to work on?\n\nYou: Can you answer normally while you are in chat mode?\n\nDELTA: I don't think I know enough from my learned local knowledge yet. Would you like me to ask a local reasoning model?\n\nI don't think I've learned this yet. My best local model for this question is qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m in the Everyday Conversation Lane. Would you like me to ask it?\nReply yes to ask the local model for this one question, or no to leave it unanswered.\n\nYou: This is just casual conversation, not a goal.\n\nDELTA: I can continue, but I need the topic or sentence you want me to build on.\n\n\n"
+}

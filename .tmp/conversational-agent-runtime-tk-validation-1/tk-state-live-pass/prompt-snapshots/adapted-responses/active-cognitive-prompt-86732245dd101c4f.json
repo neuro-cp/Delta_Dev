@@ -1,0 +1,25 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "The operator is willing to learn and correct their mistakes",
+      "The corrections are relevant and helpful",
+      "The strategy revision is effective in improving comprehension"
+    ],
+    "expected_observations": [
+      "The operator will demonstrate improved comprehension of natural language instructions during conversations",
+      "The operator will be able to apply corrections to future conversations"
+    ],
+    "hypothesis_statement": "The operator will improve their comprehension of natural language instructions through the use of correction-linked strategy revision and transfer checks.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "Operator-specific English comprehension during conversation",
+    "supporting_evidence_refs": [
+      "operator-natural-goal"
+    ],
+    "uncertainty": "The effectiveness of the correction-linked strategy revision and transfer checks in improving operator comprehension"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\n\"hypothesis_statement\": \"The operator will improve their comprehension of natural language instructions through the use of correction-linked strategy revision and transfer checks.\",\n\"scope\": \"Operator-specific English comprehension during conversation\",\n\"supporting_evidence_refs\": [\"operator-natural-goal\"],\n\"assumptions\": [\"The operator is willing to learn and correct their mistakes\", \"The corrections are relevant and helpful\", \"The strategy revision is effective in improving comprehension\"],\n\"expected_observations\": [\"The operator will demonstrate improved comprehension of natural language instructions during conversations\", \"The operator will be able to apply corrections to future conversations\"],\n\"uncertainty\": \"The effectiveness of the correction-linked strategy revision and transfer checks in improving operator comprehension\",\n\"recommended_state_transition\": \"propose_hypothesis\"\n}",
+  "raw_response_digest": "5c38008c1973bbbd5c129e9e1af4e9ab60f289c20adfe3551f1419bb50f47596",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

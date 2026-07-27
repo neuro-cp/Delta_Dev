@@ -1,0 +1,30 @@
+{
+  "checkpoint_validation": {
+    "diff_check": "passed_with_line_ending_warnings_only",
+    "focused_tests": "35 passed",
+    "process_check": "no active process expected; see process_cleanup.json",
+    "protected_paths_staged": false,
+    "py_compile": "passed"
+  },
+  "checks": {
+    "authority_uses_chat": true,
+    "chat_immediately_usable": true,
+    "corrections_goals_preserved": true,
+    "default_ui_chat_first": true,
+    "event_loop_responsive": true,
+    "messages_during_inference_preserved": true,
+    "no_bad_false_transfer": true,
+    "real_local_model_inference_occurs": true,
+    "real_tk_application_path_exercised": true,
+    "restart_works": true,
+    "runtime_recorded_completed_cycle": true,
+    "status_working_seen": true,
+    "stop_redirect_preserved": true,
+    "worker_results_apply_once": true
+  },
+  "gate": "CONVERSATIONAL_AGENT_RUNTIME_TK_VALIDATION_1",
+  "ledger_request_count": 2,
+  "ledger_result_count": 1,
+  "prompt_snapshot_count": 4,
+  "status": "CONVERSATIONAL_AGENT_RUNTIME_TK_VALIDATION_1_PASSED"
+}

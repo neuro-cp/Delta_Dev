@@ -1,0 +1,10 @@
+{
+  "first_missing_transition_found": "startup warmup used Tk callback and could race cognition; foreground goal-like messages during inference could stale the worker result; stale lifecycle merges could overwrite pause",
+  "repairs": [
+    "background warmup queue",
+    "locked provider proxy",
+    "foreground reconciliation records",
+    "goal_or_priority_queued",
+    "stale lifecycle guard"
+  ]
+}

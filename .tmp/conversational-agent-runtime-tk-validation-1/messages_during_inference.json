@@ -1,0 +1,99 @@
+{
+  "conversation_records": [
+    {
+      "created_at": "2026-07-27T05:33:32+00:00",
+      "intent_type": "persistent_or_session_goal",
+      "objective_id": "",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Your goal today is to understand my language better so we can communicate more effectively.",
+      "turn_id": "conversation-turn-e8bfbcc5a8149f51"
+    },
+    {
+      "created_at": "2026-07-27T05:33:32+00:00",
+      "intent_type": "objective_confirmation",
+      "objective_id": "conversational-objective-b48d25e9dd598140",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "I registered that as a bounded session goal: improve my operator-specific English comprehension through this conversation. I can run routine local cognition and learn from corrections under standing bounded authority; source changes, network use, installs, deletion, commits, pushes, and protected paths still need explicit approval.",
+      "turn_id": "conversation-turn-763942c0dfea5efd"
+    },
+    {
+      "created_at": "2026-07-27T05:33:33+00:00",
+      "intent_type": "ordinary_conversation_queued",
+      "objective_id": "conversational-objective-b48d25e9dd598140",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "while you think, also notice when I drop pronouns",
+      "turn_id": "conversation-turn-439a6083d5bcfd68"
+    },
+    {
+      "created_at": "2026-07-27T05:33:34+00:00",
+      "intent_type": "direct_correction",
+      "objective_id": "conversational-objective-b48d25e9dd598140",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "No, I meant the previous message when I said that.",
+      "turn_id": "conversation-turn-46a3d9645eabab6a"
+    },
+    {
+      "created_at": "2026-07-27T05:33:34+00:00",
+      "intent_type": "correction_acknowledgement",
+      "objective_id": "conversational-objective-b48d25e9dd598140",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Got it. I attached that correction to the active comprehension objective and revised the strategy for related later turns without making it a global rule.",
+      "turn_id": "conversation-turn-3f1c67882b911f8b"
+    },
+    {
+      "created_at": "2026-07-27T05:33:35+00:00",
+      "intent_type": "goal_or_priority_queued",
+      "objective_id": "conversational-objective-b48d25e9dd598140",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Your goal today is also to pay attention to abrupt topic switches.",
+      "turn_id": "conversation-turn-df831bfe77bb7084"
+    }
+  ],
+  "events": [
+    {
+      "completed_cycles": 0,
+      "conversation_count": 3,
+      "inference_in_flight": true,
+      "message": "while you think, also notice when I drop pronouns",
+      "send_callback_seconds": 1.0718050999566913,
+      "status_after_send": "Chat runtime: working on the active goal..."
+    },
+    {
+      "completed_cycles": 0,
+      "conversation_count": 5,
+      "inference_in_flight": true,
+      "message": "No, I meant the previous message when I said that.",
+      "send_callback_seconds": 1.1234906999161467,
+      "status_after_send": "Chat runtime: working on the active goal..."
+    },
+    {
+      "completed_cycles": 0,
+      "conversation_count": 6,
+      "inference_in_flight": true,
+      "message": "Your goal today is also to pay attention to abrupt topic switches.",
+      "send_callback_seconds": 2.017050200025551,
+      "status_after_send": "Chat runtime: working on the active goal..."
+    }
+  ],
+  "queued_progress": [
+    {
+      "at": "2026-07-27T05:33:33+00:00",
+      "event": "foreground_message_queued_for_reconciliation",
+      "message": "while you think, also notice when I drop pronouns",
+      "turn_id": "conversation-turn-439a6083d5bcfd68"
+    },
+    {
+      "at": "2026-07-27T05:33:35+00:00",
+      "event": "foreground_message_queued_for_reconciliation",
+      "message": "Your goal today is also to pay attention to abrupt topic switches.",
+      "turn_id": "conversation-turn-df831bfe77bb7084"
+    }
+  ],
+  "transcript_tail": "DELTA: Hi. I'm DELTA. You can talk normally here. If a task needs governed memory, evidence review, replay, or diagnostics, I can route it or you can open Advanced mode.\n\nYou: How are you today?\n\nDELTA: I'm here and ready. What would you like to work on?\n\nYou: Can you answer normally while you are in chat mode?\n\nDELTA: I don't think I know enough from my learned local knowledge yet. Would you like me to ask a local reasoning model?\n\nI don't think I've learned this yet. My best local model for this question is qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m in the Everyday Conversation Lane. Would you like me to ask it?\nReply yes to ask the local model for this one question, or no to leave it unanswered.\n\nYou: This is just casual conversation, not a goal.\n\nDELTA: I can continue, but I need the topic or sentence you want me to build on.\n\nYou: Your goal today is to understand my language better so we can communicate more effectively.\n\nDELTA: I registered that as a bounded session goal: improve my operator-specific English comprehension through this conversation. I can run routine local cognition and learn from corrections under standing bounded authority; source changes, network use, installs, deletion, commits, pushes, and protected paths still need explicit approval.\n\nYou: while you think, also notice when I drop pronouns\n\nDELTA: Got it. Your message is queued, and I will interpret it after the current reasoning step finishes.\n\nYou: No, I meant the previous message when I said that.\n\nDELTA: Got it. I attached that correction to the active comprehension objective and revised the strategy for related later turns without making it a global rule.\n\nYou: Your goal today is also to pay attention to abrupt topic switches.\n\nDELTA: I recorded that as a possible goal or priority update. I will interpret it after the current reasoning step finishes.\n\n\n"
+}

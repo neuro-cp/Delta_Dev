@@ -1,0 +1,10 @@
+{
+  "provider_lock": "model_runtime_lock through LockedProviderManagerProxy",
+  "result_queue_type": "queue.Queue",
+  "single_inference_in_flight_flag": "conversational_runtime_inference_in_flight",
+  "stale_lifecycle_guard": true,
+  "tk_poll": "_poll_conversational_runtime_worker_results and _poll_model_warm_results via root.after",
+  "warmup_thread": "delta-model-warmup",
+  "worker_thread": "delta-conversational-runtime-cycle",
+  "worker_tk_mutation": false
+}

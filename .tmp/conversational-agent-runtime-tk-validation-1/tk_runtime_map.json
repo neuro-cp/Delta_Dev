@@ -1,0 +1,5 @@
+{
+  "entry_point": "DELTA.DeltaApp(root) matching DELTA.main construction",
+  "normal_main": "DELTA.main creates tk.Tk, DeltaApp, root.mainloop",
+  "runtime_root": "G:\\Delta_Dev\\.tmp\\conversational-agent-runtime-tk-validation-1\\tk-state-live-pass"
+}

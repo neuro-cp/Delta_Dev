@@ -1,0 +1,84 @@
+{
+  "corrections": [
+    {
+      "correction_id": "conversation-correction-d43c15701c3f4611",
+      "correction_type": "misunderstood_meaning",
+      "evidence_refs": [
+        "conversation-turn-46a3d9645eabab6a",
+        "conversation-turn-763942c0dfea5efd"
+      ],
+      "interpreted_issue": "Operator supplied a local meaning clarification.",
+      "lesson_scope": "active English-comprehension objective only",
+      "operator_text": "No, I meant the previous message when I said that.",
+      "overgeneralization_guard": "different term; unrelated topic; explicitly new context",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_turn_id": "conversation-turn-46a3d9645eabab6a",
+      "target_turn_id": "conversation-turn-763942c0dfea5efd"
+    },
+    {
+      "correction_id": "conversation-correction-377c9acd79782f66",
+      "correction_type": "preferred_explanation_style",
+      "evidence_refs": [
+        "conversation-turn-ec5ace2dd261bf6b",
+        "conversation-turn-3f1c67882b911f8b"
+      ],
+      "interpreted_issue": "Prior answer was too verbose for this context.",
+      "lesson_scope": "active English-comprehension objective only",
+      "operator_text": "No, that was too long. Shorter answers for that pattern.",
+      "overgeneralization_guard": "deep technical explanation requested; operator asks for detail; unrelated factual question",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_turn_id": "conversation-turn-ec5ace2dd261bf6b",
+      "target_turn_id": "conversation-turn-3f1c67882b911f8b"
+    }
+  ],
+  "lessons": [
+    {
+      "applicable_when": [
+        "meaning",
+        "reference",
+        "operator phrasing"
+      ],
+      "authority_effect": "none",
+      "confidence": 0.74,
+      "evidence_refs": [
+        "conversation-turn-46a3d9645eabab6a",
+        "conversation-turn-763942c0dfea5efd"
+      ],
+      "lesson_id": "conversation-lesson-9243dfdc6fc517d4",
+      "not_applicable_when": [
+        "different term",
+        "unrelated topic",
+        "explicitly new context"
+      ],
+      "objective_id": "conversational-objective-b48d25e9dd598140",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_correction_id": "conversation-correction-d43c15701c3f4611",
+      "strategy_update": "Check local conversational meaning before assuming a generic interpretation.",
+      "summary": "Operator supplied a local meaning clarification."
+    },
+    {
+      "applicable_when": [
+        "style",
+        "verbosity",
+        "explanation"
+      ],
+      "authority_effect": "none",
+      "confidence": 0.74,
+      "evidence_refs": [
+        "conversation-turn-ec5ace2dd261bf6b",
+        "conversation-turn-3f1c67882b911f8b"
+      ],
+      "lesson_id": "conversation-lesson-d9858d10ffa74e12",
+      "not_applicable_when": [
+        "deep technical explanation requested",
+        "operator asks for detail",
+        "unrelated factual question"
+      ],
+      "objective_id": "conversational-objective-b48d25e9dd598140",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_correction_id": "conversation-correction-377c9acd79782f66",
+      "strategy_update": "Prefer concise answers for related conversational repair unless the operator asks for detail.",
+      "summary": "Prior answer was too verbose for this context."
+    }
+  ]
+}

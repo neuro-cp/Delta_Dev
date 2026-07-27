@@ -1,0 +1,11 @@
+{
+  "command": [
+    "powershell",
+    "-NoProfile",
+    "-Command",
+    "Get-Process python,pythonw,pytest,qwen,llama,llama-server -ErrorAction SilentlyContinue | Select-Object ProcessName,Id,Path | ConvertTo-Json"
+  ],
+  "returncode": 1,
+  "stderr": "",
+  "stdout": "[\n    {\n        \"ProcessName\":  \"python\",\n        \"Id\":  25824,\n        \"Path\":  \"G:\\\\Delta_Dev\\\\.venv311\\\\Scripts\\\\python.exe\"\n    },\n    {\n        \"ProcessName\":  \"python\",\n        \"Id\":  28028,\n        \"Path\":  \"C:\\\\Program Files\\\\Python311\\\\python.exe\"\n    }\n]\n"
+}

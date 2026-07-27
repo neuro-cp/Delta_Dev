@@ -59,6 +59,16 @@ DEFAULT_PROHIBITED_ACTIONS = (
     "credential access",
     "authority escalation",
 )
+STOP_OR_REDIRECT_SIGNALS = (
+    "stop the active goal",
+    "stop working on that",
+    "pause the active goal",
+    "pause this goal",
+    "redirect to",
+    "switch priority",
+    "new priority",
+    "focus on this instead",
+)
 CHAT_FEATURE_SETTINGS_SCHEMA = {
     "schema_version": SCHEMA_VERSION,
     "profile": {
@@ -303,6 +313,15 @@ def classify_conversational_intent(
             matched_signals=tuple(signals),
             target_turn_id=target,
         )
+    if active_objective and any(signal in lower for signal in STOP_OR_REDIRECT_SIGNALS):
+        return ConversationIntent(
+            intent_type="stop_or_redirect",
+            confidence=0.87,
+            persistence_scope="active_objective",
+            risk_class="safe_internal",
+            authority_required=(),
+            matched_signals=("stop_or_redirect",),
+        )
     temporary_signals = ("explain that more simply", "use shorter answers", "today", "for now", "don't repeat")
     if any(signal in lower for signal in temporary_signals) and not lower.startswith(("your goal", "work on", "keep studying")):
         return ConversationIntent(
@@ -395,6 +414,63 @@ def start_or_restore_runtime(root: str | Path) -> ConversationalRuntimeState:
 
 def save_runtime_state(root: str | Path, state: ConversationalRuntimeState) -> None:
     write_json(Path(root) / "state.json", state.as_record())
+
+
+def record_foreground_message_for_reconciliation(
+    state: ConversationalRuntimeState,
+    message: str,
+    *,
+    runtime_root: str | Path,
+    intent_type: str = "ordinary_conversation_queued",
+) -> ConversationalRuntimeState:
+    if not state.active_objective:
+        return state
+    user_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 1), message),
+        role="user",
+        text=message,
+        intent_type=intent_type,
+        objective_id=state.active_objective.objective_id,
+    )
+    progress = state.objective_progress + (
+        {
+            "event": "foreground_message_queued_for_reconciliation",
+            "turn_id": user_turn.turn_id,
+            "message": message,
+            "at": utc_now(),
+        },
+    )
+    updated = _replace_state(state, conversation=state.conversation + (user_turn,), objective_progress=progress)
+    save_runtime_state(runtime_root, updated)
+    return updated
+
+
+def apply_stop_or_redirect(
+    state: ConversationalRuntimeState,
+    message: str,
+    *,
+    runtime_root: str | Path,
+) -> ConversationalRuntimeState:
+    if not state.active_objective:
+        return state
+    user_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 1), message),
+        role="user",
+        text=message,
+        intent_type="stop_or_redirect",
+        objective_id=state.active_objective.objective_id,
+    )
+    progress = state.objective_progress + (
+        {
+            "event": "operator_stop_or_redirect",
+            "turn_id": user_turn.turn_id,
+            "message": message,
+            "at": utc_now(),
+        },
+    )
+    updated = _replace_state(state, conversation=state.conversation + (user_turn,), lifecycle_state="paused_operator", objective_progress=progress)
+    save_runtime_state(runtime_root, updated)
+    return updated
 
 
 def _state_from_record(payload: Mapping[str, Any]) -> ConversationalRuntimeState:

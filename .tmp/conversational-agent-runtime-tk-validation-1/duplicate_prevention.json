@@ -1,0 +1,6 @@
+{
+  "completed_cycle_keys_unique": true,
+  "correction_ids_unique": true,
+  "lesson_ids_unique": true,
+  "turn_ids_unique": true
+}

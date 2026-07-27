@@ -1,0 +1,11 @@
+{
+  "command": [
+    "git",
+    "status",
+    "--short",
+    "--branch"
+  ],
+  "returncode": 0,
+  "stderr": "",
+  "stdout": "## codex/delta-cognitive-core...origin/codex/delta-cognitive-core\n M DELTA.py\n M orchestration/runtime/conversational_runtime_operation.py\n M orchestration/runtime/live_competence_adapter.py\n M tests/runtime_gsr/test_conversational_runtime_operation.py\n M tests/runtime_gsr/test_conversational_runtime_ui.py\n?? orchestration/runtime/cognitive_claim_relation_runtime.py\n?? orchestration/runtime/cognitive_claim_relations.py\n?? orchestration/runtime/cognitive_contradiction_evaluation.py\n?? orchestration/runtime/cognitive_excluded_path_reconciliation.py\n?? tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py\n?? tests/runtime_gsr/test_cognitive_claim_relation_runtime.py\n?? tests/runtime_gsr/test_cognitive_claim_relations.py\n?? tests/runtime_gsr/test_cognitive_contradiction_evaluation.py\n?? tests/runtime_gsr/test_cognitive_excluded_path_reconciliation.py\n"
+}

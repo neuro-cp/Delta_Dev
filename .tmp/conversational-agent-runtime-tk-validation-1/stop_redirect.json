@@ -1,0 +1,56 @@
+{
+  "event": {
+    "completed_cycles": 1,
+    "conversation_count": 20,
+    "inference_in_flight": true,
+    "message": "stop working on that and focus on topic switches instead",
+    "send_callback_seconds": 1.876472899923101,
+    "status_after_send": "Chat runtime: active goal - Improve operator-specific English comprehension during con... cycles=1; corrections=2; questions=1"
+  },
+  "progress_tail": [
+    {
+      "at": "2026-07-27T05:34:10+00:00",
+      "event": "lesson_transfer_applied",
+      "lesson_id": "conversation-lesson-d9858d10ffa74e12",
+      "message": "In that style, explain what I meant there."
+    },
+    {
+      "at": "2026-07-27T05:34:12+00:00",
+      "event": "lesson_transfer_applied",
+      "lesson_id": "conversation-lesson-d9858d10ffa74e12",
+      "message": "Use the shorter style for this explanation."
+    },
+    {
+      "at": "2026-07-27T05:34:14+00:00",
+      "event": "foreground_message_queued_for_reconciliation",
+      "message": "What is angular momentum?",
+      "turn_id": "conversation-turn-591731eb26e19409"
+    },
+    {
+      "at": "2026-07-27T05:34:15+00:00",
+      "event": "foreground_message_queued_for_reconciliation",
+      "message": "What is Euclidean geometry?",
+      "turn_id": "conversation-turn-8b9489a87e48ff15"
+    },
+    {
+      "at": "2026-07-27T05:34:19+00:00",
+      "event": "operator_stop_or_redirect",
+      "message": "stop working on that and focus on topic switches instead",
+      "turn_id": "conversation-turn-297cfb076894dea2"
+    }
+  ],
+  "state_after_stop": {
+    "completed_cycle_count": 1,
+    "conversation_count": 20,
+    "correction_count": 2,
+    "inference_in_flight": true,
+    "lesson_count": 2,
+    "lifecycle_state": "paused_operator",
+    "objective_id": "conversational-objective-b48d25e9dd598140",
+    "pending_material_authority_count": 1,
+    "progress_count": 14,
+    "status_text": "Chat runtime: active goal - Improve operator-specific English comprehension during con... cycles=1; corrections=2; questions=1",
+    "warm_in_flight": false,
+    "warm_status": "warm"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "args": [
+    "diff",
+    "--name-only",
+    "--",
+    "orchestration/runtime/live_competence_adapter.py",
+    "DELTA-75",
+    "reports/RC4_*"
+  ],
+  "returncode": 0,
+  "stderr": "warning: in the working copy of 'orchestration/runtime/live_competence_adapter.py', LF will be replaced by CRLF the next time Git touches it\n",
+  "stdout": "orchestration/runtime/live_competence_adapter.py\n"
+}

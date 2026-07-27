@@ -1,0 +1,32 @@
+{
+  "checks": {
+    "authority_uses_chat": true,
+    "chat_immediately_usable": true,
+    "corrections_goals_preserved": true,
+    "default_ui_chat_first": true,
+    "event_loop_responsive": true,
+    "messages_during_inference_preserved": true,
+    "no_bad_false_transfer": true,
+    "real_local_model_inference_occurs": true,
+    "real_tk_application_path_exercised": true,
+    "restart_works": true,
+    "runtime_recorded_completed_cycle": true,
+    "status_working_seen": true,
+    "stop_redirect_preserved": true,
+    "worker_results_apply_once": true
+  },
+  "ledger_request_count": 2,
+  "ledger_result_count": 1,
+  "prompt_snapshot_count": 4,
+  "runtime_evaluation": {
+    "accepted_lesson_count": 2,
+    "background_cycle_count": 1,
+    "correction_count": 2,
+    "failure_reasons": [],
+    "objective_id": "conversational-objective-b48d25e9dd598140",
+    "passed": true,
+    "pending_material_authority_count": 1,
+    "schema_version": "conversational_runtime_operation_marathon_1_v1"
+  },
+  "status": "CONVERSATIONAL_AGENT_RUNTIME_TK_VALIDATION_1_PASSED"
+}

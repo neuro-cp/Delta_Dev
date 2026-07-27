@@ -12,7 +12,16 @@ def _app(monkeypatch, tmp_path):
     monkeypatch.setattr(DELTA.DeltaApp, "_warm_default_model", lambda self: None)
     monkeypatch.setattr(DELTA.DeltaApp, "_conversational_cognitive_model_runner", lambda self: ScriptedSemanticModel())
     monkeypatch.setattr(DELTA, "CONVERSATIONAL_RUNTIME_ROOT", tmp_path / "conversational-runtime")
-    root = tk.Tk()
+    last_error = None
+    for _ in range(4):
+        try:
+            root = tk.Tk()
+            break
+        except tk.TclError as exc:
+            last_error = exc
+            time.sleep(0.1)
+    else:
+        raise last_error
     app = DELTA.DeltaApp(root)
     root.update()
     return root, app
@@ -102,6 +111,79 @@ def test_active_inference_shows_working_status_without_blocking_chat(monkeypatch
         cycle_count = len(app.conversational_runtime_state.completed_cycle_keys)
         _pump_until(root, lambda: len(app.conversational_runtime_state.completed_cycle_keys) > cycle_count, timeout=4.0)
         assert "working" not in app.conversational_runtime_status.get()
+    finally:
+        root.destroy()
+
+
+def test_message_during_active_inference_is_acknowledged_and_preserved(monkeypatch, tmp_path):
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, ENGLISH_GOAL)
+        _pump_until(root, lambda: bool(app.conversational_runtime_state.completed_cycle_keys))
+        app.conversational_runtime_inference_in_flight = True
+
+        _send(app, "also compare that with how I use pronouns")
+
+        assert app.conversational_runtime_state.conversation[-1].intent_type == "ordinary_conversation_queued"
+        assert app.conversational_runtime_state.conversation[-1].text == "also compare that with how I use pronouns"
+        transcript = app.chat_history.get("1.0", tk.END)
+        assert "Your message is queued" in transcript
+    finally:
+        root.destroy()
+
+
+def test_goal_like_message_during_inference_is_queued_not_recompiled(monkeypatch, tmp_path):
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, ENGLISH_GOAL)
+        _pump_until(root, lambda: bool(app.conversational_runtime_state.completed_cycle_keys))
+        objective_id = app.conversational_runtime_state.active_objective.objective_id
+        app.conversational_runtime_inference_in_flight = True
+
+        _send(app, "Your goal today is also to pay attention to topic switches.")
+
+        assert app.conversational_runtime_state.active_objective.objective_id == objective_id
+        assert app.conversational_runtime_state.conversation[-1].intent_type == "goal_or_priority_queued"
+        transcript = app.chat_history.get("1.0", tk.END)
+        assert "possible goal or priority update" in transcript
+    finally:
+        root.destroy()
+
+
+def test_natural_stop_redirect_pauses_active_goal(monkeypatch, tmp_path):
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, ENGLISH_GOAL)
+        _pump_until(root, lambda: bool(app.conversational_runtime_state.completed_cycle_keys))
+
+        _send(app, "stop working on that and focus on topic switches instead")
+
+        assert app.conversational_runtime_state.lifecycle_state == "paused_operator"
+        assert app.conversational_runtime_state.objective_progress[-1]["event"] == "operator_stop_or_redirect"
+        transcript = app.chat_history.get("1.0", tk.END)
+        assert "paused the active goal" in transcript
+    finally:
+        root.destroy()
+
+
+def test_stale_background_result_does_not_overwrite_operator_pause(monkeypatch, tmp_path):
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, ENGLISH_GOAL)
+        _pump_until(root, lambda: bool(app.conversational_runtime_state.completed_cycle_keys))
+        prior = app.conversational_runtime_state
+        worker_state = app._merge_conversational_background_result(
+            prior,
+            prior,
+        )
+        assert worker_state.lifecycle_state == "running"
+
+        _send(app, "stop working on that and focus on topic switches instead")
+        paused = app.conversational_runtime_state
+        merged = app._merge_conversational_background_result(prior, prior)
+
+        assert paused.lifecycle_state == "paused_operator"
+        assert merged.lifecycle_state == "paused_operator"
     finally:
         root.destroy()
 

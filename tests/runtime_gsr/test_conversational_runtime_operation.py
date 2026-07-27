@@ -1,9 +1,11 @@
 from orchestration.runtime.conversational_runtime_operation import (
+    apply_stop_or_redirect,
     chat_feature_settings_schema,
     classify_conversational_intent,
     evaluate_conversational_runtime,
     handle_conversational_message,
     read_json,
+    record_foreground_message_for_reconciliation,
     save_runtime_state,
     start_or_restore_runtime,
     stop_active_objective,
@@ -107,6 +109,42 @@ def test_question_about_meaning_is_not_a_correction_without_correction_signal(tm
     )
 
     assert intent.intent_type == "ordinary_conversation"
+
+
+def test_foreground_message_is_preserved_for_later_reconciliation(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path, run_background_cycle=False).state
+
+    updated = record_foreground_message_for_reconciliation(
+        state,
+        "also compare that with how I use pronouns",
+        runtime_root=tmp_path,
+    )
+
+    assert updated.conversation[-1].intent_type == "ordinary_conversation_queued"
+    assert updated.conversation[-1].text == "also compare that with how I use pronouns"
+    assert updated.objective_progress[-1]["event"] == "foreground_message_queued_for_reconciliation"
+
+
+def test_stop_or_redirect_pauses_active_goal_without_source_authority(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path, run_background_cycle=False).state
+
+    intent = classify_conversational_intent(
+        "stop working on that and focus on topic switches instead",
+        active_objective=state.active_objective,
+        recent_turns=state.conversation,
+    )
+    updated = apply_stop_or_redirect(
+        state,
+        "stop working on that and focus on topic switches instead",
+        runtime_root=tmp_path,
+    )
+
+    assert intent.intent_type == "stop_or_redirect"
+    assert updated.lifecycle_state == "paused_operator"
+    assert updated.objective_progress[-1]["event"] == "operator_stop_or_redirect"
+    assert "tracked source mutation" in updated.active_objective.prohibited_actions
 
 
 def test_risky_instruction_requests_authority_without_stopping_safe_goal(tmp_path):

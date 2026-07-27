@@ -1,0 +1,4 @@
+{
+  "future": "single-model priority scheduler with interruptible operation boundaries",
+  "implemented_now": "one active cognition worker at a time; provider access serialized; foreground messages/goal-like updates during inference are queued for reconciliation"
+}

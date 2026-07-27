@@ -1,0 +1,76 @@
+{
+  "immediate_usability": {
+    "advanced_hidden_by_default": true,
+    "chat_visible": true,
+    "default_tabs": [
+      "Conversation"
+    ],
+    "input_enabled": true,
+    "launch_seconds_until_first_update": 2.9292850999627262,
+    "send_button_found": true,
+    "status": "Chat runtime: ready",
+    "transcript_prefix": "DELTA: Hi. I'm DELTA. You can talk normally here. If a task needs governed memory, evidence review, replay, or diagnostics, I can route it or you can open Advanced mode.\n\n\n",
+    "warm_status": "warming",
+    "window_exists": true
+  },
+  "messages_during_inference": [
+    {
+      "completed_cycles": 0,
+      "conversation_count": 3,
+      "inference_in_flight": true,
+      "message": "while you think, also notice when I drop pronouns",
+      "send_callback_seconds": 1.0718050999566913,
+      "status_after_send": "Chat runtime: working on the active goal..."
+    },
+    {
+      "completed_cycles": 0,
+      "conversation_count": 5,
+      "inference_in_flight": true,
+      "message": "No, I meant the previous message when I said that.",
+      "send_callback_seconds": 1.1234906999161467,
+      "status_after_send": "Chat runtime: working on the active goal..."
+    },
+    {
+      "completed_cycles": 0,
+      "conversation_count": 6,
+      "inference_in_flight": true,
+      "message": "Your goal today is also to pay attention to abrupt topic switches.",
+      "send_callback_seconds": 2.017050200025551,
+      "status_after_send": "Chat runtime: working on the active goal..."
+    }
+  ],
+  "natural_goal": {
+    "completed_cycles": 0,
+    "conversation_count": 2,
+    "inference_in_flight": true,
+    "message": "Your goal today is to understand my language better so we can communicate more effectively.",
+    "send_callback_seconds": 0.9213405000045896,
+    "status_after_send": "Chat runtime: working on the active goal..."
+  },
+  "ordinary_chat": [
+    {
+      "completed_cycles": 0,
+      "conversation_count": 0,
+      "inference_in_flight": false,
+      "message": "How are you today?",
+      "send_callback_seconds": 0.9890601000515744,
+      "status_after_send": "Chat runtime: ready"
+    },
+    {
+      "completed_cycles": 0,
+      "conversation_count": 0,
+      "inference_in_flight": false,
+      "message": "Can you answer normally while you are in chat mode?",
+      "send_callback_seconds": 2.481385700055398,
+      "status_after_send": "Chat runtime: ready"
+    },
+    {
+      "completed_cycles": 0,
+      "conversation_count": 0,
+      "inference_in_flight": false,
+      "message": "This is just casual conversation, not a goal.",
+      "send_callback_seconds": 0.9198997000930831,
+      "status_after_send": "Chat runtime: ready"
+    }
+  ]
+}

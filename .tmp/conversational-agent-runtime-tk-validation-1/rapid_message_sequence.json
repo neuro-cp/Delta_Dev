@@ -1,0 +1,51 @@
+{
+  "correction_count": 2,
+  "events": [
+    {
+      "completed_cycles": 1,
+      "conversation_count": 6,
+      "inference_in_flight": true,
+      "message": "quick note one: the short one mattered",
+      "send_callback_seconds": 2.130947500001639,
+      "status_after_send": "Chat runtime: working on the active goal..."
+    },
+    {
+      "completed_cycles": 1,
+      "conversation_count": 7,
+      "inference_in_flight": true,
+      "message": "quick note two: actually connect it to before",
+      "send_callback_seconds": 0.9452909999527037,
+      "status_after_send": "Chat runtime: working on the active goal..."
+    },
+    {
+      "completed_cycles": 1,
+      "conversation_count": 9,
+      "inference_in_flight": true,
+      "message": "No, that was too long. Shorter answers for that pattern.",
+      "send_callback_seconds": 1.0399519000202417,
+      "status_after_send": "Chat runtime: working on the active goal..."
+    },
+    {
+      "completed_cycles": 1,
+      "conversation_count": 10,
+      "inference_in_flight": true,
+      "message": "quick note four: continue",
+      "send_callback_seconds": 0.9902073000557721,
+      "status_after_send": "Chat runtime: working on the active goal..."
+    }
+  ],
+  "transcript_tail": "sion through this conversation. I can run routine local cognition and learn from corrections under standing bounded authority; source changes, network use, installs, deletion, commits, pushes, and protected paths still need explicit approval.\n\nYou: while you think, also notice when I drop pronouns\n\nDELTA: Got it. Your message is queued, and I will interpret it after the current reasoning step finishes.\n\nYou: No, I meant the previous message when I said that.\n\nDELTA: Got it. I attached that correction to the active comprehension objective and revised the strategy for related later turns without making it a global rule.\n\nYou: Your goal today is also to pay attention to abrupt topic switches.\n\nDELTA: I recorded that as a possible goal or priority update. I will interpret it after the current reasoning step finishes.\n\nYou: quick note one: the short one mattered\n\nDELTA: I don't think I know enough from my learned local knowledge yet. Would you like me to ask a local reasoning model?\n\nI don't think I've learned this yet. My best local model for this question is qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m in the Everyday Conversation Lane. Would you like me to ask it?\nReply yes to ask the local model for this one question, or no to leave it unanswered.\n\nYou: quick note two: actually connect it to before\n\nDELTA: Got it. Your message is queued, and I will interpret it after the current reasoning step finishes.\n\nYou: No, that was too long. Shorter answers for that pattern.\n\nDELTA: Got it. I attached that correction to the active comprehension objective and revised the strategy for related later turns without making it a global rule.\n\nYou: quick note four: continue\n\nDELTA: Got it. Your message is queued, and I will interpret it after the current reasoning step finishes.\n\n\n",
+  "turn_ids_unique": true,
+  "turn_texts": [
+    "Your goal today is to understand my language better so we can communicate more effectively.",
+    "I registered that as a bounded session goal: improve my operator-specific English comprehension through this conversation. I can run routine local cognition and learn from corrections under standing bounded authority; source changes, network use, installs, deletion, commits, pushes, and protected paths still need explicit approval.",
+    "while you think, also notice when I drop pronouns",
+    "No, I meant the previous message when I said that.",
+    "Got it. I attached that correction to the active comprehension objective and revised the strategy for related later turns without making it a global rule.",
+    "Your goal today is also to pay attention to abrupt topic switches.",
+    "quick note two: actually connect it to before",
+    "No, that was too long. Shorter answers for that pattern.",
+    "Got it. I attached that correction to the active comprehension objective and revised the strategy for related later turns without making it a global rule.",
+    "quick note four: continue"
+  ]
+}

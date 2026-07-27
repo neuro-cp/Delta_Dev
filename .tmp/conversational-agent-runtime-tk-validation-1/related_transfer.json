@@ -1,0 +1,48 @@
+{
+  "events": [
+    {
+      "completed_cycles": 1,
+      "conversation_count": 12,
+      "inference_in_flight": true,
+      "message": "Explain the previous reference issue again.",
+      "send_callback_seconds": 1.8915768000297248,
+      "status_after_send": "Chat runtime: working on the active goal..."
+    },
+    {
+      "completed_cycles": 1,
+      "conversation_count": 14,
+      "inference_in_flight": true,
+      "message": "In that style, explain what I meant there.",
+      "send_callback_seconds": 1.641965699964203,
+      "status_after_send": "Chat runtime: working on the active goal..."
+    },
+    {
+      "completed_cycles": 1,
+      "conversation_count": 16,
+      "inference_in_flight": true,
+      "message": "Use the shorter style for this explanation.",
+      "send_callback_seconds": 1.6934926999965683,
+      "status_after_send": "Chat runtime: working on the active goal..."
+    }
+  ],
+  "transfer_progress": [
+    {
+      "at": "2026-07-27T05:34:08+00:00",
+      "event": "lesson_transfer_applied",
+      "lesson_id": "conversation-lesson-9243dfdc6fc517d4",
+      "message": "Explain the previous reference issue again."
+    },
+    {
+      "at": "2026-07-27T05:34:10+00:00",
+      "event": "lesson_transfer_applied",
+      "lesson_id": "conversation-lesson-d9858d10ffa74e12",
+      "message": "In that style, explain what I meant there."
+    },
+    {
+      "at": "2026-07-27T05:34:12+00:00",
+      "event": "lesson_transfer_applied",
+      "lesson_id": "conversation-lesson-d9858d10ffa74e12",
+      "message": "Use the shorter style for this explanation."
+    }
+  ]
+}

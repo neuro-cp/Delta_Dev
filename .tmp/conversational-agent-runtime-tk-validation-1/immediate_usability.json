@@ -1,0 +1,14 @@
+{
+  "advanced_hidden_by_default": true,
+  "chat_visible": true,
+  "default_tabs": [
+    "Conversation"
+  ],
+  "input_enabled": true,
+  "launch_seconds_until_first_update": 2.9292850999627262,
+  "send_button_found": true,
+  "status": "Chat runtime: ready",
+  "transcript_prefix": "DELTA: Hi. I'm DELTA. You can talk normally here. If a task needs governed memory, evidence review, replay, or diagnostics, I can route it or you can open Advanced mode.\n\n\n",
+  "warm_status": "warming",
+  "window_exists": true
+}

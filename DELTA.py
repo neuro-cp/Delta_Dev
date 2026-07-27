@@ -32,6 +32,28 @@ LIVE_RUNTIME_4_ROOT = ROOT / ".tmp" / "live-runtime-4-crash-integrity-v1"
 LIVE_RUNTIME_4_ACCEPTED_ROOT = ROOT / ".tmp" / "live-general-3-approved-learning-v1"
 CONVERSATIONAL_RUNTIME_ROOT = ROOT / "data" / "runtime" / "conversational_runtime_operation"
 
+
+class LockedProviderManagerProxy:
+    def __init__(self, provider_manager: ProviderManager, lock: threading.Lock):
+        self._provider_manager = provider_manager
+        self._lock = lock
+
+    def warm(self, model_name: str):
+        with self._lock:
+            return self._provider_manager.warm(model_name)
+
+    def infer(self, **kwargs):
+        with self._lock:
+            return self._provider_manager.infer(**kwargs)
+
+    def load(self, model_name: str):
+        with self._lock:
+            return self._provider_manager.load(model_name)
+
+    def status(self):
+        with self._lock:
+            return self._provider_manager.status()
+
 from orchestration.runtime.rc1_operator_console import (  # noqa: E402
     append_observation,
     approve_propositions,
@@ -74,11 +96,13 @@ from orchestration.runtime.active_cognitive_loop import (  # noqa: E402
     write_episode_state as write_active_cognitive_episode_state,
 )
 from orchestration.runtime.conversational_runtime_operation import (  # noqa: E402
+    apply_stop_or_redirect as apply_conversational_stop_or_redirect,
     chat_feature_settings_schema,
     classify_conversational_intent,
     evaluate_conversational_runtime,
     handle_conversational_message,
     infer_lesson_transfer,
+    record_foreground_message_for_reconciliation,
     run_background_objective_cycle as run_conversational_background_cycle,
     save_runtime_state as save_conversational_runtime_state,
     start_or_restore_runtime as start_or_restore_conversational_runtime,
@@ -1668,6 +1692,10 @@ class DeltaApp:
         self.a21_health_status = tk.StringVar(value="A21: no maintenance record")
         self.a21_control_buttons: dict[str, ttk.Button] = {}
         self.provider_manager = ProviderManager(keep_loaded=True)
+        self.model_runtime_lock = threading.Lock()
+        self.locked_provider_manager = LockedProviderManagerProxy(self.provider_manager, self.model_runtime_lock)
+        self.model_warm_result_queue: queue.Queue = queue.Queue()
+        self.model_warm_in_flight = False
         self.resident_model_id: str | None = None
         self.resident_lane: str | None = None
         self.model_residency_status = "not_warmed"
@@ -1691,6 +1719,7 @@ class DeltaApp:
         self._refresh_operator_ux_views()
         self._apply_simple_default_surface()
         self.root.after(50, self._poll_live_runtime_worker_results)
+        self.root.after(50, self._poll_model_warm_results)
         self.root.after(50, self._poll_conversational_runtime_worker_results)
         self.root.after(250, self._tick_conversational_objective_runtime)
         self._refresh_state_cards()
@@ -5397,7 +5426,7 @@ class DeltaApp:
     def _conversational_cognitive_model_runner(self) -> LedgerBackedCognitiveModelRunner:
         return LedgerBackedCognitiveModelRunner(
             ledger=LocalModelRequestResultLedger(self.conversational_runtime_root / "model-ledger"),
-            provider_manager=self.provider_manager,
+            provider_manager=self.locked_provider_manager,
             authority_reason="standing_bounded_authority_conversational_runtime_operation",
             snapshot_root=self.conversational_runtime_root / "prompt-snapshots",
             request_identity_suffix="conversational-runtime-live",
@@ -5420,6 +5449,8 @@ class DeltaApp:
         prior_objective = prior_state.active_objective.objective_id if prior_state.active_objective else ""
         worker_objective = worker_state.active_objective.objective_id if worker_state.active_objective else ""
         if current_objective != prior_objective or worker_objective != prior_objective:
+            return current
+        if current.lifecycle_state != prior_state.lifecycle_state:
             return current
         progress_delta = worker_state.objective_progress[len(prior_state.objective_progress):]
         focus_delta = worker_state.focus_history[len(prior_state.focus_history):]
@@ -5497,10 +5528,48 @@ class DeltaApp:
             "persistent_or_session_goal",
             "direct_correction",
             "authority_changing_or_risky_instruction",
+            "stop_or_redirect",
         } and not transfer.get("applied"):
             if state.active_objective and state.lifecycle_state == "running":
+                if self.conversational_runtime_inference_in_flight:
+                    self.conversational_runtime_state = record_foreground_message_for_reconciliation(
+                        state,
+                        message,
+                        runtime_root=self.conversational_runtime_root,
+                    )
+                    self._append_chat("DELTA", "Got it. Your message is queued, and I will interpret it after the current reasoning step finishes.")
+                    self._append_session("user", message)
+                    self._append_session("assistant", "Got it. Your message is queued, and I will interpret it after the current reasoning step finishes.")
+                    self._set_conversational_runtime_working()
+                    self._refresh_state_cards()
+                    return True
                 self._start_conversational_background_cycle("foreground_chat_yield")
             return False
+        if intent.intent_type == "persistent_or_session_goal" and state.active_objective and self.conversational_runtime_inference_in_flight:
+            self.conversational_runtime_state = record_foreground_message_for_reconciliation(
+                state,
+                message,
+                runtime_root=self.conversational_runtime_root,
+                intent_type="goal_or_priority_queued",
+            )
+            self._append_chat("DELTA", "I recorded that as a possible goal or priority update. I will interpret it after the current reasoning step finishes.")
+            self._append_session("user", message)
+            self._append_session("assistant", "I recorded that as a possible goal or priority update. I will interpret it after the current reasoning step finishes.")
+            self._set_conversational_runtime_working()
+            self._refresh_state_cards()
+            return True
+        if intent.intent_type == "stop_or_redirect":
+            self.conversational_runtime_state = apply_conversational_stop_or_redirect(
+                state,
+                message,
+                runtime_root=self.conversational_runtime_root,
+            )
+            self._append_chat("DELTA", "I paused the active goal at a safe boundary and preserved your redirect for the next reasoning step.")
+            self._append_session("user", message)
+            self._append_session("assistant", "I paused the active goal at a safe boundary and preserved your redirect for the next reasoning step.")
+            self._refresh_conversational_runtime_status()
+            self._refresh_state_cards()
+            return True
         result = handle_conversational_message(
             state,
             message,
@@ -5555,19 +5624,41 @@ class DeltaApp:
         )
         self._append_session("assistant", "Hi. I'm DELTA. You can talk normally here.")
 
+    def _poll_model_warm_results(self) -> None:
+        while True:
+            try:
+                item = self.model_warm_result_queue.get_nowait()
+            except queue.Empty:
+                break
+            self.model_warm_in_flight = False
+            if item.get("ok"):
+                self.resident_model_id = str(item.get("model_id") or "")
+                self.resident_lane = str(item.get("lane") or "everyday_conversation")
+                self.model_residency_status = "warm"
+            else:
+                self.model_residency_status = str(item.get("status") or "warm_failed:unknown")
+        self.root.after(100, self._poll_model_warm_results)
+
     def _warm_default_model(self) -> None:
+        if self.model_warm_in_flight or self.model_residency_status == "warm":
+            return
         lane = select_model_lane("Hello DELTA.", "conversation")
         model_id = str(lane.get("selected_model_id") or lane.get("selected_model") or "")
         if not model_id:
             self.model_residency_status = "warm_failed:no_model"
             return
-        try:
-            self.provider_manager.warm(model_id)
-            self.resident_model_id = model_id
-            self.resident_lane = str(lane.get("lane") or "everyday_conversation")
-            self.model_residency_status = "warm"
-        except Exception as exc:  # noqa: BLE001 - UI should stay usable if warmup fails.
-            self.model_residency_status = f"warm_failed:{type(exc).__name__}:{str(exc)[:120]}"
+        self.model_warm_in_flight = True
+        self.model_residency_status = "warming"
+
+        def worker() -> None:
+            try:
+                self.locked_provider_manager.warm(model_id)
+                payload = {"ok": True, "model_id": model_id, "lane": str(lane.get("lane") or "everyday_conversation")}
+            except Exception as exc:  # noqa: BLE001 - UI should stay usable if warmup fails.
+                payload = {"ok": False, "status": f"warm_failed:{type(exc).__name__}:{str(exc)[:120]}"}
+            self.model_warm_result_queue.put(payload)
+
+        threading.Thread(target=worker, name="delta-model-warmup", daemon=True).start()
 
     def _prepare_resident_model_for_question(self, question: str) -> None:
         lane = select_model_lane(question)
