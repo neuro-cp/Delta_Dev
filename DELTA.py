@@ -105,6 +105,7 @@ from orchestration.runtime.conversational_runtime_operation import (  # noqa: E4
     handle_conversational_message,
     infer_lesson_transfer,
     record_foreground_message_for_reconciliation,
+    render_structured_discourse_capability_review,
     render_goal_review,
     review_status_for_goal_completion,
     request_provider_learning_packet,
@@ -5570,6 +5571,21 @@ class DeltaApp:
             active_objective=state.active_objective,
             recent_turns=state.conversation,
         )
+        if (
+            "semantic" in lower_message
+            and "reconciliation" in lower_message
+            and ("review" in lower_message or "capability" in lower_message or "adopt" in lower_message)
+        ):
+            self.conversational_runtime_state, review, _request = render_structured_discourse_capability_review(
+                state,
+                runtime_root=self.conversational_runtime_root,
+            )
+            self._append_chat("DELTA", review)
+            self._append_session("user", message)
+            self._append_session("assistant", review)
+            self._refresh_conversational_runtime_status()
+            self._refresh_state_cards()
+            return True
         if intent.intent_type == "persistent_or_session_goal" and state.active_objective and self.conversational_runtime_inference_in_flight:
             self.conversational_runtime_state = record_foreground_message_for_reconciliation(
                 state,

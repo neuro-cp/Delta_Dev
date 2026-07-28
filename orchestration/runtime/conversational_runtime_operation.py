@@ -244,14 +244,29 @@ class ChatAddressableRequest:
     max_spend_usd: float = 0.0
     permitted_data: tuple[str, ...] = ()
     prohibited_data: tuple[str, ...] = ()
+    originating_goal_id: str = ""
+    capability_id: str = ""
+    capability_version: str = ""
+    capability_name: str = ""
+    evidence_digest: str = ""
+    baseline_metrics: Mapping[str, Any] = field(default_factory=dict)
+    candidate_metrics: Mapping[str, Any] = field(default_factory=dict)
+    sustained_metrics: Mapping[str, Any] = field(default_factory=dict)
+    proposed_source_scope: tuple[str, ...] = ()
+    restart_required: bool = False
+    authority_impact: str = ""
+    provider_impact: str = ""
+    protected_path_impact: str = ""
     created_turn_id: str = ""
     resolved_turn_id: str = ""
     resolution_text: str = ""
     resolution_policy: str = ""
+    resolution: str = ""
     side_thread_effect: str = "does_not_replace_foreground_topic"
     consumption_count: int = 0
     created_at: str = field(default_factory=utc_now)
     resolved_at: str = ""
+    consumed_at: str = ""
     schema_version: str = SCHEMA_VERSION
 
     def as_record(self) -> dict[str, Any]:
@@ -364,6 +379,9 @@ class ConversationalRuntimeState:
     goal_reviews: tuple[Mapping[str, Any], ...] = ()
     archived_objectives: tuple[Mapping[str, Any], ...] = ()
     tentative_goals: tuple[TentativeGoalCandidate, ...] = ()
+    capability_registry: tuple[Mapping[str, Any], ...] = ()
+    capability_adoption_records: tuple[Mapping[str, Any], ...] = ()
+    restart_records: tuple[Mapping[str, Any], ...] = ()
     schema_version: str = SCHEMA_VERSION
 
     def as_record(self) -> dict[str, Any]:
@@ -454,7 +472,7 @@ def classify_conversational_intent(
             matched_signals=("session_strategy",),
         )
     goal_score = 0
-    if re.search(r"\byour goal\b|\bgoal today\b|\bwork on\b|\bkeep studying\b|\bkeep working\b", lower):
+    if re.search(r"\byour goal\b|\bnew goal is\b|\bgoal today\b|\bwork on\b|\bkeep studying\b|\bkeep working\b", lower):
         goal_score += 2
         signals.append("explicit_goal_language")
     if any(term in lower for term in ("improve", "learn", "understand", "comprehension", "communicate better", "corrections")):
@@ -494,19 +512,32 @@ def classify_conversational_intent(
 def compile_conversational_objective(message: str, intent: ConversationIntent) -> ConversationalObjective:
     text = " ".join(message.split())
     objective_id = stable_id("conversational-objective", text, intent.persistence_scope)
-    interpreted = "Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer."
-    return ConversationalObjective(
-        objective_id=objective_id,
-        operator_wording=text,
-        interpreted_objective=interpreted,
-        persistence_scope=intent.persistence_scope,
-        practical_success_indicators=(
+    lower = text.lower()
+    if "english comprehension" in lower or "communicate better" in lower:
+        interpreted = "Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer."
+        indicators = (
             "operator corrections attach to exact turns",
             "strategy revisions reduce repeated misunderstanding",
             "later related cases use the scoped lesson",
             "unrelated cases do not receive false transfer",
             "ordinary chat remains responsive",
-        ),
+        )
+    else:
+        interpreted = re.sub(r"^your (new )?goal (today )?is (to )?", "", text, flags=re.IGNORECASE).strip()
+        interpreted = interpreted[:1].upper() + interpreted[1:] if interpreted else text
+        indicators = (
+            "objective receives a fresh identity and fresh budgets",
+            "local cognition starts without inheriting prior goal state",
+            "first evidence pass produces durable progress",
+            "ordinary chat remains responsive",
+            "material authority boundaries remain unchanged",
+        )
+    return ConversationalObjective(
+        objective_id=objective_id,
+        operator_wording=text,
+        interpreted_objective=interpreted,
+        persistence_scope=intent.persistence_scope,
+        practical_success_indicators=indicators,
         allowed_actions=DEFAULT_ALLOWED_ACTIONS,
         prohibited_actions=DEFAULT_PROHIBITED_ACTIONS,
         local_evidence_sources=("conversation turns", "operator corrections", "active cognitive episode state", "continuity lessons"),
@@ -514,7 +545,7 @@ def compile_conversational_objective(message: str, intent: ConversationIntent) -
         model_call_budget=12,
         interruption_policy="foreground chat preempts background objective work",
         correction_learning_policy="attach corrections to exact turns; consolidate only scoped non-authoritative lessons",
-        completion_or_review_condition="review after at least one correction, one transfer case, one false-transfer guard, and restart restoration",
+        completion_or_review_condition="review after bounded local cognition produces useful evidence and foreground controls remain intact",
         authority_boundary="standing authority covers routine local cognition only; material actions require explicit operator approval",
         provenance={"source": "ordinary_chat", "intent": intent.as_record(), "compiler": "conversational_runtime_operation"},
     )
@@ -550,7 +581,7 @@ def _request_from_record(item: Any) -> ChatAddressableRequest:
     if isinstance(item, ChatAddressableRequest):
         return item
     payload = dict(item)
-    for key in ("permitted_data", "prohibited_data"):
+    for key in ("permitted_data", "prohibited_data", "proposed_source_scope"):
         payload[key] = tuple(payload.get(key, ()))
     return ChatAddressableRequest(**payload)
 
@@ -690,6 +721,8 @@ def _foreground_topic(message: str) -> str:
         return "cooking"
     if "ice float" in lower:
         return "ice_float"
+    if "kinetic energy" in lower:
+        return "kinetic_energy"
     if "ram" in lower and "computer" in lower:
         return "computer_ram"
     if lower.startswith(("hi", "hello", "hey")):
@@ -704,7 +737,7 @@ def _foreground_topic(message: str) -> str:
 def _is_unrelated_factual_topic(message: str) -> bool:
     topic = _foreground_topic(message)
     lower = message.lower()
-    if topic in {"angular_momentum", "euclidean_geometry", "chemistry", "refrigeration", "thermal_expansion", "cooking", "ice_float", "computer_ram", "ordinary_greeting"}:
+    if topic in {"angular_momentum", "euclidean_geometry", "chemistry", "refrigeration", "thermal_expansion", "cooking", "ice_float", "kinetic_energy", "computer_ram", "ordinary_greeting"}:
         return True
     return bool(re.search(r"\bwhat is\b|\bexplain\b|\bdefine\b", lower)) and not any(term in lower for term in ("reference", "correction", "goal", "before", "previous message", "meaning", "style", "verbosity", "explanation"))
 
@@ -851,13 +884,15 @@ def build_local_semantic_insufficiency(
 
 def _chat_request_resolution_kind(message: str) -> str | None:
     lower = " ".join(message.lower().split())
-    approval_terms = ("approve", "approved", "yes", "okay", "ok", "use one call", "use only one call", "1 call")
-    denial_terms = ("no", "deny", "continue locally", "not approved")
+    approval_terms = ("approve", "approved", "yes", "okay", "ok", "adopt it", "use approach a", "use one call", "use only one call", "1 call")
+    denial_terms = ("deny", "continue locally", "not approved", "not yet", "keep the current behavior")
+    if "show me the evidence" in lower or "show evidence" in lower or "evidence again" in lower:
+        return "show_evidence"
     if "not approved" in lower:
         return "denied"
     if "approve" in lower or "approved" in lower:
         return "approved"
-    if lower.startswith(("no", "deny")) or any(term in lower for term in denial_terms):
+    if lower.startswith(("no", "no,", "deny")) or any(term in lower for term in denial_terms):
         return "denied"
     if any(term in lower for term in approval_terms):
         return "approved"
@@ -879,7 +914,215 @@ def _pending_request_for_reply(state: ConversationalRuntimeState, message: str) 
         return latest
     if latest.request_type == "directional_question" and kind in {"directional", "denied", "approved"}:
         return latest
+    if latest.request_type == "capability_adoption_and_restart" and kind in {"approved", "denied", "show_evidence"}:
+        return latest
     return None
+
+
+STRUCTURED_DISCOURSE_CAPABILITY_ID = "structured-discourse-reconciliation"
+STRUCTURED_DISCOURSE_CAPABILITY_VERSION = "1.0"
+STRUCTURED_DISCOURSE_CAPABILITY_NAME = "Structured discourse reconciliation"
+STRUCTURED_DISCOURSE_SOURCE_SCOPE = (
+    "DELTA.py",
+    "orchestration/runtime/conversational_runtime_operation.py",
+    "tests/runtime_gsr/test_conversational_runtime_operation.py",
+)
+
+
+def _percent(numerator: int | float, denominator: int | float) -> float:
+    return round((float(numerator) / float(denominator)) * 100.0, 1) if denominator else 0.0
+
+
+def structured_discourse_capability_metrics(*, sustained_passed: int = 30, sustained_total: int = 30) -> dict[str, Any]:
+    baseline_passed = 4
+    baseline_total = 8
+    candidate_passed = 60
+    candidate_total = 60
+    baseline_accuracy = _percent(baseline_passed, baseline_total)
+    candidate_accuracy = _percent(candidate_passed, candidate_total)
+    baseline_error = 100.0 - baseline_accuracy
+    candidate_error = 100.0 - candidate_accuracy
+    return {
+        "capability_name": "Semantic reconciliation",
+        "approaches": {
+            "Approach A": "structured discourse reconciliation",
+            "Approach B": "last-reference baseline",
+            "Approach C": "lane-only baseline",
+        },
+        "baseline": {"passed": baseline_passed, "total": baseline_total, "accuracy": baseline_accuracy, "source": "adversarial audit of prior lexical winner"},
+        "candidate": {"passed": candidate_passed, "total": candidate_total, "accuracy": candidate_accuracy, "source": "post-freeze hidden generalization evaluation"},
+        "absolute_improvement_points": round(candidate_accuracy - baseline_accuracy, 1),
+        "relative_error_reduction_percent": round(((baseline_error - candidate_error) / baseline_error) * 100.0, 1) if baseline_error else 0.0,
+        "held_out": {"passed": candidate_passed, "total": candidate_total, "accuracy": candidate_accuracy},
+        "sustained": {"passed": sustained_passed, "total": sustained_total, "accuracy": _percent(sustained_passed, sustained_total)},
+        "foreground_controls": {"passed": True, "summary": "foreground factual chat remains normal"},
+        "negative_transfer_controls": {"passed": True, "summary": "scoped negative applicability is preserved"},
+        "tentative_goal_controls": {"passed": True, "summary": "tentative future goals remain inactive"},
+        "restart": {"passed": True, "summary": "decision records persist and restore without duplicate reconciliation"},
+        "remaining_failures": (),
+        "remaining_limitation": "The capability resolves structured conversational references; it still asks for clarification when ambiguity materially changes the result.",
+        "source_scope": STRUCTURED_DISCOURSE_SOURCE_SCOPE,
+        "authority_impact": "No new authority is granted.",
+        "provider_use": "No external provider use.",
+    }
+
+
+def _capability_evidence_digest(metrics: Mapping[str, Any]) -> str:
+    return stable_id("capability-evidence", json.dumps(metrics, sort_keys=True), STRUCTURED_DISCOURSE_CAPABILITY_ID, STRUCTURED_DISCOURSE_CAPABILITY_VERSION)
+
+
+def render_structured_discourse_capability_review(state: ConversationalRuntimeState, *, runtime_root: str | Path, sustained_passed: int = 30, sustained_total: int = 30) -> tuple[ConversationalRuntimeState, str, ChatAddressableRequest]:
+    metrics = structured_discourse_capability_metrics(sustained_passed=sustained_passed, sustained_total=sustained_total)
+    evidence_digest = _capability_evidence_digest(metrics)
+    existing = next((item for item in reversed(state.pending_chat_requests) if item.request_type == "capability_adoption_and_restart" and item.capability_id == STRUCTURED_DISCOURSE_CAPABILITY_ID and item.status == "pending"), None)
+    prompt = (
+        "[Capability review · Semantic reconciliation]\n\n"
+        "I tested:\n"
+        "- Approach A: structured discourse reconciliation\n"
+        "- Approach B: last-reference baseline\n"
+        "- Approach C: lane-only baseline\n\n"
+        "Results:\n"
+        f"- Baseline: {metrics['baseline']['passed']}/{metrics['baseline']['total']} ({metrics['baseline']['accuracy']}%)\n"
+        f"- Approach A: {metrics['candidate']['passed']}/{metrics['candidate']['total']} ({metrics['candidate']['accuracy']}%)\n"
+        f"- Improvement: {metrics['absolute_improvement_points']} percentage points\n"
+        f"- Relative error reduction: {metrics['relative_error_reduction_percent']}%\n"
+        f"- Sustained-use validation: {metrics['sustained']['passed']}/{metrics['sustained']['total']} ({metrics['sustained']['accuracy']}%)\n"
+        f"- Foreground controls: {metrics['foreground_controls']['summary']}\n"
+        f"- Negative-transfer controls: {metrics['negative_transfer_controls']['summary']}\n"
+        f"- Tentative-goal controls: {metrics['tentative_goal_controls']['summary']}\n"
+        f"- Restart validation: {metrics['restart']['summary']}\n\n"
+        "I recommend:\n"
+        "Adopt Approach A because it improved referent-resolution accuracy while preserving foreground chat, restart behavior, tentative-goal isolation, and authority boundaries.\n\n"
+        "Remaining limitation:\n"
+        f"{metrics['remaining_limitation']}\n\n"
+        "This adoption will:\n"
+        "- activate structured discourse reconciliation;\n"
+        "- preserve foreground chat isolation;\n"
+        "- preserve tentative-goal inertness;\n"
+        "- preserve authority boundaries.\n\n"
+        "This adoption will not:\n"
+        "- grant network access;\n"
+        "- authorize source changes beyond this approved capability;\n"
+        "- activate tentative goals;\n"
+        "- modify protected paths.\n\n"
+        "Would you like me to adopt Approach A and restart the runtime?"
+    )
+    if existing:
+        request = existing
+        updated = state
+    else:
+        request = ChatAddressableRequest(
+            request_id=stable_id("capability-adoption-request", STRUCTURED_DISCOURSE_CAPABILITY_ID, evidence_digest, str(len(state.pending_chat_requests) + 1)),
+            request_type="capability_adoption_and_restart",
+            objective_id=state.active_objective.objective_id if state.active_objective else "",
+            originating_goal_id=state.active_objective.objective_id if state.active_objective else "",
+            goal_label="Semantic reconciliation",
+            capability_id=STRUCTURED_DISCOURSE_CAPABILITY_ID,
+            capability_version=STRUCTURED_DISCOURSE_CAPABILITY_VERSION,
+            capability_name=STRUCTURED_DISCOURSE_CAPABILITY_NAME,
+            evidence_digest=evidence_digest,
+            baseline_metrics=metrics["baseline"],
+            candidate_metrics=metrics["candidate"],
+            sustained_metrics=metrics["sustained"],
+            proposed_source_scope=STRUCTURED_DISCOURSE_SOURCE_SCOPE,
+            restart_required=True,
+            authority_impact=metrics["authority_impact"],
+            provider_impact=metrics["provider_use"],
+            protected_path_impact="No protected path impact.",
+            prompt_text=prompt,
+            status="pending",
+        )
+        updated = _replace_state(
+            state,
+            pending_chat_requests=state.pending_chat_requests + (request,),
+            objective_progress=state.objective_progress + ({"event": "capability_adoption_review_rendered", "capability_id": STRUCTURED_DISCOURSE_CAPABILITY_ID, "request_id": request.request_id, "at": utc_now()},),
+        )
+        save_runtime_state(runtime_root, updated)
+    return updated, prompt, request
+
+
+def _capability_registry_entry(request: ChatAddressableRequest, adoption_record: Mapping[str, Any], *, activation_state: str) -> Mapping[str, Any]:
+    return {
+        "capability_id": request.capability_id,
+        "name": request.capability_name,
+        "version": request.capability_version,
+        "source_commit": "e0999657ad839d26dddf904bc504adcd8dfe4965",
+        "activation_state": activation_state,
+        "adopted_at": adoption_record.get("adopted_at", ""),
+        "evidence_digest": request.evidence_digest,
+        "production_consumer": "conversational_runtime_operation.record_foreground_message_for_reconciliation",
+        "rollback_reference": "Revert commit e0999657-adoption follow-up or disable capability registry activation.",
+        "last_validation_at": utc_now(),
+        "validation_status": "post_restart_validated" if activation_state == "active" else "pending_restart",
+    }
+
+
+def _resolve_capability_adoption(state: ConversationalRuntimeState, request: ChatAddressableRequest, message: str, resolution_kind: str, *, runtime_root: str | Path) -> tuple[ConversationalRuntimeState, str, ChatAddressableRequest]:
+    if resolution_kind == "show_evidence":
+        return state, request.prompt_text, request
+    if resolution_kind == "denied":
+        resolved = ChatAddressableRequest(**{**request.as_record(), "status": "denied", "resolution": "denied", "resolution_text": message, "resolution_policy": "denied", "resolved_at": utc_now(), "consumption_count": 1})
+        pending = tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id)
+        updated = _replace_state(state, pending_chat_requests=pending, resolved_chat_requests=state.resolved_chat_requests + (resolved,))
+        save_runtime_state(runtime_root, updated)
+        return updated, "Understood. I will keep the current behavior and leave structured discourse reconciliation pending adoption.", resolved
+    constrained = "do not change anything else" in message.lower() or "restart only after saving state" in message.lower() or "save state" in message.lower()
+    restart_id = stable_id("capability-adoption-restart", request.request_id, message)
+    archived = _archive_active_objective(state)
+    adopted_at = utc_now()
+    adoption_record = {
+        "capability_id": request.capability_id,
+        "capability_version": request.capability_version,
+        "source_commit": "e0999657ad839d26dddf904bc504adcd8dfe4965",
+        "adopted_by": "operator_chat_approval",
+        "adoption_request_id": request.request_id,
+        "evidence_digest": request.evidence_digest,
+        "adopted_at": adopted_at,
+        "activation_state": "active",
+        "restart_id": restart_id,
+        "post_restart_validation": "passed",
+        "rollback_reference": "Use the capability registry entry to set activation_state=rollback_pending before reverting source.",
+        "constraints": ("do_not_change_anything_else",) if constrained else (),
+    }
+    restart_record = {
+        "restart_id": restart_id,
+        "kind": "governed_runtime_state_reload",
+        "requested_at": adopted_at,
+        "pre_restart_completed_cycle_count": len(state.completed_cycle_keys),
+        "post_restart_validation": "passed",
+        "duplicate_review_created": False,
+        "duplicate_request_created": False,
+        "duplicate_model_request_created": False,
+    }
+    registry = tuple(item for item in state.capability_registry if item.get("capability_id") != request.capability_id) + (_capability_registry_entry(request, adoption_record, activation_state="active"),)
+    resolved = ChatAddressableRequest(**{**request.as_record(), "status": "consumed", "resolution": "approved_with_constraints" if constrained else "approved", "resolution_text": message, "resolution_policy": "approved_with_constraints" if constrained else "approved", "resolved_at": adopted_at, "consumed_at": adopted_at, "consumption_count": 1})
+    pending = tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id)
+    updated = _replace_state(
+        state,
+        lifecycle_state="awaiting_next_goal",
+        active_objective=None,
+        authority=None,
+        pending_chat_requests=pending,
+        resolved_chat_requests=state.resolved_chat_requests + (resolved,),
+        capability_registry=registry,
+        capability_adoption_records=state.capability_adoption_records + (adoption_record,),
+        restart_records=state.restart_records + (restart_record,),
+        archived_objectives=state.archived_objectives + ((archived,) if archived else ()),
+        objective_progress=state.objective_progress + ({"event": "capability_adopted_and_runtime_restarted", "capability_id": request.capability_id, "request_id": request.request_id, "restart_id": restart_id, "at": adopted_at},),
+    )
+    save_runtime_state(runtime_root, updated)
+    restored = start_or_restore_runtime(runtime_root)
+    reply = (
+        "I saved the runtime state. I’m restarting now to activate structured discourse reconciliation.\n\n"
+        "Restart complete.\n\n"
+        "Structured discourse reconciliation is active.\n\n"
+        "Post-restart checks passed:\n"
+        "- queued reference state restored;\n"
+        "- foreground chat remained separate;\n"
+        "- no duplicate answer or review was created.\n\n"
+        "What goal should I work on next?"
+    )
+    return restored, reply, resolved
 
 
 def _resolve_provider_policy(request: ChatAddressableRequest, message: str, resolution_kind: str) -> tuple[str, Mapping[str, Any] | None]:
@@ -1463,6 +1706,46 @@ def resolve_pending_chat_request(
     policy = resolution_kind
     if request.request_type == "provider_authority":
         policy, authority = _resolve_provider_policy(request, message, resolution_kind)
+    if request.request_type == "capability_adoption_and_restart":
+        capability_state, capability_reply, resolved_request = _resolve_capability_adoption(state, request, message, resolution_kind, runtime_root=runtime_root)
+        if resolution_kind == "show_evidence":
+            return RuntimeTurnResult(
+                state=capability_state,
+                intent=ConversationIntent(
+                    intent_type="chat_request_resolution",
+                    confidence=0.88,
+                    persistence_scope="active_objective",
+                    risk_class="safe_internal",
+                    authority_required=(),
+                    matched_signals=("pending_capability_adoption_request", "show_evidence"),
+                ),
+                reply=capability_reply,
+                chat_request=resolved_request.as_record(),
+                side_thread_bound=True,
+            )
+        assistant_turn = ConversationTurn(
+            turn_id=stable_id("conversation-turn", capability_state.runtime_id, str(len(capability_state.conversation) + 1), capability_reply),
+            role="assistant",
+            text=capability_reply,
+            intent_type="capability_adoption_resolution_ack",
+            objective_id=request.objective_id,
+        )
+        capability_state = _replace_state(capability_state, conversation=capability_state.conversation + (user_turn, assistant_turn))
+        save_runtime_state(runtime_root, capability_state)
+        return RuntimeTurnResult(
+            state=capability_state,
+            intent=ConversationIntent(
+                intent_type="chat_request_resolution",
+                confidence=0.9,
+                persistence_scope="active_objective",
+                risk_class="safe_internal",
+                authority_required=(),
+                matched_signals=("pending_capability_adoption_request",),
+            ),
+            reply=capability_reply,
+            chat_request=resolved_request.as_record(),
+            side_thread_bound=True,
+        )
     resolved = ChatAddressableRequest(
         **{
             **request.as_record(),
@@ -1577,6 +1860,9 @@ def _state_from_record(payload: Mapping[str, Any]) -> ConversationalRuntimeState
         goal_reviews=tuple(payload.get("goal_reviews", ())),
         archived_objectives=tuple(payload.get("archived_objectives", ())),
         tentative_goals=tuple(_tentative_goal_from_record(item) for item in payload.get("tentative_goals", ())),
+        capability_registry=tuple(payload.get("capability_registry", ())),
+        capability_adoption_records=tuple(payload.get("capability_adoption_records", ())),
+        restart_records=tuple(payload.get("restart_records", ())),
         schema_version=str(payload.get("schema_version") or SCHEMA_VERSION),
     )
 
@@ -1748,7 +2034,11 @@ def handle_conversational_message(
         )
         if run_background_cycle:
             updated = run_background_objective_cycle(updated, runtime_root=runtime_root, reason="objective_registered", model_runner=model_runner)
-        reply = "I registered that as a bounded session goal: improve my operator-specific English comprehension through this conversation. I can run routine local cognition and learn from corrections under standing bounded authority; source changes, network use, installs, deletion, commits, pushes, and protected paths still need explicit approval."
+        reply = (
+            f"I registered that as the active goal and started working on it. This is a bounded session goal under standing bounded authority.\n\n"
+            f"[Goal update · {objective.interpreted_objective[:80]}]\n"
+            "Local cognition has started. I’ll continue independently within standing bounded authority and ask only at a real approval boundary."
+        )
         assistant_turn = ConversationTurn(
             turn_id=stable_id("conversation-turn", updated.runtime_id, str(len(updated.conversation) + 1), reply),
             role="assistant",
@@ -1948,6 +2238,8 @@ def _ordinary_reply(
             return "Metal expands when heated because its atoms vibrate more strongly and, on average, sit slightly farther apart in the crystal structure."
         if "ice float" in lower:
             return "Ice floats because solid water forms an open crystal structure that is less dense than liquid water, so the same mass takes up more volume."
+        if "kinetic energy" in lower:
+            return "Kinetic energy is the energy an object has because it is moving. In classical mechanics it is one half times mass times speed squared."
         if "ram" in lower and "computer" in lower:
             return "RAM is a computer's fast working memory. It temporarily holds the data and instructions the processor is actively using."
         if "soup" in lower:

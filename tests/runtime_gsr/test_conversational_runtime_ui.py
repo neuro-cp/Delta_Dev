@@ -291,3 +291,39 @@ def test_settings_renders_gpt_style_chat_schema(monkeypatch, tmp_path):
         assert '"tracked_source_mutation": "explicit_approval_required"' in text
     finally:
         root.destroy()
+
+
+def test_capability_adoption_restart_and_next_goal_handoff_in_chat(monkeypatch, tmp_path):
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, ENGLISH_GOAL)
+        _pump_until(root, lambda: bool(app.conversational_runtime_state.completed_cycle_keys))
+
+        _send(app, "Review the semantic-reconciliation capability you developed. Tell me whether you recommend adopting it.")
+        transcript = app.chat_history.get("1.0", tk.END)
+        assert "[Capability review" in transcript
+        assert "Would you like me to adopt Approach A and restart the runtime?" in transcript
+        assert app.conversational_runtime_state.pending_chat_requests[-1].request_type == "capability_adoption_and_restart"
+
+        _send(app, "Yes. Adopt it, save state, and restart. Do not change anything else.")
+        transcript = app.chat_history.get("1.0", tk.END)
+        assert "Restart complete." in transcript
+        assert "Structured discourse reconciliation is active." in transcript
+        assert "What goal should I work on next?" in transcript
+        assert app.conversational_runtime_state.capability_registry[-1]["activation_state"] == "active"
+        assert app.conversational_runtime_state.pending_chat_requests == ()
+
+        _send(app, "Your new goal is to improve side-thread directional-question binding across delayed replies. Start with local cognition and existing evidence.")
+        _pump_until(root, lambda: bool(app.conversational_runtime_state.completed_cycle_keys), timeout=5.0)
+        assert app.conversational_runtime_state.active_objective is not None
+        assert "side-thread directional-question binding" in app.conversational_runtime_state.active_objective.interpreted_objective
+        assert len(app.conversational_runtime_state.completed_cycle_keys) >= 1
+        transcript = app.chat_history.get("1.0", tk.END)
+        assert "Local cognition has started" in transcript
+
+        _send(app, "What is kinetic energy?")
+        transcript = app.chat_history.get("1.0", tk.END)
+        assert "Kinetic energy" in transcript
+        assert app.conversational_runtime_state.capability_registry[-1]["activation_state"] == "active"
+    finally:
+        root.destroy()

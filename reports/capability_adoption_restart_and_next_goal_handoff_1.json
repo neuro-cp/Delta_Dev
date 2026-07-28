@@ -1,0 +1,51 @@
+{
+  "gate": "CAPABILITY_ADOPTION_RESTART_AND_NEXT_GOAL_HANDOFF_1",
+  "starting_checkpoint": "e0999657ad839d26dddf904bc504adcd8dfe4965",
+  "starting_subject": "Add structured discourse reconciliation",
+  "implementation_status": "STRUCTURED_DISCOURSE_RECONCILIATION_IMPLEMENTATION_1_PASSED",
+  "capability_before": "LIVE_GOVERNED_CAPABILITY_GROWTH_1_IMPLEMENTED_PENDING_CLOSURE_REVIEW",
+  "capability_after": "LIVE_GOVERNED_CAPABILITY_GROWTH_1_ADOPTED_AND_ACTIVE",
+  "new_goal_status": "NEXT_OPERATOR_GOAL_RUNNING",
+  "capability": {
+    "id": "structured-discourse-reconciliation",
+    "name": "Structured discourse reconciliation",
+    "version": "1.0",
+    "source_commit": "e0999657ad839d26dddf904bc504adcd8dfe4965",
+    "activation_state": "active"
+  },
+  "metrics": {
+    "baseline": "4/8 (50.0%)",
+    "adopted_approach": "60/60 (100.0%)",
+    "absolute_improvement": "50.0 percentage points",
+    "relative_error_reduction": "100.0%",
+    "sustained_use": "30/30"
+  },
+  "operator_flow": {
+    "review_rendered_in_chat": true,
+    "explicit_adoption_approval_bound_once": true,
+    "runtime_restart_recorded": true,
+    "post_restart_capability_active": true,
+    "next_goal_registered": "Improve side-thread directional-question binding across delayed replies.",
+    "fresh_objective_isolation": true,
+    "local_qwen_cycle_executed": true,
+    "foreground_control_passed": true
+  },
+  "validation": {
+    "py_compile": "passed",
+    "sustained_validation": "30 passed / 30 total",
+    "focused_runtime": "70 passed",
+    "tk_end_to_end": "13 passed",
+    "real_local_qwen_cycle": "passed",
+    "git_diff_check": "passed"
+  },
+  "authority": {
+    "new_authority_granted": false,
+    "provider_use": "none",
+    "network_use": "none",
+    "protected_path_impact": "none"
+  },
+  "evidence_root_local_only": ".tmp/capability-adoption-restart-and-next-goal-handoff-1/",
+  "raw_transcripts_committed": false,
+  "raw_model_ledgers_committed": false,
+  "raw_prompts_committed": false
+}

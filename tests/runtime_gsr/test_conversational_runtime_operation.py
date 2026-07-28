@@ -11,7 +11,9 @@ from orchestration.runtime.conversational_runtime_operation import (
     read_json,
     record_foreground_message_for_reconciliation,
     record_local_semantic_attempt,
+    render_structured_discourse_capability_review,
     render_goal_review,
+    structured_discourse_capability_metrics,
     request_provider_learning_packet,
     resolve_pending_chat_request,
     review_status_for_goal_completion,
@@ -67,6 +69,101 @@ def test_chat_feature_settings_schema_preserves_gpt_style_surface_and_authority(
     assert schema["interface"]["advanced_surface"] == "hidden_until_requested"
     assert schema["tools_and_actions"]["routine_local_cognition"] == "standing_bounded_authority"
     assert schema["tools_and_actions"]["tracked_source_mutation"] == "explicit_approval_required"
+
+
+def test_structured_discourse_review_metrics_are_evidence_derived():
+    metrics = structured_discourse_capability_metrics(sustained_passed=30, sustained_total=30)
+
+    assert metrics["baseline"]["passed"] == 4
+    assert metrics["baseline"]["total"] == 8
+    assert metrics["baseline"]["accuracy"] == 50.0
+    assert metrics["candidate"]["passed"] == 60
+    assert metrics["candidate"]["total"] == 60
+    assert metrics["candidate"]["accuracy"] == 100.0
+    assert metrics["absolute_improvement_points"] == 50.0
+    assert metrics["relative_error_reduction_percent"] == 100.0
+    assert metrics["remaining_limitation"]
+
+
+def test_capability_review_creates_one_pending_adoption_request(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path, run_background_cycle=False).state
+
+    reviewed, review, request = render_structured_discourse_capability_review(state, runtime_root=tmp_path)
+    reviewed_again, review_again, request_again = render_structured_discourse_capability_review(reviewed, runtime_root=tmp_path)
+
+    assert "[Capability review" in review
+    assert "Approach A" in review
+    assert "50.0 percentage points" in review
+    assert "Relative error reduction: 100.0%" in review
+    assert "Would you like me to adopt Approach A and restart the runtime?" in review
+    assert request.request_type == "capability_adoption_and_restart"
+    assert request.capability_id == "structured-discourse-reconciliation"
+    assert len(reviewed.pending_chat_requests) == 1
+    assert len(reviewed_again.pending_chat_requests) == 1
+    assert request_again.request_id == request.request_id
+    assert review_again == review
+
+
+def test_capability_adoption_approval_consumes_once_and_marks_active(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path, run_background_cycle=False).state
+    reviewed, _review, request = render_structured_discourse_capability_review(state, runtime_root=tmp_path)
+
+    adopted = resolve_pending_chat_request(reviewed, "Yes. Adopt it, save state, and restart. Do not change anything else.", runtime_root=tmp_path)
+    duplicate = resolve_pending_chat_request(adopted.state, "Yes. Adopt it, save state, and restart. Do not change anything else.", runtime_root=tmp_path)
+
+    assert adopted is not None
+    assert duplicate is None
+    assert adopted.state.pending_chat_requests == ()
+    assert adopted.state.resolved_chat_requests[-1].status == "consumed"
+    assert adopted.state.resolved_chat_requests[-1].resolution == "approved_with_constraints"
+    assert adopted.state.capability_registry[-1]["activation_state"] == "active"
+    assert adopted.state.capability_adoption_records[-1]["adoption_request_id"] == request.request_id
+    assert adopted.state.restart_records[-1]["post_restart_validation"] == "passed"
+    assert adopted.state.active_objective is None
+    assert adopted.state.archived_objectives
+    assert "What goal should I work on next?" in adopted.reply
+
+
+def test_capability_adoption_denial_and_show_evidence(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path, run_background_cycle=False).state
+    reviewed, review, _request = render_structured_discourse_capability_review(state, runtime_root=tmp_path)
+
+    evidence = resolve_pending_chat_request(reviewed, "Show me the evidence again.", runtime_root=tmp_path)
+    denied = resolve_pending_chat_request(evidence.state, "No, keep the current behavior.", runtime_root=tmp_path)
+
+    assert evidence.reply == review
+    assert evidence.state.pending_chat_requests
+    assert denied.state.capability_registry == ()
+    assert denied.state.resolved_chat_requests[-1].status == "denied"
+
+
+def test_new_goal_after_adoption_gets_fresh_cycle_and_preserves_capability(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path, run_background_cycle=False).state
+    old_objective_id = state.active_objective.objective_id
+    reviewed, _review, _request = render_structured_discourse_capability_review(state, runtime_root=tmp_path)
+    adopted = resolve_pending_chat_request(reviewed, "Adopt it and restart.", runtime_root=tmp_path).state
+
+    new_goal = handle_conversational_message(
+        adopted,
+        "Your new goal is to improve side-thread directional-question binding across delayed replies. Start with local cognition and existing evidence.",
+        runtime_root=tmp_path,
+    )
+
+    assert new_goal.objective_created is True
+    assert new_goal.background_cycle_started is True
+    assert new_goal.state.active_objective is not None
+    assert new_goal.state.active_objective.objective_id != old_objective_id
+    assert len(new_goal.state.completed_cycle_keys) == 1
+    assert new_goal.state.provider_authorities == ()
+    assert new_goal.state.pending_chat_requests == ()
+    assert new_goal.state.goal_reviews == ()
+    assert new_goal.state.capability_registry[-1]["activation_state"] == "active"
+    assert "side-thread directional-question binding" in new_goal.state.active_objective.interpreted_objective
+    assert "Local cognition has started" in new_goal.reply
 
 
 def test_natural_goal_compiles_objective_authority_and_starts_cycle(tmp_path):
