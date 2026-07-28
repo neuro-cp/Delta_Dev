@@ -1,5 +1,4 @@
 {
   "candidate_experiments_visible": true,
-  "last_ui_event": "select_experiments",
-  "selected_experiment_visible": true
+  "last_ui_event": "formulate_candidates"
 }

@@ -69,6 +69,142 @@
       "semantic_identity": "active-cognitive-ledger-request-b7f7614fbce029b3",
       "session_reference": "active-cognitive-cycle-2c3f098052e0662c"
     },
+    "shared-local-model-request-05ff58b93f864591": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-28T21:11:40+00:00",
+      "authority_state": "standing_bounded_authority_conversational_runtime_operation",
+      "claimed_at": "2026-07-28T21:11:40+00:00",
+      "completed_at": "2026-07-28T21:11:40+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-28T21:11:40+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-db2b48e2d6603ba4",
+      "failure_classification": "local_model_execution_exception",
+      "lifecycle_state": "failed",
+      "mission_id": "active-cognitive-goal-b9ee59c87afb23b3",
+      "mission_information_need_identity": "focus-c3570493770bac53",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: operator-natural-goal OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: operator-natural-goal. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":6,\"description\":\"Resolve discrepancy for goal: Learn about basic addition.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-c3570493770bac53\",\"related_goal_ids\":[\"active-cognitive-goal-b9ee59c87afb23b3\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-b9ee59c87afb23b3\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Learn about basic addition.\"},\"current_hypotheses\":[],\"evidence_for\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"your goal today is to learn about basic addition.\"}],\"recent_outcomes\":[]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "659b6f152ef23c5952f54b7efbb7f4a5f195ce6e87da2214b9747a27339c8c2a",
+      "record_version": 1,
+      "request_digest": "a2eef2eedff2e7fa91d3f336b1bcc22ccaf54808ea15fc8453b20aee5a19cc0e",
+      "request_id": "shared-local-model-request-05ff58b93f864591",
+      "requester_reference": "cognitive-operation-bae86a11229193ee",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-090312e2e3523c84",
+      "session_reference": "active-cognitive-cycle-02f05d9e98627d67"
+    },
+    "shared-local-model-request-06d2a845dd319602": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-28T02:08:12+00:00",
+      "authority_state": "standing_bounded_authority_conversational_runtime_operation",
+      "claimed_at": "2026-07-28T02:08:12+00:00",
+      "completed_at": "2026-07-28T02:08:12+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-28T02:08:12+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-b529a380953ce700",
+      "failure_classification": "local_model_execution_exception",
+      "lifecycle_state": "failed",
+      "mission_id": "active-cognitive-goal-75232b03b599d986",
+      "mission_information_need_identity": "focus-5aeb49479d92bfbc",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: none - supporting_evidence_refs must be [] because no valid IDs are supplied; do not write none OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: . Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":7,\"description\":\"Resolve discrepancy for goal: Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first. Do not change source or restart without my explicit approval. Start working now.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-5aeb49479d92bfbc\",\"related_goal_ids\":[\"active-cognitive-goal-75232b03b599d986\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"Your new goal is to improve how you distinguish between a new foreground question and a continuation of the previous topic.\\n\\nStudy our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, \"}],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-75232b03b599d986\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first. Do not change source or restart without my explicit approval. Start working now.\"},\"current_hypotheses\":[],\"evidence_for\":[],\"recent_outcomes\":[]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "5e675ea9f992ee1eea408d4628c833fc122b5dfb91855a3fc1a720734e8ad4a9",
+      "record_version": 1,
+      "request_digest": "8b3719bbe133d9d42b3ccd7142070e124cfd43ea6c052e715ffafa787f2a922f",
+      "request_id": "shared-local-model-request-06d2a845dd319602",
+      "requester_reference": "cognitive-operation-d542dab4d3645afc",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-2809e2f95427137b",
+      "session_reference": "active-cognitive-cycle-4cbf6cbd7adac9f4"
+    },
     "shared-local-model-request-07c9e39c2d1dbb48": {
       "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
       "approved_at": "2026-07-27T23:42:50+00:00",
@@ -476,6 +612,74 @@
       },
       "semantic_identity": "active-cognitive-ledger-request-e2d410d40034245f",
       "session_reference": "active-cognitive-cycle-c7b9ccd985947a36"
+    },
+    "shared-local-model-request-16674c78f58e389f": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-28T21:11:34+00:00",
+      "authority_state": "standing_bounded_authority_conversational_runtime_operation",
+      "claimed_at": "2026-07-28T21:11:34+00:00",
+      "completed_at": "2026-07-28T21:11:34+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-28T21:11:34+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-e24e388b2b5a5bca",
+      "failure_classification": "local_model_execution_exception",
+      "lifecycle_state": "failed",
+      "mission_id": "active-cognitive-goal-b9ee59c87afb23b3",
+      "mission_information_need_identity": "focus-d208663a805f181a",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: operator-natural-goal OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: operator-natural-goal. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":3,\"description\":\"Resolve discrepancy for goal: Learn about basic addition.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-d208663a805f181a\",\"related_goal_ids\":[\"active-cognitive-goal-b9ee59c87afb23b3\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-b9ee59c87afb23b3\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Learn about basic addition.\"},\"current_hypotheses\":[],\"evidence_for\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"your goal today is to learn about basic addition.\"}],\"recent_outcomes\":[]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "6eb3a8d96530f24eeccfb50dbbb5aa88dbe106e8842d98842f70f178ac23ee1a",
+      "record_version": 1,
+      "request_digest": "aed3cf90151f7415f17f2dbaf8d10aeda52bb5e3aa1e96bb9633c2e4beff4e79",
+      "request_id": "shared-local-model-request-16674c78f58e389f",
+      "requester_reference": "cognitive-operation-1bac0936c63cdff3",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-7a1befa782196632",
+      "session_reference": "active-cognitive-cycle-0f7e21111f303af9"
     },
     "shared-local-model-request-22b9e1699c25fb1d": {
       "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
@@ -953,6 +1157,74 @@
       "semantic_identity": "active-cognitive-ledger-request-11a58cbb2296a93c",
       "session_reference": "active-cognitive-cycle-2d548c4900864daa"
     },
+    "shared-local-model-request-2d891f2c8d1787be": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-28T02:08:02+00:00",
+      "authority_state": "standing_bounded_authority_conversational_runtime_operation",
+      "claimed_at": "2026-07-28T02:08:02+00:00",
+      "completed_at": "2026-07-28T02:08:02+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-28T02:08:02+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-20f1ef7e0f122a74",
+      "failure_classification": "local_model_execution_exception",
+      "lifecycle_state": "failed",
+      "mission_id": "active-cognitive-goal-75232b03b599d986",
+      "mission_information_need_identity": "focus-3a94678736b7966b",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: none - supporting_evidence_refs must be [] because no valid IDs are supplied; do not write none OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: . Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":2,\"description\":\"Resolve discrepancy for goal: Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first. Do not change source or restart without my explicit approval. Start working now.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-3a94678736b7966b\",\"related_goal_ids\":[\"active-cognitive-goal-75232b03b599d986\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"Your new goal is to improve how you distinguish between a new foreground question and a continuation of the previous topic.\\n\\nStudy our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, \"}],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-75232b03b599d986\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first. Do not change source or restart without my explicit approval. Start working now.\"},\"current_hypotheses\":[],\"evidence_for\":[],\"recent_outcomes\":[]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "f5b62446dba6e5be181643c5c5a7282fcac88599d52b9290c38df8d35d1815d2",
+      "record_version": 1,
+      "request_digest": "3385ce55fc21332ae2d056dd868f5005241a1437ca94379aa848033f36cfba45",
+      "request_id": "shared-local-model-request-2d891f2c8d1787be",
+      "requester_reference": "cognitive-operation-c913c3db27399e45",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-8fe6e33c7c8f52f5",
+      "session_reference": "active-cognitive-cycle-4b6ee32341a34c7b"
+    },
     "shared-local-model-request-2e46c0c4441aab31": {
       "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
       "approved_at": "2026-07-27T23:46:03+00:00",
@@ -1156,6 +1428,74 @@
       },
       "semantic_identity": "active-cognitive-ledger-request-4117523a7305762a",
       "session_reference": "active-cognitive-cycle-c21be81d6e035da4"
+    },
+    "shared-local-model-request-34f8bb635230d212": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-28T02:08:18+00:00",
+      "authority_state": "standing_bounded_authority_conversational_runtime_operation",
+      "claimed_at": "2026-07-28T02:08:18+00:00",
+      "completed_at": "2026-07-28T02:08:18+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-28T02:08:18+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-a6286ef611c57d86",
+      "failure_classification": "local_model_execution_exception",
+      "lifecycle_state": "failed",
+      "mission_id": "active-cognitive-goal-75232b03b599d986",
+      "mission_information_need_identity": "focus-ecf4e1010ae37717",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: none - supporting_evidence_refs must be [] because no valid IDs are supplied; do not write none OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: . Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":10,\"description\":\"Resolve discrepancy for goal: Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first. Do not change source or restart without my explicit approval. Start working now.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-ecf4e1010ae37717\",\"related_goal_ids\":[\"active-cognitive-goal-75232b03b599d986\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"Your new goal is to improve how you distinguish between a new foreground question and a continuation of the previous topic.\\n\\nStudy our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, \"}],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-75232b03b599d986\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first. Do not change source or restart without my explicit approval. Start working now.\"},\"current_hypotheses\":[],\"evidence_for\":[],\"recent_outcomes\":[]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "017980b2bc1c13571c840495a22b4c31d9d8a5dde64d114b029babaf79b78353",
+      "record_version": 1,
+      "request_digest": "ad8bb7403978ad7b2f0fbc29a8950988674ce9987488d44de8d97c957acae953",
+      "request_id": "shared-local-model-request-34f8bb635230d212",
+      "requester_reference": "cognitive-operation-3bfa8480f3150bae",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-91eebc98928da813",
+      "session_reference": "active-cognitive-cycle-6992cc1e4af80345"
     },
     "shared-local-model-request-35d88211455f02f4": {
       "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
@@ -2109,6 +2449,142 @@
       "semantic_identity": "active-cognitive-ledger-request-accaeea5aa8ec208",
       "session_reference": "active-cognitive-cycle-c7b9ccd985947a36"
     },
+    "shared-local-model-request-5e091a82acff153c": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-28T21:11:48+00:00",
+      "authority_state": "standing_bounded_authority_conversational_runtime_operation",
+      "claimed_at": "2026-07-28T21:11:48+00:00",
+      "completed_at": "2026-07-28T21:11:48+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-28T21:11:48+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-37fbc62a8502eab9",
+      "failure_classification": "local_model_execution_exception",
+      "lifecycle_state": "failed",
+      "mission_id": "active-cognitive-goal-b9ee59c87afb23b3",
+      "mission_information_need_identity": "focus-d463095b334bd185",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: operator-natural-goal OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: operator-natural-goal. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":10,\"description\":\"Resolve discrepancy for goal: Learn about basic addition.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-d463095b334bd185\",\"related_goal_ids\":[\"active-cognitive-goal-b9ee59c87afb23b3\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-b9ee59c87afb23b3\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Learn about basic addition.\"},\"current_hypotheses\":[],\"evidence_for\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"your goal today is to learn about basic addition.\"}],\"recent_outcomes\":[]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "be1dbf6fa51a705592600c1cc8fad549a71d6958b4e44e77ff2562caab8bfdf6",
+      "record_version": 1,
+      "request_digest": "f947d5651087547cd8c519f5e6b0b8a8d54285d9f6a90c019000ac3cb833411b",
+      "request_id": "shared-local-model-request-5e091a82acff153c",
+      "requester_reference": "cognitive-operation-7b3bf8e4e1dedeb1",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-3e7f1bce4fba0285",
+      "session_reference": "active-cognitive-cycle-ed20eea07b018e3a"
+    },
+    "shared-local-model-request-644b181d1f738772": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-28T02:08:16+00:00",
+      "authority_state": "standing_bounded_authority_conversational_runtime_operation",
+      "claimed_at": "2026-07-28T02:08:16+00:00",
+      "completed_at": "2026-07-28T02:08:16+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-28T02:08:16+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-0e5b8afaec6216ba",
+      "failure_classification": "local_model_execution_exception",
+      "lifecycle_state": "failed",
+      "mission_id": "active-cognitive-goal-75232b03b599d986",
+      "mission_information_need_identity": "focus-6703462b105c5017",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: none - supporting_evidence_refs must be [] because no valid IDs are supplied; do not write none OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: . Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":9,\"description\":\"Resolve discrepancy for goal: Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first. Do not change source or restart without my explicit approval. Start working now.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-6703462b105c5017\",\"related_goal_ids\":[\"active-cognitive-goal-75232b03b599d986\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"Your new goal is to improve how you distinguish between a new foreground question and a continuation of the previous topic.\\n\\nStudy our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, \"}],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-75232b03b599d986\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first. Do not change source or restart without my explicit approval. Start working now.\"},\"current_hypotheses\":[],\"evidence_for\":[],\"recent_outcomes\":[]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "cce2e457587173f04db253ccf6f072a141af999319f8ec658e3516e56dcb5354",
+      "record_version": 1,
+      "request_digest": "6e48214309c738bfcd7777d4027a8ad61e95023b8061b3cb79629eb6ab3d37e9",
+      "request_id": "shared-local-model-request-644b181d1f738772",
+      "requester_reference": "cognitive-operation-40ac76b5782d18cd",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-33a04b9d03e8b380",
+      "session_reference": "active-cognitive-cycle-d15daacf9e7c9a7b"
+    },
     "shared-local-model-request-644d531b824092a0": {
       "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
       "approved_at": "2026-07-27T23:35:46+00:00",
@@ -2176,6 +2652,74 @@
       },
       "semantic_identity": "active-cognitive-ledger-request-97cdf0adb9de5131",
       "session_reference": "active-cognitive-cycle-c7b9ccd985947a36"
+    },
+    "shared-local-model-request-68ef242b16e768be": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-28T02:08:04+00:00",
+      "authority_state": "standing_bounded_authority_conversational_runtime_operation",
+      "claimed_at": "2026-07-28T02:08:04+00:00",
+      "completed_at": "2026-07-28T02:08:04+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-28T02:08:04+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-50775b2eba1f29a0",
+      "failure_classification": "local_model_execution_exception",
+      "lifecycle_state": "failed",
+      "mission_id": "active-cognitive-goal-75232b03b599d986",
+      "mission_information_need_identity": "focus-f876a95d1f760c5f",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: none - supporting_evidence_refs must be [] because no valid IDs are supplied; do not write none OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: . Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":3,\"description\":\"Resolve discrepancy for goal: Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first. Do not change source or restart without my explicit approval. Start working now.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-f876a95d1f760c5f\",\"related_goal_ids\":[\"active-cognitive-goal-75232b03b599d986\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"Your new goal is to improve how you distinguish between a new foreground question and a continuation of the previous topic.\\n\\nStudy our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, \"}],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-75232b03b599d986\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first. Do not change source or restart without my explicit approval. Start working now.\"},\"current_hypotheses\":[],\"evidence_for\":[],\"recent_outcomes\":[]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "d2897ff60e6a6eb036bdc7a0d2b7044b7de51049e957481e54b9c7237681fad0",
+      "record_version": 1,
+      "request_digest": "13d1b3857c7c06e73f48c5866bb220b2cffcfa82980a7a1d4a7ca61369edccc0",
+      "request_id": "shared-local-model-request-68ef242b16e768be",
+      "requester_reference": "cognitive-operation-5d90553e7cccf4ce",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-f9922ee9fcd8d7d5",
+      "session_reference": "active-cognitive-cycle-85a624eaab38a99f"
     },
     "shared-local-model-request-691634c3b4f42734": {
       "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
@@ -2245,6 +2789,414 @@
       "semantic_identity": "active-cognitive-ledger-request-bd06160779130ba7",
       "session_reference": "active-cognitive-cycle-718e1237d2c6660a"
     },
+    "shared-local-model-request-6a12f0fc3568f210": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-28T21:11:30+00:00",
+      "authority_state": "standing_bounded_authority_conversational_runtime_operation",
+      "claimed_at": "2026-07-28T21:11:30+00:00",
+      "completed_at": "2026-07-28T21:11:30+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-28T21:11:30+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-18add01bf01d9c2f",
+      "failure_classification": "local_model_execution_exception",
+      "lifecycle_state": "failed",
+      "mission_id": "active-cognitive-goal-b9ee59c87afb23b3",
+      "mission_information_need_identity": "focus-7006b027b8b052f7",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: operator-natural-goal OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: operator-natural-goal. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":1,\"description\":\"Resolve discrepancy for goal: Learn about basic addition.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-7006b027b8b052f7\",\"related_goal_ids\":[\"active-cognitive-goal-b9ee59c87afb23b3\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-b9ee59c87afb23b3\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Learn about basic addition.\"},\"current_hypotheses\":[],\"evidence_for\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"your goal today is to learn about basic addition.\"}],\"recent_outcomes\":[]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "0dd644c2d2742a88dc40b7587b09164e6c28c2ea3c54df1b4feb76b04b43522d",
+      "record_version": 1,
+      "request_digest": "78f3e281561dc765ecdfdb6861e22891eefb83d500d8d1abf77afd616811492a",
+      "request_id": "shared-local-model-request-6a12f0fc3568f210",
+      "requester_reference": "cognitive-operation-cb55310f12723114",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-5fde16e78ed24752",
+      "session_reference": "active-cognitive-cycle-746a58c021a3ac71"
+    },
+    "shared-local-model-request-6ca101a81161d1e1": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-28T21:11:42+00:00",
+      "authority_state": "standing_bounded_authority_conversational_runtime_operation",
+      "claimed_at": "2026-07-28T21:11:42+00:00",
+      "completed_at": "2026-07-28T21:11:42+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-28T21:11:42+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-e0c1cb518dadb6d8",
+      "failure_classification": "local_model_execution_exception",
+      "lifecycle_state": "failed",
+      "mission_id": "active-cognitive-goal-b9ee59c87afb23b3",
+      "mission_information_need_identity": "focus-e0f677f5b653955a",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: operator-natural-goal OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: operator-natural-goal. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":7,\"description\":\"Resolve discrepancy for goal: Learn about basic addition.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-e0f677f5b653955a\",\"related_goal_ids\":[\"active-cognitive-goal-b9ee59c87afb23b3\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-b9ee59c87afb23b3\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Learn about basic addition.\"},\"current_hypotheses\":[],\"evidence_for\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"your goal today is to learn about basic addition.\"}],\"recent_outcomes\":[]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "4a9e714c543be1c9a738095bbbc3a91b4d4a9e445f121391f76d3e76dbca79c8",
+      "record_version": 1,
+      "request_digest": "cc2ee35ab7d1f833b3df7ac24ea7c107fc4db5f21ed40495384ce6185bedce04",
+      "request_id": "shared-local-model-request-6ca101a81161d1e1",
+      "requester_reference": "cognitive-operation-bf05db0c0677a440",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-accde9c42ea6e645",
+      "session_reference": "active-cognitive-cycle-964e13bc5f055fbf"
+    },
+    "shared-local-model-request-6f3ef272d1f1bd45": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-28T02:08:14+00:00",
+      "authority_state": "standing_bounded_authority_conversational_runtime_operation",
+      "claimed_at": "2026-07-28T02:08:14+00:00",
+      "completed_at": "2026-07-28T02:08:14+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-28T02:08:14+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-2f5f98b5b00743fb",
+      "failure_classification": "local_model_execution_exception",
+      "lifecycle_state": "failed",
+      "mission_id": "active-cognitive-goal-75232b03b599d986",
+      "mission_information_need_identity": "focus-48f4d62dac06cc2d",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: none - supporting_evidence_refs must be [] because no valid IDs are supplied; do not write none OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: . Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":8,\"description\":\"Resolve discrepancy for goal: Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first. Do not change source or restart without my explicit approval. Start working now.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-48f4d62dac06cc2d\",\"related_goal_ids\":[\"active-cognitive-goal-75232b03b599d986\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"Your new goal is to improve how you distinguish between a new foreground question and a continuation of the previous topic.\\n\\nStudy our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, \"}],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-75232b03b599d986\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first. Do not change source or restart without my explicit approval. Start working now.\"},\"current_hypotheses\":[],\"evidence_for\":[],\"recent_outcomes\":[]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "b9f50e0285e0c23ef60edd0eb3d62b2d84c7d63a5f8333b7d10e92e53af7c070",
+      "record_version": 1,
+      "request_digest": "78278a7b19d18a97c02c342aa14b6b1011e179a98f35595fd67ce9a5549e6033",
+      "request_id": "shared-local-model-request-6f3ef272d1f1bd45",
+      "requester_reference": "cognitive-operation-b360948987ef1a99",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-08f2b88c462d28bd",
+      "session_reference": "active-cognitive-cycle-a9ae24272a10be2a"
+    },
+    "shared-local-model-request-6f8ed9e66e6e9dbf": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-28T02:08:22+00:00",
+      "authority_state": "standing_bounded_authority_conversational_runtime_operation",
+      "claimed_at": "2026-07-28T02:08:22+00:00",
+      "completed_at": "2026-07-28T02:08:22+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-28T02:08:22+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-8acadb7084ea2447",
+      "failure_classification": "local_model_execution_exception",
+      "lifecycle_state": "failed",
+      "mission_id": "active-cognitive-goal-75232b03b599d986",
+      "mission_information_need_identity": "focus-858cfae942b0018c",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: none - supporting_evidence_refs must be [] because no valid IDs are supplied; do not write none OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: . Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":12,\"description\":\"Resolve discrepancy for goal: Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first. Do not change source or restart without my explicit approval. Start working now.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-858cfae942b0018c\",\"related_goal_ids\":[\"active-cognitive-goal-75232b03b599d986\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"Your new goal is to improve how you distinguish between a new foreground question and a continuation of the previous topic.\\n\\nStudy our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, \"}],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-75232b03b599d986\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first. Do not change source or restart without my explicit approval. Start working now.\"},\"current_hypotheses\":[],\"evidence_for\":[],\"recent_outcomes\":[]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "343123953525381ade4297a924c75083671436c657e3dc803b3616023b8c0eda",
+      "record_version": 1,
+      "request_digest": "062d32a5f83755d7db5f80edb5a3fc58d371681b12043e4f20a1e1bad3761f44",
+      "request_id": "shared-local-model-request-6f8ed9e66e6e9dbf",
+      "requester_reference": "cognitive-operation-e6671842898dc10c",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-b420767029abbb0c",
+      "session_reference": "active-cognitive-cycle-4931d0aa33945d24"
+    },
+    "shared-local-model-request-7140856c4383795e": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-28T21:11:44+00:00",
+      "authority_state": "standing_bounded_authority_conversational_runtime_operation",
+      "claimed_at": "2026-07-28T21:11:44+00:00",
+      "completed_at": "2026-07-28T21:11:44+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-28T21:11:44+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-68f62f83e89159a6",
+      "failure_classification": "local_model_execution_exception",
+      "lifecycle_state": "failed",
+      "mission_id": "active-cognitive-goal-b9ee59c87afb23b3",
+      "mission_information_need_identity": "focus-7d8b62c5fe41bfff",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: operator-natural-goal OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: operator-natural-goal. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":8,\"description\":\"Resolve discrepancy for goal: Learn about basic addition.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-7d8b62c5fe41bfff\",\"related_goal_ids\":[\"active-cognitive-goal-b9ee59c87afb23b3\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-b9ee59c87afb23b3\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Learn about basic addition.\"},\"current_hypotheses\":[],\"evidence_for\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"your goal today is to learn about basic addition.\"}],\"recent_outcomes\":[]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "4941516686e39eb34aa719f91ecdcc5cf41618ba386d46be89d3787d73ef8b3c",
+      "record_version": 1,
+      "request_digest": "5079611a1020d1fb19ff495adf1792fc5390001759831bbef35111ec27dba6b7",
+      "request_id": "shared-local-model-request-7140856c4383795e",
+      "requester_reference": "cognitive-operation-aa2efe1bf25f1a30",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-8623734089976495",
+      "session_reference": "active-cognitive-cycle-f679139477c727f8"
+    },
+    "shared-local-model-request-7284a6285cc8c98b": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-28T02:08:00+00:00",
+      "authority_state": "standing_bounded_authority_conversational_runtime_operation",
+      "claimed_at": "2026-07-28T02:08:00+00:00",
+      "completed_at": "2026-07-28T02:08:00+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-28T02:08:00+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-e2eb652aa1b8ce40",
+      "failure_classification": "local_model_execution_exception",
+      "lifecycle_state": "failed",
+      "mission_id": "active-cognitive-goal-75232b03b599d986",
+      "mission_information_need_identity": "focus-8b731b41b5b5b889",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: none - supporting_evidence_refs must be [] because no valid IDs are supplied; do not write none OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: . Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":1,\"description\":\"Resolve discrepancy for goal: Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first. Do not change source or restart without my explicit approval. Start working now.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-8b731b41b5b5b889\",\"related_goal_ids\":[\"active-cognitive-goal-75232b03b599d986\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"Your new goal is to improve how you distinguish between a new foreground question and a continuation of the previous topic.\\n\\nStudy our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, \"}],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-75232b03b599d986\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first. Do not change source or restart without my explicit approval. Start working now.\"},\"current_hypotheses\":[],\"evidence_for\":[],\"recent_outcomes\":[]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "a0e28a3a84c23308db6b9c89acccafd4ac61b6aa9290c2ed6f9b262c1d65f192",
+      "record_version": 1,
+      "request_digest": "97cf3832f4e4c8bfe90155bc0dd317680a75cdc7970344372aa1643f88e357ae",
+      "request_id": "shared-local-model-request-7284a6285cc8c98b",
+      "requester_reference": "cognitive-operation-2b3dca8a96cc3da2",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-a9f5d548baa9bf89",
+      "session_reference": "active-cognitive-cycle-5707e6925dc160b9"
+    },
     "shared-local-model-request-74f39649b23459d3": {
       "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
       "approved_at": "2026-07-28T00:10:12+00:00",
@@ -2312,6 +3264,74 @@
       },
       "semantic_identity": "active-cognitive-ledger-request-3fb97ae032acb5d6",
       "session_reference": "active-cognitive-cycle-de472c81006fe0f7"
+    },
+    "shared-local-model-request-757b8805fb085117": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-28T02:08:10+00:00",
+      "authority_state": "standing_bounded_authority_conversational_runtime_operation",
+      "claimed_at": "2026-07-28T02:08:10+00:00",
+      "completed_at": "2026-07-28T02:08:10+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-28T02:08:10+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-70e85b1d48b5ccda",
+      "failure_classification": "local_model_execution_exception",
+      "lifecycle_state": "failed",
+      "mission_id": "active-cognitive-goal-75232b03b599d986",
+      "mission_information_need_identity": "focus-df7460ff654b8f47",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: none - supporting_evidence_refs must be [] because no valid IDs are supplied; do not write none OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: . Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":6,\"description\":\"Resolve discrepancy for goal: Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first. Do not change source or restart without my explicit approval. Start working now.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-df7460ff654b8f47\",\"related_goal_ids\":[\"active-cognitive-goal-75232b03b599d986\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"Your new goal is to improve how you distinguish between a new foreground question and a continuation of the previous topic.\\n\\nStudy our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, \"}],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-75232b03b599d986\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first. Do not change source or restart without my explicit approval. Start working now.\"},\"current_hypotheses\":[],\"evidence_for\":[],\"recent_outcomes\":[]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "fe6b08eb9009f3d2ad14b4ea929612f03d4a812299ec203a2a551c56b44cc106",
+      "record_version": 1,
+      "request_digest": "c9e81a7fb514bffd37ccbb6f982f8bc14b1002233b27773ed4e07aea9ee6e7d0",
+      "request_id": "shared-local-model-request-757b8805fb085117",
+      "requester_reference": "cognitive-operation-1aa06d140e6ac6e4",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-c334035482902cbf",
+      "session_reference": "active-cognitive-cycle-aebb6f33acc2f173"
     },
     "shared-local-model-request-7a483e0043c8aae3": {
       "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
@@ -2448,6 +3468,74 @@
       },
       "semantic_identity": "active-cognitive-ledger-request-f5f39a9924fdf4c9",
       "session_reference": "active-cognitive-cycle-c7b9ccd985947a36"
+    },
+    "shared-local-model-request-7eb72f9fe9f700c8": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-28T02:08:20+00:00",
+      "authority_state": "standing_bounded_authority_conversational_runtime_operation",
+      "claimed_at": "2026-07-28T02:08:20+00:00",
+      "completed_at": "2026-07-28T02:08:20+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-28T02:08:20+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-5a2e36bf7619e378",
+      "failure_classification": "local_model_execution_exception",
+      "lifecycle_state": "failed",
+      "mission_id": "active-cognitive-goal-75232b03b599d986",
+      "mission_information_need_identity": "focus-b5e265a25d191249",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: none - supporting_evidence_refs must be [] because no valid IDs are supplied; do not write none OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: . Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":11,\"description\":\"Resolve discrepancy for goal: Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first. Do not change source or restart without my explicit approval. Start working now.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-b5e265a25d191249\",\"related_goal_ids\":[\"active-cognitive-goal-75232b03b599d986\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"Your new goal is to improve how you distinguish between a new foreground question and a continuation of the previous topic.\\n\\nStudy our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, \"}],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-75232b03b599d986\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first. Do not change source or restart without my explicit approval. Start working now.\"},\"current_hypotheses\":[],\"evidence_for\":[],\"recent_outcomes\":[]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "394b6c69dd4d36c569d4655d322598eb30a4d82a9e6e69b7756da7400a2ca00d",
+      "record_version": 1,
+      "request_digest": "30fa62f2bb8f1377967e8aa44871f5979183cdb9a6b4338872f3e547ce5e7b45",
+      "request_id": "shared-local-model-request-7eb72f9fe9f700c8",
+      "requester_reference": "cognitive-operation-8d58b6ea6d8219d7",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-59af6720825ff934",
+      "session_reference": "active-cognitive-cycle-447f1b51876ea03d"
     },
     "shared-local-model-request-855cbd7f4b60f09f": {
       "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
@@ -2788,6 +3876,74 @@
       },
       "semantic_identity": "active-cognitive-ledger-request-2d84ead2f04b27c8",
       "session_reference": "active-cognitive-cycle-eb1c3c8a9801157d"
+    },
+    "shared-local-model-request-9be50e5b15d9de79": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-28T21:11:52+00:00",
+      "authority_state": "standing_bounded_authority_conversational_runtime_operation",
+      "claimed_at": "2026-07-28T21:11:52+00:00",
+      "completed_at": "2026-07-28T21:11:53+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-28T21:11:52+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-50049d58ed23b5b8",
+      "failure_classification": "local_model_execution_exception",
+      "lifecycle_state": "failed",
+      "mission_id": "active-cognitive-goal-b9ee59c87afb23b3",
+      "mission_information_need_identity": "focus-4113b4c46bba549a",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: operator-natural-goal OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: operator-natural-goal. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":12,\"description\":\"Resolve discrepancy for goal: Learn about basic addition.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-4113b4c46bba549a\",\"related_goal_ids\":[\"active-cognitive-goal-b9ee59c87afb23b3\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-b9ee59c87afb23b3\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Learn about basic addition.\"},\"current_hypotheses\":[],\"evidence_for\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"your goal today is to learn about basic addition.\"}],\"recent_outcomes\":[]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "98be468bbb54b28614d1c07afd1b9722f9685bd40bdea8398e77e32b7d2e17f5",
+      "record_version": 1,
+      "request_digest": "e8e0cc1e6d35795c238693abac36001a6cf2a7eb98de4b2debdf684546a1382f",
+      "request_id": "shared-local-model-request-9be50e5b15d9de79",
+      "requester_reference": "cognitive-operation-95f05ebe0b120812",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-42451e9925480868",
+      "session_reference": "active-cognitive-cycle-5881c8dab3fbcb21"
     },
     "shared-local-model-request-ae852c34a3361004": {
       "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
@@ -3265,6 +4421,74 @@
       "semantic_identity": "active-cognitive-ledger-request-95ff409509608d07",
       "session_reference": "active-cognitive-cycle-2d548c4900864daa"
     },
+    "shared-local-model-request-c476329c04d917e1": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-28T21:11:46+00:00",
+      "authority_state": "standing_bounded_authority_conversational_runtime_operation",
+      "claimed_at": "2026-07-28T21:11:46+00:00",
+      "completed_at": "2026-07-28T21:11:46+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-28T21:11:46+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-7707b9a4328058ff",
+      "failure_classification": "local_model_execution_exception",
+      "lifecycle_state": "failed",
+      "mission_id": "active-cognitive-goal-b9ee59c87afb23b3",
+      "mission_information_need_identity": "focus-576834fe61127f33",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: operator-natural-goal OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: operator-natural-goal. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":9,\"description\":\"Resolve discrepancy for goal: Learn about basic addition.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-576834fe61127f33\",\"related_goal_ids\":[\"active-cognitive-goal-b9ee59c87afb23b3\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-b9ee59c87afb23b3\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Learn about basic addition.\"},\"current_hypotheses\":[],\"evidence_for\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"your goal today is to learn about basic addition.\"}],\"recent_outcomes\":[]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "7e56efa6260ff0654f069d50ca43733ee0d231e0927535b1c48a6b960aa797fa",
+      "record_version": 1,
+      "request_digest": "7d836234264e87d4624c65660e498fa0428a30aaa4a39c539f37e88b5ca6b81a",
+      "request_id": "shared-local-model-request-c476329c04d917e1",
+      "requester_reference": "cognitive-operation-c51f372a077d5160",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-2a6390b8522f9d29",
+      "session_reference": "active-cognitive-cycle-1464ab23fc1bd6be"
+    },
     "shared-local-model-request-c9a639987ccbf78a": {
       "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
       "approved_at": "2026-07-28T00:09:42+00:00",
@@ -3400,6 +4624,74 @@
       },
       "semantic_identity": "active-cognitive-ledger-request-09e7ba5e19e95940",
       "session_reference": "active-cognitive-cycle-db871397d3662cd7"
+    },
+    "shared-local-model-request-cf23204ce3a239c4": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-28T21:11:32+00:00",
+      "authority_state": "standing_bounded_authority_conversational_runtime_operation",
+      "claimed_at": "2026-07-28T21:11:32+00:00",
+      "completed_at": "2026-07-28T21:11:32+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-28T21:11:32+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-f7093726c3dc2e56",
+      "failure_classification": "local_model_execution_exception",
+      "lifecycle_state": "failed",
+      "mission_id": "active-cognitive-goal-b9ee59c87afb23b3",
+      "mission_information_need_identity": "focus-90f7ad7804a6b364",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: operator-natural-goal OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: operator-natural-goal. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":2,\"description\":\"Resolve discrepancy for goal: Learn about basic addition.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-90f7ad7804a6b364\",\"related_goal_ids\":[\"active-cognitive-goal-b9ee59c87afb23b3\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-b9ee59c87afb23b3\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Learn about basic addition.\"},\"current_hypotheses\":[],\"evidence_for\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"your goal today is to learn about basic addition.\"}],\"recent_outcomes\":[]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "19ccf5df63dc379cf631c83e372214c642726e29575215e006b398de5bdb9486",
+      "record_version": 1,
+      "request_digest": "cab8433cd173aa1ade773fd4f2eee996d83889e4085e2e324840bb8e977f21ce",
+      "request_id": "shared-local-model-request-cf23204ce3a239c4",
+      "requester_reference": "cognitive-operation-1b6cf04dc5bca084",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-c7859d6b117488e7",
+      "session_reference": "active-cognitive-cycle-d280d08131dc2937"
     },
     "shared-local-model-request-cf985b8bae21fd32": {
       "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
@@ -3673,6 +4965,278 @@
       "semantic_identity": "active-cognitive-ledger-request-293b2a84de067df0",
       "session_reference": "active-cognitive-cycle-c7fed5149b8873bb"
     },
+    "shared-local-model-request-e2e2a64e6c872784": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-28T21:11:36+00:00",
+      "authority_state": "standing_bounded_authority_conversational_runtime_operation",
+      "claimed_at": "2026-07-28T21:11:36+00:00",
+      "completed_at": "2026-07-28T21:11:36+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-28T21:11:36+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-013d063202dec4a7",
+      "failure_classification": "local_model_execution_exception",
+      "lifecycle_state": "failed",
+      "mission_id": "active-cognitive-goal-b9ee59c87afb23b3",
+      "mission_information_need_identity": "focus-2e76f7b4653b8856",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: operator-natural-goal OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: operator-natural-goal. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":4,\"description\":\"Resolve discrepancy for goal: Learn about basic addition.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-2e76f7b4653b8856\",\"related_goal_ids\":[\"active-cognitive-goal-b9ee59c87afb23b3\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-b9ee59c87afb23b3\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Learn about basic addition.\"},\"current_hypotheses\":[],\"evidence_for\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"your goal today is to learn about basic addition.\"}],\"recent_outcomes\":[]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "2f5eade96510eaa7c0208d161594ed2fc9fc3fb8ec63d7ddccc2647a13831c0c",
+      "record_version": 1,
+      "request_digest": "b2eeb7646deda2b256e32062117bf6fd8b5335b90b42766238b098af157fac76",
+      "request_id": "shared-local-model-request-e2e2a64e6c872784",
+      "requester_reference": "cognitive-operation-790c5ca1447ec9ab",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-ce1745ebb4eca70e",
+      "session_reference": "active-cognitive-cycle-daa29173d03c5b77"
+    },
+    "shared-local-model-request-e3204618d2a16b55": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-28T21:11:38+00:00",
+      "authority_state": "standing_bounded_authority_conversational_runtime_operation",
+      "claimed_at": "2026-07-28T21:11:38+00:00",
+      "completed_at": "2026-07-28T21:11:38+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-28T21:11:38+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-8741dd796b42d51e",
+      "failure_classification": "local_model_execution_exception",
+      "lifecycle_state": "failed",
+      "mission_id": "active-cognitive-goal-b9ee59c87afb23b3",
+      "mission_information_need_identity": "focus-fbac5a3b8d11e3d7",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: operator-natural-goal OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: operator-natural-goal. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":5,\"description\":\"Resolve discrepancy for goal: Learn about basic addition.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-fbac5a3b8d11e3d7\",\"related_goal_ids\":[\"active-cognitive-goal-b9ee59c87afb23b3\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-b9ee59c87afb23b3\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Learn about basic addition.\"},\"current_hypotheses\":[],\"evidence_for\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"your goal today is to learn about basic addition.\"}],\"recent_outcomes\":[]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "8728be8a143a64bfe7be41383ecf3b7298a61ef46123f71ba41852d0b9a5e502",
+      "record_version": 1,
+      "request_digest": "6953ea9a2be846ffd6037257b589ab3301dd756fa89069f07373740c9a709078",
+      "request_id": "shared-local-model-request-e3204618d2a16b55",
+      "requester_reference": "cognitive-operation-075ef4ba370d0244",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-ca9f6e28becf00cd",
+      "session_reference": "active-cognitive-cycle-3b0194d7862a76ce"
+    },
+    "shared-local-model-request-e46bfc5e9861fa1f": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-28T21:11:50+00:00",
+      "authority_state": "standing_bounded_authority_conversational_runtime_operation",
+      "claimed_at": "2026-07-28T21:11:50+00:00",
+      "completed_at": "2026-07-28T21:11:50+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-28T21:11:50+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-db3c786282cb2f90",
+      "failure_classification": "local_model_execution_exception",
+      "lifecycle_state": "failed",
+      "mission_id": "active-cognitive-goal-b9ee59c87afb23b3",
+      "mission_information_need_identity": "focus-6fa860ec6213417c",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: operator-natural-goal OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: operator-natural-goal. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":11,\"description\":\"Resolve discrepancy for goal: Learn about basic addition.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-6fa860ec6213417c\",\"related_goal_ids\":[\"active-cognitive-goal-b9ee59c87afb23b3\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-b9ee59c87afb23b3\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Learn about basic addition.\"},\"current_hypotheses\":[],\"evidence_for\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"your goal today is to learn about basic addition.\"}],\"recent_outcomes\":[]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "eaca190537029207558f348db83299f0fe95c92041696be7fb87b9163cda53dc",
+      "record_version": 1,
+      "request_digest": "165aba7203fd84ea8b9c23a7ccbfcbe1ef828ec1165a5cc6848c58c3556db09e",
+      "request_id": "shared-local-model-request-e46bfc5e9861fa1f",
+      "requester_reference": "cognitive-operation-a57b2c4535e79d2b",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-e105deb4797b5e5f",
+      "session_reference": "active-cognitive-cycle-1a3a2c87ed975270"
+    },
+    "shared-local-model-request-e665b811a3a23424": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-28T02:08:06+00:00",
+      "authority_state": "standing_bounded_authority_conversational_runtime_operation",
+      "claimed_at": "2026-07-28T02:08:06+00:00",
+      "completed_at": "2026-07-28T02:08:06+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-28T02:08:06+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-a0ff47b014e4d06a",
+      "failure_classification": "local_model_execution_exception",
+      "lifecycle_state": "failed",
+      "mission_id": "active-cognitive-goal-75232b03b599d986",
+      "mission_information_need_identity": "focus-f97664c1b144d5f5",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: none - supporting_evidence_refs must be [] because no valid IDs are supplied; do not write none OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: . Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":4,\"description\":\"Resolve discrepancy for goal: Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first. Do not change source or restart without my explicit approval. Start working now.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-f97664c1b144d5f5\",\"related_goal_ids\":[\"active-cognitive-goal-75232b03b599d986\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"Your new goal is to improve how you distinguish between a new foreground question and a continuation of the previous topic.\\n\\nStudy our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, \"}],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-75232b03b599d986\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first. Do not change source or restart without my explicit approval. Start working now.\"},\"current_hypotheses\":[],\"evidence_for\":[],\"recent_outcomes\":[]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "cdd54638468dc554cd7d953566ff78e31393e7420dd1f71c0a9429b00d5e06f1",
+      "record_version": 1,
+      "request_digest": "dc1c13038489b8b029d60bc5d4ecbbb88a25fce392be5c6d397e3a3e1fc064c8",
+      "request_id": "shared-local-model-request-e665b811a3a23424",
+      "requester_reference": "cognitive-operation-f7332fd4a8a6efd9",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-114765713bca6311",
+      "session_reference": "active-cognitive-cycle-9f098b862e120647"
+    },
     "shared-local-model-request-ea8148bcbca4e09d": {
       "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
       "approved_at": "2026-07-27T23:46:55+00:00",
@@ -3808,6 +5372,74 @@
       },
       "semantic_identity": "active-cognitive-ledger-request-2b1c42fca4d5dd2d",
       "session_reference": "active-cognitive-cycle-c7b9ccd985947a36"
+    },
+    "shared-local-model-request-f85f7f852c9be270": {
+      "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+      "approved_at": "2026-07-28T02:08:08+00:00",
+      "authority_state": "standing_bounded_authority_conversational_runtime_operation",
+      "claimed_at": "2026-07-28T02:08:08+00:00",
+      "completed_at": "2026-07-28T02:08:08+00:00",
+      "consumed_state": "terminal",
+      "created_at": "2026-07-28T02:08:08+00:00",
+      "execution_attempt_count": 1,
+      "execution_claim_id": "shared-local-model-execution-claim-1324dc28f29bc891",
+      "failure_classification": "local_model_execution_exception",
+      "lifecycle_state": "failed",
+      "mission_id": "active-cognitive-goal-75232b03b599d986",
+      "mission_information_need_identity": "focus-8d992cd695993ae3",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - hypothesis_statement: nonempty string - scope: nonempty string - supporting_evidence_refs: array[string] - assumptions: array[string] - expected_observations: array[string] - uncertainty: nonempty string - recommended_state_transition: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - supporting_evidence_refs values must be chosen from: none - supporting_evidence_refs must be [] because no valid IDs are supplied; do not write none OPERATION RULE: hypothesis_statement must be testable against future observations TASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: . Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":5,\"description\":\"Resolve discrepancy for goal: Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first. Do not change source or restart without my explicit approval. Start working now.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-8d992cd695993ae3\",\"related_goal_ids\":[\"active-cognitive-goal-75232b03b599d986\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"Your new goal is to improve how you distinguish between a new foreground question and a continuation of the previous topic.\\n\\nStudy our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, \"}],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-75232b03b599d986\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first. Do not change source or restart without my explicit approval. Start working now.\"},\"current_hypotheses\":[],\"evidence_for\":[],\"recent_outcomes\":[]}",
+      "question_objective": "formulate_hypothesis",
+      "record_digest": "673b3312f374d39bfa5c3f15f6e3c6681647b41981ee5d59c998198cadf268e0",
+      "record_version": 1,
+      "request_digest": "fed752d2aa262ea96f46ea73b5b7d2f9a2bfb80c9d0134e615b43c298d408d14",
+      "request_id": "shared-local-model-request-f85f7f852c9be270",
+      "requester_reference": "cognitive-operation-731ad607d76fbc66",
+      "requester_type": "active_cognitive_loop",
+      "result_id": "",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      },
+      "semantic_identity": "active-cognitive-ledger-request-da4a3b9c53bf8fa7",
+      "session_reference": "active-cognitive-cycle-3db0f9b0e3ebca4d"
     }
   },
   "results": {
@@ -6992,5 +8624,5 @@
       "terminal_state": "completed"
     }
   },
-  "state_digest": "ee6f8958551e0d7abb70c129c34cefaa7e81d100982bf938c0fd68c820254aa0"
+  "state_digest": "0da6354e1522b68060b9edf3f867ae7a9b6fb9a4b23717da2c40b6ab79c4968c"
 }

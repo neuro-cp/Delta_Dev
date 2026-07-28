@@ -279,6 +279,7 @@ def create_json_fixture(root: Path, *, reset: bool = False) -> dict[str, Any]:
             path.write_text(json.dumps(schema, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     unsupported = schema_dir / "unsupported_schema_version.json.schema.json"
     if not unsupported.exists():
+        unsupported.parent.mkdir(parents=True, exist_ok=True)
         unsupported.write_text(json.dumps({"__schema_version__": "2", "fields": _json_schema_records()["valid_records.json"]}, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     input_digests = tuple(sorted((path.name, _file_digest(path)) for path in input_dir.glob("*.json")))
     schema_digests = tuple(sorted((path.name, _file_digest(path)) for path in schema_dir.glob("*.json")))
