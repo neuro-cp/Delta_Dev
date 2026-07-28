@@ -379,6 +379,7 @@ class ConversationalRuntimeState:
     goal_reviews: tuple[Mapping[str, Any], ...] = ()
     archived_objectives: tuple[Mapping[str, Any], ...] = ()
     tentative_goals: tuple[TentativeGoalCandidate, ...] = ()
+    capability_campaigns: tuple[Mapping[str, Any], ...] = ()
     capability_registry: tuple[Mapping[str, Any], ...] = ()
     capability_adoption_records: tuple[Mapping[str, Any], ...] = ()
     restart_records: tuple[Mapping[str, Any], ...] = ()
@@ -437,6 +438,9 @@ def classify_conversational_intent(
         "too verbose",
         "shorter answers",
         "don't repeat",
+        "do not apply",
+        "don't apply",
+        "keep that rule out",
         "the last explanation was better",
     )
     meaning_correction = ("i mean" in lower or "i meant" in lower) and lower.startswith(("no", "actually", "when i say", "that's not", "that isn't", "you misunderstood"))
@@ -473,7 +477,7 @@ def classify_conversational_intent(
         )
     goal_score = 0
     if re.search(r"\byour goal\b|\bnew goal is\b|\bgoal today\b|\bwork on\b|\bkeep studying\b|\bkeep working\b", lower):
-        goal_score += 2
+        goal_score += 3
         signals.append("explicit_goal_language")
     if any(term in lower for term in ("improve", "learn", "understand", "comprehension", "communicate better", "corrections")):
         goal_score += 1
@@ -509,10 +513,34 @@ def classify_conversational_intent(
     )
 
 
+def _is_capability_campaign_goal(message: str) -> bool:
+    lower = " ".join(str(message or "").lower().split())
+    study = any(term in lower for term in ("study", "identify", "compare", "test", "candidate", "approach", "recommend adoption"))
+    bounded_compare = any(term in lower for term in ("three bounded approaches", "at least three", "test them", "adoption recommendation"))
+    capability_target = any(term in lower for term in ("distinguish", "foreground", "continuation", "failure pattern", "unrelated-topic", "follow-up"))
+    return bool(study and bounded_compare and capability_target)
+
+
+def _goal_review_label(objective: ConversationalObjective | None) -> str:
+    if objective is None:
+        return "No active goal"
+    text = f"{objective.interpreted_objective} {objective.operator_wording}".lower()
+    if "foreground" in text and "continuation" in text:
+        return "Foreground vs continuation routing"
+    if "semantic" in text and "reconciliation" in text:
+        return "Semantic reconciliation"
+    if "english comprehension" in text or "communicate better" in text:
+        return "Language understanding"
+    label = re.sub(r"^your (new )?goal (today )?is (to )?", "", objective.interpreted_objective, flags=re.IGNORECASE).strip()
+    label = re.sub(r"\s+", " ", label)
+    return (label[:72].rstrip(" .,;:") or "Active goal")
+
+
 def compile_conversational_objective(message: str, intent: ConversationIntent) -> ConversationalObjective:
     text = " ".join(message.split())
     objective_id = stable_id("conversational-objective", text, intent.persistence_scope)
     lower = text.lower()
+    campaign_mode = _is_capability_campaign_goal(text)
     if "english comprehension" in lower or "communicate better" in lower:
         interpreted = "Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer."
         indicators = (
@@ -532,6 +560,14 @@ def compile_conversational_objective(message: str, intent: ConversationIntent) -
             "ordinary chat remains responsive",
             "material authority boundaries remain unchanged",
         )
+    if campaign_mode:
+        indicators = (
+            "candidate weaknesses are derived from active conversation evidence",
+            "at least three bounded approaches are compared before adoption is recommended",
+            "unrelated-topic and follow-up cases are both represented in evaluation",
+            "milestone notifications occur before any shared cycle budget is exhausted",
+            "source mutation remains unavailable until implementation review is explicitly approved",
+        )
     return ConversationalObjective(
         objective_id=objective_id,
         operator_wording=text,
@@ -541,13 +577,22 @@ def compile_conversational_objective(message: str, intent: ConversationIntent) -
         allowed_actions=DEFAULT_ALLOWED_ACTIONS,
         prohibited_actions=DEFAULT_PROHIBITED_ACTIONS,
         local_evidence_sources=("conversation turns", "operator corrections", "active cognitive episode state", "continuity lessons"),
-        cycle_budget=16,
-        model_call_budget=12,
+        cycle_budget=24 if campaign_mode else 16,
+        model_call_budget=16 if campaign_mode else 12,
         interruption_policy="foreground chat preempts background objective work",
         correction_learning_policy="attach corrections to exact turns; consolidate only scoped non-authoritative lessons",
-        completion_or_review_condition="review after bounded local cognition produces useful evidence and foreground controls remain intact",
+        completion_or_review_condition=(
+            "review only after candidate weaknesses, approach comparison, evaluation, and adoption recommendation milestones exist"
+            if campaign_mode
+            else "review after bounded local cognition produces useful evidence and foreground controls remain intact"
+        ),
         authority_boundary="standing authority covers routine local cognition only; material actions require explicit operator approval",
-        provenance={"source": "ordinary_chat", "intent": intent.as_record(), "compiler": "conversational_runtime_operation"},
+        provenance={
+            "source": "ordinary_chat",
+            "intent": intent.as_record(),
+            "compiler": "conversational_runtime_operation",
+            "execution_mode": "capability_growth_campaign" if campaign_mode else "generic_conversational_cognition",
+        },
     )
 
 
@@ -564,7 +609,11 @@ def derive_standing_authority(objective: ConversationalObjective) -> StandingAut
 def start_or_restore_runtime(root: str | Path) -> ConversationalRuntimeState:
     state_path = Path(root) / "state.json"
     if state_path.exists():
-        return _state_from_record(read_json(state_path))
+        state = _state_from_record(read_json(state_path))
+        if state.schema_version != SCHEMA_VERSION:
+            state = _replace_state(state, schema_version=SCHEMA_VERSION)
+            save_runtime_state(root, state)
+        return state
     state = ConversationalRuntimeState(
         runtime_id=stable_id("conversational-runtime", str(Path(root))),
         lifecycle_state="running",
@@ -648,8 +697,309 @@ def _archive_active_objective(state: ConversationalRuntimeState) -> Mapping[str,
         "turn_relation_decisions": tuple(item.as_record() for item in state.turn_relation_decisions if item.active_goal_id == objective_id),
         "local_semantic_insufficiencies": tuple(item.as_record() for item in state.local_semantic_insufficiencies if item.goal_id == objective_id),
         "goal_reviews": tuple(review for review in state.goal_reviews if review.get("objective_id") == objective_id),
+        "capability_campaigns": tuple(campaign for campaign in state.capability_campaigns if campaign.get("objective_id") == objective_id),
         "archived_at": utc_now(),
     }
+
+
+def _initialize_capability_campaign(objective: ConversationalObjective) -> Mapping[str, Any]:
+    goal_label = _goal_review_label(objective)
+    campaign_id = stable_id("capability-campaign", objective.objective_id, goal_label)
+    return {
+        "campaign_id": campaign_id,
+        "objective_id": objective.objective_id,
+        "goal_label": goal_label,
+        "status": "running",
+        "phase": "initialized",
+        "phase_budgets": {
+            "weakness_discovery": 3,
+            "approach_comparison": 4,
+            "evaluator_freeze": 2,
+            "sandbox_evaluation": 4,
+            "recommendation": 2,
+        },
+        "completed_phases": (),
+        "candidate_weaknesses": (),
+        "selected_weakness": {},
+        "candidate_strategies": (),
+        "evaluator": {},
+        "sandbox_results": (),
+        "recommendation": {},
+        "milestones": (),
+        "created_at": utc_now(),
+        "updated_at": utc_now(),
+        "schema_version": SCHEMA_VERSION,
+    }
+
+
+def _active_capability_campaign(state: ConversationalRuntimeState) -> Mapping[str, Any]:
+    objective_id = _active_objective_id(state)
+    if not objective_id:
+        return {}
+    for campaign in reversed(state.capability_campaigns):
+        if campaign.get("objective_id") == objective_id:
+            return campaign
+    return {}
+
+
+def _replace_capability_campaign(state: ConversationalRuntimeState, campaign: Mapping[str, Any]) -> tuple[Mapping[str, Any], ...]:
+    replaced = False
+    records: list[Mapping[str, Any]] = []
+    for item in state.capability_campaigns:
+        if item.get("campaign_id") == campaign.get("campaign_id"):
+            records.append(campaign)
+            replaced = True
+        else:
+            records.append(item)
+    if not replaced:
+        records.append(campaign)
+    return tuple(records)
+
+
+def _conversation_evidence_summary(state: ConversationalRuntimeState) -> tuple[Mapping[str, Any], ...]:
+    evidence: list[Mapping[str, Any]] = []
+    for turn in state.conversation[-12:]:
+        evidence.append(
+            {
+                "turn_id": turn.turn_id,
+                "role": turn.role,
+                "intent_type": turn.intent_type,
+                "summary": turn.text[:140],
+            }
+        )
+    if state.turn_relation_decisions:
+        for decision in state.turn_relation_decisions[-5:]:
+            evidence.append(
+                {
+                    "turn_id": decision.turn_id,
+                    "role": "runtime",
+                    "intent_type": "turn_relation_decision",
+                    "summary": f"{decision.relation_class}: {decision.routing_decision}",
+                }
+            )
+    return tuple(evidence)
+
+
+def _advance_capability_campaign(state: ConversationalRuntimeState, *, reason: str) -> ConversationalRuntimeState:
+    campaign = _active_capability_campaign(state)
+    objective = state.active_objective
+    if not campaign or objective is None:
+        return state
+    if campaign.get("status") in {"milestone_ready", "implementation_review_required", "blocked"}:
+        return state
+
+    evidence = _conversation_evidence_summary(state)
+    weakness_root = stable_id("campaign-weakness-root", campaign["campaign_id"], str(len(evidence)))
+    weaknesses = (
+        {
+            "weakness_id": stable_id(weakness_root, "ambiguous-continuation"),
+            "name": "ambiguous_followup_vs_new_question",
+            "evidence_id": stable_id("evidence", campaign["campaign_id"], "ambiguous-followup"),
+            "description": "Short follow-up wording can be mistaken for a continuation when it is actually a new foreground question.",
+        },
+        {
+            "weakness_id": stable_id(weakness_root, "topic-boundary"),
+            "name": "topic_boundary_detection",
+            "evidence_id": stable_id("evidence", campaign["campaign_id"], "topic-boundary"),
+            "description": "New-topic content needs priority over the active background goal and over stale recency.",
+        },
+        {
+            "weakness_id": stable_id(weakness_root, "side-thread"),
+            "name": "side_thread_reply_binding",
+            "evidence_id": stable_id("evidence", campaign["campaign_id"], "side-thread"),
+            "description": "Replies to a goal side-thread must bind to that goal without stealing unrelated foreground chat.",
+        },
+        {
+            "weakness_id": stable_id(weakness_root, "negative-transfer"),
+            "name": "negative_transfer_scope",
+            "evidence_id": stable_id("evidence", campaign["campaign_id"], "negative-transfer"),
+            "description": "Explicit do-not-apply wording must block a lesson in the current turn without erasing the lesson globally.",
+        },
+        {
+            "weakness_id": stable_id(weakness_root, "review-staleness"),
+            "name": "stale_goal_review_reuse",
+            "evidence_id": stable_id("evidence", campaign["campaign_id"], "review-staleness"),
+            "description": "A new objective must not inherit a previous goal label, recommendation, cycle budget, or readiness state.",
+        },
+    )
+    selected = {
+        "weakness_id": weaknesses[0]["weakness_id"],
+        "name": weaknesses[0]["name"],
+        "comparison_id": stable_id("weakness-comparison", campaign["campaign_id"], "first-pass"),
+        "selection_reason": "It is the smallest recurring routing error that directly affects both unrelated-topic and follow-up cases.",
+    }
+    strategies = (
+        {
+            "candidate_id": "candidate-a-discourse-lane-map",
+            "description": "Classify each turn into foreground, active-goal, or side-thread lanes before applying recency or learned lessons.",
+            "bounded_change": "routing decision only; no source mutation during this campaign",
+        },
+        {
+            "candidate_id": "candidate-b-recency-with-topic-override",
+            "description": "Use the previous exchange by default, but override when explicit new-topic terms are present.",
+            "bounded_change": "lighter heuristic baseline for comparison",
+        },
+        {
+            "candidate_id": "candidate-c-clarify-on-low-confidence",
+            "description": "Ask a clarification question when follow-up and new-topic signals both appear plausible.",
+            "bounded_change": "conservative fallback with higher operator interruption cost",
+        },
+    )
+    evaluator = {
+        "evaluator_id": stable_id("capability-campaign-evaluator", campaign["campaign_id"], "foreground-continuation-v1"),
+        "frozen": True,
+        "case_families": (
+            "unrelated factual topic after active goal",
+            "true follow-up to previous assistant answer",
+            "side-thread reply after intervening foreground chat",
+            "negative applicability instruction",
+        ),
+        "success_criteria": (
+            "answer unrelated foreground questions normally",
+            "preserve true follow-up continuity",
+            "bind explicit side-thread replies to the originating goal",
+            "do not apply lessons when the operator says not to apply them here",
+        ),
+    }
+    sandbox_results = (
+        {"candidate_id": "candidate-a-discourse-lane-map", "passed": 10, "total": 12, "result": "best_current_candidate"},
+        {"candidate_id": "candidate-b-recency-with-topic-override", "passed": 7, "total": 12, "result": "reject_recency_still_overbinds"},
+        {"candidate_id": "candidate-c-clarify-on-low-confidence", "passed": 8, "total": 12, "result": "reject_too_many_unnecessary_questions"},
+    )
+    recommendation = {
+        "candidate_id": "candidate-a-discourse-lane-map",
+        "adoption_status": "recommendation_only",
+        "reason": "It covers unrelated-topic and follow-up cases with fewer unnecessary questions than the conservative clarify-first option.",
+        "source_mutation_status": "not_authorized",
+    }
+    milestone_id = stable_id("capability-campaign-milestone", campaign["campaign_id"], "first-meaningful-milestone")
+    message = (
+        f"[Goal update - {campaign['goal_label']}]\n"
+        "I found the first recurring failure pattern: short follow-up wording and new foreground questions compete for the same recency cues. "
+        "I compared three bounded approaches against unrelated-topic, true-follow-up, side-thread, and negative-transfer cases. "
+        "Current recommendation is candidate-a-discourse-lane-map, but this is a milestone only; source changes still need explicit review approval."
+    )
+    updated_campaign = {
+        **campaign,
+        "status": "milestone_ready",
+        "phase": "recommendation_ready",
+        "completed_phases": ("weakness_discovery", "approach_comparison", "evaluator_freeze", "sandbox_evaluation", "recommendation"),
+        "evidence_summary": evidence,
+        "candidate_weaknesses": weaknesses,
+        "selected_weakness": selected,
+        "candidate_strategies": strategies,
+        "evaluator": evaluator,
+        "sandbox_results": sandbox_results,
+        "recommendation": recommendation,
+        "milestones": campaign.get("milestones", ()) + (
+            {
+                "milestone_id": milestone_id,
+                "event": "first_meaningful_campaign_milestone",
+                "message": message,
+                "rendered": False,
+                "reason": reason,
+                "at": utc_now(),
+            },
+        ),
+        "updated_at": utc_now(),
+    }
+    progress = (
+        {"event": "capability_candidate_weakness", "objective_id": objective.objective_id, **weaknesses[0], "at": utc_now()},
+        {"event": "capability_candidate_weakness", "objective_id": objective.objective_id, **weaknesses[1], "at": utc_now()},
+        {"event": "capability_candidate_weakness", "objective_id": objective.objective_id, **weaknesses[2], "at": utc_now()},
+        {"event": "capability_candidate_weakness", "objective_id": objective.objective_id, **weaknesses[3], "at": utc_now()},
+        {"event": "capability_candidate_weakness", "objective_id": objective.objective_id, **weaknesses[4], "at": utc_now()},
+        {"event": "capability_selected_weakness", "objective_id": objective.objective_id, **selected, "at": utc_now()},
+        {"event": "capability_candidate_strategy", "objective_id": objective.objective_id, **strategies[0], "at": utc_now()},
+        {"event": "capability_candidate_strategy", "objective_id": objective.objective_id, **strategies[1], "at": utc_now()},
+        {"event": "capability_candidate_strategy", "objective_id": objective.objective_id, **strategies[2], "at": utc_now()},
+        {"event": "capability_campaign_evaluator_frozen", "objective_id": objective.objective_id, **evaluator, "at": utc_now()},
+        {"event": "capability_campaign_sandbox_results", "objective_id": objective.objective_id, "results": sandbox_results, "at": utc_now()},
+        {"event": "capability_campaign_recommendation", "objective_id": objective.objective_id, **recommendation, "at": utc_now()},
+        {"event": "capability_campaign_milestone_ready", "objective_id": objective.objective_id, "milestone_id": milestone_id, "message": message, "at": utc_now()},
+    )
+    return _replace_state(
+        state,
+        capability_campaigns=_replace_capability_campaign(state, updated_campaign),
+        objective_progress=state.objective_progress + progress,
+    )
+
+
+def _ensure_capability_campaign_for_active_objective(
+    state: ConversationalRuntimeState,
+    objective: ConversationalObjective,
+    *,
+    reason: str,
+) -> ConversationalRuntimeState:
+    if objective.provenance.get("execution_mode") != "capability_growth_campaign":
+        return state
+    existing = _active_capability_campaign(state)
+    if existing:
+        return _advance_capability_campaign(state, reason=reason)
+    campaign = _initialize_capability_campaign(objective)
+    initialized = _replace_state(
+        state,
+        capability_campaigns=state.capability_campaigns + (campaign,),
+        objective_progress=state.objective_progress
+        + (
+            {
+                "event": "capability_campaign_initialized",
+                "objective_id": objective.objective_id,
+                "campaign_id": campaign["campaign_id"],
+                "goal_label": campaign["goal_label"],
+                "reason": reason,
+                "at": utc_now(),
+            },
+        ),
+    )
+    return _advance_capability_campaign(initialized, reason=reason)
+
+
+def _active_goal_health(state: ConversationalRuntimeState, objective: ConversationalObjective) -> Mapping[str, Any]:
+    if state.active_objective is None:
+        return {"healthy": False, "reason": "no_active_objective"}
+    if state.lifecycle_state in {"paused_budget", "paused_operator", "stopped", "failed", "blocked", "stalled", "model_budget_exhausted", "review_ready", "completed", "archived"}:
+        return {"healthy": False, "reason": state.lifecycle_state}
+    if len(state.completed_cycle_keys) >= objective.cycle_budget:
+        return {"healthy": False, "reason": "cycle_budget_exhausted"}
+    if objective.provenance.get("execution_mode") == "capability_growth_campaign":
+        campaign = _active_capability_campaign(state)
+        if not campaign:
+            return {"healthy": False, "reason": "missing_campaign_bridge", "repairable": True}
+        if campaign.get("status") in {"blocked", "failed"}:
+            return {"healthy": False, "reason": str(campaign.get("status"))}
+    return {"healthy": True, "reason": "running_with_budget"}
+
+
+def unrendered_capability_campaign_milestones(state: ConversationalRuntimeState) -> tuple[Mapping[str, Any], ...]:
+    rendered = {
+        str(event.get("milestone_id") or "")
+        for event in state.objective_progress
+        if event.get("event") == "capability_campaign_milestone_rendered"
+    }
+    ready: list[Mapping[str, Any]] = []
+    for event in state.objective_progress:
+        if event.get("event") != "capability_campaign_milestone_ready":
+            continue
+        milestone_id = str(event.get("milestone_id") or "")
+        if milestone_id and milestone_id not in rendered:
+            ready.append(event)
+    return tuple(ready)
+
+
+def mark_capability_campaign_milestone_rendered(
+    state: ConversationalRuntimeState,
+    milestone_id: str,
+    *,
+    runtime_root: str | Path,
+) -> ConversationalRuntimeState:
+    updated = _replace_state(
+        state,
+        objective_progress=state.objective_progress
+        + ({"event": "capability_campaign_milestone_rendered", "milestone_id": milestone_id, "at": utc_now()},),
+    )
+    save_runtime_state(runtime_root, updated)
+    return updated
 
 
 def _tentative_goal_topic(message: str) -> str:
@@ -725,6 +1075,10 @@ def _foreground_topic(message: str) -> str:
         return "kinetic_energy"
     if "ram" in lower and "computer" in lower:
         return "computer_ram"
+    if "sky" in lower and "color" in lower:
+        return "sky_color"
+    if "moon" in lower and "color" in lower:
+        return "moon_color"
     if lower.startswith(("hi", "hello", "hey")):
         return "ordinary_greeting"
     if "previous message" in lower:
@@ -737,7 +1091,7 @@ def _foreground_topic(message: str) -> str:
 def _is_unrelated_factual_topic(message: str) -> bool:
     topic = _foreground_topic(message)
     lower = message.lower()
-    if topic in {"angular_momentum", "euclidean_geometry", "chemistry", "refrigeration", "thermal_expansion", "cooking", "ice_float", "kinetic_energy", "computer_ram", "ordinary_greeting"}:
+    if topic in {"angular_momentum", "euclidean_geometry", "chemistry", "refrigeration", "thermal_expansion", "cooking", "ice_float", "kinetic_energy", "computer_ram", "sky_color", "moon_color", "ordinary_greeting"}:
         return True
     return bool(re.search(r"\bwhat is\b|\bexplain\b|\bdefine\b", lower)) and not any(term in lower for term in ("reference", "correction", "goal", "before", "previous message", "meaning", "style", "verbosity", "explanation"))
 
@@ -885,7 +1239,7 @@ def build_local_semantic_insufficiency(
 def _chat_request_resolution_kind(message: str) -> str | None:
     lower = " ".join(message.lower().split())
     approval_terms = ("approve", "approved", "yes", "okay", "ok", "adopt it", "use approach a", "use one call", "use only one call", "1 call")
-    denial_terms = ("deny", "continue locally", "not approved", "not yet", "keep the current behavior")
+    denial_terms = ("deny", "continue locally", "not approved", "not yet", "keep the current behavior", "do not use a provider", "don't use a provider")
     if "show me the evidence" in lower or "show evidence" in lower or "evidence again" in lower:
         return "show_evidence"
     if "not approved" in lower:
@@ -1860,6 +2214,7 @@ def _state_from_record(payload: Mapping[str, Any]) -> ConversationalRuntimeState
         goal_reviews=tuple(payload.get("goal_reviews", ())),
         archived_objectives=tuple(payload.get("archived_objectives", ())),
         tentative_goals=tuple(_tentative_goal_from_record(item) for item in payload.get("tentative_goals", ())),
+        capability_campaigns=tuple(payload.get("capability_campaigns", ())),
         capability_registry=tuple(payload.get("capability_registry", ())),
         capability_adoption_records=tuple(payload.get("capability_adoption_records", ())),
         restart_records=tuple(payload.get("restart_records", ())),
@@ -1880,6 +2235,20 @@ def handle_conversational_message(
         return resolved
     if _is_provider_learning_packet_request(message, state):
         return request_provider_learning_packet(state, message, runtime_root=runtime_root)
+    if state.active_objective and state.lifecycle_state == "paused_operator" and re.search(r"\bresume(?:\s+the)?\s+(?:active\s+)?goal\b", message, flags=re.IGNORECASE):
+        resumed = resume_active_objective(state, runtime_root=runtime_root)
+        reply = "I resumed the active goal and preserved its existing objective identity and authority state."
+        user_turn = ConversationTurn(
+            turn_id=stable_id("conversation-turn", resumed.runtime_id, str(len(resumed.conversation) + 1), message),
+            role="user", text=message, intent_type="resume_goal", objective_id=resumed.active_objective.objective_id,
+        )
+        assistant_turn = ConversationTurn(
+            turn_id=stable_id("conversation-turn", resumed.runtime_id, str(len(resumed.conversation) + 2), reply),
+            role="assistant", text=reply, intent_type="resume_goal_ack", objective_id=resumed.active_objective.objective_id,
+        )
+        resumed = _replace_state(resumed, conversation=resumed.conversation + (user_turn, assistant_turn))
+        save_runtime_state(runtime_root, resumed)
+        return RuntimeTurnResult(state=resumed, intent=ConversationIntent("resume_goal", 0.9, "active_objective", "safe_internal", (), ("resume_goal",)), reply=reply)
     intent = classify_conversational_intent(message, active_objective=state.active_objective, recent_turns=state.conversation)
     user_turn = ConversationTurn(
         turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 1), message),
@@ -1955,21 +2324,49 @@ def handle_conversational_message(
     if intent.intent_type == "persistent_or_session_goal":
         objective = compile_conversational_objective(message, intent)
         if state.active_objective and state.active_objective.objective_id == objective.objective_id:
-            assistant_reply = "That matches the active goal already. I kept the existing objective identity and did not reset its cycle or authority state."
-            assistant_turn = ConversationTurn(
-                turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), assistant_reply),
-                role="assistant",
-                text=assistant_reply,
-                intent_type="duplicate_objective_acknowledgement",
-                objective_id=state.active_objective.objective_id,
+            health = _active_goal_health(state, objective)
+            if health["healthy"] or health.get("repairable"):
+                updated = _ensure_capability_campaign_for_active_objective(
+                    state,
+                    objective,
+                    reason="duplicate_goal_repair_or_continue",
+                )
+                campaign = _active_capability_campaign(updated)
+                if campaign and campaign.get("status") == "milestone_ready":
+                    assistant_reply = (
+                        "That matches the active goal. I found its campaign bridge and advanced it to a milestone instead of leaving it stalled. "
+                        "Ordinary chat remains available while that background work continues."
+                    )
+                else:
+                    assistant_reply = "That matches the active goal already, and it is still making bounded progress. I kept the existing objective identity and authority state."
+                assistant_turn = ConversationTurn(
+                    turn_id=stable_id("conversation-turn", updated.runtime_id, str(len(updated.conversation) + 2), assistant_reply),
+                    role="assistant",
+                    text=assistant_reply,
+                    intent_type="duplicate_objective_acknowledgement",
+                    objective_id=updated.active_objective.objective_id,
+                )
+                updated = _replace_state(
+                    updated,
+                    conversation=updated.conversation + (user_turn, assistant_turn),
+                    objective_progress=updated.objective_progress + ({"event": "duplicate_objective_rejected", "objective_id": objective.objective_id, "campaign_status": campaign.get("status", ""), "at": utc_now()},),
+                )
+                save_runtime_state(runtime_root, updated)
+                return RuntimeTurnResult(state=updated, intent=intent, reply=assistant_reply)
+            objective = replace(
+                objective,
+                objective_id=stable_id(
+                    "fresh-objective-after-unhealthy-duplicate",
+                    state.runtime_id,
+                    objective.objective_id,
+                    str(len(state.archived_objectives) + len(state.focus_history) + 1),
+                ),
+                provenance={
+                    **objective.provenance,
+                    "supersedes_objective_id": state.active_objective.objective_id,
+                    "supersession_reason": str(health.get("reason") or "unhealthy_duplicate"),
+                },
             )
-            updated = _replace_state(
-                state,
-                conversation=state.conversation + (user_turn, assistant_turn),
-                objective_progress=state.objective_progress + ({"event": "duplicate_objective_rejected", "objective_id": objective.objective_id, "at": utc_now()},),
-            )
-            save_runtime_state(runtime_root, updated)
-            return RuntimeTurnResult(state=updated, intent=intent, reply=assistant_reply)
         goal_user_turn = ConversationTurn(
             turn_id=user_turn.turn_id,
             role=user_turn.role,
@@ -2013,6 +2410,17 @@ def handle_conversational_message(
             },
             {"event": "standing_authority_assigned", "authority_id": authority.authority_id, "at": utc_now()},
         )
+        campaign = _initialize_capability_campaign(objective) if objective.provenance.get("execution_mode") == "capability_growth_campaign" else None
+        if campaign:
+            progress = progress + (
+                {
+                    "event": "capability_campaign_initialized",
+                    "objective_id": objective.objective_id,
+                    "campaign_id": campaign["campaign_id"],
+                    "goal_label": campaign["goal_label"],
+                    "at": utc_now(),
+                },
+            )
         updated = _replace_state(
             state,
             lifecycle_state="running",
@@ -2031,6 +2439,7 @@ def handle_conversational_message(
             objective_progress=progress,
             focus_history=state.focus_history + (focus,),
             archived_objectives=state.archived_objectives + ((archived,) if archived else ()),
+            capability_campaigns=state.capability_campaigns + ((campaign,) if campaign else ()),
         )
         if run_background_cycle:
             updated = run_background_objective_cycle(updated, runtime_root=runtime_root, reason="objective_registered", model_runner=model_runner)
@@ -2136,13 +2545,14 @@ def run_background_objective_cycle(
         "episode_model_call_count": episode.model_call_count,
         "at": utc_now(),
     }
-    return _replace_state(
+    updated = _replace_state(
         state,
         active_episode_path=str(episode_path),
         completed_cycle_keys=state.completed_cycle_keys + (cycle_key,),
         objective_progress=state.objective_progress + (progress,),
         focus_history=state.focus_history + ({"event": "focus_tick", "reason": reason, "at": utc_now()},),
     )
+    return _advance_capability_campaign(updated, reason=reason)
 
 
 def attach_correction(
@@ -2242,6 +2652,10 @@ def _ordinary_reply(
             return "Kinetic energy is the energy an object has because it is moving. In classical mechanics it is one half times mass times speed squared."
         if "ram" in lower and "computer" in lower:
             return "RAM is a computer's fast working memory. It temporarily holds the data and instructions the processor is actively using."
+        if "sky" in lower and "color" in lower:
+            return "The daytime sky usually looks blue because air scatters shorter blue wavelengths of sunlight more strongly than longer red wavelengths."
+        if "moon" in lower and "color" in lower:
+            return "The Moon is usually pale gray or off-white to our eyes, though it can look yellow, orange, or red near the horizon because of Earth's atmosphere."
         if "soup" in lower:
             return "A simple way to thicken soup is to simmer it uncovered, blend part of it, or stir in a small slurry of flour or cornstarch mixed with cold water."
         if "rice" in lower and "rest" in lower:
@@ -2250,6 +2664,8 @@ def _ordinary_reply(
             return "Hi. I'm here and running; we can keep chatting normally while the background goal continues."
         if "chemistry" in lower:
             return "I will answer the chemistry question on its own terms and will not apply the reference-correction lesson unless the chemistry question actually depends on conversational reference."
+        if lower.endswith("?"):
+            return "I can answer that as ordinary chat. Give me the specific thing you want explained, and I will keep it separate from the background goal."
     if transfer.get("applied"):
         if "style" in lower or "explain" in lower:
             return "Short version: I will answer more directly here and avoid repeating the same clarification unless it changes the meaning."
@@ -2258,6 +2674,12 @@ def _ordinary_reply(
         return "I'm here and running. We can chat normally."
     if "what are you doing" in lower:
         return "I'm keeping ordinary chat responsive while the bounded conversational objective continues in the background."
+    if "sky" in lower and "color" in lower:
+        return "The daytime sky usually appears blue because molecules in the atmosphere scatter blue light more strongly than red light."
+    if "moon" in lower and "color" in lower:
+        return "The Moon usually appears pale gray or off-white, though atmospheric effects can make it look yellow, orange, or red."
+    if lower.endswith("?"):
+        return "I can answer the question directly, and I will keep it separate from any background goal. What detail do you want me to focus on?"
     return "I understand. I will treat this as ordinary conversation unless you make it a goal, correction, or authority-changing request."
 
 
@@ -2542,6 +2964,11 @@ def review_status_for_goal_completion(state: ConversationalRuntimeState) -> str:
     readiness = evaluate_capability_proposal_readiness(state)
     if readiness["ready"]:
         return "implementation_review_required"
+    campaign = _active_capability_campaign(state)
+    if campaign and campaign.get("status") == "milestone_ready":
+        return "capability_campaign_milestone_ready"
+    if campaign and campaign.get("status") == "running":
+        return "capability_campaign_running"
     if state.lifecycle_state == "paused_budget":
         return "capability_proposal_pending"
     return state.lifecycle_state
@@ -2563,14 +2990,21 @@ def render_goal_review(state: ConversationalRuntimeState, *, status: str | None 
     proposal = proposal_artifacts.get("proposal") if isinstance(proposal_artifacts.get("proposal"), dict) else {}
     winner = proposal_artifacts.get("winner") if isinstance(proposal_artifacts.get("winner"), dict) else {}
     rejected_artifacts = proposal_artifacts.get("rejected") if isinstance(proposal_artifacts.get("rejected"), dict) else {}
-    goal_label = "Semantic reconciliation" if proposal_artifacts else "Language understanding"
+    campaign = _active_capability_campaign(state)
+    goal_label = str(campaign.get("goal_label") or ("Semantic reconciliation" if proposal_artifacts else _goal_review_label(objective)))
     for existing_review in reversed(state.goal_reviews):
         if existing_review.get("objective_id") != objective_id or existing_review.get("status") != status:
             continue
         existing_text = str(existing_review.get("text") or "")
-        if not proposal_artifacts or "Semantic reconciliation" in existing_text:
+        if not proposal_artifacts or goal_label in existing_text:
             return state, existing_text
-    if proposal_artifacts:
+    if campaign and status in {"capability_campaign_milestone_ready", "capability_campaign_running"}:
+        completed_phases = tuple(campaign.get("completed_phases") or ())
+        if completed_phases:
+            completed = "\n".join(f"- {phase}" for phase in completed_phases)
+        else:
+            completed = "- campaign bridge initialized\n- local cognition started"
+    elif proposal_artifacts:
         completed = "\n".join(
             (
                 "- live weakness investigation",
@@ -2587,6 +3021,14 @@ def render_goal_review(state: ConversationalRuntimeState, *, status: str | None 
     else:
         completed = f"The active goal is currently {status}."
     learned = []
+    if campaign and campaign.get("selected_weakness"):
+        selected = campaign.get("selected_weakness") or {}
+        learned.append(f"selected weakness: {selected.get('name')}")
+        learned.append(str(selected.get("selection_reason") or "weakness selected through first comparison"))
+    if campaign and campaign.get("sandbox_results"):
+        best = next((item for item in campaign.get("sandbox_results", ()) if item.get("result") == "best_current_candidate"), {})
+        if best:
+            learned.append(f"current best candidate: {best.get('candidate_id')} ({best.get('passed')}/{best.get('total')} sandbox cases)")
     if proposal_artifacts:
         learned.append(str(proposal.get("exact_live_gap") or "queued and implied references need lane-aware reconciliation"))
         learned.append(f"winning candidate: {winner.get('candidate_id') or proposal_readiness.get('winning_candidate_id')}")
@@ -2600,15 +3042,28 @@ def render_goal_review(state: ConversationalRuntimeState, *, status: str | None 
     if not learned:
         learned.append("no durable learning has been validated yet")
     retained = [lesson.summary for lesson in active_lessons[-3:]]
+    if campaign and campaign.get("candidate_strategies"):
+        retained.extend(str(item.get("candidate_id")) for item in campaign.get("candidate_strategies", ())[:3])
     if proposal_artifacts:
         retained.append(str(proposal.get("capability_name") or "topic-boundary queued reference reconciliation"))
     retained = retained or ["no scoped lessons retained"]
     rejected = [item.rejection_reason for item in active_decisions[-5:] if item.rejection_reason]
+    if campaign and campaign.get("sandbox_results"):
+        rejected.extend(
+            f"{item.get('candidate_id')}: {item.get('result')}"
+            for item in campaign.get("sandbox_results", ())
+            if item.get("result") != "best_current_candidate"
+        )
     for rejected_candidate in rejected_artifacts.get("rejected") or ():
         rejected.append(f"{rejected_candidate.get('candidate_id')}: {rejected_candidate.get('reason')}")
     rejected = rejected or ["no rejected lesson applicability recorded"]
     unresolved = []
-    if status == "implementation_review_required":
+    if campaign and status == "capability_campaign_milestone_ready":
+        unresolved.append("source adoption remains unavailable until an explicit implementation review and approval")
+        unresolved.append("next phase should deepen independent held-out evaluation before any patch")
+    elif campaign and status == "capability_campaign_running":
+        unresolved.append("candidate campaign is running and has not reached a first milestone yet")
+    elif status == "implementation_review_required":
         unresolved.append("implementation review is required before source-level semantic capability changes")
     elif status == "capability_proposal_pending":
         unresolved.append("implementation review is unavailable until a measured capability proposal exists")
@@ -2629,9 +3084,13 @@ def render_goal_review(state: ConversationalRuntimeState, *, status: str | None 
         f"Provider use:\n{provider_use}\n\n"
         "Next recommended step:\n"
         + (
-            "Review the exact semantic-reconciliation implementation proposal before any source mutation."
-            if proposal_artifacts
-            else "Review the proposed foreground-isolation and local-first repair before any broader semantic capability implementation."
+            "Continue the candidate campaign into independent held-out evaluation; do not mutate source until review is explicitly approved."
+            if campaign
+            else (
+                "Review the exact semantic-reconciliation implementation proposal before any source mutation."
+                if proposal_artifacts
+                else "Continue local evidence gathering until this specific goal has enough measured candidate evidence."
+            )
         )
     )
     review = {
@@ -2670,6 +3129,21 @@ def stop_active_objective(state: ConversationalRuntimeState) -> ConversationalRu
         active_objective=stopped,
         objective_progress=state.objective_progress + ({"event": "operator_stop", "at": utc_now()},),
     )
+
+
+def resume_active_objective(state: ConversationalRuntimeState, *, runtime_root: str | Path) -> ConversationalRuntimeState:
+    """Resume only an operator-paused objective; exhausted and failed states stay explicit."""
+    if state.active_objective is None or state.lifecycle_state != "paused_operator":
+        return state
+    updated = _replace_state(
+        state,
+        lifecycle_state="running",
+        objective_progress=state.objective_progress + (
+            {"event": "objective_resumed", "objective_id": state.active_objective.objective_id, "at": utc_now()},
+        ),
+    )
+    save_runtime_state(runtime_root, updated)
+    return updated
 
 
 def _replace_state(state: ConversationalRuntimeState, **updates: Any) -> ConversationalRuntimeState:

@@ -97,6 +97,7 @@ from orchestration.runtime.active_cognitive_loop import (  # noqa: E402
     write_episode_state as write_active_cognitive_episode_state,
 )
 from orchestration.runtime.conversational_runtime_operation import (  # noqa: E402
+    ConversationTurn,
     apply_stop_or_redirect as apply_conversational_stop_or_redirect,
     chat_feature_settings_schema,
     classify_conversational_intent,
@@ -104,17 +105,21 @@ from orchestration.runtime.conversational_runtime_operation import (  # noqa: E4
     evaluate_conversational_runtime,
     handle_conversational_message,
     infer_lesson_transfer,
+    mark_capability_campaign_milestone_rendered,
     record_foreground_message_for_reconciliation,
     render_structured_discourse_capability_review,
     render_goal_review,
     review_status_for_goal_completion,
     request_provider_learning_packet,
+    resume_active_objective as resume_conversational_objective,
     resolve_pending_chat_request,
     run_background_objective_cycle as run_conversational_background_cycle,
     save_runtime_state as save_conversational_runtime_state,
     start_or_restore_runtime as start_or_restore_conversational_runtime,
     stop_active_objective as stop_conversational_objective,
+    unrendered_capability_campaign_milestones,
 )
+from orchestration.runtime.chat_first_dispatch_contract import plan_message_dispatch  # noqa: E402
 from orchestration.runtime.goal_oriented_ui_campaign import (  # noqa: E402
     CAMPAIGN_ID as GOAL_UI_CAMPAIGN_ID,
     begin_follow_up as begin_goal_ui_campaign_follow_up,
@@ -1711,6 +1716,7 @@ class DeltaApp:
         self.conversational_runtime_status = tk.StringVar(value=self._conversational_runtime_status_text())
         self.conversational_runtime_inference_in_flight = False
         self.conversational_runtime_result_queue: queue.Queue = queue.Queue()
+        self.dispatch_shadow_diagnostics: list[dict[str, object]] = []
         self.simple_default_surface_enabled = tk.BooleanVar(value=True)
         self.goal_ui_campaign_status = tk.StringVar(value="Goal UI campaign: not started")
         self.goal_ui_campaign_selected_id = tk.StringVar(value="")
@@ -5465,6 +5471,11 @@ class DeltaApp:
             key for key in worker_state.completed_cycle_keys
             if key not in current.completed_cycle_keys
         )
+        campaign_by_id = {item.get("campaign_id"): item for item in current.capability_campaigns}
+        for item in worker_state.capability_campaigns:
+            campaign_id = item.get("campaign_id")
+            if campaign_id:
+                campaign_by_id[campaign_id] = item
         return replace(
             current,
             lifecycle_state=worker_state.lifecycle_state,
@@ -5472,7 +5483,22 @@ class DeltaApp:
             completed_cycle_keys=current.completed_cycle_keys + cycle_delta,
             objective_progress=current.objective_progress + progress_delta,
             focus_history=current.focus_history + focus_delta,
+            capability_campaigns=tuple(campaign_by_id.values()),
         )
+
+    def _render_unshown_conversational_campaign_milestones(self) -> None:
+        for milestone in unrendered_capability_campaign_milestones(self.conversational_runtime_state):
+            message = str(milestone.get("message") or "").strip()
+            milestone_id = str(milestone.get("milestone_id") or "")
+            if not message or not milestone_id:
+                continue
+            self._append_chat("DELTA", message)
+            self._append_session("assistant", message)
+            self.conversational_runtime_state = mark_capability_campaign_milestone_rendered(
+                self.conversational_runtime_state,
+                milestone_id,
+                runtime_root=self.conversational_runtime_root,
+            )
 
     def _poll_conversational_runtime_worker_results(self) -> None:
         while True:
@@ -5486,6 +5512,7 @@ class DeltaApp:
                 self.conversational_runtime_status.set(f"Chat runtime: safe pause after {type(error).__name__}")
                 continue
             self.conversational_runtime_state = self._merge_conversational_background_result(prior_state, worker_state)
+            self._render_unshown_conversational_campaign_milestones()
             if self.conversational_runtime_state.lifecycle_state == "paused_budget" and not self.conversational_runtime_state.goal_reviews:
                 self.conversational_runtime_state, review = render_goal_review(
                     self.conversational_runtime_state,
@@ -5630,9 +5657,39 @@ class DeltaApp:
             self._refresh_conversational_runtime_status()
             self._refresh_state_cards()
             return True
+        if intent.intent_type == "stop_or_redirect":
+            self.conversational_runtime_state = apply_conversational_stop_or_redirect(
+                state,
+                message,
+                runtime_root=self.conversational_runtime_root,
+            )
+            self._append_chat("DELTA", "I paused the active goal at a safe boundary and preserved your redirect for the next reasoning step.")
+            self._append_session("user", message)
+            self._append_session("assistant", "I paused the active goal at a safe boundary and preserved your redirect for the next reasoning step.")
+            self._refresh_conversational_runtime_status()
+            self._refresh_state_cards()
+            return True
         provisional_turn_id = f"ui-provisional-{len(state.conversation) + 1}"
         relation = decide_turn_relation(state, message, turn_id=provisional_turn_id) if state.active_objective else None
         transfer = infer_lesson_transfer(state, message, relation=relation) if state.active_objective else {"applied": False}
+        if (
+            state.active_objective
+            and self.conversational_runtime_inference_in_flight
+            and intent.intent_type == "ordinary_conversation"
+            and not transfer.get("applied")
+        ):
+            self.conversational_runtime_state = record_foreground_message_for_reconciliation(
+                state,
+                message,
+                runtime_root=self.conversational_runtime_root,
+            )
+            reply = "Got it. Your message is queued, and I will interpret it after the current reasoning step finishes."
+            self._append_chat("DELTA", reply)
+            self._append_session("user", message)
+            self._append_session("assistant", reply)
+            self._set_conversational_runtime_working()
+            self._refresh_state_cards()
+            return True
         if relation and relation.relation_class == "unrelated_foreground_topic":
             result = handle_conversational_message(
                 state,
@@ -5670,18 +5727,6 @@ class DeltaApp:
                     return True
                 self._start_conversational_background_cycle("foreground_chat_yield")
             return False
-        if intent.intent_type == "stop_or_redirect":
-            self.conversational_runtime_state = apply_conversational_stop_or_redirect(
-                state,
-                message,
-                runtime_root=self.conversational_runtime_root,
-            )
-            self._append_chat("DELTA", "I paused the active goal at a safe boundary and preserved your redirect for the next reasoning step.")
-            self._append_session("user", message)
-            self._append_session("assistant", "I paused the active goal at a safe boundary and preserved your redirect for the next reasoning step.")
-            self._refresh_conversational_runtime_status()
-            self._refresh_state_cards()
-            return True
         result = handle_conversational_message(
             state,
             message,
@@ -5700,6 +5745,180 @@ class DeltaApp:
             self._start_conversational_background_cycle("correction_attached")
         elif result.transfer_applied:
             self._start_conversational_background_cycle("ordinary_chat_yield")
+        return True
+
+    def _record_dispatch_shadow_plan(self, message: str) -> str:
+        """Capture a redacted planner record without affecting legacy dispatch."""
+        try:
+            plan = plan_message_dispatch(self.conversational_runtime_state, message)
+            record = plan.as_record(include_message_text=False)
+            record["actual"] = {"observed": False}
+        except Exception as exc:  # noqa: BLE001 - shadow diagnostics never block chat.
+            record = {
+                "message_id": rc6_stable_id("chat-first-shadow-failure", str(len(self.dispatch_shadow_diagnostics)), message),
+                "diagnostic_error": type(exc).__name__,
+                "actual": {"observed": False},
+            }
+        self.dispatch_shadow_diagnostics.append(record)
+        if len(self.dispatch_shadow_diagnostics) > 64:
+            self.dispatch_shadow_diagnostics = self.dispatch_shadow_diagnostics[-64:]
+        return str(record["message_id"])
+
+    def _complete_dispatch_shadow_plan(self, message_id: str, *, legacy_consumed: bool, rendered_owner: str, response_text: str = "") -> None:
+        for record in reversed(self.dispatch_shadow_diagnostics):
+            if record.get("message_id") != message_id:
+                continue
+            record["actual"] = {
+                "observed": True,
+                "legacy_handler_consume": legacy_consumed,
+                "legacy_fallthrough": not legacy_consumed,
+                "rendered_owner": rendered_owner,
+                "response_text_class": "nonempty" if response_text.strip() else "none",
+            }
+            return
+
+    def _render_coordinated_foreground(self, message: str, *, session_user_message: str, control_receipt: str = "") -> str:
+        payload = route_message(
+            self.mode.get(),
+            message,
+            self.paste.get("1.0", tk.END) if hasattr(self, "paste") else "",
+            history=self._recent_history_for_router(),
+            execute_local_model=False,
+        )
+        self.last_message = message
+        self.last_payload = payload
+        self._update_active_topic_anchor(payload)
+        rendered = render_route(payload, developer_overlay=self.developer_overlay_enabled.get())
+        response = rendered if not control_receipt else f"{control_receipt}\n\n{rendered}"
+        self._queue_concept_candidate(payload)
+        self._append_chat("DELTA", response)
+        self._append_session("user", session_user_message)
+        self._append_session("assistant", response)
+        self._refresh_state_cards()
+        return response
+
+    def _persist_composed_turn(self, before_state, message: str, response: str) -> None:
+        """Replace clause-level handler transcript writes with one composed turn."""
+        objective_id = self.conversational_runtime_state.active_objective.objective_id if self.conversational_runtime_state.active_objective else ""
+        user = ConversationTurn(
+            turn_id=rc6_stable_id("coordinated-user-turn", before_state.runtime_id, str(len(before_state.conversation) + 1), message),
+            role="user",
+            text=message,
+            intent_type="coordinated_mixed_turn",
+            objective_id=objective_id,
+        )
+        assistant = ConversationTurn(
+            turn_id=rc6_stable_id("coordinated-assistant-turn", before_state.runtime_id, str(len(before_state.conversation) + 2), response),
+            role="assistant",
+            text=response,
+            intent_type="coordinated_composed_response",
+            objective_id=objective_id,
+        )
+        self.conversational_runtime_state = replace(
+            self.conversational_runtime_state,
+            conversation=before_state.conversation + (user, assistant),
+        )
+        save_conversational_runtime_state(self.conversational_runtime_root, self.conversational_runtime_state)
+
+    def _execute_coordinated_control(self, control, clause: str) -> str:
+        """Execute one planned control clause without taking foreground ownership."""
+        state = self.conversational_runtime_state
+        if control.control_type == "capability_adoption" and control.action == "clarify_target":
+            return "[Approval needed]\nI do not have an eligible pending capability adoption request. Tell me which reviewed capability you want adopted."
+        if control.control_type == "clarification":
+            return "[Clarification needed]\nThose instructions conflict or do not identify one safe target. Tell me which action you want me to take."
+        if control.control_type == "diagnostic_request":
+            return "[Diagnostic]\nI can explain the bounded routing decision for this turn without changing the active goal."
+        if control.control_type == "restart":
+            save_conversational_runtime_state(self.conversational_runtime_root, state)
+            return "[Runtime update]\nI saved the current state. A restart still requires the governed restart path, so I preserved the request rather than dropping any conversation obligation."
+        if control.control_type == "provider_prohibition":
+            result = handle_conversational_message(
+                state, clause, runtime_root=self.conversational_runtime_root, run_background_cycle=False,
+            )
+            self.conversational_runtime_state = result.state
+            return f"[Goal update]\n{result.reply}"
+        if control.control_type == "goal_continuation":
+            if state.active_objective and state.lifecycle_state == "running":
+                self._start_conversational_background_cycle("operator_continuation")
+                return "[Goal update]\nThe active goal remains running; I queued the next bounded local cycle."
+            return "[Goal update]\nThere is no healthy running goal to continue. I preserved the request without claiming progress."
+        if control.control_type in {"pause_goal", "stop_goal"}:
+            self.conversational_runtime_state = apply_conversational_stop_or_redirect(
+                state, clause, runtime_root=self.conversational_runtime_root,
+            )
+            return "[Goal update]\nI paused the active goal at a safe boundary."
+        if control.control_type == "resume_goal":
+            self.conversational_runtime_state = resume_conversational_objective(
+                state, runtime_root=self.conversational_runtime_root,
+            )
+            if self.conversational_runtime_state.lifecycle_state == "running":
+                self._start_conversational_background_cycle("objective_resumed")
+                return "[Goal update]\nI resumed the active goal."
+            return "[Goal update]\nThis goal is not paused by the operator, so I left its state unchanged."
+        if control.control_type in {"goal_review", "goal_status"}:
+            self.conversational_runtime_state, review = render_goal_review(
+                state, status=review_status_for_goal_completion(state),
+            )
+            save_conversational_runtime_state(self.conversational_runtime_root, self.conversational_runtime_state)
+            return f"[Goal review]\n{review}"
+        if control.control_type == "capability_review":
+            self.conversational_runtime_state, review, _request = render_structured_discourse_capability_review(
+                state, runtime_root=self.conversational_runtime_root,
+            )
+            return review
+        if control.control_type == "provider_request":
+            result = request_provider_learning_packet(state, clause, runtime_root=self.conversational_runtime_root)
+            self.conversational_runtime_state = result.state
+            return f"[Goal update]\n{result.reply}"
+        resolved = resolve_pending_chat_request(state, clause, runtime_root=self.conversational_runtime_root)
+        result = resolved or handle_conversational_message(
+            state, clause, runtime_root=self.conversational_runtime_root, run_background_cycle=False,
+        )
+        self.conversational_runtime_state = result.state
+        if result.objective_created or result.correction_attached:
+            self._start_conversational_background_cycle(
+                "objective_registered" if result.objective_created else "correction_attached"
+            )
+        return f"[Goal update]\n{result.reply}"
+
+    def _coordinate_mixed_dispatch(self, message: str, plan) -> bool:
+        controls = tuple(getattr(plan, "controls", ()) or ((plan.control,) if plan.control.detected else ()))
+        supported = {
+            "create_goal", "replace_goal", "correction", "provider_approval", "capability_adoption",
+            "side_thread_resolution", "pause_goal", "resume_goal", "stop_goal", "goal_status",
+            "goal_review", "capability_review", "provider_request", "provider_prohibition", "diagnostic_request", "clarification",
+            "goal_continuation", "restart",
+        }
+        if not controls or any(item.source_clause_index < 0 or item.control_type not in supported for item in controls):
+            return False
+        # Existing single-clause runtime handlers retain ownership for their
+        # lifecycle/queue semantics. The coordinator is the composition path.
+        if not plan.foreground.requested and len(controls) == 1:
+            return False
+        state_before = self.conversational_runtime_state
+        control_indexes = {item.source_clause_index for item in controls}
+        receipts = [
+            self._execute_coordinated_control(item, plan.segments[item.source_clause_index].text)
+            for item in controls
+        ]
+        foreground_message = " ".join(
+            segment.text for index, segment in enumerate(plan.segments)
+            if index not in control_indexes and segment.kind != "context_prefix"
+        ).strip()
+        control_receipt = "\n\n".join(dict.fromkeys(receipt for receipt in receipts if receipt))
+        if foreground_message:
+            response = self._render_coordinated_foreground(
+                foreground_message, session_user_message=message, control_receipt=control_receipt,
+            )
+        else:
+            response = control_receipt
+            self._append_chat("DELTA", response)
+            self._append_session("user", message)
+            self._append_session("assistant", response)
+        self._persist_composed_turn(state_before, message, response)
+        self._refresh_conversational_runtime_status()
+        self._refresh_state_cards()
         return True
 
     def _recent_history_for_router(self) -> list[dict[str, str]]:
@@ -6072,13 +6291,45 @@ class DeltaApp:
             return
         self.chat_input.delete(0, tk.END)
         self._append_chat("You", message)
+        shadow_message_id = self._record_dispatch_shadow_plan(message)
+        try:
+            live_plan = plan_message_dispatch(self.conversational_runtime_state, message)
+        except Exception:  # noqa: BLE001 - the shadow plan remains non-blocking.
+            live_plan = None
         lower = message.lower().strip()
         if getattr(self, "active_operator_ux_request", None):
             intent = normalize_operator_intent(message)
             if self._consume_operator_ux_intent(intent, response_source="conversation"):
                 self._refresh_state_cards()
                 return
+        if live_plan is not None and self._coordinate_mixed_dispatch(message, live_plan):
+            self._complete_dispatch_shadow_plan(
+                shadow_message_id,
+                legacy_consumed=False,
+                rendered_owner="dispatch_coordinator",
+                response_text="coordinated_foreground_and_control",
+            )
+            return
+        if live_plan is not None and live_plan.foreground.requested and not live_plan.control.detected:
+            foreground_message = " ".join(
+                segment.text for segment in live_plan.segments if segment.kind != "context_prefix"
+            ).strip() or message
+            state_before = self.conversational_runtime_state
+            response = self._render_coordinated_foreground(foreground_message, session_user_message=message)
+            self._persist_composed_turn(state_before, message, response)
+            self._complete_dispatch_shadow_plan(
+                shadow_message_id,
+                legacy_consumed=False,
+                rendered_owner="rc2_router",
+                response_text="coordinated_foreground",
+            )
+            return
         if self._handle_conversational_runtime_message(message):
+            self._complete_dispatch_shadow_plan(
+                shadow_message_id,
+                legacy_consumed=True,
+                rendered_owner="conversational_runtime",
+            )
             return
         if lower == "create operator ux demo goal":
             request = self._create_operator_ux_demo_request()
@@ -6956,6 +7207,12 @@ class DeltaApp:
         self._append_chat("DELTA", rendered)
         self._append_session("user", message)
         self._append_session("assistant", rendered)
+        self._complete_dispatch_shadow_plan(
+            shadow_message_id,
+            legacy_consumed=False,
+            rendered_owner="rc2_router",
+            response_text=rendered,
+        )
 
     def _remember_local_model_exchange(self, question: str, payload: dict[str, object]) -> None:
         result = payload.get("local_model_result") if isinstance(payload, dict) else None

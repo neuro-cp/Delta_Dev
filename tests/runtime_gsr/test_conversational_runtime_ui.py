@@ -3,6 +3,14 @@ import time
 
 
 ENGLISH_GOAL = "Your goal today is to improve your English comprehension so we can communicate better."
+FOREGROUND_CAMPAIGN_GOAL = (
+    "Your new goal is to improve how you distinguish between a new foreground question and a continuation "
+    "of the previous topic. Study our normal conversation, identify the first recurring failure pattern, "
+    "compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, "
+    "and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. "
+    "Use local cognition and existing evidence first. Do not change source or restart without my explicit approval. "
+    "Start working now."
+)
 
 
 def _app(monkeypatch, tmp_path):
@@ -129,6 +137,38 @@ def test_active_inference_shows_working_status_without_blocking_chat(monkeypatch
         root.destroy()
 
 
+def test_mid_inference_keeps_foreground_turn_and_completes_the_worker_once(monkeypatch, tmp_path):
+    """Exercise the actual Tk worker path while a foreground turn arrives."""
+    import DELTA
+    from orchestration.runtime.active_cognitive_loop import ScriptedSemanticModel
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, ENGLISH_GOAL)
+        _pump_until(root, lambda: bool(app.conversational_runtime_state.completed_cycle_keys))
+        before_cycles = len(app.conversational_runtime_state.completed_cycle_keys)
+        original_cycle = DELTA.run_conversational_background_cycle
+
+        def slow_cycle(*args, **kwargs):
+            time.sleep(0.25)
+            kwargs["model_runner"] = ScriptedSemanticModel()
+            return original_cycle(*args, **kwargs)
+
+        monkeypatch.setattr(DELTA, "run_conversational_background_cycle", slow_cycle)
+        assert app._start_conversational_background_cycle("mid_inference_foreground") is True
+        assert app.conversational_runtime_inference_in_flight is True
+
+        _send(app, "What color is the sky?")
+
+        assert app.conversational_runtime_inference_in_flight is True
+        assert any(turn.role == "user" and turn.text == "What color is the sky?" for turn in app.conversational_runtime_state.conversation)
+        _pump_until(root, lambda: len(app.conversational_runtime_state.completed_cycle_keys) > before_cycles, timeout=4.0)
+        assert sum(turn.role == "user" and turn.text == "What color is the sky?" for turn in app.conversational_runtime_state.conversation) == 1
+        assert len(app.conversational_runtime_state.completed_cycle_keys) == before_cycles + 1
+    finally:
+        root.destroy()
+
+
 def test_message_during_active_inference_is_acknowledged_and_preserved(monkeypatch, tmp_path):
     root, app = _app(monkeypatch, tmp_path)
     try:
@@ -242,6 +282,47 @@ def test_goal_review_renders_in_chat(monkeypatch, tmp_path):
         root.destroy()
 
 
+def test_campaign_goal_milestone_renders_inline_without_budget_review(monkeypatch, tmp_path):
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, FOREGROUND_CAMPAIGN_GOAL)
+        _pump_until(
+            root,
+            lambda: any(
+                item.get("event") == "capability_campaign_milestone_rendered"
+                for item in app.conversational_runtime_state.objective_progress
+            ),
+            timeout=5.0,
+        )
+
+        transcript = app.chat_history.get("1.0", tk.END)
+        assert "[Goal update - Foreground vs continuation routing]" in transcript
+        assert "I found the first recurring failure pattern" in transcript
+        assert "[Goal review Â· Language understanding]" not in transcript
+        assert app.conversational_runtime_state.lifecycle_state == "running"
+        assert len(app.conversational_runtime_state.completed_cycle_keys) < app.conversational_runtime_state.active_objective.cycle_budget
+    finally:
+        root.destroy()
+
+
+def test_foreground_chat_answers_basic_questions_during_campaign_goal(monkeypatch, tmp_path):
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, FOREGROUND_CAMPAIGN_GOAL)
+        _pump_until(root, lambda: app.conversational_runtime_state.active_objective is not None, timeout=5.0)
+
+        _send(app, "okay while you're working on that tell me what color is the sky?")
+        _send(app, "what color is the moon?")
+
+        transcript = app.chat_history.get("1.0", tk.END).lower()
+        assert "blue" in transcript
+        assert "moon" in transcript
+        assert "i understand. i will treat this as ordinary conversation" not in transcript
+        assert app.conversational_runtime_state.active_objective is not None
+    finally:
+        root.destroy()
+
+
 def test_natural_stop_redirect_pauses_active_goal(monkeypatch, tmp_path):
     root, app = _app(monkeypatch, tmp_path)
     try:
@@ -323,7 +404,72 @@ def test_capability_adoption_restart_and_next_goal_handoff_in_chat(monkeypatch, 
 
         _send(app, "What is kinetic energy?")
         transcript = app.chat_history.get("1.0", tk.END)
-        assert "Kinetic energy" in transcript
+        assert "kinetic energy" in transcript.lower()
         assert app.conversational_runtime_state.capability_registry[-1]["activation_state"] == "active"
+    finally:
+        root.destroy()
+
+
+def test_chat_first_fourteen_step_tk_campaign(monkeypatch, tmp_path):
+    """Run the closure sequence through the visible Tk chat widgets."""
+    import DELTA
+    from orchestration.runtime.active_cognitive_loop import ScriptedSemanticModel
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        # 1-2: ordinary foreground chat remains useful before and after a goal.
+        _send(app, "What color is the sky?")
+        assert "blue" in app.chat_history.get("1.0", tk.END).lower()
+        _send(app, ENGLISH_GOAL)
+        _pump_until(root, lambda: bool(app.conversational_runtime_state.completed_cycle_keys))
+        goal_id = app.conversational_runtime_state.active_objective.objective_id
+
+        # 3-5: normal factual chat and a scoped correction coexist with the goal.
+        _send(app, "What color is the Moon?")
+        _send(app, "That was too verbose. Use shorter answers for this kind of explanation.")
+        _send(app, "Explain the style issue again.")
+        assert any(item.get("event") == "lesson_transfer_applied" for item in app.conversational_runtime_state.objective_progress)
+
+        # 6-8: a negative scope blocks transfer, provider use remains governed,
+        # and a natural denial consumes the exact pending request once.
+        _send(app, "Do not apply that rule to cooking questions. What color is the sky?")
+        _add_local_insufficiency(app)
+        _send(app, "Please request a provider learning packet for implied references.")
+        assert len(app.conversational_runtime_state.pending_chat_requests) == 1
+        _send(app, "Do not use a provider. Also, what is kinetic energy?")
+        assert not app.conversational_runtime_state.pending_chat_requests
+        assert len(app.conversational_runtime_state.resolved_chat_requests) == 1
+
+        # 9-11: a paused goal never captures foreground chat and resumes once.
+        _send(app, "Pause the active goal.")
+        assert app.conversational_runtime_state.lifecycle_state == "paused_operator"
+        _pump_until(root, lambda: not app.conversational_runtime_inference_in_flight, timeout=4.0)
+        assert app.conversational_runtime_state.lifecycle_state == "paused_operator"
+        _send(app, "Why is the Moon gray?")
+        _send(app, "Resume the active goal.")
+        assert app.conversational_runtime_state.active_objective.objective_id == goal_id
+        assert app.conversational_runtime_state.lifecycle_state == "running"
+
+        # 12: the review is an inline chat event, not a mode switch.
+        _send(app, "Review the active goal.")
+        assert "goal review" in app.chat_history.get("1.0", tk.END).lower()
+
+        # 13-14: a real worker remains alive while a goal-like update is
+        # durably queued for later reconciliation.
+        original_cycle = DELTA.run_conversational_background_cycle
+
+        def slow_cycle(*args, **kwargs):
+            time.sleep(0.25)
+            kwargs["model_runner"] = ScriptedSemanticModel()
+            return original_cycle(*args, **kwargs)
+
+        monkeypatch.setattr(DELTA, "run_conversational_background_cycle", slow_cycle)
+        before_cycles = len(app.conversational_runtime_state.completed_cycle_keys)
+        assert app._start_conversational_background_cycle("fourteen_step_campaign") is True
+        _send(app, "Your goal today is also to pay attention to topic switches.")
+        assert app.conversational_runtime_state.active_objective.objective_id == goal_id
+        assert app.conversational_runtime_state.conversation[-1].intent_type == "goal_or_priority_queued"
+        _pump_until(root, lambda: len(app.conversational_runtime_state.completed_cycle_keys) > before_cycles, timeout=4.0)
+        assert sum(turn.text == "Your goal today is also to pay attention to topic switches." for turn in app.conversational_runtime_state.conversation if turn.role == "user") == 1
     finally:
         root.destroy()

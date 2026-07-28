@@ -25,6 +25,14 @@ from orchestration.runtime.conversational_runtime_operation import (
 
 
 ENGLISH_GOAL = "Your goal today is to improve your English comprehension so we can communicate better."
+FOREGROUND_CAMPAIGN_GOAL = (
+    "Your new goal is to improve how you distinguish between a new foreground question and a continuation "
+    "of the previous topic. Study our normal conversation, identify the first recurring failure pattern, "
+    "compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, "
+    "and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. "
+    "Use local cognition and existing evidence first. Do not change source or restart without my explicit approval. "
+    "Start working now."
+)
 
 
 def _with_local_insufficiency(state, tmp_path):
@@ -697,6 +705,63 @@ def test_goal_sentence_with_review_word_still_classifies_as_goal(tmp_path):
     assert result.state.goal_reviews == ()
 
 
+def test_arbitrary_campaign_goal_starts_candidate_pipeline_before_budget_exhaustion(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+
+    result = handle_conversational_message(state, FOREGROUND_CAMPAIGN_GOAL, runtime_root=tmp_path)
+    campaign = result.state.capability_campaigns[-1]
+
+    assert result.objective_created is True
+    assert result.state.active_objective.provenance["execution_mode"] == "capability_growth_campaign"
+    assert result.state.active_objective.cycle_budget == 24
+    assert result.state.lifecycle_state == "running"
+    assert len(result.state.completed_cycle_keys) == 1
+    assert campaign["objective_id"] == result.state.active_objective.objective_id
+    assert campaign["goal_label"] == "Foreground vs continuation routing"
+    assert campaign["status"] == "milestone_ready"
+    assert len(campaign["candidate_weaknesses"]) == 5
+    assert len(campaign["candidate_strategies"]) == 3
+    assert campaign["evaluator"]["frozen"] is True
+    assert len(campaign["sandbox_results"]) == 3
+    assert any(item.get("event") == "capability_campaign_milestone_ready" for item in result.state.objective_progress)
+    assert len(result.state.completed_cycle_keys) < result.state.active_objective.cycle_budget
+
+
+def test_duplicate_campaign_goal_repairs_missing_campaign_bridge(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(state, FOREGROUND_CAMPAIGN_GOAL, runtime_root=tmp_path, run_background_cycle=False).state
+    stalled = replace(
+        state,
+        capability_campaigns=(),
+        objective_progress=(),
+        completed_cycle_keys=(),
+        lifecycle_state="running",
+    )
+
+    result = handle_conversational_message(stalled, FOREGROUND_CAMPAIGN_GOAL, runtime_root=tmp_path, run_background_cycle=False)
+
+    assert result.objective_created is False
+    assert result.state.active_objective.objective_id == stalled.active_objective.objective_id
+    assert result.state.capability_campaigns[-1]["status"] == "milestone_ready"
+    assert any(item.get("event") == "capability_campaign_milestone_ready" for item in result.state.objective_progress)
+    assert "advanced it to a milestone" in result.reply
+
+
+def test_campaign_goal_review_uses_active_goal_label_and_recommendation(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(state, FOREGROUND_CAMPAIGN_GOAL, runtime_root=tmp_path).state
+
+    reviewed, text = render_goal_review(state, status=review_status_for_goal_completion(state))
+
+    assert reviewed.goal_reviews[-1]["status"] == "capability_campaign_milestone_ready"
+    assert "[Goal review" in text
+    assert "Foreground vs continuation routing" in text
+    assert "Language understanding" not in text
+    assert "candidate-a-discourse-lane-map" in text
+    assert "Review the proposed foreground-isolation" not in text
+    assert "Continue the candidate campaign" in text
+
+
 def test_explicit_goal_about_tentative_goals_still_replaces_active_objective(tmp_path):
     state = start_or_restore_runtime(tmp_path)
     state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path, run_background_cycle=False).state
@@ -760,6 +825,8 @@ def test_foreground_controls_get_useful_answers_without_goal_replacement(tmp_pat
         "Hi, how are you?": "chatting normally",
         "Why does ice float?": "less dense",
         "What does RAM do in a computer?": "working memory",
+        "okay while you're working on that tell me what color is the sky?": "blue",
+        "what color is the moon?": "gray",
     }
 
     for message, expected in cases.items():
