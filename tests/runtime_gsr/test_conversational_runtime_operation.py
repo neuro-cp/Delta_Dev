@@ -690,3 +690,139 @@ def test_evaluator_rejects_storage_only_and_accepts_correction_learning(tmp_path
     assert evaluation["passed"] is True
     assert evaluation["correction_count"] == 1
     assert evaluation["background_cycle_count"] >= 1
+
+
+def test_queued_reconciliation_records_non_template_previous_assistant_reference(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path, run_background_cycle=False).state
+    Turn = state.conversation[-1].__class__
+    assistant_turn = Turn(
+        turn_id="assistant-angular-momentum",
+        role="assistant",
+        text="Angular momentum is conserved when external torque is negligible.",
+        intent_type="ordinary_conversation",
+        objective_id=state.active_objective.objective_id,
+    )
+    state = replace(state, conversation=state.conversation + (assistant_turn,))
+
+    updated = record_foreground_message_for_reconciliation(
+        state,
+        "Could you restate the answer you just gave in plainer words?",
+        runtime_root=tmp_path,
+    )
+
+    decision = updated.turn_relation_decisions[-1]
+    assert decision.relation_class == "previous_turn_reference"
+    assert decision.foreground_topic == "previous_assistant_response"
+    assert decision.routing_decision == "previous_turn_reference"
+    assert decision.decision_id
+    assert decision.source_turn_id == updated.conversation[-1].turn_id
+    assert decision.objective_id == state.active_objective.objective_id
+    assert decision.action == "resolve"
+    assert decision.selected_turn_ids == ("assistant-angular-momentum",)
+    assert decision.clarification_required is False
+
+
+def test_queued_reconciliation_respects_scoped_negative_applicability(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path, run_background_cycle=False).state
+    state = record_foreground_message_for_reconciliation(
+        state,
+        "Keep that reference rule out of cooking questions.",
+        runtime_root=tmp_path,
+    )
+
+    updated = record_foreground_message_for_reconciliation(state, "Why did my pasta turn gluey?", runtime_root=tmp_path)
+
+    decision = updated.turn_relation_decisions[-1]
+    assert decision.relation_class == "negative_applicability"
+    assert decision.routing_decision == "foreground_answer"
+    assert decision.action == "answer_normally"
+    assert decision.lesson_applicability == "rejected_by_operator_scope"
+    assert decision.rejection_reason
+
+
+def test_queued_reconciliation_binds_side_thread_reply_without_topic_takeover(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path, run_background_cycle=False).state
+    Turn = state.conversation[-1].__class__
+    goal_update = Turn(
+        turn_id="goal-update-topic-switch",
+        role="assistant",
+        text="[Goal update ? Language understanding]\nI found a weakness in topic-switch references. Should I prioritize that?",
+        intent_type="goal_side_thread_update",
+        objective_id=state.active_objective.objective_id,
+    )
+    state = replace(state, conversation=state.conversation + (goal_update,))
+
+    updated = record_foreground_message_for_reconciliation(state, "Yes, prioritize that.", runtime_root=tmp_path)
+
+    decision = updated.turn_relation_decisions[-1]
+    assert decision.routing_decision == "side_thread_reply"
+    assert decision.action == "bind_side_thread"
+    assert decision.side_thread_request_id == "goal-update-topic-switch"
+
+
+def test_queued_reconciliation_handles_what_i_just_wrote_correction(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path, run_background_cycle=False).state
+    state = record_foreground_message_for_reconciliation(
+        state,
+        "I meant the bridge example, not the skating example.",
+        runtime_root=tmp_path,
+    )
+
+    updated = record_foreground_message_for_reconciliation(state, "Use what I just wrote as the correction.", runtime_root=tmp_path)
+
+    decision = updated.turn_relation_decisions[-1]
+    assert decision.relation_class == "previous_turn_reference"
+    assert decision.foreground_topic == "previous_user_message"
+    assert decision.correction_scope == "current_turn_reference"
+
+
+def test_queued_reconciliation_clarifies_multiple_foreground_topics(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path, run_background_cycle=False).state
+    state = record_foreground_message_for_reconciliation(state, "Explain thermal expansion in bridges.", runtime_root=tmp_path)
+    state = record_foreground_message_for_reconciliation(state, "Now explain angular momentum in skating.", runtime_root=tmp_path)
+
+    updated = record_foreground_message_for_reconciliation(state, "For the goal, compare that to the prior subject.", runtime_root=tmp_path)
+
+    decision = updated.turn_relation_decisions[-1]
+    assert decision.routing_decision == "clarify_reference"
+    assert decision.foreground_topic == "multiple_foreground_topics"
+    assert decision.action == "clarify"
+    assert decision.clarification_required is True
+    assert decision.clarification_reason
+
+
+def test_queued_reconciliation_ignores_archived_objective_reference(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path, run_background_cycle=False).state
+
+    updated = record_foreground_message_for_reconciliation(
+        state,
+        "For the archived objective, keep the notes available but do not resume it.",
+        runtime_root=tmp_path,
+    )
+
+    decision = updated.turn_relation_decisions[-1]
+    assert decision.action == "ignore_archived_reference"
+    assert decision.tentative_goal_activation == "not_applicable"
+
+
+def test_queued_reconciliation_post_implementation_controls(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path, run_background_cycle=False).state
+    state = record_foreground_message_for_reconciliation(state, "Explain thermal expansion in bridges.", runtime_root=tmp_path)
+    state = record_foreground_message_for_reconciliation(state, "Now explain angular momentum in skating.", runtime_root=tmp_path)
+    state = record_foreground_message_for_reconciliation(state, "Now explain battery degradation.", runtime_root=tmp_path)
+
+    older = record_foreground_message_for_reconciliation(state, "Not the latest object--the one from two topics ago.", runtime_root=tmp_path)
+    assert older.turn_relation_decisions[-1].action == "clarify"
+
+    typed = record_foreground_message_for_reconciliation(state, "Use the sentence I typed right before your reply.", runtime_root=tmp_path)
+    assert typed.turn_relation_decisions[-1].foreground_topic == "previous_user_message"
+
+    future = record_foreground_message_for_reconciliation(state, "Save that as an idea for another day; do not begin it.", runtime_root=tmp_path)
+    assert future.turn_relation_decisions[-1].action == "preserve_tentative"

@@ -5570,6 +5570,20 @@ class DeltaApp:
             active_objective=state.active_objective,
             recent_turns=state.conversation,
         )
+        if intent.intent_type == "persistent_or_session_goal" and state.active_objective and self.conversational_runtime_inference_in_flight:
+            self.conversational_runtime_state = record_foreground_message_for_reconciliation(
+                state,
+                message,
+                runtime_root=self.conversational_runtime_root,
+                intent_type="goal_or_priority_queued",
+            )
+            reply = "Got it. Your possible goal or priority update is queued, and I will interpret it after the current reasoning step finishes."
+            self._append_chat("DELTA", reply)
+            self._append_session("user", message)
+            self._append_session("assistant", reply)
+            self._set_conversational_runtime_working()
+            self._refresh_state_cards()
+            return True
         if (
             intent.intent_type != "persistent_or_session_goal"
             and state.active_objective
@@ -5640,20 +5654,6 @@ class DeltaApp:
                     return True
                 self._start_conversational_background_cycle("foreground_chat_yield")
             return False
-        if intent.intent_type == "persistent_or_session_goal" and state.active_objective and self.conversational_runtime_inference_in_flight:
-            result = handle_conversational_message(
-                state,
-                message,
-                runtime_root=self.conversational_runtime_root,
-                run_background_cycle=False,
-            )
-            self.conversational_runtime_state = result.state
-            self._append_chat("DELTA", result.reply + " I will start its local reasoning after the current in-flight step settles.")
-            self._append_session("user", message)
-            self._append_session("assistant", result.reply)
-            self._set_conversational_runtime_working()
-            self._refresh_state_cards()
-            return True
         if intent.intent_type == "stop_or_redirect":
             self.conversational_runtime_state = apply_conversational_stop_or_redirect(
                 state,

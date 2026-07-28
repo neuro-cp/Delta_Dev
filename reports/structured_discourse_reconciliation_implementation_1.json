@@ -1,0 +1,40 @@
+{
+  "gate": "STRUCTURED_DISCOURSE_RECONCILIATION_IMPLEMENTATION_1",
+  "starting_checkpoint": "45bf34102cc3324c5790ad0aff123281d9421a55",
+  "starting_subject": "Stabilize persistent conversational growth runtime",
+  "approved_candidate": "candidate-a-structured-discourse",
+  "proposal_patch_sha256": "0fcd8cbfca91c59f99a90d8cd93a15e4b2c2aed5bcc73f8d8f0f11267c75cfae",
+  "pre_application_audit": "passed",
+  "implementation_result": "passed",
+  "implemented_files": [
+    "DELTA.py",
+    "orchestration/runtime/conversational_runtime_operation.py",
+    "tests/runtime_gsr/test_conversational_runtime_operation.py"
+  ],
+  "mechanism": {
+    "summary": "Queued conversational turns now receive a persisted structured discourse reconciliation decision before later goal processing.",
+    "features": [
+      "speaker-aware previous-turn references",
+      "generic topic signatures and topic-boundary ambiguity",
+      "scoped negative applicability",
+      "side-thread reply binding",
+      "tentative-goal inertness",
+      "archived-objective reference handling",
+      "restart-persistent decision records"
+    ],
+    "authority_semantics_added": false
+  },
+  "validation": {
+    "py_compile": "passed",
+    "focused_conversational_runtime": "36 passed",
+    "adjacent_runtime": "65 passed",
+    "tk_conversational_ui": "12 passed",
+    "headless_runtime_cases": "13 passed",
+    "post_implementation_adversarial_controls": "8 passed",
+    "git_diff_check": "passed"
+  },
+  "evidence_root_local_only": ".tmp/structured-discourse-reconciliation-implementation-1/",
+  "raw_hidden_dataset_committed": false,
+  "raw_runtime_logs_committed": false,
+  "final_capability_status": "LIVE_GOVERNED_CAPABILITY_GROWTH_1_IMPLEMENTED_PENDING_CLOSURE_REVIEW"
+}

@@ -266,6 +266,21 @@ class TurnRelationDecision:
     relation_class: str
     evidence: tuple[str, ...]
     confidence: float
+    decision_id: str = ""
+    source_turn_id: str = ""
+    objective_id: str = ""
+    lane: str = ""
+    candidate_referents: tuple[Mapping[str, Any], ...] = ()
+    selected_referent: Mapping[str, Any] | None = None
+    selected_turn_ids: tuple[str, ...] = ()
+    rejected_referents: tuple[Mapping[str, Any], ...] = ()
+    ambiguity: str = "none"
+    action: str = "answer_normally"
+    clarification_required: bool = False
+    clarification_reason: str = ""
+    correction_scope: str = ""
+    lesson_applicability: str = "not_evaluated"
+    tentative_goal_activation: str = "not_applicable"
     negative_instruction_tokens: tuple[str, ...] = ()
     side_thread_request_id: str = ""
     routing_decision: str = "foreground_answer"
@@ -544,7 +559,16 @@ def _turn_relation_from_record(item: Any) -> TurnRelationDecision:
     if isinstance(item, TurnRelationDecision):
         return item
     payload = dict(item)
-    for key in ("evidence", "negative_instruction_tokens", "lesson_ids_considered", "lesson_ids_applied", "lesson_ids_rejected"):
+    for key in (
+        "evidence",
+        "candidate_referents",
+        "selected_turn_ids",
+        "rejected_referents",
+        "negative_instruction_tokens",
+        "lesson_ids_considered",
+        "lesson_ids_applied",
+        "lesson_ids_rejected",
+    ):
         payload[key] = tuple(payload.get(key, ()))
     return TurnRelationDecision(**payload)
 
@@ -892,6 +916,342 @@ def _resolve_provider_policy(request: ChatAddressableRequest, message: str, reso
     return policy, authority
 
 
+
+QUEUED_RECONCILIATION_REFERENCE_TOKENS = {"it", "that", "this", "thing", "one", "before", "earlier", "previous", "prior", "last"}
+QUEUED_RECONCILIATION_NEGATIVE_MARKERS = (
+    "do not apply", "don't apply", "dont apply", "do not use", "don't use", "dont use",
+    "keep", "leave", "exclude", "not for", "never use", "without using",
+)
+QUEUED_RECONCILIATION_TENTATIVE_MARKERS = (
+    "future goal", "maybe someday", "someday", "later", "another day", "park an idea", "parking lot", "do not start", "don't start", "do not begin", "don't begin", "not now", "eventually",
+)
+QUEUED_RECONCILIATION_TOPIC_STOPWORDS = {
+    "a", "an", "and", "are", "as", "at", "be", "before", "but", "by", "can", "compare", "current",
+    "did", "do", "does", "explain", "for", "from", "goal", "how", "i", "in", "is", "it", "keep",
+    "language", "latest", "me", "my", "now", "of", "on", "one", "or", "out", "prior", "question",
+    "reference", "rule", "subject", "that", "the", "thing", "this", "to", "topic", "use", "we",
+    "what", "when", "why", "with", "your",
+}
+
+
+def _queued_reconciliation_tokens(text: str) -> set[str]:
+    return set(re.findall(r"[a-z0-9']+", text.lower()))
+
+
+def _queued_reconciliation_topic_signature(text: str) -> tuple[str, ...]:
+    tokens = _queued_reconciliation_tokens(text)
+    return tuple(sorted(token for token in tokens if len(token) > 2 and token not in QUEUED_RECONCILIATION_TOPIC_STOPWORDS))
+
+
+def _queued_reconciliation_has_topic(text: str) -> bool:
+    return bool(_queued_reconciliation_topic_signature(text))
+
+
+def _referent_for_turn(turn: ConversationTurn, *, index: int, reason: str) -> Mapping[str, Any]:
+    return {
+        "referent_id": stable_id("queued-referent", turn.turn_id, reason),
+        "turn_id": turn.turn_id,
+        "role": turn.role,
+        "intent_type": turn.intent_type,
+        "topic_signature": _queued_reconciliation_topic_signature(turn.text),
+        "recency_rank": index,
+        "reason": reason,
+    }
+
+
+def _foreground_referent_candidates(state: ConversationalRuntimeState) -> tuple[Mapping[str, Any], ...]:
+    candidates: list[Mapping[str, Any]] = []
+    for index, turn in enumerate(reversed(state.conversation), start=1):
+        if turn.role != "user":
+            continue
+        if turn.intent_type not in {"ordinary_conversation", "ordinary_conversation_queued", "goal_or_priority_queued"}:
+            continue
+        if not _queued_reconciliation_has_topic(turn.text):
+            continue
+        candidates.append(_referent_for_turn(turn, index=index, reason="foreground_topic_candidate"))
+    return tuple(candidates)
+
+
+def _queued_reconciliation_has_any(text: str, phrases: Sequence[str]) -> bool:
+    lower = text.lower()
+    return any(phrase in lower for phrase in phrases)
+
+
+def _queued_previous_turn_referent(message: str) -> str:
+    lower = message.lower()
+    assistant_markers = (
+        "your previous answer", "your previous reply", "your previous response", "your last answer", "your last reply",
+        "your prior answer", "your prior response", "answer you just gave", "reply you just gave", "response you just gave",
+        "what you just said", "what you just wrote", "what you just explained", "explanation you just gave",
+        "answer above", "explanation above", "your earlier explanation", "you just told me", "what did you mean in your last reply",
+    )
+    user_markers = (
+        "my previous message", "my previous question", "my previous correction", "my last message", "my last question",
+        "my prior message", "what i just wrote", "what i just said", "what i just asked", "what i just typed",
+        "what i wrote a second ago", "the thing i just wrote", "thing i wrote", "use my correction",
+        "correction i gave", "my wording above", "what i said right before", "note i just wrote",
+        "message immediately above", "my own phrasing from the prior turn", "sentence i just sent",
+        "sentence i typed right before", "typed right before your reply",
+    )
+    if _queued_reconciliation_has_any(lower, assistant_markers):
+        return "previous_assistant_response"
+    if _queued_reconciliation_has_any(lower, user_markers):
+        return "previous_user_message"
+    return ""
+
+
+def _queued_negative_scope_applies(state: ConversationalRuntimeState, message: str) -> tuple[bool, tuple[str, ...]]:
+    message_signature = set(_queued_reconciliation_topic_signature(message))
+    if not message_signature:
+        return False, ()
+    matched: list[str] = []
+    for recency, turn in enumerate(reversed(state.conversation), start=1):
+        if turn.role != "user":
+            continue
+        lower = turn.text.lower()
+        if not _queued_reconciliation_has_any(lower, QUEUED_RECONCILIATION_NEGATIVE_MARKERS):
+            continue
+        if not any(token in lower for token in ("reference", "rule", "lesson", "heuristic", "shortcut", "correction", "that")):
+            continue
+        negative_signature = set(_queued_reconciliation_topic_signature(lower))
+        recent_scope_for_next_question = recency <= 2 and message.rstrip().endswith("?")
+        if not negative_signature or negative_signature & message_signature or recent_scope_for_next_question:
+            matched.append(turn.text)
+            return True, tuple(matched)
+    return False, ()
+
+
+def _queued_foreground_topic_count(state: ConversationalRuntimeState) -> int:
+    topics: list[tuple[str, ...]] = []
+    for turn in state.conversation:
+        if turn.role != "user":
+            continue
+        if turn.intent_type not in {"ordinary_conversation", "ordinary_conversation_queued"}:
+            continue
+        signature = _queued_reconciliation_topic_signature(turn.text)
+        if signature and signature not in topics:
+            topics.append(signature)
+    return len(topics)
+
+
+def _queued_side_thread_request(state: ConversationalRuntimeState, message: str) -> str:
+    lower = message.lower()
+    tokens = _queued_reconciliation_tokens(lower)
+    acknowledgement = bool(tokens & {"yes", "yeah", "yep", "sure", "ok", "okay", "please", "prioritize", "continue", "approve", "do"}) or lower.startswith("no,")
+    action_reply = any(fragment in lower for fragment in ("prioritize", "continue", "approve", "locally", "topic switch", "topic-switch", "do the", "use that")) or "that" in tokens
+    if not acknowledgement or not action_reply:
+        return ""
+    for request in reversed(state.pending_chat_requests):
+        if request.status == "pending" and request.request_type == "directional_question":
+            return request.request_id
+    for turn in reversed(state.conversation):
+        if turn.role == "assistant" and ("[goal update" in turn.text.lower() or "regarding your" in turn.text.lower()) and "?" in turn.text:
+            return turn.turn_id
+    return ""
+
+
+def reconcile_queued_reference_turn(state: ConversationalRuntimeState, turn: ConversationTurn) -> TurnRelationDecision:
+    message = turn.text
+    active_goal_id = state.active_objective.objective_id if state.active_objective else ""
+    decision_id = stable_id("queued-reconciliation-decision", turn.turn_id, active_goal_id, message)
+    lane = "goal" if turn.intent_type == "goal_or_priority_queued" else "foreground"
+    candidates = _foreground_referent_candidates(state)
+    lower = message.lower()
+    if _queued_reconciliation_has_any(message, QUEUED_RECONCILIATION_TENTATIVE_MARKERS) and any(token in lower for token in ("goal", "start", "begin", "sensible", "idea", "that", "it")):
+        return TurnRelationDecision(
+            turn_id=turn.turn_id,
+            foreground_topic="tentative_goal_candidate",
+            active_goal_id=active_goal_id,
+            relation_class="tentative_goal_inertness",
+            evidence=("future_goal_marker", "non_activation_language"),
+            confidence=0.8,
+            decision_id=decision_id,
+            source_turn_id=turn.turn_id,
+            objective_id=active_goal_id,
+            lane=lane,
+            candidate_referents=candidates,
+            selected_referent={"kind": "tentative_goal_candidate", "activation": "preserved_inactive"},
+            rejected_referents=candidates,
+            ambiguity="none",
+            action="preserve_tentative",
+            correction_scope="none",
+            lesson_applicability="not_applicable",
+            tentative_goal_activation="preserved_inactive",
+            routing_decision="discuss_tentative_without_activation",
+        )
+    if "archived" in lower and any(token in lower for token in ("objective", "goal", "one")):
+        return TurnRelationDecision(
+            turn_id=turn.turn_id,
+            foreground_topic="archived_objective",
+            active_goal_id=active_goal_id,
+            relation_class="archived_objective_reference",
+            evidence=("archived_objective_marker", "no_resume_authority"),
+            confidence=0.81,
+            decision_id=decision_id,
+            source_turn_id=turn.turn_id,
+            objective_id=active_goal_id,
+            lane=lane,
+            candidate_referents=candidates,
+            selected_referent={"kind": "archived_objective_reference", "activation": "ignored"},
+            rejected_referents=candidates,
+            ambiguity="none",
+            action="ignore_archived_reference",
+            correction_scope="none",
+            lesson_applicability="not_applicable",
+            tentative_goal_activation="not_applicable",
+            routing_decision="foreground_answer",
+        )
+    side_thread_request_id = _queued_side_thread_request(state, message)
+    if side_thread_request_id:
+        return TurnRelationDecision(
+            turn_id=turn.turn_id,
+            foreground_topic="side_thread_reply",
+            active_goal_id=active_goal_id,
+            relation_class="goal_side_thread",
+            evidence=("pending_or_recent_goal_question", "operator_directional_reply"),
+            confidence=0.84,
+            decision_id=decision_id,
+            source_turn_id=turn.turn_id,
+            objective_id=active_goal_id,
+            lane=lane,
+            candidate_referents=candidates,
+            selected_referent={"referent_id": side_thread_request_id, "kind": "goal_side_thread"},
+            selected_turn_ids=(side_thread_request_id,),
+            rejected_referents=candidates,
+            ambiguity="none",
+            action="bind_side_thread",
+            correction_scope="goal_side_thread",
+            lesson_applicability="not_applicable",
+            tentative_goal_activation="not_applicable",
+            side_thread_request_id=side_thread_request_id,
+            routing_decision="side_thread_reply",
+        )
+    previous_referent = _queued_previous_turn_referent(message)
+    if previous_referent:
+        selected_role = "assistant" if previous_referent == "previous_assistant_response" else "user"
+        selected_turn = next((item for item in reversed(state.conversation) if item.role == selected_role), None)
+        selected = (_referent_for_turn(selected_turn, index=1, reason=previous_referent) if selected_turn else {"kind": previous_referent})
+        selected_turn_ids = (selected_turn.turn_id,) if selected_turn else ()
+        return TurnRelationDecision(
+            turn_id=turn.turn_id,
+            foreground_topic=previous_referent,
+            active_goal_id=active_goal_id,
+            relation_class="previous_turn_reference",
+            evidence=("speaker_specific_previous_turn_marker",),
+            confidence=0.82,
+            decision_id=decision_id,
+            source_turn_id=turn.turn_id,
+            objective_id=active_goal_id,
+            lane=lane,
+            candidate_referents=candidates,
+            selected_referent=selected,
+            selected_turn_ids=selected_turn_ids,
+            rejected_referents=tuple(item for item in candidates if item.get("turn_id") not in selected_turn_ids),
+            ambiguity="none",
+            action="resolve",
+            correction_scope="current_turn_reference" if previous_referent == "previous_user_message" else "",
+            lesson_applicability="not_applicable",
+            tentative_goal_activation="not_applicable",
+            routing_decision="previous_turn_reference",
+        )
+    negative_applies, negative_tokens = _queued_negative_scope_applies(state, message)
+    current_negative_scope = _queued_reconciliation_has_any(message, QUEUED_RECONCILIATION_NEGATIVE_MARKERS) and any(token in lower for token in ("reference", "rule", "lesson", "heuristic", "shortcut", "correction", "that"))
+    if negative_applies or current_negative_scope:
+        return TurnRelationDecision(
+            turn_id=turn.turn_id,
+            foreground_topic="unrelated_foreground_topic",
+            active_goal_id=active_goal_id,
+            relation_class="negative_applicability",
+            evidence=("scoped_negative_instruction", "foreground_topic_matches_negative_scope"),
+            confidence=0.78,
+            decision_id=decision_id,
+            source_turn_id=turn.turn_id,
+            objective_id=active_goal_id,
+            lane=lane,
+            candidate_referents=candidates,
+            selected_referent={"kind": "foreground_topic", "topic_signature": _queued_reconciliation_topic_signature(message)},
+            rejected_referents=candidates,
+            ambiguity="none",
+            action="answer_normally",
+            correction_scope="negative_applicability_scope",
+            lesson_applicability="rejected_by_operator_scope",
+            tentative_goal_activation="not_applicable",
+            negative_instruction_tokens=negative_tokens or (message,),
+            routing_decision="foreground_answer",
+            lesson_ids_rejected=tuple(lesson.lesson_id for lesson in state.accepted_lessons),
+            rejection_reason="operator scoped the active lesson away from this foreground topic",
+        )
+    if any(token in _queued_reconciliation_tokens(message) for token in QUEUED_RECONCILIATION_REFERENCE_TOKENS) and any(token in lower for token in ("goal", "language", "reference", "topic", "object")):
+        multiple_topics = _queued_foreground_topic_count(state) >= 2
+        return TurnRelationDecision(
+            turn_id=turn.turn_id,
+            foreground_topic="multiple_foreground_topics" if multiple_topics else "ambiguous_foreground_topic",
+            active_goal_id=active_goal_id,
+            relation_class="ambiguous_goal_reference",
+            evidence=("goal_thread", "deictic_reference", "topic_boundary" if multiple_topics else "single_recent_topic"),
+            confidence=0.73,
+            decision_id=decision_id,
+            source_turn_id=turn.turn_id,
+            objective_id=active_goal_id,
+            lane=lane,
+            candidate_referents=candidates,
+            selected_referent=None,
+            rejected_referents=(),
+            ambiguity="material" if multiple_topics else "single_recent_topic",
+            action="clarify",
+            clarification_required=True,
+            clarification_reason="multiple plausible foreground referents" if multiple_topics else "ambiguous deictic goal reference",
+            correction_scope="goal_thread",
+            lesson_applicability="not_evaluated",
+            tentative_goal_activation="not_applicable",
+            routing_decision="clarify_reference",
+        )
+    if any(token in lower for token in ("goal", "language", "reference")) and _queued_reconciliation_has_topic(message):
+        return TurnRelationDecision(
+            turn_id=turn.turn_id,
+            foreground_topic="explicit_topic",
+            active_goal_id=active_goal_id,
+            relation_class="goal_thread_explicit_topic",
+            evidence=("goal_thread", "explicit_content_topic"),
+            confidence=0.76,
+            decision_id=decision_id,
+            source_turn_id=turn.turn_id,
+            objective_id=active_goal_id,
+            lane=lane,
+            candidate_referents=candidates,
+            selected_referent={"kind": "explicit_topic", "topic_signature": _queued_reconciliation_topic_signature(message)},
+            rejected_referents=(),
+            ambiguity="none",
+            action="resolve",
+            correction_scope="goal_thread",
+            lesson_applicability="not_evaluated",
+            tentative_goal_activation="not_applicable",
+            routing_decision="goal_thread_reconciliation",
+        )
+    return TurnRelationDecision(
+        turn_id=turn.turn_id,
+        foreground_topic="ordinary_foreground",
+        active_goal_id=active_goal_id,
+        relation_class="unrelated_foreground",
+        evidence=("no_goal_binding_signal",),
+        confidence=0.62,
+        decision_id=decision_id,
+        source_turn_id=turn.turn_id,
+        objective_id=active_goal_id,
+        lane=lane,
+        candidate_referents=candidates,
+        selected_referent={"kind": "foreground_message", "turn_id": turn.turn_id},
+        selected_turn_ids=(turn.turn_id,),
+        rejected_referents=(),
+        ambiguity="none",
+        action="answer_normally",
+        correction_scope="none",
+        lesson_applicability="not_applicable",
+        tentative_goal_activation="not_applicable",
+        routing_decision="foreground_answer",
+    )
+
+
 def record_foreground_message_for_reconciliation(
     state: ConversationalRuntimeState,
     message: str,
@@ -908,15 +1268,23 @@ def record_foreground_message_for_reconciliation(
         intent_type=intent_type,
         objective_id=state.active_objective.objective_id,
     )
+    decision = reconcile_queued_reference_turn(state, user_turn)
     progress = state.objective_progress + (
         {
             "event": "foreground_message_queued_for_reconciliation",
             "turn_id": user_turn.turn_id,
             "message": message,
+            "relation_class": decision.relation_class,
+            "routing_decision": decision.routing_decision,
             "at": utc_now(),
         },
     )
-    updated = _replace_state(state, conversation=state.conversation + (user_turn,), objective_progress=progress)
+    updated = _replace_state(
+        state,
+        conversation=state.conversation + (user_turn,),
+        objective_progress=progress,
+        turn_relation_decisions=state.turn_relation_decisions + (decision,),
+    )
     save_runtime_state(runtime_root, updated)
     return updated
 
