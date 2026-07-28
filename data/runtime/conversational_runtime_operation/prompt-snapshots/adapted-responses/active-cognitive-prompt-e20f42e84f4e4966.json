@@ -1,0 +1,24 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "The operator can understand the corrections provided",
+      "The corrections are relevant and helpful for the operator"
+    ],
+    "expected_observations": [
+      "The operator demonstrates improved understanding of the conversation",
+      "The operator can apply corrections to future conversations"
+    ],
+    "hypothesis_statement": "The operator will improve their comprehension of English during conversations by observing and incorporating corrections, leading to better transfer of knowledge.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "Operator-specific English comprehension during conversation",
+    "supporting_evidence_refs": [
+      "operator-natural-goal"
+    ],
+    "uncertainty": "Whether the operator will consistently apply the corrections in future conversations"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\n  \"hypothesis_statement\": \"The operator will improve their comprehension of English during conversations by observing and incorporating corrections, leading to better transfer of knowledge.\",\n  \"scope\": \"Operator-specific English comprehension during conversation\",\n  \"supporting_evidence_refs\": [\"operator-natural-goal\"],\n  \"assumptions\": [\"The operator can understand the corrections provided\", \"The corrections are relevant and helpful for the operator\"],\n  \"expected_observations\": [\"The operator demonstrates improved understanding of the conversation\", \"The operator can apply corrections to future conversations\"],\n  \"uncertainty\": \"Whether the operator will consistently apply the corrections in future conversations\",\n  \"recommended_state_transition\": \"propose_hypothesis\"\n}",
+  "raw_response_digest": "f1a582a6c842c4745ac29ac19525019be68e9758c234ef11184d6fb699e4b085",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

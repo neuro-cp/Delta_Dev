@@ -1,0 +1,22 @@
+﻿{
+    "recorded_at":  "2026-07-27T23:26:16.6820774Z",
+    "branch":  "codex/delta-cognitive-core",
+    "head":  "ab180e316abf051bfa4b09535756d631fbee6585",
+    "upstream":  "ab180e316abf051bfa4b09535756d631fbee6585",
+    "remote":  "ab180e316abf051bfa4b09535756d631fbee6585\trefs/heads/codex/delta-cognitive-core",
+    "status":  [
+                   " M orchestration/runtime/live_competence_adapter.py",
+                   "?? orchestration/runtime/cognitive_claim_relation_runtime.py",
+                   "?? orchestration/runtime/cognitive_claim_relations.py",
+                   "?? orchestration/runtime/cognitive_contradiction_evaluation.py",
+                   "?? orchestration/runtime/cognitive_excluded_path_reconciliation.py",
+                   "?? tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py",
+                   "?? tests/runtime_gsr/test_cognitive_claim_relation_runtime.py",
+                   "?? tests/runtime_gsr/test_cognitive_claim_relations.py",
+                   "?? tests/runtime_gsr/test_cognitive_contradiction_evaluation.py",
+                   "?? tests/runtime_gsr/test_cognitive_excluded_path_reconciliation.py"
+               ],
+    "staged":  {
+
+               }
+}

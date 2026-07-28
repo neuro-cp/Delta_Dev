@@ -1,0 +1,25 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Corrections are effective for learning new language features.",
+      "Context and turn-based communication are key to understanding.",
+      "Repetition and transfer of learned concepts are beneficial for retention."
+    ],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "operator-natural-goal"
+    ],
+    "interpretation": "Understanding of implied references, queued messages, informal phrasing, and context across turns will improve with corrections and transfer checks. This hypothesis is supported by the natural goal of improving communication effectiveness. There is no conflicting evidence to consider.",
+    "next_evidence_need": "local evidence supporting or challenging the goal",
+    "next_focus_proposal": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+    "operation_result_type": "compare_evidence_result",
+    "recommended_action": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+    "recommended_state_transition": "add_supporting_evidence",
+    "uncertainty": "How effective are corrections in long-term retention and transfer of learned concepts?"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"assumptions\":[\"Corrections are effective for learning new language features.\",\"Context and turn-based communication are key to understanding.\",\"Repetition and transfer of learned concepts are beneficial for retention.\"],\"contrary_evidence_considered\":[],\"evidence_refs\":[\"operator-natural-goal\"],\"interpretation\":\"Understanding of implied references, queued messages, informal phrasing, and context across turns will improve with corrections and transfer checks. This hypothesis is supported by the natural goal of improving communication effectiveness. There is no conflicting evidence to consider.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"Perform formulate_hypothesis for the active focus using only referenced evidence.\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"How effective are corrections in long-term retention and transfer of learned concepts?\"}",
+  "raw_response_digest": "863c0085e2e4b6d5fc83c751883bb7c23194a28f142bc731d3a7fa2ae5f390f6",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

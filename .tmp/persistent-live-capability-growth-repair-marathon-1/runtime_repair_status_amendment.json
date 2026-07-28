@@ -1,0 +1,49 @@
+{
+  "gate": "PERSISTENT_LIVE_CAPABILITY_GROWTH_REPAIR_MARATHON_1",
+  "amended_status": "PERSISTENT_LIVE_CAPABILITY_GROWTH_REPAIR_MARATHON_1_RUNTIME_REPAIRS_PASSED",
+  "capability_growth_status": "LIVE_GOVERNED_CAPABILITY_GROWTH_1_CANDIDATE_EVALUATION_PENDING",
+  "supersedes_overclaim": {
+    "prior_claim": "LIVE_GOVERNED_CAPABILITY_GROWTH_1_IMPLEMENTATION_REVIEW_REQUIRED",
+    "reason": "Cycle-budget completion and goal-review rendering do not prove a measured capability proposal."
+  },
+  "runtime_repairs_preserved": [
+    "tentative-goal isolation",
+    "foreground conversation isolation",
+    "explicit goal classification despite review/future-goal wording",
+    "fresh objective execution accounting",
+    "completed ledger-request reuse",
+    "local-first provider escalation posture",
+    "goal-review rendering"
+  ],
+  "missing_for_implementation_review": [
+    "five evidence-linked candidate weaknesses",
+    "selected weakness with comparison",
+    "three materially distinct candidate strategies",
+    "frozen independent evaluator",
+    "sandbox execution for all candidates",
+    "held-out results for all candidates",
+    "rejected alternative candidate",
+    "winning candidate with improvement evidence",
+    "bounded source and test proposal with patch",
+    "Codex supervisor audit"
+  ],
+  "new_enforcement": {
+    "rule": "implementation_review_required is unavailable until durable proposal-readiness evidence exists",
+    "blocked_status": "capability_proposal_pending",
+    "central_distinctions": [
+      "cycle completion != capability proposal",
+      "goal review != implementation readiness",
+      "local learning packet != measured improvement"
+    ]
+  },
+  "validation": {
+    "focused_pytest": "57 passed",
+    "py_compile": "passed",
+    "git_diff_check": "passed_with_crlf_warnings_only"
+  },
+  "git_boundary": {
+    "staging_expected": "empty",
+    "commit_authorized": false,
+    "push_authorized": false
+  }
+}

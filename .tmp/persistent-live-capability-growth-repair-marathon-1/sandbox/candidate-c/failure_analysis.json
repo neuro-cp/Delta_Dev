@@ -1,0 +1,53 @@
+{
+  "candidate_id": "candidate-c",
+  "failures": [
+    {
+      "case_id": "design-last-object",
+      "expected": "cache_vs_ram",
+      "group": "last-mentioned object",
+      "partition": "design_examples",
+      "passed": false,
+      "predicted": "generic_contextual_ack"
+    },
+    {
+      "case_id": "dev-topic-switch",
+      "expected": "ambiguous_requires_clarification",
+      "group": "topic switches",
+      "partition": "candidate_development",
+      "passed": false,
+      "predicted": "clarify_ambiguous_topic_boundary"
+    },
+    {
+      "case_id": "dev-side-thread",
+      "expected": "bind_to_goal_update",
+      "group": "side-thread reply",
+      "partition": "candidate_development",
+      "passed": false,
+      "predicted": "clarify_ambiguous_topic_boundary"
+    },
+    {
+      "case_id": "held-queued-older-topic",
+      "expected": "clarify_between_metal_expansion_and_refrigerators",
+      "group": "queued references",
+      "partition": "final_held_out",
+      "passed": false,
+      "predicted": "clarify_ambiguous_topic_boundary"
+    },
+    {
+      "case_id": "held-omitted-noun",
+      "expected": "later_one_refers_to_post_restart_action",
+      "group": "omitted noun",
+      "partition": "final_held_out",
+      "passed": false,
+      "predicted": "clarify_ambiguous_topic_boundary"
+    },
+    {
+      "case_id": "held-restart-before-reconcile",
+      "expected": "preserve_queue_and_clarify",
+      "group": "restart before reconciliation",
+      "partition": "final_held_out",
+      "passed": false,
+      "predicted": "clarify_ambiguous_topic_boundary"
+    }
+  ]
+}

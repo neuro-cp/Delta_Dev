@@ -1,0 +1,24 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Operators can benefit from contextual information.",
+      "Contextual information can improve understanding."
+    ],
+    "expected_observations": [
+      "Operators will retain corrections better.",
+      "Operators will apply corrections more accurately."
+    ],
+    "hypothesis_statement": "Operators will understand corrections better if given in context of prior conversation.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "English comprehension during conversation",
+    "supporting_evidence_refs": [
+      "prior-conversational-episode-3"
+    ],
+    "uncertainty": "How much context is necessary for optimal understanding?"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"hypothesis_statement\":\"Operators will understand corrections better if given in context of prior conversation.\",\"scope\":\"English comprehension during conversation\",\"supporting_evidence_refs\":[\"prior-conversational-episode-3\"],\"assumptions\":[\"Operators can benefit from contextual information.\",\"Contextual information can improve understanding.\"],\"expected_observations\":[\"Operators will retain corrections better.\",\"Operators will apply corrections more accurately.\"],\"uncertainty\":\"How much context is necessary for optimal understanding?\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+  "raw_response_digest": "9ae5f865ae807cf502d217b96f7cb0c531a85a9d18432352f7e06be6766d3f4a",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "prior-conversational-episode-3"
+    ],
+    "lesson": "Operators may misunderstand specific English phrases in conversation.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "Uncertainty remains regarding the effectiveness of the current approach in fully addressing the goal.",
+    "unresolved_questions": [
+      "How can we ensure operators fully understand English phrases used in specific contexts?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"Operators may misunderstand specific English phrases in conversation.\",\"evidence_refs\":[\"prior-conversational-episode-3\"],\"unresolved_questions\":[\"How can we ensure operators fully understand English phrases used in specific contexts?\"],\"uncertainty\":\"Uncertainty remains regarding the effectiveness of the current approach in fully addressing the goal.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "3e723f01e140c5f69e4f012d246b0d5fc0719c87e9c5b06aab4e45ff830c23a7",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

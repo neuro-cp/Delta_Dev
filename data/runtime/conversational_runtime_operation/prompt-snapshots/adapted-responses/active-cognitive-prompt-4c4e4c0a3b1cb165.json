@@ -1,0 +1,22 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Operators are familiar with basic English grammar and vocabulary"
+    ],
+    "expected_observations": [
+      "Operators will have difficulty understanding certain technical terms and phrases"
+    ],
+    "hypothesis_statement": "Operators may misunderstand specific English phrases related to equipment operation.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "Equipment operation instructions and procedures",
+    "supporting_evidence_refs": [
+      "prior-conversational-episode-9"
+    ],
+    "uncertainty": "Whether specific phrases will cause consistent misunderstandings"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"hypothesis_statement\":\"Operators may misunderstand specific English phrases related to equipment operation.\",\"scope\":\"Equipment operation instructions and procedures\",\"supporting_evidence_refs\":[\"prior-conversational-episode-9\"],\"assumptions\":[\"Operators are familiar with basic English grammar and vocabulary\"],\"expected_observations\":[\"Operators will have difficulty understanding certain technical terms and phrases\"],\"uncertainty\":\"Whether specific phrases will cause consistent misunderstandings\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+  "raw_response_digest": "86028191ad68930cec705c5da8a7e129112c7d2d8109b0e2c8b09149d2abea45",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

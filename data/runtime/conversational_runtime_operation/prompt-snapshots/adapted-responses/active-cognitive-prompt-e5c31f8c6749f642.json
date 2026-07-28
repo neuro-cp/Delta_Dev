@@ -1,0 +1,23 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Operators are familiar with basic English grammar and vocabulary"
+    ],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "prior-conversational-episode-9"
+    ],
+    "interpretation": "Operators may misunderstand specific English phrases related to equipment operation.",
+    "next_evidence_need": "local evidence supporting or challenging the goal",
+    "next_focus_proposal": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+    "operation_result_type": "compare_evidence_result",
+    "recommended_action": "Incorporate corrections into ongoing training sessions.",
+    "recommended_state_transition": "add_supporting_evidence",
+    "uncertainty": "Specific phrases and their meanings remain unresolved."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"assumptions\":[\"Operators are familiar with basic English grammar and vocabulary\"],\"contrary_evidence_considered\":[],\"evidence_refs\":[\"prior-conversational-episode-9\"],\"interpretation\":\"Operators may misunderstand specific English phrases related to equipment operation.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"Incorporate corrections into ongoing training sessions.\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"Specific phrases and their meanings remain unresolved.\"}",
+  "raw_response_digest": "a80c82f8b4aa5f806f9777a40338e9fcbf8f0c2f1f59d073f4129be8617402bc",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

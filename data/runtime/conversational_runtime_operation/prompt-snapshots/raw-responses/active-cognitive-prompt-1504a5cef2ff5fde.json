@@ -1,0 +1,76 @@
+{
+  "ledger_request_id": "shared-local-model-request-855cbd7f4b60f09f",
+  "ledger_result_id": "shared-local-model-result-1886c4380f322d33",
+  "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+  "prompt_snapshot_id": "active-cognitive-prompt-1504a5cef2ff5fde",
+  "raw_response": "{\"assumptions\":[\"The operator has the ability to observe and correct misunderstandings\",\"The operator can apply corrections to future conversations\"],\"contrary_evidence_considered\":[],\"evidence_refs\":[\"operator-natural-goal\"],\"interpretation\":\"The current hypothesis is supported by the evidence that the operator can observe and correct misunderstandings, and apply corrections to future conversations. The evidence_for is the operator-natural-goal. No contrary evidence is considered.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"improve comprehension of English during conversations by observing and incorporating corrections from misunderstandings, and testing later transfer of these corrections\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"How the corrections will be applied in future conversations is not yet clear.\"}",
+  "raw_response_digest": "30d236ebbbae95a3a79789eaf4f6385478789095307fe1024c2c9d820c54f507",
+  "terminal_status": {
+    "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+    "approved_at": "2026-07-27T23:11:29+00:00",
+    "authority_state": "standing_bounded_authority_conversational_runtime_operation",
+    "claimed_at": "2026-07-27T23:11:29+00:00",
+    "completed_at": "2026-07-27T23:12:20+00:00",
+    "consumed_state": "terminal",
+    "created_at": "2026-07-27T23:11:29+00:00",
+    "execution_attempt_count": 1,
+    "execution_claim_id": "shared-local-model-execution-claim-620f7181537bd4e5",
+    "failure_classification": "",
+    "lifecycle_state": "completed",
+    "mission_id": "active-cognitive-goal-acc1044183eab608",
+    "mission_information_need_identity": "focus-11f2c00f149cc0cf",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "question": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text: - operation_result_type: nonempty string - interpretation: nonempty string - evidence_refs: array[string] - contrary_evidence_considered: array[string] - uncertainty: nonempty string - assumptions: array[string] - recommended_state_transition: nonempty string - recommended_action: nonempty string - next_evidence_need: nonempty string - next_focus_proposal: nonempty string ID ARRAY RULES: - array values for evidence/ref fields must be exact IDs, never evidence summaries or prose - evidence_refs values must be chosen from: operator-natural-goal - contrary_evidence_considered values must be chosen from: none - contrary_evidence_considered must be [] because no valid IDs are supplied; do not write none TASK: perform only operation compare_evidence. Allowed transition/next-operation values: add_supporting_evidence, add_conflicting_evidence, weaken_hypothesis, revise_hypothesis. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: operator-natural-goal. Use contrary_evidence_considered only from contrary_evidence IDs: none. If contrary_evidence is not empty, the interpretation must state how it changes or weakens the hypothesis Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied. CONTEXT_JSON: {\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":2,\"description\":\"Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-11f2c00f149cc0cf\",\"related_goal_ids\":[\"active-cognitive-goal-acc1044183eab608\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-acc1044183eab608\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.\"},\"current_hypotheses\":[{\"assumptions\":[\"The operator has the ability to observe and correct misunderstandings\",\"The operator can apply corrections to future conversations\"],\"confidence_state\":\"plausible\",\"created_at\":\"2026-07-27T23:11:27+00:00\",\"disposition\":\"needs_challenge\",\"evidence_against\":[],\"evidence_for\":[\"operator-natural-goal\"],\"expected_observations\":[\"local evidence should support a bounded useful step\"],\"hypothesis_id\":\"hypothesis-3839285eb0e5bece\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-453bb529bd6f2803\",\"originating_goal_id\":\"active-cognitive-goal-acc1044183eab608\",\"provenance\":[\"cognitive-operation-c14f04bdc1972030\"],\"revised_at\":\"\",\"revision_parent_id\":\"\",\"revision_reason\":\"\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.\",\"statement\":\"The operator will improve comprehension of English during conversations by observing and incorporating corrections from misunderstandings, and testing later transfer of these corrections.\"}],\"evidence_for\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"Your goal today is to improve semantic reconciliation of queued and implied references. Work on how you interpret queued messages, implied references, topic switches, corrections, and false-transfer guards. Use local cognition and local evidence first. Compare multiple candidate strategies with held\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-27T23:11:27+00:00\",\"discrepancy\":\"progress_observed\",\"expected\":\"Perform formulate_hypothesis for the active focus using only referenced evidence.\",\"observed\":\"The operator will improve comprehension of English during conversations by observing and incorporating corrections from misunderstandings, and testing later transfer of these corrections.\",\"operation_id\":\"cognitive-operation-c14f04bdc1972030\",\"outcome_id\":\"outcome-7d1a8f08e3fa328d\"}]}",
+    "question_objective": "compare_evidence",
+    "record_digest": "f219cb3f967d6616085238b734bf5420dfabf19f531d8609f7fe59baf24b90d4",
+    "record_version": 1,
+    "request_digest": "a06943dd9c8cdc50d375e79832cf14f1bba6596253085fe1352055eae7acde8e",
+    "request_id": "shared-local-model-request-855cbd7f4b60f09f",
+    "requester_reference": "cognitive-operation-8582430a18c8b208",
+    "requester_type": "active_cognitive_loop",
+    "result_id": "shared-local-model-result-1886c4380f322d33",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    },
+    "semantic_identity": "active-cognitive-ledger-request-65e81d5d4bf2cd32",
+    "session_reference": "active-cognitive-cycle-c21be81d6e035da4"
+  }
+}

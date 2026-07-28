@@ -1,0 +1,74 @@
+{
+  "authority_constraints": [
+    "no network",
+    "no protected paths",
+    "no commit",
+    "bounded local actions only"
+  ],
+  "contrary_evidence_ids_supplied": [],
+  "cycle_id": "active-cognitive-cycle-c7b9ccd985947a36",
+  "evidence_ids_supplied": [
+    "operator-natural-goal"
+  ],
+  "expected_response_schema": {
+    "evidence_refs": [
+      "IDs only from supplied evidence"
+    ],
+    "lesson": "learning from outcome",
+    "recommended_state_transition": "one allowed transition",
+    "uncertainty": "nonempty uncertainty phrase",
+    "unresolved_questions": [
+      "questions that remain unresolved"
+    ]
+  },
+  "focus_id": "focus-d9d9055720107c50",
+  "goal_id": "active-cognitive-goal-acc1044183eab608",
+  "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+  "operation_request": {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-c7b9ccd985947a36",
+    "evidence_constraints": [
+      "operator-natural-goal"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-d9d9055720107c50",
+    "goal_id": "active-cognitive-goal-acc1044183eab608",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-ddc69d4d39900a3c",
+    "operation_type": "summarize_learning",
+    "provenance": [
+      "working-memory-packet-aab7693059c8ebdb"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform summarize_learning for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "5a6874e50c8c55bb57e9d46a63a77a4092c0c4e7e977df68e380f20f70de32d8"
+  },
+  "operation_type": "summarize_learning",
+  "prompt_byte_digest": "a788de6d9ed0cfa7cc8032d56812cbae638a282443b466abe213d0e39a554d59",
+  "prompt_length": 5137,
+  "prompt_schema_version": "active_cognitive_prompt_qualification_1_v1",
+  "prompt_snapshot_id": "active-cognitive-prompt-5ade8cb372091bdd",
+  "prompt_text": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- lesson: nonempty string\n- evidence_refs: array[string]\n- unresolved_questions: array[string]\n- uncertainty: nonempty string\n- recommended_state_transition: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- evidence_refs values must be chosen from: operator-natural-goal\nTASK: perform only operation summarize_learning. Allowed transition/next-operation values: summarize_learning, select_next_focus. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: operator-natural-goal. Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied.\nCONTEXT_JSON:\n{\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":3,\"description\":\"Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-d9d9055720107c50\",\"related_goal_ids\":[\"active-cognitive-goal-acc1044183eab608\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-acc1044183eab608\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.\"},\"current_hypotheses\":[{\"assumptions\":[\"The operator has a history of misunderstandings and corrections in previous conversations.\"],\"confidence_state\":\"supported\",\"created_at\":\"2026-07-27T23:40:52+00:00\",\"disposition\":\"needs_challenge\",\"evidence_against\":[],\"evidence_for\":[\"operator-natural-goal\"],\"expected_observations\":[\"local evidence should support a bounded useful step\"],\"hypothesis_id\":\"hypothesis-0abb9b6ae647b18d\",\"lifecycle_state\":\"active\",\"originating_focus_id\":\"focus-453bb529bd6f2803\",\"originating_goal_id\":\"active-cognitive-goal-acc1044183eab608\",\"provenance\":[\"cognitive-operation-35b315dd81f840b0\",\"cognitive-operation-2ec599168cbed6b8\"],\"revised_at\":\"2026-07-27T23:41:28+00:00\",\"revision_parent_id\":\"\",\"revision_reason\":\"The operator needs to improve their comprehension of natural corrections, and the hypothesis suggests that this can be achieved through correction-linked strategy revision and transfer checks. There is no conflicting evidence to consider.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"scope\":\"Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.\",\"statement\":\"The operator will improve their comprehension of natural corrections through the use of correction-linked strategy revision and transfer checks.\"}],\"evidence_for\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"Your goal today is to complete a clean live semantic reconciliation growth run. Improve how you handle queued messages, implied references, topic switches, natural corrections, future-goal candidates, and false-transfer guards. Use local cognition and local evidence first. Compare candidate strategi\"}],\"recent_outcomes\":[{\"created_at\":\"2026-07-27T23:41:28+00:00\",\"discrepancy\":\"progress_observed\",\"expected\":\"Perform compare_evidence for the active focus using only referenced evidence.\",\"observed\":\"The operator needs to improve their comprehension of natural corrections, and the hypothesis suggests that this can be achieved through correction-linked strategy revision and transfer checks. There is no conflicting evidence to consider.\",\"operation_id\":\"cognitive-operation-2ec599168cbed6b8\",\"outcome_id\":\"outcome-ffe4686e18e67690\"}]}",
+  "request_identity": "active-cognitive-ledger-request-accaeea5aa8ec208",
+  "retry_sequence": 0,
+  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+  "working_memory_packet_digest": "5a6874e50c8c55bb57e9d46a63a77a4092c0c4e7e977df68e380f20f70de32d8",
+  "working_memory_packet_id": "working-memory-packet-aab7693059c8ebdb"
+}

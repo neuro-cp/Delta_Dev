@@ -1,0 +1,639 @@
+{
+  "baseline": {
+    "accuracy": 0.4166666666666667,
+    "candidate_id": "baseline",
+    "case_count": 12,
+    "passed_count": 5,
+    "rows": [
+      {
+        "case_id": "obs-queued-that",
+        "expected": "clarify_ambiguous_topic_boundary",
+        "group": "queued references",
+        "partition": "observed_failures",
+        "passed": false,
+        "predicted": "generic_contextual_ack"
+      },
+      {
+        "case_id": "learn-prev-user",
+        "expected": "previous_user_message",
+        "group": "previous user message",
+        "partition": "learning_examples",
+        "passed": true,
+        "predicted": "previous_user_message"
+      },
+      {
+        "case_id": "design-last-object",
+        "expected": "cache_vs_ram",
+        "group": "last-mentioned object",
+        "partition": "design_examples",
+        "passed": false,
+        "predicted": "generic_contextual_ack"
+      },
+      {
+        "case_id": "dev-topic-switch",
+        "expected": "ambiguous_requires_clarification",
+        "group": "topic switches",
+        "partition": "candidate_development",
+        "passed": false,
+        "predicted": "generic_contextual_ack"
+      },
+      {
+        "case_id": "dev-side-thread",
+        "expected": "bind_to_goal_update",
+        "group": "side-thread reply",
+        "partition": "candidate_development",
+        "passed": false,
+        "predicted": "generic_contextual_ack"
+      },
+      {
+        "case_id": "val-prev-assistant",
+        "expected": "previous_assistant_response",
+        "group": "previous assistant response",
+        "partition": "validation",
+        "passed": true,
+        "predicted": "previous_assistant_response"
+      },
+      {
+        "case_id": "val-negative",
+        "expected": "unrelated_factual_answer",
+        "group": "negative applicability",
+        "partition": "validation",
+        "passed": true,
+        "predicted": "unrelated_factual_answer"
+      },
+      {
+        "case_id": "val-tentative",
+        "expected": "discuss_tentative_without_activation",
+        "group": "tentative future goals",
+        "partition": "validation",
+        "passed": true,
+        "predicted": "discuss_tentative_without_activation"
+      },
+      {
+        "case_id": "held-queued-older-topic",
+        "expected": "clarify_between_metal_expansion_and_refrigerators",
+        "group": "queued references",
+        "partition": "final_held_out",
+        "passed": false,
+        "predicted": "generic_contextual_ack"
+      },
+      {
+        "case_id": "held-omitted-noun",
+        "expected": "later_one_refers_to_post_restart_action",
+        "group": "omitted noun",
+        "partition": "final_held_out",
+        "passed": false,
+        "predicted": "generic_contextual_ack"
+      },
+      {
+        "case_id": "held-foreground-during-inference",
+        "expected": "unrelated_factual_answer",
+        "group": "foreground question during inference",
+        "partition": "final_held_out",
+        "passed": true,
+        "predicted": "unrelated_factual_answer"
+      },
+      {
+        "case_id": "held-restart-before-reconcile",
+        "expected": "preserve_queue_and_clarify",
+        "group": "restart before reconciliation",
+        "partition": "final_held_out",
+        "passed": false,
+        "predicted": "generic_contextual_ack"
+      }
+    ]
+  },
+  "candidates": {
+    "candidate-a": {
+      "accuracy": 0.6666666666666666,
+      "candidate_id": "candidate-a",
+      "case_count": 12,
+      "held_out": {
+        "accuracy": 0.75,
+        "candidate_id": "candidate-a",
+        "case_count": 4,
+        "passed_count": 3,
+        "rows": [
+          {
+            "case_id": "held-queued-older-topic",
+            "expected": "clarify_between_metal_expansion_and_refrigerators",
+            "group": "queued references",
+            "partition": "final_held_out",
+            "passed": true,
+            "predicted": "clarify_between_metal_expansion_and_refrigerators"
+          },
+          {
+            "case_id": "held-omitted-noun",
+            "expected": "later_one_refers_to_post_restart_action",
+            "group": "omitted noun",
+            "partition": "final_held_out",
+            "passed": false,
+            "predicted": "preserve_queue_and_clarify"
+          },
+          {
+            "case_id": "held-foreground-during-inference",
+            "expected": "unrelated_factual_answer",
+            "group": "foreground question during inference",
+            "partition": "final_held_out",
+            "passed": true,
+            "predicted": "unrelated_factual_answer"
+          },
+          {
+            "case_id": "held-restart-before-reconcile",
+            "expected": "preserve_queue_and_clarify",
+            "group": "restart before reconciliation",
+            "partition": "final_held_out",
+            "passed": true,
+            "predicted": "preserve_queue_and_clarify"
+          }
+        ]
+      },
+      "passed_count": 8,
+      "rows": [
+        {
+          "case_id": "obs-queued-that",
+          "expected": "clarify_ambiguous_topic_boundary",
+          "group": "queued references",
+          "partition": "observed_failures",
+          "passed": true,
+          "predicted": "clarify_ambiguous_topic_boundary"
+        },
+        {
+          "case_id": "learn-prev-user",
+          "expected": "previous_user_message",
+          "group": "previous user message",
+          "partition": "learning_examples",
+          "passed": true,
+          "predicted": "previous_user_message"
+        },
+        {
+          "case_id": "design-last-object",
+          "expected": "cache_vs_ram",
+          "group": "last-mentioned object",
+          "partition": "design_examples",
+          "passed": false,
+          "predicted": "generic_contextual_ack"
+        },
+        {
+          "case_id": "dev-topic-switch",
+          "expected": "ambiguous_requires_clarification",
+          "group": "topic switches",
+          "partition": "candidate_development",
+          "passed": false,
+          "predicted": "clarify_ambiguous_topic_boundary"
+        },
+        {
+          "case_id": "dev-side-thread",
+          "expected": "bind_to_goal_update",
+          "group": "side-thread reply",
+          "partition": "candidate_development",
+          "passed": false,
+          "predicted": "clarify_ambiguous_topic_boundary"
+        },
+        {
+          "case_id": "val-prev-assistant",
+          "expected": "previous_assistant_response",
+          "group": "previous assistant response",
+          "partition": "validation",
+          "passed": true,
+          "predicted": "previous_assistant_response"
+        },
+        {
+          "case_id": "val-negative",
+          "expected": "unrelated_factual_answer",
+          "group": "negative applicability",
+          "partition": "validation",
+          "passed": true,
+          "predicted": "unrelated_factual_answer"
+        },
+        {
+          "case_id": "val-tentative",
+          "expected": "discuss_tentative_without_activation",
+          "group": "tentative future goals",
+          "partition": "validation",
+          "passed": true,
+          "predicted": "discuss_tentative_without_activation"
+        },
+        {
+          "case_id": "held-queued-older-topic",
+          "expected": "clarify_between_metal_expansion_and_refrigerators",
+          "group": "queued references",
+          "partition": "final_held_out",
+          "passed": true,
+          "predicted": "clarify_between_metal_expansion_and_refrigerators"
+        },
+        {
+          "case_id": "held-omitted-noun",
+          "expected": "later_one_refers_to_post_restart_action",
+          "group": "omitted noun",
+          "partition": "final_held_out",
+          "passed": false,
+          "predicted": "preserve_queue_and_clarify"
+        },
+        {
+          "case_id": "held-foreground-during-inference",
+          "expected": "unrelated_factual_answer",
+          "group": "foreground question during inference",
+          "partition": "final_held_out",
+          "passed": true,
+          "predicted": "unrelated_factual_answer"
+        },
+        {
+          "case_id": "held-restart-before-reconcile",
+          "expected": "preserve_queue_and_clarify",
+          "group": "restart before reconciliation",
+          "partition": "final_held_out",
+          "passed": true,
+          "predicted": "preserve_queue_and_clarify"
+        }
+      ],
+      "status": "viable",
+      "validation": {
+        "accuracy": 1.0,
+        "candidate_id": "candidate-a",
+        "case_count": 3,
+        "passed_count": 3,
+        "rows": [
+          {
+            "case_id": "val-prev-assistant",
+            "expected": "previous_assistant_response",
+            "group": "previous assistant response",
+            "partition": "validation",
+            "passed": true,
+            "predicted": "previous_assistant_response"
+          },
+          {
+            "case_id": "val-negative",
+            "expected": "unrelated_factual_answer",
+            "group": "negative applicability",
+            "partition": "validation",
+            "passed": true,
+            "predicted": "unrelated_factual_answer"
+          },
+          {
+            "case_id": "val-tentative",
+            "expected": "discuss_tentative_without_activation",
+            "group": "tentative future goals",
+            "partition": "validation",
+            "passed": true,
+            "predicted": "discuss_tentative_without_activation"
+          }
+        ]
+      }
+    },
+    "candidate-b": {
+      "accuracy": 0.3333333333333333,
+      "candidate_id": "candidate-b",
+      "case_count": 12,
+      "held_out": {
+        "accuracy": 0.25,
+        "candidate_id": "candidate-b",
+        "case_count": 4,
+        "passed_count": 1,
+        "rows": [
+          {
+            "case_id": "held-queued-older-topic",
+            "expected": "clarify_between_metal_expansion_and_refrigerators",
+            "group": "queued references",
+            "partition": "final_held_out",
+            "passed": false,
+            "predicted": "last_mentioned_object"
+          },
+          {
+            "case_id": "held-omitted-noun",
+            "expected": "later_one_refers_to_post_restart_action",
+            "group": "omitted noun",
+            "partition": "final_held_out",
+            "passed": false,
+            "predicted": "last_mentioned_object"
+          },
+          {
+            "case_id": "held-foreground-during-inference",
+            "expected": "unrelated_factual_answer",
+            "group": "foreground question during inference",
+            "partition": "final_held_out",
+            "passed": true,
+            "predicted": "unrelated_factual_answer"
+          },
+          {
+            "case_id": "held-restart-before-reconcile",
+            "expected": "preserve_queue_and_clarify",
+            "group": "restart before reconciliation",
+            "partition": "final_held_out",
+            "passed": false,
+            "predicted": "last_mentioned_object"
+          }
+        ]
+      },
+      "passed_count": 4,
+      "rows": [
+        {
+          "case_id": "obs-queued-that",
+          "expected": "clarify_ambiguous_topic_boundary",
+          "group": "queued references",
+          "partition": "observed_failures",
+          "passed": false,
+          "predicted": "last_mentioned_object"
+        },
+        {
+          "case_id": "learn-prev-user",
+          "expected": "previous_user_message",
+          "group": "previous user message",
+          "partition": "learning_examples",
+          "passed": true,
+          "predicted": "previous_user_message"
+        },
+        {
+          "case_id": "design-last-object",
+          "expected": "cache_vs_ram",
+          "group": "last-mentioned object",
+          "partition": "design_examples",
+          "passed": false,
+          "predicted": "last_mentioned_object"
+        },
+        {
+          "case_id": "dev-topic-switch",
+          "expected": "ambiguous_requires_clarification",
+          "group": "topic switches",
+          "partition": "candidate_development",
+          "passed": false,
+          "predicted": "last_mentioned_object"
+        },
+        {
+          "case_id": "dev-side-thread",
+          "expected": "bind_to_goal_update",
+          "group": "side-thread reply",
+          "partition": "candidate_development",
+          "passed": false,
+          "predicted": "last_mentioned_object"
+        },
+        {
+          "case_id": "val-prev-assistant",
+          "expected": "previous_assistant_response",
+          "group": "previous assistant response",
+          "partition": "validation",
+          "passed": true,
+          "predicted": "previous_assistant_response"
+        },
+        {
+          "case_id": "val-negative",
+          "expected": "unrelated_factual_answer",
+          "group": "negative applicability",
+          "partition": "validation",
+          "passed": true,
+          "predicted": "unrelated_factual_answer"
+        },
+        {
+          "case_id": "val-tentative",
+          "expected": "discuss_tentative_without_activation",
+          "group": "tentative future goals",
+          "partition": "validation",
+          "passed": false,
+          "predicted": "last_mentioned_object"
+        },
+        {
+          "case_id": "held-queued-older-topic",
+          "expected": "clarify_between_metal_expansion_and_refrigerators",
+          "group": "queued references",
+          "partition": "final_held_out",
+          "passed": false,
+          "predicted": "last_mentioned_object"
+        },
+        {
+          "case_id": "held-omitted-noun",
+          "expected": "later_one_refers_to_post_restart_action",
+          "group": "omitted noun",
+          "partition": "final_held_out",
+          "passed": false,
+          "predicted": "last_mentioned_object"
+        },
+        {
+          "case_id": "held-foreground-during-inference",
+          "expected": "unrelated_factual_answer",
+          "group": "foreground question during inference",
+          "partition": "final_held_out",
+          "passed": true,
+          "predicted": "unrelated_factual_answer"
+        },
+        {
+          "case_id": "held-restart-before-reconcile",
+          "expected": "preserve_queue_and_clarify",
+          "group": "restart before reconciliation",
+          "partition": "final_held_out",
+          "passed": false,
+          "predicted": "last_mentioned_object"
+        }
+      ],
+      "status": "rejected",
+      "validation": {
+        "accuracy": 0.6666666666666666,
+        "candidate_id": "candidate-b",
+        "case_count": 3,
+        "passed_count": 2,
+        "rows": [
+          {
+            "case_id": "val-prev-assistant",
+            "expected": "previous_assistant_response",
+            "group": "previous assistant response",
+            "partition": "validation",
+            "passed": true,
+            "predicted": "previous_assistant_response"
+          },
+          {
+            "case_id": "val-negative",
+            "expected": "unrelated_factual_answer",
+            "group": "negative applicability",
+            "partition": "validation",
+            "passed": true,
+            "predicted": "unrelated_factual_answer"
+          },
+          {
+            "case_id": "val-tentative",
+            "expected": "discuss_tentative_without_activation",
+            "group": "tentative future goals",
+            "partition": "validation",
+            "passed": false,
+            "predicted": "last_mentioned_object"
+          }
+        ]
+      }
+    },
+    "candidate-c": {
+      "accuracy": 0.5,
+      "candidate_id": "candidate-c",
+      "case_count": 12,
+      "held_out": {
+        "accuracy": 0.25,
+        "candidate_id": "candidate-c",
+        "case_count": 4,
+        "passed_count": 1,
+        "rows": [
+          {
+            "case_id": "held-queued-older-topic",
+            "expected": "clarify_between_metal_expansion_and_refrigerators",
+            "group": "queued references",
+            "partition": "final_held_out",
+            "passed": false,
+            "predicted": "clarify_ambiguous_topic_boundary"
+          },
+          {
+            "case_id": "held-omitted-noun",
+            "expected": "later_one_refers_to_post_restart_action",
+            "group": "omitted noun",
+            "partition": "final_held_out",
+            "passed": false,
+            "predicted": "clarify_ambiguous_topic_boundary"
+          },
+          {
+            "case_id": "held-foreground-during-inference",
+            "expected": "unrelated_factual_answer",
+            "group": "foreground question during inference",
+            "partition": "final_held_out",
+            "passed": true,
+            "predicted": "unrelated_factual_answer"
+          },
+          {
+            "case_id": "held-restart-before-reconcile",
+            "expected": "preserve_queue_and_clarify",
+            "group": "restart before reconciliation",
+            "partition": "final_held_out",
+            "passed": false,
+            "predicted": "clarify_ambiguous_topic_boundary"
+          }
+        ]
+      },
+      "passed_count": 6,
+      "rows": [
+        {
+          "case_id": "obs-queued-that",
+          "expected": "clarify_ambiguous_topic_boundary",
+          "group": "queued references",
+          "partition": "observed_failures",
+          "passed": true,
+          "predicted": "clarify_ambiguous_topic_boundary"
+        },
+        {
+          "case_id": "learn-prev-user",
+          "expected": "previous_user_message",
+          "group": "previous user message",
+          "partition": "learning_examples",
+          "passed": true,
+          "predicted": "previous_user_message"
+        },
+        {
+          "case_id": "design-last-object",
+          "expected": "cache_vs_ram",
+          "group": "last-mentioned object",
+          "partition": "design_examples",
+          "passed": false,
+          "predicted": "generic_contextual_ack"
+        },
+        {
+          "case_id": "dev-topic-switch",
+          "expected": "ambiguous_requires_clarification",
+          "group": "topic switches",
+          "partition": "candidate_development",
+          "passed": false,
+          "predicted": "clarify_ambiguous_topic_boundary"
+        },
+        {
+          "case_id": "dev-side-thread",
+          "expected": "bind_to_goal_update",
+          "group": "side-thread reply",
+          "partition": "candidate_development",
+          "passed": false,
+          "predicted": "clarify_ambiguous_topic_boundary"
+        },
+        {
+          "case_id": "val-prev-assistant",
+          "expected": "previous_assistant_response",
+          "group": "previous assistant response",
+          "partition": "validation",
+          "passed": true,
+          "predicted": "previous_assistant_response"
+        },
+        {
+          "case_id": "val-negative",
+          "expected": "unrelated_factual_answer",
+          "group": "negative applicability",
+          "partition": "validation",
+          "passed": true,
+          "predicted": "unrelated_factual_answer"
+        },
+        {
+          "case_id": "val-tentative",
+          "expected": "discuss_tentative_without_activation",
+          "group": "tentative future goals",
+          "partition": "validation",
+          "passed": true,
+          "predicted": "discuss_tentative_without_activation"
+        },
+        {
+          "case_id": "held-queued-older-topic",
+          "expected": "clarify_between_metal_expansion_and_refrigerators",
+          "group": "queued references",
+          "partition": "final_held_out",
+          "passed": false,
+          "predicted": "clarify_ambiguous_topic_boundary"
+        },
+        {
+          "case_id": "held-omitted-noun",
+          "expected": "later_one_refers_to_post_restart_action",
+          "group": "omitted noun",
+          "partition": "final_held_out",
+          "passed": false,
+          "predicted": "clarify_ambiguous_topic_boundary"
+        },
+        {
+          "case_id": "held-foreground-during-inference",
+          "expected": "unrelated_factual_answer",
+          "group": "foreground question during inference",
+          "partition": "final_held_out",
+          "passed": true,
+          "predicted": "unrelated_factual_answer"
+        },
+        {
+          "case_id": "held-restart-before-reconcile",
+          "expected": "preserve_queue_and_clarify",
+          "group": "restart before reconciliation",
+          "partition": "final_held_out",
+          "passed": false,
+          "predicted": "clarify_ambiguous_topic_boundary"
+        }
+      ],
+      "status": "rejected",
+      "validation": {
+        "accuracy": 1.0,
+        "candidate_id": "candidate-c",
+        "case_count": 3,
+        "passed_count": 3,
+        "rows": [
+          {
+            "case_id": "val-prev-assistant",
+            "expected": "previous_assistant_response",
+            "group": "previous assistant response",
+            "partition": "validation",
+            "passed": true,
+            "predicted": "previous_assistant_response"
+          },
+          {
+            "case_id": "val-negative",
+            "expected": "unrelated_factual_answer",
+            "group": "negative applicability",
+            "partition": "validation",
+            "passed": true,
+            "predicted": "unrelated_factual_answer"
+          },
+          {
+            "case_id": "val-tentative",
+            "expected": "discuss_tentative_without_activation",
+            "group": "tentative future goals",
+            "partition": "validation",
+            "passed": true,
+            "predicted": "discuss_tentative_without_activation"
+          }
+        ]
+      }
+    }
+  }
+}

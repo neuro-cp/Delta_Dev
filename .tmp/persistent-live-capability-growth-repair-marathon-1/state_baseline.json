@@ -1,0 +1,2024 @@
+{
+  "accepted_lessons": [
+    {
+      "applicable_when": [
+        "meaning",
+        "reference",
+        "operator phrasing"
+      ],
+      "authority_effect": "none",
+      "confidence": 0.74,
+      "evidence_refs": [
+        "conversation-turn-82dbf05a31c2ab0f",
+        "conversation-turn-16e814203276e693"
+      ],
+      "lesson_id": "conversation-lesson-1b60aa0ff4848024",
+      "not_applicable_when": [
+        "different term",
+        "unrelated topic",
+        "explicitly new context"
+      ],
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_correction_id": "conversation-correction-4f8287ae5b281e45",
+      "strategy_update": "Check local conversational meaning before assuming a generic interpretation.",
+      "summary": "Operator supplied a local meaning clarification."
+    },
+    {
+      "applicable_when": [
+        "context",
+        "interpretation",
+        "correction"
+      ],
+      "authority_effect": "none",
+      "confidence": 0.74,
+      "evidence_refs": [
+        "conversation-turn-d54400d32fbd3783",
+        "conversation-turn-4b4f779b691734a9"
+      ],
+      "lesson_id": "conversation-lesson-a8e02426f265f0be",
+      "not_applicable_when": [
+        "unrelated case",
+        "operator changes topic",
+        "insufficient similarity"
+      ],
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_correction_id": "conversation-correction-f532b9259a081332",
+      "strategy_update": "Use the latest correction as scoped evidence for related context, not as a universal rule.",
+      "summary": "Prior interpretation did not match operator intent."
+    },
+    {
+      "applicable_when": [
+        "meaning",
+        "reference",
+        "operator phrasing"
+      ],
+      "authority_effect": "none",
+      "confidence": 0.74,
+      "evidence_refs": [
+        "conversation-turn-c00696e36b73c6f0",
+        "conversation-turn-05687c438f7b232a"
+      ],
+      "lesson_id": "conversation-lesson-b9ad3eb51c1686a6",
+      "not_applicable_when": [
+        "different term",
+        "unrelated topic",
+        "explicitly new context"
+      ],
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_correction_id": "conversation-correction-edb943c2cb44d476",
+      "strategy_update": "Check local conversational meaning before assuming a generic interpretation.",
+      "summary": "Operator supplied a local meaning clarification."
+    },
+    {
+      "applicable_when": [
+        "meaning",
+        "reference",
+        "operator phrasing"
+      ],
+      "authority_effect": "none",
+      "confidence": 0.74,
+      "evidence_refs": [
+        "conversation-turn-bae082769174cc43",
+        "conversation-turn-6f9efb00c34ccb56"
+      ],
+      "lesson_id": "conversation-lesson-389e4e562ad58041",
+      "not_applicable_when": [
+        "different term",
+        "unrelated topic",
+        "explicitly new context"
+      ],
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_correction_id": "conversation-correction-b78b0c229553cde0",
+      "strategy_update": "Check local conversational meaning before assuming a generic interpretation.",
+      "summary": "Operator supplied a local meaning clarification."
+    },
+    {
+      "applicable_when": [
+        "meaning",
+        "reference",
+        "operator phrasing"
+      ],
+      "authority_effect": "none",
+      "confidence": 0.74,
+      "evidence_refs": [
+        "conversation-turn-a8b3f7d1c2f39278",
+        "conversation-turn-54385320b2260d5d"
+      ],
+      "lesson_id": "conversation-lesson-c112e91c364826ab",
+      "not_applicable_when": [
+        "different term",
+        "unrelated topic",
+        "explicitly new context"
+      ],
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_correction_id": "conversation-correction-b7d5aab55767e6b2",
+      "strategy_update": "Check local conversational meaning before assuming a generic interpretation.",
+      "summary": "Operator supplied a local meaning clarification."
+    },
+    {
+      "applicable_when": [
+        "meaning",
+        "reference",
+        "operator phrasing"
+      ],
+      "authority_effect": "none",
+      "confidence": 0.74,
+      "evidence_refs": [
+        "conversation-turn-adae536dfcb581ef",
+        "conversation-turn-efca9ee0e1cbde76"
+      ],
+      "lesson_id": "conversation-lesson-9055dd91529d8cfe",
+      "not_applicable_when": [
+        "different term",
+        "unrelated topic",
+        "explicitly new context"
+      ],
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_correction_id": "conversation-correction-da6b4b04722703a0",
+      "strategy_update": "Check local conversational meaning before assuming a generic interpretation.",
+      "summary": "Operator supplied a local meaning clarification."
+    },
+    {
+      "applicable_when": [
+        "meaning",
+        "reference",
+        "operator phrasing"
+      ],
+      "authority_effect": "none",
+      "confidence": 0.74,
+      "evidence_refs": [
+        "conversation-turn-50fef5d427b87fe5",
+        "conversation-turn-67bf0729f04ad219"
+      ],
+      "lesson_id": "conversation-lesson-b6fcd00463a13596",
+      "not_applicable_when": [
+        "different term",
+        "unrelated topic",
+        "explicitly new context"
+      ],
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_correction_id": "conversation-correction-0c4f9f4e4c811abd",
+      "strategy_update": "Check local conversational meaning before assuming a generic interpretation.",
+      "summary": "Operator supplied a local meaning clarification."
+    },
+    {
+      "applicable_when": [
+        "context",
+        "interpretation",
+        "correction"
+      ],
+      "authority_effect": "none",
+      "confidence": 0.74,
+      "evidence_refs": [
+        "conversation-turn-1cdf02e29c3e8231",
+        "conversation-turn-4fe36e148ea64e23"
+      ],
+      "lesson_id": "conversation-lesson-13a2c3de8b2bd3e2",
+      "not_applicable_when": [
+        "unrelated case",
+        "operator changes topic",
+        "insufficient similarity"
+      ],
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_correction_id": "conversation-correction-1b9f248db94d443f",
+      "strategy_update": "Use the latest correction as scoped evidence for related context, not as a universal rule.",
+      "summary": "Prior interpretation did not match operator intent."
+    },
+    {
+      "applicable_when": [
+        "meaning",
+        "reference",
+        "operator phrasing"
+      ],
+      "authority_effect": "none",
+      "confidence": 0.74,
+      "evidence_refs": [
+        "conversation-turn-f55c587fcfac7b2b",
+        "conversation-turn-9f26a94e479689d2"
+      ],
+      "lesson_id": "conversation-lesson-a9b76650c883a025",
+      "not_applicable_when": [
+        "different term",
+        "unrelated topic",
+        "explicitly new context"
+      ],
+      "objective_id": "conversational-objective-2bc0897cbe2bd850",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_correction_id": "conversation-correction-ef3e516e3f9c3eb8",
+      "strategy_update": "Check local conversational meaning before assuming a generic interpretation.",
+      "summary": "Operator supplied a local meaning clarification."
+    },
+    {
+      "applicable_when": [
+        "meaning",
+        "reference",
+        "operator phrasing"
+      ],
+      "authority_effect": "none",
+      "confidence": 0.74,
+      "evidence_refs": [
+        "conversation-turn-fc42fccf7fdd48a6",
+        "conversation-turn-c7ff35d2959dfdba"
+      ],
+      "lesson_id": "conversation-lesson-f04b43b66d15eaa5",
+      "not_applicable_when": [
+        "different term",
+        "unrelated topic",
+        "explicitly new context"
+      ],
+      "objective_id": "conversational-objective-2bc0897cbe2bd850",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_correction_id": "conversation-correction-bb2b588d0b4f7b0f",
+      "strategy_update": "Check local conversational meaning before assuming a generic interpretation.",
+      "summary": "Operator supplied a local meaning clarification."
+    }
+  ],
+  "active_episode_path": "G:\\Delta_Dev\\data\\runtime\\conversational_runtime_operation\\active_episode_conversational-objective-3aa01b063e992f0e.json",
+  "active_objective": {
+    "allowed_actions": [
+      "interpret operator wording",
+      "register bounded conversational objective",
+      "run bounded local cognitive cycles",
+      "read approved local runtime state",
+      "update working memory",
+      "record conversation episodes",
+      "attach natural corrections",
+      "consolidate scoped non-authoritative lessons",
+      "select bounded next focus"
+    ],
+    "authority_boundary": "standing authority covers routine local cognition only; material actions require explicit operator approval",
+    "completion_or_review_condition": "review after at least one correction, one transfer case, one false-transfer guard, and restart restoration",
+    "correction_learning_policy": "attach corrections to exact turns; consolidate only scoped non-authoritative lessons",
+    "cycle_budget": 16,
+    "interpreted_objective": "Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+    "interruption_policy": "foreground chat preempts background objective work",
+    "lifecycle_state": "active",
+    "local_evidence_sources": [
+      "conversation turns",
+      "operator corrections",
+      "active cognitive episode state",
+      "continuity lessons"
+    ],
+    "model_call_budget": 12,
+    "objective_id": "conversational-objective-3aa01b063e992f0e",
+    "operator_wording": "Your goal today may also include noticing when I introduce a new possible goal, but do not replace the active one yet.",
+    "persistence_scope": "session",
+    "practical_success_indicators": [
+      "operator corrections attach to exact turns",
+      "strategy revisions reduce repeated misunderstanding",
+      "later related cases use the scoped lesson",
+      "unrelated cases do not receive false transfer",
+      "ordinary chat remains responsive"
+    ],
+    "prohibited_actions": [
+      "tracked source mutation",
+      "file deletion",
+      "package installation",
+      "network or external provider use",
+      "deployment",
+      "commit or push",
+      "protected path mutation",
+      "credential access",
+      "authority escalation"
+    ],
+    "provenance": {
+      "compiler": "conversational_runtime_operation",
+      "intent": {
+        "authority_required": [],
+        "confidence": 0.84,
+        "intent_type": "persistent_or_session_goal",
+        "matched_signals": [
+          "explicit_goal_language",
+          "scope_or_duration"
+        ],
+        "persistence_scope": "session",
+        "risk_class": "safe_internal",
+        "schema_version": "conversational_runtime_operation_marathon_1_v1",
+        "target_turn_id": ""
+      },
+      "source": "ordinary_chat"
+    },
+    "schema_version": "conversational_runtime_operation_marathon_1_v1"
+  },
+  "archived_objectives": [
+    {
+      "active_episode_path": "G:\\Delta_Dev\\data\\runtime\\conversational_runtime_operation\\active_episode.json",
+      "archive_id": "archived-conversational-objective-88e6c6e169012a24",
+      "archived_at": "2026-07-27T22:32:53+00:00",
+      "authority": {
+        "allowed_actions": [
+          "interpret operator wording",
+          "register bounded conversational objective",
+          "run bounded local cognitive cycles",
+          "read approved local runtime state",
+          "update working memory",
+          "record conversation episodes",
+          "attach natural corrections",
+          "consolidate scoped non-authoritative lessons",
+          "select bounded next focus"
+        ],
+        "authority_effect": "routine_internal_only",
+        "authority_id": "standing-authority-0c92ca694b87fc8b",
+        "expires_condition": "session ends, operator revokes goal, scope changes materially, budget exhausts, or material authority is required",
+        "objective_id": "conversational-objective-87750957e30db8cd",
+        "prohibited_actions": [
+          "tracked source mutation",
+          "file deletion",
+          "package installation",
+          "network or external provider use",
+          "deployment",
+          "commit or push",
+          "protected path mutation",
+          "credential access",
+          "authority escalation"
+        ],
+        "revoked": false,
+        "schema_version": "conversational_runtime_operation_marathon_1_v1"
+      },
+      "completed_cycle_keys": [
+        "conversational-cycle-66e039ed37f9fddc",
+        "conversational-cycle-d80c34ca8a0a6aba",
+        "conversational-cycle-f0f7779e76f888b4",
+        "conversational-cycle-9b0652c1b7e973ed",
+        "conversational-cycle-fa6400e88b5e5951",
+        "conversational-cycle-25667333faf16ee3",
+        "conversational-cycle-5d38f827bac3001d",
+        "conversational-cycle-b8c110f71ad0189c",
+        "conversational-cycle-dc1e49bc40d47559",
+        "conversational-cycle-d82cf33df92b1a49",
+        "conversational-cycle-50386d90189d482f",
+        "conversational-cycle-8986fcc1f01abded",
+        "conversational-cycle-6a0cd3fd495e3c84",
+        "conversational-cycle-65470e0152ad499f",
+        "conversational-cycle-f2bf96be4a38b5c6",
+        "conversational-cycle-ad66f380dc401702"
+      ],
+      "goal_reviews": [],
+      "lifecycle_state": "paused_budget",
+      "local_semantic_insufficiencies": [],
+      "objective": {
+        "allowed_actions": [
+          "interpret operator wording",
+          "register bounded conversational objective",
+          "run bounded local cognitive cycles",
+          "read approved local runtime state",
+          "update working memory",
+          "record conversation episodes",
+          "attach natural corrections",
+          "consolidate scoped non-authoritative lessons",
+          "select bounded next focus"
+        ],
+        "authority_boundary": "standing authority covers routine local cognition only; material actions require explicit operator approval",
+        "completion_or_review_condition": "review after at least one correction, one transfer case, one false-transfer guard, and restart restoration",
+        "correction_learning_policy": "attach corrections to exact turns; consolidate only scoped non-authoritative lessons",
+        "cycle_budget": 16,
+        "interpreted_objective": "Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+        "interruption_policy": "foreground chat preempts background objective work",
+        "lifecycle_state": "active",
+        "local_evidence_sources": [
+          "conversation turns",
+          "operator corrections",
+          "active cognitive episode state",
+          "continuity lessons"
+        ],
+        "model_call_budget": 12,
+        "objective_id": "conversational-objective-87750957e30db8cd",
+        "operator_wording": "Your goal today is to keep working on semantic_reconciliation_of_queued_and_implied_references. Improve how you handle queued messages, implied references, topic switches, corrections, and false-transfer guards. Use local cognition and local evidence first, compare candidate strategies with held-out cases, and stop at the implementation boundary before source changes.",
+        "persistence_scope": "session",
+        "practical_success_indicators": [
+          "operator corrections attach to exact turns",
+          "strategy revisions reduce repeated misunderstanding",
+          "later related cases use the scoped lesson",
+          "unrelated cases do not receive false transfer",
+          "ordinary chat remains responsive"
+        ],
+        "prohibited_actions": [
+          "tracked source mutation",
+          "file deletion",
+          "package installation",
+          "network or external provider use",
+          "deployment",
+          "commit or push",
+          "protected path mutation",
+          "credential access",
+          "authority escalation"
+        ],
+        "provenance": {
+          "compiler": "conversational_runtime_operation",
+          "intent": {
+            "authority_required": [],
+            "confidence": 0.84,
+            "intent_type": "persistent_or_session_goal",
+            "matched_signals": [
+              "explicit_goal_language",
+              "learning_or_improvement_target",
+              "scope_or_duration"
+            ],
+            "persistence_scope": "session",
+            "risk_class": "safe_internal",
+            "schema_version": "conversational_runtime_operation_marathon_1_v1",
+            "target_turn_id": ""
+          },
+          "source": "ordinary_chat"
+        },
+        "schema_version": "conversational_runtime_operation_marathon_1_v1"
+      },
+      "objective_id": "conversational-objective-87750957e30db8cd",
+      "pending_chat_requests": [],
+      "provider_authorities": [],
+      "resolved_chat_requests": [],
+      "turn_relation_decisions": []
+    },
+    {
+      "active_episode_path": "G:\\Delta_Dev\\data\\runtime\\conversational_runtime_operation\\active_episode_conversational-objective-ba7c723b51606ed6.json",
+      "archive_id": "archived-conversational-objective-3eb436e12e8b44bd",
+      "archived_at": "2026-07-27T23:10:53+00:00",
+      "authority": {
+        "allowed_actions": [
+          "interpret operator wording",
+          "register bounded conversational objective",
+          "run bounded local cognitive cycles",
+          "read approved local runtime state",
+          "update working memory",
+          "record conversation episodes",
+          "attach natural corrections",
+          "consolidate scoped non-authoritative lessons",
+          "select bounded next focus"
+        ],
+        "authority_effect": "routine_internal_only",
+        "authority_id": "standing-authority-c8b3836a9106e141",
+        "expires_condition": "session ends, operator revokes goal, scope changes materially, budget exhausts, or material authority is required",
+        "objective_id": "conversational-objective-ba7c723b51606ed6",
+        "prohibited_actions": [
+          "tracked source mutation",
+          "file deletion",
+          "package installation",
+          "network or external provider use",
+          "deployment",
+          "commit or push",
+          "protected path mutation",
+          "credential access",
+          "authority escalation"
+        ],
+        "revoked": false,
+        "schema_version": "conversational_runtime_operation_marathon_1_v1"
+      },
+      "completed_cycle_keys": [
+        "conversational-cycle-f1b31cbd40f4d27a"
+      ],
+      "goal_reviews": [],
+      "lifecycle_state": "running",
+      "local_semantic_insufficiencies": [],
+      "objective": {
+        "allowed_actions": [
+          "interpret operator wording",
+          "register bounded conversational objective",
+          "run bounded local cognitive cycles",
+          "read approved local runtime state",
+          "update working memory",
+          "record conversation episodes",
+          "attach natural corrections",
+          "consolidate scoped non-authoritative lessons",
+          "select bounded next focus"
+        ],
+        "authority_boundary": "standing authority covers routine local cognition only; material actions require explicit operator approval",
+        "completion_or_review_condition": "review after at least one correction, one transfer case, one false-transfer guard, and restart restoration",
+        "correction_learning_policy": "attach corrections to exact turns; consolidate only scoped non-authoritative lessons",
+        "cycle_budget": 16,
+        "interpreted_objective": "Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+        "interruption_policy": "foreground chat preempts background objective work",
+        "lifecycle_state": "active",
+        "local_evidence_sources": [
+          "conversation turns",
+          "operator corrections",
+          "active cognitive episode state",
+          "continuity lessons"
+        ],
+        "model_call_budget": 12,
+        "objective_id": "conversational-objective-ba7c723b51606ed6",
+        "operator_wording": "Your goal today is to work on queued implied references, topic switches, corrections, and false-transfer guards so we can communicate better. Use local cognition first and stop at implementation review before source changes.",
+        "persistence_scope": "session",
+        "practical_success_indicators": [
+          "operator corrections attach to exact turns",
+          "strategy revisions reduce repeated misunderstanding",
+          "later related cases use the scoped lesson",
+          "unrelated cases do not receive false transfer",
+          "ordinary chat remains responsive"
+        ],
+        "prohibited_actions": [
+          "tracked source mutation",
+          "file deletion",
+          "package installation",
+          "network or external provider use",
+          "deployment",
+          "commit or push",
+          "protected path mutation",
+          "credential access",
+          "authority escalation"
+        ],
+        "provenance": {
+          "compiler": "conversational_runtime_operation",
+          "intent": {
+            "authority_required": [],
+            "confidence": 0.84,
+            "intent_type": "persistent_or_session_goal",
+            "matched_signals": [
+              "explicit_goal_language",
+              "learning_or_improvement_target",
+              "scope_or_duration"
+            ],
+            "persistence_scope": "session",
+            "risk_class": "safe_internal",
+            "schema_version": "conversational_runtime_operation_marathon_1_v1",
+            "target_turn_id": ""
+          },
+          "source": "ordinary_chat"
+        },
+        "schema_version": "conversational_runtime_operation_marathon_1_v1"
+      },
+      "objective_id": "conversational-objective-ba7c723b51606ed6",
+      "pending_chat_requests": [],
+      "provider_authorities": [],
+      "resolved_chat_requests": [],
+      "turn_relation_decisions": []
+    },
+    {
+      "active_episode_path": "G:\\Delta_Dev\\data\\runtime\\conversational_runtime_operation\\active_episode_conversational-objective-2bc0897cbe2bd850.json",
+      "archive_id": "archived-conversational-objective-d250872ca890ace8",
+      "archived_at": "2026-07-27T23:11:33+00:00",
+      "authority": {
+        "allowed_actions": [
+          "interpret operator wording",
+          "register bounded conversational objective",
+          "run bounded local cognitive cycles",
+          "read approved local runtime state",
+          "update working memory",
+          "record conversation episodes",
+          "attach natural corrections",
+          "consolidate scoped non-authoritative lessons",
+          "select bounded next focus"
+        ],
+        "authority_effect": "routine_internal_only",
+        "authority_id": "standing-authority-627e91b8e2730859",
+        "expires_condition": "session ends, operator revokes goal, scope changes materially, budget exhausts, or material authority is required",
+        "objective_id": "conversational-objective-2bc0897cbe2bd850",
+        "prohibited_actions": [
+          "tracked source mutation",
+          "file deletion",
+          "package installation",
+          "network or external provider use",
+          "deployment",
+          "commit or push",
+          "protected path mutation",
+          "credential access",
+          "authority escalation"
+        ],
+        "revoked": false,
+        "schema_version": "conversational_runtime_operation_marathon_1_v1"
+      },
+      "completed_cycle_keys": [
+        "conversational-cycle-5a5adc489605a779"
+      ],
+      "goal_reviews": [],
+      "lifecycle_state": "running",
+      "local_semantic_insufficiencies": [],
+      "objective": {
+        "allowed_actions": [
+          "interpret operator wording",
+          "register bounded conversational objective",
+          "run bounded local cognitive cycles",
+          "read approved local runtime state",
+          "update working memory",
+          "record conversation episodes",
+          "attach natural corrections",
+          "consolidate scoped non-authoritative lessons",
+          "select bounded next focus"
+        ],
+        "authority_boundary": "standing authority covers routine local cognition only; material actions require explicit operator approval",
+        "completion_or_review_condition": "review after at least one correction, one transfer case, one false-transfer guard, and restart restoration",
+        "correction_learning_policy": "attach corrections to exact turns; consolidate only scoped non-authoritative lessons",
+        "cycle_budget": 16,
+        "interpreted_objective": "Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+        "interruption_policy": "foreground chat preempts background objective work",
+        "lifecycle_state": "active",
+        "local_evidence_sources": [
+          "conversation turns",
+          "operator corrections",
+          "active cognitive episode state",
+          "continuity lessons"
+        ],
+        "model_call_budget": 12,
+        "objective_id": "conversational-objective-2bc0897cbe2bd850",
+        "operator_wording": "Your goal today is to improve semantic reconciliation of queued and implied references. Work on how you interpret queued messages, implied references, topic switches, corrections, and false-transfer guards. Use local cognition and local evidence first. Compare multiple candidate strategies with held-out cases. Stop at implementation review before changing source.",
+        "persistence_scope": "session",
+        "practical_success_indicators": [
+          "operator corrections attach to exact turns",
+          "strategy revisions reduce repeated misunderstanding",
+          "later related cases use the scoped lesson",
+          "unrelated cases do not receive false transfer",
+          "ordinary chat remains responsive"
+        ],
+        "prohibited_actions": [
+          "tracked source mutation",
+          "file deletion",
+          "package installation",
+          "network or external provider use",
+          "deployment",
+          "commit or push",
+          "protected path mutation",
+          "credential access",
+          "authority escalation"
+        ],
+        "provenance": {
+          "compiler": "conversational_runtime_operation",
+          "intent": {
+            "authority_required": [],
+            "confidence": 0.84,
+            "intent_type": "persistent_or_session_goal",
+            "matched_signals": [
+              "explicit_goal_language",
+              "learning_or_improvement_target",
+              "scope_or_duration"
+            ],
+            "persistence_scope": "session",
+            "risk_class": "safe_internal",
+            "schema_version": "conversational_runtime_operation_marathon_1_v1",
+            "target_turn_id": ""
+          },
+          "source": "ordinary_chat"
+        },
+        "schema_version": "conversational_runtime_operation_marathon_1_v1"
+      },
+      "objective_id": "conversational-objective-2bc0897cbe2bd850",
+      "pending_chat_requests": [],
+      "provider_authorities": [],
+      "resolved_chat_requests": [],
+      "turn_relation_decisions": [
+        {
+          "active_goal_id": "conversational-objective-2bc0897cbe2bd850",
+          "confidence": 0.7,
+          "evidence": [
+            "default_foreground_chat"
+          ],
+          "foreground_topic": "foreground_question",
+          "lesson_ids_applied": [],
+          "lesson_ids_considered": [],
+          "lesson_ids_rejected": [],
+          "negative_instruction_tokens": [],
+          "rejection_reason": "",
+          "relation_class": "unrelated_foreground_topic",
+          "routing_decision": "foreground_answer",
+          "schema_version": "conversational_runtime_operation_marathon_1_v1",
+          "side_thread_request_id": "",
+          "turn_id": "conversation-turn-5f8d723d0dce66a9"
+        }
+      ]
+    }
+  ],
+  "authority": {
+    "allowed_actions": [
+      "interpret operator wording",
+      "register bounded conversational objective",
+      "run bounded local cognitive cycles",
+      "read approved local runtime state",
+      "update working memory",
+      "record conversation episodes",
+      "attach natural corrections",
+      "consolidate scoped non-authoritative lessons",
+      "select bounded next focus"
+    ],
+    "authority_effect": "routine_internal_only",
+    "authority_id": "standing-authority-f3606efefce6200e",
+    "expires_condition": "session ends, operator revokes goal, scope changes materially, budget exhausts, or material authority is required",
+    "objective_id": "conversational-objective-3aa01b063e992f0e",
+    "prohibited_actions": [
+      "tracked source mutation",
+      "file deletion",
+      "package installation",
+      "network or external provider use",
+      "deployment",
+      "commit or push",
+      "protected path mutation",
+      "credential access",
+      "authority escalation"
+    ],
+    "revoked": false,
+    "schema_version": "conversational_runtime_operation_marathon_1_v1"
+  },
+  "completed_cycle_keys": [],
+  "conversation": [
+    {
+      "created_at": "2026-07-27T16:28:19+00:00",
+      "intent_type": "authority_changing_or_risky_instruction",
+      "objective_id": "",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Your goal today is to improve how well you understand my informal English, implied meaning, and references across conversation so we can communicate more effectively. Focus on the gap semantic_reconciliation_of_queued_and_implied_references. You may discover weaknesses, use local cognition, design sandbox approaches, evaluate them, and prepare a readable implementation proposal, but do not edit tracked source. Ask in chat before any external provider call.",
+      "turn_id": "conversation-turn-f7320c86ee20fca8"
+    },
+    {
+      "created_at": "2026-07-27T16:28:36+00:00",
+      "intent_type": "persistent_or_session_goal",
+      "objective_id": "",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Your goal today is to understand my language better so we can communicate more effectively. Focus especially on implied references, queued messages, informal phrasing, corrections, and context across turns.",
+      "turn_id": "conversation-turn-b4c7c75220291674"
+    },
+    {
+      "created_at": "2026-07-27T16:28:36+00:00",
+      "intent_type": "objective_confirmation",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "I registered that as a bounded session goal: improve my operator-specific English comprehension through this conversation. I can run routine local cognition and learn from corrections under standing bounded authority; source changes, network use, installs, deletion, commits, pushes, and protected paths still need explicit approval.",
+      "turn_id": "conversation-turn-16e814203276e693"
+    },
+    {
+      "created_at": "2026-07-27T16:28:50+00:00",
+      "intent_type": "direct_correction",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "while you are thinking, when I say the thing before I usually mean the nearest unresolved point in my own messages",
+      "turn_id": "conversation-turn-82dbf05a31c2ab0f"
+    },
+    {
+      "created_at": "2026-07-27T16:28:50+00:00",
+      "intent_type": "correction_acknowledgement",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Got it. I attached that correction to the active comprehension objective and revised the strategy for related later turns without making it a global rule.",
+      "turn_id": "conversation-turn-4b4f779b691734a9"
+    },
+    {
+      "created_at": "2026-07-27T16:28:53+00:00",
+      "intent_type": "direct_correction",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "No, if I say that thing from before, do not jump to the oldest topic. Prefer the nearest unresolved user message unless I specify otherwise.",
+      "turn_id": "conversation-turn-d54400d32fbd3783"
+    },
+    {
+      "created_at": "2026-07-27T16:28:53+00:00",
+      "intent_type": "correction_acknowledgement",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Got it. I attached that correction to the active comprehension objective and revised the strategy for related later turns without making it a global rule.",
+      "turn_id": "conversation-turn-05687c438f7b232a"
+    },
+    {
+      "created_at": "2026-07-27T16:28:55+00:00",
+      "intent_type": "goal_or_priority_queued",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Your goal today is also to notice topic switches, but keep the language-understanding goal active.",
+      "turn_id": "conversation-turn-9477794dcdd9c7d9"
+    },
+    {
+      "created_at": "2026-07-27T16:30:07+00:00",
+      "intent_type": "direct_correction",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Related check: when I say explain the thing before, what should you connect it to?",
+      "turn_id": "conversation-turn-c00696e36b73c6f0"
+    },
+    {
+      "created_at": "2026-07-27T16:30:07+00:00",
+      "intent_type": "correction_acknowledgement",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Got it. I attached that correction to the active comprehension objective and revised the strategy for related later turns without making it a global rule.",
+      "turn_id": "conversation-turn-2fccab91efd3c1ed"
+    },
+    {
+      "created_at": "2026-07-27T16:30:10+00:00",
+      "intent_type": "ordinary_conversation_queued",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Another related check: same idea, but I am switching topics now; what changes?",
+      "turn_id": "conversation-turn-c425513f26ad8dac"
+    },
+    {
+      "created_at": "2026-07-27T16:30:12+00:00",
+      "intent_type": "ordinary_conversation_queued",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Unrelated control: what is angular momentum?",
+      "turn_id": "conversation-turn-ca8c3734d40caf6e"
+    },
+    {
+      "created_at": "2026-07-27T16:30:14+00:00",
+      "intent_type": "ordinary_conversation_queued",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Unrelated control: what is Euclidean geometry?",
+      "turn_id": "conversation-turn-d73cd88dcb761e00"
+    },
+    {
+      "created_at": "2026-07-27T16:30:53+00:00",
+      "intent_type": "ordinary_conversation_queued",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Regarding the language understanding goal, I approve one bounded OpenAI API learning packet using only synthetic examples and sanitized summaries, capped at three calls and one dollar, if you need it for advisory evidence.",
+      "turn_id": "conversation-turn-d59673e0010fb717"
+    },
+    {
+      "created_at": "2026-07-27T16:47:32+00:00",
+      "intent_type": "persistent_or_session_goal",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Your goal today is to understand my language better so we can communicate more effectively. Focus especially on implied references, queued messages, informal phrasing, corrections, and context across turns.",
+      "turn_id": "conversation-turn-a31895c0f14e83c0"
+    },
+    {
+      "created_at": "2026-07-27T16:47:32+00:00",
+      "intent_type": "objective_confirmation",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "I registered that as a bounded session goal: improve my operator-specific English comprehension through this conversation. I can run routine local cognition and learn from corrections under standing bounded authority; source changes, network use, installs, deletion, commits, pushes, and protected paths still need explicit approval.",
+      "turn_id": "conversation-turn-6f9efb00c34ccb56"
+    },
+    {
+      "created_at": "2026-07-27T16:49:41+00:00",
+      "intent_type": "direct_correction",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "while you are thinking, when I say the thing before, I usually mean the previous user message, not your last reply.",
+      "turn_id": "conversation-turn-bae082769174cc43"
+    },
+    {
+      "created_at": "2026-07-27T16:49:41+00:00",
+      "intent_type": "correction_acknowledgement",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Got it. I attached that correction to the active comprehension objective and revised the strategy for related later turns without making it a global rule.",
+      "turn_id": "conversation-turn-54385320b2260d5d"
+    },
+    {
+      "created_at": "2026-07-27T16:49:43+00:00",
+      "intent_type": "direct_correction",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "No, if I say that thing from before after switching topics, check whether I mean the last user-mentioned object before assuming the current topic.",
+      "turn_id": "conversation-turn-a8b3f7d1c2f39278"
+    },
+    {
+      "created_at": "2026-07-27T16:49:43+00:00",
+      "intent_type": "correction_acknowledgement",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Got it. I attached that correction to the active comprehension objective and revised the strategy for related later turns without making it a global rule.",
+      "turn_id": "conversation-turn-5b69f94dd7a7b203"
+    },
+    {
+      "created_at": "2026-07-27T16:49:44+00:00",
+      "intent_type": "provider_learning_packet_requested",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Please request a provider learning packet for implied references and queued messages.",
+      "turn_id": "conversation-turn-4d6f566b8664aa8a"
+    },
+    {
+      "created_at": "2026-07-27T16:49:44+00:00",
+      "intent_type": "side_thread_provider_request",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "[Goal update \u00b7 Language understanding]\nI found that queued implied-reference turns need outside examples before I can compare approaches. I recommend up to three OpenAI API calls, capped at $1, using synthetic examples and sanitized summaries only. Approve?",
+      "turn_id": "conversation-turn-4add9fb236fe8e63"
+    },
+    {
+      "created_at": "2026-07-27T16:50:15+00:00",
+      "intent_type": "chat_request_resolution",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Approve, but do not send my actual messages. Use only one call.",
+      "turn_id": "conversation-turn-2fca436504afe586"
+    },
+    {
+      "created_at": "2026-07-27T16:50:15+00:00",
+      "intent_type": "chat_request_resolution_ack",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Approved. I recorded one bounded provider authority envelope for that goal thread. I still will not make a provider call until the provider step consumes this exact approval.",
+      "turn_id": "conversation-turn-efca9ee0e1cbde76"
+    },
+    {
+      "created_at": "2026-07-27T16:51:17+00:00",
+      "intent_type": "direct_correction",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Related check: when I say that thing from before now, what should you inspect before answering?",
+      "turn_id": "conversation-turn-adae536dfcb581ef"
+    },
+    {
+      "created_at": "2026-07-27T16:51:17+00:00",
+      "intent_type": "correction_acknowledgement",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Got it. I attached that correction to the active comprehension objective and revised the strategy for related later turns without making it a global rule.",
+      "turn_id": "conversation-turn-2f6c50e242526109"
+    },
+    {
+      "created_at": "2026-07-27T16:51:18+00:00",
+      "intent_type": "ordinary_conversation",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Unrelated check: what is angular momentum? Do not use my reference correction unless it actually matters.",
+      "turn_id": "conversation-turn-cc84084b0c8ac102"
+    },
+    {
+      "created_at": "2026-07-27T16:51:18+00:00",
+      "intent_type": "ordinary_response",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "I will interpret that in the current conversational context first, then ask only if the ambiguity would change the answer.",
+      "turn_id": "conversation-turn-09c5417ddf986450"
+    },
+    {
+      "created_at": "2026-07-27T17:24:24+00:00",
+      "intent_type": "ordinary_conversation",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "What color is the sky?",
+      "turn_id": "conversation-turn-98ff51caebad5157"
+    },
+    {
+      "created_at": "2026-07-27T17:24:24+00:00",
+      "intent_type": "ordinary_response",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "I understand. I will treat this as ordinary conversation unless you make it a goal, correction, or authority-changing request.",
+      "turn_id": "conversation-turn-a3bc7eb6aa1c4b96"
+    },
+    {
+      "created_at": "2026-07-27T17:24:41+00:00",
+      "intent_type": "ordinary_conversation",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "What is angular momentum? Do not use my reference correction unless it actually matters.",
+      "turn_id": "conversation-turn-ee8ab0d0d42d36dd"
+    },
+    {
+      "created_at": "2026-07-27T17:24:41+00:00",
+      "intent_type": "ordinary_response",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Angular momentum is the rotational counterpart of linear momentum. It depends on how much mass is rotating, how far it is from the axis, and how fast it is rotating.",
+      "turn_id": "conversation-turn-89f78bf2daa1e617"
+    },
+    {
+      "created_at": "2026-07-27T17:24:43+00:00",
+      "intent_type": "ordinary_conversation",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "What is Euclidean geometry?",
+      "turn_id": "conversation-turn-7dc92d216f659045"
+    },
+    {
+      "created_at": "2026-07-27T17:24:43+00:00",
+      "intent_type": "ordinary_response",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Euclidean geometry is the geometry of flat space: points, lines, angles, triangles, circles, and shapes measured with Euclid's familiar rules.",
+      "turn_id": "conversation-turn-67bf0729f04ad219"
+    },
+    {
+      "created_at": "2026-07-27T17:24:44+00:00",
+      "intent_type": "direct_correction",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "while you are thinking, when I say that thing from before, I usually mean the previous user message unless I switched topics.",
+      "turn_id": "conversation-turn-50fef5d427b87fe5"
+    },
+    {
+      "created_at": "2026-07-27T17:24:44+00:00",
+      "intent_type": "correction_acknowledgement",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Got it. I attached that correction to the active comprehension objective and revised the strategy for related later turns without making it a global rule.",
+      "turn_id": "conversation-turn-4fe36e148ea64e23"
+    },
+    {
+      "created_at": "2026-07-27T17:24:46+00:00",
+      "intent_type": "direct_correction",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "No, if I say that thing from before after switching topics, inspect the last user-mentioned object first.",
+      "turn_id": "conversation-turn-1cdf02e29c3e8231"
+    },
+    {
+      "created_at": "2026-07-27T17:24:46+00:00",
+      "intent_type": "correction_acknowledgement",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Got it. I attached that correction to the active comprehension objective and revised the strategy for related later turns without making it a global rule.",
+      "turn_id": "conversation-turn-182fd6a41ad44355"
+    },
+    {
+      "created_at": "2026-07-27T17:26:39+00:00",
+      "intent_type": "provider_learning_packet_requested_without_local_insufficiency",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Please request a provider learning packet for implied references and queued messages.",
+      "turn_id": "conversation-turn-5db3a432cfe42469"
+    },
+    {
+      "created_at": "2026-07-27T17:26:39+00:00",
+      "intent_type": "local_first_escalation_required",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "[Goal update \u00b7 Language understanding]\nI cannot ask for an external learning packet yet. I need to test local Qwen and existing local evidence first, then record an exact semantic insufficiency if that local evidence is not enough.",
+      "turn_id": "conversation-turn-8e654e2ef52d0051"
+    },
+    {
+      "created_at": "2026-07-27T17:28:30+00:00",
+      "intent_type": "goal_review",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "[Goal review \u00b7 Language understanding]\n\nI completed:\nI reached an implementation-review boundary for the active language-comprehension goal.\n\nI learned:\n- foreground messages must be routed separately from background goal work\n- 8 scoped correction-derived lesson(s) are available\n\nI retained:\n- Operator supplied a local meaning clarification.\n- Operator supplied a local meaning clarification.\n- Prior interpretation did not match operator intent.\n\nI rejected:\n- foreground_topic_is_unrelated_to_active_goal\n- foreground_topic_is_unrelated_to_active_goal\n\nStill unresolved:\n- implementation review is required before source-level semantic capability changes\n- provider authority exists but has not been consumed\n\nProvider use:\nauthority recorded for openai with max_calls=1, spent=$0, consumed_calls=0\n\nNext recommended step:\nReview the proposed foreground-isolation and local-first repair before any broader semantic capability implementation.",
+      "turn_id": "conversation-turn-44fd222d60e9381c"
+    },
+    {
+      "created_at": "2026-07-27T22:07:49+00:00",
+      "intent_type": "ordinary_conversation",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "What is angular momentum? Do not use my reference correction unless it actually matters.",
+      "turn_id": "conversation-turn-b43d094fa2f3d29f"
+    },
+    {
+      "created_at": "2026-07-27T22:07:49+00:00",
+      "intent_type": "ordinary_response",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Angular momentum is the rotational counterpart of linear momentum. It depends on how much mass is rotating, how far it is from the axis, and how fast it is rotating.",
+      "turn_id": "conversation-turn-17aebf4d0b5af961"
+    },
+    {
+      "created_at": "2026-07-27T22:07:58+00:00",
+      "intent_type": "ordinary_conversation",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "What is Euclidean geometry?",
+      "turn_id": "conversation-turn-33442ed762f6c0d9"
+    },
+    {
+      "created_at": "2026-07-27T22:07:58+00:00",
+      "intent_type": "ordinary_response",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Euclidean geometry is the geometry of flat space: points, lines, angles, triangles, circles, and shapes measured with Euclid's familiar rules.",
+      "turn_id": "conversation-turn-0435dc0714b0ff72"
+    },
+    {
+      "created_at": "2026-07-27T22:08:06+00:00",
+      "intent_type": "provider_learning_packet_requested_without_local_insufficiency",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Please request a provider learning packet for implied references and queued messages.",
+      "turn_id": "conversation-turn-07b614a642d6e8aa"
+    },
+    {
+      "created_at": "2026-07-27T22:08:06+00:00",
+      "intent_type": "local_first_escalation_required",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "[Goal update \u00b7 Language understanding]\nI cannot ask for an external learning packet yet. I need to test local Qwen and existing local evidence first, then record an exact semantic insufficiency if that local evidence is not enough.",
+      "turn_id": "conversation-turn-c3f232dad8e6324b"
+    },
+    {
+      "created_at": "2026-07-27T22:08:15+00:00",
+      "intent_type": "goal_review",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "[Goal review \u00b7 Language understanding]\n\nI completed:\nI reached an implementation-review boundary for the active language-comprehension goal.\n\nI learned:\n- foreground messages must be routed separately from background goal work\n- 8 scoped correction-derived lesson(s) are available\n\nI retained:\n- Operator supplied a local meaning clarification.\n- Operator supplied a local meaning clarification.\n- Prior interpretation did not match operator intent.\n\nI rejected:\n- foreground_topic_is_unrelated_to_active_goal\n- foreground_topic_is_unrelated_to_active_goal\n- foreground_topic_is_unrelated_to_active_goal\n- foreground_topic_is_unrelated_to_active_goal\n\nStill unresolved:\n- implementation review is required before source-level semantic capability changes\n- provider authority exists but has not been consumed\n\nProvider use:\nauthority recorded for openai with max_calls=1, spent=$0, consumed_calls=0\n\nNext recommended step:\nReview the proposed foreground-isolation and local-first repair before any broader semantic capability implementation.",
+      "turn_id": "conversation-turn-0416e7136622efa9"
+    },
+    {
+      "created_at": "2026-07-27T22:22:24+00:00",
+      "intent_type": "goal_review",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "[Goal review \u00b7 Language understanding]\n\nI completed:\nI reached an implementation-review boundary for the active language-comprehension goal.\n\nI learned:\n- foreground messages must be routed separately from background goal work\n- 8 scoped correction-derived lesson(s) are available\n\nI retained:\n- Operator supplied a local meaning clarification.\n- Operator supplied a local meaning clarification.\n- Prior interpretation did not match operator intent.\n\nI rejected:\n- foreground_topic_is_unrelated_to_active_goal\n- foreground_topic_is_unrelated_to_active_goal\n- foreground_topic_is_unrelated_to_active_goal\n- foreground_topic_is_unrelated_to_active_goal\n\nStill unresolved:\n- implementation review is required before source-level semantic capability changes\n- provider authority exists but has not been consumed\n\nProvider use:\nauthority recorded for openai with max_calls=1, spent=$0, consumed_calls=0\n\nNext recommended step:\nReview the proposed foreground-isolation and local-first repair before any broader semantic capability implementation.",
+      "turn_id": "conversation-turn-dd57ee2ff2977dc3"
+    },
+    {
+      "created_at": "2026-07-27T22:22:37+00:00",
+      "intent_type": "persistent_or_session_goal",
+      "objective_id": "conversational-objective-1892984d921a665c",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Your goal today is to keep working on semantic_reconciliation_of_queued_and_implied_references. Improve how you handle queued messages, implied references, topic switches, corrections, and false-transfer guards. Use local cognition and local evidence first, compare candidate strategies with held-out cases, and stop at the implementation boundary before source changes.",
+      "turn_id": "conversation-turn-89d7df9259db2faf"
+    },
+    {
+      "created_at": "2026-07-27T22:22:37+00:00",
+      "intent_type": "objective_confirmation",
+      "objective_id": "conversational-objective-87750957e30db8cd",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "I registered that as a bounded session goal: improve my operator-specific English comprehension through this conversation. I can run routine local cognition and learn from corrections under standing bounded authority; source changes, network use, installs, deletion, commits, pushes, and protected paths still need explicit approval.",
+      "turn_id": "conversation-turn-92b91a7ce619513b"
+    },
+    {
+      "created_at": "2026-07-27T22:32:53+00:00",
+      "intent_type": "persistent_or_session_goal",
+      "objective_id": "conversational-objective-ba7c723b51606ed6",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Your goal today is to work on queued implied references, topic switches, corrections, and false-transfer guards so we can communicate better. Use local cognition first and stop at implementation review before source changes.",
+      "turn_id": "conversation-turn-8bc043269fa1cd34"
+    },
+    {
+      "created_at": "2026-07-27T22:32:53+00:00",
+      "intent_type": "objective_confirmation",
+      "objective_id": "conversational-objective-ba7c723b51606ed6",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "I registered that as a bounded session goal: improve my operator-specific English comprehension through this conversation. I can run routine local cognition and learn from corrections under standing bounded authority; source changes, network use, installs, deletion, commits, pushes, and protected paths still need explicit approval.",
+      "turn_id": "conversation-turn-761eabc489d8b07a"
+    },
+    {
+      "created_at": "2026-07-27T23:10:53+00:00",
+      "intent_type": "persistent_or_session_goal",
+      "objective_id": "conversational-objective-2bc0897cbe2bd850",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Your goal today is to improve semantic reconciliation of queued and implied references. Work on how you interpret queued messages, implied references, topic switches, corrections, and false-transfer guards. Use local cognition and local evidence first. Compare multiple candidate strategies with held-out cases. Stop at implementation review before changing source.",
+      "turn_id": "conversation-turn-2dfd4c7ea882d25f"
+    },
+    {
+      "created_at": "2026-07-27T23:10:53+00:00",
+      "intent_type": "objective_confirmation",
+      "objective_id": "conversational-objective-2bc0897cbe2bd850",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "I registered that as a bounded session goal: improve my operator-specific English comprehension through this conversation. I can run routine local cognition and learn from corrections under standing bounded authority; source changes, network use, installs, deletion, commits, pushes, and protected paths still need explicit approval.",
+      "turn_id": "conversation-turn-01640acb8c13a3b4"
+    },
+    {
+      "created_at": "2026-07-27T23:11:25+00:00",
+      "intent_type": "ordinary_conversation",
+      "objective_id": "conversational-objective-2bc0897cbe2bd850",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "How are you doing while that runs?",
+      "turn_id": "conversation-turn-5f8d723d0dce66a9"
+    },
+    {
+      "created_at": "2026-07-27T23:11:25+00:00",
+      "intent_type": "ordinary_response",
+      "objective_id": "conversational-objective-2bc0897cbe2bd850",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "I'm here and running. We can chat normally.",
+      "turn_id": "conversation-turn-9f26a94e479689d2"
+    },
+    {
+      "created_at": "2026-07-27T23:11:28+00:00",
+      "intent_type": "direct_correction",
+      "objective_id": "conversational-objective-2bc0897cbe2bd850",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "When I say that thing from before, check the nearest unresolved user message before answering.",
+      "turn_id": "conversation-turn-f55c587fcfac7b2b"
+    },
+    {
+      "created_at": "2026-07-27T23:11:28+00:00",
+      "intent_type": "correction_acknowledgement",
+      "objective_id": "conversational-objective-2bc0897cbe2bd850",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Got it. I attached that correction to the active comprehension objective and revised the strategy for related later turns without making it a global rule.",
+      "turn_id": "conversation-turn-c7ff35d2959dfdba"
+    },
+    {
+      "created_at": "2026-07-27T23:11:29+00:00",
+      "intent_type": "direct_correction",
+      "objective_id": "conversational-objective-2bc0897cbe2bd850",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "No, nah I meant the other one, not the first thing you picked.",
+      "turn_id": "conversation-turn-fc42fccf7fdd48a6"
+    },
+    {
+      "created_at": "2026-07-27T23:11:29+00:00",
+      "intent_type": "correction_acknowledgement",
+      "objective_id": "conversational-objective-2bc0897cbe2bd850",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Got it. I attached that correction to the active comprehension objective and revised the strategy for related later turns without making it a global rule.",
+      "turn_id": "conversation-turn-5bb993bdcab2889f"
+    },
+    {
+      "created_at": "2026-07-27T23:11:30+00:00",
+      "intent_type": "ordinary_conversation_queued",
+      "objective_id": "conversational-objective-2bc0897cbe2bd850",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Topic switch: I am asking about cooking now. How long should rice rest after cooking?",
+      "turn_id": "conversation-turn-e25a624b6c405743"
+    },
+    {
+      "created_at": "2026-07-27T23:11:32+00:00",
+      "intent_type": "ordinary_conversation_queued",
+      "objective_id": "conversational-objective-2bc0897cbe2bd850",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Regarding the language goal, prioritize topic switches over old-topic matching if they conflict.",
+      "turn_id": "conversation-turn-dd47eecdff07718d"
+    },
+    {
+      "created_at": "2026-07-27T23:11:33+00:00",
+      "intent_type": "persistent_or_session_goal",
+      "objective_id": "conversational-objective-3aa01b063e992f0e",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Your goal today may also include noticing when I introduce a new possible goal, but do not replace the active one yet.",
+      "turn_id": "conversation-turn-8d0ca91641cf8d22"
+    },
+    {
+      "created_at": "2026-07-27T23:11:33+00:00",
+      "intent_type": "objective_confirmation",
+      "objective_id": "conversational-objective-3aa01b063e992f0e",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "I registered that as a bounded session goal: improve my operator-specific English comprehension through this conversation. I can run routine local cognition and learn from corrections under standing bounded authority; source changes, network use, installs, deletion, commits, pushes, and protected paths still need explicit approval.",
+      "turn_id": "conversation-turn-01e4c12f929c37b9"
+    },
+    {
+      "created_at": "2026-07-27T23:11:36+00:00",
+      "intent_type": "ordinary_conversation",
+      "objective_id": "conversational-objective-3aa01b063e992f0e",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Do not use that reference rule here. This question is unrelated to the language goal. Mentioning the correction does not mean it applies. Answer the physics question normally.",
+      "turn_id": "conversation-turn-974346c63cafd4be"
+    },
+    {
+      "created_at": "2026-07-27T23:11:36+00:00",
+      "intent_type": "ordinary_response",
+      "objective_id": "conversational-objective-3aa01b063e992f0e",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "I understand. I will treat this as ordinary conversation unless you make it a goal, correction, or authority-changing request.",
+      "turn_id": "conversation-turn-abb95e834c0d4740"
+    },
+    {
+      "created_at": "2026-07-27T23:11:38+00:00",
+      "intent_type": "ordinary_conversation",
+      "objective_id": "conversational-objective-3aa01b063e992f0e",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "What is angular momentum?",
+      "turn_id": "conversation-turn-f843054c7d518ab7"
+    },
+    {
+      "created_at": "2026-07-27T23:11:38+00:00",
+      "intent_type": "ordinary_response",
+      "objective_id": "conversational-objective-3aa01b063e992f0e",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Angular momentum is the rotational counterpart of linear momentum. It depends on how much mass is rotating, how far it is from the axis, and how fast it is rotating.",
+      "turn_id": "conversation-turn-e197bbc707461508"
+    },
+    {
+      "created_at": "2026-07-27T23:11:40+00:00",
+      "intent_type": "ordinary_conversation",
+      "objective_id": "conversational-objective-3aa01b063e992f0e",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "What is Euclidean geometry?",
+      "turn_id": "conversation-turn-3b22725fdde498ea"
+    },
+    {
+      "created_at": "2026-07-27T23:11:40+00:00",
+      "intent_type": "ordinary_response",
+      "objective_id": "conversational-objective-3aa01b063e992f0e",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Euclidean geometry is the geometry of flat space: points, lines, angles, triangles, circles, and shapes measured with Euclid's familiar rules.",
+      "turn_id": "conversation-turn-2a48e6c5b5af4570"
+    },
+    {
+      "created_at": "2026-07-27T23:11:43+00:00",
+      "intent_type": "ordinary_conversation",
+      "objective_id": "conversational-objective-3aa01b063e992f0e",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "How does a refrigerator move heat?",
+      "turn_id": "conversation-turn-d142b6dc1340e78c"
+    },
+    {
+      "created_at": "2026-07-27T23:11:43+00:00",
+      "intent_type": "ordinary_response",
+      "objective_id": "conversational-objective-3aa01b063e992f0e",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "I understand. I will treat this as ordinary conversation unless you make it a goal, correction, or authority-changing request.",
+      "turn_id": "conversation-turn-9e6b237dfcb7415f"
+    },
+    {
+      "created_at": "2026-07-27T23:11:45+00:00",
+      "intent_type": "ordinary_conversation",
+      "objective_id": "conversational-objective-3aa01b063e992f0e",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Why does metal expand when heated?",
+      "turn_id": "conversation-turn-05693edab5ec7e99"
+    },
+    {
+      "created_at": "2026-07-27T23:11:45+00:00",
+      "intent_type": "ordinary_response",
+      "objective_id": "conversational-objective-3aa01b063e992f0e",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "I understand. I will treat this as ordinary conversation unless you make it a goal, correction, or authority-changing request.",
+      "turn_id": "conversation-turn-3ec20db777a42c16"
+    },
+    {
+      "created_at": "2026-07-27T23:11:47+00:00",
+      "intent_type": "ordinary_conversation",
+      "objective_id": "conversational-objective-3aa01b063e992f0e",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "Hello there.",
+      "turn_id": "conversation-turn-0f60f7010b7a812b"
+    },
+    {
+      "created_at": "2026-07-27T23:11:47+00:00",
+      "intent_type": "ordinary_response",
+      "objective_id": "conversational-objective-3aa01b063e992f0e",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "I understand. I will treat this as ordinary conversation unless you make it a goal, correction, or authority-changing request.",
+      "turn_id": "conversation-turn-b6219929c5a503a0"
+    },
+    {
+      "created_at": "2026-07-27T23:11:49+00:00",
+      "intent_type": "ordinary_conversation",
+      "objective_id": "conversational-objective-3aa01b063e992f0e",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "What is a simple way to thicken soup?",
+      "turn_id": "conversation-turn-1f3dbe44487c9b64"
+    },
+    {
+      "created_at": "2026-07-27T23:11:49+00:00",
+      "intent_type": "ordinary_response",
+      "objective_id": "conversational-objective-3aa01b063e992f0e",
+      "role": "assistant",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "I understand. I will treat this as ordinary conversation unless you make it a goal, correction, or authority-changing request.",
+      "turn_id": "conversation-turn-313d759b78445911"
+    },
+    {
+      "created_at": "2026-07-27T23:11:51+00:00",
+      "intent_type": "ordinary_conversation_queued",
+      "objective_id": "conversational-objective-3aa01b063e992f0e",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "For the active goal: test these references too: the message before that, previous user message, previous assistant answer, last-mentioned object, cross-topic referent, omitted noun, compressed phrasing, and an ambiguous case that should trigger clarification.",
+      "turn_id": "conversation-turn-02850ae012141aa6"
+    }
+  ],
+  "corrections": [
+    {
+      "correction_id": "conversation-correction-4f8287ae5b281e45",
+      "correction_type": "misunderstood_meaning",
+      "evidence_refs": [
+        "conversation-turn-82dbf05a31c2ab0f",
+        "conversation-turn-16e814203276e693"
+      ],
+      "interpreted_issue": "Operator supplied a local meaning clarification.",
+      "lesson_scope": "active English-comprehension objective only",
+      "operator_text": "while you are thinking, when I say the thing before I usually mean the nearest unresolved point in my own messages",
+      "overgeneralization_guard": "different term; unrelated topic; explicitly new context",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_turn_id": "conversation-turn-82dbf05a31c2ab0f",
+      "target_turn_id": "conversation-turn-16e814203276e693"
+    },
+    {
+      "correction_id": "conversation-correction-f532b9259a081332",
+      "correction_type": "incorrect_contextual_interpretation",
+      "evidence_refs": [
+        "conversation-turn-d54400d32fbd3783",
+        "conversation-turn-4b4f779b691734a9"
+      ],
+      "interpreted_issue": "Prior interpretation did not match operator intent.",
+      "lesson_scope": "active English-comprehension objective only",
+      "operator_text": "No, if I say that thing from before, do not jump to the oldest topic. Prefer the nearest unresolved user message unless I specify otherwise.",
+      "overgeneralization_guard": "unrelated case; operator changes topic; insufficient similarity",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_turn_id": "conversation-turn-d54400d32fbd3783",
+      "target_turn_id": "conversation-turn-4b4f779b691734a9"
+    },
+    {
+      "correction_id": "conversation-correction-edb943c2cb44d476",
+      "correction_type": "misunderstood_meaning",
+      "evidence_refs": [
+        "conversation-turn-c00696e36b73c6f0",
+        "conversation-turn-05687c438f7b232a"
+      ],
+      "interpreted_issue": "Operator supplied a local meaning clarification.",
+      "lesson_scope": "active English-comprehension objective only",
+      "operator_text": "Related check: when I say explain the thing before, what should you connect it to?",
+      "overgeneralization_guard": "different term; unrelated topic; explicitly new context",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_turn_id": "conversation-turn-c00696e36b73c6f0",
+      "target_turn_id": "conversation-turn-05687c438f7b232a"
+    },
+    {
+      "correction_id": "conversation-correction-b78b0c229553cde0",
+      "correction_type": "misunderstood_meaning",
+      "evidence_refs": [
+        "conversation-turn-bae082769174cc43",
+        "conversation-turn-6f9efb00c34ccb56"
+      ],
+      "interpreted_issue": "Operator supplied a local meaning clarification.",
+      "lesson_scope": "active English-comprehension objective only",
+      "operator_text": "while you are thinking, when I say the thing before, I usually mean the previous user message, not your last reply.",
+      "overgeneralization_guard": "different term; unrelated topic; explicitly new context",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_turn_id": "conversation-turn-bae082769174cc43",
+      "target_turn_id": "conversation-turn-6f9efb00c34ccb56"
+    },
+    {
+      "correction_id": "conversation-correction-b7d5aab55767e6b2",
+      "correction_type": "misunderstood_meaning",
+      "evidence_refs": [
+        "conversation-turn-a8b3f7d1c2f39278",
+        "conversation-turn-54385320b2260d5d"
+      ],
+      "interpreted_issue": "Operator supplied a local meaning clarification.",
+      "lesson_scope": "active English-comprehension objective only",
+      "operator_text": "No, if I say that thing from before after switching topics, check whether I mean the last user-mentioned object before assuming the current topic.",
+      "overgeneralization_guard": "different term; unrelated topic; explicitly new context",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_turn_id": "conversation-turn-a8b3f7d1c2f39278",
+      "target_turn_id": "conversation-turn-54385320b2260d5d"
+    },
+    {
+      "correction_id": "conversation-correction-da6b4b04722703a0",
+      "correction_type": "misunderstood_meaning",
+      "evidence_refs": [
+        "conversation-turn-adae536dfcb581ef",
+        "conversation-turn-efca9ee0e1cbde76"
+      ],
+      "interpreted_issue": "Operator supplied a local meaning clarification.",
+      "lesson_scope": "active English-comprehension objective only",
+      "operator_text": "Related check: when I say that thing from before now, what should you inspect before answering?",
+      "overgeneralization_guard": "different term; unrelated topic; explicitly new context",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_turn_id": "conversation-turn-adae536dfcb581ef",
+      "target_turn_id": "conversation-turn-efca9ee0e1cbde76"
+    },
+    {
+      "correction_id": "conversation-correction-0c4f9f4e4c811abd",
+      "correction_type": "misunderstood_meaning",
+      "evidence_refs": [
+        "conversation-turn-50fef5d427b87fe5",
+        "conversation-turn-67bf0729f04ad219"
+      ],
+      "interpreted_issue": "Operator supplied a local meaning clarification.",
+      "lesson_scope": "active English-comprehension objective only",
+      "operator_text": "while you are thinking, when I say that thing from before, I usually mean the previous user message unless I switched topics.",
+      "overgeneralization_guard": "different term; unrelated topic; explicitly new context",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_turn_id": "conversation-turn-50fef5d427b87fe5",
+      "target_turn_id": "conversation-turn-67bf0729f04ad219"
+    },
+    {
+      "correction_id": "conversation-correction-1b9f248db94d443f",
+      "correction_type": "incorrect_contextual_interpretation",
+      "evidence_refs": [
+        "conversation-turn-1cdf02e29c3e8231",
+        "conversation-turn-4fe36e148ea64e23"
+      ],
+      "interpreted_issue": "Prior interpretation did not match operator intent.",
+      "lesson_scope": "active English-comprehension objective only",
+      "operator_text": "No, if I say that thing from before after switching topics, inspect the last user-mentioned object first.",
+      "overgeneralization_guard": "unrelated case; operator changes topic; insufficient similarity",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_turn_id": "conversation-turn-1cdf02e29c3e8231",
+      "target_turn_id": "conversation-turn-4fe36e148ea64e23"
+    },
+    {
+      "correction_id": "conversation-correction-ef3e516e3f9c3eb8",
+      "correction_type": "misunderstood_meaning",
+      "evidence_refs": [
+        "conversation-turn-f55c587fcfac7b2b",
+        "conversation-turn-9f26a94e479689d2"
+      ],
+      "interpreted_issue": "Operator supplied a local meaning clarification.",
+      "lesson_scope": "active English-comprehension objective only",
+      "operator_text": "When I say that thing from before, check the nearest unresolved user message before answering.",
+      "overgeneralization_guard": "different term; unrelated topic; explicitly new context",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_turn_id": "conversation-turn-f55c587fcfac7b2b",
+      "target_turn_id": "conversation-turn-9f26a94e479689d2"
+    },
+    {
+      "correction_id": "conversation-correction-bb2b588d0b4f7b0f",
+      "correction_type": "misunderstood_meaning",
+      "evidence_refs": [
+        "conversation-turn-fc42fccf7fdd48a6",
+        "conversation-turn-c7ff35d2959dfdba"
+      ],
+      "interpreted_issue": "Operator supplied a local meaning clarification.",
+      "lesson_scope": "active English-comprehension objective only",
+      "operator_text": "No, nah I meant the other one, not the first thing you picked.",
+      "overgeneralization_guard": "different term; unrelated topic; explicitly new context",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "source_turn_id": "conversation-turn-fc42fccf7fdd48a6",
+      "target_turn_id": "conversation-turn-c7ff35d2959dfdba"
+    }
+  ],
+  "focus_history": [
+    {
+      "at": "2026-07-27T16:28:36+00:00",
+      "episode_id": "active-cognitive-episode-ae2445a48f4a791e",
+      "event": "objective_registered",
+      "objective_id": "conversational-objective-1892984d921a665c"
+    },
+    {
+      "at": "2026-07-27T16:29:13+00:00",
+      "event": "focus_tick",
+      "reason": "objective_registered"
+    },
+    {
+      "at": "2026-07-27T16:29:53+00:00",
+      "event": "focus_tick",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "at": "2026-07-27T16:30:21+00:00",
+      "event": "focus_tick",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "at": "2026-07-27T16:30:42+00:00",
+      "event": "focus_tick",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "at": "2026-07-27T16:31:15+00:00",
+      "event": "focus_tick",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "at": "2026-07-27T16:31:34+00:00",
+      "event": "focus_tick",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "at": "2026-07-27T16:31:57+00:00",
+      "event": "focus_tick",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "at": "2026-07-27T16:32:30+00:00",
+      "event": "focus_tick",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "at": "2026-07-27T16:32:47+00:00",
+      "event": "focus_tick",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "at": "2026-07-27T16:33:06+00:00",
+      "event": "focus_tick",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "at": "2026-07-27T16:47:32+00:00",
+      "episode_id": "active-cognitive-episode-ae2445a48f4a791e",
+      "event": "objective_registered",
+      "objective_id": "conversational-objective-1892984d921a665c"
+    },
+    {
+      "at": "2026-07-27T16:49:51+00:00",
+      "event": "focus_tick",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "at": "2026-07-27T16:50:11+00:00",
+      "event": "focus_tick",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "at": "2026-07-27T16:50:35+00:00",
+      "event": "focus_tick",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "at": "2026-07-27T16:51:05+00:00",
+      "event": "focus_tick",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "at": "2026-07-27T16:51:22+00:00",
+      "event": "focus_tick",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "at": "2026-07-27T16:51:43+00:00",
+      "event": "focus_tick",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "at": "2026-07-27T22:22:37+00:00",
+      "episode_id": "active-cognitive-episode-ae2445a48f4a791e",
+      "event": "objective_registered",
+      "objective_id": "conversational-objective-87750957e30db8cd"
+    },
+    {
+      "archived_previous_objective_id": "conversational-objective-87750957e30db8cd",
+      "at": "2026-07-27T22:32:53+00:00",
+      "episode_id": "active-cognitive-episode-ae2445a48f4a791e",
+      "event": "objective_registered",
+      "objective_id": "conversational-objective-ba7c723b51606ed6"
+    },
+    {
+      "at": "2026-07-27T22:33:22+00:00",
+      "event": "focus_tick",
+      "reason": "objective_registered"
+    },
+    {
+      "archived_previous_objective_id": "conversational-objective-ba7c723b51606ed6",
+      "at": "2026-07-27T23:10:53+00:00",
+      "episode_id": "active-cognitive-episode-ae2445a48f4a791e",
+      "event": "objective_registered",
+      "objective_id": "conversational-objective-2bc0897cbe2bd850"
+    },
+    {
+      "at": "2026-07-27T23:11:27+00:00",
+      "event": "focus_tick",
+      "reason": "objective_registered"
+    },
+    {
+      "archived_previous_objective_id": "conversational-objective-2bc0897cbe2bd850",
+      "at": "2026-07-27T23:11:33+00:00",
+      "episode_id": "active-cognitive-episode-ae2445a48f4a791e",
+      "event": "objective_registered",
+      "objective_id": "conversational-objective-3aa01b063e992f0e"
+    }
+  ],
+  "goal_reviews": [],
+  "lifecycle_state": "running",
+  "local_semantic_insufficiencies": [],
+  "objective_progress": [
+    {
+      "archived_previous_objective_id": "conversational-objective-2bc0897cbe2bd850",
+      "at": "2026-07-27T23:11:33+00:00",
+      "cycle_count": 0,
+      "event": "fresh_objective_scope_started",
+      "objective_id": "conversational-objective-3aa01b063e992f0e"
+    },
+    {
+      "at": "2026-07-27T23:11:33+00:00",
+      "authority_id": "standing-authority-f3606efefce6200e",
+      "event": "standing_authority_assigned"
+    },
+    {
+      "active_goal_id": "conversational-objective-3aa01b063e992f0e",
+      "at": "2026-07-27T23:11:36+00:00",
+      "confidence": 0.82,
+      "event": "turn_relation_decision",
+      "evidence": [
+        "explicit_negative_applicability_instruction"
+      ],
+      "foreground_topic": "ordinary_conversation",
+      "lesson_ids_applied": [],
+      "lesson_ids_considered": [],
+      "lesson_ids_rejected": [],
+      "negative_instruction_tokens": [
+        "do not use"
+      ],
+      "rejection_reason": "negative_instruction_blocks_transfer",
+      "relation_class": "unrelated_foreground_topic",
+      "routing_decision": "foreground_answer_without_goal_lesson",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "side_thread_request_id": "",
+      "turn_id": "conversation-turn-974346c63cafd4be"
+    },
+    {
+      "active_goal_id": "conversational-objective-3aa01b063e992f0e",
+      "at": "2026-07-27T23:11:38+00:00",
+      "confidence": 0.84,
+      "event": "turn_relation_decision",
+      "evidence": [
+        "factual_question_topic_not_active_goal"
+      ],
+      "foreground_topic": "angular_momentum",
+      "lesson_ids_applied": [],
+      "lesson_ids_considered": [],
+      "lesson_ids_rejected": [],
+      "negative_instruction_tokens": [],
+      "rejection_reason": "foreground_topic_is_unrelated_to_active_goal",
+      "relation_class": "unrelated_foreground_topic",
+      "routing_decision": "foreground_answer_without_goal_lesson",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "side_thread_request_id": "",
+      "turn_id": "conversation-turn-f843054c7d518ab7"
+    },
+    {
+      "active_goal_id": "conversational-objective-3aa01b063e992f0e",
+      "at": "2026-07-27T23:11:40+00:00",
+      "confidence": 0.84,
+      "event": "turn_relation_decision",
+      "evidence": [
+        "factual_question_topic_not_active_goal"
+      ],
+      "foreground_topic": "euclidean_geometry",
+      "lesson_ids_applied": [],
+      "lesson_ids_considered": [],
+      "lesson_ids_rejected": [],
+      "negative_instruction_tokens": [],
+      "rejection_reason": "foreground_topic_is_unrelated_to_active_goal",
+      "relation_class": "unrelated_foreground_topic",
+      "routing_decision": "foreground_answer_without_goal_lesson",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "side_thread_request_id": "",
+      "turn_id": "conversation-turn-3b22725fdde498ea"
+    },
+    {
+      "active_goal_id": "conversational-objective-3aa01b063e992f0e",
+      "at": "2026-07-27T23:11:43+00:00",
+      "confidence": 0.7,
+      "event": "turn_relation_decision",
+      "evidence": [
+        "default_foreground_chat"
+      ],
+      "foreground_topic": "foreground_question",
+      "lesson_ids_applied": [],
+      "lesson_ids_considered": [],
+      "lesson_ids_rejected": [],
+      "negative_instruction_tokens": [],
+      "rejection_reason": "",
+      "relation_class": "unrelated_foreground_topic",
+      "routing_decision": "foreground_answer",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "side_thread_request_id": "",
+      "turn_id": "conversation-turn-d142b6dc1340e78c"
+    },
+    {
+      "active_goal_id": "conversational-objective-3aa01b063e992f0e",
+      "at": "2026-07-27T23:11:45+00:00",
+      "confidence": 0.7,
+      "event": "turn_relation_decision",
+      "evidence": [
+        "default_foreground_chat"
+      ],
+      "foreground_topic": "foreground_question",
+      "lesson_ids_applied": [],
+      "lesson_ids_considered": [],
+      "lesson_ids_rejected": [],
+      "negative_instruction_tokens": [],
+      "rejection_reason": "",
+      "relation_class": "unrelated_foreground_topic",
+      "routing_decision": "foreground_answer",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "side_thread_request_id": "",
+      "turn_id": "conversation-turn-05693edab5ec7e99"
+    },
+    {
+      "active_goal_id": "conversational-objective-3aa01b063e992f0e",
+      "at": "2026-07-27T23:11:47+00:00",
+      "confidence": 0.7,
+      "event": "turn_relation_decision",
+      "evidence": [
+        "default_foreground_chat"
+      ],
+      "foreground_topic": "ordinary_conversation",
+      "lesson_ids_applied": [],
+      "lesson_ids_considered": [],
+      "lesson_ids_rejected": [],
+      "negative_instruction_tokens": [],
+      "rejection_reason": "",
+      "relation_class": "unrelated_foreground_topic",
+      "routing_decision": "foreground_answer",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "side_thread_request_id": "",
+      "turn_id": "conversation-turn-0f60f7010b7a812b"
+    },
+    {
+      "active_goal_id": "conversational-objective-3aa01b063e992f0e",
+      "at": "2026-07-27T23:11:49+00:00",
+      "confidence": 0.84,
+      "event": "turn_relation_decision",
+      "evidence": [
+        "factual_question_topic_not_active_goal"
+      ],
+      "foreground_topic": "foreground_question",
+      "lesson_ids_applied": [],
+      "lesson_ids_considered": [],
+      "lesson_ids_rejected": [],
+      "negative_instruction_tokens": [],
+      "rejection_reason": "foreground_topic_is_unrelated_to_active_goal",
+      "relation_class": "unrelated_foreground_topic",
+      "routing_decision": "foreground_answer_without_goal_lesson",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "side_thread_request_id": "",
+      "turn_id": "conversation-turn-1f3dbe44487c9b64"
+    },
+    {
+      "at": "2026-07-27T23:11:51+00:00",
+      "event": "foreground_message_queued_for_reconciliation",
+      "message": "For the active goal: test these references too: the message before that, previous user message, previous assistant answer, last-mentioned object, cross-topic referent, omitted noun, compressed phrasing, and an ambiguous case that should trigger clarification.",
+      "turn_id": "conversation-turn-02850ae012141aa6"
+    }
+  ],
+  "pending_chat_requests": [],
+  "pending_material_authority": [],
+  "provider_authorities": [],
+  "rejected_lessons": [],
+  "resolved_chat_requests": [],
+  "runtime_id": "conversational-runtime-117a8d852616610d",
+  "schema_version": "conversational_runtime_operation_marathon_1_v1",
+  "turn_relation_decisions": [
+    {
+      "active_goal_id": "conversational-objective-3aa01b063e992f0e",
+      "confidence": 0.82,
+      "evidence": [
+        "explicit_negative_applicability_instruction"
+      ],
+      "foreground_topic": "ordinary_conversation",
+      "lesson_ids_applied": [],
+      "lesson_ids_considered": [],
+      "lesson_ids_rejected": [],
+      "negative_instruction_tokens": [
+        "do not use"
+      ],
+      "rejection_reason": "negative_instruction_blocks_transfer",
+      "relation_class": "unrelated_foreground_topic",
+      "routing_decision": "foreground_answer_without_goal_lesson",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "side_thread_request_id": "",
+      "turn_id": "conversation-turn-974346c63cafd4be"
+    },
+    {
+      "active_goal_id": "conversational-objective-3aa01b063e992f0e",
+      "confidence": 0.84,
+      "evidence": [
+        "factual_question_topic_not_active_goal"
+      ],
+      "foreground_topic": "angular_momentum",
+      "lesson_ids_applied": [],
+      "lesson_ids_considered": [],
+      "lesson_ids_rejected": [],
+      "negative_instruction_tokens": [],
+      "rejection_reason": "foreground_topic_is_unrelated_to_active_goal",
+      "relation_class": "unrelated_foreground_topic",
+      "routing_decision": "foreground_answer_without_goal_lesson",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "side_thread_request_id": "",
+      "turn_id": "conversation-turn-f843054c7d518ab7"
+    },
+    {
+      "active_goal_id": "conversational-objective-3aa01b063e992f0e",
+      "confidence": 0.84,
+      "evidence": [
+        "factual_question_topic_not_active_goal"
+      ],
+      "foreground_topic": "euclidean_geometry",
+      "lesson_ids_applied": [],
+      "lesson_ids_considered": [],
+      "lesson_ids_rejected": [],
+      "negative_instruction_tokens": [],
+      "rejection_reason": "foreground_topic_is_unrelated_to_active_goal",
+      "relation_class": "unrelated_foreground_topic",
+      "routing_decision": "foreground_answer_without_goal_lesson",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "side_thread_request_id": "",
+      "turn_id": "conversation-turn-3b22725fdde498ea"
+    },
+    {
+      "active_goal_id": "conversational-objective-3aa01b063e992f0e",
+      "confidence": 0.7,
+      "evidence": [
+        "default_foreground_chat"
+      ],
+      "foreground_topic": "foreground_question",
+      "lesson_ids_applied": [],
+      "lesson_ids_considered": [],
+      "lesson_ids_rejected": [],
+      "negative_instruction_tokens": [],
+      "rejection_reason": "",
+      "relation_class": "unrelated_foreground_topic",
+      "routing_decision": "foreground_answer",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "side_thread_request_id": "",
+      "turn_id": "conversation-turn-d142b6dc1340e78c"
+    },
+    {
+      "active_goal_id": "conversational-objective-3aa01b063e992f0e",
+      "confidence": 0.7,
+      "evidence": [
+        "default_foreground_chat"
+      ],
+      "foreground_topic": "foreground_question",
+      "lesson_ids_applied": [],
+      "lesson_ids_considered": [],
+      "lesson_ids_rejected": [],
+      "negative_instruction_tokens": [],
+      "rejection_reason": "",
+      "relation_class": "unrelated_foreground_topic",
+      "routing_decision": "foreground_answer",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "side_thread_request_id": "",
+      "turn_id": "conversation-turn-05693edab5ec7e99"
+    },
+    {
+      "active_goal_id": "conversational-objective-3aa01b063e992f0e",
+      "confidence": 0.7,
+      "evidence": [
+        "default_foreground_chat"
+      ],
+      "foreground_topic": "ordinary_conversation",
+      "lesson_ids_applied": [],
+      "lesson_ids_considered": [],
+      "lesson_ids_rejected": [],
+      "negative_instruction_tokens": [],
+      "rejection_reason": "",
+      "relation_class": "unrelated_foreground_topic",
+      "routing_decision": "foreground_answer",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "side_thread_request_id": "",
+      "turn_id": "conversation-turn-0f60f7010b7a812b"
+    },
+    {
+      "active_goal_id": "conversational-objective-3aa01b063e992f0e",
+      "confidence": 0.84,
+      "evidence": [
+        "factual_question_topic_not_active_goal"
+      ],
+      "foreground_topic": "foreground_question",
+      "lesson_ids_applied": [],
+      "lesson_ids_considered": [],
+      "lesson_ids_rejected": [],
+      "negative_instruction_tokens": [],
+      "rejection_reason": "foreground_topic_is_unrelated_to_active_goal",
+      "relation_class": "unrelated_foreground_topic",
+      "routing_decision": "foreground_answer_without_goal_lesson",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "side_thread_request_id": "",
+      "turn_id": "conversation-turn-1f3dbe44487c9b64"
+    }
+  ]
+}

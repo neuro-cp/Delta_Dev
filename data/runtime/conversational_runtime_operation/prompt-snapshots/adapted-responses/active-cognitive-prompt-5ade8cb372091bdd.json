@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "operator-natural-goal"
+    ],
+    "lesson": "The operator requires enhanced understanding of natural corrections to improve comprehension. This can be achieved through correction-linked strategy revision and transfer checks.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "The exact methods for testing and transferring the operator's comprehension remain unclear.",
+    "unresolved_questions": [
+      "How can the operator's comprehension be effectively tested and transferred?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"The operator requires enhanced understanding of natural corrections to improve comprehension. This can be achieved through correction-linked strategy revision and transfer checks.\",\"evidence_refs\":[\"operator-natural-goal\"],\"unresolved_questions\":[\"How can the operator's comprehension be effectively tested and transferred?\"],\"uncertainty\":\"The exact methods for testing and transferring the operator's comprehension remain unclear.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "7b2e567c6860bb75d7bf14d62115a0294deff81c2f76c0486918439f70c420c6",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

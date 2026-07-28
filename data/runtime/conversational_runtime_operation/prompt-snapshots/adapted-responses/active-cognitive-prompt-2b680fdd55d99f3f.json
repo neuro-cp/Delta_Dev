@@ -1,0 +1,19 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "prior-conversational-episode-3"
+    ],
+    "lesson": "Operators may misunderstand specific technical terms during conversations.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "Technical terms may vary in complexity and frequency of use.",
+    "unresolved_questions": [
+      "How can we ensure operators fully understand technical terms?",
+      "What methods can be used to test comprehension after corrections?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"Operators may misunderstand specific technical terms during conversations.\",\"evidence_refs\":[\"prior-conversational-episode-3\"],\"unresolved_questions\":[\"How can we ensure operators fully understand technical terms?\",\"What methods can be used to test comprehension after corrections?\"],\"uncertainty\":\"Technical terms may vary in complexity and frequency of use.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "4b6d5dfe9ab98d5bbbccbd965c8a7e42998493cb1136b1a4e4ecbfd059c75f4c",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

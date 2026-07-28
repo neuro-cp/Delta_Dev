@@ -1,0 +1,24 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Operators have a limited vocabulary of technical terms.",
+      "Technical terms are frequently used in operator-specific communication."
+    ],
+    "expected_observations": [
+      "Operators will use technical terms incorrectly or incompletely.",
+      "Operators will request clarification on technical terms."
+    ],
+    "hypothesis_statement": "Operators may misunderstand specific technical terms during conversations.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "Technical terms in operator-specific communication.",
+    "supporting_evidence_refs": [
+      "prior-conversational-episode-15"
+    ],
+    "uncertainty": "The specific terms and frequency of misunderstanding are not yet clear."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"hypothesis_statement\":\"Operators may misunderstand specific technical terms during conversations.\",\"scope\":\"Technical terms in operator-specific communication.\",\"supporting_evidence_refs\":[\"prior-conversational-episode-15\"],\"assumptions\":[\"Operators have a limited vocabulary of technical terms.\",\"Technical terms are frequently used in operator-specific communication.\"],\"expected_observations\":[\"Operators will use technical terms incorrectly or incompletely.\",\"Operators will request clarification on technical terms.\"],\"uncertainty\":\"The specific terms and frequency of misunderstanding are not yet clear.\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+  "raw_response_digest": "2b7592de7b055c5baddf50b821218a28081a14b31ab9662f287b6f44b85761b8",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

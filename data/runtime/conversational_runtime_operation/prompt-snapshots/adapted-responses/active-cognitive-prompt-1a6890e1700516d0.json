@@ -1,0 +1,22 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Operator has limited context and prior knowledge."
+    ],
+    "expected_observations": [
+      "Operator fails to understand or respond appropriately to natural language references in conversation."
+    ],
+    "hypothesis_statement": "Operator will misunderstand natural language references in conversation due to lack of context and prior knowledge.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "Natural language references in conversation between operator and system.",
+    "supporting_evidence_refs": [
+      "operator-natural-goal"
+    ],
+    "uncertainty": "Whether the operator's lack of context and prior knowledge is the sole cause of the misunderstanding."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\n\n\"hypothesis_statement\":\"Operator will misunderstand natural language references in conversation due to lack of context and prior knowledge.\",\n\"scope\":\"Natural language references in conversation between operator and system.\",\n\"supporting_evidence_refs\":[\"operator-natural-goal\"],\n\"assumptions\":[\"Operator has limited context and prior knowledge.\"],\n\"expected_observations\":[\"Operator fails to understand or respond appropriately to natural language references in conversation.\"],\n\"uncertainty\":\"Whether the operator's lack of context and prior knowledge is the sole cause of the misunderstanding.\",\n\"recommended_state_transition\":\"propose_hypothesis\"\n}",
+  "raw_response_digest": "6b7037d8aa01a810c5cc905cdc562d6024193460ac827e7659d745be6eb5e962",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

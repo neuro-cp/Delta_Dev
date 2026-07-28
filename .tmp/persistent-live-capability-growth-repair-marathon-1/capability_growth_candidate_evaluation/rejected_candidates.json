@@ -1,0 +1,12 @@
+{
+  "rejected": [
+    {
+      "candidate_id": "candidate-b",
+      "reason": "unacceptable false-transfer or weaker held-out performance"
+    },
+    {
+      "candidate_id": "candidate-c",
+      "reason": "unacceptable false-transfer or weaker held-out performance"
+    }
+  ]
+}

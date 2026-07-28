@@ -1,0 +1,48 @@
+{
+  "accuracy": 0.8,
+  "candidate_id": "candidate-a",
+  "case_count": 5,
+  "passed_count": 4,
+  "rows": [
+    {
+      "case_id": "design-last-object",
+      "expected": "cache_vs_ram",
+      "group": "last-mentioned object",
+      "partition": "design_examples",
+      "passed": false,
+      "predicted": "generic_contextual_ack"
+    },
+    {
+      "case_id": "val-prev-assistant",
+      "expected": "previous_assistant_response",
+      "group": "previous assistant response",
+      "partition": "validation",
+      "passed": true,
+      "predicted": "previous_assistant_response"
+    },
+    {
+      "case_id": "val-negative",
+      "expected": "unrelated_factual_answer",
+      "group": "negative applicability",
+      "partition": "validation",
+      "passed": true,
+      "predicted": "unrelated_factual_answer"
+    },
+    {
+      "case_id": "val-tentative",
+      "expected": "discuss_tentative_without_activation",
+      "group": "tentative future goals",
+      "partition": "validation",
+      "passed": true,
+      "predicted": "discuss_tentative_without_activation"
+    },
+    {
+      "case_id": "held-foreground-during-inference",
+      "expected": "unrelated_factual_answer",
+      "group": "foreground question during inference",
+      "partition": "final_held_out",
+      "passed": true,
+      "predicted": "unrelated_factual_answer"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "latest_production_review_status": "implementation_review_required",
+  "selected_candidate": "candidate-a",
+  "status": "LIVE_GOVERNED_CAPABILITY_GROWTH_1_IMPLEMENTATION_REVIEW_REQUIRED",
+  "summary": "Candidate A is the only candidate with material held-out improvement while preserving foreground, negative, and tentative-goal controls."
+}

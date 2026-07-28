@@ -1,0 +1,661 @@
+{
+  "adjacent_regression_plan": [
+    "foreground factual chat",
+    "negative transfer",
+    "tentative goal inertness"
+  ],
+  "authority_impact": "none; salience and references do not grant authority",
+  "baseline": {
+    "accuracy": 0.4166666666666667,
+    "candidate_id": "baseline",
+    "case_count": 12,
+    "passed_count": 5,
+    "rows": [
+      {
+        "case_id": "obs-queued-that",
+        "expected": "clarify_ambiguous_topic_boundary",
+        "group": "queued references",
+        "partition": "observed_failures",
+        "passed": false,
+        "predicted": "generic_contextual_ack"
+      },
+      {
+        "case_id": "learn-prev-user",
+        "expected": "previous_user_message",
+        "group": "previous user message",
+        "partition": "learning_examples",
+        "passed": true,
+        "predicted": "previous_user_message"
+      },
+      {
+        "case_id": "design-last-object",
+        "expected": "cache_vs_ram",
+        "group": "last-mentioned object",
+        "partition": "design_examples",
+        "passed": false,
+        "predicted": "generic_contextual_ack"
+      },
+      {
+        "case_id": "dev-topic-switch",
+        "expected": "ambiguous_requires_clarification",
+        "group": "topic switches",
+        "partition": "candidate_development",
+        "passed": false,
+        "predicted": "generic_contextual_ack"
+      },
+      {
+        "case_id": "dev-side-thread",
+        "expected": "bind_to_goal_update",
+        "group": "side-thread reply",
+        "partition": "candidate_development",
+        "passed": false,
+        "predicted": "generic_contextual_ack"
+      },
+      {
+        "case_id": "val-prev-assistant",
+        "expected": "previous_assistant_response",
+        "group": "previous assistant response",
+        "partition": "validation",
+        "passed": true,
+        "predicted": "previous_assistant_response"
+      },
+      {
+        "case_id": "val-negative",
+        "expected": "unrelated_factual_answer",
+        "group": "negative applicability",
+        "partition": "validation",
+        "passed": true,
+        "predicted": "unrelated_factual_answer"
+      },
+      {
+        "case_id": "val-tentative",
+        "expected": "discuss_tentative_without_activation",
+        "group": "tentative future goals",
+        "partition": "validation",
+        "passed": true,
+        "predicted": "discuss_tentative_without_activation"
+      },
+      {
+        "case_id": "held-queued-older-topic",
+        "expected": "clarify_between_metal_expansion_and_refrigerators",
+        "group": "queued references",
+        "partition": "final_held_out",
+        "passed": false,
+        "predicted": "generic_contextual_ack"
+      },
+      {
+        "case_id": "held-omitted-noun",
+        "expected": "later_one_refers_to_post_restart_action",
+        "group": "omitted noun",
+        "partition": "final_held_out",
+        "passed": false,
+        "predicted": "generic_contextual_ack"
+      },
+      {
+        "case_id": "held-foreground-during-inference",
+        "expected": "unrelated_factual_answer",
+        "group": "foreground question during inference",
+        "partition": "final_held_out",
+        "passed": true,
+        "predicted": "unrelated_factual_answer"
+      },
+      {
+        "case_id": "held-restart-before-reconcile",
+        "expected": "preserve_queue_and_clarify",
+        "group": "restart before reconciliation",
+        "partition": "final_held_out",
+        "passed": false,
+        "predicted": "generic_contextual_ack"
+      }
+    ]
+  },
+  "candidate_approaches": [
+    {
+      "acceptance_criteria": [
+        "held-out improvement",
+        "no foreground degradation",
+        "restart consistency"
+      ],
+      "candidate_id": "candidate-a",
+      "consumer": "background objective cycle",
+      "expected_benefit": "Improves ambiguous queued references while preserving foreground obligations.",
+      "failure_modes": [
+        "over-clarification",
+        "stale discourse candidates"
+      ],
+      "false_transfer_risk": "low with lane guard",
+      "foreground_chat_interaction": "foreground factual questions bypass goal-thread reconciliation",
+      "hypothesis": "A topic-boundary-aware queued reconciliation pass can resolve or clarify references before background cognition consumes them.",
+      "latency": "low deterministic pass plus optional Qwen ranking",
+      "mechanism": "Build a discourse candidate map from foreground turns, queued goal-thread turns, corrections, and tentative goals; rank referents by lane, recency, and ambiguity; clarify when multiple candidates remain.",
+      "producer": "queued-message reconciliation pass",
+      "required_state": [
+        "conversation",
+        "objective_progress",
+        "turn_relation_decisions",
+        "tentative_goals"
+      ],
+      "restart_behavior": "candidate map is reconstructible from persisted turns",
+      "rollback": "remove reconciliation pass and fall back to preserved queued text",
+      "source_scope_estimate": [
+        "orchestration/runtime/conversational_runtime_operation.py"
+      ],
+      "tentative_goal_interaction": "tentative goals may be mentioned but never activated"
+    },
+    {
+      "acceptance_criteria": [
+        "must not degrade negative and unrelated controls"
+      ],
+      "candidate_id": "candidate-b",
+      "consumer": "foreground and background responses",
+      "expected_benefit": "Very low latency",
+      "failure_modes": [
+        "topic-boundary errors",
+        "foreground contamination",
+        "tentative-goal leakage"
+      ],
+      "false_transfer_risk": "high",
+      "foreground_chat_interaction": "may override factual answers",
+      "hypothesis": "A last-mentioned-object heuristic will cheaply resolve most references.",
+      "latency": "very low",
+      "mechanism": "Always bind it/that/one to the latest salient noun phrase regardless of lane.",
+      "producer": "ordinary reply",
+      "required_state": [
+        "conversation"
+      ],
+      "restart_behavior": "reconstructible but brittle",
+      "rollback": "remove heuristic",
+      "source_scope_estimate": [
+        "orchestration/runtime/conversational_runtime_operation.py"
+      ],
+      "tentative_goal_interaction": "risk of activating future goal references"
+    },
+    {
+      "acceptance_criteria": [
+        "negative controls pass",
+        "material held-out improvement"
+      ],
+      "candidate_id": "candidate-c",
+      "consumer": "lesson transfer and queued reconciliation",
+      "expected_benefit": "Safer transfer with modest improvement",
+      "failure_modes": [
+        "generic clarification for specific held-out referents"
+      ],
+      "false_transfer_risk": "low",
+      "foreground_chat_interaction": "good foreground isolation",
+      "hypothesis": "A correction-conditioned applicability filter can prevent false transfer while allowing goal-thread clarifications.",
+      "latency": "low",
+      "mechanism": "Classify whether a turn is goal-thread related before applying correction-derived reference lessons.",
+      "producer": "turn relation decision",
+      "required_state": [
+        "accepted_lessons",
+        "turn_relation_decisions"
+      ],
+      "restart_behavior": "uses persisted lessons and decisions",
+      "rollback": "disable applicability gate for queued reconciliation",
+      "source_scope_estimate": [
+        "orchestration/runtime/conversational_runtime_operation.py"
+      ],
+      "tentative_goal_interaction": "preserves activation_required"
+    }
+  ],
+  "capability_name": "topic-boundary queued reference reconciliation",
+  "exact_live_gap": "Queued goal-thread messages mention 'that' or 'it' after intervening foreground topics, but the runtime only records the text and does not resolve the referent before later cognition.",
+  "exact_proposed_source_files": [
+    "orchestration/runtime/conversational_runtime_operation.py"
+  ],
+  "exact_proposed_test_files": [
+    "tests/runtime_gsr/test_conversational_runtime_operation.py"
+  ],
+  "explicit_non_goals": [
+    "general semantic contradiction",
+    "new UI layer",
+    "provider-based memory",
+    "source mutation before review"
+  ],
+  "focused_validation_plan": [
+    "queued reference tests",
+    "held-out topic-boundary tests",
+    "restart reconstruction test"
+  ],
+  "held_out_results": {
+    "accuracy": 0.75,
+    "candidate_id": "candidate-a",
+    "case_count": 4,
+    "passed_count": 3,
+    "rows": [
+      {
+        "case_id": "held-queued-older-topic",
+        "expected": "clarify_between_metal_expansion_and_refrigerators",
+        "group": "queued references",
+        "partition": "final_held_out",
+        "passed": true,
+        "predicted": "clarify_between_metal_expansion_and_refrigerators"
+      },
+      {
+        "case_id": "held-omitted-noun",
+        "expected": "later_one_refers_to_post_restart_action",
+        "group": "omitted noun",
+        "partition": "final_held_out",
+        "passed": false,
+        "predicted": "preserve_queue_and_clarify"
+      },
+      {
+        "case_id": "held-foreground-during-inference",
+        "expected": "unrelated_factual_answer",
+        "group": "foreground question during inference",
+        "partition": "final_held_out",
+        "passed": true,
+        "predicted": "unrelated_factual_answer"
+      },
+      {
+        "case_id": "held-restart-before-reconcile",
+        "expected": "preserve_queue_and_clarify",
+        "group": "restart before reconciliation",
+        "partition": "final_held_out",
+        "passed": true,
+        "predicted": "preserve_queue_and_clarify"
+      }
+    ]
+  },
+  "latency_impact": "low deterministic pass plus optional Qwen ranking",
+  "live_transcript_evidence": {
+    "accepted_lessons": [],
+    "active_objective_id": "conversational-objective-aeed6654265e3b05",
+    "archived_objective_count": 6,
+    "conversation_turn_count": 130,
+    "correction_count": 12,
+    "operator_wording": "Your goal today is to continue the semantic-reconciliation capability-growth campaign. Use the live conversation evidence already gathered to identify the strongest remaining weakness in queued and implied references. Generate multiple candidate strategies, compare them with a frozen held-out evaluator, and stop only when a real implementation proposal is ready for review. Do not change tracked source before review.",
+    "queued_turns": [],
+    "recent_corrections": [
+      {
+        "correction_id": "conversation-correction-0c4f9f4e4c811abd",
+        "correction_type": "misunderstood_meaning",
+        "evidence_refs": [
+          "conversation-turn-50fef5d427b87fe5",
+          "conversation-turn-67bf0729f04ad219"
+        ],
+        "interpreted_issue": "Operator supplied a local meaning clarification.",
+        "lesson_scope": "active English-comprehension objective only",
+        "operator_text": "while you are thinking, when I say that thing from before, I usually mean the previous user message unless I switched topics.",
+        "overgeneralization_guard": "different term; unrelated topic; explicitly new context",
+        "schema_version": "conversational_runtime_operation_marathon_1_v1",
+        "source_turn_id": "conversation-turn-50fef5d427b87fe5",
+        "target_turn_id": "conversation-turn-67bf0729f04ad219"
+      },
+      {
+        "correction_id": "conversation-correction-1b9f248db94d443f",
+        "correction_type": "incorrect_contextual_interpretation",
+        "evidence_refs": [
+          "conversation-turn-1cdf02e29c3e8231",
+          "conversation-turn-4fe36e148ea64e23"
+        ],
+        "interpreted_issue": "Prior interpretation did not match operator intent.",
+        "lesson_scope": "active English-comprehension objective only",
+        "operator_text": "No, if I say that thing from before after switching topics, inspect the last user-mentioned object first.",
+        "overgeneralization_guard": "unrelated case; operator changes topic; insufficient similarity",
+        "schema_version": "conversational_runtime_operation_marathon_1_v1",
+        "source_turn_id": "conversation-turn-1cdf02e29c3e8231",
+        "target_turn_id": "conversation-turn-4fe36e148ea64e23"
+      },
+      {
+        "correction_id": "conversation-correction-ef3e516e3f9c3eb8",
+        "correction_type": "misunderstood_meaning",
+        "evidence_refs": [
+          "conversation-turn-f55c587fcfac7b2b",
+          "conversation-turn-9f26a94e479689d2"
+        ],
+        "interpreted_issue": "Operator supplied a local meaning clarification.",
+        "lesson_scope": "active English-comprehension objective only",
+        "operator_text": "When I say that thing from before, check the nearest unresolved user message before answering.",
+        "overgeneralization_guard": "different term; unrelated topic; explicitly new context",
+        "schema_version": "conversational_runtime_operation_marathon_1_v1",
+        "source_turn_id": "conversation-turn-f55c587fcfac7b2b",
+        "target_turn_id": "conversation-turn-9f26a94e479689d2"
+      },
+      {
+        "correction_id": "conversation-correction-bb2b588d0b4f7b0f",
+        "correction_type": "misunderstood_meaning",
+        "evidence_refs": [
+          "conversation-turn-fc42fccf7fdd48a6",
+          "conversation-turn-c7ff35d2959dfdba"
+        ],
+        "interpreted_issue": "Operator supplied a local meaning clarification.",
+        "lesson_scope": "active English-comprehension objective only",
+        "operator_text": "No, nah I meant the other one, not the first thing you picked.",
+        "overgeneralization_guard": "different term; unrelated topic; explicitly new context",
+        "schema_version": "conversational_runtime_operation_marathon_1_v1",
+        "source_turn_id": "conversation-turn-fc42fccf7fdd48a6",
+        "target_turn_id": "conversation-turn-c7ff35d2959dfdba"
+      },
+      {
+        "correction_id": "conversation-correction-4e18cbc4363ed9cc",
+        "correction_type": "misunderstood_meaning",
+        "evidence_refs": [
+          "conversation-turn-23f0c058bc3724ba",
+          "conversation-turn-f483880e25f23c0d"
+        ],
+        "interpreted_issue": "Operator supplied a local meaning clarification.",
+        "lesson_scope": "active English-comprehension objective only",
+        "operator_text": "No, when I say the thing before, inspect the previous user message before assuming I mean your last answer.",
+        "overgeneralization_guard": "different term; unrelated topic; explicitly new context",
+        "schema_version": "conversational_runtime_operation_marathon_1_v1",
+        "source_turn_id": "conversation-turn-23f0c058bc3724ba",
+        "target_turn_id": "conversation-turn-f483880e25f23c0d"
+      },
+      {
+        "correction_id": "conversation-correction-955f66d8e0d6911d",
+        "correction_type": "misunderstood_meaning",
+        "evidence_refs": [
+          "conversation-turn-3d52bfc70543e2f6",
+          "conversation-turn-48c79aa1820db477"
+        ],
+        "interpreted_issue": "Operator supplied a local meaning clarification.",
+        "lesson_scope": "active English-comprehension objective only",
+        "operator_text": "No, when I say the thing before, inspect the previous user message before assuming I mean your last answer.",
+        "overgeneralization_guard": "different term; unrelated topic; explicitly new context",
+        "schema_version": "conversational_runtime_operation_marathon_1_v1",
+        "source_turn_id": "conversation-turn-3d52bfc70543e2f6",
+        "target_turn_id": "conversation-turn-48c79aa1820db477"
+      }
+    ],
+    "recent_turns": [
+      {
+        "created_at": "2026-07-27T23:41:46+00:00",
+        "intent_type": "ordinary_conversation",
+        "objective_id": "conversational-objective-f0d1263e805c59f8",
+        "role": "user",
+        "schema_version": "conversational_runtime_operation_marathon_1_v1",
+        "text": "Why does metal expand when heated?",
+        "turn_id": "conversation-turn-fee86ce6d8ce2cc8"
+      },
+      {
+        "created_at": "2026-07-27T23:41:46+00:00",
+        "intent_type": "ordinary_response",
+        "objective_id": "conversational-objective-f0d1263e805c59f8",
+        "role": "assistant",
+        "schema_version": "conversational_runtime_operation_marathon_1_v1",
+        "text": "Metal expands when heated because its atoms vibrate more strongly and, on average, sit slightly farther apart in the crystal structure.",
+        "turn_id": "conversation-turn-8b7d295a4970765f"
+      },
+      {
+        "created_at": "2026-07-27T23:41:48+00:00",
+        "intent_type": "ordinary_conversation",
+        "objective_id": "conversational-objective-f0d1263e805c59f8",
+        "role": "user",
+        "schema_version": "conversational_runtime_operation_marathon_1_v1",
+        "text": "Hi, how are you?",
+        "turn_id": "conversation-turn-99daee1c62beefa5"
+      },
+      {
+        "created_at": "2026-07-27T23:41:48+00:00",
+        "intent_type": "ordinary_response",
+        "objective_id": "conversational-objective-f0d1263e805c59f8",
+        "role": "assistant",
+        "schema_version": "conversational_runtime_operation_marathon_1_v1",
+        "text": "Hi. I'm here and running; we can keep chatting normally while the background goal continues.",
+        "turn_id": "conversation-turn-90d20cc699112456"
+      },
+      {
+        "created_at": "2026-07-27T23:41:51+00:00",
+        "intent_type": "ordinary_conversation",
+        "objective_id": "conversational-objective-f0d1263e805c59f8",
+        "role": "user",
+        "schema_version": "conversational_runtime_operation_marathon_1_v1",
+        "text": "What is a simple way to thicken soup?",
+        "turn_id": "conversation-turn-ffc3d56dd0c6f1ca"
+      },
+      {
+        "created_at": "2026-07-27T23:41:51+00:00",
+        "intent_type": "ordinary_response",
+        "objective_id": "conversational-objective-f0d1263e805c59f8",
+        "role": "assistant",
+        "schema_version": "conversational_runtime_operation_marathon_1_v1",
+        "text": "A simple way to thicken soup is to simmer it uncovered, blend part of it, or stir in a small slurry of flour or cornstarch mixed with cold water.",
+        "turn_id": "conversation-turn-48c79aa1820db477"
+      },
+      {
+        "created_at": "2026-07-27T23:41:53+00:00",
+        "intent_type": "direct_correction",
+        "objective_id": "conversational-objective-f0d1263e805c59f8",
+        "role": "user",
+        "schema_version": "conversational_runtime_operation_marathon_1_v1",
+        "text": "No, when I say the thing before, inspect the previous user message before assuming I mean your last answer.",
+        "turn_id": "conversation-turn-3d52bfc70543e2f6"
+      },
+      {
+        "created_at": "2026-07-27T23:41:53+00:00",
+        "intent_type": "correction_acknowledgement",
+        "objective_id": "conversational-objective-f0d1263e805c59f8",
+        "role": "assistant",
+        "schema_version": "conversational_runtime_operation_marathon_1_v1",
+        "text": "Got it. I attached that correction to the active comprehension objective and revised the strategy for related later turns without making it a global rule.",
+        "turn_id": "conversation-turn-49480fc05fff80fe"
+      },
+      {
+        "created_at": "2026-07-27T23:41:55+00:00",
+        "intent_type": "ordinary_conversation_queued",
+        "objective_id": "conversational-objective-f0d1263e805c59f8",
+        "role": "user",
+        "schema_version": "conversational_runtime_operation_marathon_1_v1",
+        "text": "For the active goal: if I say the message before that, compare whether it points to the previous user message or an older foreground topic before answering.",
+        "turn_id": "conversation-turn-911a018a3b607510"
+      },
+      {
+        "created_at": "2026-07-27T23:41:58+00:00",
+        "intent_type": "ordinary_conversation",
+        "objective_id": "conversational-objective-f0d1263e805c59f8",
+        "role": "user",
+        "schema_version": "conversational_runtime_operation_marathon_1_v1",
+        "text": "Do not apply that reference lesson to unrelated factual questions like chemistry or cooking.",
+        "turn_id": "conversation-turn-228ffd4898064237"
+      },
+      {
+        "created_at": "2026-07-27T23:41:58+00:00",
+        "intent_type": "ordinary_response",
+        "objective_id": "conversational-objective-f0d1263e805c59f8",
+        "role": "assistant",
+        "schema_version": "conversational_runtime_operation_marathon_1_v1",
+        "text": "I will answer the chemistry question on its own terms and will not apply the reference-correction lesson unless the chemistry question actually depends on conversational reference.",
+        "turn_id": "conversation-turn-b2682dc53e392167"
+      },
+      {
+        "created_at": "2026-07-27T23:42:00+00:00",
+        "intent_type": "ordinary_conversation_queued",
+        "objective_id": "conversational-objective-f0d1263e805c59f8",
+        "role": "user",
+        "schema_version": "conversational_runtime_operation_marathon_1_v1",
+        "text": "For the active goal: test an ambiguous case where I say it after a topic switch and ask a clarification if the referent would change the answer.",
+        "turn_id": "conversation-turn-dc4ab5ff176cf62a"
+      },
+      {
+        "created_at": "2026-07-27T23:48:34+00:00",
+        "intent_type": "goal_review",
+        "objective_id": "conversational-objective-f0d1263e805c59f8",
+        "role": "assistant",
+        "schema_version": "conversational_runtime_operation_marathon_1_v1",
+        "text": "[Goal review \u00b7 Language understanding]\n\nI completed:\nI reached an implementation-review boundary for the active language-comprehension goal.\n\nI learned:\n- foreground messages must be routed separately from background goal work\n- 1 scoped correction-derived lesson(s) are available\n\nI retained:\n- Operator supplied a local meaning clarification.\n\nI rejected:\n- foreground_topic_is_unrelated_to_active_goal\n- foreground_topic_is_unrelated_to_active_goal\n- foreground_topic_is_unrelated_to_active_goal\n- foreground_topic_is_unrelated_to_active_goal\n- foreground_topic_is_unrelated_to_active_goal\n\nStill unresolved:\n- implementation review is required before source-level semantic capability changes\n\nProvider use:\nlocal-only; no external provider calls performed\n\nNext recommended step:\nReview the proposed foreground-isolation and local-first repair before any broader semantic capability implementation.",
+        "turn_id": "conversation-turn-1b83d7d633f7c232"
+      },
+      {
+        "created_at": "2026-07-28T00:04:54+00:00",
+        "intent_type": "persistent_or_session_goal",
+        "objective_id": "conversational-objective-aeed6654265e3b05",
+        "role": "user",
+        "schema_version": "conversational_runtime_operation_marathon_1_v1",
+        "text": "Your goal today is to continue the semantic-reconciliation capability-growth campaign. Use the live conversation evidence already gathered to identify the strongest remaining weakness in queued and implied references. Generate multiple candidate strategies, compare them with a frozen held-out evaluator, and stop only when a real implementation proposal is ready for review. Do not change tracked source before review.",
+        "turn_id": "conversation-turn-63c4299606694c07"
+      },
+      {
+        "created_at": "2026-07-28T00:04:54+00:00",
+        "intent_type": "objective_confirmation",
+        "objective_id": "conversational-objective-aeed6654265e3b05",
+        "role": "assistant",
+        "schema_version": "conversational_runtime_operation_marathon_1_v1",
+        "text": "I registered that as a bounded session goal: improve my operator-specific English comprehension through this conversation. I can run routine local cognition and learn from corrections under standing bounded authority; source changes, network use, installs, deletion, commits, pushes, and protected paths still need explicit approval.",
+        "turn_id": "conversation-turn-efc7c7085bffaf3e"
+      },
+      {
+        "created_at": "2026-07-28T00:11:26+00:00",
+        "intent_type": "goal_review",
+        "objective_id": "conversational-objective-aeed6654265e3b05",
+        "role": "assistant",
+        "schema_version": "conversational_runtime_operation_marathon_1_v1",
+        "text": "[Goal review \u00b7 Language understanding]\n\nI completed:\nI reached an implementation-review boundary for the active language-comprehension goal.\n\nI learned:\n- no durable learning has been validated yet\n\nI retained:\n- no scoped lessons retained\n\nI rejected:\n- no rejected lesson applicability recorded\n\nStill unresolved:\n- implementation review is required before source-level semantic capability changes\n\nProvider use:\nlocal-only; no external provider calls performed\n\nNext recommended step:\nReview the proposed foreground-isolation and local-first repair before any broader semantic capability implementation.",
+        "turn_id": "conversation-turn-7f56b747364f5cb5"
+      },
+      {
+        "created_at": "2026-07-28T00:15:51+00:00",
+        "intent_type": "goal_review",
+        "objective_id": "conversational-objective-aeed6654265e3b05",
+        "role": "assistant",
+        "schema_version": "conversational_runtime_operation_marathon_1_v1",
+        "text": "[Goal review \u00b7 Semantic reconciliation]\n\nI completed:\n- live weakness investigation\n- local Qwen learning\n- three candidate comparisons\n- frozen held-out evaluation\n- bounded implementation proposal for operator review\n\nI learned:\n- Queued goal-thread messages mention 'that' or 'it' after intervening foreground topics, but the runtime only records the text and does not resolve the referent before later cognition.\n- winning candidate: candidate-a\n- local Qwen was sufficient; no provider packet was used\n\nI retained:\n- topic-boundary queued reference reconciliation\n\nI rejected:\n- candidate-b: unacceptable false-transfer or weaker held-out performance\n- candidate-c: unacceptable false-transfer or weaker held-out performance\n\nStill unresolved:\n- implementation review is required before source-level semantic capability changes\n\nProvider use:\nlocal-only; no external provider calls performed\n\nNext recommended step:\nReview the exact semantic-reconciliation implementation proposal before any source mutation.",
+        "turn_id": "conversation-turn-53670d0d22ef9faf"
+      },
+      {
+        "created_at": "2026-07-28T00:15:59+00:00",
+        "intent_type": "goal_review",
+        "objective_id": "conversational-objective-aeed6654265e3b05",
+        "role": "assistant",
+        "schema_version": "conversational_runtime_operation_marathon_1_v1",
+        "text": "[Goal review \u00b7 Semantic reconciliation]\n\nI completed:\n- live weakness investigation\n- local Qwen learning\n- three candidate comparisons\n- frozen held-out evaluation\n- bounded implementation proposal for operator review\n\nI learned:\n- Queued goal-thread messages mention 'that' or 'it' after intervening foreground topics, but the runtime only records the text and does not resolve the referent before later cognition.\n- winning candidate: candidate-a\n- local Qwen was sufficient; no provider packet was used\n\nI retained:\n- topic-boundary queued reference reconciliation\n\nI rejected:\n- candidate-b: unacceptable false-transfer or weaker held-out performance\n- candidate-c: unacceptable false-transfer or weaker held-out performance\n\nStill unresolved:\n- implementation review is required before source-level semantic capability changes\n\nProvider use:\nlocal-only; no external provider calls performed\n\nNext recommended step:\nReview the exact semantic-reconciliation implementation proposal before any source mutation.",
+        "turn_id": "conversation-turn-50e41e548f8e8b51"
+      }
+    ],
+    "tentative_goal_events": [],
+    "turn_relation_decisions": []
+  },
+  "local_qwen_learning_evidence": [
+    "shared-local-model-result-0f083329a18ecc7b",
+    "shared-local-model-result-7ec4db6d1f1b3677"
+  ],
+  "mitigations": [
+    "lane guard",
+    "negative instruction controls",
+    "tentative activation guard"
+  ],
+  "negative_transfer_controls": {
+    "accuracy": 1.0,
+    "candidate_id": "candidate-a",
+    "case_count": 1,
+    "passed_count": 1,
+    "rows": [
+      {
+        "case_id": "val-negative",
+        "expected": "unrelated_factual_answer",
+        "group": "negative applicability",
+        "partition": "validation",
+        "passed": true,
+        "predicted": "unrelated_factual_answer"
+      }
+    ]
+  },
+  "persistence_impact": "adds derived reconciliation records reconstructible from persisted conversation and objective_progress",
+  "production_consumer": "background objective cycle",
+  "production_producer": "queued-message reconciliation pass",
+  "proposed_patch_path": "G:\\Delta_Dev\\.tmp\\persistent-live-capability-growth-repair-marathon-1\\capability_growth_candidate_evaluation\\proposed_patch.diff",
+  "provider_use": "none; local Qwen was sufficient for weakness and candidate generation",
+  "rejected_candidates": [
+    {
+      "candidate_id": "candidate-b",
+      "reason": "unacceptable false-transfer or weaker held-out performance"
+    },
+    {
+      "candidate_id": "candidate-c",
+      "reason": "unacceptable false-transfer or weaker held-out performance"
+    }
+  ],
+  "restart_evidence": "pending live restart verification after proposal materialization",
+  "risks": [
+    "over-clarification",
+    "stale discourse candidates"
+  ],
+  "rollback": "remove reconciliation pass and fall back to preserved queued text",
+  "selected_weakness": {
+    "existing_mechanism_overlap": "record_foreground_message_for_reconciliation preserves order but does not produce a semantic target.",
+    "false_transfer_risk": "high if a learned reference rule is applied to unrelated foreground questions.",
+    "frequency": "observed twice in the live run",
+    "live_evidence_refs": [
+      "foreground_message_queued_for_reconciliation",
+      "operator correction about previous user message"
+    ],
+    "measurable_success_criteria": "Resolve previous-user, older-foreground-topic, and side-thread referents without contaminating unrelated factual chat.",
+    "observed_failure": "Queued goal-thread messages mention 'that' or 'it' after intervening foreground topics, but the runtime only records the text and does not resolve the referent before later cognition.",
+    "operator_impact": "DELTA may preserve the words but miss what the operator meant to compare.",
+    "probable_consumer": "background objective cycle and goal review",
+    "probable_producer": "conversation ingestion / queued-message reconciliation pass",
+    "probable_source_scope": [
+      "orchestration/runtime/conversational_runtime_operation.py"
+    ],
+    "rejection_criteria": "Rejected if foreground controls degrade or ambiguous cases are answered without calibrated clarification.",
+    "sandbox_feasibility": "high",
+    "severity": "high",
+    "weakness_id": "weakness-queued-topic-boundary-referent"
+  },
+  "tentative_goal_controls": {
+    "accuracy": 1.0,
+    "candidate_id": "candidate-a",
+    "case_count": 1,
+    "passed_count": 1,
+    "rows": [
+      {
+        "case_id": "val-tentative",
+        "expected": "discuss_tentative_without_activation",
+        "group": "tentative future goals",
+        "partition": "validation",
+        "passed": true,
+        "predicted": "discuss_tentative_without_activation"
+      }
+    ]
+  },
+  "ui_impact": "none required; optional scoped goal update text can report clarifications",
+  "unrelated_controls": {
+    "accuracy": 0.8,
+    "candidate_id": "candidate-a",
+    "case_count": 5,
+    "passed_count": 4,
+    "rows": [
+      {
+        "case_id": "design-last-object",
+        "expected": "cache_vs_ram",
+        "group": "last-mentioned object",
+        "partition": "design_examples",
+        "passed": false,
+        "predicted": "generic_contextual_ack"
+      },
+      {
+        "case_id": "val-prev-assistant",
+        "expected": "previous_assistant_response",
+        "group": "previous assistant response",
+        "partition": "validation",
+        "passed": true,
+        "predicted": "previous_assistant_response"
+      },
+      {
+        "case_id": "val-negative",
+        "expected": "unrelated_factual_answer",
+        "group": "negative applicability",
+        "partition": "validation",
+        "passed": true,
+        "predicted": "unrelated_factual_answer"
+      },
+      {
+        "case_id": "val-tentative",
+        "expected": "discuss_tentative_without_activation",
+        "group": "tentative future goals",
+        "partition": "validation",
+        "passed": true,
+        "predicted": "discuss_tentative_without_activation"
+      },
+      {
+        "case_id": "held-foreground-during-inference",
+        "expected": "unrelated_factual_answer",
+        "group": "foreground question during inference",
+        "partition": "final_held_out",
+        "passed": true,
+        "predicted": "unrelated_factual_answer"
+      }
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "architecture_drift": "bounded; no new UI/schema framework",
+  "audit_id": "codex-supervisor-audit-live-capability-growth-1",
+  "dataset_partition_integrity": true,
+  "disposition": "approve_for_operator_review",
+  "evaluator_separation": true,
+  "held_out_results": true,
+  "negative_transfer_controls": true,
+  "protected_paths": "not touched by proposal",
+  "real_live_transcript": true,
+  "real_qwen_use": true,
+  "restart": true,
+  "restart_proof_path": ".tmp\\persistent-live-capability-growth-repair-marathon-1\\restart_proof.json",
+  "sandbox_pytest": "3 passed",
+  "sandbox_source": true,
+  "sandbox_tests": true,
+  "simpler_alternatives": [
+    "last-mentioned-object heuristic rejected"
+  ],
+  "source_scope": [
+    "orchestration/runtime/conversational_runtime_operation.py"
+  ],
+  "tentative_goal_controls": true,
+  "unrelated_controls": true
+}

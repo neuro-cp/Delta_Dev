@@ -1,0 +1,107 @@
+{
+  "weaknesses": [
+    {
+      "existing_mechanism_overlap": "record_foreground_message_for_reconciliation preserves order but does not produce a semantic target.",
+      "false_transfer_risk": "high if a learned reference rule is applied to unrelated foreground questions.",
+      "frequency": "observed twice in the live run",
+      "live_evidence_refs": [
+        "foreground_message_queued_for_reconciliation",
+        "operator correction about previous user message"
+      ],
+      "measurable_success_criteria": "Resolve previous-user, older-foreground-topic, and side-thread referents without contaminating unrelated factual chat.",
+      "observed_failure": "Queued goal-thread messages mention 'that' or 'it' after intervening foreground topics, but the runtime only records the text and does not resolve the referent before later cognition.",
+      "operator_impact": "DELTA may preserve the words but miss what the operator meant to compare.",
+      "probable_consumer": "background objective cycle and goal review",
+      "probable_producer": "conversation ingestion / queued-message reconciliation pass",
+      "probable_source_scope": [
+        "orchestration/runtime/conversational_runtime_operation.py"
+      ],
+      "rejection_criteria": "Rejected if foreground controls degrade or ambiguous cases are answered without calibrated clarification.",
+      "sandbox_feasibility": "high",
+      "severity": "high",
+      "weakness_id": "weakness-queued-topic-boundary-referent"
+    },
+    {
+      "existing_mechanism_overlap": "ScopedLesson captures a broad strategy update.",
+      "false_transfer_risk": "medium",
+      "frequency": "observed in correction-derived learning and first fresh Qwen cycle",
+      "live_evidence_refs": [
+        "natural correction: inspect the previous user message"
+      ],
+      "measurable_success_criteria": "Correctly separate previous user message, previous assistant response, and last mentioned object cases.",
+      "observed_failure": "The system records the correction, but the active cognition output still generalizes to technical-term misunderstanding rather than the precise previous-user referent lesson.",
+      "operator_impact": "Later interpretations may look at the wrong preceding turn.",
+      "probable_consumer": "ordinary reply and background reconciliation",
+      "probable_producer": "correction attachment and turn relation decision",
+      "probable_source_scope": [
+        "orchestration/runtime/conversational_runtime_operation.py"
+      ],
+      "rejection_criteria": "Rejected if it overfits to 'previous' keywords and ignores topic boundaries.",
+      "sandbox_feasibility": "high",
+      "severity": "high",
+      "weakness_id": "weakness-previous-user-vs-assistant-distinction"
+    },
+    {
+      "existing_mechanism_overlap": "infer_lesson_transfer and decide_turn_relation reject unrelated factual topics.",
+      "false_transfer_risk": "high",
+      "frequency": "guard passed once; risk applies to every new mechanism",
+      "live_evidence_refs": [
+        "negative instruction: do not apply lesson to chemistry or cooking",
+        "turn_relation_decision rejected lesson"
+      ],
+      "measurable_success_criteria": "Preserve negative instruction behavior while improving related queued-reference cases.",
+      "observed_failure": "Negative transfer is guarded for factual examples, but queued semantic reconciliation lacks a reusable applicability filter for future candidate lessons.",
+      "operator_impact": "A new capability could reintroduce goal contamination.",
+      "probable_consumer": "turn relation and reconciliation",
+      "probable_producer": "lesson applicability filter",
+      "probable_source_scope": [
+        "orchestration/runtime/conversational_runtime_operation.py"
+      ],
+      "rejection_criteria": "Rejected if improvement comes by applying lessons too broadly.",
+      "sandbox_feasibility": "high",
+      "severity": "medium",
+      "weakness_id": "weakness-correction-conditioned-applicability"
+    },
+    {
+      "existing_mechanism_overlap": "tentative_goals records activation_required.",
+      "false_transfer_risk": "medium",
+      "frequency": "candidate goal observed twice",
+      "live_evidence_refs": [
+        "tentative_goal_candidate_recorded"
+      ],
+      "measurable_success_criteria": "Tentative candidates can be referenced for discussion without becoming active objectives.",
+      "observed_failure": "Tentative goals remain inert, but reference words in later messages could bind to tentative candidates as if activated.",
+      "operator_impact": "DELTA could silently pursue a future idea.",
+      "probable_consumer": "intent classifier and side-thread binding",
+      "probable_producer": "tentative-goal handling",
+      "probable_source_scope": [
+        "orchestration/runtime/conversational_runtime_operation.py"
+      ],
+      "rejection_criteria": "Rejected if tentative goal mentions reset active objective state.",
+      "sandbox_feasibility": "medium",
+      "severity": "medium",
+      "weakness_id": "weakness-tentative-goal-reference-leakage"
+    },
+    {
+      "existing_mechanism_overlap": "pending_chat_requests can represent authority requests.",
+      "false_transfer_risk": "medium",
+      "frequency": "not directly failed in current run; uncovered by evidence gap",
+      "live_evidence_refs": [
+        "side-thread requirement from operator",
+        "pending_chat_requests=0 in current run"
+      ],
+      "measurable_success_criteria": "Later 'yes, prioritize that' binds to the originating goal update without changing foreground topic.",
+      "observed_failure": "The product requirement expects replies to scoped goal updates to bind back later; current live run has no pending side-thread request coverage for semantic reconciliation.",
+      "operator_impact": "A directional answer may be treated as unexplained foreground chat.",
+      "probable_consumer": "resolve_pending_chat_request",
+      "probable_producer": "goal update request creation",
+      "probable_source_scope": [
+        "orchestration/runtime/conversational_runtime_operation.py"
+      ],
+      "rejection_criteria": "Rejected if it requires a new UI layer or broad workflow engine.",
+      "sandbox_feasibility": "medium",
+      "severity": "medium",
+      "weakness_id": "weakness-side-thread-reply-binding"
+    }
+  ]
+}

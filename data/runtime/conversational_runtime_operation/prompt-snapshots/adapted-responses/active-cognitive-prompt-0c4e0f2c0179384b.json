@@ -1,0 +1,23 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Operators can learn from corrections in real-time.",
+      "Corrections are effective when provided promptly."
+    ],
+    "expected_observations": [
+      "Operators will apply corrections in subsequent interactions."
+    ],
+    "hypothesis_statement": "Operators will understand corrections better in future conversations after receiving them in the current one.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "English comprehension during conversation",
+    "supporting_evidence_refs": [
+      "prior-conversational-episode-12"
+    ],
+    "uncertainty": "Whether the corrections will be retained and applied by the operators in the long term."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"hypothesis_statement\":\"Operators will understand corrections better in future conversations after receiving them in the current one.\",\"scope\":\"English comprehension during conversation\",\"supporting_evidence_refs\":[\"prior-conversational-episode-12\"],\"assumptions\":[\"Operators can learn from corrections in real-time.\",\"Corrections are effective when provided promptly.\"],\"expected_observations\":[\"Operators will apply corrections in subsequent interactions.\"],\"uncertainty\":\"Whether the corrections will be retained and applied by the operators in the long term.\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+  "raw_response_digest": "a8f1086361b36b0691026bebbccb1eb53da39994d246c60292887ce7a91b3c35",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

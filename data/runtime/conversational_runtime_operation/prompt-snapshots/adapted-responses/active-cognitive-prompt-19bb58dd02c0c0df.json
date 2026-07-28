@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "prior-conversational-episode-12"
+    ],
+    "lesson": "Operators can learn from corrections in real-time.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "Effectiveness of real-time corrections",
+    "unresolved_questions": [
+      "How effective are real-time corrections in improving comprehension?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"Operators can learn from corrections in real-time.\",\"evidence_refs\":[\"prior-conversational-episode-12\"],\"unresolved_questions\":[\"How effective are real-time corrections in improving comprehension?\"],\"uncertainty\":\"Effectiveness of real-time corrections\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "75a7050cbbeae2ac987d1edf4fbab5ca0cdf37d44789b0bbeeb14d17c87e3176",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

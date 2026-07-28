@@ -1,0 +1,32 @@
+{
+  "acceptance_criteria": [
+    "held-out improvement",
+    "no foreground degradation",
+    "restart consistency"
+  ],
+  "candidate_id": "candidate-a",
+  "consumer": "background objective cycle",
+  "expected_benefit": "Improves ambiguous queued references while preserving foreground obligations.",
+  "failure_modes": [
+    "over-clarification",
+    "stale discourse candidates"
+  ],
+  "false_transfer_risk": "low with lane guard",
+  "foreground_chat_interaction": "foreground factual questions bypass goal-thread reconciliation",
+  "hypothesis": "A topic-boundary-aware queued reconciliation pass can resolve or clarify references before background cognition consumes them.",
+  "latency": "low deterministic pass plus optional Qwen ranking",
+  "mechanism": "Build a discourse candidate map from foreground turns, queued goal-thread turns, corrections, and tentative goals; rank referents by lane, recency, and ambiguity; clarify when multiple candidates remain.",
+  "producer": "queued-message reconciliation pass",
+  "required_state": [
+    "conversation",
+    "objective_progress",
+    "turn_relation_decisions",
+    "tentative_goals"
+  ],
+  "restart_behavior": "candidate map is reconstructible from persisted turns",
+  "rollback": "remove reconciliation pass and fall back to preserved queued text",
+  "source_scope_estimate": [
+    "orchestration/runtime/conversational_runtime_operation.py"
+  ],
+  "tentative_goal_interaction": "tentative goals may be mentioned but never activated"
+}

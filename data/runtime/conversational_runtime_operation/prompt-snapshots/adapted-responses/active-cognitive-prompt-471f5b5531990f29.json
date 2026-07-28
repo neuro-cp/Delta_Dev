@@ -1,0 +1,24 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Operators can learn from corrections in real-time.",
+      "Corrections are effective when provided promptly."
+    ],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "prior-conversational-episode-12"
+    ],
+    "interpretation": "Operators will understand corrections better in future conversations after receiving them in the current one.",
+    "next_evidence_need": "local evidence supporting or challenging the goal",
+    "next_focus_proposal": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+    "operation_result_type": "compare_evidence_result",
+    "recommended_action": "continue_observation",
+    "recommended_state_transition": "add_supporting_evidence",
+    "uncertainty": "How long will the effect of corrections last? Will operators retain the understanding after the next conversation?"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"assumptions\":[\"Operators can learn from corrections in real-time.\",\"Corrections are effective when provided promptly.\"],\"contrary_evidence_considered\":[],\"evidence_refs\":[\"prior-conversational-episode-12\"],\"interpretation\":\"Operators will understand corrections better in future conversations after receiving them in the current one.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"continue_observation\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"How long will the effect of corrections last? Will operators retain the understanding after the next conversation?\"}",
+  "raw_response_digest": "5373f618a92a85d592b1e07b5d748850a9ff5218125171a15b7c3b2693860e83",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

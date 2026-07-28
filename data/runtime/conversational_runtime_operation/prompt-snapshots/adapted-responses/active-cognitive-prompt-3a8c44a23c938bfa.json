@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "prior-conversational-episode-3"
+    ],
+    "lesson": "Operators may struggle with specific English phrases in conversations due to limited exposure.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "Limited exposure to specific phrases may lead to misunderstandings.",
+    "unresolved_questions": [
+      "How can we effectively address the limited exposure issue?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"Operators may struggle with specific English phrases in conversations due to limited exposure.\",\"evidence_refs\":[\"prior-conversational-episode-3\"],\"unresolved_questions\":[\"How can we effectively address the limited exposure issue?\"],\"uncertainty\":\"Limited exposure to specific phrases may lead to misunderstandings.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "fe8fbd37e275e973acb0372ceea52b774f30cce895fef643e71cda53d53a5098",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

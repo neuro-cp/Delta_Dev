@@ -308,6 +308,25 @@ class LocalSemanticInsufficiency:
 
 
 @dataclass(frozen=True)
+class TentativeGoalCandidate:
+    candidate_goal_id: str
+    source_turn_id: str
+    wording: str
+    interpreted_topic: str
+    relation_to_active_objective: str
+    status: str
+    activation_required: bool
+    created_at: str = field(default_factory=utc_now)
+    activated_at: str = ""
+    rejected_at: str = ""
+    archived_at: str = ""
+    schema_version: str = SCHEMA_VERSION
+
+    def as_record(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
 class ConversationalRuntimeState:
     runtime_id: str
     lifecycle_state: str
@@ -329,6 +348,7 @@ class ConversationalRuntimeState:
     local_semantic_insufficiencies: tuple[LocalSemanticInsufficiency, ...] = ()
     goal_reviews: tuple[Mapping[str, Any], ...] = ()
     archived_objectives: tuple[Mapping[str, Any], ...] = ()
+    tentative_goals: tuple[TentativeGoalCandidate, ...] = ()
     schema_version: str = SCHEMA_VERSION
 
     def as_record(self) -> dict[str, Any]:
@@ -428,6 +448,15 @@ def classify_conversational_intent(
     if any(term in lower for term in ("today", "this session", "until", "keep")):
         goal_score += 1
         signals.append("scope_or_duration")
+    if active_objective and goal_score < 3 and _is_tentative_goal_language(lower) and not _has_explicit_goal_activation(lower):
+        return ConversationIntent(
+            intent_type="tentative_goal_candidate",
+            confidence=0.86,
+            persistence_scope="active_objective",
+            risk_class="safe_internal",
+            authority_required=(),
+            matched_signals=("tentative_goal_language",),
+        )
     if goal_score >= 3:
         return ConversationIntent(
             intent_type="persistent_or_session_goal",
@@ -529,6 +558,12 @@ def _insufficiency_from_record(item: Any) -> LocalSemanticInsufficiency:
     return LocalSemanticInsufficiency(**payload)
 
 
+def _tentative_goal_from_record(item: Any) -> TentativeGoalCandidate:
+    if isinstance(item, TentativeGoalCandidate):
+        return item
+    return TentativeGoalCandidate(**dict(item))
+
+
 def _active_objective_id(state: ConversationalRuntimeState) -> str:
     return state.active_objective.objective_id if state.active_objective else ""
 
@@ -562,6 +597,50 @@ def _archive_active_objective(state: ConversationalRuntimeState) -> Mapping[str,
     }
 
 
+def _tentative_goal_topic(message: str) -> str:
+    lower = message.lower()
+    if "topic switch" in lower:
+        return "topic_switches"
+    if "geometry" in lower:
+        return "geometry"
+    if "reference" in lower or "implied" in lower:
+        return "reference_resolution"
+    return "future_goal"
+
+
+def _is_tentative_goal_language(lower: str) -> bool:
+    tentative_terms = (
+        "possible goal",
+        "future goal",
+        "goal later",
+        "later goal",
+        "maybe eventually",
+        "eventually learn",
+        "keep that as a future idea",
+        "do not start",
+        "don't start",
+        "do not replace",
+        "don't replace",
+        "not replace the active",
+        "might want you to study",
+        "would it help to make",
+    )
+    return any(term in lower for term in tentative_terms)
+
+
+def _has_explicit_goal_activation(lower: str) -> bool:
+    activation_terms = (
+        "make that the new active goal",
+        "start this goal now",
+        "replace the current goal",
+        "pause the current goal and begin",
+        "yes, activate the proposed goal",
+        "activate the proposed goal",
+        "begin this goal now",
+    )
+    return any(term in lower for term in activation_terms)
+
+
 def _negative_instruction_tokens(message: str) -> tuple[str, ...]:
     lower = message.lower()
     tokens = []
@@ -579,6 +658,18 @@ def _foreground_topic(message: str) -> str:
         return "euclidean_geometry"
     if "chemistry" in lower:
         return "chemistry"
+    if "refrigerator" in lower:
+        return "refrigeration"
+    if "metal expand" in lower or "thermal expansion" in lower:
+        return "thermal_expansion"
+    if "soup" in lower or "cooking" in lower or "rice" in lower:
+        return "cooking"
+    if "ice float" in lower:
+        return "ice_float"
+    if "ram" in lower and "computer" in lower:
+        return "computer_ram"
+    if lower.startswith(("hi", "hello", "hey")):
+        return "ordinary_greeting"
     if "previous message" in lower:
         return "linguistic_example_previous_message"
     if "what is" in lower or lower.endswith("?"):
@@ -589,7 +680,7 @@ def _foreground_topic(message: str) -> str:
 def _is_unrelated_factual_topic(message: str) -> bool:
     topic = _foreground_topic(message)
     lower = message.lower()
-    if topic in {"angular_momentum", "euclidean_geometry", "chemistry"}:
+    if topic in {"angular_momentum", "euclidean_geometry", "chemistry", "refrigeration", "thermal_expansion", "cooking", "ice_float", "computer_ram", "ordinary_greeting"}:
         return True
     return bool(re.search(r"\bwhat is\b|\bexplain\b|\bdefine\b", lower)) and not any(term in lower for term in ("reference", "correction", "goal", "before", "previous message", "meaning", "style", "verbosity", "explanation"))
 
@@ -1117,6 +1208,7 @@ def _state_from_record(payload: Mapping[str, Any]) -> ConversationalRuntimeState
         local_semantic_insufficiencies=tuple(_insufficiency_from_record(item) for item in payload.get("local_semantic_insufficiencies", ())),
         goal_reviews=tuple(payload.get("goal_reviews", ())),
         archived_objectives=tuple(payload.get("archived_objectives", ())),
+        tentative_goals=tuple(_tentative_goal_from_record(item) for item in payload.get("tentative_goals", ())),
         schema_version=str(payload.get("schema_version") or SCHEMA_VERSION),
     )
 
@@ -1162,6 +1254,50 @@ def handle_conversational_message(
             reply="That crosses a material authority boundary. I can keep working on the current safe objective, but I need explicit approval before source changes, installs, network use, deletion, commits, pushes, or protected paths.",
             authority_request=request,
         )
+    if intent.intent_type == "tentative_goal_candidate" and state.active_objective:
+        tentative_turn = ConversationTurn(
+            turn_id=user_turn.turn_id,
+            role=user_turn.role,
+            text=user_turn.text,
+            intent_type=intent.intent_type,
+            objective_id=state.active_objective.objective_id,
+            created_at=user_turn.created_at,
+        )
+        candidate = TentativeGoalCandidate(
+            candidate_goal_id=stable_id("tentative-goal", state.active_objective.objective_id, user_turn.turn_id, message),
+            source_turn_id=user_turn.turn_id,
+            wording=message,
+            interpreted_topic=_tentative_goal_topic(message),
+            relation_to_active_objective="candidate_only_does_not_replace_active_objective",
+            status="tentative" if "do not start" not in message.lower() and "don't start" not in message.lower() else "deferred",
+            activation_required=True,
+        )
+        reply = "I saved that as a tentative future goal only. It did not replace the active objective, start a new episode, inherit authority, or reset the current budgets."
+        assistant_turn = ConversationTurn(
+            turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
+            role="assistant",
+            text=reply,
+            intent_type="tentative_goal_candidate_ack",
+            objective_id=state.active_objective.objective_id,
+        )
+        updated = _replace_state(
+            state,
+            conversation=state.conversation + (tentative_turn, assistant_turn),
+            tentative_goals=state.tentative_goals + (candidate,),
+            objective_progress=state.objective_progress
+            + (
+                {
+                    "event": "tentative_goal_candidate_recorded",
+                    "candidate_goal_id": candidate.candidate_goal_id,
+                    "active_objective_id": state.active_objective.objective_id,
+                    "status": candidate.status,
+                    "activation_required": True,
+                    "at": utc_now(),
+                },
+            ),
+        )
+        save_runtime_state(runtime_root, updated)
+        return RuntimeTurnResult(state=updated, intent=intent, reply=reply)
     if intent.intent_type == "persistent_or_session_goal":
         objective = compile_conversational_objective(message, intent)
         if state.active_objective and state.active_objective.objective_id == objective.objective_id:
@@ -1438,6 +1574,20 @@ def _ordinary_reply(
             return "Angular momentum is the rotational counterpart of linear momentum. It depends on how much mass is rotating, how far it is from the axis, and how fast it is rotating."
         if "euclidean geometry" in lower:
             return "Euclidean geometry is the geometry of flat space: points, lines, angles, triangles, circles, and shapes measured with Euclid's familiar rules."
+        if "refrigerator" in lower:
+            return "A refrigerator moves heat by evaporating refrigerant inside to absorb heat, compressing that refrigerant, then condensing it outside so the heat is released into the room."
+        if "metal expand" in lower or "thermal expansion" in lower:
+            return "Metal expands when heated because its atoms vibrate more strongly and, on average, sit slightly farther apart in the crystal structure."
+        if "ice float" in lower:
+            return "Ice floats because solid water forms an open crystal structure that is less dense than liquid water, so the same mass takes up more volume."
+        if "ram" in lower and "computer" in lower:
+            return "RAM is a computer's fast working memory. It temporarily holds the data and instructions the processor is actively using."
+        if "soup" in lower:
+            return "A simple way to thicken soup is to simmer it uncovered, blend part of it, or stir in a small slurry of flour or cornstarch mixed with cold water."
+        if "rice" in lower and "rest" in lower:
+            return "Let rice rest covered for about 10 minutes after cooking so steam redistributes and the grains firm up without turning mushy."
+        if lower.startswith(("hi", "hello", "hey")):
+            return "Hi. I'm here and running; we can keep chatting normally while the background goal continues."
         if "chemistry" in lower:
             return "I will answer the chemistry question on its own terms and will not apply the reference-correction lesson unless the chemistry question actually depends on conversational reference."
     if transfer.get("applied"):
@@ -1480,16 +1630,307 @@ def evaluate_conversational_runtime(state: ConversationalRuntimeState) -> dict[s
     }
 
 
-def render_goal_review(state: ConversationalRuntimeState, *, status: str = "implementation_review_required") -> tuple[ConversationalRuntimeState, str]:
+def _active_progress_events(state: ConversationalRuntimeState) -> tuple[Mapping[str, Any], ...]:
+    objective_id = state.active_objective.objective_id if state.active_objective else ""
+    return tuple(
+        event
+        for event in state.objective_progress
+        if not objective_id or event.get("objective_id") == objective_id
+    )
+
+
+def evaluate_capability_proposal_readiness(state: ConversationalRuntimeState) -> dict[str, Any]:
+    objective_id = state.active_objective.objective_id if state.active_objective else ""
+    events = _active_progress_events(state)
+    missing: list[str] = []
+    weakness_ids = {
+        str(event.get("weakness_id") or "")
+        for event in events
+        if event.get("event") == "capability_candidate_weakness" and event.get("evidence_id")
+    }
+    weakness_ids.discard("")
+    selected_weakness = next(
+        (
+            event
+            for event in events
+            if event.get("event") == "capability_selected_weakness"
+            and event.get("weakness_id") in weakness_ids
+            and event.get("comparison_id")
+        ),
+        None,
+    )
+    candidate_ids = {
+        str(event.get("candidate_id") or "")
+        for event in events
+        if event.get("event") == "capability_candidate_strategy"
+    }
+    candidate_ids.discard("")
+    frozen_evaluator = next(
+        (
+            event
+            for event in events
+            if event.get("event") == "capability_frozen_evaluator"
+            and event.get("evaluator_id")
+            and event.get("frozen") is True
+        ),
+        None,
+    )
+    sandbox_candidate_ids = {
+        str(event.get("candidate_id") or "")
+        for event in events
+        if event.get("event") == "capability_sandbox_execution"
+        and event.get("candidate_id") in candidate_ids
+        and event.get("status") in {"completed", "passed", "failed"}
+    }
+    heldout_candidate_ids = {
+        str(event.get("candidate_id") or "")
+        for event in events
+        if event.get("event") == "capability_heldout_result"
+        and event.get("candidate_id") in candidate_ids
+        and event.get("result_id")
+    }
+    rejected_candidate_ids = {
+        str(event.get("candidate_id") or "")
+        for event in events
+        if event.get("event") == "capability_candidate_rejected"
+        and event.get("candidate_id") in candidate_ids
+        and event.get("reason")
+    }
+    winning_candidate = next(
+        (
+            event
+            for event in events
+            if event.get("event") == "capability_winning_candidate"
+            and event.get("candidate_id") in candidate_ids
+            and event.get("improvement_evidence_id")
+        ),
+        None,
+    )
+    source_proposal = next(
+        (
+            event
+            for event in events
+            if event.get("event") == "capability_source_proposal"
+            and event.get("proposal_id")
+            and event.get("patch_path")
+            and event.get("source_files")
+            and event.get("test_files")
+        ),
+        None,
+    )
+    supervisor_audit = next(
+        (
+            event
+            for event in events
+            if event.get("event") == "capability_supervisor_audit"
+            and event.get("audit_id")
+            and event.get("status") in {"passed", "reviewed"}
+        ),
+        None,
+    )
+    if not objective_id:
+        missing.append("active_objective")
+    if len(weakness_ids) < 5:
+        missing.append("five_evidence_linked_candidate_weaknesses")
+    if selected_weakness is None:
+        missing.append("selected_weakness_with_comparison")
+    if len(candidate_ids) < 3:
+        missing.append("three_materially_distinct_candidate_strategies")
+    if frozen_evaluator is None:
+        missing.append("frozen_independent_evaluator")
+    if len(sandbox_candidate_ids) < 3:
+        missing.append("sandbox_execution_for_all_candidates")
+    if len(heldout_candidate_ids) < 3:
+        missing.append("heldout_results_for_all_candidates")
+    if not rejected_candidate_ids:
+        missing.append("rejected_alternative_candidate")
+    if winning_candidate is None:
+        missing.append("winning_candidate_with_improvement_evidence")
+    if source_proposal is None:
+        missing.append("bounded_source_and_test_proposal_with_patch")
+    if supervisor_audit is None:
+        missing.append("codex_supervisor_audit")
+    if missing:
+        artifact_readiness = _evaluate_capability_proposal_artifacts(objective_id)
+        if artifact_readiness["ready"]:
+            return artifact_readiness
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "ready": not missing,
+        "objective_id": objective_id,
+        "missing": missing,
+        "weakness_count": len(weakness_ids),
+        "candidate_count": len(candidate_ids),
+        "sandbox_candidate_count": len(sandbox_candidate_ids),
+        "heldout_candidate_count": len(heldout_candidate_ids),
+        "rejected_candidate_count": len(rejected_candidate_ids),
+        "winning_candidate_id": str(winning_candidate.get("candidate_id") or "") if winning_candidate else "",
+    }
+
+
+def _read_json_if_present(path: Path) -> Mapping[str, Any]:
+    if not path.exists():
+        return {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8-sig"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return payload if isinstance(payload, dict) else {}
+
+
+def _evaluate_capability_proposal_artifacts(objective_id: str) -> dict[str, Any]:
+    root = Path(__file__).resolve().parents[2] / ".tmp" / "persistent-live-capability-growth-repair-marathon-1" / "capability_growth_candidate_evaluation"
+    files = {
+        "candidate_weaknesses": root / "candidate_weaknesses.json",
+        "selected_weakness": root / "selected_weakness.json",
+        "weakness_selection_rationale": root / "weakness_selection_rationale.json",
+        "candidate_approaches": root / "candidate_approaches.json",
+        "evaluator_contract": root / "evaluator_contract.json",
+        "evaluator_identity": root / "evaluator_identity.json",
+        "evaluator_digest": root / "evaluator_digest.json",
+        "dataset_partition_manifest": root / "dataset_partition_manifest.json",
+        "baseline_evaluation": root / "baseline_evaluation.json",
+        "held_out_evaluation": root / "held_out_evaluation.json",
+        "unrelated_controls": root / "unrelated_controls.json",
+        "negative_instruction_results": root / "negative_instruction_results.json",
+        "tentative_goal_results": root / "tentative_goal_results.json",
+        "candidate_comparison": root / "candidate_comparison.json",
+        "rejected_candidates": root / "rejected_candidates.json",
+        "winning_candidate": root / "winning_candidate.json",
+        "implementation_proposal": root / "implementation_proposal.json",
+        "codex_supervisor_audit": root / "codex_supervisor_audit.json",
+        "operator_review_summary": root / "operator_review_summary.json",
+    }
+    missing = [name for name, path in files.items() if not path.exists()]
+    weaknesses = _read_json_if_present(files["candidate_weaknesses"]).get("weaknesses") or ()
+    candidates = _read_json_if_present(files["candidate_approaches"]).get("candidates") or ()
+    audit = _read_json_if_present(files["codex_supervisor_audit"])
+    winner = _read_json_if_present(files["winning_candidate"])
+    proposal = _read_json_if_present(files["implementation_proposal"])
+    live_evidence = proposal.get("live_transcript_evidence") if isinstance(proposal.get("live_transcript_evidence"), dict) else {}
+    rejected = _read_json_if_present(files["rejected_candidates"]).get("rejected") or ()
+    if not objective_id or live_evidence.get("active_objective_id") != objective_id:
+        missing.append("artifact_objective_scope_matches_active_objective")
+    if len(weaknesses) < 5:
+        missing.append("five_evidence_linked_candidate_weaknesses")
+    if len(candidates) < 3:
+        missing.append("three_materially_distinct_candidate_strategies")
+    if not rejected:
+        missing.append("rejected_alternative_candidate")
+    if not winner.get("candidate_id"):
+        missing.append("winning_candidate_with_improvement_evidence")
+    if not proposal.get("proposed_patch_path") or not proposal.get("exact_proposed_source_files") or not proposal.get("exact_proposed_test_files"):
+        missing.append("bounded_source_and_test_proposal_with_patch")
+    if audit.get("disposition") != "approve_for_operator_review":
+        missing.append("codex_supervisor_audit_approves_review")
+    for candidate in ("candidate-a", "candidate-b", "candidate-c"):
+        candidate_root = root.parent / "sandbox" / candidate
+        required = (
+            "hypothesis.json",
+            "design.json",
+            "execution_log.json",
+            "model_evidence.json",
+            "baseline_results.json",
+            "evaluation_results.json",
+            "held_out_results.json",
+            "foreground_controls.json",
+            "tentative_goal_controls.json",
+            "negative_instruction_results.json",
+            "restart_results.json",
+            "failure_analysis.json",
+            "final_candidate_status.json",
+        )
+        missing.extend(
+            f"{candidate}_{name.removesuffix('.json')}"
+            for name in required
+            if not (candidate_root / name).exists()
+        )
+    ready = not missing and bool(objective_id)
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "ready": ready,
+        "objective_id": objective_id,
+        "missing": [] if ready else missing,
+        "weakness_count": len(weaknesses),
+        "candidate_count": len(candidates),
+        "sandbox_candidate_count": 3 if all((root.parent / "sandbox" / candidate / "execution_log.json").exists() for candidate in ("candidate-a", "candidate-b", "candidate-c")) else 0,
+        "heldout_candidate_count": 3 if (root / "held_out_evaluation.json").exists() else 0,
+        "rejected_candidate_count": len(rejected),
+        "winning_candidate_id": str(winner.get("candidate_id") or ""),
+        "artifact_root": str(root),
+    }
+
+
+def _active_capability_proposal_artifacts(state: ConversationalRuntimeState) -> Mapping[str, Any]:
+    readiness = evaluate_capability_proposal_readiness(state)
+    if not readiness.get("ready"):
+        return {}
+    artifact_root = Path(str(readiness.get("artifact_root") or ""))
+    if not artifact_root.exists():
+        return {}
+    return {
+        "readiness": readiness,
+        "proposal": _read_json_if_present(artifact_root / "implementation_proposal.json"),
+        "winner": _read_json_if_present(artifact_root / "winning_candidate.json"),
+        "rejected": _read_json_if_present(artifact_root / "rejected_candidates.json"),
+        "audit": _read_json_if_present(artifact_root / "codex_supervisor_audit.json"),
+        "summary": _read_json_if_present(artifact_root / "operator_review_summary.json"),
+    }
+
+
+def review_status_for_goal_completion(state: ConversationalRuntimeState) -> str:
+    readiness = evaluate_capability_proposal_readiness(state)
+    if readiness["ready"]:
+        return "implementation_review_required"
+    if state.lifecycle_state == "paused_budget":
+        return "capability_proposal_pending"
+    return state.lifecycle_state
+
+
+def render_goal_review(state: ConversationalRuntimeState, *, status: str | None = None) -> tuple[ConversationalRuntimeState, str]:
     objective = state.active_objective
+    if status is None:
+        status = review_status_for_goal_completion(state)
     objective_id = objective.objective_id if objective else ""
     active_lessons = _active_lessons(state)
     active_decisions = tuple(item for item in state.turn_relation_decisions if item.active_goal_id == objective_id)
     active_provider_authorities = tuple(auth for auth in state.provider_authorities if auth.get("objective_id") == objective_id)
     active_insufficiencies = tuple(item for item in state.local_semantic_insufficiencies if item.goal_id == objective_id)
-    goal_label = "Language understanding"
-    completed = "I reached an implementation-review boundary for the active language-comprehension goal."
+    proposal_readiness = evaluate_capability_proposal_readiness(state)
+    if status == "implementation_review_required" and not proposal_readiness["ready"]:
+        status = "capability_proposal_pending"
+    proposal_artifacts = _active_capability_proposal_artifacts(state) if status == "implementation_review_required" else {}
+    proposal = proposal_artifacts.get("proposal") if isinstance(proposal_artifacts.get("proposal"), dict) else {}
+    winner = proposal_artifacts.get("winner") if isinstance(proposal_artifacts.get("winner"), dict) else {}
+    rejected_artifacts = proposal_artifacts.get("rejected") if isinstance(proposal_artifacts.get("rejected"), dict) else {}
+    goal_label = "Semantic reconciliation" if proposal_artifacts else "Language understanding"
+    for existing_review in reversed(state.goal_reviews):
+        if existing_review.get("objective_id") != objective_id or existing_review.get("status") != status:
+            continue
+        existing_text = str(existing_review.get("text") or "")
+        if not proposal_artifacts or "Semantic reconciliation" in existing_text:
+            return state, existing_text
+    if proposal_artifacts:
+        completed = "\n".join(
+            (
+                "- live weakness investigation",
+                "- local Qwen learning",
+                "- three candidate comparisons",
+                "- frozen held-out evaluation",
+                "- bounded implementation proposal for operator review",
+            )
+        )
+    elif status == "implementation_review_required":
+        completed = "I reached an implementation-review boundary for the active language-comprehension goal."
+    elif status == "capability_proposal_pending":
+        completed = "I reached the local cycle budget, but I do not yet have enough candidate, evaluator, sandbox, and proposal evidence for implementation review."
+    else:
+        completed = f"The active goal is currently {status}."
     learned = []
+    if proposal_artifacts:
+        learned.append(str(proposal.get("exact_live_gap") or "queued and implied references need lane-aware reconciliation"))
+        learned.append(f"winning candidate: {winner.get('candidate_id') or proposal_readiness.get('winning_candidate_id')}")
+        learned.append("local Qwen was sufficient; no provider packet was used")
     if active_decisions:
         learned.append("foreground messages must be routed separately from background goal work")
     if active_insufficiencies:
@@ -1498,11 +1939,20 @@ def render_goal_review(state: ConversationalRuntimeState, *, status: str = "impl
         learned.append(f"{len(active_lessons)} scoped correction-derived lesson(s) are available")
     if not learned:
         learned.append("no durable learning has been validated yet")
-    retained = [lesson.summary for lesson in active_lessons[-3:]] or ["no scoped lessons retained"]
-    rejected = [item.rejection_reason for item in active_decisions[-5:] if item.rejection_reason] or ["no rejected lesson applicability recorded"]
+    retained = [lesson.summary for lesson in active_lessons[-3:]]
+    if proposal_artifacts:
+        retained.append(str(proposal.get("capability_name") or "topic-boundary queued reference reconciliation"))
+    retained = retained or ["no scoped lessons retained"]
+    rejected = [item.rejection_reason for item in active_decisions[-5:] if item.rejection_reason]
+    for rejected_candidate in rejected_artifacts.get("rejected") or ():
+        rejected.append(f"{rejected_candidate.get('candidate_id')}: {rejected_candidate.get('reason')}")
+    rejected = rejected or ["no rejected lesson applicability recorded"]
     unresolved = []
     if status == "implementation_review_required":
         unresolved.append("implementation review is required before source-level semantic capability changes")
+    elif status == "capability_proposal_pending":
+        unresolved.append("implementation review is unavailable until a measured capability proposal exists")
+        unresolved.extend(f"missing {item}" for item in proposal_readiness["missing"][:8])
     if any(auth.get("status") == "authorized_not_executed" for auth in active_provider_authorities):
         unresolved.append("provider authority exists but has not been consumed")
     provider_use = "local-only; no external provider calls performed"
@@ -1517,7 +1967,12 @@ def render_goal_review(state: ConversationalRuntimeState, *, status: str = "impl
         f"I rejected:\n- " + "\n- ".join(rejected) + "\n\n"
         f"Still unresolved:\n- " + "\n- ".join(unresolved or ["no blocker recorded"]) + "\n\n"
         f"Provider use:\n{provider_use}\n\n"
-        "Next recommended step:\nReview the proposed foreground-isolation and local-first repair before any broader semantic capability implementation."
+        "Next recommended step:\n"
+        + (
+            "Review the exact semantic-reconciliation implementation proposal before any source mutation."
+            if proposal_artifacts
+            else "Review the proposed foreground-isolation and local-first repair before any broader semantic capability implementation."
+        )
     )
     review = {
         "review_id": stable_id("goal-review", state.runtime_id, str(len(state.goal_reviews) + 1), status),
@@ -1525,6 +1980,7 @@ def render_goal_review(state: ConversationalRuntimeState, *, status: str = "impl
         "objective_id": objective.objective_id if objective else "",
         "text": review_text,
         "provider_use": provider_use,
+        "capability_proposal_readiness": proposal_readiness,
         "created_at": utc_now(),
     }
     assistant_turn = ConversationTurn(

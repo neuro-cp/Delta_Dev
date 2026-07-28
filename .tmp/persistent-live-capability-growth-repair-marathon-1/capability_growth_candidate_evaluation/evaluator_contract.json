@@ -1,0 +1,28 @@
+{
+  "dataset_digest": "87efdc77ad9e9386a1216aee6f2a3d14669480c706111c143b3c0858961f8ad7",
+  "evaluator_digest": "caa0dd6b07d1a3fb21f1e9c3ccb32e8527a2f0ac01d55ca6e0eadf62d23d4c6a",
+  "evaluator_id": "semantic-reconciliation-evaluator-v1",
+  "evaluator_identity": "deterministic-held-out-evaluator:semantic-reconciliation-v1",
+  "metrics": [
+    "referent correctness",
+    "foreground-answer usefulness",
+    "acknowledgment-only failure",
+    "queued-order preservation",
+    "correction incorporation",
+    "tentative-goal false activation",
+    "false transfer",
+    "goal contamination",
+    "clarification precision",
+    "side-thread binding",
+    "restart consistency",
+    "duplicate suppression",
+    "latency"
+  ],
+  "prohibited": [
+    "candidate self-scoring",
+    "constant metrics",
+    "candidate-generated held-out answers",
+    "threshold changes after results",
+    "model confidence as proof"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Operators are familiar with basic English grammar and vocabulary"
+    ],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "prior-conversational-episode-9"
+    ],
+    "interpretation": "Operators may misunderstand specific English phrases related to equipment operation, which could impact comprehension during conversations.",
+    "next_evidence_need": "local evidence supporting or challenging the goal",
+    "next_focus_proposal": "Continue correction-linked comprehension practice without duplicating prior completed episode work.",
+    "operation_result_type": "compare_evidence_result",
+    "recommended_action": "Continue correction-linked comprehension practice without duplicating prior completed episode work.",
+    "recommended_state_transition": "add_supporting_evidence",
+    "uncertainty": "Specific phrases and their correct usage remain unresolved."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"assumptions\":[\"Operators are familiar with basic English grammar and vocabulary\"],\"contrary_evidence_considered\":[],\"evidence_refs\":[\"prior-conversational-episode-9\"],\"interpretation\":\"Operators may misunderstand specific English phrases related to equipment operation, which could impact comprehension during conversations.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"Continue correction-linked comprehension practice without duplicating prior completed episode work.\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"Continue correction-linked comprehension practice without duplicating prior completed episode work.\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"Specific phrases and their correct usage remain unresolved.\"}",
+  "raw_response_digest": "5cdcd4cea989013618a94acf24eb0861cbfec24bf5381e70eabdeb802dab023d",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

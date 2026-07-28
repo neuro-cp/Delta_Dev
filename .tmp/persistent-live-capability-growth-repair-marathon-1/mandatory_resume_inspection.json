@@ -1,0 +1,25 @@
+{
+  "active_objective_id": "conversational-objective-f0d1263e805c59f8",
+  "archived_objective_count": 5,
+  "candidate_or_proposal_event_count": 0,
+  "candidate_or_proposal_events": [],
+  "completed_cycle_count": 16,
+  "goal_review_count": 1,
+  "goal_review_statuses": [
+    "implementation_review_required"
+  ],
+  "ledger_request_count": 42,
+  "ledger_result_count": 39,
+  "ledger_top_level_keys": [
+    "ledger_version",
+    "requests",
+    "results",
+    "state_digest"
+  ],
+  "lifecycle_state": "paused_budget",
+  "operator_wording": "Your goal today is to complete a clean live semantic reconciliation growth run. Improve how you handle queued messages, implied references, topic switches, natural corrections, future-goal candidates, and false-transfer guards. Use local cognition and local evidence first. Compare candidate strategies with held-out cases. Stop at implementation review before changing source.",
+  "pending_chat_requests": 0,
+  "provider_authorities": 0,
+  "runtime_state_path": "data\\runtime\\conversational_runtime_operation\\state.json",
+  "tentative_goals": 2
+}

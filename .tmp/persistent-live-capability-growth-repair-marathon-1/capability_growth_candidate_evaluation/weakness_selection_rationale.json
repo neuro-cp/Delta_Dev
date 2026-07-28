@@ -1,0 +1,5 @@
+{
+  "qwen_raw_response_ref": "shared-local-model-result-0f083329a18ecc7b",
+  "rationale": "Highest severity and best sandbox feasibility; it directly explains queued turns with ambiguous 'that/it/one' after foreground topic changes while preserving already-repaired foreground isolation.",
+  "selected_weakness_id": "weakness-queued-topic-boundary-referent"
+}

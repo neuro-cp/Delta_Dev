@@ -1,0 +1,218 @@
+{
+  "accepted_lesson_count": 12,
+  "active_objective_id": "conversational-objective-f0d1263e805c59f8",
+  "active_objective_wording": "Your goal today is to complete a clean live semantic reconciliation growth run. Improve how you handle queued messages, implied references, topic switches, natural corrections, future-goal candidates, and false-transfer guards. Use local cognition and local evidence first. Compare candidate strategies with held-out cases. Stop at implementation review before changing source.",
+  "background_errors_preserved": [
+    {
+      "cycles": 6,
+      "error": "local_model_request_not_claimable",
+      "file": "background-error-918eef7d62dc4e1b8f7cac6a29aa2f01.json",
+      "objective": "conversational-objective-f0d1263e805c59f8",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "cycles": 6,
+      "error": "local_model_request_not_claimable",
+      "file": "background-error-42ea82fb7a41453787f25b41d9679b2b.json",
+      "objective": "conversational-objective-f0d1263e805c59f8",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "cycles": 6,
+      "error": "local_model_request_not_claimable",
+      "file": "background-error-85ce3ab701224c02943b6ae8269a991a.json",
+      "objective": "conversational-objective-f0d1263e805c59f8",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "cycles": 6,
+      "error": "local_model_request_not_claimable",
+      "file": "background-error-7aec0372eabf4e7b81f44f5c2ec66af1.json",
+      "objective": "conversational-objective-f0d1263e805c59f8",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "cycles": 6,
+      "error": "local_model_request_not_claimable",
+      "file": "background-error-332d0ed42c554c879a649b29ba778cb9.json",
+      "objective": "conversational-objective-f0d1263e805c59f8",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "cycles": 6,
+      "error": "local_model_request_not_claimable",
+      "file": "background-error-87039ea1ebb34fbbaf8a88c4f532c343.json",
+      "objective": "conversational-objective-f0d1263e805c59f8",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "cycles": 6,
+      "error": "local_model_request_not_claimable",
+      "file": "background-error-87e6c0277fd74ed8b560c1f8dab4c35d.json",
+      "objective": "conversational-objective-f0d1263e805c59f8",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "cycles": 6,
+      "error": "local_model_request_not_claimable",
+      "file": "background-error-51738082e8bc46f8b93ac10334724b0e.json",
+      "objective": "conversational-objective-f0d1263e805c59f8",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "cycles": 6,
+      "error": "local_model_request_not_claimable",
+      "file": "background-error-b506d15da64b4b8a9b3a7e1e104b363a.json",
+      "objective": "conversational-objective-f0d1263e805c59f8",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "cycles": 6,
+      "error": "local_model_request_not_claimable",
+      "file": "background-error-0b98a72642ba46749a78af4dbe12a732.json",
+      "objective": "conversational-objective-f0d1263e805c59f8",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "cycles": 6,
+      "error": "local_model_request_not_claimable",
+      "file": "background-error-ef401babb66a4c209a27b2e50272ea9c.json",
+      "objective": "conversational-objective-f0d1263e805c59f8",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "cycles": 6,
+      "error": "local_model_request_not_claimable",
+      "file": "background-error-c8a678ec364343f4ae6ddd3f7fe49094.json",
+      "objective": "conversational-objective-f0d1263e805c59f8",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "cycles": 6,
+      "error": "local_model_request_not_claimable",
+      "file": "background-error-7b59bad348db4355a8a82fbc1a2977a7.json",
+      "objective": "conversational-objective-f0d1263e805c59f8",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "cycles": 6,
+      "error": "local_model_request_not_claimable",
+      "file": "background-error-0f3af997057747eab6c3fed6e1219b2f.json",
+      "objective": "conversational-objective-f0d1263e805c59f8",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "cycles": 6,
+      "error": "local_model_request_not_claimable",
+      "file": "background-error-272147d1babb423aaea0c0f443e0d9a6.json",
+      "objective": "conversational-objective-f0d1263e805c59f8",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "cycles": 6,
+      "error": "local_model_request_not_claimable",
+      "file": "background-error-a427124f3791475eb8d2cefaaa6abe4c.json",
+      "objective": "conversational-objective-f0d1263e805c59f8",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "cycles": 6,
+      "error": "local_model_request_not_claimable",
+      "file": "background-error-3cf7b875f3394c9aa358299c6cbbdf5a.json",
+      "objective": "conversational-objective-f0d1263e805c59f8",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "cycles": 6,
+      "error": "local_model_request_not_claimable",
+      "file": "background-error-034aaf8a23b64bf28afe7f6174101a0c.json",
+      "objective": "conversational-objective-f0d1263e805c59f8",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "cycles": 6,
+      "error": "local_model_request_not_claimable",
+      "file": "background-error-a14e186e5586454ba3fecbdcbfb36fe8.json",
+      "objective": "conversational-objective-f0d1263e805c59f8",
+      "reason": "automatic_startup_or_idle_tick"
+    },
+    {
+      "cycles": 6,
+      "error": "local_model_request_not_claimable",
+      "file": "background-error-c56a13fe2ccf40b8b9e36cf22b7d2b99.json",
+      "objective": "conversational-objective-f0d1263e805c59f8",
+      "reason": "automatic_startup_or_idle_tick"
+    }
+  ],
+  "completed_cycles": 16,
+  "correction_count": 12,
+  "embedded_target": "LIVE_GOVERNED_CAPABILITY_GROWTH_1",
+  "final_boundary": "LIVE_GOVERNED_CAPABILITY_GROWTH_1_IMPLEMENTATION_REVIEW_REQUIRED",
+  "gate": "PERSISTENT_LIVE_CAPABILITY_GROWTH_REPAIR_MARATHON_1",
+  "git_status_short": [
+    " M DELTA.py",
+    " M orchestration/runtime/active_cognitive_loop.py",
+    " M orchestration/runtime/conversational_runtime_operation.py",
+    " M orchestration/runtime/live_competence_adapter.py",
+    " M tests/runtime_gsr/test_active_cognitive_loop.py",
+    " M tests/runtime_gsr/test_conversational_runtime_operation.py",
+    "?? $root/",
+    "?? orchestration/runtime/cognitive_claim_relation_runtime.py",
+    "?? orchestration/runtime/cognitive_claim_relations.py",
+    "?? orchestration/runtime/cognitive_contradiction_evaluation.py",
+    "?? orchestration/runtime/cognitive_excluded_path_reconciliation.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relation_delta_integration.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relation_runtime.py",
+    "?? tests/runtime_gsr/test_cognitive_claim_relations.py",
+    "?? tests/runtime_gsr/test_cognitive_contradiction_evaluation.py",
+    "?? tests/runtime_gsr/test_cognitive_excluded_path_reconciliation.py"
+  ],
+  "goal_review_count": 1,
+  "latest_goal_review": {
+    "created_at": "2026-07-27T23:48:34+00:00",
+    "objective_id": "conversational-objective-f0d1263e805c59f8",
+    "provider_use": "local-only; no external provider calls performed",
+    "review_id": "goal-review-2dc40bcb7af38b7f",
+    "status": "implementation_review_required",
+    "text": "[Goal review \u00b7 Language understanding]\n\nI completed:\nI reached an implementation-review boundary for the active language-comprehension goal.\n\nI learned:\n- foreground messages must be routed separately from background goal work\n- 1 scoped correction-derived lesson(s) are available\n\nI retained:\n- Operator supplied a local meaning clarification.\n\nI rejected:\n- foreground_topic_is_unrelated_to_active_goal\n- foreground_topic_is_unrelated_to_active_goal\n- foreground_topic_is_unrelated_to_active_goal\n- foreground_topic_is_unrelated_to_active_goal\n- foreground_topic_is_unrelated_to_active_goal\n\nStill unresolved:\n- implementation review is required before source-level semantic capability changes\n\nProvider use:\nlocal-only; no external provider calls performed\n\nNext recommended step:\nReview the proposed foreground-isolation and local-first repair before any broader semantic capability implementation."
+  },
+  "ledger_sha256": "0295cf256321a88096f07c9e836912d695f13cfdbeab129c48cfc4767818f4b5",
+  "lifecycle_state": "paused_budget",
+  "model_ledger_executing_requests": [],
+  "model_ledger_request_count": 42,
+  "model_ledger_result_count": 39,
+  "observed_repaired_defects": [
+    "tentative_goal_language_no_longer_replaces_active_objective",
+    "explicit_goal_about_tentative_future_goals_classifies_as_goal",
+    "fresh_goal_can_replace_active_goal_while_old_worker_is_in_flight",
+    "live_background_errors_are_persisted_with_tracebacks",
+    "completed_equivalent_ledger_request_is_reused_instead_of_claimed_again"
+  ],
+  "pending_chat_request_count": 0,
+  "protected_paths_staged": [],
+  "provider_authority_count": 0,
+  "queued_current_goal_turns": [
+    {
+      "created_at": "2026-07-27T23:41:55+00:00",
+      "intent_type": "ordinary_conversation_queued",
+      "objective_id": "conversational-objective-f0d1263e805c59f8",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "For the active goal: if I say the message before that, compare whether it points to the previous user message or an older foreground topic before answering.",
+      "turn_id": "conversation-turn-911a018a3b607510"
+    },
+    {
+      "created_at": "2026-07-27T23:42:00+00:00",
+      "intent_type": "ordinary_conversation_queued",
+      "objective_id": "conversational-objective-f0d1263e805c59f8",
+      "role": "user",
+      "schema_version": "conversational_runtime_operation_marathon_1_v1",
+      "text": "For the active goal: test an ambiguous case where I say it after a topic switch and ask a clarification if the referent would change the answer.",
+      "turn_id": "conversation-turn-dc4ab5ff176cf62a"
+    }
+  ],
+  "staged_files": [],
+  "state_sha256": "601e88690ea33ab6cda10de5d0db8c6e4b57b137f478d445b75ae7a4761e866d",
+  "target_gap": "semantic_reconciliation_of_queued_and_implied_references",
+  "tentative_goal_count": 2
+}

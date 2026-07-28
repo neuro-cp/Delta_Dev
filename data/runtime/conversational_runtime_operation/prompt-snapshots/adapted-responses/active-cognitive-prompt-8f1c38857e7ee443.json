@@ -1,0 +1,19 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "prior-conversational-episode-3"
+    ],
+    "lesson": "Operators can benefit from contextual information during comprehension practice.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "The effectiveness of context in improving comprehension is not fully understood.",
+    "unresolved_questions": [
+      "How can we ensure that context is always relevant and useful?",
+      "How can we measure the impact of context on comprehension?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"Operators can benefit from contextual information during comprehension practice.\",\"evidence_refs\":[\"prior-conversational-episode-3\"],\"unresolved_questions\":[\"How can we ensure that context is always relevant and useful?\",\"How can we measure the impact of context on comprehension?\"],\"uncertainty\":\"The effectiveness of context in improving comprehension is not fully understood.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "5591bf738daa903fbbbb465b6e6d834ee7f441a725746ccec2152c4ed4c56313",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

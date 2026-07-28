@@ -1,0 +1,22 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "The operator has a history of misunderstandings and corrections in previous conversations."
+    ],
+    "expected_observations": [
+      "The operator will demonstrate improved comprehension of natural corrections in subsequent conversations."
+    ],
+    "hypothesis_statement": "The operator will improve their comprehension of natural corrections through the use of correction-linked strategy revision and transfer checks.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "Operator-specific English comprehension during conversation",
+    "supporting_evidence_refs": [
+      "operator-natural-goal"
+    ],
+    "uncertainty": "Whether the correction-linked strategy revision and transfer checks will effectively improve the operator's comprehension."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\n  \"hypothesis_statement\": \"The operator will improve their comprehension of natural corrections through the use of correction-linked strategy revision and transfer checks.\",\n  \"scope\": \"Operator-specific English comprehension during conversation\",\n  \"supporting_evidence_refs\": [\"operator-natural-goal\"],\n  \"assumptions\": [\"The operator has a history of misunderstandings and corrections in previous conversations.\"],\n  \"expected_observations\": [\"The operator will demonstrate improved comprehension of natural corrections in subsequent conversations.\"],\n  \"uncertainty\": \"Whether the correction-linked strategy revision and transfer checks will effectively improve the operator's comprehension.\",\n  \"recommended_state_transition\": \"propose_hypothesis\"\n}",
+  "raw_response_digest": "5b324dee8379caf521cbbd2798a8d3d42a79b8ba3e799c32c48e84c0c9e9e574",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "operator-natural-goal"
+    ],
+    "lesson": "Understanding of implied references, queued messages, informal phrasing, and context across turns will improve with corrections and transfer checks.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "Need more data to fully assess the effectiveness of the current strategy.",
+    "unresolved_questions": [
+      "How can we ensure consistent improvement in the operator's comprehension?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{ \"lesson\": \"Understanding of implied references, queued messages, informal phrasing, and context across turns will improve with corrections and transfer checks.\", \"evidence_refs\": [ \"operator-natural-goal\" ], \"unresolved_questions\": [ \"How can we ensure consistent improvement in the operator's comprehension?\" ], \"uncertainty\": \"Need more data to fully assess the effectiveness of the current strategy.\", \"recommended_state_transition\": \"summarize_learning\" }",
+  "raw_response_digest": "8096c876d3763bbfeb674e16da0d6dab675413fa74f1cb12c028aa828736d910",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

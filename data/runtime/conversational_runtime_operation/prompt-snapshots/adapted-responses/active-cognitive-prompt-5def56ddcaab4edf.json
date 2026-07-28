@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "operator-natural-goal"
+    ],
+    "lesson": "The operator can understand and benefit from corrections provided during conversations, leading to improved comprehension and transfer of knowledge.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "The exact impact of corrections on comprehension and transfer remains unclear.",
+    "unresolved_questions": [
+      "How will the operator's comprehension improve in real-world scenarios?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"The operator can understand and benefit from corrections provided during conversations, leading to improved comprehension and transfer of knowledge.\",\"evidence_refs\":[\"operator-natural-goal\"],\"unresolved_questions\":[\"How will the operator's comprehension improve in real-world scenarios?\"],\"uncertainty\":\"The exact impact of corrections on comprehension and transfer remains unclear.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "a7592d724c9311ffbceb49fbba1503a46517ce3bb274006dfd1dd915b7b8aa73",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

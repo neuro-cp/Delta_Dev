@@ -1,0 +1,19 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "prior-conversational-episode-9"
+    ],
+    "lesson": "Operators may misunderstand specific English phrases related to equipment operation, which could impact comprehension during conversations.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "Need more data to confirm the frequency and specific phrases.",
+    "unresolved_questions": [
+      "How frequently do operators encounter such misunderstandings?",
+      "Are there specific phrases or terms that are commonly misinterpreted?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"Operators may misunderstand specific English phrases related to equipment operation, which could impact comprehension during conversations.\",\"evidence_refs\":[\"prior-conversational-episode-9\"],\"unresolved_questions\":[\"How frequently do operators encounter such misunderstandings?\",\"Are there specific phrases or terms that are commonly misinterpreted?\"],\"uncertainty\":\"Need more data to confirm the frequency and specific phrases.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "ebc96ab1ca9a65f8e99f258b5b3c4cc9f4043c691343243a33a2beefb3ef37d6",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

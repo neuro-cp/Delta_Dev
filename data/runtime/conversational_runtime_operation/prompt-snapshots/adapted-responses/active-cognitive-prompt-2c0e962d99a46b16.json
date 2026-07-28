@@ -1,0 +1,24 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Technical terms are used in operator-specific conversations.",
+      "Operators may have varying levels of familiarity with technical terms."
+    ],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "prior-conversational-episode-3"
+    ],
+    "interpretation": "Operators may misunderstand specific technical terms during conversations.",
+    "next_evidence_need": "local evidence supporting or challenging the goal",
+    "next_focus_proposal": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+    "operation_result_type": "compare_evidence_result",
+    "recommended_action": "Incorporate corrections into ongoing conversations to improve comprehension.",
+    "recommended_state_transition": "add_supporting_evidence",
+    "uncertainty": "How specific are the misunderstandings and which terms are most problematic?"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"assumptions\":[\"Technical terms are used in operator-specific conversations.\",\"Operators may have varying levels of familiarity with technical terms.\"],\"contrary_evidence_considered\":[],\"evidence_refs\":[\"prior-conversational-episode-3\"],\"interpretation\":\"Operators may misunderstand specific technical terms during conversations.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"Incorporate corrections into ongoing conversations to improve comprehension.\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"How specific are the misunderstandings and which terms are most problematic?\"}",
+  "raw_response_digest": "2ae06880b01566e8f4991baa73fe16964d1b8c102056724702db56c8ee08855b",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

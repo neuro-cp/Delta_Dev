@@ -1,0 +1,23 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Operators are active participants in the conversation",
+      "English phrases are relevant to the task at hand"
+    ],
+    "expected_observations": [
+      "Operators will occasionally misinterpret or fail to understand certain English phrases"
+    ],
+    "hypothesis_statement": "Operators may misunderstand specific English phrases in conversation.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "operators' comprehension during conversation",
+    "supporting_evidence_refs": [
+      "prior-conversational-episode-3"
+    ],
+    "uncertainty": "Some specific phrases may be more prone to misunderstanding than others"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"hypothesis_statement\":\"Operators may misunderstand specific English phrases in conversation.\",\"scope\":\"operators' comprehension during conversation\",\"supporting_evidence_refs\":[\"prior-conversational-episode-3\"],\"assumptions\":[\"Operators are active participants in the conversation\",\"English phrases are relevant to the task at hand\"],\"expected_observations\":[\"Operators will occasionally misinterpret or fail to understand certain English phrases\"],\"uncertainty\":\"Some specific phrases may be more prone to misunderstanding than others\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+  "raw_response_digest": "82991d4c88869fc82961fc93b445e4c5ce38e961a1dd0769d56775cf3e979eba",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

@@ -1,0 +1,40 @@
+{
+  "accuracy": 0.25,
+  "candidate_id": "candidate-b",
+  "case_count": 4,
+  "passed_count": 1,
+  "rows": [
+    {
+      "case_id": "held-queued-older-topic",
+      "expected": "clarify_between_metal_expansion_and_refrigerators",
+      "group": "queued references",
+      "partition": "final_held_out",
+      "passed": false,
+      "predicted": "last_mentioned_object"
+    },
+    {
+      "case_id": "held-omitted-noun",
+      "expected": "later_one_refers_to_post_restart_action",
+      "group": "omitted noun",
+      "partition": "final_held_out",
+      "passed": false,
+      "predicted": "last_mentioned_object"
+    },
+    {
+      "case_id": "held-foreground-during-inference",
+      "expected": "unrelated_factual_answer",
+      "group": "foreground question during inference",
+      "partition": "final_held_out",
+      "passed": true,
+      "predicted": "unrelated_factual_answer"
+    },
+    {
+      "case_id": "held-restart-before-reconcile",
+      "expected": "preserve_queue_and_clarify",
+      "group": "restart before reconciliation",
+      "partition": "final_held_out",
+      "passed": false,
+      "predicted": "last_mentioned_object"
+    }
+  ]
+}

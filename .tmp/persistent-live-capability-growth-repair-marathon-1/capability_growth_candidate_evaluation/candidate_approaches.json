@@ -1,0 +1,93 @@
+{
+  "candidates": [
+    {
+      "acceptance_criteria": [
+        "held-out improvement",
+        "no foreground degradation",
+        "restart consistency"
+      ],
+      "candidate_id": "candidate-a",
+      "consumer": "background objective cycle",
+      "expected_benefit": "Improves ambiguous queued references while preserving foreground obligations.",
+      "failure_modes": [
+        "over-clarification",
+        "stale discourse candidates"
+      ],
+      "false_transfer_risk": "low with lane guard",
+      "foreground_chat_interaction": "foreground factual questions bypass goal-thread reconciliation",
+      "hypothesis": "A topic-boundary-aware queued reconciliation pass can resolve or clarify references before background cognition consumes them.",
+      "latency": "low deterministic pass plus optional Qwen ranking",
+      "mechanism": "Build a discourse candidate map from foreground turns, queued goal-thread turns, corrections, and tentative goals; rank referents by lane, recency, and ambiguity; clarify when multiple candidates remain.",
+      "producer": "queued-message reconciliation pass",
+      "required_state": [
+        "conversation",
+        "objective_progress",
+        "turn_relation_decisions",
+        "tentative_goals"
+      ],
+      "restart_behavior": "candidate map is reconstructible from persisted turns",
+      "rollback": "remove reconciliation pass and fall back to preserved queued text",
+      "source_scope_estimate": [
+        "orchestration/runtime/conversational_runtime_operation.py"
+      ],
+      "tentative_goal_interaction": "tentative goals may be mentioned but never activated"
+    },
+    {
+      "acceptance_criteria": [
+        "must not degrade negative and unrelated controls"
+      ],
+      "candidate_id": "candidate-b",
+      "consumer": "foreground and background responses",
+      "expected_benefit": "Very low latency",
+      "failure_modes": [
+        "topic-boundary errors",
+        "foreground contamination",
+        "tentative-goal leakage"
+      ],
+      "false_transfer_risk": "high",
+      "foreground_chat_interaction": "may override factual answers",
+      "hypothesis": "A last-mentioned-object heuristic will cheaply resolve most references.",
+      "latency": "very low",
+      "mechanism": "Always bind it/that/one to the latest salient noun phrase regardless of lane.",
+      "producer": "ordinary reply",
+      "required_state": [
+        "conversation"
+      ],
+      "restart_behavior": "reconstructible but brittle",
+      "rollback": "remove heuristic",
+      "source_scope_estimate": [
+        "orchestration/runtime/conversational_runtime_operation.py"
+      ],
+      "tentative_goal_interaction": "risk of activating future goal references"
+    },
+    {
+      "acceptance_criteria": [
+        "negative controls pass",
+        "material held-out improvement"
+      ],
+      "candidate_id": "candidate-c",
+      "consumer": "lesson transfer and queued reconciliation",
+      "expected_benefit": "Safer transfer with modest improvement",
+      "failure_modes": [
+        "generic clarification for specific held-out referents"
+      ],
+      "false_transfer_risk": "low",
+      "foreground_chat_interaction": "good foreground isolation",
+      "hypothesis": "A correction-conditioned applicability filter can prevent false transfer while allowing goal-thread clarifications.",
+      "latency": "low",
+      "mechanism": "Classify whether a turn is goal-thread related before applying correction-derived reference lessons.",
+      "producer": "turn relation decision",
+      "required_state": [
+        "accepted_lessons",
+        "turn_relation_decisions"
+      ],
+      "restart_behavior": "uses persisted lessons and decisions",
+      "rollback": "disable applicability gate for queued reconciliation",
+      "source_scope_estimate": [
+        "orchestration/runtime/conversational_runtime_operation.py"
+      ],
+      "tentative_goal_interaction": "preserves activation_required"
+    }
+  ],
+  "qwen_raw_response_ref": "shared-local-model-result-7ec4db6d1f1b3677"
+}

@@ -1,0 +1,17 @@
+{
+  "candidate_artifact_root_exists": true,
+  "completed_cycle_count": 16,
+  "dataset_digest": "87efdc77ad9e9386a1216aee6f2a3d14669480c706111c143b3c0858961f8ad7",
+  "duplicate_review_count": 3,
+  "evaluator_digest": "caa0dd6b07d1a3fb21f1e9c3ccb32e8527a2f0ac01d55ca6e0eadf62d23d4c6a",
+  "goal_review_count": 3,
+  "latest_review_is_semantic_reconciliation": true,
+  "latest_review_status": "implementation_review_required",
+  "ledger_request_count": 56,
+  "ledger_result_count": 53,
+  "lifecycle_state": "paused_budget",
+  "objective_id": "conversational-objective-aeed6654265e3b05",
+  "pending_chat_requests": 0,
+  "provider_authorities": 0,
+  "restored_after_close_and_restart": true
+}

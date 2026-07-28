@@ -1,0 +1,19 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "prior-conversational-episode-9"
+    ],
+    "lesson": "Operators may misunderstand specific English phrases related to equipment operation.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "Uncertainty remains regarding specific phrases causing confusion.",
+    "unresolved_questions": [
+      "What specific phrases are causing confusion?",
+      "How can we address these phrases in future sessions?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"Operators may misunderstand specific English phrases related to equipment operation.\",\"evidence_refs\":[\"prior-conversational-episode-9\"],\"unresolved_questions\":[\"What specific phrases are causing confusion?\",\"How can we address these phrases in future sessions?\"],\"uncertainty\":\"Uncertainty remains regarding specific phrases causing confusion.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "c25140800b66f4c92f0ee8f70102e287fcd71f6d749e7f7a6013ae4a64f37c6c",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

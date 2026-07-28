@@ -1,0 +1,24 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "The operator has the ability to observe and correct misunderstandings",
+      "The operator can apply corrections to future conversations"
+    ],
+    "expected_observations": [
+      "Operator reports improved comprehension during conversations",
+      "Operator demonstrates ability to transfer corrections to future conversations"
+    ],
+    "hypothesis_statement": "The operator will improve comprehension of English during conversations by observing and incorporating corrections from misunderstandings, and testing later transfer of these corrections.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "operator-specific English comprehension during conversation",
+    "supporting_evidence_refs": [
+      "operator-natural-goal"
+    ],
+    "uncertainty": "Whether the corrections will be consistently applied and lead to sustained improvement"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\n  \"hypothesis_statement\": \"The operator will improve comprehension of English during conversations by observing and incorporating corrections from misunderstandings, and testing later transfer of these corrections.\",\n  \"scope\": \"operator-specific English comprehension during conversation\",\n  \"supporting_evidence_refs\": [\"operator-natural-goal\"],\n  \"assumptions\": [\"The operator has the ability to observe and correct misunderstandings\", \"The operator can apply corrections to future conversations\"],\n  \"expected_observations\": [\"Operator reports improved comprehension during conversations\", \"Operator demonstrates ability to transfer corrections to future conversations\"],\n  \"uncertainty\": \"Whether the corrections will be consistently applied and lead to sustained improvement\",\n  \"recommended_state_transition\": \"propose_hypothesis\"\n}",
+  "raw_response_digest": "c710cb66b1716473bb2d90a5151704fc9d721d25ae06e6eba0e14b2ea6d2764a",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

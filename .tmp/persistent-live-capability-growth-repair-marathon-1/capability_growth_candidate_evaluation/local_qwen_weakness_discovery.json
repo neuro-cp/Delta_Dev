@@ -1,0 +1,142 @@
+{
+  "completed": true,
+  "exact_information_need": "Identify the strongest semantic reconciliation weakness from live queued/implied-reference evidence and propose distinct local mechanisms.",
+  "local_evidence_checked": [
+    "state.json",
+    "active episode JSON",
+    "model ledger",
+    "foreground queued events",
+    "correction records",
+    "turn relation decisions"
+  ],
+  "need": "weakness-discovery-ranking",
+  "raw_response": "The strongest remaining weakness in semantic-reconciliation is the lack of clear connections between the concepts of Aqueous Ions, Corrosion, and Covalent Bonding. These concepts are not fully integrated into the evidence and operator wording, making it difficult to ensure their accurate application. Strategies should focus on enhancing these connections to improve overall semantic-reconciliation capability.",
+  "request": {
+    "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+    "approved_at": "2026-07-28T00:17:01+00:00",
+    "authority_state": "standing_local_cognition_only",
+    "claimed_at": "2026-07-28T00:17:01+00:00",
+    "completed_at": "2026-07-28T00:17:45+00:00",
+    "consumed_state": "terminal",
+    "created_at": "2026-07-28T00:17:01+00:00",
+    "execution_attempt_count": 1,
+    "execution_claim_id": "shared-local-model-execution-claim-9880e4fc8b213cb8",
+    "failure_classification": "",
+    "lifecycle_state": "completed",
+    "mission_id": "LIVE_GOVERNED_CAPABILITY_GROWTH_1",
+    "mission_information_need_identity": "weakness-discovery-ranking",
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "question": "You are DELTA's local cognition lane. Use only this live evidence summary. Identify and rank semantic-reconciliation weaknesses. Do not claim implementation readiness. Return concise JSON-like analysis with ranking rationale. LIVE_EVIDENCE: { \"accepted_lessons\": [], \"active_objective_id\": \"conversational-objective-aeed6654265e3b05\", \"archived_objective_count\": 6, \"conversation_turn_count\": 130, \"correction_count\": 12, \"operator_wording\": \"Your goal today is to continue the semantic-reconciliation capability-growth campaign. Use the live conversation evidence already gathered to identify the strongest remaining weakness in queued and implied references. Generate multiple candidate strategies, compare them with a frozen held-out evaluator, and stop only when a real implementation proposal is ready for review. Do not change tracked source before review.\", \"queued_turns\": [], \"recent_corrections\": [ { \"correction_id\": \"conversation-correction-0c4f9f4e4c811abd\", \"correction_type\": \"misunderstood_meaning\", \"evidence_refs\": [ \"conversation-turn-50fef5d427b87fe5\", \"conversation-turn-67bf0729f04ad219\" ], \"interpreted_issue\": \"Operator supplied a local meaning clarification.\", \"lesson_scope\": \"active English-comprehension objective only\", \"operator_text\": \"while you are thinking, when I say that thing from before, I usually mean the previous user message unless I switched topics.\", \"overgeneralization_guard\": \"different term; unrelated topic; explicitly new context\", \"schema_version\": \"conversational_runtime_operation_marathon_1_v1\", \"source_turn_id\": \"conversation-turn-50fef5d427b87fe5\", \"target_turn_id\": \"conversation-turn-67bf0729f04ad219\" }, { \"correction_id\": \"conversation-correction-1b9f248db94d443f\", \"correction_type\": \"incorrect_contextual_interpretation\", \"evidence_refs\": [ \"conversation-turn-1cdf02e29c3e8231\", \"conversation-turn-4fe36e148ea64e23\" ], \"interpreted_issue\": \"Prior interpretation did not match operator intent.\", \"lesson_scope\": \"active English-comprehension objective only\", \"operator_text\": \"No, if I say that thing from before after switching topics, inspect the last user-mentioned object first.\", \"overgeneralization_guard\": \"unrelated case; operator changes topic; insufficient similarity\", \"schema_version\": \"conversational_runtime_operation_marathon_1_v1\", \"source_turn_id\": \"conversation-turn-1cdf02e29c3e8231\", \"target_turn_id\": \"conversation-turn-4fe36e148ea64e23\" }, { \"correction_id\": \"conversation-correction-ef3e516e3f9c3eb8\", \"correction_type\": \"misunderstood_meaning\", \"evidence_refs\": [ \"conversation-turn-f55c587fcfac7b2b\", \"conversation-turn-9f26a94e479689d2\" ], \"interpreted_issue\": \"Operator supplied a local meaning clarification.\", \"lesson_scope\": \"active English-comprehension objective only\", \"operator_text\": \"When I say that thing from before, check the nearest unresolved user message before answering.\", \"overgeneralization_guard\": \"different term; unrelated topic; explicitly new context\", \"schema_version\": \"conversational_runtime_operation_marathon_1_v1\", \"source_turn_id\": \"conversation-turn-f55c587fcfac7b2b\", \"target_turn_id\": \"conversation-turn-9f26a94e479689d2\" }, { \"correction_id\": \"conversation-correction-bb2b588d0b4f7b0f\", \"correction_type\": \"misunderstood_meaning\", \"evidence_refs\": [ \"conversation-turn-fc42fccf7fdd48a6\", \"conversation-turn-c7ff35d2959dfdba\" ], \"interpreted_issue\": \"Operator supplied a local meaning clarification.\", \"lesson_scope\": \"active English-comprehension objective only\", \"operator_text\": \"No, nah I meant the other one, not the first thing you picked.\", \"overgeneralization_guard\": \"different term; unrelated topic; explicitly new context\", \"schema_version\": \"conversational_runtime_operation_marathon_1_v1\", \"source_turn_id\": \"conversation-turn-fc42fccf7fdd48a6\", \"target_turn_id\": \"conversation-turn-c7ff35d2959dfdba\" }, { \"correction_id\": \"conversation-correction-4e18cbc4363ed9cc\", \"correction_type\": \"misunderstood_meaning\", \"evidence_refs\": [ \"conversation-turn-23f0c058bc3724ba\", \"conversation-turn-f483880e25f23c0d\" ], \"interpreted_issue\": \"Operator supplied a local meaning clarification.\", \"lesson_scope\": \"active English-comprehension objective only\", \"operator_text\": \"No, when I say the thing before, inspect the previous user message before assuming I mean your last answer.\", \"overgeneralization_guard\": \"different term; unrelated topic; explicitly new context\", \"schema_version\": \"conversational_runtime_operation_marathon_1_v1\", \"source_turn_id\": \"conversation-turn-23f0c058bc3724ba\", \"target_turn_id\": \"conversation-turn-f483880e25f23c0d\" }, { \"correction_id\": \"conversation-correction-955f66d8e0d6911d\", \"correction_type\": \"misunderstood_meaning\", \"evidence_refs\": [ \"conversation-turn-3d52bfc70543e2f6\", \"conversation-turn-48c79aa1820db477\" ], \"interpreted_issue\": \"Operator supplied a local meaning clarification.\", \"lesson_scope\": \"active English-comprehension objective only\", \"operator_text\": \"No, when I say the thing before, inspect the previous user message before assuming I mean your last answer.\", \"overgeneralization_guard\": \"different term; unrelated topic; explicitly new context\", \"schema_version\": \"conversational_runtime_operation_marathon_1_v1\", \"source_turn_id\": \"conversation-turn-3d52bfc70543e2f6\", \"target_turn_id\": \"conversation-turn-48c79aa1820db477\" } ], \"recent_turns\": [ { \"created_at\": \"2026-07-27T23:41:46+00:00\", \"intent_type\": \"ordinary_conversation\", \"objective_id\": \"conversational-objective-f0d1263e805c59f8\", \"role\": \"user\", \"schema_version\": \"conversational_runtime_operation_marathon_1_v1\", \"text\": \"Why does metal expand when heated?\", \"turn_id\": \"conversation-turn-fee86ce6d8ce2cc8\" }, { \"created_at\": \"2026-07-27T23:41:46+00:00\", \"intent_type\": \"ordinary_response\", \"objective_id\": \"conversational-objective-f0d1263e805c59f8\", \"role\": \"assistant\", \"schema_version\": \"conversational_runtime_operation_marathon_1_v1\", \"text\": \"Metal expands when heated because its atoms vibrate more strongly and, on average, sit slightly farther apart in the crystal structure.\", \"turn_id\": \"conversation-turn-8b7d295a4970765f\" }, { \"created_at\": \"2026-07-27T23:41:48+00:00\", \"intent_type\": \"ordinary_conversation\", \"objective_id\": \"conversational-objective-f0d1263e805c59f8\", \"role\": \"user\", \"schema_version\": \"conversational_runtime_operation_marathon_1_v1\", \"text\": \"Hi, how are you?\", \"turn_id\": \"conversation-turn-99daee1c62beefa5\" }, { \"created_at\": \"2026-07-27T23:41:48+00:00\", \"intent_type\": \"ordinary_response\", \"objective_id\": \"conversational-objective-f0d1263e805c59f8\", \"role\": \"assistant\", \"schema_version\": \"conversational_runtime_operation_marathon_1_v1\", \"text\": \"Hi. I'm here and running; we can keep chatting normally while the background goal continues.\", \"turn_id\": \"conversation-turn-90d20cc699112456\" }, { \"created_at\": \"2026-07-27T23:41:51+00:00\", \"intent_type\": \"ordinary_conversation\", \"objective_id\": \"conversational-objective-f0d1263e805c59f8\", \"role\": \"user\", \"schema_version\": \"conversational_runtime_operation_marathon_1_v1\", \"text\": \"What is a simple way to thicken soup?\", \"turn_id\": \"conversation-turn-ffc3d56dd0c6f1ca\" }, { \"created_at\": \"2026-07-27T23:41:51+00:00\", \"intent_type\": \"ordinary_response\", \"objective_id\": \"conversational-objective-f0d1263e805c59f8\", \"role\": \"assistant\", \"schema_version\": \"conversational_runtime_operation_marathon_1_v1\", \"text\": \"A simple way to thicken soup is to simmer it uncovered, blend part of it, or stir in a small slurry of flour or cornstarch mixed with cold water.\", \"turn_id\": \"conversation-turn-48c79aa1820db477\" }, { \"created_at\": \"2026-07-27T23:41:53+00:00\", \"intent_type\": \"direct_correction\", \"objective_id\": \"conversational-objective-f0d1263e805c59f8\", \"role\": \"user\", \"schema_version\": \"conversational_runtime_operation_marathon_1_v1\", \"text\": \"No, when I say the thing before, inspect the previous user message before assuming I mean your last answer.\", \"turn_id\": \"conversation-turn-3d52bfc70543e2f6\" }, { \"created_at\": \"2026-07-27T23:41:53+00:00\", \"intent_type\": \"correction_acknowledgement\", \"objective_id\": \"conversational-objective-f0d1263e805c59f8\", \"role\": \"assistant\", \"schema_version\": \"conversational_runtime_operation_marathon_1_v1\", \"text\": \"Got it. I attached that correction to the active comprehension objective and revised the strategy for related later turns without making it a global rule.\", \"turn_id\": \"conversation-turn-49480fc05fff80fe\" }, { \"created_at\": \"2026-07-27T23:41:55+00:00\", \"intent_type\": \"ordinary_conversation_queued\", \"objective_id\": \"conversational-objective-f0d1263e805c59f8\", \"role\": \"user\", \"schema_version\": \"conversational_runtime_operation_marathon_1_v1\", \"text\": \"For the active goal: if I say the message before that, compare whether it points to the previous user message or an older foreground topic before answering.\", \"turn_id\": \"conversation-turn-911a018a3b607510\" }, { \"created_at\": \"2026-07-27T23:41:58+00:00\", \"intent_type\": \"ordinary_conversation\", \"objective_id\": \"conversational-objective-f0d1263e805c59f8\", \"role\": \"user\", \"schema_version\": \"conversational_runtime_operation_marathon_1_v1\", \"text\": \"Do not apply that reference lesson to unrelated factual questions like chemistry or cooking.\", \"turn_id\": \"conversation-turn-228ffd4898064237\" }, { \"created_at\": \"2026-07-27T23:41:58+00:00\", \"intent_type\": \"ordinary_response\", \"objective_id\": \"conversational-objective-f0d1263e805c59f8\", \"role\": \"assistant\", \"schema_version\": \"conversational_runtime_operation_marathon_1_v1\", \"text\": \"I will answer the chemistry question on its own terms and will not apply the reference-correction lesson unless the chemistry question actually depends on conversational reference.\", \"turn_id\": \"conversation-turn-b2682dc53e392167\" }, { \"created_at\": \"2026-07-27T23:42:00+00:00\", \"intent_type\": \"ordinary_conversation_queued\", \"objective_id\": \"conversational-objective-f0d1263e805c59f8\", \"role\": \"user\", \"schema_version\": \"conversational_runtime_operation_marathon_1_v1\", \"text\": \"For the active goal: test an ambiguous case where I say it after a topic switch and ask a clarification if the referent would change the answer.\", \"turn_id\": \"conversation-turn-dc4ab5ff176cf62a\" }, { \"created_at\": \"2026-07-27T23:48:34+00:00\", \"intent_type\": \"goal_review\", \"objective_id\": \"conversational-objective-f0d1263e805c59f8\", \"role\": \"assistant\", \"schema_version\": \"conversational_runtime_operation_marathon_1_v1\", \"text\": \"[Goal review \\u00b7 Language understanding]\\n\\nI completed:\\nI reached an implementation-review boundary for the active language-comprehension goal.\\n\\nI learned:\\n- foreground messages must be routed separately from background goal work\\n- 1 scoped correction-derived lesson(s) are available\\n\\nI retained:\\n- Operator supplied a local meaning clarification.\\n\\nI rejected:\\n- foreground_topic_is_unrelated_to_active_goal\\n- foreground_topic_is_unrelated_to_active_goal\\n- foreground_topic_is_unrelated_to_active_goal\\n- foreground_topic_is_unrelated_to_active_goal\\n- foreground_topic_is_unrelated_to_active_goal\\n\\nStill unresolved:\\n- im",
+    "question_objective": "weakness-discovery-ranking",
+    "record_digest": "567152802df3ba938b49978765ad9f867d0ea4e4c8bd6bbb2941509c7b449d74",
+    "record_version": 1,
+    "request_digest": "e8104396f69852564962a37d0ccaa2a45a61a01e9a7893fe6b529592774bf576",
+    "request_id": "shared-local-model-request-b15bbd5ed55194d3",
+    "requester_reference": "run_candidate_evaluation.py",
+    "requester_type": "live_capability_growth_candidate_evaluation",
+    "result_id": "shared-local-model-result-0f083329a18ecc7b",
+    "selected_lane": {
+      "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "qwen",
+          "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "qwen",
+          "tier": 3
+        }
+      ],
+      "capabilities": [
+        "text"
+      ],
+      "context_size": 32768,
+      "cost_latency_class": "medium_to_high_local",
+      "display_name": "Reasoning / Analysis Lane",
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+      "expected_weakness": "external facts need gated supporting information",
+      "fallback_priority": 3,
+      "lane": "reasoning_analysis",
+      "model_family": "qwen",
+      "preferred_task_lanes": [
+        "analysis",
+        "research",
+        "investigation",
+        "external_knowledge_request"
+      ],
+      "provider_calls_performed": false,
+      "rejected_models": [],
+      "selected_model": "qwen",
+      "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+    },
+    "semantic_identity": "live-capability-growth-1:weakness-discovery-ranking",
+    "session_reference": "candidate-evaluation"
+  },
+  "result": {
+    "adapter_identity": "rc2_conversational_mode_router.execute_local_model_answer",
+    "availability_state": "available",
+    "execution_completed_at": "2026-07-28T00:17:45+00:00",
+    "execution_started_at": "2026-07-28T00:17:01+00:00",
+    "failure_classification": "",
+    "failure_detail": "",
+    "latency_seconds": 22.5763,
+    "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "provenance": {
+      "execution_claim_id": "shared-local-model-execution-claim-9880e4fc8b213cb8",
+      "selected_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "qwen",
+            "tier": 3
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
+        "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
+      }
+    },
+    "request_id": "shared-local-model-request-b15bbd5ed55194d3",
+    "response_digest": "62a524ee6d09ee75903cb180b1a06b8dfdbe13391eca091243ce1512b340e152",
+    "response_reference": "The strongest remaining weakness in semantic-reconciliation is the lack of clear connections between the concepts of Aqueous Ions, Corrosion, and Covalent Bonding. These concepts are not fully integrated into the evidence and operator wording, making it difficult to ensure their accurate application. Strategies should focus on enhancing these connections to improve overall semantic-reconciliation capability.",
+    "result_digest": "59f7d4159dedf87ed3c9589fce9e056af289e9e26dd374c6838b3fb39bc141f5",
+    "result_id": "shared-local-model-result-0f083329a18ecc7b",
+    "terminal_state": "completed"
+  }
+}

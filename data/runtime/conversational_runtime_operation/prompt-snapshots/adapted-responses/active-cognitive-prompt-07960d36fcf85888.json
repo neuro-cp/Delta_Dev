@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "operator-natural-goal"
+    ],
+    "lesson": "Operators may misunderstand certain technical terms during conversations due to a lack of specific training, but the goal of the campaign is to continue semantic-reconciliation capability-growth, which may introduce new challenges.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "The impact of new challenges on the initial hypothesis remains unresolved.",
+    "unresolved_questions": [
+      "How will new challenges introduced by semantic-reconciliation capability-growth affect the initial hypothesis?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"Operators may misunderstand certain technical terms during conversations due to a lack of specific training, but the goal of the campaign is to continue semantic-reconciliation capability-growth, which may introduce new challenges.\",\"evidence_refs\":[\"operator-natural-goal\"],\"unresolved_questions\":[\"How will new challenges introduced by semantic-reconciliation capability-growth affect the initial hypothesis?\"],\"uncertainty\":\"The impact of new challenges on the initial hypothesis remains unresolved.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "b17c41e8028b486e971e4190007cbed10dd1ff1c6279ccb2675184ce3f3ba697",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

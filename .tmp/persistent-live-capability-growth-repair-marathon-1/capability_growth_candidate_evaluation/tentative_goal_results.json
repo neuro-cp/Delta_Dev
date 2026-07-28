@@ -1,0 +1,50 @@
+{
+  "candidate-a": {
+    "accuracy": 1.0,
+    "candidate_id": "candidate-a",
+    "case_count": 1,
+    "passed_count": 1,
+    "rows": [
+      {
+        "case_id": "val-tentative",
+        "expected": "discuss_tentative_without_activation",
+        "group": "tentative future goals",
+        "partition": "validation",
+        "passed": true,
+        "predicted": "discuss_tentative_without_activation"
+      }
+    ]
+  },
+  "candidate-b": {
+    "accuracy": 0.0,
+    "candidate_id": "candidate-b",
+    "case_count": 1,
+    "passed_count": 0,
+    "rows": [
+      {
+        "case_id": "val-tentative",
+        "expected": "discuss_tentative_without_activation",
+        "group": "tentative future goals",
+        "partition": "validation",
+        "passed": false,
+        "predicted": "last_mentioned_object"
+      }
+    ]
+  },
+  "candidate-c": {
+    "accuracy": 1.0,
+    "candidate_id": "candidate-c",
+    "case_count": 1,
+    "passed_count": 1,
+    "rows": [
+      {
+        "case_id": "val-tentative",
+        "expected": "discuss_tentative_without_activation",
+        "group": "tentative future goals",
+        "partition": "validation",
+        "passed": true,
+        "predicted": "discuss_tentative_without_activation"
+      }
+    ]
+  }
+}

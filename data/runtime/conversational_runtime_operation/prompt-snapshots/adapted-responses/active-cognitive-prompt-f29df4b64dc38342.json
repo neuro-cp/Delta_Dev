@@ -1,0 +1,24 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Operators have varying levels of prior technical knowledge",
+      "Training materials are not tailored to operator-specific needs"
+    ],
+    "expected_observations": [
+      "Operators will ask for clarification on certain technical terms",
+      "Operators will use incorrect terms in their responses"
+    ],
+    "hypothesis_statement": "Operators will misunderstand certain technical terms during conversations due to lack of specific training.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "Technical terms in operator-specific conversations",
+    "supporting_evidence_refs": [
+      "operator-natural-goal"
+    ],
+    "uncertainty": "Whether specific training can address the issue"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"hypothesis_statement\":\"Operators will misunderstand certain technical terms during conversations due to lack of specific training.\",\"scope\":\"Technical terms in operator-specific conversations\",\"supporting_evidence_refs\":[\"operator-natural-goal\"],\"assumptions\":[\"Operators have varying levels of prior technical knowledge\",\"Training materials are not tailored to operator-specific needs\"],\"expected_observations\":[\"Operators will ask for clarification on certain technical terms\",\"Operators will use incorrect terms in their responses\"],\"uncertainty\":\"Whether specific training can address the issue\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+  "raw_response_digest": "764604ba361fcbbd36f532051b3d93b1cec4c99fd1cbb058b6749d97d8eb9ba3",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

@@ -1,0 +1,24 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Operators are active participants in the conversation",
+      "English phrases are relevant to the task at hand"
+    ],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "prior-conversational-episode-3"
+    ],
+    "interpretation": "Operators may misunderstand specific English phrases in conversation.",
+    "next_evidence_need": "local evidence supporting or challenging the goal",
+    "next_focus_proposal": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+    "operation_result_type": "compare_evidence_result",
+    "recommended_action": "Continue correction-linked comprehension practice without duplicating prior completed episode work.",
+    "recommended_state_transition": "add_supporting_evidence",
+    "uncertainty": "Specific English phrases that operators may misunderstand."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"assumptions\":[\"Operators are active participants in the conversation\",\"English phrases are relevant to the task at hand\"],\"contrary_evidence_considered\":[],\"evidence_refs\":[\"prior-conversational-episode-3\"],\"interpretation\":\"Operators may misunderstand specific English phrases in conversation.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"Continue correction-linked comprehension practice without duplicating prior completed episode work.\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"Specific English phrases that operators may misunderstand.\"}",
+  "raw_response_digest": "c63f292562decfebbd401f774ef78721c7bb3fc88233d9a7c96b5d843aedb245",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

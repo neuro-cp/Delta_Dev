@@ -1,0 +1,28 @@
+{
+  "acceptance_criteria": [
+    "must not degrade negative and unrelated controls"
+  ],
+  "candidate_id": "candidate-b",
+  "consumer": "foreground and background responses",
+  "expected_benefit": "Very low latency",
+  "failure_modes": [
+    "topic-boundary errors",
+    "foreground contamination",
+    "tentative-goal leakage"
+  ],
+  "false_transfer_risk": "high",
+  "foreground_chat_interaction": "may override factual answers",
+  "hypothesis": "A last-mentioned-object heuristic will cheaply resolve most references.",
+  "latency": "very low",
+  "mechanism": "Always bind it/that/one to the latest salient noun phrase regardless of lane.",
+  "producer": "ordinary reply",
+  "required_state": [
+    "conversation"
+  ],
+  "restart_behavior": "reconstructible but brittle",
+  "rollback": "remove heuristic",
+  "source_scope_estimate": [
+    "orchestration/runtime/conversational_runtime_operation.py"
+  ],
+  "tentative_goal_interaction": "risk of activating future goal references"
+}

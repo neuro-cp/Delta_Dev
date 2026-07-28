@@ -1,0 +1,24 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Operators have varying levels of English proficiency.",
+      "Limited exposure to specific phrases can lead to misunderstandings."
+    ],
+    "expected_observations": [
+      "Operators will make errors when using specific phrases.",
+      "Operators will ask for clarification on specific phrases."
+    ],
+    "hypothesis_statement": "Operators may struggle with specific English phrases in conversations due to limited exposure.",
+    "recommended_state_transition": "propose_hypothesis",
+    "scope": "English conversation phrases among operators.",
+    "supporting_evidence_refs": [
+      "prior-conversational-episode-3"
+    ],
+    "uncertainty": "Whether specific phrases are the primary cause of errors."
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"hypothesis_statement\":\"Operators may struggle with specific English phrases in conversations due to limited exposure.\",\"scope\":\"English conversation phrases among operators.\",\"supporting_evidence_refs\":[\"prior-conversational-episode-3\"],\"assumptions\":[\"Operators have varying levels of English proficiency.\",\"Limited exposure to specific phrases can lead to misunderstandings.\"],\"expected_observations\":[\"Operators will make errors when using specific phrases.\",\"Operators will ask for clarification on specific phrases.\"],\"uncertainty\":\"Whether specific phrases are the primary cause of errors.\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+  "raw_response_digest": "e474203a4d2a677328a850be1a8ecbbb3e3d964894df0abf0f2c4de547ef778a",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

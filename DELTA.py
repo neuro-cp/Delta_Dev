@@ -7,6 +7,7 @@ import queue
 import re
 import subprocess
 import threading
+import traceback
 import uuid
 import sys
 import tkinter as tk
@@ -105,6 +106,7 @@ from orchestration.runtime.conversational_runtime_operation import (  # noqa: E4
     infer_lesson_transfer,
     record_foreground_message_for_reconciliation,
     render_goal_review,
+    review_status_for_goal_completion,
     request_provider_learning_packet,
     resolve_pending_chat_request,
     run_background_objective_cycle as run_conversational_background_cycle,
@@ -5486,7 +5488,7 @@ class DeltaApp:
             if self.conversational_runtime_state.lifecycle_state == "paused_budget" and not self.conversational_runtime_state.goal_reviews:
                 self.conversational_runtime_state, review = render_goal_review(
                     self.conversational_runtime_state,
-                    status="implementation_review_required",
+                    status=review_status_for_goal_completion(self.conversational_runtime_state),
                 )
                 self._append_chat("DELTA", review)
                 self._append_session("assistant", review)
@@ -5518,6 +5520,26 @@ class DeltaApp:
             except Exception as exc:  # noqa: BLE001 - foreground chat must remain usable.
                 worker_state = prior_state
                 error = exc
+                error_root = self.conversational_runtime_root / "background-errors"
+                error_root.mkdir(parents=True, exist_ok=True)
+                error_path = error_root / f"background-error-{uuid.uuid4().hex}.json"
+                error_path.write_text(
+                    json.dumps(
+                        {
+                            "error_type": type(exc).__name__,
+                            "error_message": str(exc),
+                            "traceback": traceback.format_exc(),
+                            "reason": reason,
+                            "active_objective_id": prior_state.active_objective.objective_id if prior_state.active_objective else "",
+                            "completed_cycle_count": len(prior_state.completed_cycle_keys),
+                            "active_episode_path": prior_state.active_episode_path,
+                        },
+                        indent=2,
+                        sort_keys=True,
+                    )
+                    + "\n",
+                    encoding="utf-8",
+                )
             self.conversational_runtime_result_queue.put((prior_state, worker_state, error))
 
         threading.Thread(target=worker, name="delta-conversational-runtime-cycle", daemon=True).start()
@@ -5569,7 +5591,7 @@ class DeltaApp:
         if intent.intent_type != "persistent_or_session_goal" and state.active_objective and "review" in lower_message and "goal" in lower_message:
             self.conversational_runtime_state, review = render_goal_review(
                 state,
-                status="implementation_review_required" if state.lifecycle_state in {"paused_budget", "running"} else state.lifecycle_state,
+                status=review_status_for_goal_completion(state) if state.lifecycle_state in {"paused_budget", "running"} else state.lifecycle_state,
             )
             save_conversational_runtime_state(self.conversational_runtime_root, self.conversational_runtime_state)
             self._append_chat("DELTA", review)
@@ -5619,15 +5641,16 @@ class DeltaApp:
                 self._start_conversational_background_cycle("foreground_chat_yield")
             return False
         if intent.intent_type == "persistent_or_session_goal" and state.active_objective and self.conversational_runtime_inference_in_flight:
-            self.conversational_runtime_state = record_foreground_message_for_reconciliation(
+            result = handle_conversational_message(
                 state,
                 message,
                 runtime_root=self.conversational_runtime_root,
-                intent_type="goal_or_priority_queued",
+                run_background_cycle=False,
             )
-            self._append_chat("DELTA", "I recorded that as a possible goal or priority update. I will interpret it after the current reasoning step finishes.")
+            self.conversational_runtime_state = result.state
+            self._append_chat("DELTA", result.reply + " I will start its local reasoning after the current in-flight step settles.")
             self._append_session("user", message)
-            self._append_session("assistant", "I recorded that as a possible goal or priority update. I will interpret it after the current reasoning step finishes.")
+            self._append_session("assistant", result.reply)
             self._set_conversational_runtime_working()
             self._refresh_state_cards()
             return True

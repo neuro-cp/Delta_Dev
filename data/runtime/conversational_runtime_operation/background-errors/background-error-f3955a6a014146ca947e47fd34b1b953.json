@@ -1,0 +1,9 @@
+{
+  "active_episode_path": "G:\\Delta_Dev\\data\\runtime\\conversational_runtime_operation\\active_episode_4.json",
+  "active_objective_id": "conversational-objective-f0d1263e805c59f8",
+  "completed_cycle_count": 6,
+  "error_message": "local_model_request_not_claimable",
+  "error_type": "RuntimeError",
+  "reason": "automatic_startup_or_idle_tick",
+  "traceback": "Traceback (most recent call last):\n  File \"G:\\Delta_Dev\\DELTA.py\", line 5512, in worker\n    worker_state = run_conversational_background_cycle(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"G:\\Delta_Dev\\orchestration\\runtime\\conversational_runtime_operation.py\", line 1471, in run_background_objective_cycle\n    episode = run_cognitive_cycle(episode, model_runner=model_runner or ScriptedSemanticModel())\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"G:\\Delta_Dev\\orchestration\\runtime\\active_cognitive_loop.py\", line 625, in run_cognitive_cycle\n    raw = runner(request, packet)\n          ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"G:\\Delta_Dev\\orchestration\\runtime\\active_cognitive_loop.py\", line 489, in __call__\n    terminal = self.ledger.execute_claimed_request(\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"G:\\Delta_Dev\\orchestration\\runtime\\local_model_request_result_ledger.py\", line 286, in execute_claimed_request\n    record = self.claim_execution(request_id)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"G:\\Delta_Dev\\orchestration\\runtime\\local_model_request_result_ledger.py\", line 239, in claim_execution\n    raise RuntimeError(\"local_model_request_not_claimable\")\nRuntimeError: local_model_request_not_claimable\n"
+}

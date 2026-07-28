@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "prior-conversational-episode-12"
+    ],
+    "lesson": "Operators may misunderstand the 'verify' command in system status checks.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "Uncertainty remains regarding the specific misunderstandings and effective corrective measures.",
+    "unresolved_questions": [
+      "How can we ensure operators correctly understand 'verify' in system status checks?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"Operators may misunderstand the 'verify' command in system status checks.\",\"evidence_refs\":[\"prior-conversational-episode-12\"],\"unresolved_questions\":[\"How can we ensure operators correctly understand 'verify' in system status checks?\"],\"uncertainty\":\"Uncertainty remains regarding the specific misunderstandings and effective corrective measures.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "9b7dda9add72cba45672c4fb0fec8d810f8208671e13169cdf25962b58a3f16b",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

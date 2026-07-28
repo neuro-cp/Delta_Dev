@@ -1,0 +1,28 @@
+{
+  "acceptance_criteria": [
+    "negative controls pass",
+    "material held-out improvement"
+  ],
+  "candidate_id": "candidate-c",
+  "consumer": "lesson transfer and queued reconciliation",
+  "expected_benefit": "Safer transfer with modest improvement",
+  "failure_modes": [
+    "generic clarification for specific held-out referents"
+  ],
+  "false_transfer_risk": "low",
+  "foreground_chat_interaction": "good foreground isolation",
+  "hypothesis": "A correction-conditioned applicability filter can prevent false transfer while allowing goal-thread clarifications.",
+  "latency": "low",
+  "mechanism": "Classify whether a turn is goal-thread related before applying correction-derived reference lessons.",
+  "producer": "turn relation decision",
+  "required_state": [
+    "accepted_lessons",
+    "turn_relation_decisions"
+  ],
+  "restart_behavior": "uses persisted lessons and decisions",
+  "rollback": "disable applicability gate for queued reconciliation",
+  "source_scope_estimate": [
+    "orchestration/runtime/conversational_runtime_operation.py"
+  ],
+  "tentative_goal_interaction": "preserves activation_required"
+}

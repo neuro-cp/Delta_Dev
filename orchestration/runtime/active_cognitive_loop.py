@@ -484,12 +484,22 @@ class LedgerBackedCognitiveModelRunner:
             question_objective=request.operation_type,
         )
         request_id = str(ledger_record["request_id"])
-        if str(ledger_record.get("lifecycle_state") or "") == "pending_operator_approval":
+        ledger_state = str(ledger_record.get("lifecycle_state") or "")
+        if ledger_state == "completed" and ledger_record.get("result_id"):
+            terminal = ledger_record
+        elif ledger_state == "pending_operator_approval":
             self.ledger.approve_request(request_id, self.authority_reason)
-        terminal = self.ledger.execute_claimed_request(
-            request_id,
-            {"executor": lambda question, lane: self._execute_exact_prompt(question, lane, operation_type=request.operation_type)},
-        )
+            terminal = self.ledger.execute_claimed_request(
+                request_id,
+                {"executor": lambda question, lane: self._execute_exact_prompt(question, lane, operation_type=request.operation_type)},
+            )
+        elif ledger_state == "approved":
+            terminal = self.ledger.execute_claimed_request(
+                request_id,
+                {"executor": lambda question, lane: self._execute_exact_prompt(question, lane, operation_type=request.operation_type)},
+            )
+        else:
+            terminal = ledger_record
         result_id = str(terminal.get("result_id") or "")
         if str(terminal.get("lifecycle_state") or "") != "completed" or not result_id:
             return {

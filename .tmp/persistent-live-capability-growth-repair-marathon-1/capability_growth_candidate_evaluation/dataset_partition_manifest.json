@@ -1,0 +1,139 @@
+{
+  "dataset": [
+    {
+      "answer_obligation": "goal_thread",
+      "case_id": "obs-queued-that",
+      "expected": "clarify_ambiguous_topic_boundary",
+      "group": "queued references",
+      "partition": "observed_failures",
+      "turns": [
+        "Cars are my foreground topic.",
+        "For the active goal: compare that with the message before it."
+      ]
+    },
+    {
+      "answer_obligation": "goal_thread",
+      "case_id": "learn-prev-user",
+      "expected": "previous_user_message",
+      "group": "previous user message",
+      "partition": "learning_examples",
+      "turns": [
+        "DELTA: I answered a factual question.",
+        "No, by the thing before I mean my previous user message."
+      ]
+    },
+    {
+      "answer_obligation": "foreground",
+      "case_id": "design-last-object",
+      "expected": "cache_vs_ram",
+      "group": "last-mentioned object",
+      "partition": "design_examples",
+      "turns": [
+        "I mentioned RAM, then cache.",
+        "How does it differ from the previous one?"
+      ]
+    },
+    {
+      "answer_obligation": "goal_thread",
+      "case_id": "dev-topic-switch",
+      "expected": "ambiguous_requires_clarification",
+      "group": "topic switches",
+      "partition": "candidate_development",
+      "turns": [
+        "We were discussing soup.",
+        "For the active goal: test it after topic switch."
+      ]
+    },
+    {
+      "answer_obligation": "goal_thread",
+      "case_id": "dev-side-thread",
+      "expected": "bind_to_goal_update",
+      "group": "side-thread reply",
+      "partition": "candidate_development",
+      "turns": [
+        "[Goal update] Should I prioritize reference resolution?",
+        "Yes, prioritize that."
+      ]
+    },
+    {
+      "answer_obligation": "foreground",
+      "case_id": "val-prev-assistant",
+      "expected": "previous_assistant_response",
+      "group": "previous assistant response",
+      "partition": "validation",
+      "turns": [
+        "DELTA: Angular momentum is rotational momentum.",
+        "Can you make your previous answer shorter?"
+      ]
+    },
+    {
+      "answer_obligation": "foreground",
+      "case_id": "val-negative",
+      "expected": "unrelated_factual_answer",
+      "group": "negative applicability",
+      "partition": "validation",
+      "turns": [
+        "Do not apply the reference lesson to cooking.",
+        "How do I thicken soup?"
+      ]
+    },
+    {
+      "answer_obligation": "foreground",
+      "case_id": "val-tentative",
+      "expected": "discuss_tentative_without_activation",
+      "group": "tentative future goals",
+      "partition": "validation",
+      "turns": [
+        "Maybe make geometry a future goal, do not start it.",
+        "What about that goal?"
+      ]
+    },
+    {
+      "answer_obligation": "goal_thread",
+      "case_id": "held-queued-older-topic",
+      "expected": "clarify_between_metal_expansion_and_refrigerators",
+      "group": "queued references",
+      "partition": "final_held_out",
+      "turns": [
+        "We talked about refrigerators.",
+        "Then we talked about metal expansion.",
+        "For the active goal: compare that with the earlier one."
+      ]
+    },
+    {
+      "answer_obligation": "goal_thread",
+      "case_id": "held-omitted-noun",
+      "expected": "later_one_refers_to_post_restart_action",
+      "group": "omitted noun",
+      "partition": "final_held_out",
+      "turns": [
+        "The parser failed after restart.",
+        "For the active goal: explain why the later one should not duplicate."
+      ]
+    },
+    {
+      "answer_obligation": "foreground",
+      "case_id": "held-foreground-during-inference",
+      "expected": "unrelated_factual_answer",
+      "group": "foreground question during inference",
+      "partition": "final_held_out",
+      "turns": [
+        "Background goal is running.",
+        "What is angular momentum?"
+      ]
+    },
+    {
+      "answer_obligation": "goal_thread",
+      "case_id": "held-restart-before-reconcile",
+      "expected": "preserve_queue_and_clarify",
+      "group": "restart before reconciliation",
+      "partition": "final_held_out",
+      "turns": [
+        "For the active goal: queue this ambiguous reference.",
+        "restart",
+        "Continue that comparison."
+      ]
+    }
+  ],
+  "dataset_digest": "87efdc77ad9e9386a1216aee6f2a3d14669480c706111c143b3c0858961f8ad7"
+}

@@ -1,8 +1,11 @@
+from dataclasses import replace
+
 from orchestration.runtime.conversational_runtime_operation import (
     apply_stop_or_redirect,
     chat_feature_settings_schema,
     classify_conversational_intent,
     decide_turn_relation,
+    evaluate_capability_proposal_readiness,
     evaluate_conversational_runtime,
     handle_conversational_message,
     read_json,
@@ -11,6 +14,7 @@ from orchestration.runtime.conversational_runtime_operation import (
     render_goal_review,
     request_provider_learning_packet,
     resolve_pending_chat_request,
+    review_status_for_goal_completion,
     run_background_objective_cycle,
     save_runtime_state,
     start_or_restore_runtime,
@@ -337,8 +341,137 @@ def test_completion_review_distinguishes_retained_lessons_from_authority(tmp_pat
     assert "[Goal review" in text
     assert "I retained:" in text
     assert "Provider use:" in text
-    assert "implementation-review boundary" in text
+    assert "implementation review is unavailable" in text
+    assert "candidate, evaluator, sandbox, and proposal evidence" in text
     assert reviewed.goal_reviews
+    assert reviewed.goal_reviews[-1]["status"] == "capability_proposal_pending"
+
+
+def test_cycle_budget_review_does_not_claim_implementation_readiness_without_proposal_artifacts(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path, run_background_cycle=False).state
+    state = replace(state, lifecycle_state="paused_budget")
+
+    readiness = evaluate_capability_proposal_readiness(state)
+    status = review_status_for_goal_completion(state)
+    reviewed, text = render_goal_review(state, status="implementation_review_required")
+
+    assert readiness["ready"] is False
+    assert "three_materially_distinct_candidate_strategies" in readiness["missing"]
+    assert status == "capability_proposal_pending"
+    assert reviewed.goal_reviews[-1]["status"] == "capability_proposal_pending"
+    assert "implementation-review boundary" not in text
+    assert "implementation review is unavailable" in text
+
+
+def test_implementation_review_requires_complete_capability_proposal_artifacts(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path, run_background_cycle=False).state
+    objective_id = state.active_objective.objective_id
+    events = []
+    for index in range(5):
+        events.append(
+            {
+                "event": "capability_candidate_weakness",
+                "objective_id": objective_id,
+                "weakness_id": f"weakness-{index}",
+                "evidence_id": f"evidence-{index}",
+            }
+        )
+    events.append(
+        {
+            "event": "capability_selected_weakness",
+            "objective_id": objective_id,
+            "weakness_id": "weakness-2",
+            "comparison_id": "weakness-comparison-1",
+        }
+    )
+    for candidate_id in ("candidate-a", "candidate-b", "candidate-c"):
+        events.extend(
+            (
+                {
+                    "event": "capability_candidate_strategy",
+                    "objective_id": objective_id,
+                    "candidate_id": candidate_id,
+                    "summary": f"{candidate_id} strategy",
+                },
+                {
+                    "event": "capability_sandbox_execution",
+                    "objective_id": objective_id,
+                    "candidate_id": candidate_id,
+                    "status": "completed",
+                },
+                {
+                    "event": "capability_heldout_result",
+                    "objective_id": objective_id,
+                    "candidate_id": candidate_id,
+                    "result_id": f"{candidate_id}-heldout",
+                    "score": 0.7,
+                },
+            )
+        )
+    events.extend(
+        (
+            {
+                "event": "capability_frozen_evaluator",
+                "objective_id": objective_id,
+                "evaluator_id": "evaluator-1",
+                "frozen": True,
+            },
+            {
+                "event": "capability_candidate_rejected",
+                "objective_id": objective_id,
+                "candidate_id": "candidate-b",
+                "reason": "weaker held-out performance",
+            },
+            {
+                "event": "capability_winning_candidate",
+                "objective_id": objective_id,
+                "candidate_id": "candidate-a",
+                "improvement_evidence_id": "candidate-a-heldout",
+            },
+            {
+                "event": "capability_source_proposal",
+                "objective_id": objective_id,
+                "proposal_id": "proposal-1",
+                "patch_path": ".tmp/proposal.patch",
+                "source_files": ("orchestration/runtime/conversational_runtime_operation.py",),
+                "test_files": ("tests/runtime_gsr/test_conversational_runtime_operation.py",),
+            },
+            {
+                "event": "capability_supervisor_audit",
+                "objective_id": objective_id,
+                "audit_id": "audit-1",
+                "status": "passed",
+            },
+        )
+    )
+    state = replace(state, lifecycle_state="paused_budget", objective_progress=state.objective_progress + tuple(events))
+
+    readiness = evaluate_capability_proposal_readiness(state)
+    status = review_status_for_goal_completion(state)
+    reviewed, text = render_goal_review(state, status=status)
+
+    assert readiness["ready"] is True
+    assert status == "implementation_review_required"
+    assert reviewed.goal_reviews[-1]["status"] == "implementation_review_required"
+    assert "[Goal review" in text
+    assert "Semantic reconciliation" in text
+    assert "three candidate comparisons" in text
+
+
+def test_goal_review_is_idempotent_for_same_objective_status(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path, run_background_cycle=False).state
+    state = replace(state, lifecycle_state="paused_budget")
+
+    first, first_text = render_goal_review(state, status="capability_proposal_pending")
+    second, second_text = render_goal_review(first, status="capability_proposal_pending")
+
+    assert first_text == second_text
+    assert len(first.goal_reviews) == 1
+    assert len(second.goal_reviews) == 1
+    assert len(second.conversation) == len(first.conversation)
 
 
 def test_restart_restores_without_duplicate_cycles_or_corrections(tmp_path):
@@ -465,6 +598,80 @@ def test_goal_sentence_with_review_word_still_classifies_as_goal(tmp_path):
     assert result.objective_created is True
     assert result.state.active_objective.operator_wording == message
     assert result.state.goal_reviews == ()
+
+
+def test_explicit_goal_about_tentative_goals_still_replaces_active_objective(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path, run_background_cycle=False).state
+    previous_objective_id = state.active_objective.objective_id
+    message = (
+        "Your goal today is to improve semantic reconciliation of queued and implied references. "
+        "Work on how you interpret queued messages, implied references, topic switches, corrections, "
+        "tentative future goals, and false-transfer guards. Use local cognition and local evidence first. "
+        "Compare multiple candidate strategies with held-out cases. Stop at implementation review before changing source."
+    )
+
+    intent = classify_conversational_intent(
+        message,
+        active_objective=state.active_objective,
+        recent_turns=state.conversation,
+    )
+    result = handle_conversational_message(state, message, runtime_root=tmp_path, run_background_cycle=False)
+
+    assert intent.intent_type == "persistent_or_session_goal"
+    assert result.objective_created is True
+    assert result.state.active_objective.objective_id != previous_objective_id
+    assert result.state.active_objective.operator_wording == message
+    assert result.state.goal_reviews == ()
+    assert result.state.tentative_goals == ()
+
+
+def test_tentative_goal_language_does_not_replace_active_objective(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path, run_background_cycle=False).state
+    objective_id = state.active_objective.objective_id
+    cycle_keys = state.completed_cycle_keys
+
+    messages = [
+        "That could be a goal later.",
+        "New possible goal, but do not replace the active one yet.",
+        "Maybe eventually learn more about topic switches.",
+        "Keep that as a future idea.",
+        "Do not start this yet.",
+        "Would it help to make geometry a future goal?",
+        "I might want you to study that later.",
+    ]
+    for message in messages:
+        result = handle_conversational_message(state, message, runtime_root=tmp_path, run_background_cycle=False)
+        state = result.state
+        assert result.objective_created is False
+        assert state.active_objective.objective_id == objective_id
+        assert state.completed_cycle_keys == cycle_keys
+        assert state.archived_objectives == ()
+        assert state.tentative_goals[-1].activation_required is True
+        assert "tentative future goal only" in result.reply
+
+
+def test_foreground_controls_get_useful_answers_without_goal_replacement(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path, run_background_cycle=False).state
+    objective_id = state.active_objective.objective_id
+    cases = {
+        "How does a refrigerator move heat?": "refrigerant",
+        "Why does metal expand when heated?": "atoms vibrate",
+        "How do I make basic soup?": "soup",
+        "Hi, how are you?": "chatting normally",
+        "Why does ice float?": "less dense",
+        "What does RAM do in a computer?": "working memory",
+    }
+
+    for message, expected in cases.items():
+        result = handle_conversational_message(state, message, runtime_root=tmp_path, run_background_cycle=False)
+        state = result.state
+        assert expected.lower() in result.reply.lower()
+        assert "I understand. I will treat this as ordinary conversation" not in result.reply
+        assert state.active_objective.objective_id == objective_id
+        assert result.transfer_applied is False
 
 
 def test_evaluator_rejects_storage_only_and_accepts_correction_learning(tmp_path):

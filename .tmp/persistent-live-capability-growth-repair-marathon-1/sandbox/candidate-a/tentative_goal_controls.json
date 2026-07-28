@@ -1,0 +1,16 @@
+{
+  "accuracy": 1.0,
+  "candidate_id": "candidate-a",
+  "case_count": 1,
+  "passed_count": 1,
+  "rows": [
+    {
+      "case_id": "val-tentative",
+      "expected": "discuss_tentative_without_activation",
+      "group": "tentative future goals",
+      "partition": "validation",
+      "passed": true,
+      "predicted": "discuss_tentative_without_activation"
+    }
+  ]
+}

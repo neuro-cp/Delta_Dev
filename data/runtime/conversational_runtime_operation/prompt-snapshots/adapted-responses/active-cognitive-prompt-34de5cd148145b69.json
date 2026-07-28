@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "prior-conversational-episode-6"
+    ],
+    "lesson": "Operators may misunderstand specific English phrases due to lack of context or familiarity.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "How can we ensure consistent understanding of complex English phrases?",
+    "unresolved_questions": [
+      "How can we ensure consistent understanding of complex English phrases?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"Operators may misunderstand specific English phrases due to lack of context or familiarity.\",\"evidence_refs\":[\"prior-conversational-episode-6\"],\"unresolved_questions\":[\"How can we ensure consistent understanding of complex English phrases?\"],\"uncertainty\":\"How can we ensure consistent understanding of complex English phrases?\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "1d26862dd180f7156562678467ba3c0299e50fa69f1525c07bec9fdc64f6217a",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

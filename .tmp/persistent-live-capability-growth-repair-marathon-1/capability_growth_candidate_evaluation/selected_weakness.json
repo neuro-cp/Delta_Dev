@@ -1,0 +1,21 @@
+{
+  "existing_mechanism_overlap": "record_foreground_message_for_reconciliation preserves order but does not produce a semantic target.",
+  "false_transfer_risk": "high if a learned reference rule is applied to unrelated foreground questions.",
+  "frequency": "observed twice in the live run",
+  "live_evidence_refs": [
+    "foreground_message_queued_for_reconciliation",
+    "operator correction about previous user message"
+  ],
+  "measurable_success_criteria": "Resolve previous-user, older-foreground-topic, and side-thread referents without contaminating unrelated factual chat.",
+  "observed_failure": "Queued goal-thread messages mention 'that' or 'it' after intervening foreground topics, but the runtime only records the text and does not resolve the referent before later cognition.",
+  "operator_impact": "DELTA may preserve the words but miss what the operator meant to compare.",
+  "probable_consumer": "background objective cycle and goal review",
+  "probable_producer": "conversation ingestion / queued-message reconciliation pass",
+  "probable_source_scope": [
+    "orchestration/runtime/conversational_runtime_operation.py"
+  ],
+  "rejection_criteria": "Rejected if foreground controls degrade or ambiguous cases are answered without calibrated clarification.",
+  "sandbox_feasibility": "high",
+  "severity": "high",
+  "weakness_id": "weakness-queued-topic-boundary-referent"
+}

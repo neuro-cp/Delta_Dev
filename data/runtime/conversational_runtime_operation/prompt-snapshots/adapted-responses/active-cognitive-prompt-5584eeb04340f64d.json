@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "prior-conversational-episode-12"
+    ],
+    "lesson": "Operators will understand corrections better in future conversations after receiving them in the current one.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "Variability in comprehension improvement among operators.",
+    "unresolved_questions": [
+      "How will the effectiveness of corrections vary across different operators?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"Operators will understand corrections better in future conversations after receiving them in the current one.\",\"evidence_refs\":[\"prior-conversational-episode-12\"],\"unresolved_questions\":[\"How will the effectiveness of corrections vary across different operators?\"],\"uncertainty\":\"Variability in comprehension improvement among operators.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "b2c4880e6c4cea52e1aeee84b0207aea81b411bf9808e2474ac10f314a36c16a",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

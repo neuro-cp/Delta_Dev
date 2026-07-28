@@ -1,0 +1,805 @@
+{
+  "actions": [],
+  "attention": {
+    "abandonment_reason": "",
+    "active_focus_id": "focus-d93cfe126582355c",
+    "active_focus_summary": "Challenge or revise hypothesis: Operators will misunderstand certain technical terms during conversations due to lack of specific training.",
+    "active_goal_ids": [
+      "active-cognitive-goal-acc1044183eab608"
+    ],
+    "attention_state_id": "active-attention-d27dafdb31432ae6",
+    "candidate_focuses": [
+      {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "local_model_semantic_operation",
+        "creation_sequence": 3,
+        "description": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+        "evidence_need": "local evidence supporting or challenging the goal",
+        "evidence_refs": [
+          "operator-natural-goal"
+        ],
+        "expected_value": "useful_progress",
+        "focus_id": "focus-d9d9055720107c50",
+        "related_goal_ids": [
+          "active-cognitive-goal-acc1044183eab608"
+        ],
+        "salience_categories": [
+          "operator_priority",
+          "goal_discrepancy",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "goal_discrepancy",
+        "urgency": "medium"
+      },
+      {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "semantic comparison",
+        "creation_sequence": 3,
+        "description": "Challenge or revise hypothesis: Operators will misunderstand certain technical terms during conversations due to lack of specific training.",
+        "evidence_need": "contrary and supporting evidence",
+        "evidence_refs": [
+          "operator-natural-goal",
+          "operator-natural-goal"
+        ],
+        "expected_value": "belief_revision",
+        "focus_id": "focus-d93cfe126582355c",
+        "related_goal_ids": [
+          "active-cognitive-goal-acc1044183eab608"
+        ],
+        "salience_categories": [
+          "unresolved_hypothesis",
+          "evidence_revision",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "An active hypothesis needs evidence-linked revision before action.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "hypothesis_revision",
+        "urgency": "high"
+      }
+    ],
+    "continuation_reason": "",
+    "cycle_sequence": 3,
+    "evidence_refs": [
+      "operator-natural-goal",
+      "operator-natural-goal"
+    ],
+    "focus_started_at": "2026-07-28T00:04:55+00:00",
+    "interruption_priority": "none",
+    "interruption_reason": "",
+    "last_progress_at": "2026-07-28T00:06:18+00:00",
+    "previous_focus_ids": [
+      "focus-453bb529bd6f2803",
+      "focus-11f2c00f149cc0cf"
+    ],
+    "progress_summary": "selected focus for cognitive operation",
+    "return_condition": "",
+    "salience_reasons": [
+      "An active hypothesis needs evidence-linked revision before action.",
+      "unresolved_hypothesis",
+      "evidence_revision",
+      "expected_useful_progress"
+    ],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "stagnation_count": 0,
+    "switch_reason": "An active hypothesis needs evidence-linked revision before action.",
+    "transition_journal": [
+      {
+        "at": "2026-07-28T00:04:55+00:00",
+        "focus_id": "focus-453bb529bd6f2803",
+        "reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "sequence": 1,
+        "transition": "establish_focus"
+      },
+      {
+        "at": "2026-07-28T00:05:22+00:00",
+        "focus_id": "focus-11f2c00f149cc0cf",
+        "reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "sequence": 2,
+        "transition": "switch_focus"
+      },
+      {
+        "at": "2026-07-28T00:06:18+00:00",
+        "focus_id": "focus-d93cfe126582355c",
+        "reason": "An active hypothesis needs evidence-linked revision before action.",
+        "sequence": 3,
+        "transition": "switch_focus"
+      }
+    ],
+    "unresolved_questions": []
+  },
+  "budgets": {
+    "max_actions": 4,
+    "max_cycles": 16,
+    "max_model_calls": 12,
+    "max_packet_items": 8
+  },
+  "completed": true,
+  "cycles": [
+    {
+      "completed": true,
+      "cycle_id": "active-cognitive-cycle-c7fed5149b8873bb",
+      "focus_id": "focus-453bb529bd6f2803",
+      "operation_id": "cognitive-operation-e45459390da6efdd",
+      "outcome_id": "outcome-f942f8b7c0f75d1d",
+      "packet_digest": "08ccef159545ac7a5f031b72cc3d4c9bc4aa7e9664dbf0e4e2a6131755e1ec61",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "sequence": 1,
+      "summary": "Operators will misunderstand certain technical terms during conversations due to lack of specific training."
+    },
+    {
+      "completed": true,
+      "cycle_id": "active-cognitive-cycle-c21be81d6e035da4",
+      "focus_id": "focus-11f2c00f149cc0cf",
+      "operation_id": "cognitive-operation-6551fb51d6a69191",
+      "outcome_id": "outcome-ada31dd19faf1df7",
+      "packet_digest": "cf04aafc0d939ccc34734c644599ee7ae16fa8aa54f9a5a36afefcb032905993",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "sequence": 2,
+      "summary": "The hypothesis that operators will misunderstand certain technical terms during conversations due to a lack of specific training is supported by the live conversation evidence already gathered. However, the goal of the campaign is to contin"
+    },
+    {
+      "completed": true,
+      "cycle_id": "active-cognitive-cycle-c7b9ccd985947a36",
+      "focus_id": "focus-d93cfe126582355c",
+      "operation_id": "cognitive-operation-401ad1ebfde3decd",
+      "outcome_id": "outcome-ea75fc7bfc5def96",
+      "packet_digest": "cae0c5249e2c27ffb9b33938c2436ab840a1649b41d1850055296ffc1dbe852e",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "sequence": 3,
+      "summary": "Operators may misunderstand certain technical terms during conversations due to a lack of specific training, but the goal of the campaign is to continue semantic-reconciliation capability-growth, which may introduce new challenges."
+    }
+  ],
+  "episode_id": "active-cognitive-episode-ae2445a48f4a791e",
+  "evidence": [
+    {
+      "content": "",
+      "evidence_id": "operator-natural-goal",
+      "exists": true,
+      "kind": "local_evidence",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "ordinary_chat",
+      "summary": "Your goal today is to continue the semantic-reconciliation capability-growth campaign. Use the live conversation evidence already gathered to identify the strongest remaining weakness in queued and implied references. Generate multiple candidate strategies, compare them with a frozen held-out evaluator, and stop only when a real implementation proposal is ready for review. Do not change tracked source before review."
+    }
+  ],
+  "goals": [
+    {
+      "expected_state": "Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.",
+      "goal_id": "active-cognitive-goal-acc1044183eab608",
+      "observed_state": "",
+      "priority": "operator_requested",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "summary": "Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer."
+    }
+  ],
+  "hypotheses": [
+    {
+      "assumptions": [
+        "Operators have varying levels of prior technical knowledge",
+        "Training materials are not tailored to operator-specific needs"
+      ],
+      "confidence_state": "contested",
+      "created_at": "2026-07-28T00:05:21+00:00",
+      "disposition": "needs_challenge",
+      "evidence_against": [
+        "operator-natural-goal"
+      ],
+      "evidence_for": [
+        "operator-natural-goal"
+      ],
+      "expected_observations": [
+        "local evidence should support a bounded useful step"
+      ],
+      "hypothesis_id": "hypothesis-3f9d825d1b656c53",
+      "lifecycle_state": "active",
+      "originating_focus_id": "focus-453bb529bd6f2803",
+      "originating_goal_id": "active-cognitive-goal-acc1044183eab608",
+      "provenance": [
+        "cognitive-operation-e45459390da6efdd",
+        "cognitive-operation-6551fb51d6a69191"
+      ],
+      "revised_at": "2026-07-28T00:06:17+00:00",
+      "revision_parent_id": "",
+      "revision_reason": "The hypothesis that operators will misunderstand certain technical terms during conversations due to a lack of specific training is supported by the live conversation evidence already gathered. However, the goal of the campaign is to continue the semantic-reconciliation capability-growth, which may introduce new challenges that were not anticipated in the initial hypothesis.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "scope": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+      "statement": "Operators will misunderstand certain technical terms during conversations due to lack of specific training."
+    }
+  ],
+  "learning_updates": [
+    {
+      "created_at": "2026-07-28T00:06:43+00:00",
+      "evidence_refs": [
+        "operator-natural-goal"
+      ],
+      "learning_id": "learning-ea75fc7bfc5def96",
+      "summary": "Operators may misunderstand certain technical terms during conversations due to a lack of specific training, but the goal of the campaign is to continue semantic-reconciliation capability-growth, which may introduce new challenges."
+    }
+  ],
+  "loop_state": "completed",
+  "model_call_count": 3,
+  "next_focus_candidates": [
+    {
+      "authority_need": "none_for_local_analysis",
+      "blocking_state": "",
+      "capability_need": "local_model_semantic_operation",
+      "creation_sequence": 3,
+      "description": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+      "evidence_need": "local evidence supporting or challenging the goal",
+      "evidence_refs": [
+        "operator-natural-goal"
+      ],
+      "expected_value": "useful_progress",
+      "focus_id": "focus-d9d9055720107c50",
+      "related_goal_ids": [
+        "active-cognitive-goal-acc1044183eab608"
+      ],
+      "salience_categories": [
+        "operator_priority",
+        "goal_discrepancy",
+        "expected_useful_progress"
+      ],
+      "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "goal_discrepancy",
+      "urgency": "medium"
+    },
+    {
+      "authority_need": "none_for_local_analysis",
+      "blocking_state": "",
+      "capability_need": "semantic comparison",
+      "creation_sequence": 3,
+      "description": "Challenge or revise hypothesis: Operators will misunderstand certain technical terms during conversations due to lack of specific training.",
+      "evidence_need": "contrary and supporting evidence",
+      "evidence_refs": [
+        "operator-natural-goal",
+        "operator-natural-goal"
+      ],
+      "expected_value": "belief_revision",
+      "focus_id": "focus-d93cfe126582355c",
+      "related_goal_ids": [
+        "active-cognitive-goal-acc1044183eab608"
+      ],
+      "salience_categories": [
+        "unresolved_hypothesis",
+        "evidence_revision",
+        "expected_useful_progress"
+      ],
+      "salience_explanation": "An active hypothesis needs evidence-linked revision before action.",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "hypothesis_revision",
+      "urgency": "high"
+    }
+  ],
+  "operation_requests": [
+    {
+      "authority_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "budget": {
+        "max_response_words": 220,
+        "max_retries": 1
+      },
+      "cycle_id": "active-cognitive-cycle-c7fed5149b8873bb",
+      "evidence_constraints": [
+        "operator-natural-goal"
+      ],
+      "expected_output_schema": {
+        "contrary_evidence_considered": "list",
+        "evidence_refs": "list",
+        "interpretation": "string",
+        "operation_result_type": "string",
+        "recommended_state_transition": "string",
+        "uncertainty": "string"
+      },
+      "focus_id": "focus-453bb529bd6f2803",
+      "goal_id": "active-cognitive-goal-acc1044183eab608",
+      "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+      "operation_id": "cognitive-operation-e45459390da6efdd",
+      "operation_type": "formulate_hypothesis",
+      "provenance": [
+        "working-memory-packet-0d49a01a290acf71"
+      ],
+      "retry_allowance": 1,
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "task": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+      "working_memory_packet_digest": "08ccef159545ac7a5f031b72cc3d4c9bc4aa7e9664dbf0e4e2a6131755e1ec61"
+    },
+    {
+      "authority_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "budget": {
+        "max_response_words": 220,
+        "max_retries": 1
+      },
+      "cycle_id": "active-cognitive-cycle-c21be81d6e035da4",
+      "evidence_constraints": [
+        "operator-natural-goal"
+      ],
+      "expected_output_schema": {
+        "contrary_evidence_considered": "list",
+        "evidence_refs": "list",
+        "interpretation": "string",
+        "operation_result_type": "string",
+        "recommended_state_transition": "string",
+        "uncertainty": "string"
+      },
+      "focus_id": "focus-11f2c00f149cc0cf",
+      "goal_id": "active-cognitive-goal-acc1044183eab608",
+      "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+      "operation_id": "cognitive-operation-6551fb51d6a69191",
+      "operation_type": "compare_evidence",
+      "provenance": [
+        "working-memory-packet-c8225640ed6936f5"
+      ],
+      "retry_allowance": 1,
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "task": "Perform compare_evidence for the active focus using only referenced evidence.",
+      "working_memory_packet_digest": "cf04aafc0d939ccc34734c644599ee7ae16fa8aa54f9a5a36afefcb032905993"
+    },
+    {
+      "authority_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "budget": {
+        "max_response_words": 220,
+        "max_retries": 1
+      },
+      "cycle_id": "active-cognitive-cycle-c7b9ccd985947a36",
+      "evidence_constraints": [
+        "operator-natural-goal"
+      ],
+      "expected_output_schema": {
+        "contrary_evidence_considered": "list",
+        "evidence_refs": "list",
+        "interpretation": "string",
+        "operation_result_type": "string",
+        "recommended_state_transition": "string",
+        "uncertainty": "string"
+      },
+      "focus_id": "focus-d93cfe126582355c",
+      "goal_id": "active-cognitive-goal-acc1044183eab608",
+      "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+      "operation_id": "cognitive-operation-401ad1ebfde3decd",
+      "operation_type": "summarize_learning",
+      "provenance": [
+        "working-memory-packet-debf358e85de6d03"
+      ],
+      "retry_allowance": 1,
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "task": "Perform summarize_learning for the active focus using only referenced evidence.",
+      "working_memory_packet_digest": "cae0c5249e2c27ffb9b33938c2436ab840a1649b41d1850055296ffc1dbe852e"
+    }
+  ],
+  "operation_results": [
+    {
+      "accepted": true,
+      "assumptions": [
+        "Operators have varying levels of prior technical knowledge",
+        "Training materials are not tailored to operator-specific needs"
+      ],
+      "contrary_evidence_considered": [],
+      "evidence_refs": [
+        "operator-natural-goal"
+      ],
+      "interpretation": "Operators will misunderstand certain technical terms during conversations due to lack of specific training.",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "next_evidence_need": "",
+      "next_focus_proposal": "",
+      "operation_id": "cognitive-operation-e45459390da6efdd",
+      "operation_result_type": "formulate_hypothesis_result",
+      "raw_model_output": "{\"hypothesis_statement\":\"Operators will misunderstand certain technical terms during conversations due to lack of specific training.\",\"scope\":\"Technical terms in operator-specific conversations\",\"supporting_evidence_refs\":[\"operator-natural-goal\"],\"assumptions\":[\"Operators have varying levels of prior technical knowledge\",\"Training materials are not tailored to operator-specific needs\"],\"expected_observations\":[\"Operators will ask for clarification on certain technical terms\",\"Operators will use incorrect terms in their responses\"],\"uncertainty\":\"Whether specific training can address the issue\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+      "recommended_action": "Technical terms in operator-specific conversations",
+      "recommended_state_transition": "propose_hypothesis",
+      "rejection_reasons": [],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "uncertainty": "Whether specific training can address the issue"
+    },
+    {
+      "accepted": true,
+      "assumptions": [
+        "Operators have varying levels of prior technical knowledge",
+        "Training materials are not tailored to operator-specific needs"
+      ],
+      "contrary_evidence_considered": [
+        "operator-natural-goal"
+      ],
+      "evidence_refs": [],
+      "interpretation": "The hypothesis that operators will misunderstand certain technical terms during conversations due to a lack of specific training is supported by the live conversation evidence already gathered. However, the goal of the campaign is to continue the semantic-reconciliation capability-growth, which may introduce new challenges that were not anticipated in the initial hypothesis.",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "next_evidence_need": "local evidence supporting or challenging the goal",
+      "next_focus_proposal": "Continue the semantic-reconciliation capability-growth campaign by identifying the strongest remaining weakness in queued and implied references and generating multiple candidate strategies.",
+      "operation_id": "cognitive-operation-6551fb51d6a69191",
+      "operation_result_type": "compare_evidence_result",
+      "raw_model_output": "{ \"assumptions\": [ \"Operators have varying levels of prior technical knowledge\", \"Training materials are not tailored to operator-specific needs\" ], \"contrary_evidence_considered\": [ \"operator-natural-goal\" ], \"evidence_refs\": [], \"interpretation\": \"The hypothesis that operators will misunderstand certain technical terms during conversations due to a lack of specific training is supported by the live conversation evidence already gathered. However, the goal of the campaign is to continue the semantic-reconciliation capability-growth, which may introduce new challenges that were not anticipated in the initial hypothesis.\", \"next_evidence_need\": \"local evidence supporting or challenging the goal\", \"next_focus_proposal\": \"Continue the semantic-reconciliation capability-growth campaign by identifying the strongest remaining weakness in queued and implied references and generating multiple candidate strategies.\", \"operation_result_type\": \"compare_evidence_result\", \"recommended_action\": \"Continue the semantic-reconciliation capability-growth campaign by identifying the strongest remaining weakness in queued and implied references and generating multiple candidate strategies.\", \"recommended_state_transition\": \"add_conflicting_evidence\", \"uncertainty\": \"The hypothesis may need to be revised to account for the challenges introduced by the semantic-reconciliation capability-growth campaign.\" }",
+      "recommended_action": "Continue the semantic-reconciliation capability-growth campaign by identifying the strongest remaining weakness in queued and implied references and generating multiple candidate strategies.",
+      "recommended_state_transition": "add_conflicting_evidence",
+      "rejection_reasons": [],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "uncertainty": "The hypothesis may need to be revised to account for the challenges introduced by the semantic-reconciliation capability-growth campaign."
+    },
+    {
+      "accepted": true,
+      "assumptions": [],
+      "contrary_evidence_considered": [],
+      "evidence_refs": [
+        "operator-natural-goal"
+      ],
+      "interpretation": "Operators may misunderstand certain technical terms during conversations due to a lack of specific training, but the goal of the campaign is to continue semantic-reconciliation capability-growth, which may introduce new challenges.",
+      "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "next_evidence_need": "How will new challenges introduced by semantic-reconciliation capability-growth affect the initial hypothesis?",
+      "next_focus_proposal": "",
+      "operation_id": "cognitive-operation-401ad1ebfde3decd",
+      "operation_result_type": "summarize_learning_result",
+      "raw_model_output": "{\"lesson\":\"Operators may misunderstand certain technical terms during conversations due to a lack of specific training, but the goal of the campaign is to continue semantic-reconciliation capability-growth, which may introduce new challenges.\",\"evidence_refs\":[\"operator-natural-goal\"],\"unresolved_questions\":[\"How will new challenges introduced by semantic-reconciliation capability-growth affect the initial hypothesis?\"],\"uncertainty\":\"The impact of new challenges on the initial hypothesis remains unresolved.\",\"recommended_state_transition\":\"summarize_learning\"}",
+      "recommended_action": "",
+      "recommended_state_transition": "summarize_learning",
+      "rejection_reasons": [],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "uncertainty": "The impact of new challenges on the initial hypothesis remains unresolved."
+    }
+  ],
+  "outcomes": [
+    {
+      "created_at": "2026-07-28T00:05:21+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+      "observed": "Operators will misunderstand certain technical terms during conversations due to lack of specific training.",
+      "operation_id": "cognitive-operation-e45459390da6efdd",
+      "outcome_id": "outcome-f942f8b7c0f75d1d"
+    },
+    {
+      "created_at": "2026-07-28T00:06:17+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform compare_evidence for the active focus using only referenced evidence.",
+      "observed": "The hypothesis that operators will misunderstand certain technical terms during conversations due to a lack of specific training is supported by the live conversation evidence already gathered. However, the goal of the campaign is to continue the semantic-reconciliation capability-growth, which may introduce new challenges that were not anticipated in the initial hypothesis.",
+      "operation_id": "cognitive-operation-6551fb51d6a69191",
+      "outcome_id": "outcome-ada31dd19faf1df7"
+    },
+    {
+      "created_at": "2026-07-28T00:06:43+00:00",
+      "discrepancy": "progress_observed",
+      "expected": "Perform summarize_learning for the active focus using only referenced evidence.",
+      "observed": "Operators may misunderstand certain technical terms during conversations due to a lack of specific training, but the goal of the campaign is to continue semantic-reconciliation capability-growth, which may introduce new challenges.",
+      "operation_id": "cognitive-operation-401ad1ebfde3decd",
+      "outcome_id": "outcome-ea75fc7bfc5def96"
+    }
+  ],
+  "pending_operator_requests": [],
+  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+  "title": "Conversational English comprehension objective",
+  "useful_artifacts": [
+    {
+      "artifact_id": "useful-artifact-ea75fc7bfc5def96",
+      "artifact_type": "cognitive_episode_summary",
+      "evidence_refs": [
+        "operator-natural-goal"
+      ],
+      "summary": "Operators may misunderstand certain technical terms during conversations due to a lack of specific training, but the goal of the campaign is to continue semantic-reconciliation capability-growth, which may introduce new challenges."
+    }
+  ],
+  "working_memory_packets": [
+    {
+      "active_focus": {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "local_model_semantic_operation",
+        "creation_sequence": 1,
+        "description": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+        "evidence_need": "local evidence supporting or challenging the goal",
+        "evidence_refs": [
+          "operator-natural-goal"
+        ],
+        "expected_value": "useful_progress",
+        "focus_id": "focus-453bb529bd6f2803",
+        "related_goal_ids": [
+          "active-cognitive-goal-acc1044183eab608"
+        ],
+        "salience_categories": [
+          "operator_priority",
+          "goal_discrepancy",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "goal_discrepancy",
+        "urgency": "medium"
+      },
+      "active_goal": {
+        "expected_state": "Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.",
+        "goal_id": "active-cognitive-goal-acc1044183eab608",
+        "observed_state": "",
+        "priority": "operator_requested",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "summary": "Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer."
+      },
+      "authority_state": "authorized_for_local_cognitive_marathon",
+      "capability_limits": [
+        "model calls budgeted",
+        "source mutation requires explicit bounded patch authority"
+      ],
+      "conflicting_evidence": [
+        {
+          "content": "",
+          "evidence_id": "operator-natural-goal",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "ordinary_chat",
+          "summary": "Your goal today is to continue the semantic-reconciliation capability-growth campaign. Use the live conversation evidence already gathered to identify the strongest remaining weakness in queued and implied references. Generate multiple candidate strategies, compare them with a frozen held-out evaluator, and stop only when a real implementation proposal is ready for review. Do not change tracked source before review."
+        }
+      ],
+      "construction_rationale": "bounded by active focus, goal discrepancy, recency, evidence provenance, and operation need",
+      "current_hypotheses": [],
+      "cycle_id": "active-cognitive-cycle-c7fed5149b8873bb",
+      "observed_outcomes": [],
+      "omitted_items_summary": "0 older or less relevant items omitted by packet budget",
+      "operator_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "packet_digest": "08ccef159545ac7a5f031b72cc3d4c9bc4aa7e9664dbf0e4e2a6131755e1ec61",
+      "packet_id": "working-memory-packet-0d49a01a290acf71",
+      "prior_cycle_summary": "",
+      "provenance_refs": [
+        "operator-natural-goal"
+      ],
+      "recent_actions": [],
+      "relevant_evidence": [],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "size_budget": 8,
+      "unresolved_questions": []
+    },
+    {
+      "active_focus": {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "local_model_semantic_operation",
+        "creation_sequence": 2,
+        "description": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+        "evidence_need": "local evidence supporting or challenging the goal",
+        "evidence_refs": [
+          "operator-natural-goal"
+        ],
+        "expected_value": "useful_progress",
+        "focus_id": "focus-11f2c00f149cc0cf",
+        "related_goal_ids": [
+          "active-cognitive-goal-acc1044183eab608"
+        ],
+        "salience_categories": [
+          "operator_priority",
+          "goal_discrepancy",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "goal_discrepancy",
+        "urgency": "medium"
+      },
+      "active_goal": {
+        "expected_state": "Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.",
+        "goal_id": "active-cognitive-goal-acc1044183eab608",
+        "observed_state": "",
+        "priority": "operator_requested",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "summary": "Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer."
+      },
+      "authority_state": "authorized_for_local_cognitive_marathon",
+      "capability_limits": [
+        "model calls budgeted",
+        "source mutation requires explicit bounded patch authority"
+      ],
+      "conflicting_evidence": [
+        {
+          "content": "",
+          "evidence_id": "operator-natural-goal",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "ordinary_chat",
+          "summary": "Your goal today is to continue the semantic-reconciliation capability-growth campaign. Use the live conversation evidence already gathered to identify the strongest remaining weakness in queued and implied references. Generate multiple candidate strategies, compare them with a frozen held-out evaluator, and stop only when a real implementation proposal is ready for review. Do not change tracked source before review."
+        }
+      ],
+      "construction_rationale": "bounded by active focus, goal discrepancy, recency, evidence provenance, and operation need",
+      "current_hypotheses": [
+        {
+          "assumptions": [
+            "Operators have varying levels of prior technical knowledge",
+            "Training materials are not tailored to operator-specific needs"
+          ],
+          "confidence_state": "plausible",
+          "created_at": "2026-07-28T00:05:21+00:00",
+          "disposition": "needs_challenge",
+          "evidence_against": [],
+          "evidence_for": [
+            "operator-natural-goal"
+          ],
+          "expected_observations": [
+            "local evidence should support a bounded useful step"
+          ],
+          "hypothesis_id": "hypothesis-3f9d825d1b656c53",
+          "lifecycle_state": "active",
+          "originating_focus_id": "focus-453bb529bd6f2803",
+          "originating_goal_id": "active-cognitive-goal-acc1044183eab608",
+          "provenance": [
+            "cognitive-operation-e45459390da6efdd"
+          ],
+          "revised_at": "",
+          "revision_parent_id": "",
+          "revision_reason": "",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "scope": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+          "statement": "Operators will misunderstand certain technical terms during conversations due to lack of specific training."
+        }
+      ],
+      "cycle_id": "active-cognitive-cycle-c21be81d6e035da4",
+      "observed_outcomes": [
+        {
+          "created_at": "2026-07-28T00:05:21+00:00",
+          "discrepancy": "progress_observed",
+          "expected": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+          "observed": "Operators will misunderstand certain technical terms during conversations due to lack of specific training.",
+          "operation_id": "cognitive-operation-e45459390da6efdd",
+          "outcome_id": "outcome-f942f8b7c0f75d1d"
+        }
+      ],
+      "omitted_items_summary": "0 older or less relevant items omitted by packet budget",
+      "operator_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "packet_digest": "cf04aafc0d939ccc34734c644599ee7ae16fa8aa54f9a5a36afefcb032905993",
+      "packet_id": "working-memory-packet-c8225640ed6936f5",
+      "prior_cycle_summary": "Operators will misunderstand certain technical terms during conversations due to lack of specific training.",
+      "provenance_refs": [
+        "operator-natural-goal"
+      ],
+      "recent_actions": [],
+      "relevant_evidence": [],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "size_budget": 8,
+      "unresolved_questions": []
+    },
+    {
+      "active_focus": {
+        "authority_need": "none_for_local_analysis",
+        "blocking_state": "",
+        "capability_need": "semantic comparison",
+        "creation_sequence": 3,
+        "description": "Challenge or revise hypothesis: Operators will misunderstand certain technical terms during conversations due to lack of specific training.",
+        "evidence_need": "contrary and supporting evidence",
+        "evidence_refs": [
+          "operator-natural-goal",
+          "operator-natural-goal"
+        ],
+        "expected_value": "belief_revision",
+        "focus_id": "focus-d93cfe126582355c",
+        "related_goal_ids": [
+          "active-cognitive-goal-acc1044183eab608"
+        ],
+        "salience_categories": [
+          "unresolved_hypothesis",
+          "evidence_revision",
+          "expected_useful_progress"
+        ],
+        "salience_explanation": "An active hypothesis needs evidence-linked revision before action.",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "source": "hypothesis_revision",
+        "urgency": "high"
+      },
+      "active_goal": {
+        "expected_state": "Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.",
+        "goal_id": "active-cognitive-goal-acc1044183eab608",
+        "observed_state": "",
+        "priority": "operator_requested",
+        "schema_version": "active_cognitive_architecture_marathon_1_v1",
+        "summary": "Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer."
+      },
+      "authority_state": "authorized_for_local_cognitive_marathon",
+      "capability_limits": [
+        "model calls budgeted",
+        "source mutation requires explicit bounded patch authority"
+      ],
+      "conflicting_evidence": [
+        {
+          "content": "",
+          "evidence_id": "operator-natural-goal",
+          "exists": true,
+          "kind": "local_evidence",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "source": "ordinary_chat",
+          "summary": "Your goal today is to continue the semantic-reconciliation capability-growth campaign. Use the live conversation evidence already gathered to identify the strongest remaining weakness in queued and implied references. Generate multiple candidate strategies, compare them with a frozen held-out evaluator, and stop only when a real implementation proposal is ready for review. Do not change tracked source before review."
+        }
+      ],
+      "construction_rationale": "bounded by active focus, goal discrepancy, recency, evidence provenance, and operation need",
+      "current_hypotheses": [
+        {
+          "assumptions": [
+            "Operators have varying levels of prior technical knowledge",
+            "Training materials are not tailored to operator-specific needs"
+          ],
+          "confidence_state": "contested",
+          "created_at": "2026-07-28T00:05:21+00:00",
+          "disposition": "needs_challenge",
+          "evidence_against": [
+            "operator-natural-goal"
+          ],
+          "evidence_for": [
+            "operator-natural-goal"
+          ],
+          "expected_observations": [
+            "local evidence should support a bounded useful step"
+          ],
+          "hypothesis_id": "hypothesis-3f9d825d1b656c53",
+          "lifecycle_state": "active",
+          "originating_focus_id": "focus-453bb529bd6f2803",
+          "originating_goal_id": "active-cognitive-goal-acc1044183eab608",
+          "provenance": [
+            "cognitive-operation-e45459390da6efdd",
+            "cognitive-operation-6551fb51d6a69191"
+          ],
+          "revised_at": "2026-07-28T00:06:17+00:00",
+          "revision_parent_id": "",
+          "revision_reason": "The hypothesis that operators will misunderstand certain technical terms during conversations due to a lack of specific training is supported by the live conversation evidence already gathered. However, the goal of the campaign is to continue the semantic-reconciliation capability-growth, which may introduce new challenges that were not anticipated in the initial hypothesis.",
+          "schema_version": "active_cognitive_architecture_marathon_1_v1",
+          "scope": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+          "statement": "Operators will misunderstand certain technical terms during conversations due to lack of specific training."
+        }
+      ],
+      "cycle_id": "active-cognitive-cycle-c7b9ccd985947a36",
+      "observed_outcomes": [
+        {
+          "created_at": "2026-07-28T00:05:21+00:00",
+          "discrepancy": "progress_observed",
+          "expected": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+          "observed": "Operators will misunderstand certain technical terms during conversations due to lack of specific training.",
+          "operation_id": "cognitive-operation-e45459390da6efdd",
+          "outcome_id": "outcome-f942f8b7c0f75d1d"
+        },
+        {
+          "created_at": "2026-07-28T00:06:17+00:00",
+          "discrepancy": "progress_observed",
+          "expected": "Perform compare_evidence for the active focus using only referenced evidence.",
+          "observed": "The hypothesis that operators will misunderstand certain technical terms during conversations due to a lack of specific training is supported by the live conversation evidence already gathered. However, the goal of the campaign is to continue the semantic-reconciliation capability-growth, which may introduce new challenges that were not anticipated in the initial hypothesis.",
+          "operation_id": "cognitive-operation-6551fb51d6a69191",
+          "outcome_id": "outcome-ada31dd19faf1df7"
+        }
+      ],
+      "omitted_items_summary": "0 older or less relevant items omitted by packet budget",
+      "operator_constraints": [
+        "no network",
+        "no protected paths",
+        "no commit",
+        "bounded local actions only"
+      ],
+      "packet_digest": "cae0c5249e2c27ffb9b33938c2436ab840a1649b41d1850055296ffc1dbe852e",
+      "packet_id": "working-memory-packet-debf358e85de6d03",
+      "prior_cycle_summary": "The hypothesis that operators will misunderstand certain technical terms during conversations due to a lack of specific training is supported by the live conversation evidence already gathered. However, the goal of the campaign is to contin",
+      "provenance_refs": [
+        "operator-natural-goal"
+      ],
+      "recent_actions": [],
+      "relevant_evidence": [],
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "size_budget": 8,
+      "unresolved_questions": []
+    }
+  ]
+}

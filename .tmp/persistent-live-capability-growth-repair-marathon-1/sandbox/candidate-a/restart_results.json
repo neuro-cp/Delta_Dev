@@ -1,0 +1,16 @@
+{
+  "accuracy": 1.0,
+  "candidate_id": "candidate-a",
+  "case_count": 1,
+  "passed_count": 1,
+  "rows": [
+    {
+      "case_id": "held-restart-before-reconcile",
+      "expected": "preserve_queue_and_clarify",
+      "group": "restart before reconciliation",
+      "partition": "final_held_out",
+      "passed": true,
+      "predicted": "preserve_queue_and_clarify"
+    }
+  ]
+}

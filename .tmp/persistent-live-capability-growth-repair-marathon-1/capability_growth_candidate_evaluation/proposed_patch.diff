@@ -1,0 +1,7 @@
+diff --git a/orchestration/runtime/conversational_runtime_operation.py b/orchestration/runtime/conversational_runtime_operation.py
+--- proposal only; do not apply before operator review
++++ proposal only; add topic-boundary queued reference reconciliation records
+@@
++# Add a bounded reconciliation pass that ranks referents from persisted turns by lane, recency,
++# correction scope, and tentative-goal activation state, then records clarify/resolve decisions
++# for background cognition without changing foreground factual chat routing.

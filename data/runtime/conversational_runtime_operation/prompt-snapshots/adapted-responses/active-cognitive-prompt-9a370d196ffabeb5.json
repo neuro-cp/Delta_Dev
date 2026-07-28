@@ -1,0 +1,18 @@
+{
+  "adapted_response": {
+    "evidence_refs": [
+      "operator-natural-goal"
+    ],
+    "lesson": "Understanding implied references, queued messages, informal phrasing, and context across turns is crucial for effective communication. Corrections and transfer checks are beneficial for learning new language features.",
+    "recommended_state_transition": "summarize_learning",
+    "uncertainty": "The extent to which informal phrasing and context across turns are understood by the operator remains unclear.",
+    "unresolved_questions": [
+      "How can we ensure the operator fully grasps the nuances of informal phrasing and context across turns?"
+    ]
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"lesson\":\"Understanding implied references, queued messages, informal phrasing, and context across turns is crucial for effective communication. Corrections and transfer checks are beneficial for learning new language features.\",\"evidence_refs\":[\"operator-natural-goal\"],\"unresolved_questions\":[\"How can we ensure the operator fully grasps the nuances of informal phrasing and context across turns?\"],\"uncertainty\":\"The extent to which informal phrasing and context across turns are understood by the operator remains unclear.\",\"recommended_state_transition\":\"summarize_learning\"}",
+  "raw_response_digest": "f052eee2a59a6c2187473b385eecd82f6ce5513ac2adae76236a945518a48bf0",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

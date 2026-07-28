@@ -1,0 +1,24 @@
+{
+  "adapted_response": {
+    "assumptions": [
+      "Operators can benefit from contextual information.",
+      "Contextual information can improve understanding."
+    ],
+    "contrary_evidence_considered": [],
+    "evidence_refs": [
+      "prior-conversational-episode-3"
+    ],
+    "interpretation": "Operators will understand corrections better if given in context of prior conversation.",
+    "next_evidence_need": "local evidence supporting or challenging the goal",
+    "next_focus_proposal": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+    "operation_result_type": "compare_evidence_result",
+    "recommended_action": "Continue correction-linked comprehension practice without duplicating prior completed episode work.",
+    "recommended_state_transition": "add_supporting_evidence",
+    "uncertainty": "How much context is necessary for optimal understanding?"
+  },
+  "adapter_rejection_reasons": [],
+  "adapter_transformations": [],
+  "raw_response": "{\"assumptions\":[\"Operators can benefit from contextual information.\",\"Contextual information can improve understanding.\"],\"contrary_evidence_considered\":[],\"evidence_refs\":[\"prior-conversational-episode-3\"],\"interpretation\":\"Operators will understand corrections better if given in context of prior conversation.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"Continue correction-linked comprehension practice without duplicating prior completed episode work.\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"How much context is necessary for optimal understanding?\"}",
+  "raw_response_digest": "506b70b6d8de2bbad703842423bc18c997c9dab3d2fbd95d83f9f7f36d12d2da",
+  "schema_version": "active_cognitive_architecture_marathon_1_v1"
+}

@@ -1,0 +1,16 @@
+{
+  "accuracy": 1.0,
+  "candidate_id": "candidate-c",
+  "case_count": 1,
+  "passed_count": 1,
+  "rows": [
+    {
+      "case_id": "val-negative",
+      "expected": "unrelated_factual_answer",
+      "group": "negative applicability",
+      "partition": "validation",
+      "passed": true,
+      "predicted": "unrelated_factual_answer"
+    }
+  ]
+}

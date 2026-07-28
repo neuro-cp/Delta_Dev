@@ -1,0 +1,70 @@
+{
+  "actions": [],
+  "attention": {
+    "abandonment_reason": "",
+    "active_focus_id": "",
+    "active_focus_summary": "",
+    "active_goal_ids": [],
+    "attention_state_id": "active-attention-d27dafdb31432ae6",
+    "candidate_focuses": [],
+    "continuation_reason": "",
+    "cycle_sequence": 0,
+    "evidence_refs": [],
+    "focus_started_at": "",
+    "interruption_priority": "none",
+    "interruption_reason": "",
+    "last_progress_at": "",
+    "previous_focus_ids": [],
+    "progress_summary": "",
+    "return_condition": "",
+    "salience_reasons": [],
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "stagnation_count": 0,
+    "switch_reason": "",
+    "transition_journal": [],
+    "unresolved_questions": []
+  },
+  "budgets": {
+    "max_actions": 4,
+    "max_cycles": 16,
+    "max_model_calls": 12,
+    "max_packet_items": 8
+  },
+  "completed": false,
+  "cycles": [],
+  "episode_id": "active-cognitive-episode-ae2445a48f4a791e",
+  "evidence": [
+    {
+      "content": "",
+      "evidence_id": "operator-natural-goal",
+      "exists": true,
+      "kind": "local_evidence",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "source": "ordinary_chat",
+      "summary": "Your goal today is to keep working on semantic_reconciliation_of_queued_and_implied_references. Improve how you handle queued messages, implied references, topic switches, corrections, and false-transfer guards. Use local cognition and local evidence first, compare candidate strategies with held-out cases, and stop at the implementation boundary before source changes."
+    }
+  ],
+  "goals": [
+    {
+      "expected_state": "Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.",
+      "goal_id": "active-cognitive-goal-acc1044183eab608",
+      "observed_state": "",
+      "priority": "operator_requested",
+      "schema_version": "active_cognitive_architecture_marathon_1_v1",
+      "summary": "Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer."
+    }
+  ],
+  "hypotheses": [],
+  "learning_updates": [],
+  "loop_state": "idle",
+  "model_call_count": 0,
+  "next_focus_candidates": [],
+  "operation_requests": [],
+  "operation_results": [],
+  "outcomes": [],
+  "pending_operator_requests": [],
+  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+  "title": "Conversational English comprehension objective",
+  "useful_artifacts": [],
+  "working_memory_packets": []
+}

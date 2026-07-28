@@ -1,0 +1,78 @@
+{
+  "authority_constraints": [
+    "no network",
+    "no protected paths",
+    "no commit",
+    "bounded local actions only"
+  ],
+  "contrary_evidence_ids_supplied": [
+    "operator-natural-goal"
+  ],
+  "cycle_id": "active-cognitive-cycle-c7fed5149b8873bb",
+  "evidence_ids_supplied": [],
+  "expected_response_schema": {
+    "assumptions": [
+      "explicit assumptions"
+    ],
+    "expected_observations": [
+      "observable expectations"
+    ],
+    "hypothesis_statement": "falsifiable hypothesis statement",
+    "recommended_state_transition": "one allowed transition",
+    "scope": "scope of hypothesis",
+    "supporting_evidence_refs": [
+      "IDs only from supplied evidence"
+    ],
+    "uncertainty": "nonempty uncertainty phrase"
+  },
+  "focus_id": "focus-453bb529bd6f2803",
+  "goal_id": "active-cognitive-goal-acc1044183eab608",
+  "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+  "operation_request": {
+    "authority_constraints": [
+      "no network",
+      "no protected paths",
+      "no commit",
+      "bounded local actions only"
+    ],
+    "budget": {
+      "max_response_words": 220,
+      "max_retries": 1
+    },
+    "cycle_id": "active-cognitive-cycle-c7fed5149b8873bb",
+    "evidence_constraints": [
+      "operator-natural-goal"
+    ],
+    "expected_output_schema": {
+      "contrary_evidence_considered": "list",
+      "evidence_refs": "list",
+      "interpretation": "string",
+      "operation_result_type": "string",
+      "recommended_state_transition": "string",
+      "uncertainty": "string"
+    },
+    "focus_id": "focus-453bb529bd6f2803",
+    "goal_id": "active-cognitive-goal-acc1044183eab608",
+    "model_identity": "shared-local-model-ledger:active-cognitive-loop",
+    "operation_id": "cognitive-operation-e45459390da6efdd",
+    "operation_type": "formulate_hypothesis",
+    "provenance": [
+      "working-memory-packet-0d49a01a290acf71"
+    ],
+    "retry_allowance": 1,
+    "schema_version": "active_cognitive_architecture_marathon_1_v1",
+    "task": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
+    "working_memory_packet_digest": "08ccef159545ac7a5f031b72cc3d4c9bc4aa7e9664dbf0e4e2a6131755e1ec61"
+  },
+  "operation_type": "formulate_hypothesis",
+  "prompt_byte_digest": "9d5440027e75d1b5b330a87ecaa2b62affcc07f0bb784230b4997fcf94166d90",
+  "prompt_length": 3489,
+  "prompt_schema_version": "active_cognitive_prompt_qualification_1_v1",
+  "prompt_snapshot_id": "active-cognitive-prompt-f29df4b64dc38342",
+  "prompt_text": "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. The following is a type contract, not answer text:\n- hypothesis_statement: nonempty string\n- scope: nonempty string\n- supporting_evidence_refs: array[string]\n- assumptions: array[string]\n- expected_observations: array[string]\n- uncertainty: nonempty string\n- recommended_state_transition: nonempty string\nID ARRAY RULES:\n- array values for evidence/ref fields must be exact IDs, never evidence summaries or prose\n- supporting_evidence_refs values must be chosen from: none\n- supporting_evidence_refs must be [] because no valid IDs are supplied; do not write none\nOPERATION RULE: hypothesis_statement must be testable against future observations\nTASK: perform only operation formulate_hypothesis. Allowed transition/next-operation values: propose_hypothesis, declare_insufficient_evidence. For recommended_state_transition or recommended_next_operation, copy exactly one allowed value with no new label. Use evidence_refs only from evidence_for IDs: . Contrary evidence may inform the summary, but do not add a contrary_evidence_considered field Empty strings are invalid for required text fields. The uncertainty value must be a nonempty phrase naming what remains unresolved. Do not copy field descriptions as answers. Do not claim the loop, task, system, or episode is successful or complete. Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied.\nCONTEXT_JSON:\n{\"active_focus\":{\"authority_need\":\"none_for_local_analysis\",\"blocking_state\":\"\",\"capability_need\":\"local_model_semantic_operation\",\"creation_sequence\":1,\"description\":\"Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.\",\"evidence_need\":\"local evidence supporting or challenging the goal\",\"evidence_refs\":[\"operator-natural-goal\"],\"expected_value\":\"useful_progress\",\"focus_id\":\"focus-453bb529bd6f2803\",\"related_goal_ids\":[\"active-cognitive-goal-acc1044183eab608\"],\"salience_categories\":[\"operator_priority\",\"goal_discrepancy\",\"expected_useful_progress\"],\"salience_explanation\":\"Goal discrepancy is observed_state_missing and the episode needs a useful outcome.\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"source\":\"goal_discrepancy\",\"urgency\":\"medium\"},\"contrary_evidence\":[{\"content\":\"\",\"evidence_id\":\"operator-natural-goal\",\"source\":\"ordinary_chat\",\"summary\":\"Your goal today is to continue the semantic-reconciliation capability-growth campaign. Use the live conversation evidence already gathered to identify the strongest remaining weakness in queued and implied references. Generate multiple candidate strategies, compare them with a frozen held-out evalua\"}],\"current_goal\":{\"expected_state\":\"Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.\",\"goal_id\":\"active-cognitive-goal-acc1044183eab608\",\"observed_state\":\"\",\"priority\":\"operator_requested\",\"schema_version\":\"active_cognitive_architecture_marathon_1_v1\",\"summary\":\"Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.\"},\"current_hypotheses\":[],\"evidence_for\":[],\"recent_outcomes\":[]}",
+  "request_identity": "active-cognitive-ledger-request-74b68bd3129802c3",
+  "retry_sequence": 0,
+  "schema_version": "active_cognitive_architecture_marathon_1_v1",
+  "working_memory_packet_digest": "08ccef159545ac7a5f031b72cc3d4c9bc4aa7e9664dbf0e4e2a6131755e1ec61",
+  "working_memory_packet_id": "working-memory-packet-0d49a01a290acf71"
+}

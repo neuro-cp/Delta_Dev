@@ -186,6 +186,52 @@ def test_ledger_backed_runner_uses_shared_request_lifecycle():
     assert raw["evidence_refs"] == ["repo_runtime"]
 
 
+def test_ledger_backed_runner_reuses_completed_equivalent_request():
+    class CompletedLedger:
+        def __init__(self):
+            self.created = None
+            self.approved = False
+            self.executed = False
+
+        def create_or_reuse_request(self, **kwargs):
+            self.created = kwargs
+            return {"request_id": "req-completed", "lifecycle_state": "completed", "result_id": "res-completed"}
+
+        def approve_request(self, request_id, reason):
+            self.approved = True
+
+        def execute_claimed_request(self, request_id, context):
+            self.executed = True
+            raise AssertionError("completed request must not be claimed again")
+
+        def observe_result(self, result_id):
+            assert result_id == "res-completed"
+            return {
+                "model_identity": "fake-local-model",
+                "response_reference": (
+                    '{"interpretation":"reused completed evidence",'
+                    '"evidence_refs":["repo_runtime"],'
+                    '"contrary_evidence_considered":[],'
+                    '"uncertainty":"bounded",'
+                    '"recommended_state_transition":"propose_hypothesis"}'
+                ),
+            }
+
+    state = run_cognitive_cycle(_episode())
+    packet = build_working_memory_packet(state, sequence=len(state.cycles) + 1)
+    request = build_operation_request(state, packet, operation_type="compare_evidence", model_identity="ledger")
+    ledger = CompletedLedger()
+    runner = LedgerBackedCognitiveModelRunner(ledger=ledger, provider_manager=object(), authority_reason="test_authority")
+
+    raw = runner(request, packet)
+
+    assert ledger.created["requester_type"] == "active_cognitive_loop"
+    assert ledger.approved is False
+    assert ledger.executed is False
+    assert raw["model_identity"] == "fake-local-model"
+    assert raw["interpretation"] == "reused completed evidence"
+
+
 def test_ledger_runner_exact_prompt_executor_uses_provider_manager_without_chat_compactor():
     class FakeProviderManager:
         def __init__(self):
