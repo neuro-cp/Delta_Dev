@@ -2464,9 +2464,10 @@ def route_message(
                 answer = f"Returning to {resolved_topic}."
                 if detail:
                     answer += f" {detail}"
+                route_label = "topic_return" if any(item.get("role") == "topic_state" for item in history or []) else "session_memory"
                 payload = {
                     "mode": mode,
-                    "route": "topic_return",
+                    "route": route_label,
                     "answer": answer,
                     "confidence": "explicit_prior_topic_return",
                     "confidence_score": 0.88,

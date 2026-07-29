@@ -7,6 +7,7 @@ from orchestration.runtime.chat_first_dispatch_contract import MessageDispatchRe
 from orchestration.runtime.conversational_runtime_operation import (
     ChatAddressableRequest,
     handle_conversational_message,
+    record_foreground_message_for_reconciliation,
     start_or_restore_runtime,
 )
 
@@ -40,6 +41,22 @@ def _with_request(state, request_type):
         max_spend_usd=1.0,
     )
     return replace(state, pending_chat_requests=(request,))
+
+
+def _with_requests(state, *request_types):
+    requests = tuple(
+        ChatAddressableRequest(
+            request_id=f"request-{index}-{request_type}",
+            request_type=request_type,
+            objective_id=state.active_objective.objective_id,
+            goal_label="Language understanding",
+            prompt_text="Review this bounded request.",
+            max_calls=1,
+            max_spend_usd=1.0,
+        )
+        for index, request_type in enumerate(request_types, start=1)
+    )
+    return replace(state, pending_chat_requests=requests)
 
 
 def test_pure_message_plans_are_independent_and_non_mutating(tmp_path):
@@ -129,8 +146,57 @@ def test_correction_and_question_are_dual_without_runtime_mutation(tmp_path):
 
     assert plan.control.control_type == "correction"
     assert plan.foreground.requested is True
+    assert any(item.terminal_disposition == "control_planned" for item in plan.clauses)
+    assert any(item.terminal_disposition == "foreground_planned" for item in plan.clauses)
     assert plan.persistence.transcript_write_count == 1
     assert state.as_record() == before
+
+
+def test_runtime_state_query_is_a_terminal_control_clause(tmp_path):
+    state = _state_with_goal(tmp_path)
+
+    plan = plan_message_dispatch(state, "Are you currently paused or running, and are there pending requests?")
+
+    assert plan.control.control_type == "runtime_state_query"
+    assert plan.foreground.requested is False
+    assert len(plan.clauses) == 2
+    assert all(item.control_type == "runtime_state_query" for item in plan.clauses)
+    assert all(item.terminal_disposition == "control_planned" for item in plan.clauses)
+
+
+def test_local_model_permission_reply_binds_to_visible_request(tmp_path):
+    state = _with_request(_state_with_goal(tmp_path), "local_model_execution")
+
+    plan = plan_message_dispatch(state, "Yes, ask it.")
+
+    assert plan.control.control_type == "local_model_permission"
+    assert plan.pending_request.reply_bound is True
+    assert plan.pending_request.consume_once is True
+    assert plan.clauses[0].pending_request_id == "request-local_model_execution"
+
+
+def test_two_pending_requests_clarify_and_bind_none(tmp_path):
+    state = _with_requests(_state_with_goal(tmp_path), "provider_authority", "local_model_execution")
+
+    plan = plan_message_dispatch(state, "Yes, go ahead.")
+
+    assert plan.control.control_type == "clarification"
+    assert plan.control.action == "clarify_pending_request"
+    assert plan.pending_request.request_detected is False
+    assert all(not item.pending_request_id for item in plan.clauses)
+
+
+def test_ambiguous_reference_plans_clarification_from_reconciler(tmp_path):
+    state = _state_with_goal(tmp_path)
+    state = record_foreground_message_for_reconciliation(state, "Explain thermal expansion in bridges.", runtime_root=tmp_path)
+    state = record_foreground_message_for_reconciliation(state, "Now explain angular momentum in skating.", runtime_root=tmp_path)
+
+    plan = plan_message_dispatch(state, "For the goal, compare that to the prior subject.")
+
+    assert plan.control.control_type == "reference_clarification"
+    assert plan.control.action == "create_reference_clarification"
+    assert plan.foreground.requested is False
+    assert plan.clauses[0].terminal_disposition == "control_planned"
 
 
 def test_plan_is_idempotent_and_json_round_trips(tmp_path):

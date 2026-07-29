@@ -1,4 +1,5 @@
 import tkinter as tk
+from dataclasses import replace
 import time
 
 
@@ -323,6 +324,462 @@ def test_foreground_chat_answers_basic_questions_during_campaign_goal(monkeypatc
         root.destroy()
 
 
+def test_negative_scope_with_new_color_question_does_not_reuse_prior_topic(monkeypatch, tmp_path):
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, FOREGROUND_CAMPAIGN_GOAL)
+        _pump_until(root, lambda: app.conversational_runtime_state.active_objective is not None, timeout=5.0)
+        _send(app, "What color is the Moon?")
+
+        before_turns = len(app.conversational_runtime_state.conversation)
+        _send(app, "Do not apply that rule to cooking questions. What color is the sky?")
+
+        transcript = app.chat_history.get("1.0", tk.END).lower()
+        latest = transcript.rsplit("you: do not apply that rule to cooking questions. what color is the sky?", 1)[-1]
+        assert "blue" in latest
+        assert "moon color appearance" not in latest
+        assert len(app.conversational_runtime_state.conversation) == before_turns + 2
+        assert app.conversational_runtime_state.active_objective is not None
+    finally:
+        root.destroy()
+
+
+def test_correction_and_unrelated_factual_question_commit_once(monkeypatch, tmp_path):
+    import DELTA
+    import orchestration.runtime.conversational_runtime_operation as operation
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, FOREGROUND_CAMPAIGN_GOAL)
+        _pump_until(root, lambda: app.conversational_runtime_state.active_objective is not None, timeout=5.0)
+
+        save_calls = []
+        original_delta_save = DELTA.save_conversational_runtime_state
+
+        def counted_save(root_path, state):
+            save_calls.append((root_path, len(state.conversation)))
+            return original_delta_save(root_path, state)
+
+        monkeypatch.setattr(DELTA, "save_conversational_runtime_state", counted_save)
+        monkeypatch.setattr(operation, "save_runtime_state", counted_save)
+        render_calls = []
+        original_append_chat = app._append_chat
+        original_append_session = app._append_session
+        session_calls = []
+
+        def counted_append_chat(speaker, text):
+            render_calls.append((speaker, text))
+            return original_append_chat(speaker, text)
+
+        def counted_append_session(role, content):
+            session_calls.append((role, content))
+            return original_append_session(role, content)
+
+        app._append_chat = counted_append_chat
+        app._append_session = counted_append_session
+        before_turns = len(app.conversational_runtime_state.conversation)
+        _send(app, "That explanation was too long. Use shorter answers here. Also, what color is the sky?")
+
+        transcript = app.chat_history.get("1.0", tk.END).lower()
+        latest = transcript.rsplit("you: that explanation was too long. use shorter answers here. also, what color is the sky?", 1)[-1]
+        assert "[goal update]" in latest
+        assert "blue" in latest
+        assert len(app.conversational_runtime_state.conversation) == before_turns + 2
+        assert app.conversational_runtime_state.conversation[-2].text == "That explanation was too long. Use shorter answers here. Also, what color is the sky?"
+        assert app.conversational_runtime_state.conversation[-1].intent_type == "coordinated_composed_response"
+        assert len(save_calls) == 1
+        assert len([item for item in render_calls if item[0] == "DELTA"]) == 1
+        assert len([item for item in session_calls if item[0] == "user"]) == 1
+        assert len([item for item in session_calls if item[0] == "assistant"]) == 1
+        assert app.last_coordinated_dispatch_audit["deferred_subordinate_save_count"] >= 1
+        assert app.last_coordinated_dispatch_audit["final_persistence_owner"] == "dispatch_coordinator"
+    finally:
+        root.destroy()
+
+
+def test_pause_and_factual_question_commit_once(monkeypatch, tmp_path):
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, FOREGROUND_CAMPAIGN_GOAL)
+        _pump_until(root, lambda: app.conversational_runtime_state.active_objective is not None, timeout=5.0)
+
+        before_turns = len(app.conversational_runtime_state.conversation)
+        _send(app, "Pause the active goal. Also, what color is water?")
+
+        transcript = app.chat_history.get("1.0", tk.END).lower()
+        latest = transcript.rsplit("you: pause the active goal. also, what color is water?", 1)[-1]
+        assert "paused the active goal" in latest
+        assert "water" in latest
+        assert app.conversational_runtime_state.lifecycle_state == "paused_operator"
+        assert len(app.conversational_runtime_state.conversation) == before_turns + 2
+    finally:
+        root.destroy()
+
+
+def test_runtime_state_query_during_active_goal_commits_once(monkeypatch, tmp_path):
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, FOREGROUND_CAMPAIGN_GOAL)
+        _pump_until(root, lambda: app.conversational_runtime_state.active_objective is not None, timeout=5.0)
+
+        before_turns = len(app.conversational_runtime_state.conversation)
+        _send(app, "Are you currently paused or running, and are there pending requests?")
+
+        transcript = app.chat_history.get("1.0", tk.END).lower()
+        latest = transcript.rsplit("you: are you currently paused or running, and are there pending requests?", 1)[-1]
+        assert "[runtime state]" in latest
+        assert "active goal: yes" in latest
+        assert "pending requests:" in latest
+        assert "would you like me to ask" not in latest
+        assert len(app.conversational_runtime_state.conversation) == before_turns + 2
+    finally:
+        root.destroy()
+
+
+def test_runtime_state_query_reports_last_question_and_discarded_count(monkeypatch, tmp_path):
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, FOREGROUND_CAMPAIGN_GOAL)
+        _pump_until(root, lambda: app.conversational_runtime_state.active_objective is not None, timeout=5.0)
+        _send(app, "What color is the sky?")
+        _send(app, "What is frobnicated glim energy?")
+        _send(app, "No, leave it.")
+
+        _send(app, "What was the last user question, and how many requests were discarded or expired?")
+
+        transcript = app.chat_history.get("1.0", tk.END).lower()
+        latest = transcript.rsplit("you: what was the last user question, and how many requests were discarded or expired?", 1)[-1]
+        assert "[runtime state]" in latest
+        assert "last user question: no, leave it." in latest
+        assert "discarded or expired requests: 1" in latest
+        assert "would you like me to ask" not in latest
+    finally:
+        root.destroy()
+
+
+def test_visible_local_model_permission_yes_consumes_once(monkeypatch, tmp_path):
+    import DELTA
+    import orchestration.runtime.conversational_runtime_operation as operation
+
+    original_route = DELTA.route_message
+
+    def scripted_route(mode, message, *args, **kwargs):
+        if kwargs.get("execute_local_model"):
+            return {
+                "mode": "Conversation",
+                "route": "local_model_answer",
+                "answer": "Here is the local-model expansion.",
+                "confidence": "local_model_result",
+                "confidence_score": 0.74,
+                "selected_model_lane": {"lane": "everyday_conversation", "selected_model_id": "scripted-local-model"},
+                "local_model_result": {"executed": True},
+                "supporting_information_offer": None,
+                "local_model_offer": None,
+                "memory_candidate": None,
+                "provider_calls_performed": False,
+                "web_search_performed": False,
+                "training_performed": False,
+                "canonical_write_performed": False,
+            }
+        return original_route(mode, message, *args, **kwargs)
+
+    monkeypatch.setattr(DELTA, "route_message", scripted_route)
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        save_calls = []
+        original_delta_save = DELTA.save_conversational_runtime_state
+
+        def counted_save(root_path, state):
+            save_calls.append((root_path, len(state.conversation), len(state.pending_chat_requests)))
+            return original_delta_save(root_path, state)
+
+        monkeypatch.setattr(DELTA, "save_conversational_runtime_state", counted_save)
+        monkeypatch.setattr(operation, "save_runtime_state", counted_save)
+        _send(app, "What is frobnicated glim energy?")
+        assert len(app.conversational_runtime_state.pending_chat_requests) == 1
+        assert app.conversational_runtime_state.pending_chat_requests[0].request_type == "local_model_execution"
+        assert len(save_calls) == 1
+
+        save_calls.clear()
+        before_turns = len(app.conversational_runtime_state.conversation)
+        _send(app, "Yes, ask it.")
+
+        transcript = app.chat_history.get("1.0", tk.END).lower()
+        latest = transcript.rsplit("you: yes, ask it.", 1)[-1]
+        assert "local-model expansion" in latest
+        assert "would you like me to ask" not in latest
+        assert app.conversational_runtime_state.pending_chat_requests == ()
+        assert len(app.conversational_runtime_state.resolved_chat_requests) == 1
+        assert app.conversational_runtime_state.resolved_chat_requests[0].consumption_count == 1
+        assert len(app.conversational_runtime_state.conversation) == before_turns + 2
+        assert len(save_calls) == 1
+        assert app.last_coordinated_dispatch_audit["final_persistence_owner"] == "dispatch_coordinator"
+    finally:
+        root.destroy()
+
+
+def test_visible_local_model_permission_no_denies_once(monkeypatch, tmp_path):
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, "What is frobnicated glim energy?")
+        assert len(app.conversational_runtime_state.pending_chat_requests) == 1
+
+        before_turns = len(app.conversational_runtime_state.conversation)
+        _send(app, "No, leave it.")
+
+        transcript = app.chat_history.get("1.0", tk.END).lower()
+        latest = transcript.rsplit("you: no, leave it.", 1)[-1]
+        assert "leave that unanswered" in latest
+        assert app.conversational_runtime_state.pending_chat_requests == ()
+        assert len(app.conversational_runtime_state.resolved_chat_requests) == 1
+        assert app.conversational_runtime_state.resolved_chat_requests[0].status == "denied"
+        assert app.conversational_runtime_state.resolved_chat_requests[0].consumption_count == 1
+        assert len(app.conversational_runtime_state.conversation) == before_turns + 2
+    finally:
+        root.destroy()
+
+
+def test_two_pending_requests_clarify_and_consume_none(monkeypatch, tmp_path):
+    from orchestration.runtime.conversational_runtime_operation import ChatAddressableRequest
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, FOREGROUND_CAMPAIGN_GOAL)
+        _pump_until(root, lambda: app.conversational_runtime_state.active_objective is not None, timeout=5.0)
+        objective_id = app.conversational_runtime_state.active_objective.objective_id
+        requests = (
+            ChatAddressableRequest(
+                request_id="request-provider",
+                request_type="provider_authority",
+                objective_id=objective_id,
+                goal_label="Language understanding",
+                prompt_text="Approve provider?",
+                max_calls=1,
+                max_spend_usd=1.0,
+            ),
+            ChatAddressableRequest(
+                request_id="request-local-model",
+                request_type="local_model_execution",
+                objective_id=objective_id,
+                goal_label="Local model permission",
+                prompt_text="Ask local model?",
+                max_calls=1,
+            ),
+        )
+        app.conversational_runtime_state = replace(app.conversational_runtime_state, pending_chat_requests=requests)
+        before_turns = len(app.conversational_runtime_state.conversation)
+
+        _send(app, "Yes, go ahead.")
+
+        transcript = app.chat_history.get("1.0", tk.END).lower()
+        latest = transcript.rsplit("you: yes, go ahead.", 1)[-1]
+        assert "clarification needed" in latest
+        assert tuple(item.request_id for item in app.conversational_runtime_state.pending_chat_requests) == ("request-provider", "request-local-model")
+        assert app.conversational_runtime_state.resolved_chat_requests == ()
+        assert len(app.conversational_runtime_state.conversation) == before_turns + 2
+    finally:
+        root.destroy()
+
+
+def test_reference_clarification_create_resolve_and_expire(monkeypatch, tmp_path):
+    from orchestration.runtime.conversational_runtime_operation import record_foreground_message_for_reconciliation
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, FOREGROUND_CAMPAIGN_GOAL)
+        _pump_until(root, lambda: app.conversational_runtime_state.active_objective is not None, timeout=5.0)
+        app.conversational_runtime_state = record_foreground_message_for_reconciliation(
+            app.conversational_runtime_state,
+            "Explain thermal expansion in bridges.",
+            runtime_root=tmp_path / "conversational-runtime",
+        )
+        app.conversational_runtime_state = record_foreground_message_for_reconciliation(
+            app.conversational_runtime_state,
+            "Now explain angular momentum in skating.",
+            runtime_root=tmp_path / "conversational-runtime",
+        )
+
+        before_turns = len(app.conversational_runtime_state.conversation)
+        _send(app, "For the goal, compare that to the prior subject.")
+        transcript = app.chat_history.get("1.0", tk.END).lower()
+        latest = transcript.rsplit("you: for the goal, compare that to the prior subject.", 1)[-1]
+        assert "which prior subject" in latest
+        assert app.conversational_runtime_state.pending_chat_requests[-1].request_type == "reference_clarification"
+        assert len(app.conversational_runtime_state.conversation) == before_turns + 2
+
+        _send(app, "I meant angular momentum.")
+        transcript = app.chat_history.get("1.0", tk.END).lower()
+        latest = transcript.rsplit("you: i meant angular momentum.", 1)[-1]
+        assert "bound that reference" in latest
+        assert not any(item.request_type == "reference_clarification" for item in app.conversational_runtime_state.pending_chat_requests)
+        assert app.conversational_runtime_state.resolved_chat_requests[-1].request_type == "reference_clarification"
+        assert app.conversational_runtime_state.resolved_chat_requests[-1].status == "resolved"
+
+        app.conversational_runtime_state = replace(app.conversational_runtime_state, resolved_chat_requests=())
+        _send(app, "For the goal, compare that to the prior subject.")
+        assert app.conversational_runtime_state.pending_chat_requests[-1].request_type == "reference_clarification"
+        _send(app, "What color is water?")
+        transcript = app.chat_history.get("1.0", tk.END).lower()
+        latest = transcript.rsplit("you: what color is water?", 1)[-1]
+        assert "water" in latest
+        assert not any(item.request_type == "reference_clarification" for item in app.conversational_runtime_state.pending_chat_requests)
+        assert app.conversational_runtime_state.resolved_chat_requests[-1].status == "expired"
+    finally:
+        root.destroy()
+
+
+def test_multi_obligation_correction_pause_and_factual_question(monkeypatch, tmp_path):
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, FOREGROUND_CAMPAIGN_GOAL)
+        _pump_until(root, lambda: app.conversational_runtime_state.active_objective is not None, timeout=5.0)
+
+        before_turns = len(app.conversational_runtime_state.conversation)
+        _send(app, "That was too verbose. Pause the active goal. Also, what color is the sky?")
+
+        transcript = app.chat_history.get("1.0", tk.END).lower()
+        latest = transcript.rsplit("you: that was too verbose. pause the active goal. also, what color is the sky?", 1)[-1]
+        assert latest.count("[goal update]") >= 1
+        assert "paused the active goal" in latest
+        assert "blue" in latest
+        assert app.conversational_runtime_state.lifecycle_state == "paused_operator"
+        assert len(app.conversational_runtime_state.conversation) == before_turns + 2
+        assert app.last_coordinated_dispatch_audit["control_count"] == 2
+        assert app.last_coordinated_dispatch_audit["final_persistence_owner"] == "dispatch_coordinator"
+    finally:
+        root.destroy()
+
+
+def test_multi_obligation_approval_and_runtime_state_question(monkeypatch, tmp_path):
+    from orchestration.runtime.conversational_runtime_operation import ChatAddressableRequest
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, FOREGROUND_CAMPAIGN_GOAL)
+        _pump_until(root, lambda: app.conversational_runtime_state.active_objective is not None, timeout=5.0)
+        objective_id = app.conversational_runtime_state.active_objective.objective_id
+        request = ChatAddressableRequest(
+            request_id="provider-approval-runtime-state",
+            request_type="provider_authority",
+            objective_id=objective_id,
+            goal_label="Provider authority",
+            prompt_text="Approve provider?",
+            max_calls=1,
+            max_spend_usd=1.0,
+        )
+        app.conversational_runtime_state = replace(app.conversational_runtime_state, pending_chat_requests=(request,))
+        before_turns = len(app.conversational_runtime_state.conversation)
+
+        _send(app, "Approve one call. Also, are you currently running or paused?")
+
+        transcript = app.chat_history.get("1.0", tk.END).lower()
+        latest = transcript.rsplit("you: approve one call. also, are you currently running or paused?", 1)[-1]
+        assert "approved" in latest
+        assert "[runtime state]" in latest
+        assert app.conversational_runtime_state.pending_chat_requests == ()
+        assert app.conversational_runtime_state.provider_authorities
+        assert len(app.conversational_runtime_state.conversation) == before_turns + 2
+    finally:
+        root.destroy()
+
+
+def test_multi_obligation_denial_and_unrelated_factual_question(monkeypatch, tmp_path):
+    from orchestration.runtime.conversational_runtime_operation import ChatAddressableRequest
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, FOREGROUND_CAMPAIGN_GOAL)
+        _pump_until(root, lambda: app.conversational_runtime_state.active_objective is not None, timeout=5.0)
+        objective_id = app.conversational_runtime_state.active_objective.objective_id
+        request = ChatAddressableRequest(
+            request_id="provider-denial-foreground",
+            request_type="provider_authority",
+            objective_id=objective_id,
+            goal_label="Provider authority",
+            prompt_text="Approve provider?",
+            max_calls=1,
+            max_spend_usd=1.0,
+        )
+        app.conversational_runtime_state = replace(app.conversational_runtime_state, pending_chat_requests=(request,))
+        before_turns = len(app.conversational_runtime_state.conversation)
+
+        _send(app, "No, continue locally. Also, what color is the sky?")
+
+        transcript = app.chat_history.get("1.0", tk.END).lower()
+        latest = transcript.rsplit("you: no, continue locally. also, what color is the sky?", 1)[-1]
+        assert "continue the goal locally" in latest
+        assert "blue" in latest
+        assert app.conversational_runtime_state.pending_chat_requests == ()
+        assert app.conversational_runtime_state.resolved_chat_requests[-1].status == "denied"
+        assert len(app.conversational_runtime_state.conversation) == before_turns + 2
+    finally:
+        root.destroy()
+
+
+def test_multi_obligation_resume_and_queued_update_introspection(monkeypatch, tmp_path):
+    from orchestration.runtime.conversational_runtime_operation import record_foreground_message_for_reconciliation
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, FOREGROUND_CAMPAIGN_GOAL)
+        _pump_until(root, lambda: app.conversational_runtime_state.active_objective is not None, timeout=5.0)
+        _send(app, "Pause the active goal.")
+        app.conversational_runtime_state = record_foreground_message_for_reconciliation(
+            app.conversational_runtime_state,
+            "Your goal today is also to pay attention to topic switches.",
+            runtime_root=tmp_path / "conversational-runtime",
+            intent_type="goal_or_priority_queued",
+        )
+        before_turns = len(app.conversational_runtime_state.conversation)
+
+        _send(app, "Resume the active goal. Also, are there queued updates?")
+
+        transcript = app.chat_history.get("1.0", tk.END).lower()
+        latest = transcript.rsplit("you: resume the active goal. also, are there queued updates?", 1)[-1]
+        assert "resumed the active goal" in latest
+        assert "[runtime state]" in latest
+        assert "queued turns: 1" in latest
+        assert app.conversational_runtime_state.lifecycle_state == "running"
+        assert len(app.conversational_runtime_state.conversation) == before_turns + 2
+    finally:
+        root.destroy()
+
+
+def test_multi_obligation_restart_continuation_and_last_question_query(monkeypatch, tmp_path):
+    import DELTA
+    import orchestration.runtime.conversational_runtime_operation as operation
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, FOREGROUND_CAMPAIGN_GOAL)
+        _pump_until(root, lambda: app.conversational_runtime_state.active_objective is not None, timeout=5.0)
+        _send(app, "What color is water?")
+        app._start_conversational_background_cycle = lambda _reason: True
+        save_calls = []
+        original_delta_save = DELTA.save_conversational_runtime_state
+
+        def counted_save(root_path, state):
+            save_calls.append((root_path, len(state.conversation)))
+            return original_delta_save(root_path, state)
+
+        monkeypatch.setattr(DELTA, "save_conversational_runtime_state", counted_save)
+        monkeypatch.setattr(operation, "save_runtime_state", counted_save)
+        before_turns = len(app.conversational_runtime_state.conversation)
+
+        _send(app, "Restart after saving state. Then continue where you left off. Also, what was the last user question?")
+
+        transcript = app.chat_history.get("1.0", tk.END).lower()
+        latest = transcript.rsplit("you: restart after saving state. then continue where you left off. also, what was the last user question?", 1)[-1]
+        assert "saved the current state" in latest
+        assert "active goal remains running" in latest
+        assert "last user question: what color is water?" in latest
+        assert len(save_calls) == 1
+        assert len(app.conversational_runtime_state.conversation) == before_turns + 2
+        assert app.last_coordinated_dispatch_audit["deferred_subordinate_save_count"] >= 1
+    finally:
+        root.destroy()
+
+
 def test_natural_stop_redirect_pauses_active_goal(monkeypatch, tmp_path):
     root, app = _app(monkeypatch, tmp_path)
     try:
@@ -333,8 +790,11 @@ def test_natural_stop_redirect_pauses_active_goal(monkeypatch, tmp_path):
 
         assert app.conversational_runtime_state.lifecycle_state == "paused_operator"
         assert app.conversational_runtime_state.objective_progress[-1]["event"] == "operator_stop_or_redirect"
+        assert app.conversational_runtime_state.conversation[-1].role == "assistant"
+        assert app.conversational_runtime_state.conversation[-1].intent_type == "stop_or_redirect_acknowledgement"
         transcript = app.chat_history.get("1.0", tk.END)
         assert "paused the active goal" in transcript
+        assert "Chat runtime: paused goal" in app.conversational_runtime_status.get()
     finally:
         root.destroy()
 
@@ -470,6 +930,12 @@ def test_chat_first_fourteen_step_tk_campaign(monkeypatch, tmp_path):
         assert app.conversational_runtime_state.active_objective.objective_id == goal_id
         assert app.conversational_runtime_state.conversation[-1].intent_type == "goal_or_priority_queued"
         _pump_until(root, lambda: len(app.conversational_runtime_state.completed_cycle_keys) > before_cycles, timeout=4.0)
+        assert sum(turn.text == "Your goal today is also to pay attention to topic switches." for turn in app.conversational_runtime_state.conversation if turn.role == "user") == 1
+        _send(app, "Please wait until the current reasoning step finishes, then tell me if the topic-switch update remained queued exactly once.")
+        transcript = app.chat_history.get("1.0", tk.END).lower()
+        latest = transcript.rsplit("you: please wait until the current reasoning step finishes, then tell me if the topic-switch update remained queued exactly once.", 1)[-1]
+        assert "queued exactly once" in latest
+        assert "would you like me to ask a local reasoning model" not in latest
         assert sum(turn.text == "Your goal today is also to pay attention to topic switches." for turn in app.conversational_runtime_state.conversation if turn.role == "user") == 1
     finally:
         root.destroy()

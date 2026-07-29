@@ -727,6 +727,142 @@ def test_arbitrary_campaign_goal_starts_candidate_pipeline_before_budget_exhaust
     assert len(result.state.completed_cycle_keys) < result.state.active_objective.cycle_budget
 
 
+def test_goal_lane_selection_separates_knowledge_from_delta_capability_work(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+
+    knowledge = handle_conversational_message(
+        state,
+        "Your new goal is to study engine efficiency and explain the key tradeoffs.",
+        runtime_root=tmp_path,
+        run_background_cycle=False,
+    )
+    capability = handle_conversational_message(
+        state,
+        "Your new goal is to improve DELTA's routing around topic switches and reduce regressions.",
+        runtime_root=tmp_path,
+        run_background_cycle=False,
+    )
+
+    assert knowledge.state.active_objective.provenance["execution_mode"] == "knowledge_acquisition"
+    assert knowledge.state.capability_campaigns == ()
+    assert knowledge.state.active_objective.cycle_budget == 16
+    assert capability.state.active_objective.provenance["execution_mode"] == "capability_growth_campaign"
+    assert capability.state.active_objective.cycle_budget == 24
+    assert capability.state.capability_campaigns
+
+
+def test_composition_state_round_trips_without_duplicate_requests_or_lanes(tmp_path):
+    from orchestration.runtime.conversational_runtime_operation import ChatAddressableRequest
+
+    state = start_or_restore_runtime(tmp_path)
+    knowledge = handle_conversational_message(
+        state,
+        "Your new goal is to study engine efficiency and explain the key tradeoffs.",
+        runtime_root=tmp_path,
+        run_background_cycle=False,
+    ).state
+    capability = handle_conversational_message(
+        state,
+        "Your new goal is to improve DELTA's routing around topic switches and reduce regressions.",
+        runtime_root=tmp_path,
+        run_background_cycle=False,
+    ).state
+    capability = apply_stop_or_redirect(capability, "Pause the active goal.", runtime_root=tmp_path)
+    pending = (
+        ChatAddressableRequest(
+            request_id="roundtrip-reference-pending",
+            request_type="reference_clarification",
+            objective_id=capability.active_objective.objective_id,
+            goal_label="Reference clarification",
+            prompt_text="Which subject?",
+            baseline_metrics={"state": "unresolved"},
+        ),
+        ChatAddressableRequest(
+            request_id="roundtrip-local-model-pending",
+            request_type="local_model_execution",
+            objective_id=capability.active_objective.objective_id,
+            goal_label="Local model permission",
+            prompt_text="Ask local model?",
+            baseline_metrics={"question": "What is frobnicated glim energy?"},
+        ),
+        ChatAddressableRequest(
+            request_id="roundtrip-provider-pending",
+            request_type="provider_authority",
+            objective_id=capability.active_objective.objective_id,
+            goal_label="Provider authority",
+            prompt_text="Approve provider?",
+        ),
+    )
+    resolved = (
+        ChatAddressableRequest(
+            request_id="roundtrip-reference-resolved",
+            request_type="reference_clarification",
+            objective_id=capability.active_objective.objective_id,
+            goal_label="Reference clarification",
+            prompt_text="Which subject?",
+            status="resolved",
+            resolution="resolved",
+            consumption_count=1,
+        ),
+        ChatAddressableRequest(
+            request_id="roundtrip-reference-expired",
+            request_type="reference_clarification",
+            objective_id=capability.active_objective.objective_id,
+            goal_label="Reference clarification",
+            prompt_text="Which subject?",
+            status="expired",
+            resolution="expired",
+            consumption_count=0,
+        ),
+        ChatAddressableRequest(
+            request_id="roundtrip-local-model-approved",
+            request_type="local_model_execution",
+            objective_id=capability.active_objective.objective_id,
+            goal_label="Local model permission",
+            prompt_text="Ask local model?",
+            status="consumed",
+            resolution="approved",
+            consumption_count=1,
+        ),
+        ChatAddressableRequest(
+            request_id="roundtrip-local-model-denied",
+            request_type="local_model_execution",
+            objective_id=capability.active_objective.objective_id,
+            goal_label="Local model permission",
+            prompt_text="Ask local model?",
+            status="denied",
+            resolution="denied",
+            consumption_count=1,
+        ),
+    )
+    queued = capability.conversation[-1].__class__(
+        turn_id="roundtrip-queued-update",
+        role="user",
+        text="Your goal today is also to pay attention to topic switches.",
+        intent_type="goal_or_priority_queued",
+        objective_id=capability.active_objective.objective_id,
+    )
+    capability = replace(
+        capability,
+        conversation=capability.conversation + (queued,),
+        pending_chat_requests=pending,
+        resolved_chat_requests=resolved,
+    )
+    save_runtime_state(tmp_path, capability)
+
+    first = start_or_restore_runtime(tmp_path)
+    save_runtime_state(tmp_path, first)
+    second = start_or_restore_runtime(tmp_path)
+
+    assert first.as_record() == second.as_record()
+    assert tuple(item.request_id for item in second.pending_chat_requests) == tuple(item.request_id for item in pending)
+    assert tuple(item.request_id for item in second.resolved_chat_requests) == tuple(item.request_id for item in resolved)
+    assert second.lifecycle_state == "paused_operator"
+    assert second.active_objective.provenance["execution_mode"] == "capability_growth_campaign"
+    assert knowledge.active_objective.provenance["execution_mode"] == "knowledge_acquisition"
+    assert sum(turn.turn_id == "roundtrip-queued-update" for turn in second.conversation) == 1
+
+
 def test_duplicate_campaign_goal_repairs_missing_campaign_bridge(tmp_path):
     state = start_or_restore_runtime(tmp_path)
     state = handle_conversational_message(state, FOREGROUND_CAMPAIGN_GOAL, runtime_root=tmp_path, run_background_cycle=False).state

@@ -97,6 +97,7 @@ from orchestration.runtime.active_cognitive_loop import (  # noqa: E402
     write_episode_state as write_active_cognitive_episode_state,
 )
 from orchestration.runtime.conversational_runtime_operation import (  # noqa: E402
+    ChatAddressableRequest,
     ConversationTurn,
     apply_stop_or_redirect as apply_conversational_stop_or_redirect,
     chat_feature_settings_schema,
@@ -164,6 +165,7 @@ from orchestration.runtime.rc2_render_correction import is_render_correction_req
 from orchestration.runtime.pc1_pragmatic_cognition import build_pragmatic_frame  # noqa: E402
 from orchestration.runtime.integrated_cognitive_runtime import build_integrated_cognitive_trace  # noqa: E402
 from orchestration.runtime.rc5_developmental_cognition import DevelopmentConsultationPacket  # noqa: E402
+import orchestration.runtime.conversational_runtime_operation as conversational_runtime_operation  # noqa: E402
 from orchestration.runtime.rc6_governed_external_intelligence import (  # noqa: E402
     build_consultation_request_from_rc5,
     classify_provider_risk,
@@ -5422,6 +5424,12 @@ class DeltaApp:
         if objective is None:
             return "Chat runtime: ready"
         evaluation = evaluate_conversational_runtime(state)
+        if state.lifecycle_state == "paused_operator":
+            return (
+                f"Chat runtime: paused goal - {objective.interpreted_objective[:58]}... "
+                f"cycles={evaluation['background_cycle_count']}; corrections={evaluation['correction_count']}; "
+                f"questions={evaluation['pending_material_authority_count']}"
+            )
         return (
             f"Chat runtime: active goal - {objective.interpreted_objective[:58]}... "
             f"cycles={evaluation['background_cycle_count']}; corrections={evaluation['correction_count']}; "
@@ -5663,9 +5671,27 @@ class DeltaApp:
                 message,
                 runtime_root=self.conversational_runtime_root,
             )
-            self._append_chat("DELTA", "I paused the active goal at a safe boundary and preserved your redirect for the next reasoning step.")
+            reply = "I paused the active goal at a safe boundary and preserved your redirect for the next reasoning step."
+            assistant_turn = ConversationTurn(
+                turn_id=rc6_stable_id(
+                    "conversation-stop-ack",
+                    self.conversational_runtime_state.runtime_id,
+                    str(len(self.conversational_runtime_state.conversation) + 1),
+                    reply,
+                ),
+                role="assistant",
+                text=reply,
+                intent_type="stop_or_redirect_acknowledgement",
+                objective_id=self.conversational_runtime_state.active_objective.objective_id if self.conversational_runtime_state.active_objective else "",
+            )
+            self.conversational_runtime_state = replace(
+                self.conversational_runtime_state,
+                conversation=self.conversational_runtime_state.conversation + (assistant_turn,),
+            )
+            save_conversational_runtime_state(self.conversational_runtime_root, self.conversational_runtime_state)
+            self._append_chat("DELTA", reply)
             self._append_session("user", message)
-            self._append_session("assistant", "I paused the active goal at a safe boundary and preserved your redirect for the next reasoning step.")
+            self._append_session("assistant", reply)
             self._refresh_conversational_runtime_status()
             self._refresh_state_cards()
             return True
@@ -5788,6 +5814,7 @@ class DeltaApp:
         self.last_message = message
         self.last_payload = payload
         self._update_active_topic_anchor(payload)
+        self._record_visible_local_model_request(message, payload)
         rendered = render_route(payload, developer_overlay=self.developer_overlay_enabled.get())
         response = rendered if not control_receipt else f"{control_receipt}\n\n{rendered}"
         self._queue_concept_candidate(payload)
@@ -5796,6 +5823,55 @@ class DeltaApp:
         self._append_session("assistant", response)
         self._refresh_state_cards()
         return response
+
+    def _record_visible_local_model_request(self, message: str, payload: dict[str, object]) -> None:
+        """Materialize visible local-model offers as durable chat requests."""
+        local_offer = payload.get("local_model_offer") if isinstance(payload, dict) else None
+        if not isinstance(local_offer, dict) or not local_offer.get("offered"):
+            return
+        active = self.conversational_runtime_state.active_objective
+        question = str(message or "").strip()
+        selected_model = str(local_offer.get("selected_model") or "")
+        existing = next(
+            (
+                item for item in reversed(self.conversational_runtime_state.pending_chat_requests)
+                if item.status == "pending"
+                and not item.consumption_count
+                and item.request_type == "local_model_execution"
+                and item.baseline_metrics.get("question") == question
+            ),
+            None,
+        )
+        if existing:
+            return
+        request = ChatAddressableRequest(
+            request_id=rc6_stable_id(
+                "local-model-chat-request",
+                self.conversational_runtime_state.runtime_id,
+                str(len(self.conversational_runtime_state.pending_chat_requests) + 1),
+                question,
+                selected_model,
+            ),
+            request_type="local_model_execution",
+            objective_id=active.objective_id if active else "",
+            originating_goal_id=active.objective_id if active else "",
+            goal_label="Local model permission",
+            prompt_text=str(local_offer.get("prompt") or "Would you like me to ask the local model?"),
+            provider=selected_model,
+            max_calls=1,
+            max_spend_usd=0.0,
+            baseline_metrics={
+                "question": question,
+                "selected_model": selected_model,
+                "support_identifier": local_offer.get("support_identifier") or "",
+                "reason": local_offer.get("reason") or "",
+            },
+        )
+        self.conversational_runtime_state = replace(
+            self.conversational_runtime_state,
+            pending_chat_requests=self.conversational_runtime_state.pending_chat_requests + (request,),
+        )
+        self.pending_local_model_question = question
 
     def _persist_composed_turn(self, before_state, message: str, response: str) -> None:
         """Replace clause-level handler transcript writes with one composed turn."""
@@ -5823,6 +5899,14 @@ class DeltaApp:
     def _execute_coordinated_control(self, control, clause: str) -> str:
         """Execute one planned control clause without taking foreground ownership."""
         state = self.conversational_runtime_state
+        if control.control_type == "reference_clarification":
+            return self._create_reference_clarification_request(clause)
+        if control.control_type == "reference_clarification_resolution":
+            return self._resolve_reference_clarification(clause)
+        if control.control_type == "runtime_state_query":
+            return self._runtime_state_query_reply(clause)
+        if control.control_type == "local_model_permission":
+            return self._resolve_local_model_permission(clause)
         if control.control_type == "capability_adoption" and control.action == "clarify_target":
             return "[Approval needed]\nI do not have an eligible pending capability adoption request. Tell me which reviewed capability you want adopted."
         if control.control_type == "clarification":
@@ -5882,31 +5966,289 @@ class DeltaApp:
             )
         return f"[Goal update]\n{result.reply}"
 
+    def _runtime_state_query_reply(self, message: str) -> str:
+        state = self.conversational_runtime_state
+        active = state.active_objective
+        lower = message.lower()
+        pending_count = sum(1 for item in state.pending_chat_requests if item.status == "pending" and not item.consumption_count)
+        discarded_count = sum(1 for item in state.resolved_chat_requests if item.status in {"denied", "expired"} or item.resolution in {"denied", "expired"})
+        queued_count = sum(1 for turn in state.conversation if turn.intent_type in {"goal_or_priority_queued", "ordinary_conversation_queued"})
+        last_user = next((turn.text for turn in reversed(state.conversation) if turn.role == "user"), "")
+        if active and state.lifecycle_state == "paused_operator":
+            lifecycle = "paused"
+        elif active and self.conversational_runtime_inference_in_flight:
+            lifecycle = "working"
+        elif active and state.lifecycle_state == "running":
+            lifecycle = "running"
+        else:
+            lifecycle = state.lifecycle_state.replace("_", " ")
+        lines = [
+            "[Runtime state]",
+            f"Active goal: {'yes' if active else 'no'}",
+            f"State: {lifecycle}",
+            f"Pending requests: {pending_count}",
+            f"Queued turns: {queued_count}",
+        ]
+        if "exactly once" in message.lower():
+            lines.append(f"Queued exactly once: {'yes' if queued_count == 1 else 'no'}")
+        if "last" in lower and "question" in lower:
+            lines.append(f"Last user question: {last_user or 'none'}")
+        if "discarded" in lower or "expired" in lower:
+            lines.append(f"Discarded or expired requests: {discarded_count}")
+        return "\n".join(lines)
+
+    def _pending_reference_clarification(self):
+        return next(
+            (
+                item for item in reversed(self.conversational_runtime_state.pending_chat_requests)
+                if item.status == "pending"
+                and not item.consumption_count
+                and item.request_type == "reference_clarification"
+            ),
+            None,
+        )
+
+    def _create_reference_clarification_request(self, message: str) -> str:
+        state = self.conversational_runtime_state
+        existing = self._pending_reference_clarification()
+        if existing:
+            return "[Clarification needed]\nI still need the earlier reference clarified before I bind that goal-thread instruction."
+        request = ChatAddressableRequest(
+            request_id=rc6_stable_id("reference-clarification-request", state.runtime_id, str(len(state.pending_chat_requests) + 1), message),
+            request_type="reference_clarification",
+            objective_id=state.active_objective.objective_id if state.active_objective else "",
+            originating_goal_id=state.active_objective.objective_id if state.active_objective else "",
+            goal_label="Reference clarification",
+            prompt_text="Which prior subject or turn should that refer to?",
+            max_calls=0,
+            max_spend_usd=0.0,
+            baseline_metrics={
+                "ambiguous_message": message,
+                "created_conversation_count": len(state.conversation),
+                "expires_on_unrelated_foreground_question": True,
+            },
+        )
+        self.conversational_runtime_state = replace(
+            state,
+            pending_chat_requests=state.pending_chat_requests + (request,),
+            objective_progress=state.objective_progress + ({"event": "reference_clarification_requested", "request_id": request.request_id},),
+        )
+        return "[Clarification needed]\nWhich prior subject should that refer to?"
+
+    def _resolve_reference_clarification(self, message: str) -> str:
+        state = self.conversational_runtime_state
+        request = self._pending_reference_clarification()
+        if request is None:
+            return "[Clarification]\nThere is no active reference clarification to resolve."
+        resolved = ChatAddressableRequest(
+            **{
+                **request.as_record(),
+                "status": "resolved",
+                "resolved_turn_id": rc6_stable_id("reference-clarification-resolution", state.runtime_id, message),
+                "resolution_text": message,
+                "resolution_policy": "operator_clarified_reference",
+                "resolution": "resolved",
+                "consumption_count": 1,
+            }
+        )
+        self.conversational_runtime_state = replace(
+            state,
+            pending_chat_requests=tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id),
+            resolved_chat_requests=state.resolved_chat_requests + (resolved,),
+            objective_progress=state.objective_progress + ({"event": "reference_clarification_resolved", "request_id": request.request_id},),
+        )
+        return "[Clarification]\nGot it. I bound that reference to your clarification."
+
+    def _settle_matching_local_model_request(self, question: str, resolution: str, reply: str) -> None:
+        state = self.conversational_runtime_state
+        request = next(
+            (
+                item for item in reversed(state.pending_chat_requests)
+                if item.status == "pending"
+                and not item.consumption_count
+                and item.request_type == "local_model_execution"
+                and item.baseline_metrics.get("question") == question
+            ),
+            None,
+        )
+        if request is None:
+            return
+        resolved = ChatAddressableRequest(
+            **{
+                **request.as_record(),
+                "status": "consumed" if resolution == "approved" else "denied",
+                "resolved_turn_id": rc6_stable_id("local-model-legacy-resolution-turn", state.runtime_id, question, resolution),
+                "resolution_text": reply,
+                "resolution_policy": resolution,
+                "resolution": resolution,
+                "consumption_count": 1,
+            }
+        )
+        self.conversational_runtime_state = replace(
+            state,
+            pending_chat_requests=tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id),
+            resolved_chat_requests=state.resolved_chat_requests + (resolved,),
+        )
+        save_conversational_runtime_state(self.conversational_runtime_root, self.conversational_runtime_state)
+
+    def _expire_reference_clarifications_for_foreground(self, message: str) -> None:
+        request = self._pending_reference_clarification()
+        if request is None:
+            return
+        lower = " ".join(str(message or "").lower().split())
+        if not ("?" in lower or re.search(r"\b(?:what|why|how|explain|tell me)\b", lower)):
+            return
+        if re.search(r"\b(?:that|it|this|prior|previous|earlier|reference|subject|topic)\b", lower):
+            return
+        state = self.conversational_runtime_state
+        expired = ChatAddressableRequest(
+            **{
+                **request.as_record(),
+                "status": "expired",
+                "resolved_turn_id": rc6_stable_id("reference-clarification-expired", state.runtime_id, message),
+                "resolution_text": message,
+                "resolution_policy": "expired_on_unrelated_foreground_question",
+                "resolution": "expired",
+                "consumption_count": 0,
+            }
+        )
+        self.conversational_runtime_state = replace(
+            state,
+            pending_chat_requests=tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id),
+            resolved_chat_requests=state.resolved_chat_requests + (expired,),
+            objective_progress=state.objective_progress + ({"event": "reference_clarification_expired", "request_id": request.request_id},),
+        )
+
+    def _resolve_local_model_permission(self, message: str) -> str:
+        state = self.conversational_runtime_state
+        request = next(
+            (
+                item for item in reversed(state.pending_chat_requests)
+                if item.status == "pending"
+                and not item.consumption_count
+                and item.request_type == "local_model_execution"
+            ),
+            None,
+        )
+        if request is None:
+            return "[Local model]\nThere is no active local-model request to consume."
+        lower = message.lower().strip()
+        approved = lower.startswith(("yes", "ok", "okay")) or "ask" in lower or "go ahead" in lower
+        resolved = ChatAddressableRequest(
+            **{
+                **request.as_record(),
+                "status": "consumed" if approved else "denied",
+                "resolved_turn_id": rc6_stable_id("local-model-resolution-turn", state.runtime_id, message),
+                "resolution_text": message,
+                "resolution_policy": "approved" if approved else "denied",
+                "resolution": "approved" if approved else "denied",
+                "consumption_count": 1,
+            }
+        )
+        pending = tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id)
+        self.conversational_runtime_state = replace(
+            state,
+            pending_chat_requests=pending,
+            resolved_chat_requests=state.resolved_chat_requests + (resolved,),
+        )
+        self.pending_local_model_question = None
+        if not approved:
+            return "[Local model]\nOkay. I will leave that unanswered locally for now."
+        target = str(request.baseline_metrics.get("question") or "").strip() or request.prompt_text
+        self._prepare_resident_model_for_question(target)
+        payload = route_message(
+            "Conversation",
+            target,
+            history=self._recent_history_for_router(),
+            execute_local_model=True,
+            provider_manager=self.provider_manager,
+        )
+        payload.update({
+            "active_pending_action_id": request.request_id,
+            "active_pending_action_type": "local_model_execution",
+            "pending_action_matched": True,
+            "action_executed": bool((payload.get("local_model_result") or {}).get("executed")),
+            "pending_action_cleared": True,
+        })
+        self.last_message = target
+        self.last_payload = payload
+        self._update_active_topic_anchor(payload)
+        self._queue_concept_candidate(payload)
+        self._remember_local_model_exchange(target, payload)
+        return render_route(payload, developer_overlay=self.developer_overlay_enabled.get())
+
+    def _execute_controls_with_deferred_saves(self, controls, plan) -> tuple[list[str], int]:
+        """Run subordinate control handlers in memory; coordinator commits once."""
+        deferred_saves: list[object] = []
+        original_save = conversational_runtime_operation.save_runtime_state
+        original_alias_save = save_conversational_runtime_state
+
+        def _deferred_save(_root, saved_state) -> None:
+            deferred_saves.append(saved_state)
+
+        conversational_runtime_operation.save_runtime_state = _deferred_save
+        globals()["save_conversational_runtime_state"] = _deferred_save
+        try:
+            receipts = [
+                self._execute_coordinated_control(item, plan.segments[item.source_clause_index].text)
+                for item in controls
+            ]
+        finally:
+            conversational_runtime_operation.save_runtime_state = original_save
+            globals()["save_conversational_runtime_state"] = original_alias_save
+        return receipts, len(deferred_saves)
+
     def _coordinate_mixed_dispatch(self, message: str, plan) -> bool:
         controls = tuple(getattr(plan, "controls", ()) or ((plan.control,) if plan.control.detected else ()))
         supported = {
             "create_goal", "replace_goal", "correction", "provider_approval", "capability_adoption",
             "side_thread_resolution", "pause_goal", "resume_goal", "stop_goal", "goal_status",
             "goal_review", "capability_review", "provider_request", "provider_prohibition", "diagnostic_request", "clarification",
-            "goal_continuation", "restart",
+            "goal_continuation", "restart", "runtime_state_query", "local_model_permission",
+            "reference_clarification", "reference_clarification_resolution",
         }
         if not controls or any(item.source_clause_index < 0 or item.control_type not in supported for item in controls):
             return False
         # Existing single-clause runtime handlers retain ownership for their
         # lifecycle/queue semantics. The coordinator is the composition path.
-        if not plan.foreground.requested and len(controls) == 1:
+        if not plan.foreground.requested and len(controls) == 1 and controls[0].control_type not in {"runtime_state_query", "local_model_permission", "clarification", "reference_clarification", "reference_clarification_resolution"}:
             return False
         state_before = self.conversational_runtime_state
-        control_indexes = {item.source_clause_index for item in controls}
-        receipts = [
-            self._execute_coordinated_control(item, plan.segments[item.source_clause_index].text)
-            for item in controls
-        ]
+        control_indexes = {
+            item.source_clause_index for item in controls
+            if not any(
+                clause.clause_index == item.source_clause_index and clause.foreground_requested
+                for clause in getattr(plan, "clauses", ())
+            )
+        }
+        if any(item.control_type in {"capability_adoption"} for item in controls):
+            receipts = [
+                self._execute_coordinated_control(item, plan.segments[item.source_clause_index].text)
+                for item in controls
+            ]
+            deferred_save_count = 0
+        else:
+            receipts, deferred_save_count = self._execute_controls_with_deferred_saves(controls, plan)
+        self.last_coordinated_dispatch_audit = {
+            "control_count": len(controls),
+            "deferred_subordinate_save_count": deferred_save_count,
+            "final_persistence_owner": "dispatch_coordinator",
+            "render_owner": "dispatch_coordinator",
+        }
         foreground_message = " ".join(
             segment.text for index, segment in enumerate(plan.segments)
             if index not in control_indexes and segment.kind != "context_prefix"
         ).strip()
         control_receipt = "\n\n".join(dict.fromkeys(receipt for receipt in receipts if receipt))
+        foreground_indexes = {
+            clause.clause_index for clause in getattr(plan, "clauses", ())
+            if clause.foreground_requested
+        }
+        if foreground_message:
+            foreground_message = " ".join(
+                segment.text for index, segment in enumerate(plan.segments)
+                if index in foreground_indexes and segment.kind != "context_prefix"
+            ).strip()
         if foreground_message:
             response = self._render_coordinated_foreground(
                 foreground_message, session_user_message=message, control_receipt=control_receipt,
@@ -6302,7 +6644,138 @@ class DeltaApp:
             if self._consume_operator_ux_intent(intent, response_source="conversation"):
                 self._refresh_state_cards()
                 return
-        if live_plan is not None and self._coordinate_mixed_dispatch(message, live_plan):
+        cancel_words = {"no", "n", "not now", "no thanks", "keep chatting", "nevermind", "never mind", "cancel", "stop", "forget it"}
+        affirm_words = {"yes", "y", "yes please", "sure", "okay", "ok", "go ahead", "do it", "tell me more", "more", "go deeper"}
+        if self.live_runtime_session and self.live_runtime_session.active:
+            self._append_session("user", message)
+            self._begin_live_runtime_turn(message)
+            return
+        if self._is_local_model_response_query(lower):
+            reply = self._last_local_model_response_answer()
+            if reply:
+                self._append_session("user", message)
+                self._append_chat("DELTA", reply)
+                self._append_session("assistant", reply)
+                return
+        if self._is_discourse_history_query(lower):
+            reply = self._discourse_history_answer()
+            if reply:
+                self._append_session("user", message)
+                self._append_chat("DELTA", reply)
+                self._append_session("assistant", reply)
+                return
+        if self.pending_local_model_question and lower in (affirm_words | {"ask local", "ask the local model", "ask a local model"}):
+            target = self.pending_local_model_question
+            self.pending_local_model_question = None
+            self._append_session("user", message)
+            payload = route_message(
+                "Conversation",
+                target,
+                history=self._recent_history_for_router(),
+                execute_local_model=True,
+                provider_manager=self.provider_manager,
+            )
+            self._settle_matching_local_model_request(target, "approved", message)
+            self.last_message = target
+            self.last_payload = payload
+            self._update_active_topic_anchor(payload)
+            offer = payload.get("supporting_information_offer") if isinstance(payload, dict) else None
+            self.pending_provider_question = target if isinstance(offer, dict) and offer.get("offered") else None
+            rendered = render_route(payload, developer_overlay=self.developer_overlay_enabled.get())
+            self._queue_concept_candidate(payload)
+            self._set_deepening_offer_if_present(target, payload)
+            self._remember_local_model_exchange(target, payload)
+            self._append_chat("DELTA", rendered)
+            self._append_session("assistant", rendered)
+            self._refresh_state_cards()
+            return
+        if self.pending_local_model_question and lower in cancel_words:
+            target = self.pending_local_model_question
+            self.pending_local_model_question = None
+            self._append_session("user", message)
+            reply = "Okay. I will leave that unanswered locally for now."
+            self._settle_matching_local_model_request(target, "denied", message)
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            return
+        has_runtime_coordination_context = bool(
+            self.conversational_runtime_state.active_objective
+            or self.conversational_runtime_state.pending_chat_requests
+        )
+        question_like_foreground = "?" in message or bool(
+            re.match(r"^(?:what|why|how|who|where|when|which|is|are|was|were|do|does|did|can|could|should|would)\b", lower)
+        )
+        runtime_intake_or_control = bool(
+            re.search(
+                r"\b(?:your\s+new\s+goal|your\s+goal\s+today|new\s+goal|active\s+goal|pause|resume|stop|review|approve|adopt|provider|restart|continue)\b",
+                lower,
+            )
+        )
+        legacy_imperative_foreground = bool(
+            live_plan is not None
+            and live_plan.foreground.requested
+            and not question_like_foreground
+            and not runtime_intake_or_control
+        )
+        if legacy_imperative_foreground:
+            self.pending_local_model_deepening = None
+            payload = route_message(
+                self.mode.get(),
+                message,
+                self.paste.get("1.0", tk.END) if hasattr(self, "paste") else "",
+                history=self._recent_history_for_router(),
+                execute_local_model=False,
+            )
+            self.last_message = message
+            self.last_payload = payload
+            self._update_active_topic_anchor(payload)
+            offer = payload.get("supporting_information_offer") if isinstance(payload, dict) else None
+            if isinstance(offer, dict) and offer.get("offered"):
+                self.pending_provider_question = message
+            elif payload.get("route") == "gpt_support_approval_preview":
+                self.pending_provider_question = message
+            else:
+                self.pending_provider_question = None
+            local_offer = payload.get("local_model_offer") if isinstance(payload, dict) else None
+            pending_suggestion = payload.get("pending_action_suggestion") if isinstance(payload, dict) else None
+            if isinstance(pending_suggestion, dict) and pending_suggestion.get("action_type") == "local_model_deepening":
+                exchange = self._last_substantive_exchange() or {"question": message, "answer": str(payload.get("answer") or "")}
+                action_id = f"rc2-pending-action-{uuid.uuid4().hex[:12]}"
+                self.pending_local_model_deepening = {
+                    "action_id": action_id,
+                    "action_type": "local_model_deepening",
+                    "question": exchange["question"],
+                    "answer": exchange["answer"],
+                    "followup_instruction": message,
+                    "source_turn_id": str(len(self.session_history)),
+                }
+                payload["pending_action_suggestion"] = {
+                    **pending_suggestion,
+                    "action_id": action_id,
+                    "original_topic": exchange["question"],
+                    "prior_answer_summary": exchange["answer"][:260],
+                    "selected_lane": (payload.get("selected_model_lane") or {}).get("lane"),
+                    "selected_model": (payload.get("selected_model_lane") or {}).get("selected_model_id"),
+                }
+                self.pending_local_model_question = None
+            else:
+                self.pending_local_model_question = message if isinstance(local_offer, dict) and local_offer.get("offered") else None
+                if self.pending_local_model_question:
+                    self.pending_local_model_deepening = None
+            self._refresh_state_cards()
+            rendered = render_route(payload, developer_overlay=self.developer_overlay_enabled.get())
+            self._queue_concept_candidate(payload)
+            self._append_chat("DELTA", rendered)
+            self._append_session("user", message)
+            self._append_session("assistant", rendered)
+            self._complete_dispatch_shadow_plan(
+                shadow_message_id,
+                legacy_consumed=False,
+                rendered_owner="rc2_router",
+                response_text=rendered,
+            )
+            return
+        if live_plan is not None and not legacy_imperative_foreground and self._coordinate_mixed_dispatch(message, live_plan):
             self._complete_dispatch_shadow_plan(
                 shadow_message_id,
                 legacy_consumed=False,
@@ -6310,11 +6783,17 @@ class DeltaApp:
                 response_text="coordinated_foreground_and_control",
             )
             return
-        if live_plan is not None and live_plan.foreground.requested and not live_plan.control.detected:
+        if (
+            live_plan is not None
+            and live_plan.foreground.requested
+            and not live_plan.control.detected
+            and (has_runtime_coordination_context or question_like_foreground)
+        ):
             foreground_message = " ".join(
                 segment.text for segment in live_plan.segments if segment.kind != "context_prefix"
             ).strip() or message
             state_before = self.conversational_runtime_state
+            self._expire_reference_clarifications_for_foreground(foreground_message)
             response = self._render_coordinated_foreground(foreground_message, session_user_message=message)
             self._persist_composed_turn(state_before, message, response)
             self._complete_dispatch_shadow_plan(
@@ -6324,7 +6803,7 @@ class DeltaApp:
                 response_text="coordinated_foreground",
             )
             return
-        if self._handle_conversational_runtime_message(message):
+        if not legacy_imperative_foreground and self._handle_conversational_runtime_message(message):
             self._complete_dispatch_shadow_plan(
                 shadow_message_id,
                 legacy_consumed=True,
@@ -6550,8 +7029,6 @@ class DeltaApp:
             self._append_session("assistant", claim_relation_result)
             self._refresh_state_cards()
             return
-        cancel_words = {"no", "n", "not now", "no thanks", "keep chatting", "nevermind", "never mind", "cancel", "stop", "forget it"}
-        affirm_words = {"yes", "y", "yes please", "sure", "okay", "ok", "go ahead", "do it", "tell me more", "more", "go deeper"}
         discourse_frame = build_discourse_frame(message, self.last_report_inspection)
         discourse_trace = discourse_frame.as_dict()
         controller = getattr(self, "developmental_learning_controller", None)

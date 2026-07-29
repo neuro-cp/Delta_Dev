@@ -14,8 +14,10 @@ import re
 
 from orchestration.runtime.conversational_runtime_operation import (
     ChatAddressableRequest,
+    ConversationTurn,
     ConversationalRuntimeState,
     classify_conversational_intent,
+    reconcile_queued_reference_turn,
 )
 from orchestration.runtime.delta_1_0_common import stable_id
 
@@ -111,6 +113,23 @@ class PendingRequestDispatch:
 
 
 @dataclass(frozen=True)
+class ClauseDispatch:
+    clause_index: int
+    text: str
+    segment_kind: str
+    control_type: str = ""
+    foreground_requested: bool = False
+    pending_request_id: str = ""
+    state_mutation: str = "none"
+    terminal_disposition: str = "unassigned"
+    execution_order: int = 0
+    dedupe_key: str = ""
+
+    def as_record(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
 class PersistenceDispatch:
     persist_user_turn: bool = True
     persist_foreground_response: bool = False
@@ -165,6 +184,7 @@ class MessageDispatchResult:
     foreground: ForegroundDispatch
     control: ControlDispatch
     controls: tuple[ControlDispatch, ...]
+    clauses: tuple[ClauseDispatch, ...]
     background: BackgroundDispatch
     pending_request: PendingRequestDispatch
     persistence: PersistenceDispatch
@@ -195,6 +215,7 @@ class MessageDispatchResult:
         payload["controls"] = tuple(ControlDispatch(**dict(item)) for item in payload.get("controls", ()))
         if not payload["controls"] and payload["control"].detected:
             payload["controls"] = (payload["control"],)
+        payload["clauses"] = tuple(ClauseDispatch(**dict(item)) for item in payload.get("clauses", ()))
         payload["background"] = BackgroundDispatch(**dict(payload.get("background") or {}))
         pending = dict(payload.get("pending_request") or {})
         constraints = dict(pending.get("constraints") or {})
@@ -230,9 +251,9 @@ def segment_message(message: str) -> tuple[tuple[MessageSegment, ...], float, st
     if re.search(r"\bstop\s+that\s+and\s+work\s+on\b", text, flags=re.IGNORECASE):
         return (MessageSegment(text=text, kind="unsegmented", confidence=0.94),), 0.94, ""
     connector = (
-        r"(?:[.;!?]\s+(?:also\s+)?)(?=(?:your\s+new\s+goal|new\s+goal|stop|pause|resume|review|show|approve|adopt|deny|don't|do\s+not|no,|yes,|i\s+meant|what|why|how|explain|remind|tell))"
-        r"|(?:\s+also,?\s+)(?=(?:your\s+new\s+goal|new\s+goal|start|study|work\s+on|keep\s+working|stop|pause|resume|review|show|approve|adopt|deny|don't|do\s+not|no,|yes,|you\s+may|what|why|how|explain|remind|tell))"
-        r"|(?:\s+(?:and|but|then|while)\s+)(?=(?:your\s+new\s+goal|new\s+goal|start|study|work\s+on|keep\s+working|stop|pause|resume|review|show|approve|adopt|deny|don't|do\s+not|no,|yes,|you\s+may|what|why|how|explain|remind|tell))"
+        r"(?:[.;!?]\s+(?:also\s+)?)(?=(?:your\s+new\s+goal|new\s+goal|stop|pause|resume|continue|review|show|approve|adopt|deny|don't|do\s+not|no,|yes,|i\s+meant|what|why|how|is|are|was|were|do|does|did|can|could|should|would|explain|remind|tell))"
+        r"|(?:\s+also,?\s+)(?=(?:your\s+new\s+goal|new\s+goal|start|study|work\s+on|keep\s+working|continue|stop|pause|resume|review|show|approve|adopt|deny|don't|do\s+not|no,|yes,|you\s+may|what|why|how|is|are|was|were|do|does|did|can|could|should|would|explain|remind|tell))"
+        r"|(?:\s+(?:and|but|then|while)\s+)(?=(?:your\s+new\s+goal|new\s+goal|start|study|work\s+on|keep\s+working|continue|stop|pause|resume|review|show|approve|adopt|deny|don't|do\s+not|no,|yes,|you\s+may|what|why|how|is|are|was|were|do|does|did|can|could|should|would|explain|remind|tell))"
     )
     parts = [part.strip(" ,.;") for part in re.split(connector, text, flags=re.IGNORECASE) if part.strip(" ,.;")]
     if not parts:
@@ -269,7 +290,28 @@ def _matching_pending_request(state: ConversationalRuntimeState, message: str) -
         return request
     if request.request_type == "directional_question" and resolution in {"approved", "denied", "directional"}:
         return request
+    if request.request_type == "local_model_execution" and resolution in {"approved", "denied"}:
+        return request
     return None
+
+
+def _pending_reference_clarification(state: ConversationalRuntimeState) -> ChatAddressableRequest | None:
+    return next(
+        (
+            item for item in reversed(state.pending_chat_requests)
+            if item.status == "pending"
+            and not item.consumption_count
+            and item.request_type == "reference_clarification"
+        ),
+        None,
+    )
+
+
+def _looks_like_reference_clarification_reply(clause: str) -> bool:
+    lower = _normalize(clause).lower()
+    if "?" in lower:
+        return False
+    return bool(re.search(r"\b(?:i\s+meant|i\s+mean|the\s+first|the\s+second|the\s+earlier|the\s+later|previous|prior|not\s+the|that\s+one)\b", lower))
 
 
 def _control_for_clause(state: ConversationalRuntimeState, clause: str) -> tuple[ControlDispatch, PendingRequestDispatch]:
@@ -279,6 +321,7 @@ def _control_for_clause(state: ConversationalRuntimeState, clause: str) -> tuple
         control_type = {
             "provider_authority": "provider_approval",
             "capability_adoption_and_restart": "capability_adoption",
+            "local_model_execution": "local_model_permission",
             "directional_question": "side_thread_resolution",
         }.get(request.request_type, "side_thread_resolution")
         return (
@@ -300,6 +343,27 @@ def _control_for_clause(state: ConversationalRuntimeState, clause: str) -> tuple
         return ControlDispatch(True, "clarification", "clarify_conflicting_control", deferred=True, should_render_acknowledgment=True), PendingRequestDispatch(False)
     if re.search(r"\b(?:how|why) did you (?:route|misroute)\b|\bdecision record\b", lower):
         return ControlDispatch(True, "diagnostic_request", "route_advanced", deferred=True, should_render_acknowledgment=True), PendingRequestDispatch(False)
+    if re.search(r"\b(?:are you|is the runtime|chat runtime|runtime state|goal state|pending requests?|queued|last user question|last question|recorded once|discarded)\b", lower) and re.search(r"\b(?:paused|running|working|pending|queued|state|status|exactly once|how many|last|discarded|expired)\b", lower):
+        return ControlDispatch(True, "runtime_state_query", "render_runtime_state", state.active_objective.objective_id if state.active_objective else "", deferred=True, should_render_acknowledgment=True), PendingRequestDispatch(False)
+    if state.active_objective and re.search(r"\bstop\s+(?:working\s+on\s+)?(?:that|this|the\s+active\s+goal|goal)\b", lower):
+        return ControlDispatch(True, "stop_goal", "stop", state.active_objective.objective_id, deferred=True, should_render_acknowledgment=True), PendingRequestDispatch(False)
+    pending_reference = _pending_reference_clarification(state)
+    if pending_reference and _looks_like_reference_clarification_reply(clause):
+        return (
+            ControlDispatch(True, "reference_clarification_resolution", "resolve_reference_clarification", pending_reference.request_id, deferred=True, should_render_acknowledgment=True),
+            PendingRequestDispatch(True, pending_reference.request_id, pending_reference.request_type, "resolved", {"objective_id": pending_reference.objective_id}, True, False, True),
+        )
+    if state.active_objective and any(token in lower for token in ("that", "it", "this", "prior", "previous", "earlier")) and any(token in lower for token in ("goal", "topic", "subject", "reference")):
+        provisional = ConversationTurn(
+            turn_id=stable_id("chat-first-reference-provisional", state.runtime_id, clause),
+            role="user",
+            text=clause,
+            intent_type="ordinary_conversation_queued",
+            objective_id=state.active_objective.objective_id,
+        )
+        decision = reconcile_queued_reference_turn(state, provisional)
+        if decision.clarification_required:
+            return ControlDispatch(True, "reference_clarification", "create_reference_clarification", state.active_objective.objective_id, deferred=True, should_render_acknowledgment=True), PendingRequestDispatch(False)
     if "save state" in lower and "restart" in lower or lower.startswith("restart"):
         return ControlDispatch(True, "restart", "save_and_restart", state.active_objective.objective_id if state.active_objective else "", deferred=True, should_render_acknowledgment=True), PendingRequestDispatch(False)
     if "continue where you left off" in lower or "keep working on" in lower or "keep working locally" in lower:
@@ -357,8 +421,16 @@ def _foreground_requested(clause: str, control: ControlDispatch) -> bool:
     lower = _normalize(clause).lower()
     if not clause:
         return False
-    if control.detected:
+    if re.search(r"\b(?:please\s+)?wait until\b", lower) and re.search(r"\b(?:reasoning step|current step|work step|cycle)\b", lower):
         return False
+    if control.detected:
+        return bool(re.search(r"\b(?:what|why|how|explain|tell me)\b", lower)) and control.control_type in {
+            "correction",
+            "provider_prohibition",
+            "pause_goal",
+            "resume_goal",
+            "stop_goal",
+        }
     return any(token in lower for token in ("?", "what", "why", "how", "explain", "remind me", "tell me", "color")) or not control.detected
 
 
@@ -374,18 +446,41 @@ def plan_message_dispatch(state: ConversationalRuntimeState, message: str) -> Me
     }
     message_id = stable_id("chat-first-dispatch", json.dumps(state_key, sort_keys=True), normalized)
     controls: list[ControlDispatch] = []
+    clause_plans: list[ClauseDispatch] = []
     pending = PendingRequestDispatch(False)
     foreground_clauses: list[str] = []
     for index, segment in enumerate(segments):
         if segment.kind == "context_prefix":
+            clause_plans.append(ClauseDispatch(index, segment.text, segment.kind, terminal_disposition="context_retained", execution_order=index))
             continue
         control, candidate_pending = _control_for_clause(state, segment.text)
         if control.detected:
             controls.append(ControlDispatch(**{**control.as_record(), "source_clause_index": index}))
         if candidate_pending.request_detected:
             pending = candidate_pending
-        if _foreground_requested(segment.text, control):
+        foreground_requested = _foreground_requested(segment.text, control)
+        if foreground_requested:
             foreground_clauses.append(segment.text)
+        if control.detected and foreground_requested:
+            disposition = "control_and_foreground_planned"
+        elif control.detected:
+            disposition = "control_planned"
+        elif foreground_requested:
+            disposition = "foreground_planned"
+        else:
+            disposition = "observed_noop"
+        clause_plans.append(ClauseDispatch(
+            index,
+            segment.text,
+            segment.kind,
+            control_type=control.control_type if control.detected else "",
+            foreground_requested=foreground_requested,
+            pending_request_id=candidate_pending.request_id if candidate_pending.request_detected else "",
+            state_mutation="possible" if control.detected else "none",
+            terminal_disposition=disposition,
+            execution_order=index,
+            dedupe_key=stable_id("chat-first-clause", message_id, str(index), segment.text, control.control_type if control.detected else "foreground"),
+        ))
     control = controls[0] if controls else ControlDispatch(False)
     control_types = {item.control_type for item in controls}
     if ({"stop_goal", "goal_continuation"} <= control_types) or ({"capability_adoption", "provider_approval"} <= control_types):
@@ -430,6 +525,7 @@ def plan_message_dispatch(state: ConversationalRuntimeState, message: str) -> Me
         foreground=foreground,
         control=control,
         controls=tuple(controls),
+        clauses=tuple(clause_plans),
         background=background,
         pending_request=pending,
         persistence=persistence,

@@ -518,7 +518,18 @@ def _is_capability_campaign_goal(message: str) -> bool:
     study = any(term in lower for term in ("study", "identify", "compare", "test", "candidate", "approach", "recommend adoption"))
     bounded_compare = any(term in lower for term in ("three bounded approaches", "at least three", "test them", "adoption recommendation"))
     capability_target = any(term in lower for term in ("distinguish", "foreground", "continuation", "failure pattern", "unrelated-topic", "follow-up"))
-    return bool(study and bounded_compare and capability_target)
+    delta_target = any(term in lower for term in ("delta", "your routing", "your planner", "your coordinator", "your runtime", "your behavior", "topic switch", "topic-switch"))
+    capability_verbs = any(term in lower for term in ("improve", "repair", "fix", "strengthen", "harden", "reduce failures", "avoid regressions"))
+    return bool((study and bounded_compare and capability_target) or (delta_target and capability_verbs))
+
+
+def _goal_execution_mode(message: str) -> str:
+    lower = " ".join(str(message or "").lower().split())
+    if _is_capability_campaign_goal(message):
+        return "capability_growth_campaign"
+    if any(term in lower for term in ("study", "learn", "research", "understand", "explain")):
+        return "knowledge_acquisition"
+    return "generic_conversational_cognition"
 
 
 def _goal_review_label(objective: ConversationalObjective | None) -> str:
@@ -540,7 +551,8 @@ def compile_conversational_objective(message: str, intent: ConversationIntent) -
     text = " ".join(message.split())
     objective_id = stable_id("conversational-objective", text, intent.persistence_scope)
     lower = text.lower()
-    campaign_mode = _is_capability_campaign_goal(text)
+    execution_mode = _goal_execution_mode(text)
+    campaign_mode = execution_mode == "capability_growth_campaign"
     if "english comprehension" in lower or "communicate better" in lower:
         interpreted = "Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer."
         indicators = (
@@ -591,7 +603,7 @@ def compile_conversational_objective(message: str, intent: ConversationIntent) -
             "source": "ordinary_chat",
             "intent": intent.as_record(),
             "compiler": "conversational_runtime_operation",
-            "execution_mode": "capability_growth_campaign" if campaign_mode else "generic_conversational_cognition",
+            "execution_mode": execution_mode,
         },
     )
 
@@ -1267,6 +1279,8 @@ def _pending_request_for_reply(state: ConversationalRuntimeState, message: str) 
     if latest.request_type == "provider_authority" and kind in {"approved", "denied"}:
         return latest
     if latest.request_type == "directional_question" and kind in {"directional", "denied", "approved"}:
+        return latest
+    if latest.request_type == "local_model_execution" and kind in {"approved", "denied"}:
         return latest
     if latest.request_type == "capability_adoption_and_restart" and kind in {"approved", "denied", "show_evidence"}:
         return latest
