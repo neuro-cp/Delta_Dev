@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, fields, is_dataclass, replace
+from datetime import datetime, timezone
 import json
 import os
 import queue
@@ -5907,6 +5908,8 @@ class DeltaApp:
             return self._runtime_state_query_reply(clause)
         if control.control_type == "local_model_permission":
             return self._resolve_local_model_permission(clause)
+        if control.control_type == "capability_adoption" and control.action == "resolve_pending_request":
+            return self._resolve_capability_adoption_for_coordinator(control, clause)
         if control.control_type == "capability_adoption" and control.action == "clarify_target":
             return "[Approval needed]\nI do not have an eligible pending capability adoption request. Tell me which reviewed capability you want adopted."
         if control.control_type == "clarification":
@@ -5988,13 +5991,12 @@ class DeltaApp:
             f"State: {lifecycle}",
             f"Pending requests: {pending_count}",
             f"Queued turns: {queued_count}",
+            f"Discarded or expired requests: {discarded_count}",
         ]
         if "exactly once" in message.lower():
             lines.append(f"Queued exactly once: {'yes' if queued_count == 1 else 'no'}")
         if "last" in lower and "question" in lower:
             lines.append(f"Last user question: {last_user or 'none'}")
-        if "discarded" in lower or "expired" in lower:
-            lines.append(f"Discarded or expired requests: {discarded_count}")
         return "\n".join(lines)
 
     def _pending_reference_clarification(self):
@@ -6090,6 +6092,114 @@ class DeltaApp:
             resolved_chat_requests=state.resolved_chat_requests + (resolved,),
         )
         save_conversational_runtime_state(self.conversational_runtime_root, self.conversational_runtime_state)
+
+    def _resolve_capability_adoption_for_coordinator(self, control, message: str) -> str:
+        state = self.conversational_runtime_state
+        request = next(
+            (
+                item for item in reversed(state.pending_chat_requests)
+                if item.status == "pending"
+                and not item.consumption_count
+                and item.request_type == "capability_adoption_and_restart"
+                and (not control.target_id or item.request_id == control.target_id)
+            ),
+            None,
+        )
+        if request is None:
+            return "[Approval needed]\nI do not have an eligible pending capability adoption request."
+        lower = " ".join(message.lower().split())
+        denied = control.denied or lower.startswith(("no", "deny", "decline")) or "do not adopt" in lower or "don't adopt" in lower
+        now = datetime.now(timezone.utc).isoformat()
+        resolved = ChatAddressableRequest(
+            **{
+                **request.as_record(),
+                "status": "denied" if denied else "consumed",
+                "resolution": "denied" if denied else "approved",
+                "resolution_text": message,
+                "resolution_policy": "denied" if denied else "approved_coordinated",
+                "resolved_at": now,
+                "consumed_at": "" if denied else now,
+                "consumption_count": 1,
+            }
+        )
+        pending = tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id)
+        if denied:
+            self.conversational_runtime_state = replace(
+                state,
+                pending_chat_requests=pending,
+                resolved_chat_requests=state.resolved_chat_requests + (resolved,),
+                objective_progress=state.objective_progress + (
+                    {
+                        "event": "capability_adoption_denied_in_coordinated_turn",
+                        "request_id": request.request_id,
+                        "at": now,
+                    },
+                ),
+            )
+            return "[Capability adoption]\nUnderstood. I will keep the current behavior and leave that capability unadopted."
+
+        restart_id = rc6_stable_id("coordinated-capability-adoption-restart", request.request_id, message)
+        archived = state.active_objective.as_record() if state.active_objective else None
+        adoption_record = {
+            "capability_id": request.capability_id,
+            "capability_version": request.capability_version,
+            "source_commit": "coordinated_pending_request",
+            "adopted_by": "operator_chat_approval",
+            "adoption_request_id": request.request_id,
+            "evidence_digest": request.evidence_digest,
+            "adopted_at": now,
+            "activation_state": "active",
+            "restart_id": restart_id,
+            "post_restart_validation": "pending_full_restart_validation",
+            "constraints": ("coordinated_single_commit",),
+        }
+        restart_record = {
+            "restart_id": restart_id,
+            "kind": "coordinated_runtime_state_commit",
+            "requested_at": now,
+            "pre_restart_completed_cycle_count": len(state.completed_cycle_keys),
+            "post_restart_validation": "pending_full_restart_validation",
+            "duplicate_review_created": False,
+            "duplicate_request_created": False,
+            "duplicate_model_request_created": False,
+        }
+        registry = tuple(item for item in state.capability_registry if item.get("capability_id") != request.capability_id) + (
+            {
+                "capability_id": request.capability_id,
+                "name": request.capability_name,
+                "version": request.capability_version,
+                "source_commit": "coordinated_pending_request",
+                "activation_state": "active",
+                "adopted_at": now,
+                "evidence_digest": request.evidence_digest,
+                "production_consumer": "chat_first_dispatch_coordinator",
+                "rollback_reference": "Disable the capability registry entry before reverting source.",
+                "last_validation_at": now,
+                "validation_status": "pending_full_restart_validation",
+            },
+        )
+        self.conversational_runtime_state = replace(
+            state,
+            lifecycle_state="awaiting_next_goal",
+            active_objective=None,
+            authority=None,
+            pending_chat_requests=pending,
+            resolved_chat_requests=state.resolved_chat_requests + (resolved,),
+            capability_registry=registry,
+            capability_adoption_records=state.capability_adoption_records + (adoption_record,),
+            restart_records=state.restart_records + (restart_record,),
+            archived_objectives=state.archived_objectives + ((archived,) if archived else ()),
+            objective_progress=state.objective_progress + (
+                {
+                    "event": "capability_adopted_in_coordinated_turn",
+                    "capability_id": request.capability_id,
+                    "request_id": request.request_id,
+                    "restart_id": restart_id,
+                    "at": now,
+                },
+            ),
+        )
+        return "[Capability adoption]\nI recorded the adoption and restart disposition for the composed turn. The coordinator will commit the resulting state once."
 
     def _expire_reference_clarifications_for_foreground(self, message: str) -> None:
         request = self._pending_reference_clarification()
@@ -6221,14 +6331,7 @@ class DeltaApp:
                 for clause in getattr(plan, "clauses", ())
             )
         }
-        if any(item.control_type in {"capability_adoption"} for item in controls):
-            receipts = [
-                self._execute_coordinated_control(item, plan.segments[item.source_clause_index].text)
-                for item in controls
-            ]
-            deferred_save_count = 0
-        else:
-            receipts, deferred_save_count = self._execute_controls_with_deferred_saves(controls, plan)
+        receipts, deferred_save_count = self._execute_controls_with_deferred_saves(controls, plan)
         self.last_coordinated_dispatch_audit = {
             "control_count": len(controls),
             "deferred_subordinate_save_count": deferred_save_count,

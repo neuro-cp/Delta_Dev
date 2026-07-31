@@ -421,6 +421,8 @@ def _foreground_requested(clause: str, control: ControlDispatch) -> bool:
     lower = _normalize(clause).lower()
     if not clause:
         return False
+    if lower in {"do not change anything else", "don't change anything else", "change nothing else"}:
+        return False
     if re.search(r"\b(?:please\s+)?wait until\b", lower) and re.search(r"\b(?:reasoning step|current step|work step|cycle)\b", lower):
         return False
     if control.detected:
@@ -455,7 +457,10 @@ def plan_message_dispatch(state: ConversationalRuntimeState, message: str) -> Me
             continue
         control, candidate_pending = _control_for_clause(state, segment.text)
         if control.detected:
-            controls.append(ControlDispatch(**{**control.as_record(), "source_clause_index": index}))
+            planned = ControlDispatch(**{**control.as_record(), "source_clause_index": index})
+            dedupe_key = (planned.control_type, planned.action, planned.target_id)
+            if not any((item.control_type, item.action, item.target_id) == dedupe_key for item in controls):
+                controls.append(planned)
         if candidate_pending.request_detected:
             pending = candidate_pending
         foreground_requested = _foreground_requested(segment.text, control)

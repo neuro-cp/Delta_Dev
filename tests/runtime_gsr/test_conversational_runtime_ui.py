@@ -683,6 +683,60 @@ def test_multi_obligation_approval_and_runtime_state_question(monkeypatch, tmp_p
         root.destroy()
 
 
+def test_multi_obligation_adoption_and_runtime_state_commit_once(monkeypatch, tmp_path):
+    import DELTA
+    import orchestration.runtime.conversational_runtime_operation as operation
+    from orchestration.runtime.conversational_runtime_operation import ChatAddressableRequest
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, FOREGROUND_CAMPAIGN_GOAL)
+        _pump_until(root, lambda: app.conversational_runtime_state.active_objective is not None, timeout=5.0)
+        objective_id = app.conversational_runtime_state.active_objective.objective_id
+        request = ChatAddressableRequest(
+            request_id="adoption-runtime-state",
+            request_type="capability_adoption_and_restart",
+            objective_id=objective_id,
+            goal_label="Semantic reconciliation",
+            prompt_text="Adopt this capability?",
+            capability_id="semantic_reconciliation",
+            capability_version="test",
+            capability_name="Semantic reconciliation",
+            evidence_digest="test-evidence",
+            restart_required=True,
+        )
+        app.conversational_runtime_state = replace(app.conversational_runtime_state, pending_chat_requests=(request,))
+        save_calls = []
+        original_delta_save = DELTA.save_conversational_runtime_state
+
+        def counted_save(root_path, state):
+            save_calls.append((root_path, len(state.conversation), len(state.pending_chat_requests), len(state.restart_records)))
+            return original_delta_save(root_path, state)
+
+        monkeypatch.setattr(DELTA, "save_conversational_runtime_state", counted_save)
+        monkeypatch.setattr(operation, "save_runtime_state", counted_save)
+        before_turns = len(app.conversational_runtime_state.conversation)
+
+        _send(app, "Yes, adopt it. Also, are you currently running or paused?")
+
+        transcript = app.chat_history.get("1.0", tk.END).lower()
+        latest = transcript.rsplit("you: yes, adopt it. also, are you currently running or paused?", 1)[-1]
+        assert "recorded the adoption" in latest
+        assert "[runtime state]" in latest
+        assert "active goal: no" in latest
+        assert app.conversational_runtime_state.pending_chat_requests == ()
+        assert app.conversational_runtime_state.resolved_chat_requests[-1].request_id == "adoption-runtime-state"
+        assert app.conversational_runtime_state.resolved_chat_requests[-1].status == "consumed"
+        assert app.conversational_runtime_state.capability_registry[-1]["activation_state"] == "active"
+        assert len(app.conversational_runtime_state.restart_records) == 1
+        assert len(app.conversational_runtime_state.conversation) == before_turns + 2
+        assert len(save_calls) == 1
+        assert app.last_coordinated_dispatch_audit["final_persistence_owner"] == "dispatch_coordinator"
+        assert app.last_coordinated_dispatch_audit["render_owner"] == "dispatch_coordinator"
+    finally:
+        root.destroy()
+
+
 def test_multi_obligation_denial_and_unrelated_factual_question(monkeypatch, tmp_path):
     from orchestration.runtime.conversational_runtime_operation import ChatAddressableRequest
 

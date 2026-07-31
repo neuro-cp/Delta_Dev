@@ -2,6 +2,7 @@ from dataclasses import replace
 
 from orchestration.runtime.conversational_runtime_operation import (
     apply_stop_or_redirect,
+    ChatAddressableRequest,
     chat_feature_settings_schema,
     classify_conversational_intent,
     decide_turn_relation,
@@ -388,6 +389,116 @@ def test_unresolved_provider_request_survives_restart(tmp_path):
     assert restored.pending_chat_requests[0].request_id == state.pending_chat_requests[0].request_id
     assert approved.provider_authority["request_id"] == state.pending_chat_requests[0].request_id
     assert len(approved.state.provider_authorities) == 1
+
+
+def test_request_and_lane_states_restore_twice_without_duplication(tmp_path):
+    def restore_twice(root, state):
+        save_runtime_state(root, state)
+        first = start_or_restore_runtime(root)
+        save_runtime_state(root, first)
+        second = start_or_restore_runtime(root)
+        assert first.as_record() == second.as_record()
+        return second
+
+    provider_root = tmp_path / "provider-approved"
+    state = start_or_restore_runtime(provider_root)
+    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=provider_root, run_background_cycle=False).state
+    state = _with_local_insufficiency(state, provider_root)
+    state = request_provider_learning_packet(state, "Request a provider learning packet.", runtime_root=provider_root).state
+    provider_approved = resolve_pending_chat_request(state, "Approve.", runtime_root=provider_root).state
+    restored_provider = restore_twice(provider_root, provider_approved)
+    assert restored_provider.pending_chat_requests == ()
+    assert len(restored_provider.provider_authorities) == 1
+    assert len(restored_provider.resolved_chat_requests) == 1
+    assert restored_provider.resolved_chat_requests[0].consumption_count == 1
+
+    denial_root = tmp_path / "provider-denied"
+    state = start_or_restore_runtime(denial_root)
+    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=denial_root, run_background_cycle=False).state
+    state = _with_local_insufficiency(state, denial_root)
+    state = request_provider_learning_packet(state, "Request a provider learning packet.", runtime_root=denial_root).state
+    provider_denied = resolve_pending_chat_request(state, "No, continue locally.", runtime_root=denial_root).state
+    restored_denial = restore_twice(denial_root, provider_denied)
+    assert restored_denial.pending_chat_requests == ()
+    assert restored_denial.provider_authorities == ()
+    assert restored_denial.resolved_chat_requests[0].status == "denied"
+
+    adoption_root = tmp_path / "adoption-approved"
+    state = start_or_restore_runtime(adoption_root)
+    state = handle_conversational_message(state, FOREGROUND_CAMPAIGN_GOAL, runtime_root=adoption_root, run_background_cycle=False).state
+    reviewed, _review, _request = render_structured_discourse_capability_review(state, runtime_root=adoption_root)
+    adopted = resolve_pending_chat_request(reviewed, "Adopt it and restart.", runtime_root=adoption_root).state
+    restored_adoption = restore_twice(adoption_root, adopted)
+    assert restored_adoption.pending_chat_requests == ()
+    assert len(restored_adoption.resolved_chat_requests) == 1
+    assert len(restored_adoption.capability_adoption_records) == 1
+    assert len(restored_adoption.restart_records) == 1
+    assert restored_adoption.capability_registry[-1]["activation_state"] == "active"
+
+    adoption_denied_root = tmp_path / "adoption-denied"
+    state = start_or_restore_runtime(adoption_denied_root)
+    state = handle_conversational_message(state, FOREGROUND_CAMPAIGN_GOAL, runtime_root=adoption_denied_root, run_background_cycle=False).state
+    reviewed, _review, _request = render_structured_discourse_capability_review(state, runtime_root=adoption_denied_root)
+    denied = resolve_pending_chat_request(reviewed, "No, keep the current behavior.", runtime_root=adoption_denied_root).state
+    restored_adoption_denied = restore_twice(adoption_denied_root, denied)
+    assert restored_adoption_denied.pending_chat_requests == ()
+    assert restored_adoption_denied.capability_adoption_records == ()
+    assert restored_adoption_denied.restart_records == ()
+    assert restored_adoption_denied.resolved_chat_requests[0].status == "denied"
+
+    multi_root = tmp_path / "multiple-pending-paused-lanes"
+    state = start_or_restore_runtime(multi_root)
+    knowledge = handle_conversational_message(
+        state,
+        "Your new goal is to study engine efficiency and explain the key tradeoffs.",
+        runtime_root=multi_root,
+        run_background_cycle=False,
+    ).state
+    capability = handle_conversational_message(
+        state,
+        "Your new goal is to improve DELTA's routing around topic switches and reduce regressions.",
+        runtime_root=multi_root,
+        run_background_cycle=False,
+    ).state
+    capability = apply_stop_or_redirect(capability, "Pause the active goal.", runtime_root=multi_root)
+    pending = (
+        ChatAddressableRequest(
+            request_id="restore-reference-pending",
+            request_type="reference_clarification",
+            objective_id=capability.active_objective.objective_id,
+            goal_label="Reference clarification",
+            prompt_text="Which subject?",
+        ),
+        ChatAddressableRequest(
+            request_id="restore-local-model-pending",
+            request_type="local_model_execution",
+            objective_id=capability.active_objective.objective_id,
+            goal_label="Local model permission",
+            prompt_text="Ask local model?",
+            baseline_metrics={"question": "What is frobnicated glim energy?"},
+        ),
+        ChatAddressableRequest(
+            request_id="restore-provider-pending",
+            request_type="provider_authority",
+            objective_id=capability.active_objective.objective_id,
+            goal_label="Provider authority",
+            prompt_text="Approve provider?",
+        ),
+    )
+    queued = capability.conversation[-1].__class__(
+        turn_id="restore-queued-update",
+        role="user",
+        text="Your goal today is also to pay attention to topic switches.",
+        intent_type="goal_or_priority_queued",
+        objective_id=capability.active_objective.objective_id,
+    )
+    capability = replace(capability, conversation=capability.conversation + (queued,), pending_chat_requests=pending)
+    restored_multi = restore_twice(multi_root, capability)
+    assert restored_multi.lifecycle_state == "paused_operator"
+    assert tuple(item.request_id for item in restored_multi.pending_chat_requests) == tuple(item.request_id for item in pending)
+    assert sum(turn.turn_id == "restore-queued-update" for turn in restored_multi.conversation) == 1
+    assert restored_multi.active_objective.provenance["execution_mode"] == "capability_growth_campaign"
+    assert knowledge.active_objective.provenance["execution_mode"] == "knowledge_acquisition"
 
 
 def test_unrelated_factual_question_isolated_from_active_goal(tmp_path):
