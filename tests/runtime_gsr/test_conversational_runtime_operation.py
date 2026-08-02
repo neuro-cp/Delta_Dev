@@ -1,6 +1,7 @@
 from dataclasses import replace
 
 from orchestration.runtime.conversational_runtime_operation import (
+    _knowledge_node_completion_contract,
     apply_stop_or_redirect,
     ChatAddressableRequest,
     chat_feature_settings_schema,
@@ -13,6 +14,7 @@ from orchestration.runtime.conversational_runtime_operation import (
     record_foreground_message_for_reconciliation,
     record_local_semantic_attempt,
     render_structured_discourse_capability_review,
+    render_knowledge_goal_event,
     render_goal_review,
     structured_discourse_capability_metrics,
     request_provider_learning_packet,
@@ -22,6 +24,8 @@ from orchestration.runtime.conversational_runtime_operation import (
     save_runtime_state,
     start_or_restore_runtime,
     stop_active_objective,
+    unrendered_knowledge_goal_events,
+    mark_knowledge_goal_event_rendered,
 )
 
 
@@ -68,6 +72,24 @@ def test_intent_classifier_distinguishes_chat_goal_correction_and_risk(tmp_path)
     assert correction.intent_type == "direct_correction"
     assert "modify_source" in risky.authority_required
     assert "push" in risky.authority_required
+
+
+def test_collection_wording_uses_a_mechanism_completion_contract():
+    contract = _knowledge_node_completion_contract(
+        "how rain barrels collect water",
+        "address how rain barrels collect water",
+    )
+
+    assert contract["contribution_kind"] == "mechanism_path"
+
+
+def test_prevention_wording_uses_an_intervention_completion_contract():
+    contract = _knowledge_node_completion_contract(
+        "how to prevent mosquitoes",
+        "address how to prevent mosquitoes",
+    )
+
+    assert contract["contribution_kind"] == "prevention_intervention"
 
 
 def test_chat_feature_settings_schema_preserves_gpt_style_surface_and_authority():
@@ -856,10 +878,602 @@ def test_goal_lane_selection_separates_knowledge_from_delta_capability_work(tmp_
 
     assert knowledge.state.active_objective.provenance["execution_mode"] == "knowledge_acquisition"
     assert knowledge.state.capability_campaigns == ()
-    assert knowledge.state.active_objective.cycle_budget == 16
+    assert knowledge.state.active_objective.cycle_budget is None
+    assert knowledge.state.active_objective.model_call_budget is None
     assert capability.state.active_objective.provenance["execution_mode"] == "capability_growth_campaign"
     assert capability.state.active_objective.cycle_budget == 24
     assert capability.state.capability_campaigns
+
+
+def test_knowledge_goal_preserves_full_contract_and_frontier_nodes(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    message = (
+        "Your new goal is to study attic ventilation. Study airflow, moisture control, roof temperature, "
+        "common installation constraints, and maintenance checks. Use local cognition and existing local evidence first. "
+        "Ask me only for missing information that materially changes the answer. Continue until budgets are exhausted, "
+        "then give a clear completion, blocking, or remaining-gap report. Do not change source code or restart."
+    )
+
+    result = handle_conversational_message(state, message, runtime_root=tmp_path, run_background_cycle=False)
+    objective = result.state.active_objective
+    episode = read_json(result.state.active_episode_path)
+    contract = objective.provenance["knowledge_contract"]
+    frontier = [item for item in episode["evidence"] if item["kind"] == "knowledge_frontier_node"]
+
+    assert objective.provenance["execution_mode"] == "knowledge_acquisition"
+    assert objective.operator_wording == message
+    assert contract["full_operator_wording"] == message
+    assert "source code changes" in contract["prohibited_actions"]
+    assert "restart" in contract["prohibited_actions"]
+    assert any("airflow" in item for item in contract["requested_subtopics"])
+    assert any("maintenance checks" in item for item in contract["requested_subtopics"])
+    assert any("address airflow" == item for item in objective.practical_success_indicators)
+    assert episode["title"] == "Knowledge acquisition objective"
+    assert "correction-linked" not in episode["goals"][0]["expected_state"]
+    assert len(frontier) >= 4
+
+
+def test_knowledge_goal_normalizes_weak_surface_fragments(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    message = (
+        "Your new goal is to build a local knowledge map of compact appliances. "
+        "Study how they work, maintenance, and when a simpler appliance may be a better fit."
+    )
+
+    result = handle_conversational_message(state, message, runtime_root=tmp_path, run_background_cycle=False)
+    contract = result.state.active_objective.provenance["knowledge_contract"]
+
+    assert "they work" not in contract["requested_subtopics"]
+    assert any("operating principle of compact appliances" == item for item in contract["requested_subtopics"])
+    assert any(item == "conditions when a simpler appliance may be a better fit" for item in contract["requested_subtopics"])
+
+
+def test_colon_delimited_goal_preserves_every_material_clause(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    message = (
+        "Your new goal is to understand rain barrels: how they collect water, how overflow works, "
+        "and how to prevent mosquitoes. Use local cognition first. Give a short completion or remaining-gap report."
+    )
+
+    result = handle_conversational_message(state, message, runtime_root=tmp_path, run_background_cycle=False)
+    contract = result.state.active_objective.provenance["knowledge_contract"]
+    episode = read_json(result.state.active_episode_path)
+    frontier = [item for item in episode["evidence"] if item["kind"] == "knowledge_frontier_node"]
+
+    assert contract["requested_subtopics"] == (
+        "how they collect water",
+        "how overflow works",
+        "how to prevent mosquitoes",
+    )
+    assert [item["text"] for item in contract["material_requirements"]] == list(contract["requested_subtopics"])
+    assert len(frontier) == 3
+    assert all("material_requirement_id" in item["content"] for item in frontier)
+    frontier_event = next(item for item in result.state.objective_progress if item.get("event_type") == "knowledge_frontier_created")
+    assert frontier_event["progress_counters"]["criteria_total"] == 3
+
+
+def test_terminal_completion_requires_all_material_requirements(tmp_path):
+    class RainBarrelRunner:
+        model_identity = "qwen-test"
+
+        def __call__(self, request, packet):
+            node = packet.active_focus["active_frontier_node"]
+            label = node["label"]
+            if "collect" in label:
+                statement = "Rain barrels collect roof runoff through a downspout because gravity directs water into storage."
+            elif "overflow" in label:
+                statement = "Rain barrel overflow occurs when incoming flow exceeds outlet discharge, so an overflow hose redirects excess water away from the foundation."
+            else:
+                statement = "A screened inlet and sealed lid prevent mosquitoes from reaching standing water because they block access for egg laying."
+            return {
+                "operation_result_type": request.operation_type + "_result",
+                "hypothesis_statement": statement,
+                "scope": label,
+                "interpretation": statement,
+                "supporting_evidence_refs": [node["node_id"]],
+                "assumptions": [],
+                "expected_observations": [],
+                "uncertainty": "installation details vary",
+                "recommended_state_transition": "propose_hypothesis",
+            }
+
+    state = handle_conversational_message(
+        start_or_restore_runtime(tmp_path),
+        "Your new goal is to understand rain barrels: how they collect water, how overflow works, and how to prevent mosquitoes.",
+        runtime_root=tmp_path,
+        run_background_cycle=False,
+    ).state
+    for index in range(4):
+        state = run_background_objective_cycle(state, runtime_root=tmp_path, reason=f"rain-barrel-{index}", model_runner=RainBarrelRunner())
+        if any(item.get("event") == "knowledge_goal_terminal_report" for item in state.objective_progress):
+            break
+
+    report = next(item for item in state.objective_progress if item.get("event") == "knowledge_goal_terminal_report")
+    assert report["status"] == "completed"
+    assert report["stop_reason"] == "all_material_requirements_satisfied"
+    assert report["material_requirements_total"] == report["material_requirements_satisfied"] == 3
+    assert report["remaining_gaps"] == ()
+
+
+def test_knowledge_frontier_advances_without_repeating_same_focus(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(
+        state,
+        "Your new goal is to study small wind turbines. Study siting, maintenance, cost, and grid connection.",
+        runtime_root=tmp_path,
+        run_background_cycle=False,
+    ).state
+
+    first = run_background_objective_cycle(state, runtime_root=tmp_path, reason="frontier-1")
+    second = run_background_objective_cycle(first, runtime_root=tmp_path, reason="frontier-2")
+    episode = read_json(second.active_episode_path)
+    focus_ids = [item["focus_id"] for item in episode["operation_requests"]]
+    operation_types = [item["operation_type"] for item in episode["operation_requests"]]
+    focus_descriptions = [item["active_focus"]["description"] for item in episode["working_memory_packets"]]
+
+    assert len(focus_ids) == 2
+    assert len(set(focus_ids)) == 2
+    assert operation_types == ["formulate_hypothesis", "formulate_hypothesis"]
+    assert all("Resolve knowledge frontier" in item for item in focus_descriptions)
+
+
+def test_knowledge_goal_continues_after_single_rejected_frontier_node(tmp_path):
+    class FirstBadThenGood:
+        model_identity = "qwen-test"
+
+        def __call__(self, request, packet):
+            node = packet.active_focus["active_frontier_node"]
+            if "airflow" in node["label"] and not packet.active_focus.get("prior_rejection_reasons"):
+                return {
+                    "operation_result_type": "formulate_hypothesis_result",
+                    "hypothesis_statement": "An unrelated answer about paint color.",
+                    "scope": "paint color",
+                    "interpretation": "Paint color is unrelated to the active node.",
+                    "supporting_evidence_refs": ["operator-natural-goal"],
+                    "assumptions": ["unrelated"],
+                    "expected_observations": ["unrelated"],
+                    "uncertainty": "misaligned",
+                    "recommended_state_transition": "propose_hypothesis",
+                }
+            return {
+                "operation_result_type": "formulate_hypothesis_result",
+                "hypothesis_statement": f"{node['label']} determines the practical ventilation design constraints.",
+                "scope": node["label"],
+                "interpretation": f"{node['label']} determines the practical ventilation design constraints.",
+                "supporting_evidence_refs": ["operator-natural-goal"],
+                "assumptions": [f"{node['label']} can be evaluated independently"],
+                "expected_observations": [f"{node['label']} changes the design recommendation"],
+                "uncertainty": "site details",
+                "recommended_state_transition": "propose_hypothesis",
+            }
+
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(
+        state,
+        "Your new goal is to study attic ventilation. Study airflow, moisture control, and maintenance checks.",
+        runtime_root=tmp_path,
+        run_background_cycle=False,
+    ).state
+    first = run_background_objective_cycle(state, runtime_root=tmp_path, reason="reject-one", model_runner=FirstBadThenGood())
+    second = run_background_objective_cycle(first, runtime_root=tmp_path, reason="continue-next", model_runner=FirstBadThenGood())
+    episode = read_json(second.active_episode_path)
+
+    assert first.lifecycle_state == "running"
+    assert second.lifecycle_state == "running"
+    assert not any(item.get("event") == "knowledge_goal_terminal_report" for item in second.objective_progress)
+    assert len(episode["operation_results"]) == 2
+    assert episode["operation_results"][0]["accepted"] is False
+    assert episode["operation_results"][1]["accepted"] is True
+    assert episode["cycles"][0]["focus_id"] == episode["cycles"][1]["focus_id"]
+    assert episode["operation_requests"][1]["operation_type"] == "reformulate_node_specific_hypothesis"
+    assert episode["working_memory_packets"][0]["active_focus"]["active_frontier_node"]["node_id"] == episode["working_memory_packets"][1]["active_focus"]["active_frontier_node"]["node_id"]
+    first_events = unrendered_knowledge_goal_events(first)
+    retry_event = next(item for item in first_events if item["event_type"] == "knowledge_node_retry_scheduled")
+    assert retry_event["progress_counters"]["retryable_nodes"] == 1
+    assert retry_event["progress_counters"]["unresolved_nodes"] == 3
+    assert "Retry scheduled" in retry_event["summary"]
+    all_events = unrendered_knowledge_goal_events(second)
+    retry_started = next(
+        item for item in all_events
+        if item["event_type"] == "local_model_request_started"
+        and item["model_request_id"] == episode["operation_requests"][1]["operation_id"]
+    )
+    retry_packet = next(
+        item for item in all_events
+        if item["event_type"] == "evidence_packet_prepared"
+        and "retry evidence packet" in item["summary"]
+    )
+    assert retry_started["progress_counters"]["active_node_index"] == 1
+    assert retry_packet["node_id"] == retry_started["node_id"]
+
+
+def test_knowledge_goal_emits_frontier_event_once_and_renders_counters(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(
+        state,
+        "Your new goal is to study attic ventilation. Study airflow, moisture control, roof temperature, and maintenance checks.",
+        runtime_root=tmp_path,
+        run_background_cycle=False,
+    ).state
+
+    events = unrendered_knowledge_goal_events(state)
+    frontier = [item for item in events if item["event_type"] == "knowledge_frontier_created"]
+
+    assert len(frontier) == 1
+    rendered = render_knowledge_goal_event(frontier[0], state.active_objective)
+    assert "[Goal activity" in rendered
+    assert "Created" in rendered
+    assert "Progress:" in rendered
+    assert "CONTEXT_JSON" not in rendered
+    marked = mark_knowledge_goal_event_rendered(state, frontier[0]["event_id"], runtime_root=tmp_path)
+    restored = start_or_restore_runtime(tmp_path)
+    assert unrendered_knowledge_goal_events(marked) == tuple(item for item in events if item["event_id"] != frontier[0]["event_id"])
+    assert unrendered_knowledge_goal_events(restored) == unrendered_knowledge_goal_events(marked)
+
+
+def test_knowledge_cycle_emits_node_model_result_and_update_events(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(
+        state,
+        "Your new goal is to study small wind turbines. Study siting, maintenance, cost, and grid connection.",
+        runtime_root=tmp_path,
+        run_background_cycle=False,
+    ).state
+    state = run_background_objective_cycle(state, runtime_root=tmp_path, reason="frontier-event-cycle")
+    visible_types = [item["event_type"] for item in unrendered_knowledge_goal_events(state)]
+
+    assert "knowledge_frontier_created" in visible_types
+    assert "knowledge_node_selected" in visible_types
+    assert "evidence_packet_prepared" in visible_types
+    assert "local_model_request_started" in visible_types
+    assert "local_model_response_received" in visible_types
+    assert "knowledge_claims_extracted" in visible_types
+    assert "knowledge_understanding_updated" in visible_types
+    assert "knowledge_node_completed" in visible_types
+    model_event = next(item for item in unrendered_knowledge_goal_events(state) if item["event_type"] == "local_model_request_started")
+    assert model_event["model_request_id"]
+    assert model_event["model_identity"]
+    assert "prompt" not in render_knowledge_goal_event(model_event, state.active_objective).lower()
+    selected = next(item for item in unrendered_knowledge_goal_events(state) if item["event_type"] == "knowledge_node_selected")
+    packet = next(item for item in unrendered_knowledge_goal_events(state) if item["event_type"] == "evidence_packet_prepared")
+    for event in (selected, packet, model_event):
+        assert event["progress_counters"]["frontier_nodes_completed"] == 0
+        assert event["progress_counters"]["criteria_satisfied"] == 0
+        assert event["progress_counters"]["model_calls_used"] == 0
+
+
+def test_local_model_result_render_includes_bounded_output_and_delta_interpretation(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(
+        state,
+        "Your new goal is to study small wind turbines. Study siting and maintenance.",
+        runtime_root=tmp_path,
+        run_background_cycle=False,
+    ).state
+    state = run_background_objective_cycle(state, runtime_root=tmp_path, reason="model-output-visible")
+    event = next(item for item in unrendered_knowledge_goal_events(state) if item["event_type"] == "local_model_response_received")
+    rendered = render_knowledge_goal_event(event, state.active_objective)
+
+    assert "Model output:" in rendered
+    assert "DELTA interpretation:" in rendered
+    assert "Local evaluation:" in rendered
+    assert "CONTEXT_JSON" not in rendered
+    assert "OUTPUT CONTRACT" not in rendered
+    assert len(rendered) < 1400
+
+
+def test_accepted_knowledge_event_names_claims_and_relationships(tmp_path):
+    class RelationshipRunner:
+        model_identity = "qwen-test"
+
+        def __call__(self, request, packet):
+            node = packet.active_focus["active_frontier_node"]
+            label = node["label"]
+            return {
+                "operation_result_type": "formulate_hypothesis_result",
+                "hypothesis_statement": f"{label} affects battery-backup sizing decisions.",
+                "scope": label,
+                "interpretation": f"{label} affects battery-backup sizing because higher demand increases required reserve capacity.",
+                "evidence_refs": [node["node_id"]],
+                "contrary_evidence_considered": [],
+                "assumptions": [f"{label} depends on the household load profile."],
+                "expected_observations": [f"Changing {label} changes required backup duration."],
+                "uncertainty": "home load details",
+                "recommended_state_transition": "propose_hypothesis",
+                "raw_model_output": (
+                    '{"hypothesis_statement":"'
+                    + label
+                    + ' affects sizing; household demand increases reserve capacity.",'
+                    + '"scope":"'
+                    + label
+                    + '"}'
+                ),
+                "model_identity": self.model_identity,
+            }
+
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(
+        state,
+        "Your new goal is to study residential battery backups. Study household demand and inverter sizing.",
+        runtime_root=tmp_path,
+        run_background_cycle=False,
+    ).state
+    state = run_background_objective_cycle(state, runtime_root=tmp_path, reason="relationship-visible", model_runner=RelationshipRunner())
+    event = next(item for item in unrendered_knowledge_goal_events(state) if item["event_type"] == "knowledge_claims_extracted")
+    rendered = render_knowledge_goal_event(event, state.active_objective)
+
+    assert "Accepted claims:" in rendered
+    assert "Relationship-like statements:" not in rendered
+    assert "claim-like output" not in rendered
+    assert '{"hypothesis_statement"' not in rendered
+    assert "depends on the household load profile" not in rendered
+    assert "affects battery-backup sizing" in rendered
+
+
+def test_rejected_knowledge_output_emits_rejection_without_progress_claim(tmp_path):
+    class MisalignedRunner:
+        model_identity = "qwen-test"
+
+        def __call__(self, request, packet):
+            return {
+                "operation_result_type": "formulate_hypothesis_result",
+                "hypothesis_statement": "Capacity and outage-duration tradeoffs determine runtime.",
+                "scope": "capacity and outage-duration tradeoffs",
+                "interpretation": "Capacity and outage-duration tradeoffs determine runtime.",
+                "evidence_refs": ["operator-natural-goal"],
+                "contrary_evidence_considered": [],
+                "assumptions": ["capacity is finite"],
+                "expected_observations": ["larger loads reduce runtime"],
+                "uncertainty": "load profile",
+                "recommended_state_transition": "propose_hypothesis",
+            }
+
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(
+        state,
+        "Your new goal is to study residential battery backup systems. Study inverter size and transfer equipment.",
+        runtime_root=tmp_path,
+        run_background_cycle=False,
+    ).state
+    state = run_background_objective_cycle(state, runtime_root=tmp_path, reason="misaligned", model_runner=MisalignedRunner())
+    events = unrendered_knowledge_goal_events(state)
+    rejected = next(item for item in events if item["event_type"] == "local_model_response_rejected")
+    text = render_knowledge_goal_event(rejected, state.active_objective)
+
+    assert "Response rejected" in text
+    assert "understanding increased" not in text.lower()
+    assert not any(item["event_type"] == "knowledge_node_completed" for item in events)
+    counters = rejected["progress_counters"]
+    assert counters["frontier_nodes_completed"] == 0
+    assert counters["blocked_nodes"] == 0
+    assert counters["retryable_nodes"] == 1
+
+
+def test_knowledge_budget_exhaustion_renders_terminal_gap_report(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(
+        state,
+        "Your new goal is to study basement insulation. Study moisture, R value, costs, and installation constraints.",
+        runtime_root=tmp_path,
+        run_background_cycle=False,
+    ).state
+    state = replace(state, active_objective=replace(state.active_objective, cycle_budget=1, model_call_budget=1))
+    state = run_background_objective_cycle(state, runtime_root=tmp_path, reason="one-cycle")
+
+    assert any(item.get("event") == "knowledge_goal_terminal_report" for item in state.objective_progress)
+    request = state.pending_chat_requests[-1]
+    assert request.request_type == "knowledge_model_budget_increase"
+    assert request.objective_id == state.active_objective.objective_id
+    assert "Model calls: 1/1" in request.prompt_text
+    approved = resolve_pending_chat_request(state, "Yes", runtime_root=tmp_path)
+    assert approved is not None
+    assert approved.state.lifecycle_state == "running"
+    assert approved.state.active_objective.model_call_budget == request.max_calls
+    assert approved.state.pending_chat_requests == ()
+    assert approved.state.resolved_chat_requests[-1].request_id == request.request_id
+    assert review_status_for_goal_completion(state) == "knowledge_terminal_report"
+    reviewed, text = render_goal_review(state)
+    assert "Remaining gaps:" in text
+    assert reviewed.goal_reviews[-1]["status"] == "knowledge_terminal_report"
+
+
+def test_oversized_knowledge_goal_starts_without_preflight_budget_request_when_local_mode_is_unlimited(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    message = (
+        "Your new goal is to build a local knowledge map of residential rainwater systems. "
+        "Study operating principle, catchment, gutters, first flush, filtration, storage, pumps, pressure, potable use, "
+        "non-potable use, freeze protection, mosquito control, overflow, drainage, maintenance, failure modes, permitting, climate, demand, recommendations, roof materials, controls, inspection, seasonal operation, and water treatment."
+    )
+
+    result = handle_conversational_message(state, message, runtime_root=tmp_path, run_background_cycle=True)
+
+    assert result.state.lifecycle_state == "running"
+    assert result.background_cycle_started is True
+    assert result.state.pending_chat_requests == ()
+    assert "[Budget boundary]" not in result.reply
+
+
+def test_knowledge_budget_yes_increases_only_active_goal_budget(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(
+        state,
+        "Your new goal is to build a local knowledge map of residential rainwater systems. Study catchment, storage, and overflow.",
+        runtime_root=tmp_path,
+        run_background_cycle=False,
+    ).state
+    state = replace(state, active_objective=replace(state.active_objective, cycle_budget=1, model_call_budget=1))
+    state = run_background_objective_cycle(state, runtime_root=tmp_path, reason="bounded-budget-fixture")
+    old_budget = state.active_objective.model_call_budget
+
+    approved = resolve_pending_chat_request(state, "Yes", runtime_root=tmp_path)
+
+    assert approved is not None
+    assert approved.state.lifecycle_state == "running"
+    assert approved.state.active_objective.model_call_budget > old_budget
+    assert approved.state.active_objective.provenance["temporary_model_call_budget"]["scope"] == "active_goal_only"
+    assert approved.state.pending_chat_requests == ()
+    frontier_event = next(item for item in approved.state.objective_progress if item.get("event_type") == "knowledge_frontier_created")
+    assert frontier_event["progress_counters"]["model_call_budget"] == approved.state.active_objective.model_call_budget
+
+
+def test_knowledge_budget_no_stops_with_partial_report(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(
+        state,
+        "Your new goal is to build a local knowledge map of residential rainwater systems. Study catchment, storage, and overflow.",
+        runtime_root=tmp_path,
+        run_background_cycle=False,
+    ).state
+    state = replace(state, active_objective=replace(state.active_objective, cycle_budget=1, model_call_budget=1))
+    state = run_background_objective_cycle(state, runtime_root=tmp_path, reason="bounded-budget-fixture")
+
+    denied = resolve_pending_chat_request(state, "No", runtime_root=tmp_path)
+
+    assert denied is not None
+    assert denied.state.lifecycle_state == "paused_budget"
+    assert denied.state.pending_chat_requests == ()
+    assert denied.state.resolved_chat_requests[-1].resolution_policy == "denied_stop_with_partial_report"
+
+
+def test_unlimited_local_knowledge_goal_runs_past_old_call_boundaries_without_budget_request(tmp_path):
+    class RetryThenSpecificRunner:
+        model_identity = "qwen-test"
+
+        def __call__(self, request, packet):
+            node = packet.active_focus["active_frontier_node"]
+            if not packet.active_focus.get("retry_attempt"):
+                return {
+                    "operation_result_type": request.operation_type + "_result",
+                    "hypothesis_statement": f"{node['label']} has a node-specific but incomplete first-pass statement.",
+                    "scope": node["label"],
+                    "interpretation": f"{node['label']} has a node-specific but incomplete first-pass statement.",
+                    "supporting_evidence_refs": ["operator-natural-goal"],
+                    "assumptions": [],
+                    "expected_observations": [],
+                    "uncertainty": "generic",
+                    "recommended_state_transition": "propose_hypothesis",
+                }
+            label = node["label"]
+            return {
+                "operation_result_type": request.operation_type + "_result",
+                "hypothesis_statement": f"{label} depends on component capacity, operating demand, and installation constraints because each changes the required design decision.",
+                "scope": label,
+                "interpretation": f"{label} depends on component capacity, operating demand, and installation constraints because each changes the required design decision.",
+                "supporting_evidence_refs": [node["node_id"]],
+                "assumptions": ["site details vary"],
+                "expected_observations": ["changing demand changes the required design decision"],
+                "uncertainty": "site-specific measurements remain unknown",
+                "recommended_state_transition": "propose_hypothesis",
+            }
+
+    topics = ", ".join(
+        " ".join(f"term{index}{suffix}" for suffix in ("alpha", "beta", "gamma", "delta", "epsilon", "zeta", "eta", "theta"))
+        for index in range(1, 23)
+    )
+    state = handle_conversational_message(
+        start_or_restore_runtime(tmp_path),
+        f"Your new goal is to build a local knowledge map of long local study. Study {topics}.",
+        runtime_root=tmp_path,
+        run_background_cycle=False,
+    ).state
+
+    assert state.active_objective.model_call_budget is None
+    assert state.active_objective.cycle_budget is None
+    for index in range(50):
+        state = run_background_objective_cycle(state, runtime_root=tmp_path, reason=f"unlimited-{index}", model_runner=RetryThenSpecificRunner())
+        if any(item.get("event") == "knowledge_goal_terminal_report" for item in state.objective_progress):
+            break
+
+    report = next(item for item in state.objective_progress if item.get("event") == "knowledge_goal_terminal_report")
+    assert report["model_calls_used"] > 39
+    assert report["model_call_budget"] is None
+    assert report["stop_reason"] != "model_call_budget_exhausted"
+    assert not any(item.request_type == "knowledge_model_budget_increase" for item in state.pending_chat_requests)
+
+
+def test_knowledge_terminal_report_dedupes_findings_and_names_budget_exhaustion(tmp_path):
+    class DuplicateRunner:
+        model_identity = "qwen-test"
+
+        def __call__(self, request, packet):
+            node = packet.active_focus["active_frontier_node"]
+            label = node["label"]
+            if "sizing" in label:
+                statement = (
+                    f"{label} must relate stored volume to expected demand and desired outage duration "
+                    "because higher demand drains a fixed capacity sooner."
+                )
+            else:
+                statement = (
+                    f"{label} depends on site conditions, component constraints, and inspection cadence "
+                    "because each changes the local verification path."
+                )
+            return {
+                "operation_result_type": "formulate_hypothesis_result",
+                "hypothesis_statement": statement,
+                "scope": label,
+                "interpretation": "Storage sizing, overflow planning, and maintenance checks share one recurring inspection cadence.",
+                "evidence_refs": [node["node_id"]],
+                "contrary_evidence_considered": [],
+                "assumptions": [f"{node['label']} can be checked locally"],
+                "expected_observations": [f"{node['label']} evidence remains visible"],
+                "uncertainty": "home details",
+                "recommended_state_transition": "propose_hypothesis",
+                "raw_model_output": "duplicate",
+                "model_identity": self.model_identity,
+            }
+
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(
+        state,
+        "Your new goal is to study compact rain barrels. Study storage sizing, overflow planning, and maintenance checks.",
+        runtime_root=tmp_path,
+        run_background_cycle=False,
+    ).state
+    state = replace(state, active_objective=replace(state.active_objective, cycle_budget=2, model_call_budget=2))
+    state = run_background_objective_cycle(state, runtime_root=tmp_path, reason="dedupe-1", model_runner=DuplicateRunner())
+    state = run_background_objective_cycle(state, runtime_root=tmp_path, reason="dedupe-2", model_runner=DuplicateRunner())
+
+    report = next(item for item in state.objective_progress if item.get("event") == "knowledge_goal_terminal_report")
+    _reviewed, text = render_goal_review(state)
+
+    assert report["stop_reason"] == "model_call_budget_exhausted"
+    assert len(report["accepted_findings"]) == 1
+    assert "Stopped because: model_call_budget_exhausted" in text
+    assert "Model calls: 2/2" in text
+
+
+def test_knowledge_model_failure_reports_blocked_not_satisfied(tmp_path):
+    class FailingRunner:
+        model_identity = "failing-local-model"
+
+        def __call__(self, request, packet):
+            return {
+                "operation_result_type": request.operation_type + "_unavailable",
+                "interpretation": "Local model execution did not complete: ModuleNotFoundError: No module named 'llama_cpp'",
+                "supporting_evidence_refs": tuple(item["evidence_id"] for item in packet.relevant_evidence),
+                "evidence_refs": tuple(item["evidence_id"] for item in packet.relevant_evidence),
+                "assumptions": ["No concept progress should be accepted without model output."],
+                "expected_observations": ["A working local model should return typed output."],
+                "uncertainty": "local_model_execution_exception",
+                "recommended_state_transition": "declare_insufficient_evidence",
+            }
+
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(
+        state,
+        "Your new goal is to study garage ventilation. Study airflow and moisture control.",
+        runtime_root=tmp_path,
+        run_background_cycle=False,
+    ).state
+    state = run_background_objective_cycle(state, runtime_root=tmp_path, reason="model-failure", model_runner=FailingRunner())
+    report = next(item for item in state.objective_progress if item.get("event") == "knowledge_goal_terminal_report")
+    _reviewed, text = render_goal_review(state)
+
+    assert report["status"] == "blocked_capability"
+    assert report["criteria_satisfied"] == ()
+    assert "ModuleNotFoundError" in text
+    assert "Satisfied criteria:\n- none yet" in text
 
 
 def test_composition_state_round_trips_without_duplicate_requests_or_lanes(tmp_path):

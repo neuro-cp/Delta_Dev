@@ -1,6 +1,6 @@
 {
   "discovery": {
-    "available_model_count": 15,
+    "available_model_count": 11,
     "lane_order": {
       "coding_technical": [
         "qwen",
@@ -158,32 +158,6 @@
       },
       {
         "capabilities": [
-          "text",
-          "vision"
-        ],
-        "context_size": 8192,
-        "cost_latency_class": "local_gguf_tier_2",
-        "display_name": "ministral-3-3b-instruct-2512-gguf-ministral-3-3b-instruct-2512-q4-k-m",
-        "family": "ministral",
-        "model_id": "ministral-3-3b-instruct-2512-gguf-ministral-3-3b-instruct-2512-q4-k-m",
-        "provider": "local_gguf",
-        "tier": 2
-      },
-      {
-        "capabilities": [
-          "text",
-          "vision"
-        ],
-        "context_size": 8192,
-        "cost_latency_class": "local_gguf_tier_2",
-        "display_name": "ministral-3-3b-instruct-2512-gguf-ministral-3-3b-instruct-2512-q6-k",
-        "family": "ministral",
-        "model_id": "ministral-3-3b-instruct-2512-gguf-ministral-3-3b-instruct-2512-q6-k",
-        "provider": "local_gguf",
-        "tier": 2
-      },
-      {
-        "capabilities": [
           "text"
         ],
         "context_size": 8192,
@@ -234,18 +208,6 @@
         "capabilities": [
           "text"
         ],
-        "context_size": 8192,
-        "cost_latency_class": "local_gguf_tier_2",
-        "display_name": "phi-4-mini-reasoning-gguf-phi-4-mini-reasoning-q4-k-m",
-        "family": "phi4",
-        "model_id": "phi-4-mini-reasoning-gguf-phi-4-mini-reasoning-q4-k-m",
-        "provider": "local_gguf",
-        "tier": 2
-      },
-      {
-        "capabilities": [
-          "text"
-        ],
         "context_size": 4096,
         "cost_latency_class": "local_gguf_tier_1",
         "display_name": "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m",
@@ -258,22 +220,9 @@
         "capabilities": [
           "text"
         ],
-        "context_size": 8192,
-        "cost_latency_class": "local_gguf_tier_2",
-        "display_name": "phi-4-mini-reasoning-gguf-phi-4-mini-reasoning-q4-k-m",
-        "family": "phi4",
-        "model_id": "phi4",
-        "provider": "local_gguf",
-        "tier": 2
-      },
-      {
-        "capabilities": [
-          "text",
-          "vision"
-        ],
         "context_size": 32768,
         "cost_latency_class": "local_gguf_tier_3",
-        "display_name": "qwen3-5-9b-gguf-qwen3-5-9b-q4-k-m",
+        "display_name": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
         "family": "qwen",
         "model_id": "qwen",
         "provider": "local_gguf",
@@ -293,14 +242,13 @@
       },
       {
         "capabilities": [
-          "text",
-          "vision"
+          "text"
         ],
         "context_size": 32768,
         "cost_latency_class": "local_gguf_tier_3",
-        "display_name": "qwen2-5-vl-7b-instruct-gguf-qwen2-5-vl-7b-instruct-q4-k-m",
+        "display_name": "qwen2-5-coder-7b-instruct-gguf-qwen2-5-coder-7b-instruct-q4-k-m",
         "family": "qwen",
-        "model_id": "qwen2-5-vl-7b-instruct-gguf-qwen2-5-vl-7b-instruct-q4-k-m",
+        "model_id": "qwen2-5-coder-7b-instruct-gguf-qwen2-5-coder-7b-instruct-q4-k-m",
         "provider": "local_gguf",
         "tier": 3
       },

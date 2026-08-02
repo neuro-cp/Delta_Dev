@@ -78,6 +78,11 @@ def test_delta_goal_campaign_panel_is_visible_without_model_call(monkeypatch):
             "follow",
         }
         assert "GOAL_ORIENTED_UI_EXPERIMENT_CAMPAIGN_1" in app.goal_ui_campaign_status.get()
+        developer_tabs = {app.developer_notebook.tab(tab_id, "text") for tab_id in app.developer_notebook.tabs()}
+        assert "Consolidation" in developer_tabs
+        assert app.consolidation_episode_tree.winfo_exists()
+        assert app.consolidation_claim_tree.winfo_exists()
+        assert "recorded" in app.consolidation_episode_tree.cget("columns")
     finally:
         root.destroy()
 

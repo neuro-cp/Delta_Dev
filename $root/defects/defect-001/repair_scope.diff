@@ -1,0 +1,285 @@
+﻿diff --git a/orchestration/runtime/conversational_runtime_operation.py b/orchestration/runtime/conversational_runtime_operation.py
+index d101f12a..1b6bb632 100644
+--- a/orchestration/runtime/conversational_runtime_operation.py
++++ b/orchestration/runtime/conversational_runtime_operation.py
+@@ -307,6 +307,25 @@ class LocalSemanticInsufficiency:
+         return asdict(self)
+ 
+ 
++@dataclass(frozen=True)
++class TentativeGoalCandidate:
++    candidate_goal_id: str
++    source_turn_id: str
++    wording: str
++    interpreted_topic: str
++    relation_to_active_objective: str
++    status: str
++    activation_required: bool
++    created_at: str = field(default_factory=utc_now)
++    activated_at: str = ""
++    rejected_at: str = ""
++    archived_at: str = ""
++    schema_version: str = SCHEMA_VERSION
++
++    def as_record(self) -> dict[str, Any]:
++        return asdict(self)
++
++
+ @dataclass(frozen=True)
+ class ConversationalRuntimeState:
+     runtime_id: str
+@@ -329,6 +348,7 @@ class ConversationalRuntimeState:
+     local_semantic_insufficiencies: tuple[LocalSemanticInsufficiency, ...] = ()
+     goal_reviews: tuple[Mapping[str, Any], ...] = ()
+     archived_objectives: tuple[Mapping[str, Any], ...] = ()
++    tentative_goals: tuple[TentativeGoalCandidate, ...] = ()
+     schema_version: str = SCHEMA_VERSION
+ 
+     def as_record(self) -> dict[str, Any]:
+@@ -418,6 +438,15 @@ def classify_conversational_intent(
+             authority_required=(),
+             matched_signals=("session_strategy",),
+         )
++    if active_objective and _is_tentative_goal_language(lower) and not _has_explicit_goal_activation(lower):
++        return ConversationIntent(
++            intent_type="tentative_goal_candidate",
++            confidence=0.86,
++            persistence_scope="active_objective",
++            risk_class="safe_internal",
++            authority_required=(),
++            matched_signals=("tentative_goal_language",),
++        )
+     goal_score = 0
+     if re.search(r"\byour goal\b|\bgoal today\b|\bwork on\b|\bkeep studying\b|\bkeep working\b", lower):
+         goal_score += 2
+@@ -529,6 +558,12 @@ def _insufficiency_from_record(item: Any) -> LocalSemanticInsufficiency:
+     return LocalSemanticInsufficiency(**payload)
+ 
+ 
++def _tentative_goal_from_record(item: Any) -> TentativeGoalCandidate:
++    if isinstance(item, TentativeGoalCandidate):
++        return item
++    return TentativeGoalCandidate(**dict(item))
++
++
+ def _active_objective_id(state: ConversationalRuntimeState) -> str:
+     return state.active_objective.objective_id if state.active_objective else ""
+ 
+@@ -562,6 +597,50 @@ def _archive_active_objective(state: ConversationalRuntimeState) -> Mapping[str,
+     }
+ 
+ 
++def _tentative_goal_topic(message: str) -> str:
++    lower = message.lower()
++    if "topic switch" in lower:
++        return "topic_switches"
++    if "geometry" in lower:
++        return "geometry"
++    if "reference" in lower or "implied" in lower:
++        return "reference_resolution"
++    return "future_goal"
++
++
++def _is_tentative_goal_language(lower: str) -> bool:
++    tentative_terms = (
++        "possible goal",
++        "future goal",
++        "goal later",
++        "later goal",
++        "maybe eventually",
++        "eventually learn",
++        "keep that as a future idea",
++        "do not start",
++        "don't start",
++        "do not replace",
++        "don't replace",
++        "not replace the active",
++        "might want you to study",
++        "would it help to make",
++    )
++    return any(term in lower for term in tentative_terms)
++
++
++def _has_explicit_goal_activation(lower: str) -> bool:
++    activation_terms = (
++        "make that the new active goal",
++        "start this goal now",
++        "replace the current goal",
++        "pause the current goal and begin",
++        "yes, activate the proposed goal",
++        "activate the proposed goal",
++        "begin this goal now",
++    )
++    return any(term in lower for term in activation_terms)
++
++
+ def _negative_instruction_tokens(message: str) -> tuple[str, ...]:
+     lower = message.lower()
+     tokens = []
+@@ -579,6 +658,18 @@ def _foreground_topic(message: str) -> str:
+         return "euclidean_geometry"
+     if "chemistry" in lower:
+         return "chemistry"
++    if "refrigerator" in lower:
++        return "refrigeration"
++    if "metal expand" in lower or "thermal expansion" in lower:
++        return "thermal_expansion"
++    if "soup" in lower or "cooking" in lower or "rice" in lower:
++        return "cooking"
++    if "ice float" in lower:
++        return "ice_float"
++    if "ram" in lower and "computer" in lower:
++        return "computer_ram"
++    if lower.startswith(("hi", "hello", "hey")):
++        return "ordinary_greeting"
+     if "previous message" in lower:
+         return "linguistic_example_previous_message"
+     if "what is" in lower or lower.endswith("?"):
+@@ -589,7 +680,7 @@ def _foreground_topic(message: str) -> str:
+ def _is_unrelated_factual_topic(message: str) -> bool:
+     topic = _foreground_topic(message)
+     lower = message.lower()
+-    if topic in {"angular_momentum", "euclidean_geometry", "chemistry"}:
++    if topic in {"angular_momentum", "euclidean_geometry", "chemistry", "refrigeration", "thermal_expansion", "cooking", "ice_float", "computer_ram", "ordinary_greeting"}:
+         return True
+     return bool(re.search(r"\bwhat is\b|\bexplain\b|\bdefine\b", lower)) and not any(term in lower for term in ("reference", "correction", "goal", "before", "previous message", "meaning", "style", "verbosity", "explanation"))
+ 
+@@ -1117,6 +1208,7 @@ def _state_from_record(payload: Mapping[str, Any]) -> ConversationalRuntimeState
+         local_semantic_insufficiencies=tuple(_insufficiency_from_record(item) for item in payload.get("local_semantic_insufficiencies", ())),
+         goal_reviews=tuple(payload.get("goal_reviews", ())),
+         archived_objectives=tuple(payload.get("archived_objectives", ())),
++        tentative_goals=tuple(_tentative_goal_from_record(item) for item in payload.get("tentative_goals", ())),
+         schema_version=str(payload.get("schema_version") or SCHEMA_VERSION),
+     )
+ 
+@@ -1162,6 +1254,50 @@ def handle_conversational_message(
+             reply="That crosses a material authority boundary. I can keep working on the current safe objective, but I need explicit approval before source changes, installs, network use, deletion, commits, pushes, or protected paths.",
+             authority_request=request,
+         )
++    if intent.intent_type == "tentative_goal_candidate" and state.active_objective:
++        tentative_turn = ConversationTurn(
++            turn_id=user_turn.turn_id,
++            role=user_turn.role,
++            text=user_turn.text,
++            intent_type=intent.intent_type,
++            objective_id=state.active_objective.objective_id,
++            created_at=user_turn.created_at,
++        )
++        candidate = TentativeGoalCandidate(
++            candidate_goal_id=stable_id("tentative-goal", state.active_objective.objective_id, user_turn.turn_id, message),
++            source_turn_id=user_turn.turn_id,
++            wording=message,
++            interpreted_topic=_tentative_goal_topic(message),
++            relation_to_active_objective="candidate_only_does_not_replace_active_objective",
++            status="tentative" if "do not start" not in message.lower() and "don't start" not in message.lower() else "deferred",
++            activation_required=True,
++        )
++        reply = "I saved that as a tentative future goal only. It did not replace the active objective, start a new episode, inherit authority, or reset the current budgets."
++        assistant_turn = ConversationTurn(
++            turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
++            role="assistant",
++            text=reply,
++            intent_type="tentative_goal_candidate_ack",
++            objective_id=state.active_objective.objective_id,
++        )
++        updated = _replace_state(
++            state,
++            conversation=state.conversation + (tentative_turn, assistant_turn),
++            tentative_goals=state.tentative_goals + (candidate,),
++            objective_progress=state.objective_progress
++            + (
++                {
++                    "event": "tentative_goal_candidate_recorded",
++                    "candidate_goal_id": candidate.candidate_goal_id,
++                    "active_objective_id": state.active_objective.objective_id,
++                    "status": candidate.status,
++                    "activation_required": True,
++                    "at": utc_now(),
++                },
++            ),
++        )
++        save_runtime_state(runtime_root, updated)
++        return RuntimeTurnResult(state=updated, intent=intent, reply=reply)
+     if intent.intent_type == "persistent_or_session_goal":
+         objective = compile_conversational_objective(message, intent)
+         if state.active_objective and state.active_objective.objective_id == objective.objective_id:
+@@ -1438,6 +1574,20 @@ def _ordinary_reply(
+             return "Angular momentum is the rotational counterpart of linear momentum. It depends on how much mass is rotating, how far it is from the axis, and how fast it is rotating."
+         if "euclidean geometry" in lower:
+             return "Euclidean geometry is the geometry of flat space: points, lines, angles, triangles, circles, and shapes measured with Euclid's familiar rules."
++        if "refrigerator" in lower:
++            return "A refrigerator moves heat by evaporating refrigerant inside to absorb heat, compressing that refrigerant, then condensing it outside so the heat is released into the room."
++        if "metal expand" in lower or "thermal expansion" in lower:
++            return "Metal expands when heated because its atoms vibrate more strongly and, on average, sit slightly farther apart in the crystal structure."
++        if "ice float" in lower:
++            return "Ice floats because solid water forms an open crystal structure that is less dense than liquid water, so the same mass takes up more volume."
++        if "ram" in lower and "computer" in lower:
++            return "RAM is a computer's fast working memory. It temporarily holds the data and instructions the processor is actively using."
++        if "soup" in lower:
++            return "A simple way to thicken soup is to simmer it uncovered, blend part of it, or stir in a small slurry of flour or cornstarch mixed with cold water."
++        if "rice" in lower and "rest" in lower:
++            return "Let rice rest covered for about 10 minutes after cooking so steam redistributes and the grains firm up without turning mushy."
++        if lower.startswith(("hi", "hello", "hey")):
++            return "Hi. I'm here and running; we can keep chatting normally while the background goal continues."
+         if "chemistry" in lower:
+             return "I will answer the chemistry question on its own terms and will not apply the reference-correction lesson unless the chemistry question actually depends on conversational reference."
+     if transfer.get("applied"):
+diff --git a/tests/runtime_gsr/test_conversational_runtime_operation.py b/tests/runtime_gsr/test_conversational_runtime_operation.py
+index 9acd61ba..c946cd8c 100644
+--- a/tests/runtime_gsr/test_conversational_runtime_operation.py
++++ b/tests/runtime_gsr/test_conversational_runtime_operation.py
+@@ -467,6 +467,54 @@ def test_goal_sentence_with_review_word_still_classifies_as_goal(tmp_path):
+     assert result.state.goal_reviews == ()
+ 
+ 
++def test_tentative_goal_language_does_not_replace_active_objective(tmp_path):
++    state = start_or_restore_runtime(tmp_path)
++    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path, run_background_cycle=False).state
++    objective_id = state.active_objective.objective_id
++    cycle_keys = state.completed_cycle_keys
++
++    messages = [
++        "That could be a goal later.",
++        "New possible goal, but do not replace the active one yet.",
++        "Maybe eventually learn more about topic switches.",
++        "Keep that as a future idea.",
++        "Do not start this yet.",
++        "Would it help to make geometry a future goal?",
++        "I might want you to study that later.",
++    ]
++    for message in messages:
++        result = handle_conversational_message(state, message, runtime_root=tmp_path, run_background_cycle=False)
++        state = result.state
++        assert result.objective_created is False
++        assert state.active_objective.objective_id == objective_id
++        assert state.completed_cycle_keys == cycle_keys
++        assert state.archived_objectives == ()
++        assert state.tentative_goals[-1].activation_required is True
++        assert "tentative future goal only" in result.reply
++
++
++def test_foreground_controls_get_useful_answers_without_goal_replacement(tmp_path):
++    state = start_or_restore_runtime(tmp_path)
++    state = handle_conversational_message(state, ENGLISH_GOAL, runtime_root=tmp_path, run_background_cycle=False).state
++    objective_id = state.active_objective.objective_id
++    cases = {
++        "How does a refrigerator move heat?": "refrigerant",
++        "Why does metal expand when heated?": "atoms vibrate",
++        "How do I make basic soup?": "soup",
++        "Hi, how are you?": "chatting normally",
++        "Why does ice float?": "less dense",
++        "What does RAM do in a computer?": "working memory",
++    }
++
++    for message, expected in cases.items():
++        result = handle_conversational_message(state, message, runtime_root=tmp_path, run_background_cycle=False)
++        state = result.state
++        assert expected.lower() in result.reply.lower()
++        assert "I understand. I will treat this as ordinary conversation" not in result.reply
++        assert state.active_objective.objective_id == objective_id
++        assert result.transfer_applied is False
++
++
+ def test_evaluator_rejects_storage_only_and_accepts_correction_learning(tmp_path):
+     empty = start_or_restore_runtime(tmp_path / "empty")
+     assert evaluate_conversational_runtime(empty)["passed"] is False

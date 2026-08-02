@@ -2,27 +2,27 @@
   "actions": [],
   "attention": {
     "abandonment_reason": "",
-    "active_focus_id": "focus-4f69f9e8f0f5a53f",
-    "active_focus_summary": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+    "active_focus_id": "focus-8c1d7444044f8d98",
+    "active_focus_summary": "Resolve discrepancy for goal: Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first",
     "active_goal_ids": [
-      "active-cognitive-goal-5db245fd5c9b2346"
+      "active-cognitive-goal-87780e03da28e541"
     ],
-    "attention_state_id": "active-attention-55d0d3c560c12a24",
+    "attention_state_id": "active-attention-4488e0dc0bcf0e1b",
     "candidate_focuses": [
       {
         "authority_need": "none_for_local_analysis",
         "blocking_state": "",
         "capability_need": "local_model_semantic_operation",
         "creation_sequence": 3,
-        "description": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+        "description": "Resolve discrepancy for goal: Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first",
         "evidence_need": "local evidence supporting or challenging the goal",
         "evidence_refs": [
           "prior-conversational-episode-3"
         ],
         "expected_value": "useful_progress",
-        "focus_id": "focus-4f69f9e8f0f5a53f",
+        "focus_id": "focus-8c1d7444044f8d98",
         "related_goal_ids": [
-          "active-cognitive-goal-5db245fd5c9b2346"
+          "active-cognitive-goal-87780e03da28e541"
         ],
         "salience_categories": [
           "operator_priority",
@@ -40,13 +40,13 @@
     "evidence_refs": [
       "prior-conversational-episode-3"
     ],
-    "focus_started_at": "2026-07-28T00:06:44+00:00",
+    "focus_started_at": "2026-07-28T23:01:14+00:00",
     "interruption_priority": "none",
     "interruption_reason": "",
-    "last_progress_at": "2026-07-28T00:07:46+00:00",
+    "last_progress_at": "2026-07-28T23:02:24+00:00",
     "previous_focus_ids": [
-      "focus-0326d844003766e1",
-      "focus-b1b7426b59305ddb"
+      "focus-5655a41cb85c5654",
+      "focus-b95b069bf6ddec18"
     ],
     "progress_summary": "selected focus for cognitive operation",
     "return_condition": "",
@@ -61,22 +61,22 @@
     "switch_reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
     "transition_journal": [
       {
-        "at": "2026-07-28T00:06:44+00:00",
-        "focus_id": "focus-0326d844003766e1",
+        "at": "2026-07-28T23:01:14+00:00",
+        "focus_id": "focus-5655a41cb85c5654",
         "reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
         "sequence": 1,
         "transition": "establish_focus"
       },
       {
-        "at": "2026-07-28T00:07:12+00:00",
-        "focus_id": "focus-b1b7426b59305ddb",
+        "at": "2026-07-28T23:01:44+00:00",
+        "focus_id": "focus-b95b069bf6ddec18",
         "reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
         "sequence": 2,
         "transition": "switch_focus"
       },
       {
-        "at": "2026-07-28T00:07:46+00:00",
-        "focus_id": "focus-4f69f9e8f0f5a53f",
+        "at": "2026-07-28T23:02:24+00:00",
+        "focus_id": "focus-8c1d7444044f8d98",
         "reason": "Goal discrepancy is observed_state_missing and the episode needs a useful outcome.",
         "sequence": 3,
         "transition": "switch_focus"
@@ -86,47 +86,47 @@
   },
   "budgets": {
     "max_actions": 4,
-    "max_cycles": 16,
-    "max_model_calls": 12,
+    "max_cycles": 24,
+    "max_model_calls": 16,
     "max_packet_items": 8
   },
   "completed": true,
   "cycles": [
     {
       "completed": true,
-      "cycle_id": "active-cognitive-cycle-2c3f098052e0662c",
-      "focus_id": "focus-0326d844003766e1",
-      "operation_id": "cognitive-operation-6b2819bb771d1cad",
-      "outcome_id": "outcome-81d77223add4c872",
-      "packet_digest": "04b7d68965c57cb1b8919559490661194adaae5d5f4c2b04e996cf8218979f6a",
+      "cycle_id": "active-cognitive-cycle-c624c1a9b28e3928",
+      "focus_id": "focus-5655a41cb85c5654",
+      "operation_id": "cognitive-operation-ad5ac584be078b62",
+      "outcome_id": "outcome-70bb51f1513720aa",
+      "packet_digest": "7d21ffa7a0d3fc8ba8e4f84292c35618978f8e7ec5de26778ba46379dcaf3d3b",
       "schema_version": "active_cognitive_architecture_marathon_1_v1",
       "sequence": 1,
-      "summary": "Operators may struggle with specific English phrases in conversations due to limited exposure."
+      "summary": "The conversation will shift to a new unrelated topic."
     },
     {
       "completed": true,
-      "cycle_id": "active-cognitive-cycle-3949426f2c0a5586",
-      "focus_id": "focus-b1b7426b59305ddb",
-      "operation_id": "cognitive-operation-009ac4eea560f405",
-      "outcome_id": "outcome-66eca02059a8895b",
-      "packet_digest": "883ae77e882182ba3de02af32a6127629b875a48b3c90e0ed09fc377ed5b9f4b",
+      "cycle_id": "active-cognitive-cycle-8a437476920fa271",
+      "focus_id": "focus-b95b069bf6ddec18",
+      "operation_id": "cognitive-operation-7622ec29d5215be3",
+      "outcome_id": "outcome-762b01883391b1ec",
+      "packet_digest": "b442a4de6a4b7631a04d7395f202613d1efb71164816b98ede76ffdcc36be528",
       "schema_version": "active_cognitive_architecture_marathon_1_v1",
       "sequence": 2,
-      "summary": "Operators may struggle with specific English phrases in conversations due to limited exposure."
+      "summary": "The conversation will shift to a new unrelated topic."
     },
     {
       "completed": true,
-      "cycle_id": "active-cognitive-cycle-2d548c4900864daa",
-      "focus_id": "focus-4f69f9e8f0f5a53f",
-      "operation_id": "cognitive-operation-81c5352ef9c1a0a1",
-      "outcome_id": "outcome-40cccab09d058b44",
-      "packet_digest": "b1242fb265f804a2ca9b964c344e5c5233348c186bd0dd05e5fd42ea6c11f95e",
+      "cycle_id": "active-cognitive-cycle-6d2154c881ad07c5",
+      "focus_id": "focus-8c1d7444044f8d98",
+      "operation_id": "cognitive-operation-a6e86c2a1063189c",
+      "outcome_id": "outcome-7704208b89b6a0bb",
+      "packet_digest": "e1a0eed0dc02cb957bc9f522f700d2bad12d55e9bd90c3efa0b9702549ed2e53",
       "schema_version": "active_cognitive_architecture_marathon_1_v1",
       "sequence": 3,
-      "summary": "Operators may struggle with specific English phrases in conversations due to limited exposure."
+      "summary": "Distinguish between new foreground questions and continuations of previous topics."
     }
   ],
-  "episode_id": "active-cognitive-episode-a31a2250e0eb6bbb",
+  "episode_id": "active-cognitive-episode-3ad15e612b88f2f5",
   "evidence": [
     {
       "content": "",
@@ -134,28 +134,28 @@
       "exists": true,
       "kind": "local_evidence",
       "schema_version": "active_cognitive_architecture_marathon_1_v1",
-      "source": "G:\\Delta_Dev\\data\\runtime\\conversational_runtime_operation\\active_episode_conversational-objective-aeed6654265e3b05.json",
+      "source": "G:\\Delta_Dev\\data\\runtime\\conversational_runtime_operation\\active_episode_conversational-objective-762c338df3c28bf1.json",
       "summary": "Prior bounded active episode completed; continuation keeps the approved conversational objective active."
     }
   ],
   "goals": [
     {
       "expected_state": "Continue correction-linked comprehension practice without duplicating prior completed episode work.",
-      "goal_id": "active-cognitive-goal-5db245fd5c9b2346",
+      "goal_id": "active-cognitive-goal-87780e03da28e541",
       "observed_state": "",
       "priority": "operator_requested",
       "schema_version": "active_cognitive_architecture_marathon_1_v1",
-      "summary": "Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer."
+      "summary": "Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first"
     }
   ],
   "hypotheses": [
     {
       "assumptions": [
-        "Operators have varying levels of English proficiency.",
-        "Limited exposure to specific phrases can lead to misunderstandings."
+        "The current topic is not the operator's primary interest",
+        "The conversation has been ongoing for at least 10 minutes"
       ],
       "confidence_state": "supported",
-      "created_at": "2026-07-28T00:07:11+00:00",
+      "created_at": "2026-07-28T23:01:42+00:00",
       "disposition": "needs_challenge",
       "evidence_against": [],
       "evidence_for": [
@@ -164,30 +164,30 @@
       "expected_observations": [
         "local evidence should support a bounded useful step"
       ],
-      "hypothesis_id": "hypothesis-5e2f3610af21804b",
+      "hypothesis_id": "hypothesis-23c47d3e4239c802",
       "lifecycle_state": "active",
-      "originating_focus_id": "focus-0326d844003766e1",
-      "originating_goal_id": "active-cognitive-goal-5db245fd5c9b2346",
+      "originating_focus_id": "focus-5655a41cb85c5654",
+      "originating_goal_id": "active-cognitive-goal-87780e03da28e541",
       "provenance": [
-        "cognitive-operation-6b2819bb771d1cad",
-        "cognitive-operation-009ac4eea560f405"
+        "cognitive-operation-ad5ac584be078b62",
+        "cognitive-operation-7622ec29d5215be3"
       ],
-      "revised_at": "2026-07-28T00:07:46+00:00",
+      "revised_at": "2026-07-28T23:02:22+00:00",
       "revision_parent_id": "",
-      "revision_reason": "Operators may struggle with specific English phrases in conversations due to limited exposure.",
+      "revision_reason": "The conversation will shift to a new unrelated topic.",
       "schema_version": "active_cognitive_architecture_marathon_1_v1",
-      "scope": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
-      "statement": "Operators may struggle with specific English phrases in conversations due to limited exposure."
+      "scope": "Resolve discrepancy for goal: Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first",
+      "statement": "The conversation will shift to a new unrelated topic."
     }
   ],
   "learning_updates": [
     {
-      "created_at": "2026-07-28T00:08:03+00:00",
+      "created_at": "2026-07-28T23:02:43+00:00",
       "evidence_refs": [
         "prior-conversational-episode-3"
       ],
-      "learning_id": "learning-40cccab09d058b44",
-      "summary": "Operators may struggle with specific English phrases in conversations due to limited exposure."
+      "learning_id": "learning-7704208b89b6a0bb",
+      "summary": "Distinguish between new foreground questions and continuations of previous topics."
     }
   ],
   "loop_state": "completed",
@@ -198,15 +198,15 @@
       "blocking_state": "",
       "capability_need": "local_model_semantic_operation",
       "creation_sequence": 3,
-      "description": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+      "description": "Resolve discrepancy for goal: Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first",
       "evidence_need": "local evidence supporting or challenging the goal",
       "evidence_refs": [
         "prior-conversational-episode-3"
       ],
       "expected_value": "useful_progress",
-      "focus_id": "focus-4f69f9e8f0f5a53f",
+      "focus_id": "focus-8c1d7444044f8d98",
       "related_goal_ids": [
-        "active-cognitive-goal-5db245fd5c9b2346"
+        "active-cognitive-goal-87780e03da28e541"
       ],
       "salience_categories": [
         "operator_priority",
@@ -231,7 +231,7 @@
         "max_response_words": 220,
         "max_retries": 1
       },
-      "cycle_id": "active-cognitive-cycle-2c3f098052e0662c",
+      "cycle_id": "active-cognitive-cycle-c624c1a9b28e3928",
       "evidence_constraints": [
         "prior-conversational-episode-3"
       ],
@@ -243,18 +243,18 @@
         "recommended_state_transition": "string",
         "uncertainty": "string"
       },
-      "focus_id": "focus-0326d844003766e1",
-      "goal_id": "active-cognitive-goal-5db245fd5c9b2346",
+      "focus_id": "focus-5655a41cb85c5654",
+      "goal_id": "active-cognitive-goal-87780e03da28e541",
       "model_identity": "shared-local-model-ledger:active-cognitive-loop",
-      "operation_id": "cognitive-operation-6b2819bb771d1cad",
+      "operation_id": "cognitive-operation-ad5ac584be078b62",
       "operation_type": "formulate_hypothesis",
       "provenance": [
-        "working-memory-packet-207a286c0a407234"
+        "working-memory-packet-9e90d49c5178d57c"
       ],
       "retry_allowance": 1,
       "schema_version": "active_cognitive_architecture_marathon_1_v1",
       "task": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
-      "working_memory_packet_digest": "04b7d68965c57cb1b8919559490661194adaae5d5f4c2b04e996cf8218979f6a"
+      "working_memory_packet_digest": "7d21ffa7a0d3fc8ba8e4f84292c35618978f8e7ec5de26778ba46379dcaf3d3b"
     },
     {
       "authority_constraints": [
@@ -267,7 +267,7 @@
         "max_response_words": 220,
         "max_retries": 1
       },
-      "cycle_id": "active-cognitive-cycle-3949426f2c0a5586",
+      "cycle_id": "active-cognitive-cycle-8a437476920fa271",
       "evidence_constraints": [
         "prior-conversational-episode-3"
       ],
@@ -279,18 +279,18 @@
         "recommended_state_transition": "string",
         "uncertainty": "string"
       },
-      "focus_id": "focus-b1b7426b59305ddb",
-      "goal_id": "active-cognitive-goal-5db245fd5c9b2346",
+      "focus_id": "focus-b95b069bf6ddec18",
+      "goal_id": "active-cognitive-goal-87780e03da28e541",
       "model_identity": "shared-local-model-ledger:active-cognitive-loop",
-      "operation_id": "cognitive-operation-009ac4eea560f405",
+      "operation_id": "cognitive-operation-7622ec29d5215be3",
       "operation_type": "compare_evidence",
       "provenance": [
-        "working-memory-packet-77afa1e0ac9dec62"
+        "working-memory-packet-a18fff8cfc3f7ce4"
       ],
       "retry_allowance": 1,
       "schema_version": "active_cognitive_architecture_marathon_1_v1",
       "task": "Perform compare_evidence for the active focus using only referenced evidence.",
-      "working_memory_packet_digest": "883ae77e882182ba3de02af32a6127629b875a48b3c90e0ed09fc377ed5b9f4b"
+      "working_memory_packet_digest": "b442a4de6a4b7631a04d7395f202613d1efb71164816b98ede76ffdcc36be528"
     },
     {
       "authority_constraints": [
@@ -303,7 +303,7 @@
         "max_response_words": 220,
         "max_retries": 1
       },
-      "cycle_id": "active-cognitive-cycle-2d548c4900864daa",
+      "cycle_id": "active-cognitive-cycle-6d2154c881ad07c5",
       "evidence_constraints": [
         "prior-conversational-episode-3"
       ],
@@ -315,66 +315,66 @@
         "recommended_state_transition": "string",
         "uncertainty": "string"
       },
-      "focus_id": "focus-4f69f9e8f0f5a53f",
-      "goal_id": "active-cognitive-goal-5db245fd5c9b2346",
+      "focus_id": "focus-8c1d7444044f8d98",
+      "goal_id": "active-cognitive-goal-87780e03da28e541",
       "model_identity": "shared-local-model-ledger:active-cognitive-loop",
-      "operation_id": "cognitive-operation-81c5352ef9c1a0a1",
+      "operation_id": "cognitive-operation-a6e86c2a1063189c",
       "operation_type": "summarize_learning",
       "provenance": [
-        "working-memory-packet-35b1229f2b0800bb"
+        "working-memory-packet-4b40173bab9b90c9"
       ],
       "retry_allowance": 1,
       "schema_version": "active_cognitive_architecture_marathon_1_v1",
       "task": "Perform summarize_learning for the active focus using only referenced evidence.",
-      "working_memory_packet_digest": "b1242fb265f804a2ca9b964c344e5c5233348c186bd0dd05e5fd42ea6c11f95e"
+      "working_memory_packet_digest": "e1a0eed0dc02cb957bc9f522f700d2bad12d55e9bd90c3efa0b9702549ed2e53"
     }
   ],
   "operation_results": [
     {
       "accepted": true,
       "assumptions": [
-        "Operators have varying levels of English proficiency.",
-        "Limited exposure to specific phrases can lead to misunderstandings."
+        "The current topic is not the operator's primary interest",
+        "The conversation has been ongoing for at least 10 minutes"
       ],
       "contrary_evidence_considered": [],
       "evidence_refs": [
         "prior-conversational-episode-3"
       ],
-      "interpretation": "Operators may struggle with specific English phrases in conversations due to limited exposure.",
+      "interpretation": "The conversation will shift to a new unrelated topic.",
       "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
       "next_evidence_need": "",
       "next_focus_proposal": "",
-      "operation_id": "cognitive-operation-6b2819bb771d1cad",
+      "operation_id": "cognitive-operation-ad5ac584be078b62",
       "operation_result_type": "formulate_hypothesis_result",
-      "raw_model_output": "{\"hypothesis_statement\":\"Operators may struggle with specific English phrases in conversations due to limited exposure.\",\"scope\":\"English conversation phrases among operators.\",\"supporting_evidence_refs\":[\"prior-conversational-episode-3\"],\"assumptions\":[\"Operators have varying levels of English proficiency.\",\"Limited exposure to specific phrases can lead to misunderstandings.\"],\"expected_observations\":[\"Operators will make errors when using specific phrases.\",\"Operators will ask for clarification on specific phrases.\"],\"uncertainty\":\"Whether specific phrases are the primary cause of errors.\",\"recommended_state_transition\":\"propose_hypothesis\"}",
-      "recommended_action": "English conversation phrases among operators.",
+      "raw_model_output": "{\"hypothesis_statement\":\"The conversation will shift to a new unrelated topic.\",\"scope\":\"the next 5 minutes of the conversation\",\"supporting_evidence_refs\":[\"prior-conversational-episode-3\"],\"assumptions\":[\"The current topic is not the operator's primary interest\",\"The conversation has been ongoing for at least 10 minutes\"],\"expected_observations\":[\"The operator will introduce a new topic\",\"The conversation will diverge from the current topic\"],\"uncertainty\":\"Whether the operator's interest will shift to a new topic or not\",\"recommended_state_transition\":\"propose_hypothesis\"}",
+      "recommended_action": "the next 5 minutes of the conversation",
       "recommended_state_transition": "propose_hypothesis",
       "rejection_reasons": [],
       "schema_version": "active_cognitive_architecture_marathon_1_v1",
-      "uncertainty": "Whether specific phrases are the primary cause of errors."
+      "uncertainty": "Whether the operator's interest will shift to a new topic or not"
     },
     {
       "accepted": true,
       "assumptions": [
-        "Operators have varying levels of English proficiency.",
-        "Limited exposure to specific phrases can lead to misunderstandings."
+        "The current topic is not the operator's primary interest",
+        "The conversation has been ongoing for at least 10 minutes"
       ],
       "contrary_evidence_considered": [],
       "evidence_refs": [
         "prior-conversational-episode-3"
       ],
-      "interpretation": "Operators may struggle with specific English phrases in conversations due to limited exposure.",
+      "interpretation": "The conversation will shift to a new unrelated topic.",
       "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
       "next_evidence_need": "local evidence supporting or challenging the goal",
       "next_focus_proposal": "Continue correction-linked comprehension practice without duplicating prior completed episode work.",
-      "operation_id": "cognitive-operation-009ac4eea560f405",
+      "operation_id": "cognitive-operation-7622ec29d5215be3",
       "operation_result_type": "compare_evidence_result",
-      "raw_model_output": "{\"assumptions\":[\"Operators have varying levels of English proficiency.\",\"Limited exposure to specific phrases can lead to misunderstandings.\"],\"contrary_evidence_considered\":[],\"evidence_refs\":[\"prior-conversational-episode-3\"],\"interpretation\":\"Operators may struggle with specific English phrases in conversations due to limited exposure.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"Continue correction-linked comprehension practice without duplicating prior completed episode work.\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"Incorporate specific corrections from prior episode into ongoing practice.\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"What specific phrases operators struggle with remains unresolved.\"}",
-      "recommended_action": "Incorporate specific corrections from prior episode into ongoing practice.",
+      "raw_model_output": "{\"assumptions\":[\"The current topic is not the operator's primary interest\",\"The conversation has been ongoing for at least 10 minutes\"],\"contrary_evidence_considered\":[],\"evidence_refs\":[\"prior-conversational-episode-3\"],\"interpretation\":\"The conversation will shift to a new unrelated topic.\",\"next_evidence_need\":\"local evidence supporting or challenging the goal\",\"next_focus_proposal\":\"Continue correction-linked comprehension practice without duplicating prior completed episode work.\",\"operation_result_type\":\"compare_evidence_result\",\"recommended_action\":\"Continue correction-linked comprehension practice without duplicating prior completed episode work.\",\"recommended_state_transition\":\"add_supporting_evidence\",\"uncertainty\":\"How the conversation will shift to a new unrelated topic without the operator's primary interest.\"}",
+      "recommended_action": "Continue correction-linked comprehension practice without duplicating prior completed episode work.",
       "recommended_state_transition": "add_supporting_evidence",
       "rejection_reasons": [],
       "schema_version": "active_cognitive_architecture_marathon_1_v1",
-      "uncertainty": "What specific phrases operators struggle with remains unresolved."
+      "uncertainty": "How the conversation will shift to a new unrelated topic without the operator's primary interest."
     },
     {
       "accepted": true,
@@ -383,44 +383,44 @@
       "evidence_refs": [
         "prior-conversational-episode-3"
       ],
-      "interpretation": "Operators may struggle with specific English phrases in conversations due to limited exposure.",
+      "interpretation": "Distinguish between new foreground questions and continuations of previous topics.",
       "model_identity": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
-      "next_evidence_need": "How can we effectively address the limited exposure issue?",
+      "next_evidence_need": "How to effectively shift topics in a conversation?",
       "next_focus_proposal": "",
-      "operation_id": "cognitive-operation-81c5352ef9c1a0a1",
+      "operation_id": "cognitive-operation-a6e86c2a1063189c",
       "operation_result_type": "summarize_learning_result",
-      "raw_model_output": "{\"lesson\":\"Operators may struggle with specific English phrases in conversations due to limited exposure.\",\"evidence_refs\":[\"prior-conversational-episode-3\"],\"unresolved_questions\":[\"How can we effectively address the limited exposure issue?\"],\"uncertainty\":\"Limited exposure to specific phrases may lead to misunderstandings.\",\"recommended_state_transition\":\"summarize_learning\"}",
+      "raw_model_output": "{\"lesson\":\"Distinguish between new foreground questions and continuations of previous topics.\",\"evidence_refs\":[\"prior-conversational-episode-3\"],\"unresolved_questions\":[\"How to effectively shift topics in a conversation?\"],\"uncertainty\":\"Determine if the current topic is a new question or a continuation.\",\"recommended_state_transition\":\"summarize_learning\"}",
       "recommended_action": "",
       "recommended_state_transition": "summarize_learning",
       "rejection_reasons": [],
       "schema_version": "active_cognitive_architecture_marathon_1_v1",
-      "uncertainty": "Limited exposure to specific phrases may lead to misunderstandings."
+      "uncertainty": "Determine if the current topic is a new question or a continuation."
     }
   ],
   "outcomes": [
     {
-      "created_at": "2026-07-28T00:07:11+00:00",
+      "created_at": "2026-07-28T23:01:42+00:00",
       "discrepancy": "progress_observed",
       "expected": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
-      "observed": "Operators may struggle with specific English phrases in conversations due to limited exposure.",
-      "operation_id": "cognitive-operation-6b2819bb771d1cad",
-      "outcome_id": "outcome-81d77223add4c872"
+      "observed": "The conversation will shift to a new unrelated topic.",
+      "operation_id": "cognitive-operation-ad5ac584be078b62",
+      "outcome_id": "outcome-70bb51f1513720aa"
     },
     {
-      "created_at": "2026-07-28T00:07:46+00:00",
+      "created_at": "2026-07-28T23:02:22+00:00",
       "discrepancy": "progress_observed",
       "expected": "Perform compare_evidence for the active focus using only referenced evidence.",
-      "observed": "Operators may struggle with specific English phrases in conversations due to limited exposure.",
-      "operation_id": "cognitive-operation-009ac4eea560f405",
-      "outcome_id": "outcome-66eca02059a8895b"
+      "observed": "The conversation will shift to a new unrelated topic.",
+      "operation_id": "cognitive-operation-7622ec29d5215be3",
+      "outcome_id": "outcome-762b01883391b1ec"
     },
     {
-      "created_at": "2026-07-28T00:08:03+00:00",
+      "created_at": "2026-07-28T23:02:43+00:00",
       "discrepancy": "progress_observed",
       "expected": "Perform summarize_learning for the active focus using only referenced evidence.",
-      "observed": "Operators may struggle with specific English phrases in conversations due to limited exposure.",
-      "operation_id": "cognitive-operation-81c5352ef9c1a0a1",
-      "outcome_id": "outcome-40cccab09d058b44"
+      "observed": "Distinguish between new foreground questions and continuations of previous topics.",
+      "operation_id": "cognitive-operation-a6e86c2a1063189c",
+      "outcome_id": "outcome-7704208b89b6a0bb"
     }
   ],
   "pending_operator_requests": [],
@@ -428,12 +428,12 @@
   "title": "Conversational English comprehension continuation 4",
   "useful_artifacts": [
     {
-      "artifact_id": "useful-artifact-40cccab09d058b44",
+      "artifact_id": "useful-artifact-7704208b89b6a0bb",
       "artifact_type": "cognitive_episode_summary",
       "evidence_refs": [
         "prior-conversational-episode-3"
       ],
-      "summary": "Operators may struggle with specific English phrases in conversations due to limited exposure."
+      "summary": "Distinguish between new foreground questions and continuations of previous topics."
     }
   ],
   "working_memory_packets": [
@@ -443,15 +443,15 @@
         "blocking_state": "",
         "capability_need": "local_model_semantic_operation",
         "creation_sequence": 1,
-        "description": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+        "description": "Resolve discrepancy for goal: Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first",
         "evidence_need": "local evidence supporting or challenging the goal",
         "evidence_refs": [
           "prior-conversational-episode-3"
         ],
         "expected_value": "useful_progress",
-        "focus_id": "focus-0326d844003766e1",
+        "focus_id": "focus-5655a41cb85c5654",
         "related_goal_ids": [
-          "active-cognitive-goal-5db245fd5c9b2346"
+          "active-cognitive-goal-87780e03da28e541"
         ],
         "salience_categories": [
           "operator_priority",
@@ -465,11 +465,11 @@
       },
       "active_goal": {
         "expected_state": "Continue correction-linked comprehension practice without duplicating prior completed episode work.",
-        "goal_id": "active-cognitive-goal-5db245fd5c9b2346",
+        "goal_id": "active-cognitive-goal-87780e03da28e541",
         "observed_state": "",
         "priority": "operator_requested",
         "schema_version": "active_cognitive_architecture_marathon_1_v1",
-        "summary": "Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer."
+        "summary": "Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first"
       },
       "authority_state": "authorized_for_local_cognitive_marathon",
       "capability_limits": [
@@ -479,7 +479,7 @@
       "conflicting_evidence": [],
       "construction_rationale": "bounded by active focus, goal discrepancy, recency, evidence provenance, and operation need",
       "current_hypotheses": [],
-      "cycle_id": "active-cognitive-cycle-2c3f098052e0662c",
+      "cycle_id": "active-cognitive-cycle-c624c1a9b28e3928",
       "observed_outcomes": [],
       "omitted_items_summary": "0 older or less relevant items omitted by packet budget",
       "operator_constraints": [
@@ -488,8 +488,8 @@
         "no commit",
         "bounded local actions only"
       ],
-      "packet_digest": "04b7d68965c57cb1b8919559490661194adaae5d5f4c2b04e996cf8218979f6a",
-      "packet_id": "working-memory-packet-207a286c0a407234",
+      "packet_digest": "7d21ffa7a0d3fc8ba8e4f84292c35618978f8e7ec5de26778ba46379dcaf3d3b",
+      "packet_id": "working-memory-packet-9e90d49c5178d57c",
       "prior_cycle_summary": "",
       "provenance_refs": [
         "prior-conversational-episode-3"
@@ -502,7 +502,7 @@
           "exists": true,
           "kind": "local_evidence",
           "schema_version": "active_cognitive_architecture_marathon_1_v1",
-          "source": "G:\\Delta_Dev\\data\\runtime\\conversational_runtime_operation\\active_episode_conversational-objective-aeed6654265e3b05.json",
+          "source": "G:\\Delta_Dev\\data\\runtime\\conversational_runtime_operation\\active_episode_conversational-objective-762c338df3c28bf1.json",
           "summary": "Prior bounded active episode completed; continuation keeps the approved conversational objective active."
         }
       ],
@@ -516,15 +516,15 @@
         "blocking_state": "",
         "capability_need": "local_model_semantic_operation",
         "creation_sequence": 2,
-        "description": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+        "description": "Resolve discrepancy for goal: Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first",
         "evidence_need": "local evidence supporting or challenging the goal",
         "evidence_refs": [
           "prior-conversational-episode-3"
         ],
         "expected_value": "useful_progress",
-        "focus_id": "focus-b1b7426b59305ddb",
+        "focus_id": "focus-b95b069bf6ddec18",
         "related_goal_ids": [
-          "active-cognitive-goal-5db245fd5c9b2346"
+          "active-cognitive-goal-87780e03da28e541"
         ],
         "salience_categories": [
           "operator_priority",
@@ -538,11 +538,11 @@
       },
       "active_goal": {
         "expected_state": "Continue correction-linked comprehension practice without duplicating prior completed episode work.",
-        "goal_id": "active-cognitive-goal-5db245fd5c9b2346",
+        "goal_id": "active-cognitive-goal-87780e03da28e541",
         "observed_state": "",
         "priority": "operator_requested",
         "schema_version": "active_cognitive_architecture_marathon_1_v1",
-        "summary": "Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer."
+        "summary": "Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first"
       },
       "authority_state": "authorized_for_local_cognitive_marathon",
       "capability_limits": [
@@ -554,11 +554,11 @@
       "current_hypotheses": [
         {
           "assumptions": [
-            "Operators have varying levels of English proficiency.",
-            "Limited exposure to specific phrases can lead to misunderstandings."
+            "The current topic is not the operator's primary interest",
+            "The conversation has been ongoing for at least 10 minutes"
           ],
           "confidence_state": "plausible",
-          "created_at": "2026-07-28T00:07:11+00:00",
+          "created_at": "2026-07-28T23:01:42+00:00",
           "disposition": "needs_challenge",
           "evidence_against": [],
           "evidence_for": [
@@ -567,30 +567,30 @@
           "expected_observations": [
             "local evidence should support a bounded useful step"
           ],
-          "hypothesis_id": "hypothesis-5e2f3610af21804b",
+          "hypothesis_id": "hypothesis-23c47d3e4239c802",
           "lifecycle_state": "active",
-          "originating_focus_id": "focus-0326d844003766e1",
-          "originating_goal_id": "active-cognitive-goal-5db245fd5c9b2346",
+          "originating_focus_id": "focus-5655a41cb85c5654",
+          "originating_goal_id": "active-cognitive-goal-87780e03da28e541",
           "provenance": [
-            "cognitive-operation-6b2819bb771d1cad"
+            "cognitive-operation-ad5ac584be078b62"
           ],
           "revised_at": "",
           "revision_parent_id": "",
           "revision_reason": "",
           "schema_version": "active_cognitive_architecture_marathon_1_v1",
-          "scope": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
-          "statement": "Operators may struggle with specific English phrases in conversations due to limited exposure."
+          "scope": "Resolve discrepancy for goal: Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first",
+          "statement": "The conversation will shift to a new unrelated topic."
         }
       ],
-      "cycle_id": "active-cognitive-cycle-3949426f2c0a5586",
+      "cycle_id": "active-cognitive-cycle-8a437476920fa271",
       "observed_outcomes": [
         {
-          "created_at": "2026-07-28T00:07:11+00:00",
+          "created_at": "2026-07-28T23:01:42+00:00",
           "discrepancy": "progress_observed",
           "expected": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
-          "observed": "Operators may struggle with specific English phrases in conversations due to limited exposure.",
-          "operation_id": "cognitive-operation-6b2819bb771d1cad",
-          "outcome_id": "outcome-81d77223add4c872"
+          "observed": "The conversation will shift to a new unrelated topic.",
+          "operation_id": "cognitive-operation-ad5ac584be078b62",
+          "outcome_id": "outcome-70bb51f1513720aa"
         }
       ],
       "omitted_items_summary": "0 older or less relevant items omitted by packet budget",
@@ -600,9 +600,9 @@
         "no commit",
         "bounded local actions only"
       ],
-      "packet_digest": "883ae77e882182ba3de02af32a6127629b875a48b3c90e0ed09fc377ed5b9f4b",
-      "packet_id": "working-memory-packet-77afa1e0ac9dec62",
-      "prior_cycle_summary": "Operators may struggle with specific English phrases in conversations due to limited exposure.",
+      "packet_digest": "b442a4de6a4b7631a04d7395f202613d1efb71164816b98ede76ffdcc36be528",
+      "packet_id": "working-memory-packet-a18fff8cfc3f7ce4",
+      "prior_cycle_summary": "The conversation will shift to a new unrelated topic.",
       "provenance_refs": [
         "prior-conversational-episode-3"
       ],
@@ -614,7 +614,7 @@
           "exists": true,
           "kind": "local_evidence",
           "schema_version": "active_cognitive_architecture_marathon_1_v1",
-          "source": "G:\\Delta_Dev\\data\\runtime\\conversational_runtime_operation\\active_episode_conversational-objective-aeed6654265e3b05.json",
+          "source": "G:\\Delta_Dev\\data\\runtime\\conversational_runtime_operation\\active_episode_conversational-objective-762c338df3c28bf1.json",
           "summary": "Prior bounded active episode completed; continuation keeps the approved conversational objective active."
         }
       ],
@@ -628,15 +628,15 @@
         "blocking_state": "",
         "capability_need": "local_model_semantic_operation",
         "creation_sequence": 3,
-        "description": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
+        "description": "Resolve discrepancy for goal: Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first",
         "evidence_need": "local evidence supporting or challenging the goal",
         "evidence_refs": [
           "prior-conversational-episode-3"
         ],
         "expected_value": "useful_progress",
-        "focus_id": "focus-4f69f9e8f0f5a53f",
+        "focus_id": "focus-8c1d7444044f8d98",
         "related_goal_ids": [
-          "active-cognitive-goal-5db245fd5c9b2346"
+          "active-cognitive-goal-87780e03da28e541"
         ],
         "salience_categories": [
           "operator_priority",
@@ -650,11 +650,11 @@
       },
       "active_goal": {
         "expected_state": "Continue correction-linked comprehension practice without duplicating prior completed episode work.",
-        "goal_id": "active-cognitive-goal-5db245fd5c9b2346",
+        "goal_id": "active-cognitive-goal-87780e03da28e541",
         "observed_state": "",
         "priority": "operator_requested",
         "schema_version": "active_cognitive_architecture_marathon_1_v1",
-        "summary": "Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer."
+        "summary": "Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first"
       },
       "authority_state": "authorized_for_local_cognitive_marathon",
       "capability_limits": [
@@ -666,11 +666,11 @@
       "current_hypotheses": [
         {
           "assumptions": [
-            "Operators have varying levels of English proficiency.",
-            "Limited exposure to specific phrases can lead to misunderstandings."
+            "The current topic is not the operator's primary interest",
+            "The conversation has been ongoing for at least 10 minutes"
           ],
           "confidence_state": "supported",
-          "created_at": "2026-07-28T00:07:11+00:00",
+          "created_at": "2026-07-28T23:01:42+00:00",
           "disposition": "needs_challenge",
           "evidence_against": [],
           "evidence_for": [
@@ -679,39 +679,39 @@
           "expected_observations": [
             "local evidence should support a bounded useful step"
           ],
-          "hypothesis_id": "hypothesis-5e2f3610af21804b",
+          "hypothesis_id": "hypothesis-23c47d3e4239c802",
           "lifecycle_state": "active",
-          "originating_focus_id": "focus-0326d844003766e1",
-          "originating_goal_id": "active-cognitive-goal-5db245fd5c9b2346",
+          "originating_focus_id": "focus-5655a41cb85c5654",
+          "originating_goal_id": "active-cognitive-goal-87780e03da28e541",
           "provenance": [
-            "cognitive-operation-6b2819bb771d1cad",
-            "cognitive-operation-009ac4eea560f405"
+            "cognitive-operation-ad5ac584be078b62",
+            "cognitive-operation-7622ec29d5215be3"
           ],
-          "revised_at": "2026-07-28T00:07:46+00:00",
+          "revised_at": "2026-07-28T23:02:22+00:00",
           "revision_parent_id": "",
-          "revision_reason": "Operators may struggle with specific English phrases in conversations due to limited exposure.",
+          "revision_reason": "The conversation will shift to a new unrelated topic.",
           "schema_version": "active_cognitive_architecture_marathon_1_v1",
-          "scope": "Resolve discrepancy for goal: Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer.",
-          "statement": "Operators may struggle with specific English phrases in conversations due to limited exposure."
+          "scope": "Resolve discrepancy for goal: Improve how you distinguish between a new foreground question and a continuation of the previous topic. Study our normal conversation, identify the first recurring failure pattern, compare at least three bounded approaches, test them against unrelated-topic and follow-up cases, and notify me when you reach a meaningful milestone, become blocked, or finish with an adoption recommendation. Use local cognition and existing evidence first",
+          "statement": "The conversation will shift to a new unrelated topic."
         }
       ],
-      "cycle_id": "active-cognitive-cycle-2d548c4900864daa",
+      "cycle_id": "active-cognitive-cycle-6d2154c881ad07c5",
       "observed_outcomes": [
         {
-          "created_at": "2026-07-28T00:07:11+00:00",
+          "created_at": "2026-07-28T23:01:42+00:00",
           "discrepancy": "progress_observed",
           "expected": "Perform formulate_hypothesis for the active focus using only referenced evidence.",
-          "observed": "Operators may struggle with specific English phrases in conversations due to limited exposure.",
-          "operation_id": "cognitive-operation-6b2819bb771d1cad",
-          "outcome_id": "outcome-81d77223add4c872"
+          "observed": "The conversation will shift to a new unrelated topic.",
+          "operation_id": "cognitive-operation-ad5ac584be078b62",
+          "outcome_id": "outcome-70bb51f1513720aa"
         },
         {
-          "created_at": "2026-07-28T00:07:46+00:00",
+          "created_at": "2026-07-28T23:02:22+00:00",
           "discrepancy": "progress_observed",
           "expected": "Perform compare_evidence for the active focus using only referenced evidence.",
-          "observed": "Operators may struggle with specific English phrases in conversations due to limited exposure.",
-          "operation_id": "cognitive-operation-009ac4eea560f405",
-          "outcome_id": "outcome-66eca02059a8895b"
+          "observed": "The conversation will shift to a new unrelated topic.",
+          "operation_id": "cognitive-operation-7622ec29d5215be3",
+          "outcome_id": "outcome-762b01883391b1ec"
         }
       ],
       "omitted_items_summary": "0 older or less relevant items omitted by packet budget",
@@ -721,9 +721,9 @@
         "no commit",
         "bounded local actions only"
       ],
-      "packet_digest": "b1242fb265f804a2ca9b964c344e5c5233348c186bd0dd05e5fd42ea6c11f95e",
-      "packet_id": "working-memory-packet-35b1229f2b0800bb",
-      "prior_cycle_summary": "Operators may struggle with specific English phrases in conversations due to limited exposure.",
+      "packet_digest": "e1a0eed0dc02cb957bc9f522f700d2bad12d55e9bd90c3efa0b9702549ed2e53",
+      "packet_id": "working-memory-packet-4b40173bab9b90c9",
+      "prior_cycle_summary": "The conversation will shift to a new unrelated topic.",
       "provenance_refs": [
         "prior-conversational-episode-3"
       ],
@@ -735,7 +735,7 @@
           "exists": true,
           "kind": "local_evidence",
           "schema_version": "active_cognitive_architecture_marathon_1_v1",
-          "source": "G:\\Delta_Dev\\data\\runtime\\conversational_runtime_operation\\active_episode_conversational-objective-aeed6654265e3b05.json",
+          "source": "G:\\Delta_Dev\\data\\runtime\\conversational_runtime_operation\\active_episode_conversational-objective-762c338df3c28bf1.json",
           "summary": "Prior bounded active episode completed; continuation keeps the approved conversational objective active."
         }
       ],

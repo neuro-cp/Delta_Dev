@@ -11,11 +11,13 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 from typing import Any, Callable, Mapping, Sequence
 
 from integration.model_runtime.model_registry import list_available_models
 from integration.model_runtime.execution_lanes import ModelExecutionLane
 from orchestration.runtime.delta_1_0_common import stable_id, utc_now
+from orchestration.runtime.local_model_execution_adapter import execute_local_model_inference
 
 
 SCHEMA_VERSION = "active_cognitive_architecture_marathon_1_v1"
@@ -25,6 +27,8 @@ OPERATION_TYPES = (
     "interpret_state",
     "prioritize_focus",
     "formulate_hypothesis",
+    "reformulate_node_specific_hypothesis",
+    "repair_node_specific_hypothesis_format",
     "identify_evidence_need",
     "compare_evidence",
     "challenge_hypothesis",
@@ -38,6 +42,11 @@ OPERATION_TYPES = (
     "declare_blocked_capability",
     "declare_insufficient_evidence",
 )
+HYPOTHESIS_OPERATIONS = frozenset({
+    "formulate_hypothesis",
+    "reformulate_node_specific_hypothesis",
+    "repair_node_specific_hypothesis_format",
+})
 CONFIDENCE_STATES = (
     "tentative",
     "plausible",
@@ -243,6 +252,8 @@ class CognitiveOperationResult:
     model_identity: str
     accepted: bool
     rejection_reasons: tuple[str, ...] = ()
+    evaluation_state: str = "not_evaluated"
+    evaluation_reasons: tuple[str, ...] = ()
     schema_version: str = SCHEMA_VERSION
 
     def as_record(self) -> dict[str, Any]:
@@ -409,10 +420,15 @@ class ScriptedSemanticModel:
 
     def __call__(self, request: CognitiveOperationRequest, packet: WorkingMemoryPacket) -> Mapping[str, Any]:
         focus = str(packet.active_focus.get("description") or "")
+        frontier_node = dict(packet.active_focus.get("active_frontier_node") or {})
         evidence = [str(item.get("evidence_id") or "") for item in packet.relevant_evidence]
         contrary = [str(item.get("evidence_id") or "") for item in packet.conflicting_evidence]
-        if request.operation_type == "formulate_hypothesis":
-            interpretation = f"A plausible working hypothesis is that {focus} can progress using the available local evidence."
+        if request.operation_type in HYPOTHESIS_OPERATIONS:
+            label = str(frontier_node.get("label") or focus)
+            interpretation = (
+                f"{label} depends on site conditions, component constraints, and operating demand "
+                "because each changes the practical design decision."
+            )
             transition = "propose_hypothesis"
         elif request.operation_type == "challenge_hypothesis":
             interpretation = f"Contrary evidence changes the hypothesis: {focus} needs a narrower plan before action."
@@ -426,7 +442,7 @@ class ScriptedSemanticModel:
         else:
             interpretation = f"For {focus}, the next useful operation is to compare evidence and choose one bounded step."
             transition = "continue_focus"
-        return {
+        response = {
             "operation_result_type": request.operation_type + "_result",
             "interpretation": interpretation,
             "evidence_refs": evidence[:3],
@@ -440,6 +456,14 @@ class ScriptedSemanticModel:
             "raw_model_output": interpretation,
             "model_identity": self.model_identity,
         }
+        if request.operation_type in HYPOTHESIS_OPERATIONS:
+            response.update({
+                "hypothesis_statement": interpretation,
+                "scope": str(frontier_node.get("label") or focus),
+                "supporting_evidence_refs": evidence[:3],
+                "expected_observations": ["changing one concrete condition changes the design decision"],
+            })
+        return response
 
 
 class LedgerBackedCognitiveModelRunner:
@@ -502,16 +526,7 @@ class LedgerBackedCognitiveModelRunner:
             terminal = ledger_record
         result_id = str(terminal.get("result_id") or "")
         if str(terminal.get("lifecycle_state") or "") != "completed" or not result_id:
-            return {
-                "operation_result_type": request.operation_type + "_unavailable",
-                "interpretation": "Local model execution did not complete through the shared ledger.",
-                "evidence_refs": (),
-                "contrary_evidence_considered": (),
-                "uncertainty": str(terminal.get("failure_classification") or "local_model_unavailable"),
-                "recommended_state_transition": "declare_blocked_capability",
-                "raw_model_output": json.dumps(terminal, sort_keys=True, default=str),
-                "model_identity": str(terminal.get("model_identity") or self.model_identity),
-            }
+            return _operation_unavailable_result(request, terminal, packet)
         ledger_result = self.ledger.observe_result(result_id)
         raw_text = str(ledger_result.get("response_reference") or "")
         adapted = adapt_operation_response(raw_text)
@@ -531,32 +546,420 @@ class LedgerBackedCognitiveModelRunner:
                 "executed": False,
                 "reason": "provider_manager_required_for_exact_active_cognitive_prompt",
             }
-        model_name = str(lane.get("selected_model") or "")
-        if not model_name:
+        model_names = _bounded_local_model_attempt_order(lane)
+        if not model_names:
             return {"executed": False, "reason": "no_local_model_available"}
-        result = self.provider_manager.infer(
-            model_name=model_name,
-            prompt=question,
-            task_type="active_cognitive_json_operation",
-            metadata={
-                "route": "active_cognitive_loop",
-                "lane": lane.get("lane"),
-                "execution_lane": ModelExecutionLane.COGNITIVE_OPERATION.value,
-                "operation_type": operation_type,
-            },
-        )
+        attempts: list[dict[str, Any]] = []
+        last_error = ""
+        for model_name in model_names[:2]:
+            result = execute_local_model_inference(
+                model_name=model_name,
+                prompt=question,
+                task_type="active_cognitive_json_operation",
+                metadata={
+                    "route": "active_cognitive_loop",
+                    "lane": lane.get("lane"),
+                    "execution_lane": ModelExecutionLane.COGNITIVE_OPERATION.value,
+                    "operation_type": operation_type,
+                },
+                provider_manager=self.provider_manager,
+                execution_adapter="active_cognitive_loop.exact_prompt",
+            )
+            if not result.get("executed"):
+                last_error = str(result.get("reason") or "local_model_execution_failed")
+                attempts.append({"model_name": model_name, "executed": True, "succeeded": False, "error": last_error, "adapter": result.get("execution_adapter")})
+                continue
+            answer = str(result.get("answer") or "").strip()
+            attempts.append({"model_name": model_name, "executed": True, "succeeded": bool(answer), "adapter": result.get("execution_adapter")})
+            if not answer:
+                last_error = "empty_model_answer"
+                continue
+            return {
+                "executed": True,
+                "available": True,
+                "answer": answer,
+                "confidence_score": float(result.get("confidence_score") or 0.0),
+                "model_id": str(result.get("model_id") or model_name),
+                "latency_seconds": float(result.get("latency_seconds") or 0.0),
+                "response_tokens": int(result.get("response_tokens") or 0),
+                "prompt_sent": question,
+                "execution_adapter": str(result.get("execution_adapter") or "active_cognitive_loop.exact_prompt"),
+                "provider_calls_performed": False,
+                "model_attempts": attempts,
+            }
         return {
-            "executed": bool(str(result.answer or "").strip()),
+            "executed": False,
             "available": True,
-            "answer": str(result.answer or "").strip(),
-            "confidence_score": float(result.confidence or 0.0),
-            "model_id": str(result.model_id or model_name),
-            "latency_seconds": float(result.latency_seconds or 0.0),
-            "response_tokens": int(result.response_tokens or 0),
+            "answer": "",
+            "reason": last_error or "local_model_execution_failed",
             "prompt_sent": question,
-            "execution_adapter": "active_cognitive_loop.ProviderManager.exact_prompt",
+            "execution_adapter": "active_cognitive_loop.exact_prompt",
             "provider_calls_performed": False,
+            "model_attempts": attempts,
         }
+
+
+def _bounded_local_model_attempt_order(lane: Mapping[str, Any]) -> tuple[str, ...]:
+    selected = str(lane.get("selected_model") or "")
+    ordered: list[str] = [selected] if selected else []
+    selected_family = str(lane.get("model_family") or "").lower()
+    models = list_available_models()
+    for preferred_family in ("llama", "qwen", "mistral", "phi4", "phi3"):
+        if preferred_family == selected_family:
+            continue
+        for key, spec in sorted(models.items()):
+            if key in ordered or spec.name in ordered:
+                continue
+            if spec.family != preferred_family or "text" not in spec.capabilities:
+                continue
+            if not Path(spec.path).exists():
+                continue
+            ordered.append(key)
+            return tuple(ordered)
+    return tuple(ordered)
+
+
+def _operation_unavailable_result(
+    request: CognitiveOperationRequest,
+    terminal: Mapping[str, Any],
+    packet: WorkingMemoryPacket,
+) -> dict[str, Any]:
+    failure = str(terminal.get("failure_classification") or "local_model_unavailable")
+    detail = str(terminal.get("failure_detail") or failure)
+    allowed = _allowed_transitions_for_operation(request.operation_type)
+    transition = "declare_insufficient_evidence" if "declare_insufficient_evidence" in allowed else allowed[0]
+    evidence_refs = tuple(str(item.get("evidence_id") or "") for item in packet.relevant_evidence if item.get("evidence_id"))
+    base = {
+        "operation_result_type": request.operation_type + "_unavailable",
+        "interpretation": f"Local model execution did not complete: {detail}",
+        "evidence_refs": evidence_refs,
+        "contrary_evidence_considered": (),
+        "uncertainty": failure,
+        "recommended_state_transition": transition,
+        "raw_model_output": json.dumps(terminal, sort_keys=True, default=str),
+        "model_identity": str(terminal.get("model_identity") or "shared-local-model-ledger:active-cognitive-loop"),
+    }
+    if request.operation_type in HYPOTHESIS_OPERATIONS:
+        base.update({
+            "hypothesis_statement": "No supported hypothesis was formed because local model execution did not complete.",
+            "scope": str(packet.active_focus.get("description") or packet.active_goal.get("summary") or "active focus"),
+            "supporting_evidence_refs": evidence_refs,
+            "assumptions": ["No concept progress should be accepted without model output or evidence."],
+            "expected_observations": ["A later successful local execution or bounded fallback should produce a typed result."],
+        })
+    return base
+
+
+def _active_frontier_node_from_evidence(
+    evidence: Sequence[EvidenceRef],
+    focus: CandidateFocus,
+) -> EvidenceRef | None:
+    focus_refs = set(focus.evidence_refs)
+    return next((item for item in evidence if item.kind == "knowledge_frontier_node" and item.evidence_id in focus_refs), None)
+
+
+def _frontier_node_prompt_metadata(node: EvidenceRef | None) -> dict[str, Any]:
+    if node is None:
+        return {}
+    try:
+        content = json.loads(node.content or "{}")
+    except json.JSONDecodeError:
+        content = {}
+    return {
+        "node_id": node.evidence_id,
+        "label": str(content.get("label") or node.summary),
+        "parent_node_id": str(content.get("parent_id") or ""),
+        "completion_criterion_reference": str(content.get("completion_criterion_reference") or ""),
+        "minimum_contribution_contract": dict(content.get("minimum_contribution_contract") or {}),
+        "evidence_need": str(content.get("evidence_need") or ""),
+        "unresolved_questions": tuple(str(item) for item in content.get("unresolved_questions", ()) if str(item)),
+        "existing_node_claim_ids": tuple(str(item) for item in content.get("extracted_claim_ids", ()) if str(item)),
+        "existing_node_concept_ids": tuple(str(item) for item in content.get("extracted_concept_ids", ()) if str(item)),
+        "dependency_node_ids": tuple(
+            str(item)
+            for item in (content.get("dependency_node_ids") or content.get("dependencies") or ())
+            if str(item)
+        ),
+    }
+
+
+def _frontier_dependency_hypotheses(
+    state: ActiveCognitiveEpisodeState,
+    node_metadata: Mapping[str, Any],
+) -> tuple[dict[str, str], ...]:
+    """Return accepted prior claims only for dependencies explicitly declared by this node."""
+    dependency_ids = {str(item) for item in node_metadata.get("dependency_node_ids", ()) if str(item)}
+    if not dependency_ids:
+        return ()
+    dependency_focuses = {
+        stable_id("focus", state.episode_id, dependency_id)
+        for dependency_id in dependency_ids
+    }
+    return tuple(
+        {
+            "node_id": next(
+                (
+                    dependency_id
+                    for dependency_id in dependency_ids
+                    if stable_id("focus", state.episode_id, dependency_id) == hypothesis.originating_focus_id
+                ),
+                "",
+            ),
+            "statement": hypothesis.statement[:320],
+        }
+        for hypothesis in state.hypotheses
+        if hypothesis.originating_focus_id in dependency_focuses and hypothesis.statement
+    )
+
+
+def _semantic_digest(text: str) -> str:
+    tokens = sorted(_semantic_tokens(text))
+    return _digest({"semantic_tokens": tokens})
+
+
+def _semantic_tokens(text: str) -> set[str]:
+    stop = {
+        "about", "active", "address", "and", "available", "backup", "battery", "batteries", "because", "between",
+        "during", "evidence", "for", "frontier", "goal", "knowledge", "local", "model", "node", "outages", "residential",
+        "resolve", "system", "systems", "that", "their", "there", "these", "this", "using",
+        "with", "without", "which", "what", "when", "where", "from", "into", "they", "work", "synthesis",
+    }
+    return {
+        token
+        for token in re.findall(r"[a-z0-9][a-z0-9-]{2,}", str(text).lower())
+        if token not in stop
+    }
+
+
+def _semantic_similarity(left: str, right: str) -> float:
+    left_tokens = _semantic_tokens(left)
+    right_tokens = _semantic_tokens(right)
+    if not left_tokens or not right_tokens:
+        return 0.0
+    return len(left_tokens & right_tokens) / max(1, len(left_tokens | right_tokens))
+
+
+def _knowledge_result_text(raw: Mapping[str, Any]) -> str:
+    parts: list[str] = [
+        str(raw.get("scope") or ""),
+        str(raw.get("hypothesis_statement") or ""),
+        str(raw.get("interpretation") or ""),
+        str(raw.get("uncertainty") or ""),
+    ]
+    parts.extend(str(item) for item in raw.get("assumptions", ()) if str(item))
+    parts.extend(str(item) for item in raw.get("expected_observations", ()) if str(item))
+    return " ".join(parts)
+
+
+def _knowledge_hypothesis_text(raw: Mapping[str, Any]) -> str:
+    return str(raw.get("hypothesis_statement") or raw.get("interpretation") or "").strip()
+
+
+def _knowledge_contract_contribution_rejections(contract: Mapping[str, Any], statement: str) -> tuple[str, ...]:
+    lowered = statement.lower()
+    kind = str(contract.get("contribution_kind") or "explanatory_relation")
+    actions = {
+        token for token in (
+            "address", "check", "clean", "clear", "cover", "drain", "empty", "inspect",
+            "maintain", "remove", "repair", "replace", "screen", "seal", "secure", "test", "treat",
+        )
+        if token in lowered
+    }
+    if kind == "recurring_actions_with_consequence":
+        if len(actions) < int(contract.get("minimum_action_count") or 2) or not any(marker in lowered for marker in ("prevent", "avoid", "reduce", "protect", "ensure")):
+            return ("node_completion_contract_missing:recurring_actions_with_consequence",)
+    if kind == "threshold_and_safe_mitigation":
+        threshold = any(marker in lowered for marker in ("exceed", "full", "capacity", "threshold", "limit"))
+        route = any(marker in lowered for marker in ("route", "direct", "drain", "discharge", "divert", "away", "hose", "pipe", "channel"))
+        concrete_destination = any(marker in lowered for marker in ("away", "storm", "drain", "ground", "foundation", "structure", "erosion", "splash", "safe area"))
+        mitigation = route and concrete_destination
+        if not (threshold and mitigation):
+            return ("node_completion_contract_missing:threshold_and_safe_mitigation",)
+    if kind == "sizing_relation":
+        sizing_terms = sum(
+            marker in lowered
+            for marker in ("capacity", "volume", "size", "demand", "load", "usage", "duration", "runtime", "rate", "area")
+        )
+        if sizing_terms < 2:
+            return ("node_completion_contract_missing:sizing_relation",)
+    if kind == "mechanism_path":
+        capture = any(marker in lowered for marker in ("collect", "catch", "capture", "intake", "inlet"))
+        transfer = any(marker in lowered for marker in ("flow", "route", "channel", "convey", "transfer", "downspout", "gutter"))
+        if not (capture and transfer):
+            return ("node_completion_contract_missing:mechanism_path",)
+    if kind == "prevention_intervention":
+        intervention = bool(actions) or any(marker in lowered for marker in ("mesh", "lid", "larvicide"))
+        hazard = any(marker in lowered for marker in ("mosquito", "larva", "larvae", "breeding", "egg", "standing water"))
+        causal_block = any(marker in lowered for marker in ("prevent", "block", "stop", "keep", "deny", "reduce", "avoid", "limit", "cannot access"))
+        if not (intervention and hazard and causal_block):
+            return ("node_completion_contract_missing:prevention_intervention",)
+    return ()
+
+
+def _knowledge_contract_prompt_hint(contract: Mapping[str, Any]) -> str:
+    kind = str(contract.get("contribution_kind") or "explanatory_relation")
+    if kind == "mechanism_path":
+        return "For a mechanism-path node, explain the route or transfer path from source through intermediate component into storage or output."
+    if kind == "threshold_and_safe_mitigation":
+        return "For an overflow or threshold node, name the threshold condition and the concrete route or destination that safely carries excess flow away."
+    if kind == "prevention_intervention":
+        return "For a prevention node, name the concrete intervention, the hazard being prevented, and how the intervention blocks or reduces that hazard."
+    if kind == "sizing_relation":
+        return "For a sizing node, relate at least two sizing variables such as capacity, demand, rate, duration, load, area, or usage."
+    if kind == "recurring_actions_with_consequence":
+        return "For a maintenance node, name recurring actions and the consequence they prevent or reduce."
+    return "Provide a concrete explanatory relation rather than a relevant but static label."
+
+
+def _knowledge_independent_evaluation(
+    packet: WorkingMemoryPacket,
+    raw: Mapping[str, Any],
+) -> tuple[str, tuple[str, ...]]:
+    """A deterministic local evaluator that cannot inherit the proposer's acceptance decision."""
+    if str(packet.active_focus.get("source") or "") != "knowledge_frontier":
+        return "not_evaluated", ()
+    text = _knowledge_result_text(raw).lower()
+    capacity = re.search(r"\b(\d+(?:\.\d+)?)\s*[- ]?gallons?\b", text)
+    people = re.search(r"(?:family of|for)\s+(\d+)\s+(?:people|persons|adults)", text)
+    if people is None:
+        number_words = {"one": "1", "two": "2", "three": "3", "four": "4", "five": "5", "six": "6", "seven": "7", "eight": "8"}
+        word_match = re.search(r"family of\s+(one|two|three|four|five|six|seven|eight)\b", text)
+        if word_match:
+            people = re.match(r"(\d+)", number_words[word_match.group(1)])
+    days = re.search(r"(?:over|during|for)\s+(?:a\s+)?(\d+)\s*[- ]?days?\b", text)
+    daily_rate = re.search(r"(\d+(?:\.\d+)?)\s*gallons?\s*(?:per|/)\s*person\s*(?:per|/)\s*day", text)
+    if capacity and people and days and daily_rate:
+        available = float(capacity.group(1))
+        required = float(people.group(1)) * float(days.group(1)) * float(daily_rate.group(1))
+        if available < required:
+            return "contradicted", (f"arithmetic_capacity_shortfall:{available:g}_lt_{required:g}",)
+    if not _knowledge_hypothesis_text(raw):
+        return "insufficient_evidence", ("missing_candidate_proposition",)
+    return "supported", ("deterministic_local_plausibility_pass",)
+
+
+def _knowledge_completion_sufficiency_rejections(
+    packet: WorkingMemoryPacket,
+    raw: Mapping[str, Any],
+) -> tuple[str, ...]:
+    if str(packet.active_focus.get("source") or "") != "knowledge_frontier":
+        return ()
+    node = dict(packet.active_focus.get("active_frontier_node") or {})
+    contract = dict(node.get("minimum_contribution_contract") or {})
+    if not contract:
+        return ()
+    statement = " ".join(
+        part for part in (
+            _knowledge_hypothesis_text(raw),
+            str(raw.get("interpretation") or "").strip(),
+        )
+        if part
+    )
+    lowered = statement.lower()
+    generic_terms = {
+        "air", "critical", "desired", "effective", "effectively", "efficient", "efficiency", "home", "house",
+        "important", "issue", "issues", "larger", "moisture", "necessary", "operation", "operations", "properly",
+        "required", "residential", "smaller", "space", "spaces", "system", "systems", "water", "whole",
+    }
+    specific_terms = _semantic_tokens(statement) - _semantic_tokens(str(node.get("label") or "")) - generic_terms
+    minimum_terms = int(contract.get("minimum_specific_terms") or 0)
+    rejections: list[str] = []
+    if minimum_terms and len(specific_terms) < minimum_terms:
+        rejections.append("node_completion_insufficient_specific_content")
+    if contract.get("requires_explanatory_relation"):
+        relation_markers = (
+            "because", "when", "therefore", "caus", "lead", "depend", "determin", "constrain", "limit", "require", "must",
+            "prevent", "adjust", "control", "compress", "flow", "drain", "circulat", "integrat", "affect",
+        )
+        if not any(marker in lowered for marker in relation_markers):
+            rejections.append("node_completion_missing_explanatory_relation")
+    if contract.get("reject_importance_only") and re.search(r"\b(?:is|are)\s+(?:critical|important|necessary|required)\b", lowered):
+        rejections.append("node_completion_generic_importance_assertion")
+    rejections.extend(_knowledge_contract_contribution_rejections(contract, statement))
+    return tuple(dict.fromkeys(rejections))
+
+
+def _knowledge_cross_node_context_rejections(
+    packet: WorkingMemoryPacket,
+    raw: Mapping[str, Any],
+) -> tuple[str, ...]:
+    if str(packet.active_focus.get("source") or "") != "knowledge_frontier":
+        return ()
+    node = dict(packet.active_focus.get("active_frontier_node") or {})
+    active_tokens = _semantic_tokens(
+        " ".join(
+            (
+                str(node.get("label") or ""),
+                str(node.get("completion_criterion_reference") or ""),
+            )
+        )
+    )
+    generic_terms = {
+        "air", "because", "critical", "desired", "effective", "effectively", "efficient", "efficiency", "home",
+        "house", "important", "issue", "issues", "larger", "moisture", "necessary", "operation", "operations",
+        "properly", "required", "residential", "smaller", "space", "spaces", "system", "systems", "water", "whole",
+    }
+    candidate_tokens = _semantic_tokens(_knowledge_hypothesis_text(raw)) - active_tokens - generic_terms
+    if len(candidate_tokens) < 4:
+        return ()
+    active_focus_id = str(packet.active_focus.get("focus_id") or "")
+    for target in tuple(packet.active_focus.get("prohibited_duplicate_targets") or ()):
+        if str(target.get("originating_focus_id") or "") == active_focus_id:
+            continue
+        prior_tokens = {str(token) for token in target.get("statement_tokens", ()) if str(token)} - generic_terms
+        overlap = candidate_tokens & prior_tokens
+        new_terms = candidate_tokens - prior_tokens
+        if len(overlap) >= 4 and len(overlap) > len(new_terms):
+            return ("cross_node_context_dominates_active_contribution",)
+    active_specific = active_tokens - generic_terms
+    for sibling in tuple(packet.active_focus.get("sibling_frontier_nodes") or ()):
+        if not isinstance(sibling, Mapping):
+            continue
+        sibling_tokens = _semantic_tokens(
+            str(sibling.get("label") or "") + " " + str(sibling.get("completion_criterion_reference") or "")
+        ) - generic_terms
+        sibling_overlap = candidate_tokens & sibling_tokens
+        active_overlap = candidate_tokens & active_specific
+        if len(sibling_overlap) >= 2 and len(sibling_overlap) > len(active_overlap):
+            return ("sibling_frontier_node_dominates_active_contribution",)
+    return ()
+
+
+def _frontier_attempt_counts(state: ActiveCognitiveEpisodeState) -> dict[str, dict[str, int]]:
+    counts: dict[str, dict[str, int]] = {}
+    results = {result.operation_id: result for result in state.operation_results}
+    for cycle in state.cycles:
+        result = results.get(cycle.operation_id)
+        bucket = counts.setdefault(cycle.focus_id, {"accepted": 0, "rejected": 0})
+        if result and result.accepted:
+            bucket["accepted"] += 1
+        elif result:
+            bucket["rejected"] += 1
+    return counts
+
+
+def _frontier_attempt_records(
+    state: ActiveCognitiveEpisodeState,
+    focus_id: str,
+) -> tuple[tuple[CognitiveOperationRequest, CognitiveOperationResult], ...]:
+    requests = {request.operation_id: request for request in state.operation_requests}
+    results = {result.operation_id: result for result in state.operation_results}
+    records: list[tuple[CognitiveOperationRequest, CognitiveOperationResult]] = []
+    for cycle in state.cycles:
+        if cycle.focus_id != focus_id:
+            continue
+        request = requests.get(cycle.operation_id)
+        result = results.get(cycle.operation_id)
+        if request is not None and result is not None:
+            records.append((request, result))
+    return tuple(records)
+
+
+def _retry_output_schema_invalid(request: CognitiveOperationRequest, result: CognitiveOperationResult) -> bool:
+    return (
+        request.operation_type == "reformulate_node_specific_hypothesis"
+        and "retry_output_schema_invalid" in result.rejection_reasons
+    )
 
 
 def discover_model_inventory() -> dict[str, Any]:
@@ -620,13 +1023,17 @@ def run_cognitive_cycle(
     _validate_state(state)
     if state.completed:
         return state
-    if state.model_call_count >= int(state.budgets.get("max_model_calls", 0) or 0):
+    max_model_calls = state.budgets.get("max_model_calls")
+    max_cycles = state.budgets.get("max_cycles")
+    if max_model_calls is not None and state.model_call_count >= int(max_model_calls):
         return replace(state, loop_state="paused_budget")
-    if len(state.cycles) >= int(state.budgets.get("max_cycles", 0) or 0):
+    if max_cycles is not None and len(state.cycles) >= int(max_cycles):
         return replace(state, loop_state="paused_budget")
     runner = model_runner or ScriptedSemanticModel()
     sequence = len(state.cycles) + 1
     candidates = generate_candidate_focuses(state)
+    if not candidates:
+        return replace(state, loop_state="blocked_insufficient_evidence")
     attention = select_attention(state, candidates)
     state = replace(state, attention=attention, next_focus_candidates=candidates, loop_state="assembling_working_memory")
     packet = build_working_memory_packet(state, sequence=sequence)
@@ -659,6 +1066,54 @@ def generate_candidate_focuses(state: ActiveCognitiveEpisodeState) -> tuple[Cand
         item for item in state.hypotheses if item.lifecycle_state == "active" and item.confidence_state in {"tentative", "contested", "weakened", "unresolved"}
     )
     focuses: list[CandidateFocus] = []
+    frontier_nodes = tuple(item for item in state.evidence if item.kind == "knowledge_frontier_node")
+    if frontier_nodes:
+        attempt_counts = _frontier_attempt_counts(state)
+        for index, node in enumerate(frontier_nodes, start=1):
+            node_focus_id = stable_id("focus", state.episode_id, node.evidence_id)
+            counts = attempt_counts.get(node_focus_id, {})
+            attempts = _frontier_attempt_records(state, node_focus_id)
+            latest_attempt = attempts[-1] if attempts else None
+            format_repair = bool(
+                latest_attempt
+                and _retry_output_schema_invalid(*latest_attempt)
+                and not any(request.operation_type == "repair_node_specific_hypothesis_format" for request, _result in attempts)
+            )
+            if counts.get("accepted", 0) or (counts.get("rejected", 0) >= 2 and not format_repair):
+                continue
+            label = node.summary.replace("Knowledge frontier node", "Frontier node", 1)
+            retrying = counts.get("rejected", 0) == 1
+            repair_description = f"Repair response format for knowledge frontier: {label}"
+            focuses.append(CandidateFocus(
+                focus_id=node_focus_id,
+                description=repair_description if format_repair else f"{'Retry' if retrying else 'Resolve'} knowledge frontier: {label}",
+                source="knowledge_frontier",
+                related_goal_ids=(goal.goal_id,),
+                urgency="high" if retrying or index == 1 else "medium",
+                expected_value="concept_progress",
+                evidence_need=(
+                    "re-emit a complete typed replacement hypothesis for the same frontier node"
+                    if format_repair else
+                    "retry with a narrowed node-specific contribution and avoid the rejected hypothesis"
+                    if retrying else "local evidence and typed model synthesis for this frontier node"
+                ),
+                authority_need="none_for_local_analysis",
+                capability_need="local_model_semantic_operation",
+                blocking_state=(
+                    "format_repair_after_retry_schema_failure" if format_repair
+                    else "retry_after_rejection" if retrying else ""
+                ),
+                salience_explanation=(
+                    "The retry response omitted required fields; repair its typed replacement once before blocking the node."
+                    if format_repair else
+                    "A prior response for this frontier node was rejected; retry once with narrower instructions."
+                    if retrying else "Knowledge acquisition advances by selecting the next unresolved frontier node."
+                ),
+                creation_sequence=len(state.cycles) + index,
+                salience_categories=("operator_priority", "knowledge_frontier", "expected_concept_progress"),
+                evidence_refs=("operator-natural-goal", node.evidence_id),
+            ))
+        return _dedupe_focuses(focuses)
     base_categories = ("operator_priority", "goal_discrepancy", "expected_useful_progress")
     focuses.append(CandidateFocus(
         focus_id=stable_id("focus", state.episode_id, goal.goal_id, "primary", len(state.cycles)),
@@ -872,9 +1327,64 @@ def build_working_memory_packet(state: ActiveCognitiveEpisodeState, *, sequence:
         raise ActiveCognitiveLoopError("active_focus_missing")
     budget = int(state.budgets.get("max_packet_items", 8) or 8)
     relevant, conflicting = _select_evidence_for_focus(state, focus, budget=budget)
-    current_hypotheses = tuple(item.as_record() for item in state.hypotheses[-3:])
+    is_frontier = focus.source == "knowledge_frontier"
+    if is_frontier:
+        current_hypotheses = tuple(item.as_record() for item in state.hypotheses if item.originating_focus_id == focus.focus_id)[-3:]
+    else:
+        current_hypotheses = tuple(item.as_record() for item in state.hypotheses[-3:])
     recent_actions = tuple(dict(item) for item in state.actions[-3:])
     outcomes = tuple(dict(item) for item in state.outcomes[-3:])
+    focus_record = focus.as_record()
+    if is_frontier:
+        node = _active_frontier_node_from_evidence(relevant, focus)
+        node_metadata = _frontier_node_prompt_metadata(node)
+        prior_rejections = tuple(
+            result
+            for result in state.operation_results
+            if not result.accepted
+            and any(cycle.operation_id == result.operation_id and cycle.focus_id == focus.focus_id for cycle in state.cycles)
+        )
+        focus_record = {
+            **focus_record,
+            "active_frontier_node": node_metadata,
+            "sibling_frontier_nodes": tuple(
+                _frontier_node_prompt_metadata(candidate)
+                for candidate in state.evidence
+                if candidate.kind == "knowledge_frontier_node" and candidate.evidence_id != node.evidence_id
+            ),
+            "explicit_dependencies": _frontier_dependency_hypotheses(state, node_metadata),
+            "prohibited_duplicate_targets": tuple(
+                {
+                    "hypothesis_id": item.hypothesis_id,
+                    "statement_digest": _semantic_digest(item.statement),
+                    "statement": item.statement,
+                    "statement_excerpt": item.statement[:220],
+                    "statement_tokens": tuple(sorted(_semantic_tokens(item.statement))),
+                    "originating_focus_id": item.originating_focus_id,
+                }
+                for item in state.hypotheses
+                if item.originating_focus_id != focus.focus_id
+            ) + tuple(
+                {
+                    "hypothesis_id": result.operation_id,
+                    "statement_digest": _semantic_digest(result.interpretation),
+                    "statement": result.interpretation,
+                    "statement_excerpt": result.interpretation[:220],
+                    "statement_tokens": tuple(sorted(_semantic_tokens(result.interpretation))),
+                    "originating_focus_id": focus.focus_id,
+                    "rejection_reasons": result.rejection_reasons,
+                }
+                for result in prior_rejections[-2:]
+                if result.interpretation
+            ),
+            "prior_rejection_reasons": tuple(reason for result in prior_rejections[-2:] for reason in result.rejection_reasons),
+            "retry_rejected_hypotheses": tuple(
+                str(result.interpretation)[:320]
+                for result in prior_rejections[-2:]
+                if result.interpretation
+            ),
+            "retry_attempt": len(prior_rejections) + 1 if prior_rejections else 0,
+        }
     omitted = max(0, len(state.evidence) + len(state.hypotheses) + len(state.actions) + len(state.outcomes) - budget)
     cycle_id = stable_id("active-cognitive-cycle", state.episode_id, sequence)
     core = {
@@ -892,7 +1402,7 @@ def build_working_memory_packet(state: ActiveCognitiveEpisodeState, *, sequence:
         packet_id=stable_id("working-memory-packet", cycle_id, packet_digest),
         cycle_id=cycle_id,
         active_goal=goal.as_record(),
-        active_focus=focus.as_record(),
+        active_focus=focus_record,
         current_hypotheses=current_hypotheses,
         relevant_evidence=tuple(item.as_record() for item in relevant),
         conflicting_evidence=tuple(item.as_record() for item in conflicting),
@@ -906,12 +1416,22 @@ def build_working_memory_packet(state: ActiveCognitiveEpisodeState, *, sequence:
         size_budget=budget,
         omitted_items_summary=f"{omitted} older or less relevant items omitted by packet budget",
         provenance_refs=tuple(dict.fromkeys(focus.evidence_refs + tuple(item.evidence_id for item in relevant) + tuple(item.evidence_id for item in conflicting))),
-        construction_rationale="bounded by active focus, goal discrepancy, recency, evidence provenance, and operation need",
+        construction_rationale="bounded by active focus, goal discrepancy, recency, evidence provenance, and operation need"
+        if not is_frontier
+        else "bounded by the active knowledge frontier node; unrelated prior hypotheses are excluded from current_hypotheses and listed only as duplicate targets",
         packet_digest=packet_digest,
     )
 
 
 def select_operation_type(state: ActiveCognitiveEpisodeState, packet: WorkingMemoryPacket) -> str:
+    if str(packet.active_focus.get("source") or "") == "knowledge_frontier":
+        if str(packet.active_focus.get("blocking_state") or "") == "format_repair_after_retry_schema_failure":
+            return "repair_node_specific_hypothesis_format"
+        return (
+            "reformulate_node_specific_hypothesis"
+            if int(packet.active_focus.get("retry_attempt") or 0) > 0
+            else "formulate_hypothesis"
+        )
     if not state.hypotheses:
         return "formulate_hypothesis"
     latest = state.hypotheses[-1]
@@ -935,6 +1455,24 @@ def build_operation_request(
 ) -> CognitiveOperationRequest:
     if operation_type not in OPERATION_TYPES:
         raise ActiveCognitiveLoopError("unsupported_operation_type")
+    expected_output_schema = {
+        "operation_result_type": "string",
+        "interpretation": "string",
+        "evidence_refs": "list",
+        "contrary_evidence_considered": "list",
+        "uncertainty": "string",
+        "recommended_state_transition": "string",
+    }
+    if operation_type in HYPOTHESIS_OPERATIONS:
+        expected_output_schema = {
+            "hypothesis_statement": "string",
+            "scope": "string",
+            "supporting_evidence_refs": "list",
+            "assumptions": "list",
+            "expected_observations": "list",
+            "uncertainty": "string",
+            "recommended_state_transition": "string",
+        }
     return CognitiveOperationRequest(
         operation_id=stable_id("cognitive-operation", packet.cycle_id, operation_type, packet.packet_digest),
         cycle_id=packet.cycle_id,
@@ -943,14 +1481,7 @@ def build_operation_request(
         goal_id=str(packet.active_goal["goal_id"]),
         focus_id=str(packet.active_focus["focus_id"]),
         task=f"Perform {operation_type} for the active focus using only referenced evidence.",
-        expected_output_schema={
-            "operation_result_type": "string",
-            "interpretation": "string",
-            "evidence_refs": "list",
-            "contrary_evidence_considered": "list",
-            "uncertainty": "string",
-            "recommended_state_transition": "string",
-        },
+        expected_output_schema=expected_output_schema,
         evidence_constraints=packet.provenance_refs,
         authority_constraints=packet.operator_constraints,
         budget={"max_response_words": 220, "max_retries": 1},
@@ -967,8 +1498,22 @@ def validate_model_result(
 ) -> CognitiveOperationResult:
     evidence_ids = {str(item.get("evidence_id") or "") for item in packet.relevant_evidence + packet.conflicting_evidence}
     refs = tuple(str(item) for item in raw.get("evidence_refs", ()) if str(item))
+    if not refs:
+        refs = tuple(str(item) for item in raw.get("supporting_evidence_refs", ()) if str(item))
     contrary = tuple(str(item) for item in raw.get("contrary_evidence_considered", ()) if str(item))
+    refs = _attach_active_frontier_ref_when_aligned(packet, raw, refs)
     rejection: list[str] = []
+    if str(raw.get("operation_result_type") or "").endswith("_unavailable"):
+        rejection.append("local_model_execution_blocked")
+    if request.operation_type in {"reformulate_node_specific_hypothesis", "repair_node_specific_hypothesis_format"}:
+        missing_retry_fields = tuple(
+            field
+            for field in ("hypothesis_statement", "scope", "supporting_evidence_refs")
+            if not raw.get(field)
+        )
+        if missing_retry_fields:
+            rejection.append("retry_output_schema_invalid")
+            rejection.append("retry_output_schema_missing:" + ",".join(missing_retry_fields))
     if not str(raw.get("interpretation") or "").strip():
         rejection.append("missing_interpretation")
     rejection.extend(str(item) for item in raw.get("adapter_rejection_reasons", ()) if str(item))
@@ -986,6 +1531,12 @@ def validate_model_result(
     transition = str(raw.get("recommended_state_transition") or "")
     if transition and transition not in set(_allowed_transitions_for_operation(request.operation_type)):
         rejection.append("invalid_state_transition")
+    rejection.extend(_knowledge_frontier_alignment_rejections(packet, raw, refs))
+    rejection.extend(_knowledge_completion_sufficiency_rejections(packet, raw))
+    rejection.extend(_knowledge_cross_node_context_rejections(packet, raw))
+    evaluation_state, evaluation_reasons = _knowledge_independent_evaluation(packet, raw)
+    if evaluation_state in {"contradicted", "insufficient_evidence"}:
+        rejection.extend("independent_evaluation_" + reason for reason in evaluation_reasons)
     return CognitiveOperationResult(
         operation_id=request.operation_id,
         operation_result_type=str(raw.get("operation_result_type") or request.operation_type + "_result"),
@@ -1002,7 +1553,100 @@ def validate_model_result(
         model_identity=str(raw.get("model_identity") or request.model_identity),
         accepted=not rejection,
         rejection_reasons=tuple(rejection),
+        evaluation_state=evaluation_state,
+        evaluation_reasons=evaluation_reasons,
     )
+
+
+def _attach_active_frontier_ref_when_aligned(
+    packet: WorkingMemoryPacket,
+    raw: Mapping[str, Any],
+    refs: Sequence[str],
+) -> tuple[str, ...]:
+    if str(packet.active_focus.get("source") or "") != "knowledge_frontier":
+        return tuple(refs)
+    node = dict(packet.active_focus.get("active_frontier_node") or {})
+    node_id = str(node.get("node_id") or "")
+    if not node_id or node_id in set(refs):
+        return tuple(refs)
+    label = str(node.get("label") or "")
+    criterion = str(node.get("completion_criterion_reference") or "")
+    evidence_need = str(node.get("evidence_need") or "")
+    result_text = _knowledge_hypothesis_text(raw)
+    scope = str(raw.get("scope") or raw.get("recommended_action") or "")
+    interpretation = _knowledge_hypothesis_text(raw)
+    label_tokens = _semantic_tokens(label)
+    controlling_tokens = label_tokens | _semantic_tokens(criterion + " " + evidence_need)
+    result_tokens = _semantic_tokens(result_text)
+    scope_tokens = _semantic_tokens(scope)
+    if controlling_tokens and (
+        controlling_tokens & (result_tokens | scope_tokens)
+        or _semantic_similarity(result_text, " ".join(controlling_tokens)) >= 0.18
+    ):
+        return tuple(dict.fromkeys(tuple(refs) + (node_id,)))
+    return tuple(refs)
+
+
+def _knowledge_frontier_alignment_rejections(
+    packet: WorkingMemoryPacket,
+    raw: Mapping[str, Any],
+    refs: Sequence[str],
+) -> tuple[str, ...]:
+    if str(packet.active_focus.get("source") or "") != "knowledge_frontier":
+        return ()
+    node = dict(packet.active_focus.get("active_frontier_node") or {})
+    node_id = str(node.get("node_id") or "")
+    label = str(node.get("label") or "")
+    criterion = str(node.get("completion_criterion_reference") or "")
+    evidence_need = str(node.get("evidence_need") or "")
+    result_text = _knowledge_hypothesis_text(raw)
+    scope = str(raw.get("scope") or raw.get("recommended_action") or "")
+    interpretation = _knowledge_hypothesis_text(raw)
+    rejections: list[str] = []
+    packet_evidence_ids = {str(item.get("evidence_id") or "") for item in packet.relevant_evidence + packet.conflicting_evidence}
+    if not node_id:
+        rejections.append("active_frontier_node_missing_from_packet")
+    if node_id and node_id not in set(refs):
+        rejections.append("active_node_evidence_not_cited")
+    wrong_refs = tuple(ref for ref in refs if ref not in packet_evidence_ids)
+    if wrong_refs:
+        rejections.append("evidence_reference_not_in_packet:" + ",".join(wrong_refs))
+    label_tokens = _semantic_tokens(label)
+    criterion_tokens = _semantic_tokens(criterion + " " + evidence_need)
+    result_tokens = _semantic_tokens(result_text)
+    interpretation_tokens = _semantic_tokens(interpretation)
+    scope_tokens = _semantic_tokens(scope)
+    scope_matches_label = bool(label_tokens & scope_tokens)
+    scope_matches_contract = bool(criterion_tokens & scope_tokens)
+    if re.fullmatch(r"(?:knowledge-)?frontier-node-[a-z0-9]+", scope.lower()):
+        rejections.append("scope_uses_internal_frontier_node_id")
+    if label_tokens and not (label_tokens & interpretation_tokens) and not scope_matches_label:
+        rejections.append("scope_not_aligned_with_active_node")
+    controlling_tokens = label_tokens | criterion_tokens
+    if controlling_tokens and not (controlling_tokens & interpretation_tokens) and not (scope_matches_label or scope_matches_contract):
+        rejections.append("interpretation_not_node_specific")
+    prior_targets = tuple(packet.active_focus.get("prohibited_duplicate_targets") or ())
+    result_digest = _semantic_digest(result_text)
+    result_tokens = _semantic_tokens(result_text)
+    for target in prior_targets:
+        prior = str(target.get("statement") or target.get("statement_excerpt") or "")
+        prior_digest = str(target.get("statement_digest") or "")
+        prior_tokens = {str(token) for token in target.get("statement_tokens", ()) if str(token)}
+        token_similarity = (
+            len(result_tokens & prior_tokens) / max(1, len(result_tokens | prior_tokens))
+            if result_tokens and prior_tokens
+            else 0.0
+        )
+        if (
+            prior_digest and prior_digest == result_digest
+            or prior and _semantic_similarity(result_text, prior) >= 0.72
+            or token_similarity >= 0.72
+        ):
+            rejections.append("duplicate_prior_node_contribution")
+            break
+    if label_tokens and interpretation_tokens and not (label_tokens & interpretation_tokens) and not (scope_matches_label or scope_matches_contract) and _semantic_similarity(result_text, " ".join(label_tokens | criterion_tokens)) < 0.18:
+        rejections.append("no_new_node_specific_contribution")
+    return tuple(dict.fromkeys(rejections))
 
 
 def apply_operation_result(
@@ -1014,6 +1658,7 @@ def apply_operation_result(
     sequence: int,
 ) -> ActiveCognitiveEpisodeState:
     if not result.accepted:
+        global_failure = any(reason == "local_model_execution_blocked" for reason in result.rejection_reasons)
         cycle = LoopCycle(
             cycle_id=packet.cycle_id,
             sequence=sequence,
@@ -1025,7 +1670,11 @@ def apply_operation_result(
         )
         return replace(
             state,
-            loop_state="blocked_insufficient_evidence",
+            loop_state=(
+                "selecting_focus"
+                if str(packet.active_focus.get("source") or "") == "knowledge_frontier" and not global_failure
+                else "blocked_insufficient_evidence"
+            ),
             working_memory_packets=state.working_memory_packets + (packet,),
             operation_requests=state.operation_requests + (request,),
             operation_results=state.operation_results + (result,),
@@ -1145,6 +1794,26 @@ def apply_operation_result(
         completed=True,
     )
     completed = bool(learning and artifacts and len(hypotheses) >= 1)
+    next_attention = state.attention
+    next_candidates = state.next_focus_candidates
+    if str(packet.active_focus.get("source") or "") == "knowledge_frontier":
+        provisional = replace(
+            state,
+            operation_requests=state.operation_requests + (request,),
+            operation_results=state.operation_results + (result,),
+            cycles=state.cycles + (cycle,),
+        )
+        remaining_candidates = generate_candidate_focuses(provisional)
+        prior_attention = state.attention or AttentionState(attention_state_id=stable_id("active-attention", state.episode_id))
+        next_attention = replace(
+            prior_attention,
+            active_focus_id="",
+            active_focus_summary="",
+            candidate_focuses=remaining_candidates,
+            evidence_refs=(),
+            continuation_reason="accepted_frontier_node_removed_from_retry_queue",
+        )
+        next_candidates = remaining_candidates
     return replace(
         state,
         loop_state="completed" if completed else "persisting",
@@ -1158,6 +1827,8 @@ def apply_operation_result(
         useful_artifacts=artifacts,
         model_call_count=state.model_call_count + 1,
         completed=completed,
+        attention=next_attention,
+        next_focus_candidates=next_candidates,
     )
 
 
@@ -1175,6 +1846,8 @@ def read_episode_state(path: str | Path) -> ActiveCognitiveEpisodeState:
 
 
 def active_loop_snapshot(state: ActiveCognitiveEpisodeState) -> dict[str, Any]:
+    max_cycles = state.budgets.get("max_cycles")
+    max_model_calls = state.budgets.get("max_model_calls")
     attention = state.attention
     latest_hypothesis = state.hypotheses[-1] if state.hypotheses else None
     return {
@@ -1191,8 +1864,8 @@ def active_loop_snapshot(state: ActiveCognitiveEpisodeState) -> dict[str, Any]:
         "next_intended_step": _next_step(state),
         "blocked_authority_state": state.pending_operator_requests[-1] if state.pending_operator_requests else {},
         "budget_remaining": {
-            "cycles": int(state.budgets.get("max_cycles", 0) or 0) - len(state.cycles),
-            "model_calls": int(state.budgets.get("max_model_calls", 0) or 0) - state.model_call_count,
+            "cycles": None if max_cycles is None else int(max_cycles) - len(state.cycles),
+            "model_calls": None if max_model_calls is None else int(max_model_calls) - state.model_call_count,
         },
         "completed": state.completed,
     }
@@ -1298,6 +1971,26 @@ def operation_schema_registry() -> dict[str, CognitiveOperationSchema]:
         "formulate_hypothesis": CognitiveOperationSchema(
             operation_type="formulate_hypothesis",
             schema_id="operation-schema-formulate-hypothesis-v1",
+            required_fields=("hypothesis_statement", "scope", "supporting_evidence_refs", "assumptions", "expected_observations", "uncertainty", "recommended_state_transition"),
+            optional_fields=(),
+            allowed_transitions=("propose_hypothesis", "declare_insufficient_evidence"),
+            evidence_fields=("supporting_evidence_refs",),
+            string_array_fields=("supporting_evidence_refs", "assumptions", "expected_observations"),
+            nonempty_string_fields=("hypothesis_statement", "scope", "uncertainty", "recommended_state_transition"),
+        ),
+        "reformulate_node_specific_hypothesis": CognitiveOperationSchema(
+            operation_type="reformulate_node_specific_hypothesis",
+            schema_id="operation-schema-reformulate-node-specific-hypothesis-v1",
+            required_fields=("hypothesis_statement", "scope", "supporting_evidence_refs", "assumptions", "expected_observations", "uncertainty", "recommended_state_transition"),
+            optional_fields=(),
+            allowed_transitions=("propose_hypothesis", "declare_insufficient_evidence"),
+            evidence_fields=("supporting_evidence_refs",),
+            string_array_fields=("supporting_evidence_refs", "assumptions", "expected_observations"),
+            nonempty_string_fields=("hypothesis_statement", "scope", "uncertainty", "recommended_state_transition"),
+        ),
+        "repair_node_specific_hypothesis_format": CognitiveOperationSchema(
+            operation_type="repair_node_specific_hypothesis_format",
+            schema_id="operation-schema-repair-node-specific-hypothesis-format-v1",
             required_fields=("hypothesis_statement", "scope", "supporting_evidence_refs", "assumptions", "expected_observations", "uncertainty", "recommended_state_transition"),
             optional_fields=(),
             allowed_transitions=("propose_hypothesis", "declare_insufficient_evidence"),
@@ -1593,6 +2286,14 @@ def _operation_specific_prompt_rules(schema: CognitiveOperationSchema) -> str:
         "formulate_hypothesis": (
             "OPERATION RULE: hypothesis_statement must be testable against future observations"
         ),
+        "reformulate_node_specific_hypothesis": (
+            "RETRY OPERATION: formulate one new hypothesis_statement for active_frontier_node only. "
+            "It must correct the stated rejection reasons, add a materially distinct proposition, and must not restate any prohibited duplicate target."
+        ),
+        "repair_node_specific_hypothesis_format": (
+            "FORMAT REPAIR OPERATION: return a complete replacement hypothesis record for active_frontier_node. "
+            "Do not answer only with uncertainty and do not use generic cognitive-operation fields such as interpretation or next_focus_proposal."
+        ),
         "identify_evidence_need": (
             "OPERATION RULE: this optional operation creates one evidence-acquisition work item; "
             "missing_fact must be one concrete question, bounded_retrieval_action must be executable, "
@@ -1689,10 +2390,10 @@ def _runtime_payload_from_operation_response(operation_type: str, response: dict
             "next_evidence_need": "",
             "next_focus_proposal": str(response.get("selected_focus_id") or ""),
         }
-    if operation_type == "formulate_hypothesis":
+    if operation_type in HYPOTHESIS_OPERATIONS:
         return {
             **response,
-            "operation_result_type": "formulate_hypothesis_result",
+            "operation_result_type": operation_type + "_result",
             "interpretation": str(response.get("hypothesis_statement") or ""),
             "evidence_refs": tuple(str(item) for item in response.get("supporting_evidence_refs", ()) if str(item)),
             "contrary_evidence_considered": (),
@@ -1855,6 +2556,62 @@ def compile_operation_prompt_snapshot(
         "contrary_evidence": contrary,
         "recent_outcomes": packet.observed_outcomes[-1:],
     }
+    frontier_node = packet.active_focus.get("active_frontier_node") if isinstance(packet.active_focus, Mapping) else None
+    frontier_rule = ""
+    retry_response_reminder = ""
+    if frontier_node:
+        prompt_payload = {
+            "current_goal": packet.active_goal,
+            "active_frontier_node": frontier_node,
+            "explicit_dependencies": tuple(packet.active_focus.get("explicit_dependencies") or ()),
+            "evidence_for": supporting,
+            "contrary_evidence": contrary,
+            "retry_attempt": int(packet.active_focus.get("retry_attempt") or 0),
+        }
+        retry_rule = ""
+        completion_contract = dict(frontier_node.get("minimum_contribution_contract") or {})
+        completion_hint = _knowledge_contract_prompt_hint(completion_contract) if completion_contract else ""
+        completion_rule = (
+            " NODE COMPLETION RULE: a relevant statement is not enough. Provide a concrete explanatory relation and at least "
+            + str(int(completion_contract.get("minimum_specific_terms") or 0))
+            + " specific content terms beyond the node label; do not use an importance-only assertion. "
+            + completion_hint
+            if completion_contract else ""
+        )
+        if int(packet.active_focus.get("retry_attempt") or 0) > 0:
+            retry_rule = (
+                " RETRY TARGET: The prior answer was rejected for "
+                + ", ".join(str(item) for item in packet.active_focus.get("prior_rejection_reasons", ()) if str(item))
+                + ". Required new proposition: "
+                + str(frontier_node.get("completion_criterion_reference") or frontier_node.get("label") or "the active frontier node")
+                + ". "
+                + completion_hint
+            )
+            prompt_payload = {
+                "active_frontier_node": frontier_node,
+                "prior_rejection_reasons": tuple(packet.active_focus.get("prior_rejection_reasons") or ()),
+                "rejected_hypotheses_for_this_node": tuple(packet.active_focus.get("retry_rejected_hypotheses") or ()),
+                "explicit_dependencies": tuple(packet.active_focus.get("explicit_dependencies") or ()),
+                "allowed_supporting_evidence_refs": tuple(item["evidence_id"] for item in supporting),
+            }
+            retry_response_reminder = (
+                "\nFINAL RETRY RESPONSE: return every required key. hypothesis_statement must be a new proposition for "
+                + str(frontier_node.get("label") or "the active frontier node")
+                + "; scope must exactly name that node; supporting_evidence_refs must include its node ID. "
+                "Do not return only uncertainty, interpretation, or a generic cognitive-operation record."
+            )
+        frontier_rule = (
+            " KNOWLEDGE FRONTIER RULES: Work only on active_frontier_node. "
+            "The response scope must match active_frontier_node.label and its completion_criterion_reference. "
+            "Only hypothesis_statement is evaluated as the candidate knowledge proposition; scope, assumptions, expected observations, and uncertainty cannot satisfy the node. "
+            "Do not restate conclusions from other nodes unless they are necessary dependencies. "
+            "Name the specific new relationship, constraint, failure mode, tradeoff, fact, or uncertainty reduction added for this node. "
+            "Prior-node claims are checked separately by deterministic duplicate validation; do not use them as generation context unless listed in explicit_dependencies. "
+            "If retry_attempt is nonzero, this is a reformulation: correct prior_rejection_reasons with a narrower node-specific hypothesis_statement, "
+            "state the required new proposition for active_frontier_node, and do not repeat the prior hypothesis or explain another node's mechanism. "
+            + completion_rule
+            + retry_rule
+        )
     prompt_text = (
         "OUTPUT CONTRACT: return only one minified JSON object. The first character must be { and the last character must be }. "
         "Do not use markdown. Do not add explanation outside JSON. Produce exactly these keys and no others. "
@@ -1875,9 +2632,11 @@ def compile_operation_prompt_snapshot(
         + "The uncertainty value must be a nonempty phrase naming what remains unresolved. "
         + "Do not copy field descriptions as answers. "
         + "Do not claim the loop, task, system, or episode is successful or complete. "
+        + frontier_rule
         + "Do not choose declare_insufficient_evidence when both evidence_for and contrary_evidence are supplied.\n"
         + "CONTEXT_JSON:\n"
         + json.dumps(prompt_payload, sort_keys=True, default=list, separators=(",", ":"))
+        + retry_response_reminder
     )
     prompt_digest = _digest({"prompt_text": prompt_text})
     request_identity = stable_id(
@@ -2102,6 +2861,8 @@ def _allowed_transitions_for_operation(operation_type: str) -> tuple[str, ...]:
         "interpret_state": ("continue_focus", "identify_evidence_need", "declare_insufficient_evidence"),
         "prioritize_focus": ("select_next_focus", "continue_focus", "request_operator_resolution"),
         "formulate_hypothesis": ("propose_hypothesis", "declare_insufficient_evidence"),
+        "reformulate_node_specific_hypothesis": ("propose_hypothesis", "declare_insufficient_evidence"),
+        "repair_node_specific_hypothesis_format": ("propose_hypothesis", "declare_insufficient_evidence"),
         "identify_evidence_need": ("request_evidence",),
         "compare_evidence": ("add_supporting_evidence", "add_conflicting_evidence", "weaken_hypothesis", "revise_hypothesis"),
         "challenge_hypothesis": ("weaken_hypothesis", "revise_hypothesis", "reject_hypothesis", "falsify_hypothesis"),
@@ -2189,11 +2950,23 @@ def _select_evidence_for_focus(
     wanted = set(focus.evidence_refs)
     relevant: list[EvidenceRef] = []
     conflicting: list[EvidenceRef] = []
+    by_id = {item.evidence_id: item for item in state.evidence}
+    if focus.source == "knowledge_frontier":
+        for evidence_id in focus.evidence_refs:
+            item = by_id.get(evidence_id)
+            if item is not None:
+                relevant.append(item)
     for item in state.evidence:
+        if focus.source == "knowledge_frontier" and item.evidence_id in wanted:
+            continue
         text = f"{item.summary} {item.content}".lower()
         target = conflicting if any(word in text for word in ("contrary", "conflict", "fails", "not ", "unsupported", "weaken")) else relevant
         if item.evidence_id in wanted or len(relevant) + len(conflicting) < budget:
             target.append(item)
+    if focus.source == "knowledge_frontier":
+        pinned = [item for item in relevant if item.evidence_id in wanted]
+        remainder = [item for item in relevant if item.evidence_id not in wanted]
+        return tuple((pinned + remainder)[:budget]), tuple(conflicting[: max(1, budget // 3)])
     return tuple(relevant[:budget]), tuple(conflicting[: max(1, budget // 3)])
 
 
@@ -2286,7 +3059,7 @@ def _request_from_mapping(data: Mapping[str, Any]) -> CognitiveOperationRequest:
 
 def _result_from_mapping(data: Mapping[str, Any]) -> CognitiveOperationResult:
     payload = dict(data)
-    for key in ("evidence_refs", "contrary_evidence_considered", "assumptions", "rejection_reasons"):
+    for key in ("evidence_refs", "contrary_evidence_considered", "assumptions", "rejection_reasons", "evaluation_reasons"):
         payload[key] = tuple(payload.get(key) or ())
     return CognitiveOperationResult(**payload)
 

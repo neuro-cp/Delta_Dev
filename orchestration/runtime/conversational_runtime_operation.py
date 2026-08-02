@@ -27,6 +27,10 @@ from orchestration.runtime.active_cognitive_loop import (
     write_episode_state,
 )
 from orchestration.runtime.delta_1_0_common import stable_id, utc_now
+from orchestration.runtime.provisional_semantic_consolidation import (
+    ConsolidationIntegrityError,
+    ingest_episode_at_runtime_root,
+)
 
 
 SCHEMA_VERSION = "conversational_runtime_operation_marathon_1_v1"
@@ -168,8 +172,8 @@ class ConversationalObjective:
     allowed_actions: tuple[str, ...]
     prohibited_actions: tuple[str, ...]
     local_evidence_sources: tuple[str, ...]
-    cycle_budget: int
-    model_call_budget: int
+    cycle_budget: int | None
+    model_call_budget: int | None
     interruption_policy: str
     correction_learning_policy: str
     completion_or_review_condition: str
@@ -258,6 +262,12 @@ class ChatAddressableRequest:
     provider_impact: str = ""
     protected_path_impact: str = ""
     created_turn_id: str = ""
+    thread_id: str = ""
+    rendered_turn_id: str = ""
+    created_sequence: int = 0
+    render_sequence: int = 0
+    accepted_response_types: tuple[str, ...] = ()
+    resolution_state: str = "pending"
     resolved_turn_id: str = ""
     resolution_text: str = ""
     resolution_policy: str = ""
@@ -271,6 +281,64 @@ class ChatAddressableRequest:
 
     def as_record(self) -> dict[str, Any]:
         return asdict(self)
+
+
+CLARIFICATION_PRESSURES = frozenset({
+    "ambiguous_reference",
+    "ambiguous_goal",
+    "missing_evidence",
+    "contradictory_claim",
+    "operator_preference",
+    "cross_topic_relevance",
+    "blocked_authority",
+})
+
+
+def compile_chat_clarification_request(
+    state: "ConversationalRuntimeState",
+    *,
+    pressure: str,
+    prompt_text: str,
+    source_record_ids: Sequence[str] = (),
+    objective_id: str = "",
+    created_turn_id: str = "",
+    created_sequence: int = 0,
+    request_type: str = "interactive_clarification",
+) -> ChatAddressableRequest:
+    """Compile one durable clarification request; rendering and resolution remain separate."""
+
+    normalized_pressure = str(pressure or "").strip()
+    wording = " ".join(str(prompt_text or "").split())
+    if normalized_pressure not in CLARIFICATION_PRESSURES or not wording:
+        raise ValueError("clarification request requires a known pressure and visible wording")
+    goal_id = objective_id or (state.active_objective.objective_id if state.active_objective else "")
+    source_refs = tuple(sorted({str(item) for item in source_record_ids if str(item)}))
+    sequence = int(created_sequence or len(state.conversation) + 1)
+    request_id = stable_id(
+        "chat-clarification-request",
+        state.runtime_id,
+        normalized_pressure,
+        goal_id,
+        created_turn_id,
+        *source_refs,
+        wording,
+    )
+    return ChatAddressableRequest(
+        request_id=request_id,
+        request_type=request_type,
+        objective_id=goal_id,
+        originating_goal_id=goal_id,
+        goal_label="Clarification",
+        prompt_text=wording,
+        created_turn_id=created_turn_id,
+        thread_id=goal_id or "foreground-clarification",
+        created_sequence=sequence,
+        accepted_response_types=("clarification",),
+        baseline_metrics={
+            "clarification_pressure": normalized_pressure,
+            "source_record_ids": source_refs,
+        },
+    )
 
 
 @dataclass(frozen=True)
@@ -532,6 +600,90 @@ def _goal_execution_mode(message: str) -> str:
     return "generic_conversational_cognition"
 
 
+def _strip_goal_prefix(message: str) -> str:
+    text = " ".join(str(message or "").split()).strip()
+    return re.sub(r"^your (new )?goal (today )?is (to )?", "", text, flags=re.IGNORECASE).strip()
+
+
+def _knowledge_goal_contract(message: str) -> dict[str, Any]:
+    full = " ".join(str(message or "").split()).strip()
+    objective = _strip_goal_prefix(full)
+    lower = full.lower()
+    before_constraints = re.split(r"\buse local cognition\b|\bask me only\b|\bcontinue until\b|\bdo not\b", objective, maxsplit=1, flags=re.IGNORECASE)[0]
+    topic_source = before_constraints.split(":", 1)[0] if ":" in before_constraints else re.split(r"\.\s*study\b", before_constraints, maxsplit=1, flags=re.IGNORECASE)[0]
+    topic = topic_source
+    topic = re.sub(r"^(?:build|create|study|learn|research|understand|explain)\b\s*(?:(?:a|an|the)\s+)?(?:local\s+)?", "", topic, flags=re.IGNORECASE).strip(" .")
+    topic = re.sub(r"^knowledge map of\s+", "", topic, flags=re.IGNORECASE).strip(" .") or objective
+    study_matches = re.findall(r"\bstudy\s+(.+?)(?:\.\s|$)", objective, flags=re.IGNORECASE)
+    source = (
+        before_constraints.split(":", 1)[1]
+        if ":" in before_constraints
+        else study_matches[-1] if study_matches else before_constraints
+    )
+    requested = _extract_material_knowledge_clauses(source, topic)
+    if not requested:
+        requested = [topic]
+    requested = list(dict.fromkeys(requested))
+    material_requirements = tuple({
+        "requirement_id": stable_id("knowledge-material-requirement", topic, str(index), item),
+        "text": item,
+    } for index, item in enumerate(requested, start=1))
+    criteria = tuple("address " + str(item["text"]) for item in material_requirements)
+    if "recommend" in lower and not any("recommend" in item for item in criteria):
+        criteria = criteria + ("identify information needed before a specific recommendation",)
+    if "completion" in lower or "blocking" in lower or "remaining-gap" in lower or "remaining gap" in lower:
+        criteria = criteria + ("produce a terminal synthesis or explicit blocked/remaining-gap report",)
+    return {
+        "full_operator_wording": full,
+        "normalized_topic": topic,
+        "requested_subtopics": tuple(requested),
+        "material_requirements": material_requirements,
+        "evidence_source_constraints": tuple(
+            item for item, present in (
+                ("local cognition first", "use local cognition" in lower),
+                ("existing local evidence first", "existing local evidence" in lower),
+                ("no external provider without approval", "provider" in lower or "local" in lower),
+            )
+            if present
+        ),
+        "follow_up_question_policy": "ask only for missing information that materially changes the answer" if "ask me only" in lower else "ask only when materially needed",
+        "budget_continuation_instruction": "continue until available local resources or budgets are exhausted" if "continue until" in lower else "bounded local cycle budget",
+        "completion_report_instruction": "give a clear completion, blocking, or remaining-gap report" if ("blocking" in lower or "remaining-gap" in lower or "remaining gap" in lower) else "report terminal outcome",
+        "prohibited_actions": tuple(item for item, present in (("source code changes", "change source" in lower or "source code" in lower), ("restart", "restart" in lower)) if present),
+        "completion_criteria": criteria,
+    }
+
+
+def _extract_material_knowledge_clauses(source: str, topic: str) -> list[str]:
+    """Preserve each operator-requested knowledge clause before node planning."""
+    source = " ".join(str(source or "").strip(" .").split())
+    parts = re.split(r"\s*(?:,|;|\band\b|\bor\b)\s*", source, flags=re.IGNORECASE)
+    requested: list[str] = []
+    for part in parts:
+        cleaned = _normalize_knowledge_subtopic(part, topic)
+        cleaned = re.sub(r"^(?:to\s+)?build\s+a\s+local\s+knowledge\s+map\s+of\s+", "", cleaned, flags=re.IGNORECASE)
+        cleaned = re.sub(r"^(?:understand|study|learn|research|explain)\s+" + re.escape(topic) + r"\s*:\s*", "", cleaned, flags=re.IGNORECASE)
+        if cleaned and cleaned.lower() not in {topic.lower(), "local evidence first"}:
+            requested.append(cleaned)
+    return requested
+
+
+def _normalize_knowledge_subtopic(part: str, topic: str) -> str:
+    cleaned = " ".join(str(part or "").strip(" .").split())
+    cleaned = re.sub(r"^(?:and|or)\s+", "", cleaned, flags=re.IGNORECASE)
+    lower = cleaned.lower()
+    if lower in {"how they work", "how it works", "how this works", "how those work"}:
+        return f"operating principle of {topic}"
+    if lower in {"they work", "it works", "this works", "those work"}:
+        return f"operating principle of {topic}"
+    if lower.startswith("how "):
+        return cleaned
+    cleaned = re.sub(r"^(?:what|which)\s+", "", cleaned, flags=re.IGNORECASE)
+    if cleaned.lower().startswith("when "):
+        return "conditions " + cleaned
+    return cleaned
+
+
 def _goal_review_label(objective: ConversationalObjective | None) -> str:
     if objective is None:
         return "No active goal"
@@ -547,12 +699,67 @@ def _goal_review_label(objective: ConversationalObjective | None) -> str:
     return (label[:72].rstrip(" .,;:") or "Active goal")
 
 
+def _knowledge_model_budget_request(
+    objective: ConversationalObjective,
+    *,
+    required_nodes: int,
+    completed_nodes: int,
+    model_calls_used: int,
+    exhausted: bool,
+) -> ChatAddressableRequest:
+    remaining_nodes = max(0, int(required_nodes) - int(completed_nodes))
+    if objective.model_call_budget is None:
+        raise ValueError("unlimited_local_knowledge_goals_do_not_need_budget_approval")
+    current_budget = int(objective.model_call_budget)
+    extra_calls = (
+        remaining_nodes + 1 + min(4, max(2, remaining_nodes // 4))
+        if exhausted
+        else max(0, required_nodes + 1 + min(4, max(2, required_nodes // 4)) - current_budget)
+    )
+    recommended_budget = current_budget + extra_calls
+    introduction = (
+        "The local-model call budget is exhausted."
+        if exhausted
+        else "This goal needs more local-model calls than the current budget allows."
+    )
+    prompt = (
+        "[Budget boundary]\n"
+        f"{introduction} Temporarily increase the budget for this goal?\n\n"
+        f"Required nodes: {required_nodes}\n"
+        f"Completed: {completed_nodes}\n"
+        f"Remaining: {remaining_nodes}\n"
+        f"Model calls: {model_calls_used}/{current_budget}\n"
+        f"Recommended temporary increase: +{extra_calls} calls\n\n"
+        "Reply Yes to increase for this goal only, or No to stop with a partial report."
+    )
+    return ChatAddressableRequest(
+        request_id=stable_id(
+            "knowledge-budget-request",
+            objective.objective_id,
+            "runtime-exhaustion" if exhausted else "preflight",
+            str(model_calls_used),
+            str(recommended_budget),
+        ),
+        request_type="knowledge_model_budget_increase",
+        objective_id=objective.objective_id,
+        originating_goal_id=objective.objective_id,
+        goal_label=_goal_review_label(objective),
+        prompt_text=prompt,
+        max_calls=recommended_budget,
+        side_thread_effect="does_not_replace_foreground_topic",
+        thread_id=objective.objective_id,
+        accepted_response_types=("approved", "denied"),
+    )
+
+
 def compile_conversational_objective(message: str, intent: ConversationIntent) -> ConversationalObjective:
     text = " ".join(message.split())
     objective_id = stable_id("conversational-objective", text, intent.persistence_scope)
     lower = text.lower()
     execution_mode = _goal_execution_mode(text)
     campaign_mode = execution_mode == "capability_growth_campaign"
+    unlimited_local_knowledge = execution_mode == "knowledge_acquisition"
+    knowledge_contract = _knowledge_goal_contract(text) if execution_mode == "knowledge_acquisition" else {}
     if "english comprehension" in lower or "communicate better" in lower:
         interpreted = "Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer."
         indicators = (
@@ -562,8 +769,11 @@ def compile_conversational_objective(message: str, intent: ConversationIntent) -
             "unrelated cases do not receive false transfer",
             "ordinary chat remains responsive",
         )
+    elif knowledge_contract:
+        interpreted = str(knowledge_contract["normalized_topic"]).strip().capitalize()
+        indicators = tuple(str(item) for item in knowledge_contract["completion_criteria"])
     else:
-        interpreted = re.sub(r"^your (new )?goal (today )?is (to )?", "", text, flags=re.IGNORECASE).strip()
+        interpreted = _strip_goal_prefix(text)
         interpreted = interpreted[:1].upper() + interpreted[1:] if interpreted else text
         indicators = (
             "objective receives a fresh identity and fresh budgets",
@@ -589,8 +799,8 @@ def compile_conversational_objective(message: str, intent: ConversationIntent) -
         allowed_actions=DEFAULT_ALLOWED_ACTIONS,
         prohibited_actions=DEFAULT_PROHIBITED_ACTIONS,
         local_evidence_sources=("conversation turns", "operator corrections", "active cognitive episode state", "continuity lessons"),
-        cycle_budget=24 if campaign_mode else 16,
-        model_call_budget=16 if campaign_mode else 12,
+        cycle_budget=None if unlimited_local_knowledge else (24 if campaign_mode else 16),
+        model_call_budget=None if unlimited_local_knowledge else (16 if campaign_mode else 24),
         interruption_policy="foreground chat preempts background objective work",
         correction_learning_policy="attach corrections to exact turns; consolidate only scoped non-authoritative lessons",
         completion_or_review_condition=(
@@ -604,8 +814,734 @@ def compile_conversational_objective(message: str, intent: ConversationIntent) -
             "intent": intent.as_record(),
             "compiler": "conversational_runtime_operation",
             "execution_mode": execution_mode,
+            "knowledge_contract": knowledge_contract,
         },
     )
+
+
+def _episode_title_for_objective(objective: ConversationalObjective) -> str:
+    if objective.provenance.get("execution_mode") == "knowledge_acquisition":
+        return "Knowledge acquisition objective"
+    return "Conversational English comprehension objective"
+
+
+def _expected_state_for_objective(objective: ConversationalObjective) -> str:
+    if objective.provenance.get("execution_mode") == "knowledge_acquisition":
+        return "Knowledge-specific criteria are advanced through local evidence, concept frontier nodes, and terminal gap reporting."
+    return "Operator-specific comprehension improves through correction-linked strategy revision and transfer checks."
+
+
+def _knowledge_frontier_evidence(objective: ConversationalObjective) -> tuple[EvidenceRef, ...]:
+    contract = objective.provenance.get("knowledge_contract") if isinstance(objective.provenance, Mapping) else None
+    if not isinstance(contract, Mapping):
+        return ()
+    material_requirements = tuple(
+        item for item in contract.get("material_requirements", ())
+        if isinstance(item, Mapping) and str(item.get("requirement_id") or "") and str(item.get("text") or "")
+    )
+    subtopics = tuple(str(item["text"]).strip() for item in material_requirements) or tuple(str(item).strip() for item in contract.get("requested_subtopics", ()) if str(item).strip())
+    criteria = tuple(str(item).strip() for item in contract.get("completion_criteria", ()) if str(item).strip())
+    nodes: list[EvidenceRef] = []
+    for index, label in enumerate(subtopics, start=1):
+        criterion = criteria[min(index - 1, len(criteria) - 1)] if criteria else label
+        requirement_id = str(material_requirements[index - 1]["requirement_id"]) if index <= len(material_requirements) else stable_id("knowledge-material-requirement", objective.objective_id, str(index), label)
+        nodes.append(EvidenceRef(
+            evidence_id=stable_id("knowledge-frontier-node", objective.objective_id, str(index), label),
+            summary=f"Knowledge frontier node {index}: {label}",
+            content=json.dumps({
+                "node_id": stable_id("knowledge-frontier-node", objective.objective_id, str(index), label),
+                "material_requirement_id": requirement_id,
+                "objective_id": objective.objective_id,
+                "label": label,
+                "parent_id": objective.objective_id,
+                "depth": 1,
+                "status": "queued",
+                "evidence_need": f"local evidence and model synthesis for {label}",
+                "completion_criterion_reference": criterion,
+                "minimum_contribution_contract": _knowledge_node_completion_contract(label, criterion),
+                "extracted_concept_ids": [],
+                "extracted_claim_ids": [],
+                "unresolved_questions": [],
+                "attempt_count": 0,
+                "last_progress_digest": "",
+            }, sort_keys=True),
+            source="knowledge_frontier",
+            kind="knowledge_frontier_node",
+        ))
+    return tuple(nodes)
+
+
+def _knowledge_node_completion_contract(label: str, criterion: str) -> dict[str, Any]:
+    """Derive reusable contribution shapes from node semantics, never a topic fixture."""
+    text = f"{label} {criterion}".lower()
+    contract: dict[str, Any] = {
+        "minimum_specific_terms": 3,
+        "requires_explanatory_relation": True,
+        "reject_importance_only": True,
+        "contribution_kind": "explanatory_relation",
+    }
+    # A multi-topic frontier node needs the general causal contract. Requiring one
+    # narrow contribution shape would reject valid coverage of its other topic.
+    if re.search(r"\b(?:and|or)\b|[,/;]", label.lower()):
+        return contract
+    if any(term in text for term in ("maintenance", "inspection", "upkeep", "service")):
+        return {**contract, "contribution_kind": "recurring_actions_with_consequence", "minimum_action_count": 2}
+    if any(term in text for term in ("prevent", "prevention", "avoid", "reduce", "mosquito", "pest", "breeding")):
+        return {**contract, "contribution_kind": "prevention_intervention"}
+    if any(term in text for term in ("overflow", "overload", "spill", "exceed")):
+        return {**contract, "contribution_kind": "threshold_and_safe_mitigation"}
+    if any(term in text for term in ("capacity", "sizing", "volume", "runtime", "duration")):
+        return {**contract, "contribution_kind": "sizing_relation"}
+    if any(term in text for term in ("collect", "collection", "capture", "intake", "harvest")):
+        return {**contract, "contribution_kind": "mechanism_path"}
+    return contract
+
+
+def _knowledge_label_for_objective(objective: ConversationalObjective | None) -> str:
+    return _goal_review_label(objective)
+
+
+def _knowledge_progress_counters(
+    objective: ConversationalObjective,
+    episode: ActiveCognitiveEpisodeState,
+    *,
+    completed_operation_ids: set[str] | None = None,
+    blocked_operation_ids: set[str] | None = None,
+    active_node_index: int = 0,
+    model_calls_used: int | None = None,
+) -> dict[str, Any]:
+    frontier_nodes = tuple(item for item in episode.evidence if item.kind == "knowledge_frontier_node")
+    if completed_operation_ids is None:
+        completed_operation_ids = {result.operation_id for result in episode.operation_results if result.accepted}
+    if blocked_operation_ids is None:
+        blocked_operation_ids = {result.operation_id for result in episode.operation_results if not result.accepted}
+    completed_focuses = {
+        cycle.focus_id
+        for cycle in episode.cycles
+        if cycle.completed
+        and cycle.operation_id in completed_operation_ids
+    }
+    rejected_counts: dict[str, int] = {}
+    for cycle in episode.cycles:
+        if cycle.completed and cycle.operation_id in blocked_operation_ids and cycle.focus_id not in completed_focuses:
+            rejected_counts[cycle.focus_id] = rejected_counts.get(cycle.focus_id, 0) + 1
+    blocked_focuses = {focus_id for focus_id, count in rejected_counts.items() if count >= 2}
+    retryable_focuses = {focus_id for focus_id, count in rejected_counts.items() if count == 1}
+    expected_focuses = {
+        stable_id("focus", episode.episode_id, node.evidence_id)
+        for node in frontier_nodes
+    }
+    unattempted_focuses = expected_focuses - completed_focuses - set(rejected_counts)
+    material_requirements = _knowledge_material_requirements(objective)
+    criteria_total = len(material_requirements) or len(tuple(objective.practical_success_indicators))
+    accepted_refs: set[str] = set()
+    for result in episode.operation_results:
+        if result.accepted and result.operation_id in completed_operation_ids:
+            accepted_refs.update(result.evidence_refs)
+    satisfied = 0
+    for node in frontier_nodes:
+        if node.evidence_id in accepted_refs:
+            satisfied += 1
+    return {
+        "frontier_nodes_completed": len(completed_focuses),
+        "frontier_nodes_total": len(frontier_nodes),
+        "criteria_satisfied": min(satisfied, criteria_total),
+        "criteria_total": criteria_total,
+        "model_calls_used": episode.model_call_count if model_calls_used is None else int(model_calls_used),
+        "model_call_budget": objective.model_call_budget,
+        "cycles_used": len(episode.cycles),
+        "cycle_budget": objective.cycle_budget,
+        "blocked_nodes": len(blocked_focuses),
+        "retryable_nodes": len(retryable_focuses),
+        "unattempted_nodes": len(unattempted_focuses),
+        "unresolved_nodes": max(0, len(frontier_nodes) - len(completed_focuses)),
+        "active_node_index": int(active_node_index),
+    }
+
+
+def _knowledge_frontier_all_attempted(episode: ActiveCognitiveEpisodeState) -> bool:
+    frontier_nodes = tuple(item for item in episode.evidence if item.kind == "knowledge_frontier_node")
+    if not frontier_nodes:
+        return False
+    results = {result.operation_id: result for result in episode.operation_results}
+    accepted_focuses: set[str] = set()
+    rejected_counts: dict[str, int] = {}
+    for cycle in episode.cycles:
+        result = results.get(cycle.operation_id)
+        if result is None:
+            continue
+        if result.accepted:
+            accepted_focuses.add(cycle.focus_id)
+        else:
+            rejected_counts[cycle.focus_id] = rejected_counts.get(cycle.focus_id, 0) + 1
+    expected_focuses = {
+        stable_id("focus", episode.episode_id, node.evidence_id)
+        for node in frontier_nodes
+    }
+    permanently_finished = accepted_focuses | {focus_id for focus_id, count in rejected_counts.items() if count >= 2}
+    return expected_focuses <= permanently_finished
+
+
+def _knowledge_has_global_model_failure(episode: ActiveCognitiveEpisodeState) -> bool:
+    return any(
+        not result.accepted and "local_model_execution_blocked" in result.rejection_reasons
+        for result in episode.operation_results
+    )
+
+
+def _knowledge_stagnation(episode: ActiveCognitiveEpisodeState, *, window: int = 8) -> Mapping[str, Any]:
+    """Detect only repeated nonproductive output across several nodes, never normal long work."""
+    results = {result.operation_id: result for result in episode.operation_results}
+    recent = [
+        (cycle, results.get(cycle.operation_id))
+        for cycle in episode.cycles[-window:]
+        if results.get(cycle.operation_id) is not None
+    ]
+    if len(recent) < window or any(result.accepted for _cycle, result in recent):
+        return {}
+    fingerprints: dict[str, set[str]] = {}
+    for cycle, result in recent:
+        text = " ".join(re.findall(r"[a-z0-9]+", str(result.interpretation or "").lower()))
+        if text:
+            fingerprints.setdefault(text, set()).add(cycle.focus_id)
+    repeated = {
+        fingerprint: focus_ids
+        for fingerprint, focus_ids in fingerprints.items()
+        if len(focus_ids) >= 3
+    }
+    if not repeated:
+        return {}
+    return {
+        "reason": "repeated_nonproductive_hypothesis",
+        "window_calls": len(recent),
+        "repeated_fingerprints": tuple(sorted(repeated)),
+        "affected_focus_ids": tuple(sorted({focus_id for focus_ids in repeated.values() for focus_id in focus_ids})),
+    }
+
+
+def _knowledge_limit_reached(used: int, limit: int | None) -> bool:
+    return limit is not None and used >= limit
+
+
+def _knowledge_call_progress_text(used: int, limit: int | None) -> str:
+    return f"{used} (unlimited local)" if limit is None else f"{used}/{limit}"
+
+
+def _with_updated_knowledge_event_budget(
+    events: Sequence[Mapping[str, Any]],
+    *,
+    objective_id: str,
+    model_call_budget: int | None,
+    cycle_budget: int | None,
+) -> tuple[Mapping[str, Any], ...]:
+    updated: list[Mapping[str, Any]] = []
+    for item in events:
+        if item.get("event") != "knowledge_runtime_event" or item.get("objective_id") != objective_id:
+            updated.append(item)
+            continue
+        counters = dict(item.get("progress_counters") or {})
+        counters["model_call_budget"] = model_call_budget
+        counters["cycle_budget"] = cycle_budget
+        updated.append({**item, "progress_counters": counters})
+    return tuple(updated)
+
+
+def _knowledge_event(
+    objective: ConversationalObjective,
+    *,
+    event_type: str,
+    summary: str,
+    dedupe_key: str,
+    episode: ActiveCognitiveEpisodeState,
+    node_id: str = "",
+    parent_node_id: str = "",
+    model_request_id: str = "",
+    model_result_id: str = "",
+    model_identity: str = "",
+    evidence_refs: Sequence[str] = (),
+    criterion_refs: Sequence[str] = (),
+    visibility: str = "operator_visible",
+    extra: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    payload = {
+        "event": "knowledge_runtime_event",
+        "event_id": stable_id("knowledge-event", objective.objective_id, dedupe_key),
+        "objective_id": objective.objective_id,
+        "goal_thread_id": objective.objective_id,
+        "at": utc_now(),
+        "event_type": event_type,
+        "node_id": node_id,
+        "parent_node_id": parent_node_id,
+        "model_request_id": model_request_id,
+        "model_result_id": model_result_id,
+        "model_identity": model_identity,
+        "evidence_refs": tuple(str(item) for item in evidence_refs if str(item)),
+        "criterion_refs": tuple(str(item) for item in criterion_refs if str(item)),
+        "progress_counters": _knowledge_progress_counters(objective, episode),
+        "summary": summary,
+        "dedupe_key": dedupe_key,
+        "visibility": visibility,
+        "persistence_status": "persisted",
+    }
+    if extra:
+        payload.update(dict(extra))
+    return payload
+
+
+def _frontier_node_label(node: EvidenceRef | Mapping[str, Any]) -> str:
+    summary = str(node.summary if isinstance(node, EvidenceRef) else node.get("summary") or "")
+    match = re.search(r":\s*(.+)$", summary)
+    return match.group(1).strip() if match else summary
+
+
+def _knowledge_material_requirements(objective: ConversationalObjective) -> tuple[Mapping[str, str], ...]:
+    contract = objective.provenance.get("knowledge_contract") if isinstance(objective.provenance, Mapping) else None
+    if not isinstance(contract, Mapping):
+        return ()
+    requirements = tuple(
+        {"requirement_id": str(item.get("requirement_id")), "text": str(item.get("text"))}
+        for item in contract.get("material_requirements", ())
+        if isinstance(item, Mapping) and str(item.get("requirement_id") or "") and str(item.get("text") or "")
+    )
+    if requirements:
+        return requirements
+    return tuple(
+        {
+            "requirement_id": stable_id("knowledge-material-requirement", objective.objective_id, str(index), str(item)),
+            "text": str(item),
+        }
+        for index, item in enumerate(contract.get("requested_subtopics", ()), start=1)
+        if str(item).strip()
+    )
+
+
+def _frontier_requirement_id(node: EvidenceRef | Mapping[str, Any]) -> str:
+    raw_content = node.content if isinstance(node, EvidenceRef) else node.get("content") or ""
+    try:
+        content = json.loads(str(raw_content)) if isinstance(raw_content, str) else dict(raw_content)
+    except (TypeError, ValueError, json.JSONDecodeError):
+        content = {}
+    return str(content.get("material_requirement_id") or "")
+
+
+def _knowledge_requirement_coverage(
+    objective: ConversationalObjective,
+    episode: ActiveCognitiveEpisodeState,
+) -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
+    requirements = _knowledge_material_requirements(objective)
+    nodes = tuple(item for item in episode.evidence if item.kind == "knowledge_frontier_node")
+    planned_ids = {_frontier_requirement_id(node) for node in nodes}
+    accepted_refs = {
+        ref
+        for result in episode.operation_results
+        if result.accepted
+        for ref in result.evidence_refs
+        if ref
+    }
+    satisfied_ids = {
+        _frontier_requirement_id(node)
+        for node in nodes
+        if node.evidence_id in accepted_refs
+    }
+    satisfied = tuple(item["text"] for item in requirements if item["requirement_id"] in satisfied_ids)
+    missing = tuple(item["text"] for item in requirements if item["requirement_id"] not in planned_ids)
+    unsatisfied = tuple(
+        item["text"]
+        for item in requirements
+        if item["requirement_id"] not in satisfied_ids and item["text"] not in set(missing)
+    )
+    return satisfied, missing, unsatisfied
+
+
+def _bounded_model_output_excerpt(raw_model_output: str) -> str:
+    text = str(raw_model_output or "").strip()
+    if not text:
+        return ""
+    try:
+        payload = json.loads(text)
+    except json.JSONDecodeError:
+        payload = None
+    if isinstance(payload, Mapping):
+        pieces = []
+        for key in ("scope", "hypothesis_statement", "uncertainty"):
+            value = str(payload.get(key) or "").strip()
+            if value:
+                pieces.append(f"{key}: {value}")
+        assumptions = tuple(str(item).strip() for item in payload.get("assumptions", ()) if str(item).strip())
+        observations = tuple(str(item).strip() for item in payload.get("expected_observations", ()) if str(item).strip())
+        if assumptions:
+            pieces.append("assumptions: " + "; ".join(assumptions[:2]))
+        if observations:
+            pieces.append("expected: " + "; ".join(observations[:2]))
+        text = " | ".join(pieces) if pieces else text
+    text = " ".join(text.split())
+    return text[:700] + ("..." if len(text) > 700 else "")
+
+
+def _bounded_knowledge_statement(text: str, *, limit: int = 220) -> str:
+    cleaned = " ".join(str(text or "").split())
+    return cleaned[:limit] + ("..." if len(cleaned) > limit else "")
+
+
+def _accepted_knowledge_claims(result: CognitiveOperationResult) -> tuple[str, ...]:
+    claims = []
+    if result.interpretation:
+        claims.append(result.interpretation)
+    return tuple(_dedupe_knowledge_lines(_bounded_knowledge_statement(item) for item in claims if str(item).strip()))[:6]
+
+
+def _accepted_knowledge_relationships(result: CognitiveOperationResult) -> tuple[str, ...]:
+    return ()
+
+
+def _knowledge_events_from_episode(
+    objective: ConversationalObjective,
+    episode: ActiveCognitiveEpisodeState,
+    existing_events: Sequence[Mapping[str, Any]] = (),
+) -> tuple[Mapping[str, Any], ...]:
+    existing_dedupe = {
+        str(item.get("dedupe_key") or "")
+        for item in existing_events
+        if item.get("event") == "knowledge_runtime_event"
+    }
+    frontier_nodes = tuple(item for item in episode.evidence if item.kind == "knowledge_frontier_node")
+    node_by_id = {item.evidence_id: item for item in frontier_nodes}
+    events: list[Mapping[str, Any]] = []
+
+    def add(event: Mapping[str, Any]) -> None:
+        key = str(event.get("dedupe_key") or "")
+        if key and key not in existing_dedupe:
+            existing_dedupe.add(key)
+            events.append(event)
+
+    if frontier_nodes:
+        add(_knowledge_event(
+            objective,
+            event_type="knowledge_frontier_created",
+            summary=f"Created {len(frontier_nodes)} initial knowledge nodes.",
+            dedupe_key=f"{objective.objective_id}:frontier_created:{len(frontier_nodes)}",
+            episode=episode,
+            visibility="operator_visible",
+            extra={"created_node_count": len(frontier_nodes)},
+        ))
+        for node in frontier_nodes:
+            add(_knowledge_event(
+                objective,
+                event_type="knowledge_node_created",
+                summary=f"Created node: {_frontier_node_label(node)}.",
+                dedupe_key=f"{objective.objective_id}:node_created:{node.evidence_id}",
+                episode=episode,
+                node_id=node.evidence_id,
+                evidence_refs=(node.evidence_id,),
+                visibility="advanced_detail",
+            ))
+
+    packets_by_cycle = {packet.cycle_id: packet for packet in episode.working_memory_packets}
+    requests_by_operation = {request.operation_id: request for request in episode.operation_requests}
+    results_by_operation = {result.operation_id: result for result in episode.operation_results}
+    for cycle in episode.cycles:
+        request = requests_by_operation.get(cycle.operation_id)
+        result = results_by_operation.get(cycle.operation_id)
+        packet = packets_by_cycle.get(cycle.cycle_id)
+        prior_completed_ops = {
+            prior.operation_id
+            for prior in episode.operation_results
+            if prior.accepted
+            and any(prior_cycle.operation_id == prior.operation_id and prior_cycle.sequence < cycle.sequence for prior_cycle in episode.cycles)
+        }
+        prior_blocked_ops = {
+            prior.operation_id
+            for prior in episode.operation_results
+            if not prior.accepted
+            and any(prior_cycle.operation_id == prior.operation_id and prior_cycle.sequence < cycle.sequence for prior_cycle in episode.cycles)
+        }
+        node_id = str((packet.active_focus.get("active_frontier_node") or {}).get("node_id") or "") if packet else ""
+        node_index = next((index for index, node in enumerate(frontier_nodes, start=1) if node.evidence_id == node_id), 0)
+        pre_result_counters = _knowledge_progress_counters(
+            objective,
+            episode,
+            completed_operation_ids=prior_completed_ops,
+            blocked_operation_ids=prior_blocked_ops,
+            active_node_index=node_index,
+            model_calls_used=max(0, episode.model_call_count - (1 if result else 0)),
+        )
+        focus_label = ""
+        evidence_refs: tuple[str, ...] = ()
+        if packet:
+            focus_label = str(packet.active_focus.get("description") or "")
+            evidence_refs = tuple(str(item.get("evidence_id") or "") for item in packet.relevant_evidence if item.get("evidence_id"))
+            node_id = str((packet.active_focus.get("active_frontier_node") or {}).get("node_id") or "")
+        if not focus_label and request:
+            focus_label = str(request.task or request.focus_id)
+        short_label = re.sub(r"^(?:Resolve|Retry|Repair response format for) knowledge frontier:\s*", "", focus_label).strip() or "current node"
+        if cycle.focus_id:
+            add(_knowledge_event(
+                objective,
+                event_type="knowledge_node_selected",
+                summary=f"Selected {short_label}.",
+                dedupe_key=f"{objective.objective_id}:node_selected:{cycle.focus_id}",
+                episode=episode,
+                node_id=node_id,
+                evidence_refs=evidence_refs,
+                extra={"progress_counters": pre_result_counters},
+            ))
+        if packet:
+            packet_summary = (
+                f"Prepared a format-repair packet for {short_label} with {len(packet.relevant_evidence)} evidence item(s)."
+                if request and request.operation_type == "repair_node_specific_hypothesis_format"
+                else
+                f"Prepared a retry evidence packet for {short_label} with {len(packet.relevant_evidence)} evidence item(s)."
+                if request and request.operation_type == "reformulate_node_specific_hypothesis"
+                else f"Prepared a bounded evidence packet with {len(packet.relevant_evidence)} evidence item(s)."
+            )
+            add(_knowledge_event(
+                objective,
+                event_type="evidence_packet_prepared",
+                summary=packet_summary,
+                dedupe_key=f"{objective.objective_id}:packet_prepared:{packet.packet_digest}",
+                episode=episode,
+                node_id=node_id,
+                evidence_refs=evidence_refs,
+                visibility="operator_visible",
+                extra={"prompt_rendered": False, "evidence_item_count": len(packet.relevant_evidence), "progress_counters": pre_result_counters},
+            ))
+        if request:
+            add(_knowledge_event(
+                objective,
+                event_type="local_model_request_started",
+                summary=f"Started {request.operation_type} with {_friendly_model_name(request.model_identity)}.",
+                dedupe_key=f"{objective.objective_id}:model_started:{request.operation_id}",
+                episode=episode,
+                node_id=node_id,
+                model_request_id=request.operation_id,
+                model_identity=request.model_identity,
+                evidence_refs=evidence_refs,
+                extra={"progress_counters": pre_result_counters},
+            ))
+        if result:
+            received_type = "local_model_response_received" if result.accepted else "local_model_response_rejected"
+            received_summary = "Response accepted." if result.accepted else "Response rejected: " + ", ".join(result.rejection_reasons)
+            add(_knowledge_event(
+                objective,
+                event_type=received_type,
+                summary=received_summary,
+                dedupe_key=f"{objective.objective_id}:model_result:{result.operation_id}:{result.accepted}",
+                episode=episode,
+                node_id=node_id,
+                model_request_id=result.operation_id,
+                model_result_id=result.operation_id,
+                model_identity=result.model_identity,
+                evidence_refs=result.evidence_refs,
+                extra={
+                    "rejection_reasons": result.rejection_reasons,
+                    "model_output_excerpt": _bounded_model_output_excerpt(result.raw_model_output),
+                    "delta_interpretation": result.interpretation,
+                    "delta_acceptance": "accepted" if result.accepted else "rejected",
+                    "evaluation_state": result.evaluation_state,
+                    "evaluation_reasons": result.evaluation_reasons,
+                },
+            ))
+            if result.accepted:
+                claims = _accepted_knowledge_claims(result)
+                relationships = _accepted_knowledge_relationships(result)
+                claim_count = len(claims)
+                relationship_count = len(relationships)
+                add(_knowledge_event(
+                    objective,
+                    event_type="knowledge_claims_extracted",
+                    summary=f"Accepted {claim_count} claim(s) and identified {relationship_count} relationship-like statement(s).",
+                    dedupe_key=f"{objective.objective_id}:claims_extracted:{result.operation_id}:{claim_count}:{relationship_count}",
+                    episode=episode,
+                    node_id=node_id,
+                    model_result_id=result.operation_id,
+                    model_identity=result.model_identity,
+                    evidence_refs=result.evidence_refs,
+                    extra={
+                        "claim_count": claim_count,
+                        "relationship_count": relationship_count,
+                        "accepted_claims": claims,
+                        "identified_relationships": relationships,
+                    },
+                ))
+                add(_knowledge_event(
+                    objective,
+                    event_type="knowledge_understanding_updated",
+                    summary=f"Added accepted support for {short_label}.",
+                    dedupe_key=f"{objective.objective_id}:understanding:{result.operation_id}",
+                    episode=episode,
+                    node_id=node_id,
+                    model_result_id=result.operation_id,
+                    evidence_refs=result.evidence_refs,
+                ))
+                add(_knowledge_event(
+                    objective,
+                    event_type="knowledge_node_completed",
+                    summary=f"Completed {short_label}.",
+                    dedupe_key=f"{objective.objective_id}:node_completed:{cycle.focus_id}",
+                    episode=episode,
+                    node_id=node_id,
+                    model_result_id=result.operation_id,
+                    evidence_refs=result.evidence_refs,
+                ))
+            else:
+                rejected_attempts = sum(
+                    1
+                    for prior_cycle in episode.cycles
+                    if prior_cycle.focus_id == cycle.focus_id
+                    and prior_cycle.sequence <= cycle.sequence
+                    and not (results_by_operation.get(prior_cycle.operation_id) or result).accepted
+                )
+                format_repair = (
+                    request is not None
+                    and request.operation_type == "reformulate_node_specific_hypothesis"
+                    and "retry_output_schema_invalid" in result.rejection_reasons
+                )
+                retrying = rejected_attempts == 1
+                add(_knowledge_event(
+                    objective,
+                    event_type=(
+                        "knowledge_node_format_repair_scheduled" if format_repair
+                        else "knowledge_node_retry_scheduled" if retrying else "knowledge_node_blocked"
+                    ),
+                    summary=(
+                        f"Format repair scheduled for {short_label}: "
+                        if format_repair else
+                        f"Retry scheduled for {short_label}: "
+                        if retrying else f"Blocked incomplete {short_label}: "
+                    ) + ", ".join(result.rejection_reasons),
+                    dedupe_key=(
+                        f"{objective.objective_id}:node_format_repair:{cycle.focus_id}:{','.join(result.rejection_reasons)}"
+                        if format_repair else
+                        f"{objective.objective_id}:node_retry:{cycle.focus_id}:{','.join(result.rejection_reasons)}"
+                        if retrying else f"{objective.objective_id}:node_blocked:{cycle.focus_id}:{','.join(result.rejection_reasons)}"
+                    ),
+                    episode=episode,
+                    node_id=node_id,
+                    model_result_id=result.operation_id,
+                    evidence_refs=result.evidence_refs,
+                ))
+
+    if episode.loop_state in {"blocked_insufficient_evidence", "blocked_capability_gap", "paused_budget"} or episode.completed:
+        add(_knowledge_event(
+            objective,
+            event_type="knowledge_budget_updated",
+            summary=f"Budget/status update: {episode.loop_state}.",
+            dedupe_key=f"{objective.objective_id}:budget:{episode.loop_state}:{episode.model_call_count}:{len(episode.cycles)}",
+            episode=episode,
+            visibility="operator_visible",
+        ))
+    return tuple(events)
+
+
+def _friendly_model_name(model_identity: str) -> str:
+    lower = str(model_identity or "").lower()
+    if "qwen" in lower:
+        return "Qwen"
+    if "llama" in lower:
+        return "Llama"
+    if lower.startswith("shared-local-model-ledger"):
+        return "Local model"
+    return str(model_identity or "local model")
+
+
+def unrendered_knowledge_goal_events(state: ConversationalRuntimeState) -> tuple[Mapping[str, Any], ...]:
+    rendered = {
+        str(item.get("event_id") or "")
+        for item in state.objective_progress
+        if item.get("event") == "knowledge_runtime_event_rendered"
+    }
+    events = []
+    for item in state.objective_progress:
+        if item.get("event") != "knowledge_runtime_event":
+            continue
+        if item.get("visibility") != "operator_visible":
+            continue
+        event_id = str(item.get("event_id") or "")
+        if event_id and event_id not in rendered:
+            events.append(item)
+    return tuple(events)
+
+
+def mark_knowledge_goal_event_rendered(
+    state: ConversationalRuntimeState,
+    event_id: str,
+    *,
+    runtime_root: str | Path | None = None,
+) -> ConversationalRuntimeState:
+    if any(item.get("event") == "knowledge_runtime_event_rendered" and item.get("event_id") == event_id for item in state.objective_progress):
+        return state
+    updated = _replace_state(
+        state,
+        objective_progress=state.objective_progress + ({"event": "knowledge_runtime_event_rendered", "event_id": event_id, "at": utc_now()},),
+    )
+    if runtime_root is not None:
+        save_runtime_state(runtime_root, updated)
+    return updated
+
+
+def render_knowledge_goal_event(event: Mapping[str, Any], objective: ConversationalObjective | None = None) -> str:
+    label = _knowledge_label_for_objective(objective)
+    counters = dict(event.get("progress_counters") or {})
+    event_type = str(event.get("event_type") or "")
+    summary = str(event.get("summary") or "").strip()
+    progress = (
+        f"Progress: completed {counters.get('frontier_nodes_completed', 0)}/{counters.get('frontier_nodes_total', 0)} nodes; "
+        f"active node {counters.get('active_node_index', 0) or '-'}; "
+        f"{counters.get('criteria_satisfied', 0)}/{counters.get('criteria_total', 0)} criteria; "
+        f"model calls {_knowledge_call_progress_text(int(counters.get('model_calls_used', 0)), counters.get('model_call_budget'))}; "
+        f"blocked {counters.get('blocked_nodes', 0)}; retryable {counters.get('retryable_nodes', 0)}; "
+        f"unattempted {counters.get('unattempted_nodes', 0)}; unresolved {counters.get('unresolved_nodes', 0)}"
+    )
+    if event_type == "local_model_request_started":
+        header = f"[Local model \u00b7 {_friendly_model_name(str(event.get('model_identity') or ''))}]"
+    elif event_type in {"local_model_response_received", "local_model_response_rejected"}:
+        header = "[Local model result]"
+    elif event_type in {"knowledge_claims_extracted", "knowledge_understanding_updated", "knowledge_node_completed", "knowledge_node_blocked", "knowledge_budget_updated"}:
+        header = f"[Knowledge update \u00b7 {label}]"
+    else:
+        header = f"[Goal activity \u00b7 {label}]"
+    lines = [header, summary]
+    if event_type in {"local_model_response_received", "local_model_response_rejected"}:
+        excerpt = str(event.get("model_output_excerpt") or "").strip()
+        interpretation = str(event.get("delta_interpretation") or "").strip()
+        if excerpt:
+            lines.append("Model output: " + excerpt)
+        if interpretation:
+            lines.append("DELTA interpretation: " + interpretation[:500] + ("..." if len(interpretation) > 500 else ""))
+        evaluation = _render_knowledge_evaluation(
+            str(event.get("evaluation_state") or ""),
+            tuple(str(item) for item in event.get("evaluation_reasons", ()) if str(item)),
+        )
+        if evaluation:
+            lines.append("Local evaluation: " + evaluation)
+    if event_type == "knowledge_claims_extracted":
+        claims = tuple(str(item).strip() for item in event.get("accepted_claims", ()) if str(item).strip())
+        relationships = tuple(str(item).strip() for item in event.get("identified_relationships", ()) if str(item).strip())
+        if claims:
+            lines.append("Accepted claims:")
+            lines.extend(f"- {item}" for item in claims[:4])
+        if relationships:
+            lines.append("Relationship-like statements:")
+            lines.extend(f"- {item}" for item in relationships[:3])
+    lines.append(progress)
+    return "\n".join(lines)
+
+
+def _render_knowledge_evaluation(state: str, reasons: Sequence[str]) -> str:
+    if state in {"", "not_evaluated"}:
+        return ""
+    if state == "supported":
+        return "no deterministic contradiction found."
+    rendered_reasons = []
+    for reason in reasons:
+        if reason.startswith("arithmetic_capacity_shortfall:"):
+            rendered_reasons.append("the stated capacity is less than the stated demand")
+        elif reason == "missing_candidate_proposition":
+            rendered_reasons.append("the response did not contain a candidate proposition")
+        else:
+            rendered_reasons.append(reason.replace("_", " "))
+    detail = "; ".join(dict.fromkeys(rendered_reasons)) or "no reason was recorded"
+    return f"{state}: {detail}."
 
 
 def derive_standing_authority(objective: ConversationalObjective) -> StandingAuthority:
@@ -972,7 +1908,7 @@ def _active_goal_health(state: ConversationalRuntimeState, objective: Conversati
         return {"healthy": False, "reason": "no_active_objective"}
     if state.lifecycle_state in {"paused_budget", "paused_operator", "stopped", "failed", "blocked", "stalled", "model_budget_exhausted", "review_ready", "completed", "archived"}:
         return {"healthy": False, "reason": state.lifecycle_state}
-    if len(state.completed_cycle_keys) >= objective.cycle_budget:
+    if objective.cycle_budget is not None and len(state.completed_cycle_keys) >= objective.cycle_budget:
         return {"healthy": False, "reason": "cycle_budget_exhausted"}
     if objective.provenance.get("execution_mode") == "capability_growth_campaign":
         campaign = _active_capability_campaign(state)
@@ -1273,18 +2209,52 @@ def _pending_request_for_reply(state: ConversationalRuntimeState, message: str) 
     kind = _chat_request_resolution_kind(message)
     if kind is None:
         return None
-    latest = state.pending_chat_requests[-1]
-    if latest.status != "pending" or latest.consumption_count:
+    compatibility_defaults = {
+        "provider_authority": ("approved", "denied"),
+        "directional_question": ("directional", "denied", "approved"),
+        "local_model_execution": ("approved", "denied"),
+        "knowledge_model_budget_increase": ("approved", "denied"),
+        "capability_adoption_and_restart": ("approved", "denied", "show_evidence"),
+    }
+    candidates = []
+    for index, request in enumerate(state.pending_chat_requests):
+        if request.status != "pending" or request.consumption_count:
+            continue
+        accepted = tuple(request.accepted_response_types or compatibility_defaults.get(request.request_type, ()))
+        if kind not in accepted:
+            continue
+        candidates.append((request.render_sequence, request.created_sequence, index, request))
+    if not candidates:
         return None
-    if latest.request_type == "provider_authority" and kind in {"approved", "denied"}:
-        return latest
-    if latest.request_type == "directional_question" and kind in {"directional", "denied", "approved"}:
-        return latest
-    if latest.request_type == "local_model_execution" and kind in {"approved", "denied"}:
-        return latest
-    if latest.request_type == "capability_adoption_and_restart" and kind in {"approved", "denied", "show_evidence"}:
-        return latest
-    return None
+    if len(candidates) > 1 and max(item[0] for item in candidates) <= 0:
+        return None
+    # The most recently rendered compatible prompt owns an otherwise ambiguous reply.
+    return max(candidates, key=lambda item: item[:3])[3]
+
+
+def select_chat_request_owner(state: ConversationalRuntimeState, message: str) -> ChatAddressableRequest | None:
+    """Expose conversational ownership selection without exposing request-type precedence."""
+    return _pending_request_for_reply(state, message)
+
+
+def mark_chat_request_rendered(
+    state: ConversationalRuntimeState,
+    request_id: str,
+    *,
+    rendered_turn_id: str,
+    render_sequence: int,
+) -> ConversationalRuntimeState:
+    updated = tuple(
+        replace(
+            request,
+            rendered_turn_id=rendered_turn_id,
+            render_sequence=render_sequence,
+        )
+        if request.request_id == request_id and request.status == "pending" and not request.consumption_count
+        else request
+        for request in state.pending_chat_requests
+    )
+    return _replace_state(state, pending_chat_requests=updated)
 
 
 STRUCTURED_DISCOURSE_CAPABILITY_ID = "structured-discourse-reconciliation"
@@ -2114,10 +3084,71 @@ def resolve_pending_chat_request(
             chat_request=resolved_request.as_record(),
             side_thread_bound=True,
         )
+    if request.request_type == "knowledge_model_budget_increase":
+        if resolution_kind == "approved":
+            new_budget = max(state.active_objective.model_call_budget if state.active_objective else 0, request.max_calls)
+            updated_objective = replace(
+                state.active_objective,
+                model_call_budget=new_budget,
+                cycle_budget=max(state.active_objective.cycle_budget, new_budget),
+                provenance={
+                    **state.active_objective.provenance,
+                    "temporary_model_call_budget": {
+                        "approved_request_id": request.request_id,
+                        "authorized_model_call_budget": new_budget,
+                        "approved_at": utc_now(),
+                        "scope": "active_goal_only",
+                    },
+                },
+            ) if state.active_objective else None
+            resolved_request = ChatAddressableRequest(**{**request.as_record(), "status": "consumed", "resolution_state": "consumed", "resolution": "approved", "resolution_policy": "approved_temporary_goal_budget", "resolution_text": message, "resolved_turn_id": user_turn.turn_id, "resolved_at": utc_now(), "consumed_at": utc_now(), "consumption_count": 1})
+            reply = f"Approved. I temporarily increased this goal's local-model budget to {new_budget} calls and will continue the same goal thread."
+            lifecycle = "running"
+            progress_event = {"event": "knowledge_model_budget_increase_approved", "request_id": request.request_id, "authorized_model_call_budget": new_budget, "scope": "active_goal_only", "at": utc_now()}
+        else:
+            resolved_request = ChatAddressableRequest(**{**request.as_record(), "status": "denied", "resolution_state": "denied", "resolution": "denied", "resolution_policy": "denied_stop_with_partial_report", "resolution_text": message, "resolved_turn_id": user_turn.turn_id, "resolved_at": utc_now(), "consumption_count": 1})
+            updated_objective = state.active_objective
+            reply = "Understood. I stopped the budget increase and will keep the current partial report as the terminal state."
+            lifecycle = "paused_budget"
+            progress_event = {"event": "knowledge_model_budget_increase_denied", "request_id": request.request_id, "at": utc_now()}
+        pending = tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id)
+        assistant_turn = ConversationTurn(
+            turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
+            role="assistant",
+            text=reply,
+            intent_type="knowledge_budget_resolution_ack",
+            objective_id=request.objective_id,
+        )
+        progress_source = state.objective_progress
+        if resolution_kind == "approved" and updated_objective is not None:
+            progress_source = _with_updated_knowledge_event_budget(
+                progress_source,
+                objective_id=updated_objective.objective_id,
+                model_call_budget=updated_objective.model_call_budget,
+                cycle_budget=updated_objective.cycle_budget,
+            )
+        updated = _replace_state(
+            state,
+            lifecycle_state=lifecycle,
+            active_objective=updated_objective,
+            conversation=state.conversation + (user_turn, assistant_turn),
+            pending_chat_requests=pending,
+            resolved_chat_requests=state.resolved_chat_requests + (resolved_request,),
+            objective_progress=progress_source + (progress_event,),
+        )
+        save_runtime_state(runtime_root, updated)
+        return RuntimeTurnResult(
+            state=updated,
+            intent=ConversationIntent("chat_request_resolution", 0.9, "active_objective", "safe_internal", (), ("pending_knowledge_budget_request",)),
+            reply=reply,
+            chat_request=resolved_request.as_record(),
+            side_thread_bound=True,
+        )
     resolved = ChatAddressableRequest(
         **{
             **request.as_record(),
             "status": "denied" if policy == "denied_continue_locally" else "resolved",
+            "resolution_state": "denied" if policy == "denied_continue_locally" else "resolved",
             "resolved_turn_id": user_turn.turn_id,
             "resolution_text": message,
             "resolution_policy": policy,
@@ -2391,17 +3422,18 @@ def handle_conversational_message(
         )
         authority = derive_standing_authority(objective)
         episode_path = str(Path(runtime_root) / f"active_episode_{objective.objective_id}.json")
+        frontier_evidence = _knowledge_frontier_evidence(objective)
         episode = initialize_episode(
-            title="Conversational English comprehension objective",
+            title=_episode_title_for_objective(objective),
             goal_summary=objective.interpreted_objective,
-            expected_state="Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.",
+            expected_state=_expected_state_for_objective(objective),
             evidence=(
                 EvidenceRef(
                     evidence_id="operator-natural-goal",
                     summary=message,
                     source="ordinary_chat",
                 ),
-            ),
+            ) + frontier_evidence,
             state_path=episode_path,
         )
         episode = replace(episode, budgets={**episode.budgets, "max_cycles": objective.cycle_budget, "max_model_calls": objective.model_call_budget})
@@ -2424,6 +3456,8 @@ def handle_conversational_message(
             },
             {"event": "standing_authority_assigned", "authority_id": authority.authority_id, "at": utc_now()},
         )
+        if objective.provenance.get("execution_mode") == "knowledge_acquisition" and frontier_evidence:
+            progress = progress + _knowledge_events_from_episode(objective, episode, progress)
         campaign = _initialize_capability_campaign(objective) if objective.provenance.get("execution_mode") == "capability_growth_campaign" else None
         if campaign:
             progress = progress + (
@@ -2435,16 +3469,32 @@ def handle_conversational_message(
                     "at": utc_now(),
                 },
             )
+        budget_request: ChatAddressableRequest | None = None
+        lifecycle_state = "running"
+        if (
+            objective.provenance.get("execution_mode") == "knowledge_acquisition"
+            and objective.model_call_budget is not None
+            and len(frontier_evidence) > objective.model_call_budget
+        ):
+            budget_request = _knowledge_model_budget_request(
+                objective,
+                required_nodes=len(frontier_evidence),
+                completed_nodes=0,
+                model_calls_used=0,
+                exhausted=False,
+            )
+            lifecycle_state = "paused_operator"
+            progress = progress + ({"event": "knowledge_model_budget_increase_requested", "request_id": budget_request.request_id, "required_nodes": len(frontier_evidence), "current_model_call_budget": objective.model_call_budget, "recommended_model_call_budget": budget_request.max_calls, "at": utc_now()},)
         updated = _replace_state(
             state,
-            lifecycle_state="running",
+            lifecycle_state=lifecycle_state,
             active_objective=objective,
             authority=authority,
             conversation=state.conversation + (goal_user_turn,),
             active_episode_path=episode_path,
             completed_cycle_keys=(),
             pending_material_authority=(),
-            pending_chat_requests=(),
+            pending_chat_requests=((budget_request,) if budget_request else ()),
             resolved_chat_requests=(),
             provider_authorities=(),
             turn_relation_decisions=(),
@@ -2455,13 +3505,18 @@ def handle_conversational_message(
             archived_objectives=state.archived_objectives + ((archived,) if archived else ()),
             capability_campaigns=state.capability_campaigns + ((campaign,) if campaign else ()),
         )
-        if run_background_cycle:
+        if run_background_cycle and budget_request is None:
             updated = run_background_objective_cycle(updated, runtime_root=runtime_root, reason="objective_registered", model_runner=model_runner)
         reply = (
             f"I registered that as the active goal and started working on it. This is a bounded session goal under standing bounded authority.\n\n"
             f"[Goal update · {objective.interpreted_objective[:80]}]\n"
             "Local cognition has started. I’ll continue independently within standing bounded authority and ask only at a real approval boundary."
         )
+        if budget_request:
+            reply = (
+                "I registered that as the active goal and paused at a budget boundary before local model execution.\n\n"
+                f"{budget_request.prompt_text}"
+            )
         assistant_turn = ConversationTurn(
             turn_id=stable_id("conversation-turn", updated.runtime_id, str(len(updated.conversation) + 1), reply),
             role="assistant",
@@ -2471,7 +3526,7 @@ def handle_conversational_message(
         )
         updated = _replace_state(updated, conversation=updated.conversation + (assistant_turn,))
         save_runtime_state(runtime_root, updated)
-        return RuntimeTurnResult(state=updated, intent=intent, reply=reply, objective_created=True, background_cycle_started=run_background_cycle)
+        return RuntimeTurnResult(state=updated, intent=intent, reply=reply, objective_created=True, background_cycle_started=run_background_cycle and budget_request is None, chat_request=budget_request.as_record() if budget_request else None)
     if intent.intent_type == "direct_correction" and state.active_objective:
         updated, correction, lesson = attach_correction(state, user_turn, intent)
         reply = "Got it. I attached that correction to the active comprehension objective and revised the strategy for related later turns without making it a global rule."
@@ -2521,34 +3576,39 @@ def run_background_objective_cycle(
     cycle_key = stable_id("conversational-cycle", state.active_objective.objective_id, reason, str(len(state.completed_cycle_keys) + 1))
     if cycle_key in state.completed_cycle_keys:
         return state
-    if len(state.completed_cycle_keys) >= state.active_objective.cycle_budget:
+    if (
+        state.active_objective.cycle_budget is not None
+        and len(state.completed_cycle_keys) >= state.active_objective.cycle_budget
+    ):
         return _replace_state(state, lifecycle_state="paused_budget")
     episode_path = Path(state.active_episode_path or Path(runtime_root) / "active_episode.json")
     episode = read_episode_state(episode_path) if episode_path.exists() else initialize_episode(
-        title="Conversational English comprehension objective",
+        title=_episode_title_for_objective(state.active_objective),
         goal_summary=state.active_objective.interpreted_objective,
-        expected_state="Operator-specific comprehension improves through correction-linked strategy revision and transfer checks.",
+        expected_state=_expected_state_for_objective(state.active_objective),
+        evidence=(EvidenceRef(evidence_id="operator-natural-goal", summary=state.active_objective.operator_wording, source="ordinary_chat"),) + _knowledge_frontier_evidence(state.active_objective),
         state_path=episode_path,
     )
     episode = replace(episode, budgets={**episode.budgets, "max_cycles": state.active_objective.cycle_budget, "max_model_calls": state.active_objective.model_call_budget})
     if episode.completed or episode.loop_state == "completed":
-        episode_path = Path(runtime_root) / f"active_episode_{len(state.completed_cycle_keys) + 1}.json"
-        episode = initialize_episode(
-            title=f"Conversational English comprehension continuation {len(state.completed_cycle_keys) + 1}",
-            goal_summary=state.active_objective.interpreted_objective,
-            expected_state="Continue correction-linked comprehension practice without duplicating prior completed episode work.",
-            evidence=(
-                EvidenceRef(
-                    evidence_id=f"prior-conversational-episode-{len(state.completed_cycle_keys)}",
-                    summary="Prior bounded active episode completed; continuation keeps the approved conversational objective active.",
-                    source=state.active_episode_path,
+        if state.active_objective.provenance.get("execution_mode") != "knowledge_acquisition":
+            episode_path = Path(runtime_root) / f"active_episode_{len(state.completed_cycle_keys) + 1}.json"
+            episode = initialize_episode(
+                title=f"Conversational English comprehension continuation {len(state.completed_cycle_keys) + 1}",
+                goal_summary=state.active_objective.interpreted_objective,
+                expected_state="Continue correction-linked comprehension practice without duplicating prior completed episode work.",
+                evidence=(
+                    EvidenceRef(
+                        evidence_id=f"prior-conversational-episode-{len(state.completed_cycle_keys)}",
+                        summary="Prior bounded active episode completed; continuation keeps the approved conversational objective active.",
+                        source=state.active_episode_path,
+                    ),
                 ),
-            ),
-            state_path=episode_path,
-        )
-        episode = replace(episode, budgets={**episode.budgets, "max_cycles": state.active_objective.cycle_budget, "max_model_calls": state.active_objective.model_call_budget})
-        write_episode_state(episode_path, episode)
-    if episode.model_call_count < state.active_objective.model_call_budget:
+                state_path=episode_path,
+            )
+            episode = replace(episode, budgets={**episode.budgets, "max_cycles": state.active_objective.cycle_budget, "max_model_calls": state.active_objective.model_call_budget})
+            write_episode_state(episode_path, episode)
+    if not _knowledge_limit_reached(episode.model_call_count, state.active_objective.model_call_budget):
         episode = run_cognitive_cycle(episode, model_runner=model_runner or ScriptedSemanticModel())
         write_episode_state(episode_path, episode)
     progress = {
@@ -2566,7 +3626,207 @@ def run_background_objective_cycle(
         objective_progress=state.objective_progress + (progress,),
         focus_history=state.focus_history + ({"event": "focus_tick", "reason": reason, "at": utc_now()},),
     )
+    if state.active_objective.provenance.get("execution_mode") == "knowledge_acquisition":
+        events = _knowledge_events_from_episode(state.active_objective, episode, updated.objective_progress)
+        if events:
+            updated = _replace_state(updated, objective_progress=updated.objective_progress + events)
+    if state.active_objective.provenance.get("execution_mode") == "knowledge_acquisition":
+        stagnation = _knowledge_stagnation(episode)
+        exhausted = (
+            _knowledge_limit_reached(episode.model_call_count, state.active_objective.model_call_budget)
+            or (
+                state.active_objective.cycle_budget is not None
+                and len(updated.completed_cycle_keys) >= state.active_objective.cycle_budget
+            )
+            or episode.loop_state in {"blocked_capability_gap", "paused_budget"}
+            or _knowledge_has_global_model_failure(episode)
+            or bool(stagnation)
+            or (episode.loop_state == "blocked_insufficient_evidence" and _knowledge_frontier_all_attempted(episode))
+            or episode.completed
+        )
+        if exhausted and not any(item.get("event") == "knowledge_goal_terminal_report" for item in updated.objective_progress):
+            report = _knowledge_terminal_report(state.active_objective, episode)
+            budget_request: ChatAddressableRequest | None = None
+            if (
+                report.get("stop_reason") == "model_call_budget_exhausted"
+                and int(report.get("remaining_frontier_nodes") or 0) > 0
+                and not any(item.request_type == "knowledge_model_budget_increase" and item.status == "pending" for item in updated.pending_chat_requests)
+            ):
+                budget_request = _knowledge_model_budget_request(
+                    state.active_objective,
+                    required_nodes=int(report.get("frontier_nodes_total") or 0),
+                    completed_nodes=int(report.get("frontier_nodes_completed") or 0),
+                    model_calls_used=episode.model_call_count,
+                    exhausted=True,
+                )
+                report = {
+                    **report,
+                    "budget_boundary_prompt": budget_request.prompt_text,
+                    "budget_request_id": budget_request.request_id,
+                }
+            if stagnation:
+                report = {**report, "stagnation": dict(stagnation)}
+            terminal_event = _knowledge_event(
+                state.active_objective,
+                event_type="knowledge_goal_terminal_report",
+                summary=f"Terminal report ready: {report.get('status')}.",
+                dedupe_key=f"{state.active_objective.objective_id}:terminal:{report.get('status')}:{episode.model_call_count}:{len(episode.cycles)}",
+                episode=episode,
+                visibility="operator_visible",
+                extra={"terminal_status": report.get("status")},
+            )
+            updated = _replace_state(
+                updated,
+                lifecycle_state="paused_budget",
+                pending_chat_requests=updated.pending_chat_requests + ((budget_request,) if budget_request else ()),
+                objective_progress=updated.objective_progress + (terminal_event, report,) + (({"event": "knowledge_model_budget_increase_requested", "request_id": budget_request.request_id, "required_nodes": report.get("frontier_nodes_total"), "completed_nodes": report.get("frontier_nodes_completed"), "remaining_nodes": report.get("remaining_frontier_nodes"), "current_model_call_budget": state.active_objective.model_call_budget, "recommended_model_call_budget": budget_request.max_calls, "at": utc_now()},) if budget_request else ()),
+            )
+    if state.active_objective.provenance.get("execution_mode") == "knowledge_acquisition":
+        terminal = next(
+            (
+                item for item in reversed(updated.objective_progress)
+                if item.get("event") == "knowledge_goal_terminal_report"
+            ),
+            {},
+        )
+        try:
+            graph = ingest_episode_at_runtime_root(
+                runtime_root,
+                objective=state.active_objective,
+                episode=episode,
+                terminal_status=str(terminal.get("status") or episode.loop_state),
+            )
+            updated = _replace_state(
+                updated,
+                objective_progress=updated.objective_progress + ({
+                    "event": "provisional_semantic_graph_ingested",
+                    "episode_id": episode.episode_id,
+                    "graph_id": graph.graph_id,
+                    "at": utc_now(),
+                },),
+            )
+        except ConsolidationIntegrityError as exc:
+            updated = _replace_state(
+                updated,
+                objective_progress=updated.objective_progress + ({
+                    "event": "provisional_semantic_graph_ingestion_failed",
+                    "episode_id": episode.episode_id,
+                    "reason": str(exc),
+                    "at": utc_now(),
+                },),
+            )
     return _advance_capability_campaign(updated, reason=reason)
+
+
+def _knowledge_terminal_report(objective: ConversationalObjective, episode: ActiveCognitiveEpisodeState) -> dict[str, Any]:
+    accepted_results = tuple(result for result in episode.operation_results if result.accepted)
+    frontier_nodes = tuple(item for item in episode.evidence if item.kind == "knowledge_frontier_node")
+    findings: list[str] = []
+    for result in accepted_results:
+        if result.interpretation:
+            findings.append(result.interpretation)
+    satisfied_material, unplanned_material, unsatisfied_material = _knowledge_requirement_coverage(objective, episode)
+    satisfied = tuple("address " + item for item in satisfied_material)
+    remaining_gaps = tuple("address " + item for item in unplanned_material + unsatisfied_material)
+    accepted_findings = _dedupe_knowledge_lines(findings)
+    model_failures = tuple(
+        result.interpretation or result.uncertainty for result in episode.operation_results
+        if not result.accepted and (
+            "local_model" in result.uncertainty
+            or "execution" in result.uncertainty
+            or "local model execution" in result.interpretation.lower()
+        )
+    )
+    concepts = tuple(
+        item.statement for item in episode.hypotheses
+        if item.statement and not item.statement.lower().startswith("local model execution did not complete")
+    )
+    counters = _knowledge_progress_counters(objective, episode)
+    stop_reason = ""
+    stagnation = _knowledge_stagnation(episode)
+    if _knowledge_limit_reached(episode.model_call_count, objective.model_call_budget):
+        stop_reason = "model_call_budget_exhausted"
+    elif objective.cycle_budget is not None and len(episode.cycles) >= objective.cycle_budget:
+        stop_reason = "cycle_budget_exhausted"
+    elif stagnation:
+        stop_reason = "nonproductive_local_model_loop"
+    elif episode.loop_state in {"blocked_insufficient_evidence", "blocked_capability_gap", "paused_budget"}:
+        stop_reason = episode.loop_state
+    all_material_satisfied = bool(_knowledge_material_requirements(objective)) and not unplanned_material and not unsatisfied_material
+    if all_material_satisfied:
+        status = "completed"
+        stop_reason = "all_material_requirements_satisfied"
+    elif unplanned_material:
+        status = "planning_incomplete" if not satisfied_material else "partially_completed"
+    elif satisfied_material:
+        status = "partially_completed"
+    elif model_failures:
+        status = "blocked_capability"
+    elif stop_reason == "model_call_budget_exhausted":
+        status = "budget_exhausted_with_remaining_gaps"
+    elif stop_reason in {"blocked_insufficient_evidence", "blocked_capability_gap"}:
+        status = "blocked_with_remaining_work" if counters["unresolved_nodes"] else stop_reason
+    elif stop_reason == "nonproductive_local_model_loop":
+        status = "blocked_with_remaining_work"
+    else:
+        status = "blocked_with_remaining_work"
+    if status == "completed":
+        recommended = "the requested material requirements are complete; wait for a new operator request"
+    elif stop_reason == "model_call_budget_exhausted":
+        recommended = "authorize additional local-model calls for this goal or stop with this partial report"
+    elif status == "blocked_capability":
+        recommended = "repair local model execution or provide bounded local evidence"
+    elif stop_reason == "nonproductive_local_model_loop":
+        recommended = "stop the repeated nonproductive local-model loop and review the preserved remaining gaps"
+    elif counters.get("retryable_nodes"):
+        recommended = "retry blocked frontier nodes with narrowed prompts while budget remains"
+    elif counters.get("blocked_nodes"):
+        recommended = "review blocked incomplete nodes or authorize a new repair strategy"
+    else:
+        recommended = "continue frontier evaluation within remaining budget"
+    return {
+        "event": "knowledge_goal_terminal_report",
+        "objective_id": objective.objective_id,
+        "status": status,
+        "stop_reason": stop_reason or status,
+        "frontier_nodes_completed": counters["frontier_nodes_completed"],
+        "frontier_nodes_total": counters["frontier_nodes_total"],
+        "material_requirements_total": len(_knowledge_material_requirements(objective)),
+        "material_requirements_satisfied": len(satisfied_material),
+        "material_requirements_unplanned": len(unplanned_material),
+        "remaining_frontier_nodes": counters["unresolved_nodes"],
+        "blocked_incomplete_nodes": counters["blocked_nodes"],
+        "retryable_nodes": counters["retryable_nodes"],
+        "unattempted_nodes": counters["unattempted_nodes"],
+        "model_calls_used": episode.model_call_count,
+        "model_call_budget": objective.model_call_budget,
+        "stagnation": dict(stagnation),
+        "criteria_satisfied": satisfied,
+        "criteria_unsatisfied": remaining_gaps,
+        "accepted_findings": accepted_findings,
+        "concepts_extracted": concepts,
+        "evidence_used": tuple(item.evidence_id for item in episode.evidence if item.evidence_id),
+        "model_failures": tuple(dict.fromkeys(model_failures)),
+        "follow_up_questions_still_needed": (),
+        "remaining_gaps": remaining_gaps,
+        "recommended_next_action": recommended,
+        "at": utc_now(),
+    }
+
+
+def _dedupe_knowledge_lines(lines: Sequence[str]) -> tuple[str, ...]:
+    seen: set[str] = set()
+    deduped: list[str] = []
+    for line in lines:
+        text = " ".join(str(line or "").split()).strip()
+        if not text:
+            continue
+        key = re.sub(r"[^a-z0-9]+", " ", text.lower()).strip()
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(text)
+    return tuple(deduped)
 
 
 def attach_correction(
@@ -2984,6 +4244,8 @@ def review_status_for_goal_completion(state: ConversationalRuntimeState) -> str:
     if campaign and campaign.get("status") == "running":
         return "capability_campaign_running"
     if state.lifecycle_state == "paused_budget":
+        if state.active_objective and state.active_objective.provenance.get("execution_mode") == "knowledge_acquisition":
+            return "knowledge_terminal_report"
         return "capability_proposal_pending"
     return state.lifecycle_state
 
@@ -3012,6 +4274,68 @@ def render_goal_review(state: ConversationalRuntimeState, *, status: str | None 
         existing_text = str(existing_review.get("text") or "")
         if not proposal_artifacts or goal_label in existing_text:
             return state, existing_text
+    if status == "knowledge_terminal_report":
+        report = next((item for item in reversed(state.objective_progress) if item.get("event") == "knowledge_goal_terminal_report" and item.get("objective_id") == objective_id), {})
+        if not report and objective:
+            report = {
+                "status": "budget_exhausted_with_remaining_gaps",
+                "criteria_satisfied": (),
+                "criteria_unsatisfied": objective.practical_success_indicators,
+                "concepts_extracted": (),
+                "model_failures": (),
+                "remaining_gaps": objective.practical_success_indicators,
+                "recommended_next_action": "continue bounded knowledge evaluation",
+            }
+        lines = [
+            f"[Goal review \u00b7 {_goal_review_label(objective)}]",
+            "",
+            f"Status: {report.get('status') or 'budget_exhausted_with_remaining_gaps'}",
+            f"Stopped because: {report.get('stop_reason') or 'not_recorded'}",
+            f"Completed nodes: {report.get('frontier_nodes_completed', 0)}/{report.get('frontier_nodes_total', 0)}",
+            f"Unresolved nodes: {report.get('remaining_frontier_nodes', 0)}",
+            f"Retryable nodes: {report.get('retryable_nodes', 0)}",
+            f"Blocked incomplete nodes: {report.get('blocked_incomplete_nodes', 0)}",
+            f"Unattempted nodes: {report.get('unattempted_nodes', 0)}",
+            f"Model calls: {_knowledge_call_progress_text(int(report.get('model_calls_used', 0)), report.get('model_call_budget'))}",
+            "",
+            "Satisfied criteria:",
+        ]
+        satisfied = tuple(report.get("criteria_satisfied") or ())
+        lines.extend(f"- {item}" for item in (satisfied or ("none yet",)))
+        findings = tuple(report.get("accepted_findings") or ())
+        if findings:
+            lines.append("")
+            lines.append("Accepted findings:")
+            lines.extend(f"- {item}" for item in findings[:12])
+        lines.append("")
+        lines.append("Remaining gaps:")
+        lines.extend(f"- {item}" for item in tuple(report.get("remaining_gaps") or report.get("criteria_unsatisfied") or ("none recorded",)))
+        failures = tuple(report.get("model_failures") or ())
+        if failures:
+            lines.append("")
+            lines.append("Model failures:")
+            lines.extend(f"- {item}" for item in failures)
+        lines.append("")
+        lines.append(f"Next recommended action: {report.get('recommended_next_action') or 'continue bounded knowledge evaluation'}")
+        budget_request_id = str(report.get("budget_request_id") or "")
+        has_live_budget_request = any(
+            item.request_id == budget_request_id
+            and item.request_type == "knowledge_model_budget_increase"
+            and item.status == "pending"
+            for item in state.pending_chat_requests
+        )
+        if report.get("budget_boundary_prompt") and has_live_budget_request:
+            lines.append("")
+            lines.append(str(report.get("budget_boundary_prompt")))
+        text = "\n".join(lines)
+        review = {
+            "review_id": stable_id("goal-review", objective_id, status, _digest({"text": text})),
+            "objective_id": objective_id,
+            "status": status,
+            "text": text,
+            "at": utc_now(),
+        }
+        return _replace_state(state, goal_reviews=state.goal_reviews + (review,)), text
     if campaign and status in {"capability_campaign_milestone_ready", "capability_campaign_running"}:
         completed_phases = tuple(campaign.get("completed_phases") or ())
         if completed_phases:

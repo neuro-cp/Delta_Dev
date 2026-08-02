@@ -1,5 +1,12 @@
+from dataclasses import replace
+import json
+
 import pytest
 
+from integration.model_runtime.model_registry import ModelSpec
+import orchestration.runtime.active_cognitive_loop as acl
+from orchestration.runtime.conversational_runtime_operation import _knowledge_stagnation
+import orchestration.runtime.local_model_execution_adapter as lmea
 from orchestration.runtime.active_cognitive_loop import (
     ActiveCognitiveLoopError,
     EvidenceRef,
@@ -17,6 +24,7 @@ from orchestration.runtime.active_cognitive_loop import (
     complete_focus,
     evaluate_operation_response,
     evaluate_cognitive_episode,
+    generate_candidate_focuses,
     initialize_episode,
     interrupt_focus,
     read_episode_state,
@@ -43,6 +51,56 @@ def _episode():
         goal_summary="turn available runtime pieces into one active cognitive loop",
         expected_state="useful artifact produced",
         evidence=_evidence(),
+    )
+
+
+def _knowledge_node(node_id, label, criterion, dependencies=(), contribution_contract=None):
+    return EvidenceRef(
+        node_id,
+        "knowledge_contract",
+        f"Knowledge frontier node: {label}",
+        json.dumps({
+            "label": label,
+            "parent_id": "goal-battery",
+            "completion_criterion_reference": criterion,
+            "evidence_need": f"node-specific evidence for {label}",
+            "unresolved_questions": [],
+            "extracted_claim_ids": [],
+            "extracted_concept_ids": [],
+            "dependency_node_ids": list(dependencies),
+            "minimum_contribution_contract": contribution_contract or {
+                "minimum_specific_terms": 3,
+                "requires_explanatory_relation": True,
+                "reject_importance_only": True,
+            },
+        }),
+        kind="knowledge_frontier_node",
+    )
+
+
+def _knowledge_episode():
+    return initialize_episode(
+        title="Knowledge acquisition objective",
+        goal_summary="Residential battery backup systems",
+        expected_state="Knowledge-specific criteria are advanced.",
+        evidence=(
+            EvidenceRef("operator-natural-goal", "ordinary_chat", "Study residential battery backup systems", ""),
+            _knowledge_node("node-capacity", "capacity and outage-duration tradeoffs", "explain capacity versus outage duration"),
+            _knowledge_node("node-inverter", "inverter size", "explain inverter sizing constraints"),
+        ),
+    )
+
+
+def _many_node_knowledge_episode(count=10):
+    nodes = tuple(
+        _knowledge_node(f"node-{index}", f"topic {index}", f"address topic {index}")
+        for index in range(1, count + 1)
+    )
+    return initialize_episode(
+        title="Knowledge acquisition objective",
+        goal_summary="Many node knowledge map",
+        expected_state="Knowledge-specific criteria are advanced.",
+        evidence=(EvidenceRef("operator-natural-goal", "ordinary_chat", "Study many nodes", ""),) + nodes,
     )
 
 
@@ -112,6 +170,613 @@ def test_working_memory_is_bounded_and_provenance_checked():
     assert packet.size_budget <= 8
     assert set(packet.provenance_refs).issubset({item.evidence_id for item in state.evidence})
     assert "no protected paths" in packet.operator_constraints
+
+
+def test_knowledge_frontier_packet_is_node_specific_and_excludes_unrelated_hypotheses():
+    class CapacityModel:
+        model_identity = "scripted-capacity"
+
+        def __call__(self, request, packet):
+            return {
+                "operation_result_type": "formulate_hypothesis_result",
+                "hypothesis_statement": "Capacity and outage-duration tradeoffs determine how long battery backup can support loads.",
+                "scope": "capacity and outage-duration tradeoffs",
+                "interpretation": "Capacity and outage-duration tradeoffs determine how long battery backup can support loads.",
+                "evidence_refs": ["node-capacity"],
+                "contrary_evidence_considered": [],
+                "assumptions": ["battery capacity is finite"],
+                "expected_observations": ["larger loads reduce runtime"],
+                "uncertainty": "actual load profile remains unresolved",
+                "recommended_state_transition": "propose_hypothesis",
+                "raw_model_output": "capacity output",
+                "model_identity": self.model_identity,
+            }
+
+    state = run_cognitive_cycle(_knowledge_episode(), model_runner=CapacityModel())
+    state = replace(state, attention=select_attention(state, generate_candidate_focuses(state)))
+    packet = build_working_memory_packet(state, sequence=2)
+
+    assert packet.active_focus["active_frontier_node"]["label"] == "inverter size"
+    assert packet.current_hypotheses == ()
+    duplicate_targets = packet.active_focus["prohibited_duplicate_targets"]
+    assert duplicate_targets
+    assert "Capacity and outage-duration" in duplicate_targets[0]["statement_excerpt"]
+    assert "inverter sizing constraints" in packet.active_focus["active_frontier_node"]["completion_criterion_reference"]
+    snapshot = compile_operation_prompt_snapshot(
+        build_operation_request(state, packet, operation_type="formulate_hypothesis", model_identity="qwen-test"),
+        packet,
+    )
+    assert "Capacity and outage-duration tradeoffs determine how long battery backup can support loads." not in snapshot.prompt_text
+    assert "prohibited_duplicate_targets" not in snapshot.prompt_text
+
+
+def test_frontier_packet_pins_active_node_beyond_packet_budget():
+    state = _many_node_knowledge_episode(count=10)
+    candidates = generate_candidate_focuses(state)
+    state = replace(state, attention=select_attention(state, (candidates[8],)))
+    packet = build_working_memory_packet(state, sequence=1)
+    node = packet.active_focus["active_frontier_node"]
+    relevant_ids = {item["evidence_id"] for item in packet.relevant_evidence}
+
+    assert node["label"] == "topic 9"
+    assert node["node_id"] in relevant_ids
+    assert node["completion_criterion_reference"] == "address topic 9"
+
+
+def test_capacity_hypothesis_is_rejected_for_inverter_size_node():
+    state = run_cognitive_cycle(_knowledge_episode())
+    state = replace(state, attention=select_attention(state, generate_candidate_focuses(state)))
+    packet = build_working_memory_packet(state, sequence=2)
+    request = build_operation_request(state, packet, operation_type="formulate_hypothesis", model_identity="qwen-test")
+
+    result = validate_model_result(request, packet, {
+        "operation_result_type": "formulate_hypothesis_result",
+        "hypothesis_statement": "Capacity and outage-duration tradeoffs determine how long battery backup can support loads.",
+        "scope": "capacity and outage-duration tradeoffs",
+        "interpretation": "Capacity and outage-duration tradeoffs determine how long battery backup can support loads.",
+        "evidence_refs": ["node-capacity"],
+        "contrary_evidence_considered": [],
+        "assumptions": ["battery capacity is finite"],
+        "expected_observations": ["larger loads reduce runtime"],
+        "uncertainty": "actual load profile remains unresolved",
+        "recommended_state_transition": "propose_hypothesis",
+    })
+
+    assert result.accepted is False
+    assert "active_node_evidence_not_cited" in result.rejection_reasons
+    assert "scope_not_aligned_with_active_node" in result.rejection_reasons
+    assert "interpretation_not_node_specific" in result.rejection_reasons
+
+
+def test_frontier_prompt_includes_prior_claim_only_for_explicit_dependency():
+    class CapacityModel:
+        model_identity = "scripted-capacity"
+
+        def __call__(self, request, packet):
+            return {
+                "operation_result_type": "formulate_hypothesis_result",
+                "hypothesis_statement": "Capacity and outage-duration tradeoffs determine how long battery backup can support loads.",
+                "scope": "capacity and outage-duration tradeoffs",
+                "interpretation": "Capacity and outage-duration tradeoffs determine how long battery backup can support loads.",
+                "supporting_evidence_refs": ["node-capacity"],
+                "assumptions": ["battery capacity is finite"],
+                "expected_observations": ["larger loads reduce runtime"],
+                "uncertainty": "actual load profile remains unresolved",
+                "recommended_state_transition": "propose_hypothesis",
+            }
+
+    state = initialize_episode(
+        title="Knowledge acquisition objective",
+        goal_summary="Residential battery backup systems",
+        expected_state="Knowledge-specific criteria are advanced.",
+        evidence=(
+            EvidenceRef("operator-natural-goal", "ordinary_chat", "Study residential battery backup systems", ""),
+            _knowledge_node("node-capacity", "capacity and outage-duration tradeoffs", "explain capacity versus outage duration"),
+            _knowledge_node("node-inverter", "inverter size", "explain inverter sizing constraints", dependencies=("node-capacity",)),
+        ),
+    )
+    state = run_cognitive_cycle(state, model_runner=CapacityModel())
+    state = replace(state, attention=select_attention(state, generate_candidate_focuses(state)))
+    packet = build_working_memory_packet(state, sequence=2)
+    snapshot = compile_operation_prompt_snapshot(
+        build_operation_request(state, packet, operation_type="formulate_hypothesis", model_identity="qwen-test"),
+        packet,
+    )
+
+    assert packet.active_focus["explicit_dependencies"][0]["node_id"] == "node-capacity"
+    assert "Capacity and outage-duration tradeoffs determine how long battery backup can support loads." in snapshot.prompt_text
+
+
+def test_repeated_nonproductive_outputs_across_nodes_trigger_stagnation_guard():
+    class RepetitiveModel:
+        model_identity = "repetitive-local"
+
+        def __call__(self, request, packet):
+            return {
+                "operation_result_type": request.operation_type + "_result",
+                "hypothesis_statement": "The same generic proposition repeats without addressing the active node.",
+                "scope": "generic proposition",
+                "interpretation": "The same generic proposition repeats without addressing the active node.",
+                "supporting_evidence_refs": ["operator-natural-goal"],
+                "assumptions": [],
+                "expected_observations": [],
+                "uncertainty": "repetitive",
+                "recommended_state_transition": "propose_hypothesis",
+            }
+
+    state = replace(_many_node_knowledge_episode(count=5), budgets={"max_cycles": None, "max_model_calls": None, "max_packet_items": 8})
+    for _ in range(8):
+        state = run_cognitive_cycle(state, model_runner=RepetitiveModel())
+
+    stagnation = _knowledge_stagnation(state)
+    assert stagnation["reason"] == "repeated_nonproductive_hypothesis"
+    assert len(stagnation["affected_focus_ids"]) >= 3
+
+
+def test_aligned_frontier_output_gets_runtime_attached_active_node_ref():
+    state = run_cognitive_cycle(_knowledge_episode())
+    state = replace(state, attention=select_attention(state, generate_candidate_focuses(state)))
+    packet = build_working_memory_packet(state, sequence=2)
+    request = build_operation_request(state, packet, operation_type="formulate_hypothesis", model_identity="qwen-test")
+
+    result = validate_model_result(request, packet, {
+        "operation_result_type": "formulate_hypothesis_result",
+        "hypothesis_statement": "Inverter size constrains which critical loads can start and run during an outage.",
+        "scope": "inverter size",
+        "interpretation": "Inverter size constrains backup design because motor-starting surge demand can exceed steady running load.",
+        "supporting_evidence_refs": ["operator-natural-goal"],
+        "assumptions": ["critical loads may include motor loads"],
+        "expected_observations": ["higher surge loads require larger inverter ratings"],
+        "uncertainty": "actual appliance surge loads remain unknown",
+        "recommended_state_transition": "propose_hypothesis",
+    })
+
+    assert result.accepted is True
+    assert "node-inverter" in result.evidence_refs
+    assert request.expected_output_schema["hypothesis_statement"] == "string"
+    assert request.expected_output_schema["supporting_evidence_refs"] == "list"
+
+
+def test_frontier_rejects_prior_node_context_that_dominates_new_contribution():
+    state = run_cognitive_cycle(_knowledge_episode())
+    state = replace(state, attention=select_attention(state, generate_candidate_focuses(state)))
+    packet = build_working_memory_packet(state, sequence=2)
+    request = build_operation_request(state, packet, operation_type="formulate_hypothesis", model_identity="qwen-test")
+
+    result = validate_model_result(request, packet, {
+        "operation_result_type": "formulate_hypothesis_result",
+        "hypothesis_statement": (
+            "Inverter size depends on site conditions, component constraints, operating demand, and the prior practical design "
+            "decision because those earlier capacity tradeoffs determine the output-power requirement."
+        ),
+        "scope": "inverter size",
+        "interpretation": (
+            "Inverter size depends on site conditions, component constraints, operating demand, and the prior practical design "
+            "decision because those earlier capacity tradeoffs determine the output-power requirement."
+        ),
+        "supporting_evidence_refs": ["operator-natural-goal"],
+        "assumptions": [],
+        "expected_observations": [],
+        "uncertainty": "site loads remain unknown",
+        "recommended_state_transition": "propose_hypothesis",
+    })
+
+    assert result.accepted is False
+    assert "cross_node_context_dominates_active_contribution" in result.rejection_reasons
+
+
+def test_frontier_rejects_sibling_node_contribution_as_active_node_completion():
+    state = run_cognitive_cycle(_knowledge_episode())
+    state = replace(state, attention=select_attention(state, generate_candidate_focuses(state)))
+    packet = build_working_memory_packet(state, sequence=2)
+    request = build_operation_request(state, packet, operation_type="formulate_hypothesis", model_identity="qwen-test")
+
+    assert packet.active_focus["active_frontier_node"]["label"] == "inverter size"
+    assert any(item["label"] == "capacity and outage-duration tradeoffs" for item in packet.active_focus["sibling_frontier_nodes"])
+    result = validate_model_result(request, packet, {
+        "operation_result_type": "formulate_hypothesis_result",
+        "hypothesis_statement": "Battery capacity determines outage duration because stored energy is depleted by the connected load demand.",
+        "scope": "inverter size",
+        "interpretation": "Battery capacity determines outage duration because stored energy is depleted by the connected load demand.",
+        "supporting_evidence_refs": ["operator-natural-goal"],
+        "assumptions": [],
+        "expected_observations": [],
+        "uncertainty": "load demand varies",
+        "recommended_state_transition": "propose_hypothesis",
+    })
+
+    assert result.accepted is False
+    assert "sibling_frontier_node_dominates_active_contribution" in result.rejection_reasons
+
+
+def test_calibrated_frontier_contracts_reject_tangential_or_shallow_claims_and_accept_maintenance_actions():
+    def packet_for(label, kind):
+        state = initialize_episode(
+            title="Knowledge acquisition objective",
+            goal_summary="Generic local map",
+            expected_state="Knowledge-specific criteria are advanced.",
+            evidence=(
+                EvidenceRef("operator-natural-goal", "ordinary_chat", "Study a local system", ""),
+                _knowledge_node(
+                    "node-1",
+                    label,
+                    "address " + label,
+                    contribution_contract={
+                        "minimum_specific_terms": 3,
+                        "requires_explanatory_relation": True,
+                        "reject_importance_only": True,
+                        "contribution_kind": kind,
+                        "minimum_action_count": 2,
+                    },
+                ),
+            ),
+        )
+        state = replace(state, attention=select_attention(state, generate_candidate_focuses(state)))
+        packet = build_working_memory_packet(state, sequence=1)
+        request = build_operation_request(state, packet, operation_type="formulate_hypothesis", model_identity="qwen-test")
+        return request, packet
+
+    collection_request, collection_packet = packet_for("rainwater collection", "mechanism_path")
+    tangential = validate_model_result(collection_request, collection_packet, {
+        "operation_result_type": "formulate_hypothesis_result",
+        "hypothesis_statement": "Rainwater collection systems can be integrated with irrigation networks to optimize water usage.",
+        "scope": "rainwater collection",
+        "supporting_evidence_refs": ["node-1"],
+        "assumptions": [], "expected_observations": [], "uncertainty": "site layout varies", "recommended_state_transition": "propose_hypothesis",
+    })
+    verb_collection_request, verb_collection_packet = packet_for("how rain barrels collect water", "mechanism_path")
+    overflow_only = validate_model_result(verb_collection_request, verb_collection_packet, {
+        "operation_result_type": "formulate_hypothesis_result",
+        "hypothesis_statement": "Rain barrels have a spout or outlet for overflow, which directs excess water away from the structure.",
+        "scope": "how rain barrels collect water", "supporting_evidence_refs": ["node-1"],
+        "assumptions": [], "expected_observations": [], "uncertainty": "site layout varies", "recommended_state_transition": "propose_hypothesis",
+    })
+    internal_scope = validate_model_result(verb_collection_request, verb_collection_packet, {
+        "operation_result_type": "formulate_hypothesis_result",
+        "hypothesis_statement": "Rain barrels collect roof runoff when gutters route water through a downspout into the barrel inlet.",
+        "scope": "knowledge-frontier-node-2c6a2ec7a23eddc0", "supporting_evidence_refs": ["node-1"],
+        "assumptions": [], "expected_observations": [], "uncertainty": "gutter layout varies", "recommended_state_transition": "propose_hypothesis",
+    })
+    overflow_request, overflow_packet = packet_for("overflow", "threshold_and_safe_mitigation")
+    shallow = validate_model_result(overflow_request, overflow_packet, {
+        "operation_result_type": "formulate_hypothesis_result",
+        "hypothesis_statement": "Overflow occurs when storage capacity is exceeded by incoming water.",
+        "scope": "overflow", "supporting_evidence_refs": ["node-1"],
+        "assumptions": [], "expected_observations": [], "uncertainty": "rainfall varies", "recommended_state_transition": "propose_hypothesis",
+    })
+    vague_overflow = validate_model_result(overflow_request, overflow_packet, {
+        "operation_result_type": "formulate_hypothesis_result",
+        "hypothesis_statement": "Rain barrels overflow when the water level reaches a threshold, and the overflow is directed to a safe outlet.",
+        "scope": "overflow", "supporting_evidence_refs": ["node-1"],
+        "assumptions": [], "expected_observations": [], "uncertainty": "outlet details vary", "recommended_state_transition": "propose_hypothesis",
+    })
+    safe_overflow = validate_model_result(overflow_request, overflow_packet, {
+        "operation_result_type": "formulate_hypothesis_result",
+        "hypothesis_statement": "Rain barrel overflow occurs when capacity is exceeded, so an overflow hose diverts excess water away from the foundation.",
+        "scope": "overflow", "supporting_evidence_refs": ["node-1"],
+        "interpretation": "Rain barrel overflow occurs when capacity is exceeded, so an overflow hose diverts excess water away from the foundation.",
+        "assumptions": [], "expected_observations": [], "uncertainty": "site drainage varies", "recommended_state_transition": "propose_hypothesis",
+    })
+    prevention_request, prevention_packet = packet_for("prevent mosquitoes", "prevention_intervention")
+    vague_prevention = validate_model_result(prevention_request, prevention_packet, {
+        "operation_result_type": "formulate_hypothesis_result",
+        "hypothesis_statement": "Rain barrels can prevent mosquitoes by creating an environment unsuitable for their breeding.",
+        "scope": "prevent mosquitoes", "supporting_evidence_refs": ["node-1"],
+        "assumptions": [], "expected_observations": [], "uncertainty": "climate varies", "recommended_state_transition": "propose_hypothesis",
+    })
+    concrete_prevention = validate_model_result(prevention_request, prevention_packet, {
+        "operation_result_type": "formulate_hypothesis_result",
+        "hypothesis_statement": "A screened inlet and sealed lid prevent mosquitoes because they block adult access to standing water for egg laying.",
+        "scope": "prevent mosquitoes", "supporting_evidence_refs": ["node-1"],
+        "interpretation": "A screened inlet and sealed lid prevent mosquitoes because they block adult access to standing water for egg laying.",
+        "assumptions": [], "expected_observations": [], "uncertainty": "screen condition varies", "recommended_state_transition": "propose_hypothesis",
+    })
+    maintenance_request, maintenance_packet = packet_for("basic maintenance", "recurring_actions_with_consequence")
+    maintenance = validate_model_result(maintenance_request, maintenance_packet, {
+        "operation_result_type": "formulate_hypothesis_result",
+        "hypothesis_statement": "Regularly checking clogs, addressing leaks, and securing the container prevents damage and keeps the system working.",
+        "scope": "rain barrel maintenance", "supporting_evidence_refs": ["node-1"],
+        "interpretation": "Checking, addressing, and securing recurring maintenance conditions prevents damage and preserves operation.",
+        "assumptions": [], "expected_observations": [], "uncertainty": "maintenance interval varies", "recommended_state_transition": "propose_hypothesis",
+    })
+
+    assert "node_completion_contract_missing:mechanism_path" in tangential.rejection_reasons
+    assert "node_completion_contract_missing:mechanism_path" in overflow_only.rejection_reasons
+    assert "scope_uses_internal_frontier_node_id" in internal_scope.rejection_reasons
+    assert "node_completion_contract_missing:threshold_and_safe_mitigation" in shallow.rejection_reasons
+    assert "node_completion_contract_missing:threshold_and_safe_mitigation" in vague_overflow.rejection_reasons
+    assert safe_overflow.accepted is True
+    assert "node_completion_contract_missing:prevention_intervention" in vague_prevention.rejection_reasons
+    assert concrete_prevention.accepted is True
+    assert maintenance.accepted is True
+    assert maintenance.evaluation_state == "supported"
+
+
+def test_retry_prompt_names_required_frontier_contribution_shape():
+    state = initialize_episode(
+        title="Knowledge acquisition objective",
+        goal_summary="Study rain barrels",
+        expected_state="Knowledge-specific criteria are advanced.",
+        evidence=(
+            EvidenceRef("operator-natural-goal", "ordinary_chat", "Study rain barrels", ""),
+            _knowledge_node("node-1", "how rain barrels collect water", "address how rain barrels collect water", contribution_contract={
+                "minimum_specific_terms": 3,
+                "requires_explanatory_relation": True,
+                "reject_importance_only": True,
+                "contribution_kind": "mechanism_path",
+            }),
+        ),
+    )
+    state = replace(state, attention=select_attention(state, generate_candidate_focuses(state)))
+    packet = build_working_memory_packet(state, sequence=1)
+    packet = replace(
+        packet,
+        active_focus={
+            **packet.active_focus,
+            "retry_attempt": 1,
+            "prior_rejection_reasons": ("node_completion_contract_missing:mechanism_path",),
+            "retry_rejected_hypotheses": ("Rain barrels collect water through a funnel and storage container.",),
+        },
+    )
+    request = build_operation_request(state, packet, operation_type="reformulate_node_specific_hypothesis", model_identity="qwen-test")
+
+    prompt = compile_operation_prompt_snapshot(request, packet).prompt_text
+
+    assert "mechanism-path node" in prompt
+    assert "route or transfer path from source" in prompt
+    assert "node_completion_contract_missing:mechanism_path" in prompt
+    assert "Rain barrels collect water through a funnel and storage container." in prompt
+
+
+def test_independent_evaluator_rejects_arithmetic_capacity_contradiction():
+    state = initialize_episode(
+        title="Knowledge acquisition objective",
+        goal_summary="Generic local map",
+        expected_state="Knowledge-specific criteria are advanced.",
+        evidence=(
+            EvidenceRef("operator-natural-goal", "ordinary_chat", "Study a local system", ""),
+            _knowledge_node("node-1", "storage capacity", "address storage capacity", contribution_contract={
+                "minimum_specific_terms": 3, "requires_explanatory_relation": True, "reject_importance_only": True, "contribution_kind": "sizing_relation",
+            }),
+        ),
+    )
+    state = replace(state, attention=select_attention(state, generate_candidate_focuses(state)))
+    packet = build_working_memory_packet(state, sequence=1)
+    request = build_operation_request(state, packet, operation_type="formulate_hypothesis", model_identity="qwen-test")
+    result = validate_model_result(request, packet, {
+        "operation_result_type": "formulate_hypothesis_result",
+        "hypothesis_statement": "A 50-gallon capacity can provide water for a family of four during a 10-day period.",
+        "scope": "storage capacity", "supporting_evidence_refs": ["node-1"],
+        "assumptions": ["average daily water usage is 50 gallons per person per day"],
+        "expected_observations": [], "uncertainty": "demand varies", "recommended_state_transition": "propose_hypothesis",
+    })
+
+    assert result.accepted is False
+    assert result.evaluation_state == "contradicted"
+    assert any(reason.startswith("independent_evaluation_arithmetic_capacity_shortfall") for reason in result.rejection_reasons)
+
+
+def test_frontier_rejects_global_duplicate_then_retries_same_node_with_distinct_operation():
+    class DuplicateThenSpecific:
+        model_identity = "qwen-test"
+
+        def __call__(self, request, packet):
+            node = packet.active_focus["active_frontier_node"]
+            generic = "Capacity and outage-duration tradeoffs determine how long battery backup can support loads."
+            if node["node_id"] == "node-capacity":
+                statement = generic
+            elif not packet.active_focus.get("retry_attempt"):
+                statement = generic
+            else:
+                statement = "Inverter size limits which critical loads can start because motor surge demand can exceed steady running power."
+            return {
+                "operation_result_type": request.operation_type + "_result",
+                "hypothesis_statement": statement,
+                "scope": node["label"],
+                "interpretation": statement,
+                "supporting_evidence_refs": ["operator-natural-goal"],
+                "assumptions": [],
+                "expected_observations": [],
+                "uncertainty": "site-specific loads remain unknown",
+                "recommended_state_transition": "propose_hypothesis",
+            }
+
+    state = run_cognitive_cycle(_knowledge_episode(), model_runner=DuplicateThenSpecific())
+    state = run_cognitive_cycle(state, model_runner=DuplicateThenSpecific())
+    state = run_cognitive_cycle(state, model_runner=DuplicateThenSpecific())
+
+    first, duplicate, retry = state.operation_results
+    first_packet, duplicate_packet, retry_packet = state.working_memory_packets
+    assert first.accepted is True
+    assert duplicate.accepted is False
+    assert "duplicate_prior_node_contribution" in duplicate.rejection_reasons
+    assert retry.accepted is True
+    assert state.operation_requests[1].operation_type == "formulate_hypothesis"
+    assert state.operation_requests[2].operation_type == "reformulate_node_specific_hypothesis"
+    assert duplicate_packet.active_focus["active_frontier_node"]["node_id"] == "node-inverter"
+    assert retry_packet.active_focus["active_frontier_node"]["node_id"] == "node-inverter"
+    assert retry_packet.active_focus["focus_id"] == duplicate_packet.active_focus["focus_id"]
+    assert "duplicate_prior_node_contribution" in retry_packet.active_focus["prior_rejection_reasons"]
+    assert first_packet.active_focus["active_frontier_node"]["node_id"] == "node-capacity"
+    retry_prompt = compile_operation_prompt_snapshot(state.operation_requests[2], retry_packet)
+    assert "RETRY TARGET:" in retry_prompt.prompt_text
+    assert "Required new proposition: explain inverter sizing constraints." in retry_prompt.prompt_text
+
+
+def test_accepted_frontier_node_is_removed_from_persisted_attention_candidates():
+    state = run_cognitive_cycle(_knowledge_episode())
+
+    assert state.attention.active_focus_id == ""
+    assert "capacity and outage-duration" not in " ".join(item.description for item in state.attention.candidate_focuses)
+    assert any("inverter size" in item.description for item in state.attention.candidate_focuses)
+    assert all("capacity and outage-duration" not in item.description for item in state.next_focus_candidates)
+
+
+def test_malformed_retry_gets_one_same_node_format_repair_before_completion():
+    class DuplicateMalformedThenRepaired:
+        model_identity = "qwen-test"
+
+        def __call__(self, request, packet):
+            node = packet.active_focus["active_frontier_node"]
+            generic = "Capacity and outage-duration tradeoffs determine how long battery backup can support loads."
+            if node["node_id"] == "node-capacity":
+                statement = generic
+            elif request.operation_type == "formulate_hypothesis":
+                statement = generic
+            elif request.operation_type == "reformulate_node_specific_hypothesis":
+                return {
+                    "operation_result_type": "cognitive_operation",
+                    "interpretation": "The replacement should be more specific to inverter size.",
+                    "evidence_refs": ["operator-natural-goal", node["node_id"]],
+                    "uncertainty": "exact surge loads remain unknown",
+                    "recommended_state_transition": "propose_hypothesis",
+                }
+            else:
+                statement = "Inverter size must cover both continuous demand and short motor-starting surge demand for the selected critical loads."
+            return {
+                "operation_result_type": request.operation_type + "_result",
+                "hypothesis_statement": statement,
+                "scope": node["label"],
+                "interpretation": statement,
+                "supporting_evidence_refs": ["operator-natural-goal"],
+                "assumptions": [],
+                "expected_observations": [],
+                "uncertainty": "site-specific loads remain unknown",
+                "recommended_state_transition": "propose_hypothesis",
+            }
+
+    state = _knowledge_episode()
+    for _ in range(4):
+        state = run_cognitive_cycle(state, model_runner=DuplicateMalformedThenRepaired())
+
+    operations = [request.operation_type for request in state.operation_requests]
+    packets = state.working_memory_packets
+    assert operations == [
+        "formulate_hypothesis",
+        "formulate_hypothesis",
+        "reformulate_node_specific_hypothesis",
+        "repair_node_specific_hypothesis_format",
+    ]
+    assert "retry_output_schema_invalid" in state.operation_results[2].rejection_reasons
+    assert state.operation_results[3].accepted is True
+    assert packets[1].active_focus["active_frontier_node"]["node_id"] == "node-inverter"
+    assert packets[2].active_focus["active_frontier_node"]["node_id"] == "node-inverter"
+    assert packets[3].active_focus["active_frontier_node"]["node_id"] == "node-inverter"
+
+
+def test_frontier_completion_rejects_generic_importance_and_accepts_concrete_relation():
+    state = _knowledge_episode()
+    state = replace(state, attention=select_attention(state, generate_candidate_focuses(state)))
+    packet = build_working_memory_packet(state, sequence=1)
+    node = packet.active_focus["active_frontier_node"]
+    packet = replace(packet, active_focus={
+        **packet.active_focus,
+        "active_frontier_node": {
+            **node,
+            "minimum_contribution_contract": {
+                "minimum_specific_terms": 3,
+                "requires_explanatory_relation": True,
+                "reject_importance_only": True,
+            },
+        },
+    })
+    request = build_operation_request(state, packet, operation_type="formulate_hypothesis", model_identity="qwen-test")
+
+    weak = validate_model_result(request, packet, {
+        "operation_result_type": "formulate_hypothesis_result",
+        "hypothesis_statement": "Capacity and outage-duration tradeoffs are critical for battery backup systems.",
+        "scope": "capacity and outage-duration tradeoffs",
+        "interpretation": "Capacity and outage-duration tradeoffs are critical for battery backup systems.",
+        "supporting_evidence_refs": ["operator-natural-goal"],
+        "assumptions": [],
+        "expected_observations": [],
+        "uncertainty": "load details remain unknown",
+        "recommended_state_transition": "propose_hypothesis",
+    })
+    strong = validate_model_result(request, packet, {
+        "operation_result_type": "formulate_hypothesis_result",
+        "hypothesis_statement": "Capacity and outage-duration tradeoffs depend on critical-load power, usable battery energy, and outage length because higher demand shortens runtime.",
+        "scope": "capacity and outage-duration tradeoffs",
+        "interpretation": "Capacity and outage-duration tradeoffs depend on critical-load power, usable battery energy, and outage length because higher demand shortens runtime.",
+        "supporting_evidence_refs": ["operator-natural-goal"],
+        "assumptions": [],
+        "expected_observations": [],
+        "uncertainty": "actual household loads remain unknown",
+        "recommended_state_transition": "propose_hypothesis",
+    })
+
+    assert weak.accepted is False
+    assert "node_completion_generic_importance_assertion" in weak.rejection_reasons
+    assert strong.accepted is True
+
+
+def test_aligned_novel_frontier_output_completes_only_active_node():
+    state = run_cognitive_cycle(_knowledge_episode())
+    state = replace(state, attention=select_attention(state, generate_candidate_focuses(state)))
+    packet = build_working_memory_packet(state, sequence=2)
+    request = build_operation_request(state, packet, operation_type="formulate_hypothesis", model_identity="qwen-test")
+
+    result = validate_model_result(request, packet, {
+        "operation_result_type": "formulate_hypothesis_result",
+        "hypothesis_statement": "Inverter size must cover the continuous and surge wattage of selected critical loads.",
+        "scope": "inverter size",
+        "interpretation": "Inverter size must cover continuous load and short surge demand, so motor-starting appliances can constrain backup design even when energy capacity is sufficient.",
+        "evidence_refs": ["node-inverter"],
+        "contrary_evidence_considered": [],
+        "assumptions": ["critical loads include some devices with startup surge"],
+        "expected_observations": ["surge-heavy loads require higher inverter ratings"],
+        "uncertainty": "actual appliance surge loads remain unknown",
+        "recommended_state_transition": "propose_hypothesis",
+    })
+    updated = apply_operation_result(state, packet, request, result, sequence=2)
+
+    assert result.accepted is True
+    assert updated.cycles[-1].focus_id == request.focus_id
+    assert updated.hypotheses[-1].originating_focus_id == request.focus_id
+    assert "Inverter size" in updated.hypotheses[-1].statement or "inverter size" in updated.hypotheses[-1].statement
+
+
+def test_rejected_frontier_node_retries_once_with_prior_rejection_context():
+    class FirstBadThenGood:
+        model_identity = "qwen-test"
+
+        def __call__(self, request, packet):
+            node = packet.active_focus["active_frontier_node"]
+            if not packet.active_focus.get("prior_rejection_reasons"):
+                return {
+                    "operation_result_type": "formulate_hypothesis_result",
+                    "hypothesis_statement": "A generic unrelated answer about roof color.",
+                    "scope": "roof color",
+                    "interpretation": "Roof color is unrelated to this battery backup node.",
+                    "supporting_evidence_refs": ["operator-natural-goal"],
+                    "assumptions": ["unrelated"],
+                    "expected_observations": ["unrelated"],
+                    "uncertainty": "misaligned",
+                    "recommended_state_transition": "propose_hypothesis",
+                }
+            return {
+                "operation_result_type": "formulate_hypothesis_result",
+                "hypothesis_statement": "Capacity and outage duration determine how long selected backup loads can run.",
+                "scope": node["label"],
+                "interpretation": "Capacity and outage duration determine how long selected backup loads can run.",
+                "supporting_evidence_refs": ["operator-natural-goal"],
+                "assumptions": ["critical loads are known"],
+                "expected_observations": ["larger loads shorten runtime"],
+                "uncertainty": "actual loads unknown",
+                "recommended_state_transition": "propose_hypothesis",
+            }
+
+    state = run_cognitive_cycle(_knowledge_episode(), model_runner=FirstBadThenGood())
+    assert state.loop_state == "selecting_focus"
+    state = run_cognitive_cycle(state, model_runner=FirstBadThenGood())
+
+    assert len(state.operation_results) == 2
+    assert state.operation_results[0].accepted is False
+    assert state.operation_results[1].accepted is True
+    assert state.cycles[0].focus_id == state.cycles[1].focus_id
+    assert state.working_memory_packets[-1].active_focus["prior_rejection_reasons"]
+    assert state.working_memory_packets[-1].active_focus["prohibited_duplicate_targets"]
+    assert state.loop_state != "blocked_insufficient_evidence"
 
 
 def test_model_result_rejects_self_certified_or_invented_evidence():
@@ -257,6 +922,94 @@ def test_ledger_runner_exact_prompt_executor_uses_provider_manager_without_chat_
     assert result["answer"].startswith("{")
     assert manager.calls[0]["prompt"] == "EXACT PROMPT JSON"
     assert manager.calls[0]["task_type"] == "active_cognitive_json_operation"
+
+
+def test_ledger_runner_attempts_one_registered_local_fallback(monkeypatch, tmp_path):
+    class FakeProviderManager:
+        def __init__(self):
+            self.calls = []
+
+        def infer(self, **kwargs):
+            self.calls.append(kwargs)
+            if kwargs["model_name"] == "qwen":
+                raise RuntimeError("qwen runtime unavailable")
+
+            class Result:
+                answer = '{"hypothesis_statement":"fallback worked","scope":"test","supporting_evidence_refs":["operator-natural-goal"],"assumptions":["bounded"],"expected_observations":["typed output"],"uncertainty":"low","recommended_state_transition":"propose_hypothesis"}'
+                confidence = 0.7
+                model_id = "llama-test"
+                latency_seconds = 0.2
+                response_tokens = 12
+
+            return Result()
+
+    qwen = tmp_path / "qwen.gguf"
+    llama = tmp_path / "llama.gguf"
+    qwen.write_text("q", encoding="utf-8")
+    llama.write_text("l", encoding="utf-8")
+    monkeypatch.setattr(acl, "list_available_models", lambda: {
+        "qwen": ModelSpec("qwen-test", str(qwen), 3, "qwen", 4096, family="qwen"),
+        "llama": ModelSpec("llama-test", str(llama), 4, "llama", 4096, family="llama"),
+    })
+    manager = FakeProviderManager()
+    runner = LedgerBackedCognitiveModelRunner(ledger=object(), provider_manager=manager)
+
+    result = runner._execute_exact_prompt(
+        "JSON prompt",
+        {"selected_model": "qwen", "model_family": "qwen", "lane": "reasoning_analysis"},
+        operation_type="formulate_hypothesis",
+    )
+
+    assert result["executed"] is True
+    assert result["model_id"] == "llama-test"
+    assert [call["model_name"] for call in manager.calls] == ["qwen", "llama"]
+    assert result["model_attempts"][0]["succeeded"] is False
+    assert result["model_attempts"][1]["succeeded"] is True
+
+
+def test_ledger_runner_uses_venv_subprocess_when_ui_python_lacks_llama_cpp(monkeypatch):
+    class MissingLlamaCppProvider:
+        def infer(self, **_kwargs):
+            raise ModuleNotFoundError("No module named 'llama_cpp'")
+
+    monkeypatch.setattr(lmea, "execute_local_model_via_venv_subprocess", lambda **kwargs: {
+        "executed": True,
+        "answer": '{"hypothesis_statement":"venv path worked","scope":"test","supporting_evidence_refs":["operator-natural-goal"],"assumptions":["bounded"],"expected_observations":["typed output"],"uncertainty":"low","recommended_state_transition":"propose_hypothesis"}',
+        "model_id": "qwen-test",
+        "confidence_score": 0.7,
+        "response_tokens": 10,
+        "execution_adapter": kwargs["execution_adapter"],
+    })
+    runner = LedgerBackedCognitiveModelRunner(ledger=object(), provider_manager=MissingLlamaCppProvider())
+
+    result = runner._execute_exact_prompt(
+        "JSON prompt",
+        {"selected_model": "qwen", "model_family": "qwen", "lane": "reasoning_analysis"},
+        operation_type="formulate_hypothesis",
+    )
+
+    assert result["executed"] is True
+    assert result["model_id"] == "qwen-test"
+    assert result["execution_adapter"] == "active_cognitive_loop.exact_prompt.venv_subprocess"
+
+
+def test_unavailable_operation_result_is_not_accepted_as_concept_progress():
+    request, packet = _request_and_packet("formulate_hypothesis")
+    raw = {
+        "operation_result_type": "formulate_hypothesis_unavailable",
+        "interpretation": "Local model execution did not complete: ModuleNotFoundError: No module named 'llama_cpp'",
+        "supporting_evidence_refs": ["repo_runtime"],
+        "evidence_refs": ["repo_runtime"],
+        "assumptions": ["No concept progress should be accepted without model output or evidence."],
+        "expected_observations": ["A later successful local execution should produce a typed result."],
+        "uncertainty": "local_model_execution_exception",
+        "recommended_state_transition": "declare_insufficient_evidence",
+    }
+
+    result = validate_model_result(request, packet, raw)
+
+    assert result.accepted is False
+    assert "local_model_execution_blocked" in result.rejection_reasons
 
 
 def _request_and_packet(operation_type="compare_evidence"):

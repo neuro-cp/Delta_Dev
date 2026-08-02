@@ -9,17 +9,18 @@ asks for local inference.
 
 from __future__ import annotations
 
-import contextlib
 import hashlib
-import io
 import json
 import re
-import subprocess
 from pathlib import Path
 from typing import Any, Callable
 
 from integration.model_runtime.model_registry import list_available_models
 from integration.model_runtime.provider_manager import ProviderManager
+from orchestration.runtime.local_model_execution_adapter import (
+    execute_local_model_inference,
+    execute_local_model_via_venv_subprocess,
+)
 from orchestration.runtime.rc2_dialogue_intent_classifier import (
     classify_dialogue_act,
     evaluate_dialogue_intent_corpus,
@@ -1449,116 +1450,32 @@ def execute_local_model_answer(
             "prompt_sent": prompt,
             "provider_calls_performed": False,
         }
-    try:
-        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
-            manager = provider_manager or ProviderManager()
-            result = manager.infer(
-                model_name=str(model_name),
-                prompt=prompt,
-                task_type="rc2_conversation",
-                metadata={"route": "rc2_local_model_lane", "lane": model_lane.get("lane")},
-            )
-        answer = result.answer
-        confidence = float(result.confidence or 0.72)
-        clean_answer = _naturalize_model_answer(answer)
-        return {
-            "executed": bool(clean_answer),
-            "available": True,
-            "answer": clean_answer,
-            "confidence_score": max(0.0, min(1.0, confidence)),
-            "model_id": str(result.model_id or model_name),
-            "latency_seconds": float(result.latency_seconds or 0.0),
-            "response_tokens": int(result.response_tokens or 0),
-            "prompt_sent": prompt,
-            "provider_calls_performed": False,
-        }
-    except ModuleNotFoundError as exc:
-        if exc.name == "llama_cpp":
-            fallback = _infer_local_model_via_venv_subprocess(str(model_name), prompt, model_lane)
-            if fallback.get("executed"):
-                return fallback
-            return {
-                "executed": False,
-                "available": True,
-                "answer": "",
-                "reason": str(fallback.get("reason") or f"local_model_execution_failed:{type(exc).__name__}:{str(exc)[:160]}"),
-                "prompt_sent": prompt,
-                "provider_calls_performed": False,
-            }
-        return {
-            "executed": False,
-            "available": True,
-            "answer": "",
-            "reason": f"local_model_execution_failed:{type(exc).__name__}:{str(exc)[:160]}",
-            "prompt_sent": prompt,
-            "provider_calls_performed": False,
-        }
-    except Exception as exc:  # pragma: no cover - defensive for local model runtime availability
-        return {
-            "executed": False,
-            "available": True,
-            "answer": "",
-            "reason": f"local_model_execution_failed:{type(exc).__name__}:{str(exc)[:160]}",
-            "prompt_sent": prompt,
-            "provider_calls_performed": False,
-        }
+    result = execute_local_model_inference(
+        model_name=str(model_name),
+        prompt=prompt,
+        task_type="rc2_conversation",
+        metadata={"route": "rc2_local_model_lane", "lane": model_lane.get("lane")},
+        provider_manager=provider_manager or ProviderManager(),
+        execution_adapter="rc2_conversational_mode_router.execute_local_model_answer",
+    )
+    clean_answer = _naturalize_model_answer(str(result.get("answer") or ""))
+    return {
+        **result,
+        "executed": bool(clean_answer),
+        "answer": clean_answer,
+        "confidence_score": max(0.0, min(1.0, float(result.get("confidence_score") or 0.72))),
+        "reason": None if clean_answer else str(result.get("reason") or "local_model_empty_answer"),
+    }
 
 
 def _infer_local_model_via_venv_subprocess(model_name: str, prompt: str, model_lane: dict[str, Any]) -> dict[str, Any]:
-    venv_python = ROOT / ".venv311" / "Scripts" / "python.exe"
-    helper = ROOT / "scripts" / "delta_rc2_local_model_infer.py"
-    if not venv_python.exists():
-        return {"executed": False, "reason": "local_model_venv_python_missing", "provider_calls_performed": False}
-    if not helper.exists():
-        return {"executed": False, "reason": "local_model_subprocess_helper_missing", "provider_calls_performed": False}
-    request = {
-        "model_name": model_name,
-        "prompt": prompt,
-        "task_type": "rc2_conversation",
-        "metadata": {"route": "rc2_local_model_lane", "lane": model_lane.get("lane")},
-    }
-    try:
-        completed = subprocess.run(
-            [str(venv_python), str(helper)],
-            input=json.dumps(request),
-            capture_output=True,
-            text=True,
-            cwd=str(ROOT),
-            timeout=240,
-            check=False,
-        )
-    except Exception as exc:  # noqa: BLE001 - returned as visible route diagnostic.
-        return {
-            "executed": False,
-            "reason": f"local_model_subprocess_failed:{type(exc).__name__}:{str(exc)[:160]}",
-            "provider_calls_performed": False,
-        }
-    if completed.returncode != 0:
-        return {
-            "executed": False,
-            "reason": f"local_model_subprocess_returned_{completed.returncode}:{completed.stderr[:180]}",
-            "provider_calls_performed": False,
-        }
-    try:
-        payload = json.loads(completed.stdout)
-    except Exception as exc:
-        return {
-            "executed": False,
-            "reason": f"local_model_subprocess_json_failed:{type(exc).__name__}:{completed.stdout[:180]}",
-            "provider_calls_performed": False,
-        }
-    answer = _naturalize_model_answer(str(payload.get("answer", "")))
-    return {
-        "executed": bool(answer),
-        "available": True,
-        "answer": answer,
-        "confidence_score": float(payload.get("confidence_score") or 0.72),
-        "model_id": payload.get("model_id") or model_name,
-        "prompt_sent": prompt,
-        "execution_adapter": "venv_subprocess",
-        "provider_calls_performed": False,
-        "reason": None if answer else "local_model_subprocess_empty_answer",
-    }
+    return execute_local_model_via_venv_subprocess(
+        model_name=model_name,
+        prompt=prompt,
+        task_type="rc2_conversation",
+        metadata={"route": "rc2_local_model_lane", "lane": model_lane.get("lane")},
+        execution_adapter="rc2_conversational_mode_router.execute_local_model_answer.venv_subprocess",
+    )
 
 
 def _naturalize_model_answer(text: str) -> str:

@@ -18,7 +18,7 @@
         "active_topic": "sky",
         "active_wrs": null,
         "conversation_branch": [],
-        "created_at": "2026-07-13T05:05:50+00:00",
+        "created_at": "2026-08-01T22:51:35+00:00",
         "ephemeral": true,
         "episode_confidence": 0.7,
         "episode_id": "rc2-episode-ffc380c1f6ae8379",
@@ -125,7 +125,7 @@
             "yielded_to": null
           }
         ],
-        "created_at": "2026-07-13T05:05:50+00:00",
+        "created_at": "2026-08-01T22:51:35+00:00",
         "dispatch_aligned_with_arbitration": true,
         "ephemeral": true,
         "precedence_order": [
@@ -254,17 +254,17 @@
             "capabilities": [
               "text"
             ],
-            "family": "llama",
-            "model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
             "reason": "registered_alias",
-            "registry_key": "llama",
-            "tier": 4
+            "registry_key": "qwen",
+            "tier": 3
           }
         ],
         "capabilities": [
           "text"
         ],
-        "context_size": 8192,
+        "context_size": 32768,
         "cost_latency_class": "low_to_medium_local",
         "display_name": "Everyday Conversation Lane",
         "executed": false,
@@ -273,7 +273,7 @@
         "expected_weakness": "specialized factual lookup and high-stakes reasoning require support",
         "fallback_priority": 1,
         "lane": "everyday_conversation",
-        "model_family": "llama",
+        "model_family": "qwen",
         "preferred_task_lanes": [
           "conversation",
           "question",
@@ -282,21 +282,15 @@
         "provider_calls_performed": false,
         "rejected_models": [
           {
-            "model_id": "phi-4-mini-reasoning-gguf-phi-4-mini-reasoning-q4-k-m",
-            "reason": "unusable_or_marked_fail",
+            "reason": "not_registered",
             "requested": "phi4"
-          },
-          {
-            "model_id": "qwen3-5-9b-gguf-qwen3-5-9b-q4-k-m",
-            "reason": "unusable_or_marked_fail",
-            "requested": "qwen"
           }
         ],
-        "selected_model": "llama",
-        "selected_model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
-        "selected_model_path": "G:\\models\\lmstudio-community\\Meta-Llama-3.1-8B-Instruct-GGUF\\Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
-        "selection_reason": "Selected meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m because it is a usable local llama model for the everyday_conversation lane.",
-        "support_identifier": "rc2-local-lane:everyday_conversation:model:meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m:family:llama:capabilities:text"
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the everyday_conversation lane.",
+        "support_identifier": "rc2-local-lane:everyday_conversation:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
       },
       "supporting_information_offer": null,
       "training_performed": false,
@@ -321,7 +315,7 @@
         "active_topic": "sky",
         "active_wrs": null,
         "conversation_branch": [],
-        "created_at": "2026-07-13T05:05:51+00:00",
+        "created_at": "2026-08-01T22:51:35+00:00",
         "ephemeral": true,
         "episode_confidence": 0.7,
         "episode_id": "rc2-episode-8bb37e625400baff",
@@ -428,7 +422,7 @@
             "yielded_to": null
           }
         ],
-        "created_at": "2026-07-13T05:05:51+00:00",
+        "created_at": "2026-08-01T22:51:35+00:00",
         "dispatch_aligned_with_arbitration": true,
         "ephemeral": true,
         "precedence_order": [
@@ -557,17 +551,17 @@
             "capabilities": [
               "text"
             ],
-            "family": "llama",
-            "model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
             "reason": "registered_alias",
-            "registry_key": "llama",
-            "tier": 4
+            "registry_key": "qwen",
+            "tier": 3
           }
         ],
         "capabilities": [
           "text"
         ],
-        "context_size": 8192,
+        "context_size": 32768,
         "cost_latency_class": "low_to_medium_local",
         "display_name": "Everyday Conversation Lane",
         "executed": false,
@@ -576,7 +570,7 @@
         "expected_weakness": "specialized factual lookup and high-stakes reasoning require support",
         "fallback_priority": 1,
         "lane": "everyday_conversation",
-        "model_family": "llama",
+        "model_family": "qwen",
         "preferred_task_lanes": [
           "conversation",
           "question",
@@ -585,21 +579,15 @@
         "provider_calls_performed": false,
         "rejected_models": [
           {
-            "model_id": "phi-4-mini-reasoning-gguf-phi-4-mini-reasoning-q4-k-m",
-            "reason": "unusable_or_marked_fail",
+            "reason": "not_registered",
             "requested": "phi4"
-          },
-          {
-            "model_id": "qwen3-5-9b-gguf-qwen3-5-9b-q4-k-m",
-            "reason": "unusable_or_marked_fail",
-            "requested": "qwen"
           }
         ],
-        "selected_model": "llama",
-        "selected_model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
-        "selected_model_path": "G:\\models\\lmstudio-community\\Meta-Llama-3.1-8B-Instruct-GGUF\\Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
-        "selection_reason": "Selected meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m because it is a usable local llama model for the everyday_conversation lane.",
-        "support_identifier": "rc2-local-lane:everyday_conversation:model:meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m:family:llama:capabilities:text"
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the everyday_conversation lane.",
+        "support_identifier": "rc2-local-lane:everyday_conversation:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
       },
       "supporting_information_offer": null,
       "training_performed": false,
@@ -622,7 +610,7 @@
         "active_topic": null,
         "active_wrs": null,
         "conversation_branch": [],
-        "created_at": "2026-07-13T05:05:51+00:00",
+        "created_at": "2026-08-01T22:51:35+00:00",
         "ephemeral": true,
         "episode_confidence": 0.35,
         "episode_id": "rc2-episode-6add00569d0a3041",
@@ -728,7 +716,7 @@
             "yielded_to": null
           }
         ],
-        "created_at": "2026-07-13T05:05:51+00:00",
+        "created_at": "2026-08-01T22:51:35+00:00",
         "dispatch_aligned_with_arbitration": true,
         "ephemeral": true,
         "precedence_order": [
@@ -857,17 +845,17 @@
             "capabilities": [
               "text"
             ],
-            "family": "llama",
-            "model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
             "reason": "registered_alias",
-            "registry_key": "llama",
-            "tier": 4
+            "registry_key": "qwen",
+            "tier": 3
           }
         ],
         "capabilities": [
           "text"
         ],
-        "context_size": 8192,
+        "context_size": 32768,
         "cost_latency_class": "medium_local",
         "display_name": "Coding / Technical Lane",
         "executed": false,
@@ -876,29 +864,18 @@
         "expected_weakness": "may need repo file context or tests for correctness",
         "fallback_priority": 2,
         "lane": "coding_technical",
-        "model_family": "llama",
+        "model_family": "qwen",
         "preferred_task_lanes": [
           "coding",
           "technical_explanation"
         ],
         "provider_calls_performed": false,
-        "rejected_models": [
-          {
-            "model_id": "qwen3-5-9b-gguf-qwen3-5-9b-q4-k-m",
-            "reason": "unusable_or_marked_fail",
-            "requested": "qwen"
-          },
-          {
-            "model_id": "phi-4-mini-reasoning-gguf-phi-4-mini-reasoning-q4-k-m",
-            "reason": "unusable_or_marked_fail",
-            "requested": "phi4"
-          }
-        ],
-        "selected_model": "llama",
-        "selected_model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
-        "selected_model_path": "G:\\models\\lmstudio-community\\Meta-Llama-3.1-8B-Instruct-GGUF\\Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
-        "selection_reason": "Selected meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m because it is a usable local llama model for the coding_technical lane.",
-        "support_identifier": "rc2-local-lane:coding_technical:model:meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m:family:llama:capabilities:text"
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the coding_technical lane.",
+        "support_identifier": "rc2-local-lane:coding_technical:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
       },
       "supporting_information_offer": null,
       "training_performed": false,
@@ -923,7 +900,7 @@
         "active_topic": "the relation between avogadro's number and quantum field theory",
         "active_wrs": null,
         "conversation_branch": [],
-        "created_at": "2026-07-13T05:05:51+00:00",
+        "created_at": "2026-08-01T22:51:35+00:00",
         "ephemeral": true,
         "episode_confidence": 0.7,
         "episode_id": "rc2-episode-874d4475fc9a1b2a",
@@ -1059,7 +1036,7 @@
             "yielded_to": null
           }
         ],
-        "created_at": "2026-07-13T05:05:51+00:00",
+        "created_at": "2026-08-01T22:51:35+00:00",
         "dispatch_aligned_with_arbitration": true,
         "ephemeral": true,
         "precedence_order": [
@@ -1214,17 +1191,17 @@
             "capabilities": [
               "text"
             ],
-            "family": "llama",
-            "model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+            "family": "qwen",
+            "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
             "reason": "registered_alias",
-            "registry_key": "llama",
-            "tier": 4
+            "registry_key": "qwen",
+            "tier": 3
           }
         ],
         "capabilities": [
           "text"
         ],
-        "context_size": 8192,
+        "context_size": 32768,
         "cost_latency_class": "medium_to_high_local",
         "display_name": "Reasoning / Analysis Lane",
         "executed": false,
@@ -1233,7 +1210,7 @@
         "expected_weakness": "external facts need gated supporting information",
         "fallback_priority": 3,
         "lane": "reasoning_analysis",
-        "model_family": "llama",
+        "model_family": "qwen",
         "preferred_task_lanes": [
           "analysis",
           "research",
@@ -1241,18 +1218,12 @@
           "external_knowledge_request"
         ],
         "provider_calls_performed": false,
-        "rejected_models": [
-          {
-            "model_id": "qwen3-5-9b-gguf-qwen3-5-9b-q4-k-m",
-            "reason": "unusable_or_marked_fail",
-            "requested": "qwen"
-          }
-        ],
-        "selected_model": "llama",
-        "selected_model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
-        "selected_model_path": "G:\\models\\lmstudio-community\\Meta-Llama-3.1-8B-Instruct-GGUF\\Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
-        "selection_reason": "Selected meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m because it is a usable local llama model for the reasoning_analysis lane.",
-        "support_identifier": "rc2-local-lane:reasoning_analysis:model:meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m:family:llama:capabilities:text"
+        "rejected_models": [],
+        "selected_model": "qwen",
+        "selected_model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Qwen2.5-7B-Instruct-GGUF\\Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m because it is a usable local qwen model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m:family:qwen:capabilities:text"
       },
       "supporting_information_offer": {
         "compact_support_packet": {
@@ -1320,7 +1291,7 @@
         "active_topic": null,
         "active_wrs": null,
         "conversation_branch": [],
-        "created_at": "2026-07-13T05:05:51+00:00",
+        "created_at": "2026-08-01T22:51:35+00:00",
         "ephemeral": true,
         "episode_confidence": 0.35,
         "episode_id": "rc2-episode-4f53cda18c2baa0c",
@@ -1421,7 +1392,7 @@
             "yielded_to": null
           }
         ],
-        "created_at": "2026-07-13T05:05:51+00:00",
+        "created_at": "2026-08-01T22:51:35+00:00",
         "dispatch_aligned_with_arbitration": true,
         "ephemeral": true,
         "precedence_order": [
@@ -1558,7 +1529,7 @@
         "active_topic": null,
         "active_wrs": null,
         "conversation_branch": [],
-        "created_at": "2026-07-13T05:05:51+00:00",
+        "created_at": "2026-08-01T22:51:35+00:00",
         "ephemeral": true,
         "episode_confidence": 0.35,
         "episode_id": "rc2-episode-baa8d850fef526a6",
@@ -1632,7 +1603,7 @@
             "yielded_to": null
           }
         ],
-        "created_at": "2026-07-13T05:05:51+00:00",
+        "created_at": "2026-08-01T22:51:35+00:00",
         "dispatch_aligned_with_arbitration": true,
         "ephemeral": true,
         "precedence_order": [
@@ -1773,7 +1744,7 @@
         "active_topic": null,
         "active_wrs": null,
         "conversation_branch": [],
-        "created_at": "2026-07-13T05:05:51+00:00",
+        "created_at": "2026-08-01T22:51:35+00:00",
         "ephemeral": true,
         "episode_confidence": 0.35,
         "episode_id": "rc2-episode-5fb9540b4e6e26d3",
@@ -1871,7 +1842,7 @@
             "yielded_to": null
           }
         ],
-        "created_at": "2026-07-13T05:05:51+00:00",
+        "created_at": "2026-08-01T22:51:35+00:00",
         "dispatch_aligned_with_arbitration": false,
         "ephemeral": true,
         "precedence_order": [
@@ -2063,7 +2034,7 @@
   },
   "focus": "conversation is the product; governed runtime is the engine",
   "local_model_discovery": {
-    "available_model_count": 15,
+    "available_model_count": 11,
     "lane_order": {
       "coding_technical": [
         "qwen",
@@ -2221,32 +2192,6 @@
       },
       {
         "capabilities": [
-          "text",
-          "vision"
-        ],
-        "context_size": 8192,
-        "cost_latency_class": "local_gguf_tier_2",
-        "display_name": "ministral-3-3b-instruct-2512-gguf-ministral-3-3b-instruct-2512-q4-k-m",
-        "family": "ministral",
-        "model_id": "ministral-3-3b-instruct-2512-gguf-ministral-3-3b-instruct-2512-q4-k-m",
-        "provider": "local_gguf",
-        "tier": 2
-      },
-      {
-        "capabilities": [
-          "text",
-          "vision"
-        ],
-        "context_size": 8192,
-        "cost_latency_class": "local_gguf_tier_2",
-        "display_name": "ministral-3-3b-instruct-2512-gguf-ministral-3-3b-instruct-2512-q6-k",
-        "family": "ministral",
-        "model_id": "ministral-3-3b-instruct-2512-gguf-ministral-3-3b-instruct-2512-q6-k",
-        "provider": "local_gguf",
-        "tier": 2
-      },
-      {
-        "capabilities": [
           "text"
         ],
         "context_size": 8192,
@@ -2297,18 +2242,6 @@
         "capabilities": [
           "text"
         ],
-        "context_size": 8192,
-        "cost_latency_class": "local_gguf_tier_2",
-        "display_name": "phi-4-mini-reasoning-gguf-phi-4-mini-reasoning-q4-k-m",
-        "family": "phi4",
-        "model_id": "phi-4-mini-reasoning-gguf-phi-4-mini-reasoning-q4-k-m",
-        "provider": "local_gguf",
-        "tier": 2
-      },
-      {
-        "capabilities": [
-          "text"
-        ],
         "context_size": 4096,
         "cost_latency_class": "local_gguf_tier_1",
         "display_name": "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m",
@@ -2321,22 +2254,9 @@
         "capabilities": [
           "text"
         ],
-        "context_size": 8192,
-        "cost_latency_class": "local_gguf_tier_2",
-        "display_name": "phi-4-mini-reasoning-gguf-phi-4-mini-reasoning-q4-k-m",
-        "family": "phi4",
-        "model_id": "phi4",
-        "provider": "local_gguf",
-        "tier": 2
-      },
-      {
-        "capabilities": [
-          "text",
-          "vision"
-        ],
         "context_size": 32768,
         "cost_latency_class": "local_gguf_tier_3",
-        "display_name": "qwen3-5-9b-gguf-qwen3-5-9b-q4-k-m",
+        "display_name": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
         "family": "qwen",
         "model_id": "qwen",
         "provider": "local_gguf",
@@ -2356,14 +2276,13 @@
       },
       {
         "capabilities": [
-          "text",
-          "vision"
+          "text"
         ],
         "context_size": 32768,
         "cost_latency_class": "local_gguf_tier_3",
-        "display_name": "qwen2-5-vl-7b-instruct-gguf-qwen2-5-vl-7b-instruct-q4-k-m",
+        "display_name": "qwen2-5-coder-7b-instruct-gguf-qwen2-5-coder-7b-instruct-q4-k-m",
         "family": "qwen",
-        "model_id": "qwen2-5-vl-7b-instruct-gguf-qwen2-5-vl-7b-instruct-q4-k-m",
+        "model_id": "qwen2-5-coder-7b-instruct-gguf-qwen2-5-coder-7b-instruct-q4-k-m",
         "provider": "local_gguf",
         "tier": 3
       },

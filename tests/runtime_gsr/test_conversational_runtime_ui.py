@@ -83,6 +83,374 @@ def test_default_surface_is_simple_and_advanced_is_inspectable(monkeypatch, tmp_
         root.destroy()
 
 
+def test_periodic_attention_gates_background_work_for_rendered_operator_request(monkeypatch, tmp_path):
+    """A durable visible request pauses the periodic tick without replacing its owner."""
+    from orchestration.runtime.conversational_runtime_operation import ChatAddressableRequest
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        started = []
+        app._start_conversational_background_cycle = lambda reason: started.append(reason) or True
+        app._refresh_conversational_runtime_status = lambda: None
+        _send(app, ENGLISH_GOAL)
+        objective = app.conversational_runtime_state.active_objective
+        assert objective is not None
+        started.clear()
+
+        app._tick_conversational_objective_runtime()
+        assert started == ["automatic_startup_or_idle_tick"]
+        stages = {item.get("decision_stage") for item in app.interactive_coordination_state.decision_history}
+        assert {"shadow", "active_gate", "executed_posture"} <= stages
+
+        request = ChatAddressableRequest(
+            request_id="test-budget-request",
+            request_type="knowledge_model_budget_increase",
+            objective_id=objective.objective_id,
+            goal_label="English comprehension",
+            prompt_text="Increase this goal's local-model budget?",
+            authority_impact="goal_scoped_budget_change",
+            rendered_turn_id="assistant-turn-1",
+            render_sequence=1,
+        )
+        app.conversational_runtime_state = replace(
+            app.conversational_runtime_state,
+            pending_chat_requests=(request,),
+        )
+
+        app._tick_conversational_objective_runtime()
+
+        assert started == ["automatic_startup_or_idle_tick"]
+        assert app.interactive_attention_decision.selected_posture == "ask_operator"
+        assert app.interactive_attention_decision.target_owner == "chat_addressable_request"
+    finally:
+        root.destroy()
+
+
+def test_idle_attention_surfaces_one_explicit_dependency_without_graph_mutation(monkeypatch, tmp_path):
+    import DELTA
+    from orchestration.runtime.provisional_semantic_consolidation import (
+        ClaimVersion,
+        ProvisionalSemanticGraphState,
+        SemanticEdge,
+        load_graph,
+        save_graph,
+    )
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        graph = ProvisionalSemanticGraphState(
+            graph_id="ui-association-graph",
+            claim_versions=(
+                ClaimVersion("source-version", "source-claim", 1, "Capture rooftop runoff.", "validated", (), (), (), (), "sha256:source", "2026-08-01T00:00:00+00:00"),
+                ClaimVersion("target-version", "target-claim", 1, "Route overflow safely.", "validated", (), (), (), (), "sha256:target", "2026-08-01T00:00:00+00:00"),
+            ),
+            edges=(SemanticEdge("ui-dependency", "depends_on", "target-version", "source-version", "2026-08-01T00:00:00+00:00"),),
+        )
+        save_graph(app.conversational_runtime_root, graph)
+        app.conversational_runtime_state = replace(app.conversational_runtime_state, active_objective=None, lifecycle_state="ready")
+
+        decision = app._refresh_interactive_cognition_shadow(reason="idle-association-fixture")
+
+        assert decision.selected_posture == "explore_near_association"
+        assert app._surface_one_near_association(decision) is True
+        assert "graph-grounded dependency" in app.observation_stream.get("1.0", tk.END).lower()
+        refreshed = app._refresh_interactive_cognition_shadow(reason="post-surface-fixture")
+        assert app._surface_one_near_association(refreshed) is False
+        assert app.interactive_workspace_snapshot.association_candidates[0].state == "surfaced"
+        assert load_graph(app.conversational_runtime_root).as_record() == graph.as_record()
+    finally:
+        root.destroy()
+
+
+def test_operator_accepts_one_association_question_without_graph_mutation(monkeypatch, tmp_path):
+    from orchestration.runtime.provisional_semantic_consolidation import (
+        ClaimVersion,
+        ProvisionalSemanticGraphState,
+        SemanticEdge,
+        load_graph,
+        save_graph,
+    )
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        graph = ProvisionalSemanticGraphState(
+            graph_id="operator-association-graph",
+            claim_versions=(
+                ClaimVersion("source-version", "source-claim", 1, "Capture rooftop runoff.", "validated", (), (), (), (), "sha256:source", "2026-08-01T00:00:00+00:00"),
+                ClaimVersion("target-version", "target-claim", 1, "Route overflow safely.", "validated", (), (), (), (), "sha256:target", "2026-08-01T00:00:00+00:00"),
+            ),
+            edges=(SemanticEdge("operator-dependency", "depends_on", "target-version", "source-version", "2026-08-01T00:00:00+00:00"),),
+        )
+        save_graph(app.conversational_runtime_root, graph)
+        app.conversational_runtime_state = replace(app.conversational_runtime_state, active_objective=None, lifecycle_state="ready")
+        decision = app._refresh_interactive_cognition_shadow(reason="operator-association-fixture")
+        assert app._surface_one_near_association(decision) is True
+        graph_before = load_graph(app.conversational_runtime_root).as_record()
+
+        app._refresh_interactive_candidate_controls()
+        candidate_id = app.interactive_workspace_snapshot.association_candidates[0].candidate_id
+        app.interactive_candidate_choice.set(f"{candidate_id} | surfaced")
+        app._show_interactive_candidate_details()
+        details = app.interactive_candidate_detail.get("1.0", tk.END).lower()
+        assert "type: explicit_dependency" in details
+        assert "provenance: operator-dependency" in details
+        assert "state: surfaced; surfaced: yes" in details
+        app._apply_interactive_candidate_action("accepted")
+        app._apply_interactive_candidate_action("accepted")
+
+        pending = [item for item in app.conversational_runtime_state.pending_chat_requests if item.request_type == "interactive_clarification"]
+        assert len(pending) == 1
+        request = pending[0]
+        assert request.baseline_metrics["originating_candidate_id"] == candidate_id
+        assert request.thread_id == f"candidate:{candidate_id}"
+        assert request.baseline_metrics["relation_edge_ids"] == ("operator-dependency",)
+        assert request.baseline_metrics["association_exploration_state"] == "question_created"
+        assert request.baseline_metrics["association_resolution_state"] == "unresolved"
+        assert request.rendered_turn_id == app.conversational_runtime_state.conversation[-1].turn_id
+        assert "explicit dependency" in app.chat_history.get("1.0", tk.END).lower()
+        assert load_graph(app.conversational_runtime_root).as_record() == graph_before
+
+        _send(app, "yes")
+        assert [item.request_id for item in app.conversational_runtime_state.pending_chat_requests] == [request.request_id]
+
+        _send(app, "Yes, that connection is relevant to the direction I want to explore.")
+        assert not any(item.request_id == request.request_id for item in app.conversational_runtime_state.pending_chat_requests)
+        resolved = app.conversational_runtime_state.resolved_chat_requests[-1]
+        assert resolved.request_id == request.request_id
+        assert resolved.consumption_count == 1
+        assert resolved.resolution_policy == "operator_approved_bounded_association_exploration"
+        assert resolved.baseline_metrics["association_exploration_state"] == "approved_for_bounded_exploration"
+        assert resolved.baseline_metrics["association_resolution_state"] == "unresolved"
+        assert load_graph(app.conversational_runtime_root).as_record() == graph_before
+    finally:
+        root.destroy()
+
+
+def test_association_question_expires_on_an_unrelated_foreground_question(monkeypatch, tmp_path):
+    from orchestration.runtime.conversational_runtime_operation import (
+        compile_chat_clarification_request,
+        mark_chat_request_rendered,
+    )
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        request = compile_chat_clarification_request(
+            app.conversational_runtime_state,
+            pressure="cross_topic_relevance",
+            prompt_text="Is this dependency relevant to the direction you want to explore?",
+            source_record_ids=("dependency-edge",),
+            request_type="interactive_clarification",
+        )
+        app.conversational_runtime_state = replace(
+            app.conversational_runtime_state,
+            pending_chat_requests=(request,),
+        )
+        app.conversational_runtime_state = mark_chat_request_rendered(
+            app.conversational_runtime_state,
+            request.request_id,
+            rendered_turn_id="association-prompt-turn",
+            render_sequence=1,
+        )
+
+        _send(app, "What color is the sky?")
+
+        assert app.conversational_runtime_state.pending_chat_requests == ()
+        assert app.conversational_runtime_state.resolved_chat_requests[-1].request_id == request.request_id
+        assert app.conversational_runtime_state.resolved_chat_requests[-1].status == "expired"
+        candidate = next(item for item in app.interactive_coordination_state.candidate_dispositions if item.candidate_id == request.baseline_metrics.get("originating_candidate_id")) if request.baseline_metrics.get("originating_candidate_id") else None
+        assert candidate is None
+    finally:
+        root.destroy()
+
+
+def test_candidate_control_dispositions_persist_and_pressure_acceptance_creates_one_question(monkeypatch, tmp_path):
+    from orchestration.runtime.conversational_runtime_operation import start_or_restore_runtime
+    from orchestration.runtime.interactive_cognition import CuriosityCandidate, load_coordination_state
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        def candidate(candidate_id, trigger="epistemic_instability"):
+            return CuriosityCandidate(
+                candidate_id=candidate_id,
+                trigger=trigger,
+                source_record_ids=(candidate_id + "-source",),
+                canonical_owner="active_cognitive_episode",
+                rationale="A bounded operator decision is available.",
+                safe_next_step="the missing installation record",
+                operator_relevance=2,
+                surface_worthy=False,
+                expiry_policy="test-expiry",
+            )
+
+        for candidate_id, disposition in (
+            ("candidate-deferred", "deferred"),
+            ("candidate-rejected", "rejected"),
+            ("candidate-suppressed", "suppressed"),
+        ):
+            item = candidate(candidate_id)
+            app.interactive_candidate_choices = {candidate_id: item}
+            app.interactive_candidate_choice.set(f"{candidate_id} | generated")
+            app._apply_interactive_candidate_action(disposition)
+
+        pressure = candidate("candidate-missing-evidence", trigger="missing_evidence")
+        app.interactive_candidate_choices = {pressure.candidate_id: pressure}
+        app.interactive_candidate_choice.set(f"{pressure.candidate_id} | generated")
+        app._apply_interactive_candidate_action("accepted")
+        app.interactive_candidate_choices = {pressure.candidate_id: pressure}
+        app.interactive_candidate_choice.set(f"{pressure.candidate_id} | accepted")
+        app._apply_interactive_candidate_action("accepted")
+
+        restored_coordination = load_coordination_state(
+            app.conversational_runtime_root,
+            runtime_id=app.conversational_runtime_state.runtime_id,
+        )
+        restored_states = {item.candidate_id: item.state for item in restored_coordination.candidate_dispositions}
+        assert restored_states == {
+            "candidate-deferred": "deferred",
+            "candidate-rejected": "rejected",
+            "candidate-suppressed": "suppressed",
+            "candidate-missing-evidence": "accepted",
+        }
+        restored_runtime = start_or_restore_runtime(app.conversational_runtime_root)
+        requests = [item for item in restored_runtime.pending_chat_requests if item.baseline_metrics.get("originating_candidate_id") == pressure.candidate_id]
+        assert len(requests) == 1
+        assert requests[0].baseline_metrics["question_kind"] == "missing_evidence"
+        assert requests[0].baseline_metrics["clarification_pressure"] == "missing_evidence"
+    finally:
+        root.destroy()
+
+
+def test_negative_association_answer_rejects_exploration_without_touching_semantic_graph(monkeypatch, tmp_path):
+    from orchestration.runtime.interactive_cognition import AssociationCandidate
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        candidate = AssociationCandidate(
+            association_id="candidate-rejected-association",
+            association_type="explicit_dependency",
+            source_refs=("claim-source",),
+            target_refs=("claim-target",),
+            relation_path=("dependency-edge",),
+            shared_structure="A provisional claim depends on another provisional claim.",
+            strength=2,
+            uncertainty="A dependency is not a factual equivalence.",
+            operator_relevance=1,
+            proposed_question="Should this dependency be explored?",
+            provenance_refs=("dependency-edge", "claim-source", "claim-target"),
+            surface_worthy=False,
+        )
+        app.interactive_candidate_choices = {candidate.candidate_id: candidate}
+        app.interactive_candidate_choice.set(f"{candidate.candidate_id} | generated")
+        app._apply_interactive_candidate_action("accepted")
+
+        _send(app, "No, that connection is not relevant to the direction I want to explore.")
+
+        disposition = next(item for item in app.interactive_coordination_state.candidate_dispositions if item.candidate_id == candidate.candidate_id)
+        assert disposition.state == "rejected"
+        resolved = app.conversational_runtime_state.resolved_chat_requests[-1]
+        assert resolved.resolution_policy == "operator_rejected_association_exploration"
+        assert resolved.baseline_metrics["association_resolution_state"] == "unresolved"
+    finally:
+        root.destroy()
+
+
+def test_association_expiry_retires_candidate_and_prevents_duplicate_question(monkeypatch, tmp_path):
+    from orchestration.runtime.interactive_cognition import AssociationCandidate, load_coordination_state
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        candidate = AssociationCandidate(
+            association_id="candidate-expiring-association",
+            association_type="explicit_dependency",
+            source_refs=("claim-source",),
+            target_refs=("claim-target",),
+            relation_path=("dependency-edge",),
+            shared_structure="A provisional claim depends on another provisional claim.",
+            strength=2,
+            uncertainty="A dependency is not a factual equivalence.",
+            operator_relevance=1,
+            proposed_question="Should this dependency be explored?",
+            provenance_refs=("dependency-edge", "claim-source", "claim-target"),
+            surface_worthy=False,
+        )
+        app.interactive_candidate_choices = {candidate.candidate_id: candidate}
+        app.interactive_candidate_choice.set(f"{candidate.candidate_id} | generated")
+        app._apply_interactive_candidate_action("accepted")
+        request = app.conversational_runtime_state.pending_chat_requests[-1]
+
+        _send(app, "What color is the sky?")
+
+        restored = load_coordination_state(app.conversational_runtime_root, runtime_id=app.conversational_runtime_state.runtime_id)
+        disposition = next(item for item in restored.candidate_dispositions if item.candidate_id == candidate.candidate_id)
+        assert disposition.state == "expired"
+        assert app.conversational_runtime_state.resolved_chat_requests[-1].request_id == request.request_id
+        assert app.conversational_runtime_state.resolved_chat_requests[-1].status == "expired"
+
+        app.interactive_candidate_choices = {candidate.candidate_id: candidate}
+        app.interactive_candidate_choice.set(f"{candidate.candidate_id} | expired")
+        app._apply_interactive_candidate_action("accepted")
+        assert not any(item.baseline_metrics.get("originating_candidate_id") == candidate.candidate_id for item in app.conversational_runtime_state.pending_chat_requests)
+    finally:
+        root.destroy()
+
+
+def test_idle_attention_seals_one_consolidation_packet_without_admission(monkeypatch, tmp_path):
+    from orchestration.runtime.provisional_semantic_consolidation import (
+        ClaimVersion,
+        ProvisionalSemanticGraphState,
+        create_consolidation_cohort,
+        load_graph,
+        save_graph,
+    )
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        graph = ProvisionalSemanticGraphState(
+            graph_id="ui-consolidation-graph",
+            claim_versions=(
+                ClaimVersion("claim-version-1", "claim-1", 1, "Rain barrels collect rooftop runoff.", "pending_consolidation", (), (), (), (), "sha256:claim-1", "2026-08-01T00:00:00+00:00"),
+            ),
+        )
+        graph, cohort = create_consolidation_cohort(graph, trigger="idle_attention")
+        save_graph(app.conversational_runtime_root, graph)
+        app.conversational_runtime_state = replace(app.conversational_runtime_state, active_objective=None, lifecycle_state="ready")
+
+        decision = app._refresh_interactive_cognition_shadow(reason="idle-consolidation-fixture")
+
+        assert decision.selected_posture == "perform_one_consolidation_step"
+        assert app._perform_one_consolidation_step(decision) is True
+        persisted = load_graph(app.conversational_runtime_root)
+        assert len(persisted.packets) == 1
+        assert persisted.packets[0].cohort_id == cohort.cohort_id
+        assert persisted.reviews == ()
+        assert persisted.admissions == ()
+        assert "no provider call" in app.observation_stream.get("1.0", tk.END).lower()
+        repeated = app._refresh_interactive_cognition_shadow(reason="post-consolidation-fixture")
+        assert app._perform_one_consolidation_step(repeated) is False
+        assert len(load_graph(app.conversational_runtime_root).packets) == 1
+    finally:
+        root.destroy()
+
+
+def test_interactive_introspection_reads_live_goal_and_pending_request_state(monkeypatch, tmp_path):
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, ENGLISH_GOAL)
+        _send(app, "What are you doing right now?")
+        transcript = app.chat_history.get("1.0", tk.END).lower()
+        assert "[introspection]" in transcript
+        assert "currently attending to" in transcript
+
+        _send(app, "For the goal, compare that to the prior subject.")
+        assert app.conversational_runtime_state.pending_chat_requests[-1].request_type == "reference_clarification"
+        _send(app, "Why did you ask that?")
+        latest = app.chat_history.get("1.0", tk.END).lower().rsplit("you: why did you ask that?", 1)[-1]
+        assert "ambiguous reference" in latest
+        assert app.conversational_runtime_state.pending_chat_requests[-1].request_type == "reference_clarification"
+    finally:
+        root.destroy()
+
+
 def test_chat_goal_correction_transfer_and_authority_boundary(monkeypatch, tmp_path):
     root, app = _app(monkeypatch, tmp_path)
     try:
@@ -103,6 +471,134 @@ def test_chat_goal_correction_transfer_and_authority_boundary(monkeypatch, tmp_p
         _send(app, "Modify your source code and push it.")
         assert app.conversational_runtime_state.pending_material_authority
         assert app.conversational_runtime_state.active_objective is not None
+    finally:
+        root.destroy()
+
+
+def test_coordinated_goal_preserves_all_material_clauses(monkeypatch, tmp_path):
+    """The UI coordinator must not truncate a goal at an explicit-clause boundary."""
+    from orchestration.runtime.chat_first_dispatch_contract import plan_message_dispatch
+
+    root, app = _app(monkeypatch, tmp_path)
+    message = (
+        "Your new goal is to understand rain barrels: how they collect water, "
+        "how overflow works, and how to prevent mosquitoes. Use local cognition first. "
+        "Give a short completion or remaining-gap report. Do not change source code or restart."
+    )
+    try:
+        plan = plan_message_dispatch(app.conversational_runtime_state, message)
+
+        assert len(plan.segments) >= 2
+        assert app._coordinate_mixed_dispatch(message, plan)
+        objective = app.conversational_runtime_state.active_objective
+        assert objective is not None
+        assert objective.operator_wording == message
+        contract = objective.provenance["knowledge_contract"]
+        assert [item["text"] for item in contract["material_requirements"]] == [
+            "how they collect water",
+            "how overflow works",
+            "how to prevent mosquitoes",
+        ]
+        assert sum(turn.role == "user" and turn.text == message for turn in app.conversational_runtime_state.conversation) == 1
+    finally:
+        root.destroy()
+
+
+def test_knowledge_goal_activity_renders_to_observation_stream(monkeypatch, tmp_path):
+    root, app = _app(monkeypatch, tmp_path)
+    message = (
+        "Your new goal is to understand rain barrels: how they collect water, "
+        "how overflow works, and how to prevent mosquitoes. Use local cognition first. "
+        "Give a short completion or remaining-gap report. Do not change source code or restart."
+    )
+    try:
+        _send(app, message)
+        root.update()
+
+        chat_text = app.chat_history.get("1.0", tk.END)
+        observation_text = app.observation_stream.get("1.0", tk.END)
+
+        assert "Created 3 initial knowledge nodes" not in chat_text
+        assert "Created 3 initial knowledge nodes" in observation_text
+        assert not any(
+            item["role"] == "assistant" and "Created 3 initial knowledge nodes" in item["content"]
+            for item in app.session_history
+        )
+    finally:
+        root.destroy()
+
+
+def test_shadow_attention_decision_is_observable_without_chat_pollution(monkeypatch, tmp_path):
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        decision = app._refresh_interactive_cognition_shadow(
+            foreground_message="What color is the sky?",
+            foreground_turn_id="operator-turn-shadow-1",
+            reason="ui_shadow_test",
+        )
+
+        assert decision.selected_posture == "answer_operator"
+        assert app.interactive_workspace_snapshot is not None
+        assert "Shadow selected answer_operator" in app.observation_stream.get("1.0", tk.END)
+        assert "Shadow selected answer_operator" not in app.chat_history.get("1.0", tk.END)
+        assert app.interactive_coordination_state.decision_history
+    finally:
+        root.destroy()
+
+
+def test_operator_turn_updates_attention_snapshot_before_dispatch(monkeypatch, tmp_path):
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, "What color is the sky?")
+
+        assert app.interactive_workspace_snapshot is not None
+        assert app.interactive_workspace_snapshot.foreground_message == "What color is the sky?"
+        assert app.interactive_attention_decision.selected_posture == "answer_operator"
+        assert "Shadow selected answer_operator" in app.observation_stream.get("1.0", tk.END)
+    finally:
+        root.destroy()
+
+
+def test_shadow_attention_reads_persisted_provisional_graph_without_taking_ownership(monkeypatch, tmp_path):
+    from orchestration.runtime.provisional_semantic_consolidation import (
+        ClaimVersion,
+        ProvisionalSemanticGraphState,
+        save_graph,
+    )
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        graph = ProvisionalSemanticGraphState(
+            graph_id="attention-graph",
+            claim_versions=(
+                ClaimVersion(
+                    claim_version_id="unstable-claim-version",
+                    claim_id="unstable-claim",
+                    version_index=1,
+                    exact_text="A provisional claim requires contradiction review.",
+                    epistemic_state="unstable",
+                    rationale_refs=(),
+                    assumption_refs=(),
+                    uncertainty_refs=(),
+                    source_experience_refs=("experience-unstable",),
+                    semantic_fingerprint="sha256:unstable",
+                    created_at="2026-08-01T00:00:00+00:00",
+                ),
+            ),
+        )
+        save_graph(app.conversational_runtime_root, graph)
+
+        app._refresh_interactive_cognition_shadow(reason="persisted_graph_adapter_test")
+
+        assert app.interactive_workspace_snapshot is not None
+        thread = next(
+            item
+            for item in app.interactive_workspace_snapshot.threads
+            if item.source_record_ids == ("unstable-claim-version",)
+        )
+        assert thread.canonical_owner == "provisional_semantic_graph"
+        assert thread.thread_kind == "contradiction_review"
+        assert thread.status == "unstable"
     finally:
         root.destroy()
 
@@ -163,9 +659,12 @@ def test_mid_inference_keeps_foreground_turn_and_completes_the_worker_once(monke
 
         assert app.conversational_runtime_inference_in_flight is True
         assert any(turn.role == "user" and turn.text == "What color is the sky?" for turn in app.conversational_runtime_state.conversation)
+        assert any(item.preemption_requested for item in app.interactive_coordination_state.entries)
         _pump_until(root, lambda: len(app.conversational_runtime_state.completed_cycle_keys) > before_cycles, timeout=4.0)
         assert sum(turn.role == "user" and turn.text == "What color is the sky?" for turn in app.conversational_runtime_state.conversation) == 1
         assert len(app.conversational_runtime_state.completed_cycle_keys) == before_cycles + 1
+        assert not any(item.preemption_requested for item in app.interactive_coordination_state.entries)
+        assert "reached its atomic boundary" in app.observation_stream.get("1.0", tk.END)
     finally:
         root.destroy()
 
@@ -283,7 +782,7 @@ def test_goal_review_renders_in_chat(monkeypatch, tmp_path):
         root.destroy()
 
 
-def test_campaign_goal_milestone_renders_inline_without_budget_review(monkeypatch, tmp_path):
+def test_campaign_goal_milestone_renders_to_observation_without_budget_review(monkeypatch, tmp_path):
     root, app = _app(monkeypatch, tmp_path)
     try:
         _send(app, FOREGROUND_CAMPAIGN_GOAL)
@@ -297,8 +796,10 @@ def test_campaign_goal_milestone_renders_inline_without_budget_review(monkeypatc
         )
 
         transcript = app.chat_history.get("1.0", tk.END)
-        assert "[Goal update - Foreground vs continuation routing]" in transcript
-        assert "I found the first recurring failure pattern" in transcript
+        observation = app.observation_stream.get("1.0", tk.END)
+        assert "[Goal update - Foreground vs continuation routing]" not in transcript
+        assert "[Goal update - Foreground vs continuation routing]" in observation
+        assert "I found the first recurring failure pattern" in observation
         assert "[Goal review Â· Language understanding]" not in transcript
         assert app.conversational_runtime_state.lifecycle_state == "running"
         assert len(app.conversational_runtime_state.completed_cycle_keys) < app.conversational_runtime_state.active_objective.cycle_budget
@@ -605,6 +1106,11 @@ def test_reference_clarification_create_resolve_and_expire(monkeypatch, tmp_path
         latest = transcript.rsplit("you: for the goal, compare that to the prior subject.", 1)[-1]
         assert "which prior subject" in latest
         assert app.conversational_runtime_state.pending_chat_requests[-1].request_type == "reference_clarification"
+        clarification = app.conversational_runtime_state.pending_chat_requests[-1]
+        assert clarification.created_turn_id
+        assert clarification.rendered_turn_id == app.conversational_runtime_state.conversation[-1].turn_id
+        assert clarification.render_sequence > clarification.created_sequence
+        assert clarification.accepted_response_types == ("clarification",)
         assert len(app.conversational_runtime_state.conversation) == before_turns + 2
 
         _send(app, "I meant angular momentum.")

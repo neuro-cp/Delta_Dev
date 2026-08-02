@@ -32,7 +32,12 @@ LIVE_RUNTIME_3_ROOT = ROOT / ".tmp" / "live-runtime-3-interruption-resumption-v1
 LIVE_RUNTIME_3_ACCEPTED_ROOT = ROOT / ".tmp" / "live-general-3-approved-learning-v1"
 LIVE_RUNTIME_4_ROOT = ROOT / ".tmp" / "live-runtime-4-crash-integrity-v1"
 LIVE_RUNTIME_4_ACCEPTED_ROOT = ROOT / ".tmp" / "live-general-3-approved-learning-v1"
-CONVERSATIONAL_RUNTIME_ROOT = ROOT / "data" / "runtime" / "conversational_runtime_operation"
+CONVERSATIONAL_RUNTIME_ROOT = Path(
+    os.environ.get(
+        "DELTA_CONVERSATIONAL_RUNTIME_ROOT",
+        str(ROOT / "data" / "runtime" / "conversational_runtime_operation"),
+    )
+)
 
 
 class LockedProviderManagerProxy:
@@ -103,15 +108,20 @@ from orchestration.runtime.conversational_runtime_operation import (  # noqa: E4
     apply_stop_or_redirect as apply_conversational_stop_or_redirect,
     chat_feature_settings_schema,
     classify_conversational_intent,
+    compile_chat_clarification_request,
     decide_turn_relation,
     evaluate_conversational_runtime,
     handle_conversational_message,
     infer_lesson_transfer,
     mark_capability_campaign_milestone_rendered,
+    mark_chat_request_rendered,
+    mark_knowledge_goal_event_rendered,
     record_foreground_message_for_reconciliation,
+    render_knowledge_goal_event,
     render_structured_discourse_capability_review,
     render_goal_review,
     review_status_for_goal_completion,
+    select_chat_request_owner,
     request_provider_learning_packet,
     resume_active_objective as resume_conversational_objective,
     resolve_pending_chat_request,
@@ -120,8 +130,30 @@ from orchestration.runtime.conversational_runtime_operation import (  # noqa: E4
     start_or_restore_runtime as start_or_restore_conversational_runtime,
     stop_active_objective as stop_conversational_objective,
     unrendered_capability_campaign_milestones,
+    unrendered_knowledge_goal_events,
 )
 from orchestration.runtime.chat_first_dispatch_contract import plan_message_dispatch  # noqa: E402
+from orchestration.runtime.provisional_semantic_consolidation import (  # noqa: E402
+    ConsolidationIntegrityError,
+    apply_admission as apply_consolidation_admission,
+    create_administrative_overlay as create_consolidation_overlay,
+    load_graph as load_provisional_semantic_graph,
+    render_administrative_review as render_consolidation_review,
+    save_graph as save_provisional_semantic_graph,
+    seal_cohort_packet_once,
+)
+from orchestration.runtime.interactive_cognition import (  # noqa: E402
+    arbitrate_attention,
+    build_workspace_snapshot,
+    clear_preemption,
+    load_coordination_state,
+    record_shadow_decision,
+    request_preemption,
+    save_coordination_state,
+    set_candidate_disposition,
+    stage_attention_decision,
+    surface_candidate_once,
+)
 from orchestration.runtime.goal_oriented_ui_campaign import (  # noqa: E402
     CAMPAIGN_ID as GOAL_UI_CAMPAIGN_ID,
     begin_follow_up as begin_goal_ui_campaign_follow_up,
@@ -1716,6 +1748,12 @@ class DeltaApp:
         self.model_residency_status = "not_warmed"
         self.conversational_runtime_root = CONVERSATIONAL_RUNTIME_ROOT
         self.conversational_runtime_state = start_or_restore_conversational_runtime(self.conversational_runtime_root)
+        self.interactive_coordination_state = load_coordination_state(
+            self.conversational_runtime_root,
+            runtime_id=self.conversational_runtime_state.runtime_id,
+        )
+        self.interactive_workspace_snapshot = None
+        self.interactive_attention_decision = None
         self.conversational_runtime_status = tk.StringVar(value=self._conversational_runtime_status_text())
         self.conversational_runtime_inference_in_flight = False
         self.conversational_runtime_result_queue: queue.Queue = queue.Queue()
@@ -1724,6 +1762,14 @@ class DeltaApp:
         self.goal_ui_campaign_status = tk.StringVar(value="Goal UI campaign: not started")
         self.goal_ui_campaign_selected_id = tk.StringVar(value="")
         self.goal_ui_campaign_buttons: dict[str, ttk.Button] = {}
+        self.consolidation_review_status = tk.StringVar(value="Offline consolidation: no review loaded")
+        self.consolidation_review_id = tk.StringVar(value="")
+        self.consolidation_claim_version_id = tk.StringVar(value="")
+        self.consolidation_action = tk.StringVar(value="approve")
+        self.consolidation_graph_status = tk.StringVar(value="Learning records: not loaded")
+        self.consolidation_graph_snapshot = None
+        self.consolidation_episode_rows: dict[str, str] = {}
+        self.consolidation_administrative_enabled = False
         self.developer_overlay_enabled = tk.BooleanVar(value=False)
         if not validate_console_safe(self.snapshot):
             raise RuntimeError("DELTA console safety validation failed")
@@ -1762,6 +1808,7 @@ class DeltaApp:
         self.rc4_tab = ttk.Frame(self.developer_notebook, padding=10)
         self.rc5_tab = ttk.Frame(self.developer_notebook, padding=10)
         self.advanced_tab = ttk.Frame(self.developer_notebook, padding=10)
+        self.consolidation_tab = ttk.Frame(self.developer_notebook, padding=10)
         self.notebook.add(self.conversation_tab, text="Conversation")
         self.notebook.add(self.goals_tab, text="Goals")
         self.notebook.add(self.activity_tab, text="Activity")
@@ -1773,6 +1820,7 @@ class DeltaApp:
         self.developer_notebook.add(self.rc4_tab, text="RC4")
         self.developer_notebook.add(self.rc5_tab, text="RC5")
         self.developer_notebook.add(self.advanced_tab, text="Diagnostics")
+        self.developer_notebook.add(self.consolidation_tab, text="Consolidation")
 
         self._build_conversation_tab()
         self._build_goals_tab()
@@ -1784,6 +1832,7 @@ class DeltaApp:
         self._build_rc4_tab()
         self._build_rc5_tab()
         self._build_advanced_tab()
+        self._build_consolidation_tab()
 
     def _build_conversation_tab(self) -> None:
         header = ttk.LabelFrame(self.conversation_tab, text="Cognitive State")
@@ -1833,9 +1882,20 @@ class DeltaApp:
         ttk.Button(live_bar, text="Suspend", command=self._suspend_live_initiative).pack(side=tk.LEFT, padx=(8, 0))
         ttk.Label(live_bar, textvariable=self.live_runtime_status).pack(side=tk.LEFT, padx=(12, 0))
 
-        self.chat_history = scrolledtext.ScrolledText(self.conversation_tab, wrap=tk.WORD, height=24)
-        self.chat_history.pack(fill=tk.BOTH, expand=True, pady=(10, 0))
+        stream_panes = ttk.PanedWindow(self.conversation_tab, orient=tk.HORIZONTAL)
+        self.conversation_stream_panes = stream_panes
+        stream_panes.pack(fill=tk.BOTH, expand=True, pady=(10, 0))
+        chat_frame = ttk.LabelFrame(stream_panes, text="Conversation")
+        observation_frame = ttk.LabelFrame(stream_panes, text="Live Observation")
+        stream_panes.add(chat_frame, weight=3)
+        stream_panes.add(observation_frame, weight=2)
+
+        self.chat_history = scrolledtext.ScrolledText(chat_frame, wrap=tk.WORD, height=24)
+        self.chat_history.pack(fill=tk.BOTH, expand=True, padx=4, pady=4)
         self.chat_history.configure(state=tk.DISABLED)
+        self.observation_stream = scrolledtext.ScrolledText(observation_frame, wrap=tk.WORD, height=24)
+        self.observation_stream.pack(fill=tk.BOTH, expand=True, padx=4, pady=4)
+        self.observation_stream.configure(state=tk.DISABLED)
 
         input_bar = ttk.Frame(self.conversation_tab)
         input_bar.pack(fill=tk.X, pady=(8, 0))
@@ -4007,6 +4067,22 @@ class DeltaApp:
         self.severity.pack(fill=tk.X, padx=6, pady=4)
         ttk.Button(obs, text="Log Observation Locally", command=self._log_observation).pack(fill=tk.X, padx=6, pady=6)
 
+        candidate_controls = ttk.LabelFrame(left, text="Interactive Candidates")
+        candidate_controls.pack(fill=tk.X, pady=(10, 0))
+        self.interactive_candidate_choice = tk.StringVar()
+        self.interactive_candidate_choices: dict[str, object] = {}
+        self.interactive_candidate_selector = ttk.Combobox(candidate_controls, textvariable=self.interactive_candidate_choice, state="readonly")
+        self.interactive_candidate_selector.pack(fill=tk.X, padx=6, pady=4)
+        self.interactive_candidate_selector.bind("<<ComboboxSelected>>", lambda _event: self._show_interactive_candidate_details())
+        self.interactive_candidate_detail = scrolledtext.ScrolledText(candidate_controls, wrap=tk.WORD, height=7)
+        self.interactive_candidate_detail.pack(fill=tk.X, padx=6, pady=(0, 4))
+        self.interactive_candidate_detail.configure(state=tk.DISABLED)
+        ttk.Button(candidate_controls, text="Refresh Candidates", command=self._refresh_interactive_candidate_controls).pack(fill=tk.X, padx=6, pady=(0, 4))
+        actions = ttk.Frame(candidate_controls)
+        actions.pack(fill=tk.X, padx=6, pady=(0, 6))
+        for label, action in (("Accept", "accepted"), ("Defer", "deferred"), ("Reject", "rejected"), ("Suppress", "suppressed")):
+            ttk.Button(actions, text=label, command=lambda value=action: self._apply_interactive_candidate_action(value)).pack(side=tk.LEFT, padx=(0, 4))
+
         buttons = ttk.Frame(left)
         buttons.pack(fill=tk.X, pady=(10, 0))
         ttk.Button(buttons, text="Status", command=self._show_status).pack(fill=tk.X)
@@ -4018,6 +4094,219 @@ class DeltaApp:
         ttk.Label(right, text="Workspace").pack(anchor=tk.W)
         self.output = scrolledtext.ScrolledText(right, wrap=tk.WORD)
         self.output.pack(fill=tk.BOTH, expand=True)
+
+    def _refresh_interactive_candidate_controls(self) -> None:
+        self._refresh_interactive_cognition_shadow(reason="operator_candidate_inspection")
+        workspace = self.interactive_workspace_snapshot
+        candidates = [*getattr(workspace, "association_candidates", ()), *getattr(workspace, "curiosity_candidates", ())] if workspace else []
+        self.interactive_candidate_choices = {item.candidate_id: item for item in candidates}
+        values = [f"{item.candidate_id} | {getattr(item, 'state', 'generated')}" for item in candidates]
+        self.interactive_candidate_selector.configure(values=values)
+        if values:
+            self.interactive_candidate_choice.set(values[0])
+            self._show_interactive_candidate_details()
+        else:
+            self.interactive_candidate_choice.set("")
+            self._set_interactive_candidate_details("")
+
+    def _set_interactive_candidate_details(self, text: str) -> None:
+        self.interactive_candidate_detail.configure(state=tk.NORMAL)
+        self.interactive_candidate_detail.delete("1.0", tk.END)
+        self.interactive_candidate_detail.insert(tk.END, text)
+        self.interactive_candidate_detail.configure(state=tk.DISABLED)
+
+    def _show_interactive_candidate_details(self) -> None:
+        candidate_id = self.interactive_candidate_choice.get().split(" | ", 1)[0]
+        candidate = self.interactive_candidate_choices.get(candidate_id)
+        if candidate is None:
+            self._set_interactive_candidate_details("")
+            return
+        if hasattr(candidate, "association_id"):
+            detail = (
+                f"Type: {candidate.association_type}\n"
+                f"Originating thread: {', '.join(candidate.source_refs)} -> {', '.join(candidate.target_refs)}\n"
+                f"Provenance: {', '.join(candidate.provenance_refs)}\n"
+                f"Reason: {candidate.shared_structure}\n"
+                f"State: {candidate.state}; surfaced: {'yes' if candidate.state not in {'generated', 'queued'} else 'no'}\n"
+                f"Uncertainty: {candidate.uncertainty}"
+            )
+        else:
+            detail = (
+                f"Type: {candidate.trigger}\n"
+                f"Originating thread: {candidate.canonical_owner}\n"
+                f"Provenance: {', '.join(candidate.source_record_ids)}\n"
+                f"Reason: {candidate.rationale}\n"
+                f"State: {candidate.state}; surfaced: {'yes' if candidate.state not in {'generated', 'queued'} else 'no'}"
+            )
+        self._set_interactive_candidate_details(detail)
+
+    def _apply_interactive_candidate_action(self, disposition: str) -> None:
+        candidate_id = self.interactive_candidate_choice.get().split(" | ", 1)[0]
+        candidate = self.interactive_candidate_choices.get(candidate_id)
+        if candidate is None:
+            return
+        kind = "near_association" if hasattr(candidate, "association_id") else (
+            "cognitive_pressure" if getattr(candidate, "trigger", "") in {"missing_evidence", "contradiction"} else "curiosity_candidate"
+        )
+        source_ids = getattr(candidate, "provenance_refs", getattr(candidate, "source_record_ids", ()))
+        try:
+            if disposition == "accepted":
+                self.interactive_coordination_state = surface_candidate_once(
+                    self.interactive_coordination_state,
+                    candidate_id=candidate_id,
+                    candidate_kind=kind,
+                    source_record_ids=source_ids,
+                )
+            self.interactive_coordination_state = set_candidate_disposition(
+                self.interactive_coordination_state, candidate_id=candidate_id, candidate_kind=kind,
+                disposition=disposition, source_record_ids=source_ids,
+            )
+        except ValueError as exc:
+            self.output.insert(tk.END, f"Candidate action was not applied: {exc}\n")
+            return
+        save_coordination_state(self.conversational_runtime_root, self.interactive_coordination_state)
+        if disposition == "accepted" and kind in {"near_association", "cognitive_pressure"}:
+            existing = next(
+                (
+                    item for item in (
+                        self.conversational_runtime_state.pending_chat_requests
+                        + self.conversational_runtime_state.resolved_chat_requests
+                    )
+                    if item.request_type == "interactive_clarification"
+                    and item.baseline_metrics.get("originating_candidate_id") == candidate_id
+                ),
+                None,
+            )
+            if existing is None:
+                if kind == "near_association":
+                    pressure = "cross_topic_relevance"
+                    prompt_text = "I found an explicit dependency between two items. Is that connection relevant to the direction you want me to explore?"
+                    question_kind = "association_exploration"
+                    extra_metrics = {
+                        "association_source_ids": tuple(getattr(candidate, "source_refs", ())),
+                        "association_target_ids": tuple(getattr(candidate, "target_refs", ())),
+                        "relation_edge_ids": tuple(getattr(candidate, "relation_path", ())),
+                        "association_exploration_state": "question_created",
+                        "association_resolution_state": "unresolved",
+                    }
+                elif candidate.trigger == "missing_evidence":
+                    pressure = "missing_evidence"
+                    prompt_text = f"This local step is blocked by a bounded evidence gap. Can you provide or clarify: {candidate.safe_next_step}?"
+                    question_kind = "missing_evidence"
+                    extra_metrics = {"pressure_state": "question_created", "pressure_trigger": candidate.trigger}
+                else:
+                    pressure = "contradictory_claim"
+                    prompt_text = "A provisional claim conflicts with local evidence. Which source or interpretation should guide how I treat that conflict?"
+                    question_kind = "contradiction_resolution"
+                    extra_metrics = {"pressure_state": "question_created", "pressure_trigger": candidate.trigger}
+                request = compile_chat_clarification_request(
+                    self.conversational_runtime_state, pressure=pressure,
+                    prompt_text=prompt_text,
+                    source_record_ids=source_ids, request_type="interactive_clarification",
+                )
+                request = replace(
+                    request,
+                    thread_id=f"candidate:{candidate_id}",
+                    baseline_metrics={
+                        **request.baseline_metrics,
+                        "originating_candidate_id": candidate_id,
+                        "originating_thread_id": candidate_id,
+                        "candidate_kind": kind,
+                        "question_kind": question_kind,
+                        **extra_metrics,
+                    },
+                )
+                self.conversational_runtime_state = replace(self.conversational_runtime_state, pending_chat_requests=self.conversational_runtime_state.pending_chat_requests + (request,))
+                self._append_chat("DELTA", request.prompt_text)
+                self._append_session("assistant", request.prompt_text)
+                rendered_turn_id = rc6_stable_id("interactive-candidate-question", request.request_id)
+                rendered_turn = ConversationTurn(
+                    turn_id=rendered_turn_id,
+                    role="assistant",
+                    text=request.prompt_text,
+                    intent_type="interactive_candidate_question",
+                    objective_id=request.objective_id,
+                )
+                self.conversational_runtime_state = replace(
+                    self.conversational_runtime_state,
+                    conversation=self.conversational_runtime_state.conversation + (rendered_turn,),
+                )
+                self.conversational_runtime_state = mark_chat_request_rendered(
+                    self.conversational_runtime_state,
+                    request.request_id,
+                    rendered_turn_id=rendered_turn_id,
+                    render_sequence=len(self.conversational_runtime_state.conversation),
+                )
+                save_conversational_runtime_state(self.conversational_runtime_root, self.conversational_runtime_state)
+        self._refresh_interactive_candidate_controls()
+
+    def _build_consolidation_tab(self) -> None:
+        header = ttk.Frame(self.consolidation_tab)
+        header.pack(fill=tk.X)
+        ttk.Label(header, text="Local Learning Records").pack(side=tk.LEFT)
+        ttk.Label(header, textvariable=self.consolidation_graph_status).pack(side=tk.LEFT, padx=(12, 0))
+        ttk.Button(header, text="Refresh Records", command=self._refresh_consolidation_records).pack(side=tk.RIGHT)
+
+        panes = ttk.PanedWindow(self.consolidation_tab, orient=tk.HORIZONTAL)
+        panes.pack(fill=tk.BOTH, expand=True, pady=(8, 0))
+        episodes = ttk.LabelFrame(panes, text="Episodes")
+        claims = ttk.LabelFrame(panes, text="Provisional Claims")
+        details = ttk.LabelFrame(panes, text="Selected Record")
+        panes.add(episodes, weight=1)
+        panes.add(claims, weight=2)
+        panes.add(details, weight=2)
+
+        self.consolidation_episode_tree = ttk.Treeview(episodes, columns=("episode", "status", "recorded", "operations"), show="headings", selectmode="browse")
+        self.consolidation_episode_tree.heading("episode", text="Episode")
+        self.consolidation_episode_tree.heading("status", text="Status")
+        self.consolidation_episode_tree.heading("recorded", text="Recorded")
+        self.consolidation_episode_tree.heading("operations", text="Operations")
+        self.consolidation_episode_tree.column("episode", width=155, stretch=False)
+        self.consolidation_episode_tree.column("status", width=125, stretch=False)
+        self.consolidation_episode_tree.column("recorded", width=145, stretch=False)
+        self.consolidation_episode_tree.column("operations", width=75, stretch=False)
+        self.consolidation_episode_tree.pack(fill=tk.BOTH, expand=True, padx=6, pady=6)
+        self.consolidation_episode_tree.bind("<<TreeviewSelect>>", lambda _event: self._show_consolidation_episode())
+
+        self.consolidation_claim_tree = ttk.Treeview(claims, columns=("state", "node", "claim"), show="headings", selectmode="browse")
+        self.consolidation_claim_tree.heading("state", text="State")
+        self.consolidation_claim_tree.heading("node", text="Node")
+        self.consolidation_claim_tree.heading("claim", text="Claim")
+        self.consolidation_claim_tree.column("state", width=145, stretch=False)
+        self.consolidation_claim_tree.column("node", width=135, stretch=False)
+        self.consolidation_claim_tree.column("claim", width=340, stretch=True)
+        self.consolidation_claim_tree.pack(fill=tk.BOTH, expand=True, padx=6, pady=6)
+        self.consolidation_claim_tree.bind("<<TreeviewSelect>>", lambda _event: self._show_consolidation_claim())
+
+        self.consolidation_detail = scrolledtext.ScrolledText(details, wrap=tk.WORD, state="disabled")
+        self.consolidation_detail.pack(fill=tk.BOTH, expand=True, padx=6, pady=6)
+
+        review = ttk.LabelFrame(self.consolidation_tab, text="Offline Review")
+        review.pack(fill=tk.X, pady=(8, 0))
+        self._build_consolidation_review_controls(review)
+        self._refresh_consolidation_records()
+
+    def _build_consolidation_review_controls(self, parent: ttk.LabelFrame) -> None:
+        ttk.Label(parent, textvariable=self.consolidation_review_status).grid(row=0, column=0, columnspan=3, sticky="w", padx=6, pady=(6, 2))
+        self.consolidation_review_selector = ttk.Combobox(parent, textvariable=self.consolidation_review_id, state="readonly")
+        self.consolidation_review_selector.grid(row=1, column=0, sticky="ew", padx=6, pady=2)
+        self.consolidation_review_selector.bind("<<ComboboxSelected>>", lambda _event: self._show_consolidation_review())
+        self.consolidation_claim_selector = ttk.Combobox(parent, textvariable=self.consolidation_claim_version_id, state="readonly")
+        self.consolidation_claim_selector.grid(row=1, column=1, sticky="ew", padx=6, pady=2)
+        self.consolidation_action_selector = ttk.Combobox(
+            parent,
+            textvariable=self.consolidation_action,
+            values=("approve", "reject", "approve_partial", "replace_fragment", "revise_claim", "split_claim", "merge_claims", "recompose_cluster", "retain_provisional", "quarantine", "invalidate", "request_re_review", "escalate_for_more_evidence"),
+            state="readonly",
+        )
+        self.consolidation_action_selector.grid(row=1, column=2, sticky="ew", padx=6, pady=2)
+        buttons = ttk.Frame(parent)
+        buttons.grid(row=2, column=0, columnspan=3, sticky="ew", padx=6, pady=(2, 6))
+        ttk.Button(buttons, text="Refresh Review", command=self._refresh_consolidation_review_surface).pack(side=tk.LEFT)
+        ttk.Button(buttons, text="Enable Admin Review", command=self._enable_consolidation_administrative_review).pack(side=tk.LEFT, padx=(6, 0))
+        ttk.Button(buttons, text="Apply Administrative Action", command=self._apply_consolidation_review_action).pack(side=tk.LEFT, padx=(6, 0))
+        for column in range(3):
+            parent.columnconfigure(column, weight=1)
 
     def _refresh_rc3_snapshot(self) -> None:
         try:
@@ -5412,10 +5701,238 @@ class DeltaApp:
         self.chat_history.see(tk.END)
         self.chat_history.configure(state=tk.DISABLED)
 
+    def _append_observation(self, title: str, text: str) -> None:
+        stream = getattr(self, "observation_stream", None)
+        if stream is None:
+            self._append_chat(title, text)
+            return
+        stream.configure(state=tk.NORMAL)
+        heading = str(title or "Observation").strip()
+        body = str(text or "").strip()
+        stream.insert(tk.END, f"{heading}: {body}\n\n")
+        stream.see(tk.END)
+        stream.configure(state=tk.DISABLED)
+
     def _append_session(self, role: str, content: str) -> None:
         self.session_history.append({"role": role, "content": " ".join(str(content).split())[:1200]})
         if len(self.session_history) > 24:
             self.session_history = self.session_history[-24:]
+
+    def _refresh_interactive_cognition_shadow(
+        self,
+        *,
+        foreground_message: str = "",
+        foreground_turn_id: str = "",
+        reason: str = "",
+    ):
+        """Record what attention would choose without granting it control."""
+        coordination = getattr(self, "interactive_coordination_state", None)
+        if coordination is None:
+            coordination = load_coordination_state(
+                self.conversational_runtime_root,
+                runtime_id=self.conversational_runtime_state.runtime_id,
+            )
+            self.interactive_coordination_state = coordination
+        overlay = getattr(self, "developer_overlay_enabled", None)
+        episode = None
+        active_path = Path(self.conversational_runtime_state.active_episode_path or "")
+        if active_path.exists():
+            try:
+                episode = read_active_cognitive_episode_state(active_path)
+            except Exception:
+                episode = None
+        try:
+            graph = load_provisional_semantic_graph(self.conversational_runtime_root)
+        except Exception:
+            graph = None
+        snapshot = build_workspace_snapshot(
+            self.conversational_runtime_state,
+            episode=episode,
+            graph=graph,
+            coordination=coordination,
+            foreground_message=foreground_message,
+            foreground_turn_id=foreground_turn_id,
+            ui_visibility={
+                "conversation_visible": True,
+                "observation_visible": hasattr(self, "observation_stream"),
+                "developer_overlay": bool(overlay.get()) if overlay is not None else False,
+                "background_inference_in_flight": self.conversational_runtime_inference_in_flight,
+            },
+        )
+        decision = arbitrate_attention(snapshot)
+        self.interactive_workspace_snapshot = snapshot
+        self.interactive_attention_decision = decision
+        if not any(item.get("decision_id") == decision.decision_id for item in coordination.decision_history):
+            self.interactive_coordination_state = record_shadow_decision(coordination, decision)
+            save_coordination_state(self.conversational_runtime_root, self.interactive_coordination_state)
+            detail = (
+                f"Shadow selected {decision.selected_posture} for {decision.target_thread_id or 'no thread'} "
+                f"because {', '.join(decision.reason_codes[:3])}."
+            )
+            self._append_observation("Attention decision", detail)
+        return decision
+
+    def _record_attention_control_stage(self, decision, *, stage: str, detail: str) -> None:
+        """Keep advisory selection distinct from the limited production action it gates."""
+        record = stage_attention_decision(decision, stage=stage)
+        if any(item.get("decision_id") == record.decision_id for item in self.interactive_coordination_state.decision_history):
+            return
+        self.interactive_coordination_state = record_shadow_decision(self.interactive_coordination_state, record)
+        save_coordination_state(self.conversational_runtime_root, self.interactive_coordination_state)
+        self._append_observation("Attention control", detail)
+
+    def _surface_one_near_association(self, decision) -> bool:
+        """Surface one graph-grounded association without asserting a new claim."""
+
+        workspace = getattr(self, "interactive_workspace_snapshot", None)
+        if workspace is None:
+            return False
+        target_thread = next((item for item in workspace.threads if item.thread_id == decision.target_thread_id), None)
+        if target_thread is None:
+            return False
+        candidate = next(
+            (item for item in workspace.association_candidates if item.candidate_id == target_thread.originating_reference),
+            None,
+        )
+        if candidate is None or candidate.state not in {"generated", "queued"}:
+            return False
+        updated = surface_candidate_once(
+            self.interactive_coordination_state,
+            candidate_id=candidate.candidate_id,
+            candidate_kind="near_association",
+            source_record_ids=candidate.provenance_refs,
+        )
+        if updated == self.interactive_coordination_state:
+            return False
+        self.interactive_coordination_state = updated
+        save_coordination_state(self.conversational_runtime_root, updated)
+        self._append_observation(
+            "Association",
+            "A graph-grounded dependency is available for review. It is an association, not a new factual conclusion.",
+        )
+        self._record_attention_control_stage(
+            decision,
+            stage="executed_posture",
+            detail="One explicit dependency association was surfaced in the observation stream.",
+        )
+        return True
+
+    def _inspect_one_curiosity_candidate(self, decision) -> bool:
+        """Record one idle, provenance-only revisit without starting a new mission."""
+
+        workspace = getattr(self, "interactive_workspace_snapshot", None)
+        if workspace is None:
+            return False
+        target_thread = next((item for item in workspace.threads if item.thread_id == decision.target_thread_id), None)
+        if target_thread is None:
+            return False
+        candidate = next(
+            (item for item in workspace.curiosity_candidates if item.candidate_id == target_thread.originating_reference),
+            None,
+        )
+        if candidate is None or candidate.state not in {"generated", "queued"}:
+            return False
+        updated = surface_candidate_once(
+            self.interactive_coordination_state,
+            candidate_id=candidate.candidate_id,
+            candidate_kind="curiosity_candidate",
+            source_record_ids=candidate.source_record_ids,
+        )
+        if updated == self.interactive_coordination_state:
+            return False
+        self.interactive_coordination_state = updated
+        save_coordination_state(self.conversational_runtime_root, updated)
+        self._append_observation(
+            "Curiosity",
+            "An unstable claim remains available through its existing review path. No model call, new goal, or memory mutation was started.",
+        )
+        self._record_attention_control_stage(
+            decision,
+            stage="executed_posture",
+            detail="One provenance-only curiosity inspection was surfaced during idle time.",
+        )
+        return True
+
+    def _perform_one_consolidation_step(self, decision) -> bool:
+        """Seal one local cohort packet; review and admission remain separate authority paths."""
+
+        graph = load_provisional_semantic_graph(self.conversational_runtime_root)
+        workspace = getattr(self, "interactive_workspace_snapshot", None)
+        thread = next((item for item in workspace.threads if item.thread_id == decision.target_thread_id), None) if workspace else None
+        if thread is None:
+            return False
+        cohort = next((item for item in graph.cohorts if item.cohort_id == thread.originating_reference), None)
+        if cohort is None:
+            return False
+        updated, packet, outcome = seal_cohort_packet_once(graph, cohort)
+        if outcome != "sealed" or packet is None:
+            return False
+        save_provisional_semantic_graph(self.conversational_runtime_root, updated)
+        self._append_observation(
+            "Consolidation",
+            "One local review packet was sealed for later administrative review. No provider call, review decision, or claim promotion occurred.",
+        )
+        self._record_attention_control_stage(
+            decision,
+            stage="executed_posture",
+            detail="One local consolidation packet was sealed at the cohort cursor.",
+        )
+        return True
+
+    def _request_active_goal_preemption(self, *, reason: str) -> bool:
+        """Ask the coordinator to yield after the existing worker's atomic boundary."""
+        decision = self._refresh_interactive_cognition_shadow(reason=reason)
+        workspace = self.interactive_workspace_snapshot
+        active = next((item for item in workspace.threads if item.thread_kind == "active_goal"), None) if workspace else None
+        if active is None:
+            return False
+        updated = request_preemption(
+            self.interactive_coordination_state,
+            thread_id=active.thread_id,
+        )
+        if updated == self.interactive_coordination_state:
+            return False
+        self.interactive_coordination_state = updated
+        save_coordination_state(self.conversational_runtime_root, updated)
+        self._append_observation(
+            "Attention",
+            "Foreground input requested a yield after the active local operation reaches its atomic boundary.",
+        )
+        self._record_attention_control_stage(
+            decision,
+            stage="preemption_requested",
+            detail="Foreground input marked the active background step for a safe-boundary yield.",
+        )
+        return True
+
+    def _complete_active_goal_preemption(self) -> bool:
+        """Acknowledge a yield only after the existing background result is merged."""
+        decision = self._refresh_interactive_cognition_shadow(reason="background_atomic_boundary_reached")
+        workspace = self.interactive_workspace_snapshot
+        active = next((item for item in workspace.threads if item.thread_kind == "active_goal"), None) if workspace else None
+        if active is None:
+            return False
+        entry = next(
+            (item for item in self.interactive_coordination_state.entries if item.thread_id == active.thread_id),
+            None,
+        )
+        if entry is None or not entry.preemption_requested:
+            return False
+        self.interactive_coordination_state = clear_preemption(
+            self.interactive_coordination_state,
+            thread_id=active.thread_id,
+        )
+        save_coordination_state(self.conversational_runtime_root, self.interactive_coordination_state)
+        self._append_observation(
+            "Attention",
+            "The active local operation reached its atomic boundary; the foreground input remains with the conversational runtime for reconciliation.",
+        )
+        self._record_attention_control_stage(
+            decision,
+            stage="preemption_boundary_reached",
+            detail="The foreground yield was observed only after the background result merged.",
+        )
+        return True
 
     def _conversational_runtime_status_text(self) -> str:
         state = getattr(self, "conversational_runtime_state", None)
@@ -5425,6 +5942,37 @@ class DeltaApp:
         if objective is None:
             return "Chat runtime: ready"
         evaluation = evaluate_conversational_runtime(state)
+        if objective.provenance.get("execution_mode") == "knowledge_acquisition" and state.active_episode_path:
+            try:
+                episode = read_active_cognitive_episode_state(state.active_episode_path)
+                total_nodes = sum(1 for item in episode.evidence if item.kind == "knowledge_frontier_node")
+                accepted_ops = {result.operation_id for result in episode.operation_results if result.accepted}
+                completed_nodes = sum(1 for cycle in episode.cycles if cycle.operation_id in accepted_ops)
+                latest_progress = next(
+                    (
+                        item.get("progress_counters") or {}
+                        for item in reversed(state.objective_progress)
+                        if item.get("event") == "knowledge_runtime_event"
+                    ),
+                    {},
+                )
+                blocked_nodes = int(latest_progress.get("blocked_nodes") or 0)
+                call_progress = (
+                    f"{episode.model_call_count} (unlimited local)"
+                    if objective.model_call_budget is None
+                    else f"{episode.model_call_count}/{objective.model_call_budget}"
+                )
+                cycle_progress = (
+                    f"{len(episode.cycles)} (unlimited local)"
+                    if objective.cycle_budget is None
+                    else f"{len(episode.cycles)}/{objective.cycle_budget}"
+                )
+                return (
+                    f"Chat runtime: active knowledge goal - nodes={completed_nodes}/{total_nodes}; "
+                    f"calls={call_progress}; cycles={cycle_progress}; blocked={blocked_nodes}"
+                )
+            except Exception:
+                pass
         if state.lifecycle_state == "paused_operator":
             return (
                 f"Chat runtime: paused goal - {objective.interpreted_objective[:58]}... "
@@ -5485,6 +6033,12 @@ class DeltaApp:
             campaign_id = item.get("campaign_id")
             if campaign_id:
                 campaign_by_id[campaign_id] = item
+        pending_by_id = {item.request_id: item for item in current.pending_chat_requests}
+        for item in worker_state.pending_chat_requests:
+            pending_by_id[item.request_id] = item
+        resolved_by_id = {item.request_id: item for item in current.resolved_chat_requests}
+        for item in worker_state.resolved_chat_requests:
+            resolved_by_id[item.request_id] = item
         return replace(
             current,
             lifecycle_state=worker_state.lifecycle_state,
@@ -5493,6 +6047,8 @@ class DeltaApp:
             objective_progress=current.objective_progress + progress_delta,
             focus_history=current.focus_history + focus_delta,
             capability_campaigns=tuple(campaign_by_id.values()),
+            pending_chat_requests=tuple(pending_by_id.values()),
+            resolved_chat_requests=tuple(resolved_by_id.values()),
         )
 
     def _render_unshown_conversational_campaign_milestones(self) -> None:
@@ -5501,11 +6057,23 @@ class DeltaApp:
             milestone_id = str(milestone.get("milestone_id") or "")
             if not message or not milestone_id:
                 continue
-            self._append_chat("DELTA", message)
-            self._append_session("assistant", message)
+            self._append_observation("Goal milestone", message)
             self.conversational_runtime_state = mark_capability_campaign_milestone_rendered(
                 self.conversational_runtime_state,
                 milestone_id,
+                runtime_root=self.conversational_runtime_root,
+            )
+
+    def _render_unshown_knowledge_goal_events(self) -> None:
+        for event in unrendered_knowledge_goal_events(self.conversational_runtime_state):
+            event_id = str(event.get("event_id") or "")
+            if not event_id:
+                continue
+            message = render_knowledge_goal_event(event, self.conversational_runtime_state.active_objective)
+            self._append_observation("Goal activity", message)
+            self.conversational_runtime_state = mark_knowledge_goal_event_rendered(
+                self.conversational_runtime_state,
+                event_id,
                 runtime_root=self.conversational_runtime_root,
             )
 
@@ -5518,10 +6086,14 @@ class DeltaApp:
             prior_state, worker_state, error = item
             self.conversational_runtime_inference_in_flight = False
             if error is not None:
+                message = f"Chat runtime safe pause after {type(error).__name__}: {str(error)[:240]}"
                 self.conversational_runtime_status.set(f"Chat runtime: safe pause after {type(error).__name__}")
+                self._append_observation("Runtime problem", message)
                 continue
             self.conversational_runtime_state = self._merge_conversational_background_result(prior_state, worker_state)
+            self._complete_active_goal_preemption()
             self._render_unshown_conversational_campaign_milestones()
+            self._render_unshown_knowledge_goal_events()
             if self.conversational_runtime_state.lifecycle_state == "paused_budget" and not self.conversational_runtime_state.goal_reviews:
                 self.conversational_runtime_state, review = render_goal_review(
                     self.conversational_runtime_state,
@@ -5529,6 +6101,24 @@ class DeltaApp:
                 )
                 self._append_chat("DELTA", review)
                 self._append_session("assistant", review)
+                budget_request = next(
+                    (
+                        request
+                        for request in reversed(self.conversational_runtime_state.pending_chat_requests)
+                        if request.request_type == "knowledge_model_budget_increase"
+                        and request.objective_id == (self.conversational_runtime_state.active_objective.objective_id if self.conversational_runtime_state.active_objective else "")
+                        and request.status == "pending"
+                        and not request.consumption_count
+                    ),
+                    None,
+                )
+                if budget_request:
+                    self.conversational_runtime_state = mark_chat_request_rendered(
+                        self.conversational_runtime_state,
+                        budget_request.request_id,
+                        rendered_turn_id=rc6_stable_id("rendered-chat-request", self.conversational_runtime_state.runtime_id, budget_request.request_id, str(len(self.session_history))),
+                        render_sequence=len(self.session_history),
+                    )
             save_conversational_runtime_state(self.conversational_runtime_root, self.conversational_runtime_state)
             self._refresh_conversational_runtime_status()
         self.root.after(100, self._poll_conversational_runtime_worker_results)
@@ -5583,11 +6173,56 @@ class DeltaApp:
         return True
 
     def _tick_conversational_objective_runtime(self) -> None:
-        self._start_conversational_background_cycle("automatic_startup_or_idle_tick")
+        decision = self._refresh_interactive_cognition_shadow(reason="automatic_startup_or_idle_tick")
+        # The coordinator may gate a new periodic step, but the existing runtime
+        # remains the only owner of model execution and objective progression.
+        if decision is not None and decision.selected_posture == "continue_active_goal":
+            self._record_attention_control_stage(
+                decision,
+                stage="active_gate",
+                detail="Active gate permitted one existing background-goal step.",
+            )
+            if self._start_conversational_background_cycle("automatic_startup_or_idle_tick"):
+                self._record_attention_control_stage(
+                    decision,
+                    stage="executed_posture",
+                    detail="Existing background-goal worker started one bounded step.",
+                )
+        elif decision is not None and decision.selected_posture == "explore_near_association":
+            self._surface_one_near_association(decision)
+        elif decision is not None and decision.selected_posture == "inspect_curiosity_candidate":
+            self._inspect_one_curiosity_candidate(decision)
+        elif decision is not None and decision.selected_posture == "perform_one_consolidation_step":
+            self._perform_one_consolidation_step(decision)
+        else:
+            self._refresh_conversational_runtime_status()
         self.root.after(2000, self._tick_conversational_objective_runtime)
 
     def _handle_conversational_runtime_message(self, message: str) -> bool:
         state = self.conversational_runtime_state
+        owner = select_chat_request_owner(state, message)
+        normalized = " ".join(str(message or "").lower().split())
+        pending = tuple(
+            item for item in state.pending_chat_requests
+            if item.status == "pending" and not item.consumption_count
+        )
+        if owner is None and len(pending) > 1 and normalized in {"yes", "no", "okay", "ok"}:
+            reply = "[Clarification needed]\nMore than one unresolved prompt can accept that reply. Please answer the most recent prompt with its subject or restate the action you approve."
+            self._append_chat("DELTA", reply)
+            self._append_session("user", message)
+            self._append_session("assistant", reply)
+            self._refresh_conversational_runtime_status()
+            self._refresh_state_cards()
+            return True
+        if owner is not None and owner.request_type == "local_model_execution":
+            reply = self._resolve_local_model_permission(message, request_id=owner.request_id)
+            self._append_chat("DELTA", reply)
+            self._append_session("user", message)
+            self._append_session("assistant", reply)
+            save_conversational_runtime_state(self.conversational_runtime_root, self.conversational_runtime_state)
+            self._refresh_conversational_runtime_status()
+            self._refresh_state_cards()
+            return True
         resolved = resolve_pending_chat_request(
             state,
             message,
@@ -5598,6 +6233,8 @@ class DeltaApp:
             self._append_chat("DELTA", resolved.reply)
             self._append_session("user", message)
             self._append_session("assistant", resolved.reply)
+            if self.conversational_runtime_state.lifecycle_state == "running":
+                self._start_conversational_background_cycle("pending_chat_request_resolved")
             self._refresh_conversational_runtime_status()
             self._refresh_state_cards()
             return True
@@ -5623,6 +6260,7 @@ class DeltaApp:
             self._refresh_state_cards()
             return True
         if intent.intent_type == "persistent_or_session_goal" and state.active_objective and self.conversational_runtime_inference_in_flight:
+            self._request_active_goal_preemption(reason="foreground_goal_or_priority_update")
             self.conversational_runtime_state = record_foreground_message_for_reconciliation(
                 state,
                 message,
@@ -5705,6 +6343,7 @@ class DeltaApp:
             and intent.intent_type == "ordinary_conversation"
             and not transfer.get("applied")
         ):
+            self._request_active_goal_preemption(reason="foreground_conversation")
             self.conversational_runtime_state = record_foreground_message_for_reconciliation(
                 state,
                 message,
@@ -5741,6 +6380,7 @@ class DeltaApp:
         } and not transfer.get("applied"):
             if state.active_objective and state.lifecycle_state == "running":
                 if self.conversational_runtime_inference_in_flight:
+                    self._request_active_goal_preemption(reason="foreground_conversation")
                     self.conversational_runtime_state = record_foreground_message_for_reconciliation(
                         state,
                         message,
@@ -5764,6 +6404,7 @@ class DeltaApp:
         self._append_chat("DELTA", result.reply)
         self._append_session("user", message)
         self._append_session("assistant", result.reply)
+        self._render_unshown_knowledge_goal_events()
         self._refresh_conversational_runtime_status()
         self._refresh_state_cards()
         if result.objective_created:
@@ -5815,21 +6456,28 @@ class DeltaApp:
         self.last_message = message
         self.last_payload = payload
         self._update_active_topic_anchor(payload)
-        self._record_visible_local_model_request(message, payload)
+        request_id = self._record_visible_local_model_request(message, payload)
         rendered = render_route(payload, developer_overlay=self.developer_overlay_enabled.get())
         response = rendered if not control_receipt else f"{control_receipt}\n\n{rendered}"
         self._queue_concept_candidate(payload)
         self._append_chat("DELTA", response)
         self._append_session("user", session_user_message)
         self._append_session("assistant", response)
+        if request_id:
+            self.conversational_runtime_state = mark_chat_request_rendered(
+                self.conversational_runtime_state,
+                request_id,
+                rendered_turn_id=rc6_stable_id("rendered-chat-request", self.conversational_runtime_state.runtime_id, request_id, str(len(self.session_history))),
+                render_sequence=len(self.session_history),
+            )
         self._refresh_state_cards()
         return response
 
-    def _record_visible_local_model_request(self, message: str, payload: dict[str, object]) -> None:
+    def _record_visible_local_model_request(self, message: str, payload: dict[str, object]) -> str:
         """Materialize visible local-model offers as durable chat requests."""
         local_offer = payload.get("local_model_offer") if isinstance(payload, dict) else None
         if not isinstance(local_offer, dict) or not local_offer.get("offered"):
-            return
+            return ""
         active = self.conversational_runtime_state.active_objective
         question = str(message or "").strip()
         selected_model = str(local_offer.get("selected_model") or "")
@@ -5844,7 +6492,7 @@ class DeltaApp:
             None,
         )
         if existing:
-            return
+            return existing.request_id
         request = ChatAddressableRequest(
             request_id=rc6_stable_id(
                 "local-model-chat-request",
@@ -5861,6 +6509,9 @@ class DeltaApp:
             provider=selected_model,
             max_calls=1,
             max_spend_usd=0.0,
+            thread_id=f"{self.conversational_runtime_state.runtime_id}:foreground-chat",
+            created_sequence=len(self.conversational_runtime_state.conversation) + len(self.session_history) + 1,
+            accepted_response_types=("approved", "denied"),
             baseline_metrics={
                 "question": question,
                 "selected_model": selected_model,
@@ -5873,6 +6524,7 @@ class DeltaApp:
             pending_chat_requests=self.conversational_runtime_state.pending_chat_requests + (request,),
         )
         self.pending_local_model_question = question
+        return request.request_id
 
     def _persist_composed_turn(self, before_state, message: str, response: str) -> None:
         """Replace clause-level handler transcript writes with one composed turn."""
@@ -5895,6 +6547,20 @@ class DeltaApp:
             self.conversational_runtime_state,
             conversation=before_state.conversation + (user, assistant),
         )
+        prior_request_ids = {item.request_id for item in before_state.pending_chat_requests}
+        for request in self.conversational_runtime_state.pending_chat_requests:
+            if (
+                request.request_id not in prior_request_ids
+                and request.status == "pending"
+                and not request.consumption_count
+                and not request.rendered_turn_id
+            ):
+                self.conversational_runtime_state = mark_chat_request_rendered(
+                    self.conversational_runtime_state,
+                    request.request_id,
+                    rendered_turn_id=assistant.turn_id,
+                    render_sequence=len(before_state.conversation) + 2,
+                )
         save_conversational_runtime_state(self.conversational_runtime_root, self.conversational_runtime_state)
 
     def _execute_coordinated_control(self, control, clause: str) -> str:
@@ -5904,8 +6570,12 @@ class DeltaApp:
             return self._create_reference_clarification_request(clause)
         if control.control_type == "reference_clarification_resolution":
             return self._resolve_reference_clarification(clause)
+        if control.control_type == "interactive_clarification_resolution":
+            return self._resolve_interactive_clarification(clause)
         if control.control_type == "runtime_state_query":
             return self._runtime_state_query_reply(clause)
+        if control.control_type == "interactive_introspection":
+            return self._interactive_introspection_reply(clause)
         if control.control_type == "local_model_permission":
             return self._resolve_local_model_permission(clause)
         if control.control_type == "capability_adoption" and control.action == "resolve_pending_request":
@@ -5999,6 +6669,40 @@ class DeltaApp:
             lines.append(f"Last user question: {last_user or 'none'}")
         return "\n".join(lines)
 
+    def _interactive_introspection_reply(self, message: str) -> str:
+        """Answer from live workspace and decision records, never semantic memory."""
+
+        self._refresh_interactive_cognition_shadow(reason="operator_introspection")
+        workspace = self.interactive_workspace_snapshot
+        decision = self.interactive_attention_decision
+        lower = " ".join(str(message or "").lower().split())
+        threads = tuple(workspace.threads) if workspace else ()
+        selected = next((item for item in threads if decision and item.thread_id == decision.target_thread_id), None)
+        if "why did you ask" in lower:
+            request = next((item for item in reversed(self.conversational_runtime_state.pending_chat_requests) if item.status == "pending" and not item.consumption_count), None)
+            if request is None:
+                return "[Introspection]\nI do not have a current unanswered question, so there is no active question reason to report."
+            pressure = str(request.baseline_metrics.get("clarification_pressure") or request.request_type)
+            return f"[Introspection]\nI asked because the current request is waiting on {pressure.replace('_', ' ')} before its dependent work can continue."
+        if "unsure" in lower:
+            uncertain = [item for item in threads if item.epistemic_status in {"unstable", "uncertain", "pending_consolidation", "revisit_candidate"}]
+            if not uncertain:
+                return "[Introspection]\nI do not have a recorded unresolved epistemic item in the current workspace."
+            return f"[Introspection]\nI am currently uncertain about: {uncertain[0].focus}. It remains in its existing review path."
+        if "what did you pause" in lower:
+            paused = [item for item in threads if item.status in {"paused", "deferred", "suppressed"}]
+            if not paused:
+                return "[Introspection]\nI do not have a paused, deferred, or suppressed thread recorded right now."
+            return f"[Introspection]\nI paused or deferred: {paused[0].focus}."
+        if "return to" in lower:
+            later = [item for item in threads if item.status in {"queued", "deferred", "generated"}]
+            if not later:
+                return "[Introspection]\nI do not have a deferred background item scheduled to return to."
+            return f"[Introspection]\nThe next eligible background item is: {later[0].focus}."
+        if selected is None:
+            return "[Introspection]\nI am idle because the current workspace has no eligible thread."
+        return f"[Introspection]\nI am currently attending to: {selected.focus}. The selected posture is {decision.selected_posture.replace('_', ' ')}."
+
     def _pending_reference_clarification(self):
         return next(
             (
@@ -6015,16 +6719,26 @@ class DeltaApp:
         existing = self._pending_reference_clarification()
         if existing:
             return "[Clarification needed]\nI still need the earlier reference clarified before I bind that goal-thread instruction."
-        request = ChatAddressableRequest(
-            request_id=rc6_stable_id("reference-clarification-request", state.runtime_id, str(len(state.pending_chat_requests) + 1), message),
-            request_type="reference_clarification",
-            objective_id=state.active_objective.objective_id if state.active_objective else "",
-            originating_goal_id=state.active_objective.objective_id if state.active_objective else "",
-            goal_label="Reference clarification",
+        created_turn_id = rc6_stable_id(
+            "reference-clarification-user-turn",
+            state.runtime_id,
+            str(len(state.conversation) + 1),
+            message,
+        )
+        request = compile_chat_clarification_request(
+            state,
+            pressure="ambiguous_reference",
             prompt_text="Which prior subject or turn should that refer to?",
-            max_calls=0,
-            max_spend_usd=0.0,
+            source_record_ids=(created_turn_id,),
+            created_turn_id=created_turn_id,
+            created_sequence=len(state.conversation) + 1,
+            request_type="reference_clarification",
+        )
+        request = replace(
+            request,
+            goal_label="Reference clarification",
             baseline_metrics={
+                **request.baseline_metrics,
                 "ambiguous_message": message,
                 "created_conversation_count": len(state.conversation),
                 "expires_on_unrelated_foreground_question": True,
@@ -6060,6 +6774,85 @@ class DeltaApp:
             objective_progress=state.objective_progress + ({"event": "reference_clarification_resolved", "request_id": request.request_id},),
         )
         return "[Clarification]\nGot it. I bound that reference to your clarification."
+
+    def _pending_interactive_clarification(self):
+        return next(
+            (
+                item for item in reversed(self.conversational_runtime_state.pending_chat_requests)
+                if item.status == "pending"
+                and not item.consumption_count
+                and item.request_type == "interactive_clarification"
+            ),
+            None,
+        )
+
+    def _resolve_interactive_clarification(self, message: str) -> str:
+        """Consume one rendered operator question without asserting semantic truth."""
+
+        state = self.conversational_runtime_state
+        request = self._pending_interactive_clarification()
+        if request is None:
+            return "[Clarification]\nThere is no active exploration question to resolve."
+        metrics = dict(request.baseline_metrics)
+        candidate_id = str(metrics.get("originating_candidate_id") or "")
+        candidate_kind = str(metrics.get("candidate_kind") or "")
+        lowered = " ".join(str(message or "").lower().split())
+        association_rejected = candidate_kind == "near_association" and bool(
+            re.search(r"\b(?:no|not\s+relevant|do\s+not|don't|shouldn't)\b", lowered)
+        )
+        candidate_state = (
+            "rejected" if association_rejected else
+            "approved_for_bounded_exploration" if candidate_kind == "near_association" else
+            "resolved"
+        )
+        existing_disposition = next(
+            (item for item in self.interactive_coordination_state.candidate_dispositions if item.candidate_id == candidate_id),
+            None,
+        )
+        if existing_disposition is not None:
+            self.interactive_coordination_state = set_candidate_disposition(
+                self.interactive_coordination_state,
+                candidate_id=candidate_id,
+                candidate_kind=existing_disposition.candidate_kind,
+                disposition=candidate_state,
+                source_record_ids=existing_disposition.source_record_ids,
+            )
+            save_coordination_state(self.conversational_runtime_root, self.interactive_coordination_state)
+        resolved = ChatAddressableRequest(
+            **{
+                **request.as_record(),
+                "status": "resolved",
+                "resolution_state": "resolved",
+                "resolved_turn_id": rc6_stable_id("interactive-clarification-resolution", state.runtime_id, request.request_id, message),
+                "resolution_text": message,
+                "resolution_policy": (
+                    "operator_rejected_association_exploration" if association_rejected else
+                    "operator_approved_bounded_association_exploration" if candidate_kind == "near_association" else
+                    "operator_answered_cognitive_pressure_question"
+                ),
+                "resolution": "resolved",
+                "consumption_count": 1,
+                "baseline_metrics": {
+                    **metrics,
+                    "association_exploration_state": candidate_state if candidate_kind == "near_association" else metrics.get("association_exploration_state", ""),
+                    "association_resolution_state": "unresolved" if candidate_kind == "near_association" else metrics.get("association_resolution_state", ""),
+                    "pressure_state": "operator_input_recorded" if candidate_kind == "cognitive_pressure" else metrics.get("pressure_state", ""),
+                },
+            }
+        )
+        self.conversational_runtime_state = replace(
+            state,
+            pending_chat_requests=tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id),
+            resolved_chat_requests=state.resolved_chat_requests + (resolved,),
+            objective_progress=state.objective_progress + (
+                {"event": "interactive_clarification_resolved", "request_id": request.request_id},
+            ),
+        )
+        if association_rejected:
+            return "[Clarification]\nThanks. I recorded that this association should not be pursued now."
+        if candidate_kind == "near_association":
+            return "[Clarification]\nThanks. I recorded this association as approved for bounded exploration; it is not a validated claim."
+        return "[Clarification]\nThanks. I recorded your answer to that bounded cognitive-pressure question."
 
     def _settle_matching_local_model_request(self, question: str, resolution: str, reply: str) -> None:
         state = self.conversational_runtime_state
@@ -6202,20 +6995,26 @@ class DeltaApp:
         return "[Capability adoption]\nI recorded the adoption and restart disposition for the composed turn. The coordinator will commit the resulting state once."
 
     def _expire_reference_clarifications_for_foreground(self, message: str) -> None:
-        request = self._pending_reference_clarification()
+        candidates = [
+            item for item in self.conversational_runtime_state.pending_chat_requests
+            if item.status == "pending"
+            and not item.consumption_count
+            and item.request_type in {"reference_clarification", "interactive_clarification"}
+        ]
+        request = max(candidates, key=lambda item: (item.render_sequence, item.created_sequence, item.request_id)) if candidates else None
         if request is None:
             return
         lower = " ".join(str(message or "").lower().split())
         if not ("?" in lower or re.search(r"\b(?:what|why|how|explain|tell me)\b", lower)):
             return
-        if re.search(r"\b(?:that|it|this|prior|previous|earlier|reference|subject|topic)\b", lower):
+        if request.request_type == "reference_clarification" and re.search(r"\b(?:that|it|this|prior|previous|earlier|reference|subject|topic)\b", lower):
             return
         state = self.conversational_runtime_state
         expired = ChatAddressableRequest(
             **{
                 **request.as_record(),
                 "status": "expired",
-                "resolved_turn_id": rc6_stable_id("reference-clarification-expired", state.runtime_id, message),
+                "resolved_turn_id": rc6_stable_id("interactive-clarification-expired", state.runtime_id, request.request_id, message),
                 "resolution_text": message,
                 "resolution_policy": "expired_on_unrelated_foreground_question",
                 "resolution": "expired",
@@ -6226,10 +7025,24 @@ class DeltaApp:
             state,
             pending_chat_requests=tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id),
             resolved_chat_requests=state.resolved_chat_requests + (expired,),
-            objective_progress=state.objective_progress + ({"event": "reference_clarification_expired", "request_id": request.request_id},),
+            objective_progress=state.objective_progress + ({"event": f"{request.request_type}_expired", "request_id": request.request_id},),
         )
+        candidate_id = str(request.baseline_metrics.get("originating_candidate_id") or "")
+        existing_disposition = next(
+            (item for item in self.interactive_coordination_state.candidate_dispositions if item.candidate_id == candidate_id),
+            None,
+        )
+        if existing_disposition is not None:
+            self.interactive_coordination_state = set_candidate_disposition(
+                self.interactive_coordination_state,
+                candidate_id=candidate_id,
+                candidate_kind=existing_disposition.candidate_kind,
+                disposition="expired",
+                source_record_ids=existing_disposition.source_record_ids,
+            )
+            save_coordination_state(self.conversational_runtime_root, self.interactive_coordination_state)
 
-    def _resolve_local_model_permission(self, message: str) -> str:
+    def _resolve_local_model_permission(self, message: str, *, request_id: str = "") -> str:
         state = self.conversational_runtime_state
         request = next(
             (
@@ -6237,6 +7050,7 @@ class DeltaApp:
                 if item.status == "pending"
                 and not item.consumption_count
                 and item.request_type == "local_model_execution"
+                and (not request_id or item.request_id == request_id)
             ),
             None,
         )
@@ -6248,6 +7062,7 @@ class DeltaApp:
             **{
                 **request.as_record(),
                 "status": "consumed" if approved else "denied",
+                "resolution_state": "consumed" if approved else "denied",
                 "resolved_turn_id": rc6_stable_id("local-model-resolution-turn", state.runtime_id, message),
                 "resolution_text": message,
                 "resolution_policy": "approved" if approved else "denied",
@@ -6287,7 +7102,24 @@ class DeltaApp:
         self._remember_local_model_exchange(target, payload)
         return render_route(payload, developer_overlay=self.developer_overlay_enabled.get())
 
-    def _execute_controls_with_deferred_saves(self, controls, plan) -> tuple[list[str], int]:
+    @staticmethod
+    def _has_explicit_foreground_joiner(message: str) -> bool:
+        """Keep a distinct foreground question out of an otherwise cohesive goal."""
+        return bool(re.search(
+            r"\b(?:also|separately|by the way)\s*,?\s*(?:what|why|how|who|where|when|which|tell me|explain)\b",
+            str(message or "").lower(),
+        ))
+
+    def _coordinated_control_clause(self, control, plan, message: str) -> str:
+        """Bind a goal control to the whole goal turn, not its first dispatch segment."""
+        if (
+            control.control_type in {"create_goal", "replace_goal"}
+            and not self._has_explicit_foreground_joiner(message)
+        ):
+            return message
+        return plan.segments[control.source_clause_index].text
+
+    def _execute_controls_with_deferred_saves(self, controls, plan, message: str) -> tuple[list[str], int]:
         """Run subordinate control handlers in memory; coordinator commits once."""
         deferred_saves: list[object] = []
         original_save = conversational_runtime_operation.save_runtime_state
@@ -6300,7 +7132,7 @@ class DeltaApp:
         globals()["save_conversational_runtime_state"] = _deferred_save
         try:
             receipts = [
-                self._execute_coordinated_control(item, plan.segments[item.source_clause_index].text)
+                self._execute_coordinated_control(item, self._coordinated_control_clause(item, plan, message))
                 for item in controls
             ]
         finally:
@@ -6314,14 +7146,14 @@ class DeltaApp:
             "create_goal", "replace_goal", "correction", "provider_approval", "capability_adoption",
             "side_thread_resolution", "pause_goal", "resume_goal", "stop_goal", "goal_status",
             "goal_review", "capability_review", "provider_request", "provider_prohibition", "diagnostic_request", "clarification",
-            "goal_continuation", "restart", "runtime_state_query", "local_model_permission",
-            "reference_clarification", "reference_clarification_resolution",
+            "goal_continuation", "restart", "runtime_state_query", "interactive_introspection", "local_model_permission",
+            "reference_clarification", "reference_clarification_resolution", "interactive_clarification_resolution",
         }
         if not controls or any(item.source_clause_index < 0 or item.control_type not in supported for item in controls):
             return False
         # Existing single-clause runtime handlers retain ownership for their
         # lifecycle/queue semantics. The coordinator is the composition path.
-        if not plan.foreground.requested and len(controls) == 1 and controls[0].control_type not in {"runtime_state_query", "local_model_permission", "clarification", "reference_clarification", "reference_clarification_resolution"}:
+        if not plan.foreground.requested and len(controls) == 1 and controls[0].control_type not in {"runtime_state_query", "interactive_introspection", "local_model_permission", "clarification", "reference_clarification", "reference_clarification_resolution", "interactive_clarification_resolution"}:
             return False
         state_before = self.conversational_runtime_state
         control_indexes = {
@@ -6331,7 +7163,7 @@ class DeltaApp:
                 for clause in getattr(plan, "clauses", ())
             )
         }
-        receipts, deferred_save_count = self._execute_controls_with_deferred_saves(controls, plan)
+        receipts, deferred_save_count = self._execute_controls_with_deferred_saves(controls, plan, message)
         self.last_coordinated_dispatch_audit = {
             "control_count": len(controls),
             "deferred_subordinate_save_count": deferred_save_count,
@@ -6347,6 +7179,9 @@ class DeltaApp:
             clause.clause_index for clause in getattr(plan, "clauses", ())
             if clause.foreground_requested
         }
+        explicit_foreground_joiner = self._has_explicit_foreground_joiner(message)
+        if any(item.control_type in {"create_goal", "replace_goal"} for item in controls) and not explicit_foreground_joiner:
+            foreground_indexes = set()
         if foreground_message:
             foreground_message = " ".join(
                 segment.text for index, segment in enumerate(plan.segments)
@@ -6736,6 +7571,16 @@ class DeltaApp:
             return
         self.chat_input.delete(0, tk.END)
         self._append_chat("You", message)
+        self._refresh_interactive_cognition_shadow(
+            foreground_message=message,
+            foreground_turn_id=rc6_stable_id(
+                "interactive-foreground-turn",
+                self.conversational_runtime_state.runtime_id,
+                str(len(self.session_history) + 1),
+                message,
+            ),
+            reason="operator_message_received",
+        )
         shadow_message_id = self._record_dispatch_shadow_plan(message)
         try:
             live_plan = plan_message_dispatch(self.conversational_runtime_state, message)
@@ -6766,6 +7611,14 @@ class DeltaApp:
                 self._append_session("user", message)
                 self._append_chat("DELTA", reply)
                 self._append_session("assistant", reply)
+                return
+        if self.conversational_runtime_state.pending_chat_requests and lower in (affirm_words | cancel_words):
+            if self._handle_conversational_runtime_message(message):
+                self._complete_dispatch_shadow_plan(
+                    shadow_message_id,
+                    legacy_consumed=True,
+                    rendered_owner="conversational_runtime",
+                )
                 return
         if self.pending_local_model_question and lower in (affirm_words | {"ask local", "ask the local model", "ask a local model"}):
             target = self.pending_local_model_question
@@ -6814,6 +7667,19 @@ class DeltaApp:
                 lower,
             )
         )
+        if runtime_intake_or_control and not (live_plan is not None and live_plan.foreground.requested and live_plan.control.detected):
+            runtime_intent = classify_conversational_intent(
+                message,
+                active_objective=self.conversational_runtime_state.active_objective,
+                recent_turns=self.conversational_runtime_state.conversation,
+            )
+            if runtime_intent.intent_type == "persistent_or_session_goal" and self._handle_conversational_runtime_message(message):
+                self._complete_dispatch_shadow_plan(
+                    shadow_message_id,
+                    legacy_consumed=True,
+                    rendered_owner="conversational_runtime",
+                )
+                return
         legacy_imperative_foreground = bool(
             live_plan is not None
             and live_plan.foreground.requested
@@ -6892,6 +7758,8 @@ class DeltaApp:
             and not live_plan.control.detected
             and (has_runtime_coordination_context or question_like_foreground)
         ):
+            if self.conversational_runtime_inference_in_flight:
+                self._request_active_goal_preemption(reason="coordinated_foreground_conversation")
             foreground_message = " ".join(
                 segment.text for segment in live_plan.segments if segment.kind != "context_prefix"
             ).strip() or message
@@ -8128,6 +8996,198 @@ class DeltaApp:
     def _write_output(self, text: str) -> None:
         self.output.delete("1.0", tk.END)
         self.output.insert(tk.END, text)
+
+    def _set_consolidation_detail(self, record: object) -> None:
+        self.consolidation_detail.configure(state="normal")
+        self.consolidation_detail.delete("1.0", tk.END)
+        self.consolidation_detail.insert(tk.END, json.dumps(record, indent=2, sort_keys=True, default=str))
+        self.consolidation_detail.configure(state="disabled")
+
+    def _refresh_consolidation_records(self) -> None:
+        graph = load_provisional_semantic_graph(self.conversational_runtime_root)
+        self.consolidation_graph_snapshot = graph
+        for tree in (self.consolidation_episode_tree, self.consolidation_claim_tree):
+            for item_id in tree.get_children():
+                tree.delete(item_id)
+        self.consolidation_episode_rows = {}
+
+        traces = sorted(graph.episodic_traces, key=lambda item: (item.sealed_at, item.episode_id), reverse=True)
+        for index, trace in enumerate(traces):
+            row_id = f"episode-row-{index}"
+            self.consolidation_episode_rows[row_id] = trace.episode_id
+            self.consolidation_episode_tree.insert(
+                "",
+                tk.END,
+                iid=row_id,
+                values=(trace.episode_id[-12:], trace.terminal_status or "recorded", trace.sealed_at, len(trace.operation_ids)),
+            )
+
+        claims = {item.claim_id: item for item in graph.claims}
+        latest_versions: dict[str, object] = {}
+        for version in graph.claim_versions:
+            current = latest_versions.get(version.claim_id)
+            if current is None or version.version_index > current.version_index:
+                latest_versions[version.claim_id] = version
+        for version in sorted(latest_versions.values(), key=lambda item: (item.created_at, item.claim_version_id), reverse=True):
+            claim = claims.get(version.claim_id)
+            node_id = claim.originating_node_id if claim else ""
+            text = " ".join(version.exact_text.split())
+            self.consolidation_claim_tree.insert(
+                "",
+                tk.END,
+                iid=version.claim_version_id,
+                values=(version.epistemic_state, node_id, text[:180]),
+            )
+
+        self.consolidation_graph_status.set(
+            f"Learning records: {len(traces)} episode(s), {len(latest_versions)} current claim(s), "
+            f"{len(graph.reviews)} sealed review(s)"
+        )
+        self._set_consolidation_detail({
+            "summary": "Select an episode or provisional claim to inspect its local provenance.",
+            "episodes": len(traces),
+            "current_claims": len(latest_versions),
+            "reviews": len(graph.reviews),
+            "read_only": True,
+        })
+
+    def _show_consolidation_episode(self) -> None:
+        selection = self.consolidation_episode_tree.selection()
+        graph = self.consolidation_graph_snapshot
+        if not selection or graph is None:
+            return
+        episode_id = self.consolidation_episode_rows.get(selection[0], "")
+        trace = next((item for item in graph.episodic_traces if item.episode_id == episode_id), None)
+        if trace is None:
+            return
+        versions = {item.claim_version_id: item for item in graph.claim_versions}
+        episode_experiences = [item for item in graph.experiences if episode_id in item.origin_refs]
+        goal_statement = next(
+            (
+                item.content
+                for item in graph.experiences
+                if item.source_class == "operator_statement" and trace.objective_id in item.origin_refs
+            ),
+            "",
+        )
+        self._set_consolidation_detail({
+            "objective_id": trace.objective_id,
+            "episode_id": trace.episode_id,
+            "goal_text": goal_statement,
+            "creation_timestamp": min((item.created_at for item in episode_experiences), default=trace.sealed_at),
+            "terminal_timestamp": trace.sealed_at,
+            "run_status": trace.terminal_status or "recorded",
+            "episode_trace": asdict(trace),
+            "semantic_units": [asdict(versions[item]) for item in trace.semantic_unit_refs if item in versions],
+        })
+
+    def _show_consolidation_claim(self) -> None:
+        selection = self.consolidation_claim_tree.selection()
+        graph = self.consolidation_graph_snapshot
+        if not selection or graph is None:
+            return
+        version_id = selection[0]
+        version = next((item for item in graph.claim_versions if item.claim_version_id == version_id), None)
+        if version is None:
+            return
+        claim = next((item for item in graph.claims if item.claim_id == version.claim_id), None)
+        rationales = {item.rationale_id: item for item in graph.rationales}
+        experiences = {item.experience_id: item for item in graph.experiences}
+        relations = [item for item in graph.relations if item.source_ref == version_id or item.target_ref == version_id]
+        concepts = {item.concept_id: item for item in graph.concepts}
+        self._set_consolidation_detail({
+            "claim": asdict(claim) if claim else {},
+            "current_version": asdict(version),
+            "rationales": [asdict(rationales[item]) for item in version.rationale_refs if item in rationales],
+            "source_experiences": [asdict(experiences[item]) for item in version.source_experience_refs if item in experiences],
+            "assumptions": [asdict(experiences[item]) for item in version.assumption_refs if item in experiences],
+            "uncertainties": [asdict(experiences[item]) for item in version.uncertainty_refs if item in experiences],
+            "relations": [asdict(item) for item in relations],
+            "concepts": [asdict(concepts[item.target_ref]) for item in relations if item.target_ref in concepts],
+        })
+
+    def _refresh_consolidation_review_surface(self) -> None:
+        graph = load_provisional_semantic_graph(self.conversational_runtime_root)
+        review_ids = [item.review_id for item in graph.reviews]
+        self.consolidation_review_selector.configure(values=review_ids)
+        if not review_ids:
+            self.consolidation_review_id.set("")
+            self.consolidation_claim_version_id.set("")
+            self.consolidation_claim_selector.configure(values=())
+            self.consolidation_review_status.set("Offline consolidation: no sealed Oracle response is available")
+            self._set_consolidation_detail({"offline_review": "No sealed review response is available yet.", "read_only": True})
+            return
+        if self.consolidation_review_id.get() not in review_ids:
+            self.consolidation_review_id.set(review_ids[-1])
+        self._show_consolidation_review()
+
+    def _show_consolidation_review(self) -> None:
+        review_id = self.consolidation_review_id.get()
+        if not review_id:
+            self._refresh_consolidation_review_surface()
+            return
+        graph = load_provisional_semantic_graph(self.conversational_runtime_root)
+        try:
+            surface = render_consolidation_review(graph, review_id)
+        except ConsolidationIntegrityError as exc:
+            self.consolidation_review_status.set(f"Offline consolidation review blocked: {exc}")
+            return
+        claim_ids = [str(item["claim_version_id"]) for item in surface["claims"]]
+        self.consolidation_claim_selector.configure(values=claim_ids)
+        if self.consolidation_claim_version_id.get() not in claim_ids:
+            self.consolidation_claim_version_id.set(claim_ids[0] if claim_ids else "")
+        self.consolidation_review_status.set(f"Offline consolidation: {len(claim_ids)} reviewed claim version(s); administrative review required")
+        self._set_consolidation_detail(surface)
+
+    def _enable_consolidation_administrative_review(self) -> None:
+        confirmation = simpledialog.askstring(
+            "Administrative Consolidation Review",
+            "Enter ENABLE_ADMINISTRATIVE_CONSOLIDATION_REVIEW to enable this session-only authority.",
+            parent=self.root,
+        )
+        if confirmation == "ENABLE_ADMINISTRATIVE_CONSOLIDATION_REVIEW":
+            self.consolidation_administrative_enabled = True
+            self.consolidation_review_status.set("Offline consolidation: administrative review enabled for this session")
+        else:
+            self.consolidation_review_status.set("Offline consolidation: administrative review remains disabled")
+
+    def _apply_consolidation_review_action(self) -> None:
+        review_id = self.consolidation_review_id.get()
+        claim_version_id = self.consolidation_claim_version_id.get()
+        action = self.consolidation_action.get()
+        if not review_id or not claim_version_id or not action:
+            self.consolidation_review_status.set("Offline consolidation action requires a review, claim version, and action")
+            return
+        if not self.consolidation_administrative_enabled:
+            self.consolidation_review_status.set("Offline consolidation action requires explicit administrative review enablement")
+            return
+        replacement_text = ""
+        if action in {"replace_fragment", "revise_claim", "split_claim", "merge_claims", "recompose_cluster"}:
+            replacement_text = simpledialog.askstring(
+                "Administrative Consolidation Review",
+                "Enter the reviewed replacement formulation for this claim.",
+                parent=self.root,
+            ) or ""
+            if not replacement_text:
+                self.consolidation_review_status.set("Offline consolidation action requires an explicit replacement formulation")
+                return
+        graph = load_provisional_semantic_graph(self.conversational_runtime_root)
+        try:
+            graph, overlay = create_consolidation_overlay(
+                graph,
+                review_id=review_id,
+                claim_version_id=claim_version_id,
+                action=action,
+                role="administrative_operator",
+                operator_id="local_operator",
+                replacement_text=replacement_text,
+            )
+            graph, admission = apply_consolidation_admission(graph, review_id=review_id, overlay_id=overlay.overlay_id)
+            save_provisional_semantic_graph(self.conversational_runtime_root, graph)
+            self.consolidation_review_status.set(f"Offline consolidation applied: {admission.action} for {claim_version_id}")
+            self._show_consolidation_review()
+        except ConsolidationIntegrityError as exc:
+            self.consolidation_review_status.set(f"Offline consolidation action denied: {exc}")
 
     def _preview_evidence(self) -> None:
         data = preview_evidence_ingest(self.paste.get("1.0", tk.END))

@@ -93,6 +93,24 @@ def test_terminal_records_restore_without_retry(tmp_path, terminal, result):
     assert restored.get_request(request["request_id"])["execution_attempt_count"] == 1
 
 
+def test_execution_failure_records_error_detail_and_attempt_state(tmp_path):
+    ledger = LocalModelRequestResultLedger(tmp_path)
+    request = _request(ledger)
+    ledger.approve_request(request["request_id"], "operator")
+
+    terminal = ledger.execute_claimed_request(
+        request["request_id"],
+        {"executor": lambda _question, _lane: {"executed": False, "reason": "local_model_runtime_unavailable"}},
+    )
+
+    assert terminal["lifecycle_state"] == "unavailable"
+    assert terminal["failure_classification"] == "local_model_runtime_unavailable"
+    assert terminal["failure_detail"] == "local_model_runtime_unavailable"
+    assert terminal["error_present"] is True
+    assert terminal["execution_started"] is True
+    assert terminal["result_id"] == ""
+
+
 def test_pending_and_approved_restore_and_executing_fails_closed(tmp_path):
     pending_root, approved_root, executing_root = (tmp_path / name for name in ("pending", "approved", "executing"))
     pending = LocalModelRequestResultLedger(pending_root)

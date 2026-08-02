@@ -14,7 +14,6 @@ from pathlib import Path
 import re
 from typing import Any, Mapping, Sequence
 
-from integration.model_runtime.execution_lanes import ModelExecutionLane
 from integration.model_runtime.provider_manager import ProviderManager
 from orchestration.runtime.active_cognitive_loop import (
     ActiveCognitiveEpisodeState,
@@ -30,6 +29,7 @@ from orchestration.runtime.active_cognitive_loop import (
     write_episode_state,
 )
 from orchestration.runtime.delta_1_0_common import stable_id, utc_now
+from orchestration.runtime.local_model_execution_adapter import execute_local_model_inference
 from orchestration.runtime.local_model_request_result_ledger import LocalModelRequestResultLedger
 
 
@@ -192,28 +192,20 @@ def _execute_campaign_prompt(
         model_name = str(lane.get("selected_model") or "")
         if not model_name:
             return {"executed": False, "reason": "no_local_model_available"}
-        result = provider_manager.infer(
+        return execute_local_model_inference(
             model_name=model_name,
             prompt=question,
             task_type="active_cognitive_json_operation",
             metadata={
                 "route": "goal_oriented_ui_experiment_campaign",
                 "lane": lane.get("lane"),
-                "execution_lane": ModelExecutionLane.COGNITIVE_OPERATION.value,
+                "execution_lane": "cognitive_operation",
                 "operation_type": objective,
                 "campaign_requester_type": "cognition_lane_evidence_tooling",
             },
+            provider_manager=provider_manager,
+            execution_adapter="goal_oriented_ui_campaign.exact_prompt",
         )
-        return {
-            "executed": bool(str(result.answer or "").strip()),
-            "answer": str(result.answer or "").strip(),
-            "confidence_score": float(result.confidence or 0.0),
-            "model_id": str(result.model_id or model_name),
-            "latency_seconds": float(result.latency_seconds or 0.0),
-            "response_tokens": int(result.response_tokens or 0),
-            "execution_adapter": "goal_oriented_ui_campaign.ProviderManager.exact_prompt",
-            "provider_calls_performed": False,
-        }
 
     terminal = ledger.execute_claimed_request(request_id, {"executor": executor})
     if terminal.get("lifecycle_state") != "completed" or not terminal.get("result_id"):

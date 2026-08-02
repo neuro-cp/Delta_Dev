@@ -18,6 +18,7 @@ from orchestration.runtime.conversational_runtime_operation import (
     ConversationalRuntimeState,
     classify_conversational_intent,
     reconcile_queued_reference_turn,
+    select_chat_request_owner,
 )
 from orchestration.runtime.delta_1_0_common import stable_id
 
@@ -280,19 +281,7 @@ def _matching_pending_request(state: ConversationalRuntimeState, message: str) -
     resolution = _resolution_kind(message)
     if not resolution:
         return None
-    eligible = [item for item in state.pending_chat_requests if item.status == "pending" and not item.consumption_count]
-    if len(eligible) != 1:
-        return None
-    request = eligible[0]
-    if request.request_type == "provider_authority" and resolution in {"approved", "denied"}:
-        return request
-    if request.request_type == "capability_adoption_and_restart" and resolution in {"approved", "denied", "show_evidence"}:
-        return request
-    if request.request_type == "directional_question" and resolution in {"approved", "denied", "directional"}:
-        return request
-    if request.request_type == "local_model_execution" and resolution in {"approved", "denied"}:
-        return request
-    return None
+    return select_chat_request_owner(state, message)
 
 
 def _pending_reference_clarification(state: ConversationalRuntimeState) -> ChatAddressableRequest | None:
@@ -307,11 +296,47 @@ def _pending_reference_clarification(state: ConversationalRuntimeState) -> ChatA
     )
 
 
+def _pending_interactive_clarification(state: ConversationalRuntimeState) -> ChatAddressableRequest | None:
+    return next(
+        (item for item in reversed(state.pending_chat_requests)
+         if item.status == "pending" and not item.consumption_count and item.request_type == "interactive_clarification"),
+        None,
+    )
+
+
 def _looks_like_reference_clarification_reply(clause: str) -> bool:
     lower = _normalize(clause).lower()
     if "?" in lower:
         return False
     return bool(re.search(r"\b(?:i\s+meant|i\s+mean|the\s+first|the\s+second|the\s+earlier|the\s+later|previous|prior|not\s+the|that\s+one)\b", lower))
+
+
+def _looks_like_interactive_clarification_reply(clause: str) -> bool:
+    """Keep bare approval words available for their own rendered authority prompt."""
+
+    lower = _normalize(clause).lower()
+    if not lower or "?" in lower:
+        return False
+    if lower in {"yes", "y", "no", "n", "ok", "okay", "sure", "go ahead", "not now"}:
+        return False
+    return bool(re.search(
+        r"\b(?:relevan(?:ce|t)?|connection|relationship|depend(?:ency|ent)?|explor(?:e|ing|ation)|pursu(?:e|ing)|because|that|these|those|provide|evidence|source|document|details|information|guide|interpretation)\b",
+        lower,
+    ))
+
+
+def _clarification_request_owner(state: ConversationalRuntimeState, clause: str) -> ChatAddressableRequest | None:
+    """Choose the latest rendered compatible clarification, never a request type."""
+
+    candidates = []
+    for index, request in enumerate(state.pending_chat_requests):
+        if request.status != "pending" or request.consumption_count:
+            continue
+        if request.request_type == "reference_clarification" and _looks_like_reference_clarification_reply(clause):
+            candidates.append((request.render_sequence, request.created_sequence, index, request))
+        elif request.request_type == "interactive_clarification" and _looks_like_interactive_clarification_reply(clause):
+            candidates.append((request.render_sequence, request.created_sequence, index, request))
+    return max(candidates, key=lambda item: item[:3])[3] if candidates else None
 
 
 def _control_for_clause(state: ConversationalRuntimeState, clause: str) -> tuple[ControlDispatch, PendingRequestDispatch]:
@@ -322,6 +347,7 @@ def _control_for_clause(state: ConversationalRuntimeState, clause: str) -> tuple
             "provider_authority": "provider_approval",
             "capability_adoption_and_restart": "capability_adoption",
             "local_model_execution": "local_model_permission",
+            "knowledge_model_budget_increase": "side_thread_resolution",
             "directional_question": "side_thread_resolution",
         }.get(request.request_type, "side_thread_resolution")
         return (
@@ -343,15 +369,22 @@ def _control_for_clause(state: ConversationalRuntimeState, clause: str) -> tuple
         return ControlDispatch(True, "clarification", "clarify_conflicting_control", deferred=True, should_render_acknowledgment=True), PendingRequestDispatch(False)
     if re.search(r"\b(?:how|why) did you (?:route|misroute)\b|\bdecision record\b", lower):
         return ControlDispatch(True, "diagnostic_request", "route_advanced", deferred=True, should_render_acknowledgment=True), PendingRequestDispatch(False)
+    if re.search(r"\bwhat are you doing(?: right now)?\b|\bwhy did you ask\b|\bwhat are you unsure about\b|\bwhat did you pause\b|\bwhat will you return to(?: later)?\b", lower):
+        return ControlDispatch(True, "interactive_introspection", "render_interactive_introspection", state.active_objective.objective_id if state.active_objective else "", deferred=True, should_render_acknowledgment=True), PendingRequestDispatch(False)
     if re.search(r"\b(?:are you|is the runtime|chat runtime|runtime state|goal state|pending requests?|queued|last user question|last question|recorded once|discarded)\b", lower) and re.search(r"\b(?:paused|running|working|pending|queued|state|status|exactly once|how many|last|discarded|expired)\b", lower):
         return ControlDispatch(True, "runtime_state_query", "render_runtime_state", state.active_objective.objective_id if state.active_objective else "", deferred=True, should_render_acknowledgment=True), PendingRequestDispatch(False)
     if state.active_objective and re.search(r"\bstop\s+(?:working\s+on\s+)?(?:that|this|the\s+active\s+goal|goal)\b", lower):
         return ControlDispatch(True, "stop_goal", "stop", state.active_objective.objective_id, deferred=True, should_render_acknowledgment=True), PendingRequestDispatch(False)
-    pending_reference = _pending_reference_clarification(state)
-    if pending_reference and _looks_like_reference_clarification_reply(clause):
+    clarification_owner = _clarification_request_owner(state, clause)
+    if clarification_owner:
+        control_type = (
+            "reference_clarification_resolution"
+            if clarification_owner.request_type == "reference_clarification"
+            else "interactive_clarification_resolution"
+        )
         return (
-            ControlDispatch(True, "reference_clarification_resolution", "resolve_reference_clarification", pending_reference.request_id, deferred=True, should_render_acknowledgment=True),
-            PendingRequestDispatch(True, pending_reference.request_id, pending_reference.request_type, "resolved", {"objective_id": pending_reference.objective_id}, True, False, True),
+            ControlDispatch(True, control_type, "resolve_clarification", clarification_owner.request_id, deferred=True, should_render_acknowledgment=True),
+            PendingRequestDispatch(True, clarification_owner.request_id, clarification_owner.request_type, "resolved", {"objective_id": clarification_owner.objective_id}, True, False, True),
         )
     if state.active_objective and any(token in lower for token in ("that", "it", "this", "prior", "previous", "earlier")) and any(token in lower for token in ("goal", "topic", "subject", "reference")):
         provisional = ConversationTurn(
@@ -366,7 +399,12 @@ def _control_for_clause(state: ConversationalRuntimeState, clause: str) -> tuple
             return ControlDispatch(True, "reference_clarification", "create_reference_clarification", state.active_objective.objective_id, deferred=True, should_render_acknowledgment=True), PendingRequestDispatch(False)
     if "save state" in lower and "restart" in lower or lower.startswith("restart"):
         return ControlDispatch(True, "restart", "save_and_restart", state.active_objective.objective_id if state.active_objective else "", deferred=True, should_render_acknowledgment=True), PendingRequestDispatch(False)
-    if "continue where you left off" in lower or "keep working on" in lower or "keep working locally" in lower:
+    if (
+        "continue where you left off" in lower
+        or "keep working on" in lower
+        or "keep working locally" in lower
+        or "continue frontier evaluation" in lower
+    ):
         return ControlDispatch(True, "goal_continuation", "continue_objective", state.active_objective.objective_id if state.active_objective else "", deferred=True, should_render_acknowledgment=True), PendingRequestDispatch(False)
     if "stop" in lower and any(marker in lower for marker in ("instead", "work on", "study batteries", "battery")):
         return ControlDispatch(True, "replace_goal", "replace_objective", state.active_objective.objective_id if state.active_objective else "", deferred=True, should_render_acknowledgment=True), PendingRequestDispatch(False)

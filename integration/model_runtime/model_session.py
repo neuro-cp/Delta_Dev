@@ -30,6 +30,8 @@ COGNITIVE_OPERATION_FIELDS = {
     "interpret_state": ("state_summary", "salient_observations", "evidence_refs", "unresolved_questions", "uncertainty", "recommended_next_operation"),
     "prioritize_focus": ("selected_focus_id", "selection_reason", "supporting_evidence_refs", "rejected_focus_ids", "uncertainty", "recommended_state_transition"),
     "formulate_hypothesis": ("hypothesis_statement", "scope", "supporting_evidence_refs", "assumptions", "expected_observations", "uncertainty", "recommended_state_transition"),
+    "reformulate_node_specific_hypothesis": ("hypothesis_statement", "scope", "supporting_evidence_refs", "assumptions", "expected_observations", "uncertainty", "recommended_state_transition"),
+    "repair_node_specific_hypothesis_format": ("hypothesis_statement", "scope", "supporting_evidence_refs", "assumptions", "expected_observations", "uncertainty", "recommended_state_transition"),
     "identify_evidence_need": ("target_claim_or_decision", "known_evidence_refs", "missing_fact", "why_missing_fact_matters", "acceptable_evidence_source", "bounded_retrieval_action", "stop_condition", "uncertainty", "recommended_state_transition"),
     "challenge_hypothesis": ("challenged_hypothesis_id", "vulnerability", "contrary_evidence_refs", "disconfirming_observation", "uncertainty", "recommended_state_transition"),
     "revise_hypothesis": ("prior_hypothesis_id", "revised_statement", "evidence_refs", "contrary_evidence_considered", "revision_reason", "new_confidence_state", "uncertainty", "recommended_state_transition"),
@@ -101,6 +103,12 @@ COGNITIVE_OPERATION_ENUM_FIELDS = {
         "recommended_state_transition": ("select_next_focus", "continue_focus", "request_operator_resolution"),
     },
     "formulate_hypothesis": {
+        "recommended_state_transition": ("propose_hypothesis", "declare_insufficient_evidence"),
+    },
+    "reformulate_node_specific_hypothesis": {
+        "recommended_state_transition": ("propose_hypothesis", "declare_insufficient_evidence"),
+    },
+    "repair_node_specific_hypothesis_format": {
         "recommended_state_transition": ("propose_hypothesis", "declare_insufficient_evidence"),
     },
     "identify_evidence_need": {

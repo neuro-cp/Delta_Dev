@@ -157,7 +157,8 @@ class LocalModelRequestResultLedger:
             "authority_state": "operator_approval_required", "lifecycle_state": "pending_operator_approval",
             "execution_claim_id": "", "execution_attempt_count": 0, "consumed_state": "unconsumed",
             "created_at": utc_now(), "approved_at": "", "claimed_at": "", "completed_at": "",
-            "failure_classification": "", "result_id": "", "record_version": LEDGER_VERSION,
+            "failure_classification": "", "failure_detail": "", "error_present": False,
+            "execution_started": False, "result_id": "", "record_version": LEDGER_VERSION,
         }
         self._state["requests"][request_id] = self._seal_request(record)
         self._persist()
@@ -268,7 +269,17 @@ class LocalModelRequestResultLedger:
             }
             self._state["results"][result_id] = self._seal_result(result_record)
         detail = dict(failure or {})
-        record.update({"lifecycle_state": state, "consumed_state": "terminal", "completed_at": now, "result_id": result_id, "failure_classification": str(detail.get("classification") or "")})
+        failure_detail = str(detail.get("detail") or detail.get("message") or detail.get("reason") or "")
+        record.update({
+            "lifecycle_state": state,
+            "consumed_state": "terminal",
+            "completed_at": now,
+            "result_id": result_id,
+            "failure_classification": str(detail.get("classification") or ""),
+            "failure_detail": failure_detail,
+            "error_present": bool(failure_detail or detail.get("classification")),
+            "execution_started": True,
+        })
         self._state["requests"][request_id] = self._seal_request(record)
         self._persist()
         return self.get_request(request_id)
@@ -299,7 +310,12 @@ class LocalModelRequestResultLedger:
         except Exception as exc:
             return self.fail_request(request_id, {"classification": "local_model_execution_exception", "detail": repr(exc)})
         if not result.get("executed"):
-            return self.fail_request(request_id, {"classification": str(result.get("reason") or "local_model_unavailable")}, unavailable=True)
+            reason = str(result.get("reason") or result.get("error") or "local_model_unavailable")
+            return self.fail_request(
+                request_id,
+                {"classification": reason, "detail": reason},
+                unavailable=True,
+            )
         return self.complete_request(request_id, result)
 
     def observe_request(self, request_id: str) -> dict[str, Any]:

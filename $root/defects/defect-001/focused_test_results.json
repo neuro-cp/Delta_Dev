@@ -1,0 +1,6 @@
+﻿{
+    "py_compile":  "passed",
+    "command":  "python -m pytest tests/runtime_gsr/test_conversational_runtime_operation.py -q",
+    "result":  "25 passed",
+    "diff_check":  "passed"
+}

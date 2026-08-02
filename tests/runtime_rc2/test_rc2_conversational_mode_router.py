@@ -28,6 +28,7 @@ from orchestration.runtime.rc2_dialogue_intent_classifier import (
 from orchestration.runtime import rc1_operator_console as rc1
 from orchestration.runtime import rc2_developmental_concept_memory as rc2mem
 from orchestration.runtime import rc2_conversational_mode_router as rc2router
+from orchestration.runtime import local_model_execution_adapter as lmea
 from integration.model_runtime.inference_types import CanonicalInferenceResult
 from integration.model_runtime.model_registry import ModelSpec
 
@@ -383,22 +384,22 @@ def test_local_model_falls_back_to_venv_subprocess_when_llama_cpp_missing(monkey
 
     monkeypatch.setattr(rc2router, "ProviderManager", MissingLlamaProviderManager)
     monkeypatch.setattr(
-        rc2router,
-        "_infer_local_model_via_venv_subprocess",
-        lambda model_name, prompt, model_lane: {
+        lmea,
+        "execute_local_model_via_venv_subprocess",
+        lambda **kwargs: {
             "executed": True,
             "available": True,
             "answer": "Subprocess model answer.",
             "confidence_score": 0.77,
-            "model_id": model_name,
-            "prompt_sent": prompt,
-            "execution_adapter": "venv_subprocess",
+            "model_id": kwargs["model_name"],
+            "prompt_sent": kwargs["prompt"],
+            "execution_adapter": kwargs["execution_adapter"],
             "provider_calls_performed": False,
         },
     )
     payload = route_message("Conversation", "what color is the moon", execute_local_model=True)
     assert payload["local_model_result"]["executed"] is True
-    assert payload["local_model_result"]["execution_adapter"] == "venv_subprocess"
+    assert payload["local_model_result"]["execution_adapter"] == "rc2_conversational_mode_router.execute_local_model_answer.venv_subprocess"
     assert payload["answer"] == "Subprocess model answer."
 
 

@@ -246,3 +246,14 @@ def test_compare_evidence_grammar_enumerates_allowed_transition_values():
     assert 'enum-recommended-state-transition ::= "\\"add_supporting_evidence\\""' in grammar
     assert '"\\"continue_with_hypothesis\\""' not in grammar
     assert 'enum-operation-result-type ::= "\\"compare_evidence_result\\""' in grammar
+
+
+def test_retry_hypothesis_operations_use_the_hypothesis_grammar_contract():
+    for operation in ("reformulate_node_specific_hypothesis", "repair_node_specific_hypothesis_format"):
+        grammar = cognitive_operation_grammar(operation)
+
+        assert '"\\"hypothesis_statement\\""' in grammar
+        assert '"\\"scope\\""' in grammar
+        assert '"\\"supporting_evidence_refs\\""' in grammar
+        assert '"\\"next_focus_proposal\\""' not in grammar
+        assert 'enum-recommended-state-transition ::= "\\"propose_hypothesis\\""' in grammar

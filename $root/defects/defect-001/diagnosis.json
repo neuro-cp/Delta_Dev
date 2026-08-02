@@ -1,0 +1,7 @@
+﻿{
+    "diagnosis":  "intent classification treated tentative goal language as persistent_or_session_goal; foreground fallback lacked useful answers for several controls",
+    "focused_tests":  "25 passed tests/runtime_gsr/test_conversational_runtime_operation.py",
+    "first_incorrect_transition":  "tentative future goal text with explicit do-not-replace replaced the active semantic-reconciliation objective",
+    "defect_id":  "defect-001",
+    "repair":  "add TentativeGoalCandidate inert state, classify tentative language before goal scoring, acknowledge without activation, add useful foreground answers"
+}
