@@ -65,6 +65,12 @@ ADMINISTRATIVE_ACTIONS = frozenset({
     "escalate_for_more_evidence",
 })
 ADMISSION_ACTIONS = frozenset({"promote", "promote_partial", "revise", "retain_provisional", "quarantine", "invalidate", "escalate_operator"})
+FUNCTIONAL_RELATION_TYPES = frozenset({
+    "collects_from", "transfers_through", "accumulates_in", "limited_by_capacity",
+    "activates_at_threshold", "discharges_through", "regulates", "inhibits",
+    "reinforces", "depends_on", "transforms", "detects", "corrects",
+    "competes_for", "resumes_after",
+})
 
 
 class ConsolidationIntegrityError(ValueError):
@@ -162,6 +168,7 @@ class SemanticRelation:
     created_at: str
     provenance_refs: tuple[str, ...] = ()
     schema_version: str = SCHEMA_VERSION
+    metadata: Mapping[str, Any] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -310,6 +317,39 @@ def empty_graph(*, root_hint: str = "") -> ProvisionalSemanticGraphState:
     return ProvisionalSemanticGraphState(graph_id=stable_id("provisional-semantic-graph", root_hint or "default"))
 
 
+def record_provisional_functional_relation(
+    graph: ProvisionalSemanticGraphState,
+    *,
+    relation_type: str,
+    source_ref: str,
+    target_ref: str,
+    provenance_refs: Sequence[str],
+    confidence: float = 0.0,
+) -> tuple[ProvisionalSemanticGraphState, SemanticRelation]:
+    """Append a graph-owned functional hypothesis without granting factual authority."""
+
+    if relation_type not in FUNCTIONAL_RELATION_TYPES:
+        raise ConsolidationIntegrityError("unsupported_functional_relation:" + relation_type)
+    if not source_ref or not target_ref or not tuple(provenance_refs):
+        raise ConsolidationIntegrityError("functional_relation_requires_bound_provenance")
+    if not 0.0 <= float(confidence) <= 1.0:
+        raise ConsolidationIntegrityError("functional_relation_confidence_out_of_range")
+    relation = SemanticRelation(
+        relation_id=stable_id("provisional-functional-relation", relation_type, source_ref, target_ref, *tuple(provenance_refs)),
+        relation_type=relation_type,
+        source_ref=source_ref,
+        target_ref=target_ref,
+        created_at=utc_now(),
+        provenance_refs=tuple(provenance_refs),
+        metadata={
+            "epistemic_state": "pending_consolidation",
+            "confidence": float(confidence),
+            "review_state": "unreviewed",
+        },
+    )
+    return _append(graph, "relations", relation), relation
+
+
 def graph_path(runtime_root: str | Path) -> Path:
     return Path(runtime_root) / "consolidation" / "provisional_semantic_graph.json"
 
@@ -327,6 +367,46 @@ def load_graph(runtime_root: str | Path) -> ProvisionalSemanticGraphState:
 
 def save_graph(runtime_root: str | Path, graph: ProvisionalSemanticGraphState) -> None:
     _atomic_write_json(graph_path(runtime_root), graph.as_record())
+
+
+def record_associative_insight(
+    graph: ProvisionalSemanticGraphState,
+    *,
+    exploration: Any,
+    insight: Mapping[str, str],
+    ledger_result: Mapping[str, Any],
+) -> tuple[ProvisionalSemanticGraphState, str]:
+    """Record one model-assisted association as evidence, never as a relation admission."""
+
+    experience_id = stable_id("semantic-experience", "association-insight", str(exploration.exploration_id))
+    if any(item.experience_id == experience_id for item in graph.experiences):
+        return graph, experience_id
+    content = json.dumps(dict(insight), sort_keys=True)
+    experience = _experience(
+        experience_id,
+        "local_model_output",
+        "model_generated_provisional_associative_insight",
+        content,
+        tuple(exploration.source_record_ids) + tuple(exploration.relation_edge_ids) + (str(exploration.candidate_id),),
+        {
+            "record_kind": "provisional_associative_insight",
+            "association_candidate_id": str(exploration.candidate_id),
+            "approval_request_id": str(exploration.approval_request_id),
+            "ledger_request_id": str(exploration.ledger_request_id),
+            "ledger_result_id": str(ledger_result.get("result_id") or ""),
+            "model_identity": str(ledger_result.get("model_identity") or ""),
+            "epistemic_state": "pending_consolidation",
+        },
+    )
+    rationale = SemanticRationale(
+        stable_id("semantic-rationale", "association-insight", str(exploration.exploration_id)),
+        str(insight["shared_structure"]),
+        (experience_id,),
+        tuple(exploration.source_record_ids),
+        utc_now(),
+        _semantic_fingerprint(str(insight["shared_structure"])),
+    )
+    return replace(graph, experiences=graph.experiences + (experience,), rationales=graph.rationales + (rationale,)), experience_id
 
 
 def graph_from_record(record: Mapping[str, Any]) -> ProvisionalSemanticGraphState:
@@ -1108,7 +1188,7 @@ def _claim_version_from_record(value: Mapping[str, Any]) -> ClaimVersion:
 
 
 def _relation_from_record(value: Mapping[str, Any]) -> SemanticRelation:
-    return SemanticRelation(str(value["relation_id"]), str(value["relation_type"]), str(value["source_ref"]), str(value["target_ref"]), str(value["created_at"]), tuple(value.get("provenance_refs") or ()), str(value.get("schema_version") or SCHEMA_VERSION))
+    return SemanticRelation(str(value["relation_id"]), str(value["relation_type"]), str(value["source_ref"]), str(value["target_ref"]), str(value["created_at"]), tuple(value.get("provenance_refs") or ()), str(value.get("schema_version") or SCHEMA_VERSION), dict(value.get("metadata") or {}))
 
 
 def _concept_from_record(value: Mapping[str, Any]) -> SemanticConcept:
@@ -1148,5 +1228,5 @@ def _packet_from_record(value: Mapping[str, Any]) -> SealedConsolidationPacket:
 
 
 __all__ = [
-    "ADMINISTRATIVE_ACTIONS", "ADMISSION_ACTIONS", "ClaimFragment", "ClaimVersion", "ConsolidationCohort", "ConsolidationIntegrityError", "EpisodicTrace", "ProvisionalSemanticGraphState", "ReviewRecord", "SemanticClaim", "SemanticConcept", "SemanticEdge", "SemanticExperience", "SemanticRationale", "SemanticRelation", "SealedConsolidationPacket", "AdaptationTraceReference", "AdministrativeReviewOverlay", "AdmissionRecord", "apply_admission", "compile_sealed_packet", "compile_sealed_packets", "create_administrative_overlay", "create_consolidation_cohort", "empty_graph", "graph_from_record", "ingest_episode_at_runtime_root", "ingest_knowledge_episode", "load_graph", "record_validated_oracle_response", "render_administrative_review", "save_graph", "seal_cohort_packet_once", "validate_oracle_response", "verify_sealed_packet",
+    "ADMINISTRATIVE_ACTIONS", "ADMISSION_ACTIONS", "FUNCTIONAL_RELATION_TYPES", "ClaimFragment", "ClaimVersion", "ConsolidationCohort", "ConsolidationIntegrityError", "EpisodicTrace", "ProvisionalSemanticGraphState", "ReviewRecord", "SemanticClaim", "SemanticConcept", "SemanticEdge", "SemanticExperience", "SemanticRationale", "SemanticRelation", "SealedConsolidationPacket", "AdaptationTraceReference", "AdministrativeReviewOverlay", "AdmissionRecord", "apply_admission", "compile_sealed_packet", "compile_sealed_packets", "create_administrative_overlay", "create_consolidation_cohort", "empty_graph", "graph_from_record", "ingest_episode_at_runtime_root", "ingest_knowledge_episode", "load_graph", "record_provisional_functional_relation", "record_validated_oracle_response", "render_administrative_review", "save_graph", "seal_cohort_packet_once", "validate_oracle_response", "verify_sealed_packet",
 ]

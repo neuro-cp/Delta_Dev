@@ -204,10 +204,18 @@ def test_operator_accepts_one_association_question_without_graph_mutation(monkey
         assert request.baseline_metrics["originating_candidate_id"] == candidate_id
         assert request.thread_id == f"candidate:{candidate_id}"
         assert request.baseline_metrics["relation_edge_ids"] == ("operator-dependency",)
+        assert request.baseline_metrics["association_source_labels"] == ("Route overflow safely.",)
+        assert request.baseline_metrics["association_target_labels"] == ("Capture rooftop runoff.",)
+        assert request.baseline_metrics["association_relation_types"] == ("depends_on",)
+        assert "Return JSON only" in request.baseline_metrics["association_inquiry_question"]
         assert request.baseline_metrics["association_exploration_state"] == "question_created"
         assert request.baseline_metrics["association_resolution_state"] == "unresolved"
         assert request.rendered_turn_id == app.conversational_runtime_state.conversation[-1].turn_id
-        assert "explicit dependency" in app.chat_history.get("1.0", tk.END).lower()
+        transcript = app.chat_history.get("1.0", tk.END)
+        assert "Route overflow safely." in transcript
+        assert "Capture rooftop runoff." in transcript
+        assert "depends_on" in transcript
+        assert "Exploration question:" in transcript
         assert load_graph(app.conversational_runtime_root).as_record() == graph_before
 
         _send(app, "yes")
@@ -1497,5 +1505,14 @@ def test_chat_first_fourteen_step_tk_campaign(monkeypatch, tmp_path):
         assert "queued exactly once" in latest
         assert "would you like me to ask a local reasoning model" not in latest
         assert sum(turn.text == "Your goal today is also to pay attention to topic switches." for turn in app.conversational_runtime_state.conversation if turn.role == "user") == 1
+    finally:
+        root.destroy()
+
+
+def test_association_exploration_does_not_start_twice_while_in_flight(monkeypatch, tmp_path):
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        app.association_exploration_in_flight = True
+        assert app._start_approved_association_exploration(decision=None) is False
     finally:
         root.destroy()

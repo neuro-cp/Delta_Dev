@@ -16,6 +16,7 @@ from typing import Any, Iterable, Mapping, Sequence
 
 from orchestration.runtime.active_cognitive_loop import ActiveCognitiveEpisodeState
 from orchestration.runtime.conversational_runtime_operation import ConversationalRuntimeState
+from orchestration.runtime.consolidation_feedback import derive_consolidation_feedback
 from orchestration.runtime.provisional_semantic_consolidation import ProvisionalSemanticGraphState
 
 
@@ -117,6 +118,11 @@ class CoordinationMetadata:
     last_surfaced_sequence: int = 0
     starvation_count: int = 0
     preemption_requested: bool = False
+    preemption_operation_id: str = ""
+    preemption_candidate_id: str = ""
+    preemption_ledger_request_id: str = ""
+    preemption_foreground_turn_id: str = ""
+    preemption_reason: str = ""
     operator_pause_policy: str = ""
     updated_at: str = ""
     schema_version: str = SCHEMA_VERSION
@@ -139,7 +145,14 @@ _CANDIDATE_TRANSITIONS: Mapping[str, frozenset[str]] = {
     "queued": frozenset({"surfaced", "deferred", "rejected", "expired", "suppressed"}),
     "surfaced": frozenset({"accepted", "deferred", "rejected", "expired", "resolved", "suppressed"}),
     "accepted": frozenset({"approved_for_bounded_exploration", "rejected", "resolved", "expired", "suppressed"}),
-    "approved_for_bounded_exploration": frozenset({"rejected", "resolved", "expired", "suppressed"}),
+    "approved_for_bounded_exploration": frozenset({"exploration_queued", "rejected", "resolved", "expired", "suppressed"}),
+    "exploration_queued": frozenset({"exploration_running", "exploration_failed", "exploration_blocked"}),
+    "exploration_running": frozenset({"explored_pending_consolidation", "exploration_retryable", "exploration_failed", "exploration_blocked", "exploration_interrupted_indeterminate"}),
+    "exploration_retryable": frozenset({"exploration_queued", "exploration_blocked", "exploration_failed"}),
+    "explored_pending_consolidation": frozenset(),
+    "exploration_blocked": frozenset(),
+    "exploration_failed": frozenset(),
+    "exploration_interrupted_indeterminate": frozenset(),
     "deferred": frozenset({"queued", "surfaced", "rejected", "expired", "suppressed"}),
     "rejected": frozenset(),
     "expired": frozenset(),
@@ -301,6 +314,11 @@ def load_coordination_state(runtime_root: str | Path, *, runtime_id: str) -> Coo
             last_surfaced_sequence=int(item.get("last_surfaced_sequence") or 0),
             starvation_count=int(item.get("starvation_count") or 0),
             preemption_requested=bool(item.get("preemption_requested")),
+            preemption_operation_id=str(item.get("preemption_operation_id") or ""),
+            preemption_candidate_id=str(item.get("preemption_candidate_id") or ""),
+            preemption_ledger_request_id=str(item.get("preemption_ledger_request_id") or ""),
+            preemption_foreground_turn_id=str(item.get("preemption_foreground_turn_id") or ""),
+            preemption_reason=str(item.get("preemption_reason") or ""),
             operator_pause_policy=str(item.get("operator_pause_policy") or ""),
             updated_at=str(item.get("updated_at") or ""),
         )
@@ -376,6 +394,11 @@ def request_preemption(
     state: CoordinationState,
     *,
     thread_id: str,
+    operation_id: str = "",
+    candidate_id: str = "",
+    ledger_request_id: str = "",
+    foreground_turn_id: str = "",
+    reason: str = "",
     updated_at: str = "",
 ) -> CoordinationState:
     """Record a foreground interruption for observation at an existing safe boundary."""
@@ -384,7 +407,7 @@ def request_preemption(
         return state
     entries = {item.thread_id: item for item in state.entries}
     prior = entries.get(thread_id, CoordinationMetadata(thread_id=thread_id))
-    entries[thread_id] = replace(prior, preemption_requested=True, updated_at=updated_at or prior.updated_at)
+    entries[thread_id] = replace(prior, preemption_requested=True, preemption_operation_id=operation_id or prior.preemption_operation_id, preemption_candidate_id=candidate_id or prior.preemption_candidate_id, preemption_ledger_request_id=ledger_request_id or prior.preemption_ledger_request_id, preemption_foreground_turn_id=foreground_turn_id or prior.preemption_foreground_turn_id, preemption_reason=reason or prior.preemption_reason, updated_at=updated_at or prior.updated_at)
     return CoordinationState(
         runtime_id=state.runtime_id,
         entries=tuple(entries[key] for key in sorted(entries)),
@@ -575,7 +598,12 @@ def build_workspace_snapshot(
             operator_visibility="observation", dependency_refs=association.source_refs + association.target_refs,
             semantic_refs=association.source_refs + association.target_refs, epistemic_status="provisional_association",
             inclusion_reason="explicit_provisional_graph_dependency_path",
-            attention=AttentionInputs(association_strength=association.strength, expected_information_gain=1, operator_interest_alignment=association.operator_relevance),
+            attention=AttentionInputs(
+                authority_boundary=2 if association.state == "approved_for_bounded_exploration" else 0,
+                association_strength=association.strength,
+                expected_information_gain=3 if association.state == "approved_for_bounded_exploration" else 1,
+                operator_interest_alignment=3 if association.state == "approved_for_bounded_exploration" else association.operator_relevance,
+            ),
         ))
     for candidate in curiosity:
         threads.append(_thread(
@@ -749,6 +777,29 @@ def _derive_curiosity_candidates(
             surface_worthy=False,
             expiry_policy="retire_when_claim_is_resolved_or_superseded",
         ))
+    for feedback in derive_consolidation_feedback(graph):
+        if feedback.cognitive_consequence not in {
+            "revisit_required",
+            "high_priority_contradiction_review",
+            "targeted_remaining_gap",
+        }:
+            continue
+        trigger = (
+            "consolidation_correction"
+            if feedback.cognitive_consequence == "revisit_required"
+            else "consolidation_contradiction"
+        )
+        candidates.append(CuriosityCandidate(
+            candidate_id=_stable_id("curiosity-review-feedback", feedback.feedback_id),
+            trigger=trigger,
+            source_record_ids=feedback.source_ids,
+            canonical_owner="provisional_semantic_graph",
+            rationale=f"Consolidation review {feedback.verdict}: {feedback.rationale}.",
+            safe_next_step="ask_one_bounded_revision_or_contradiction_question",
+            operator_relevance=3 if feedback.cognitive_consequence == "high_priority_contradiction_review" else 2,
+            surface_worthy=False,
+            expiry_policy="retire_when_reviewed_claim_is_superseded_or_operator_rejects",
+        ))
     return tuple(sorted(candidates, key=lambda item: item.candidate_id))
 
 
@@ -797,7 +848,7 @@ def arbitrate_attention(snapshot: CognitiveWorkspaceSnapshot) -> AttentionDecisi
 
     eligible = [
         thread for thread in snapshot.threads
-        if thread.status not in {"completed", "accepted", "expired", "suppressed", "deferred", "rejected", "resolved", "approved_for_bounded_exploration", "awaiting_administrative_review"}
+        if thread.status not in {"completed", "accepted", "expired", "suppressed", "deferred", "rejected", "resolved", "explored_pending_consolidation", "exploration_blocked", "exploration_failed", "exploration_interrupted_indeterminate", "awaiting_administrative_review"}
     ]
     ranked = sorted(eligible, key=_priority_key)
     selected = ranked[0] if ranked else None
@@ -970,7 +1021,7 @@ def _posture_for(thread: CognitiveThread | None) -> str:
     if thread.thread_kind == "consolidation_cluster":
         return "perform_one_consolidation_step"
     if thread.thread_kind == "near_association":
-        return "explore_near_association"
+        return "execute_approved_association" if thread.status in {"approved_for_bounded_exploration", "exploration_queued", "exploration_running"} else "explore_near_association"
     if thread.thread_kind == "far_analogy":
         return "explore_far_analogy"
     if thread.thread_kind == "curiosity_candidate":
