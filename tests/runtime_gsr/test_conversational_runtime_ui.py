@@ -201,13 +201,14 @@ def test_operator_accepts_one_association_question_without_graph_mutation(monkey
         pending = [item for item in app.conversational_runtime_state.pending_chat_requests if item.request_type == "interactive_clarification"]
         assert len(pending) == 1
         request = pending[0]
+        assert request.accepted_response_types == ("approved", "denied")
         assert request.baseline_metrics["originating_candidate_id"] == candidate_id
         assert request.thread_id == f"candidate:{candidate_id}"
         assert request.baseline_metrics["relation_edge_ids"] == ("operator-dependency",)
         assert request.baseline_metrics["association_source_labels"] == ("Route overflow safely.",)
         assert request.baseline_metrics["association_target_labels"] == ("Capture rooftop runoff.",)
         assert request.baseline_metrics["association_relation_types"] == ("depends_on",)
-        assert "Return JSON only" in request.baseline_metrics["association_inquiry_question"]
+        assert "exactly one json object" in request.baseline_metrics["association_inquiry_question"].lower()
         assert request.baseline_metrics["association_exploration_state"] == "question_created"
         assert request.baseline_metrics["association_resolution_state"] == "unresolved"
         assert request.rendered_turn_id == app.conversational_runtime_state.conversation[-1].turn_id
@@ -219,9 +220,6 @@ def test_operator_accepts_one_association_question_without_graph_mutation(monkey
         assert load_graph(app.conversational_runtime_root).as_record() == graph_before
 
         _send(app, "yes")
-        assert [item.request_id for item in app.conversational_runtime_state.pending_chat_requests] == [request.request_id]
-
-        _send(app, "Yes, that connection is relevant to the direction I want to explore.")
         assert not any(item.request_id == request.request_id for item in app.conversational_runtime_state.pending_chat_requests)
         resolved = app.conversational_runtime_state.resolved_chat_requests[-1]
         assert resolved.request_id == request.request_id
@@ -273,7 +271,7 @@ def test_association_question_expires_on_an_unrelated_foreground_question(monkey
 
 def test_candidate_control_dispositions_persist_and_pressure_acceptance_creates_one_question(monkeypatch, tmp_path):
     from orchestration.runtime.conversational_runtime_operation import start_or_restore_runtime
-    from orchestration.runtime.interactive_cognition import CuriosityCandidate, load_coordination_state
+    from orchestration.runtime.interactive_cognition import CuriosityCandidate, load_coordination_state, set_candidate_disposition
 
     root, app = _app(monkeypatch, tmp_path)
     try:
@@ -324,6 +322,24 @@ def test_candidate_control_dispositions_persist_and_pressure_acceptance_creates_
         assert len(requests) == 1
         assert requests[0].baseline_metrics["question_kind"] == "missing_evidence"
         assert requests[0].baseline_metrics["clarification_pressure"] == "missing_evidence"
+
+        review_candidate = candidate("candidate-review-feedback", trigger="consolidation_correction")
+        app.interactive_coordination_state = set_candidate_disposition(
+            app.interactive_coordination_state,
+            candidate_id=review_candidate.candidate_id,
+            candidate_kind="curiosity_candidate",
+            disposition="surfaced",
+            source_record_ids=review_candidate.source_record_ids,
+        )
+        app.interactive_candidate_choices = {review_candidate.candidate_id: review_candidate}
+        app.interactive_candidate_choice.set(f"{review_candidate.candidate_id} | surfaced")
+        app._apply_interactive_candidate_action("accepted")
+        preserved = next(item for item in app.interactive_coordination_state.candidate_dispositions if item.candidate_id == review_candidate.candidate_id)
+        assert preserved.candidate_kind == "curiosity_candidate"
+        assert preserved.state == "accepted"
+        review_requests = [item for item in app.conversational_runtime_state.pending_chat_requests if item.baseline_metrics.get("originating_candidate_id") == review_candidate.candidate_id]
+        assert len(review_requests) == 1
+        assert review_requests[0].baseline_metrics["question_kind"] == "consolidation_feedback"
     finally:
         root.destroy()
 

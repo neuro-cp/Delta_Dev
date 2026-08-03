@@ -144,7 +144,7 @@ _CANDIDATE_TRANSITIONS: Mapping[str, frozenset[str]] = {
     "generated": frozenset({"queued", "surfaced", "deferred", "rejected", "expired", "suppressed"}),
     "queued": frozenset({"surfaced", "deferred", "rejected", "expired", "suppressed"}),
     "surfaced": frozenset({"accepted", "deferred", "rejected", "expired", "resolved", "suppressed"}),
-    "accepted": frozenset({"approved_for_bounded_exploration", "rejected", "resolved", "expired", "suppressed"}),
+    "accepted": frozenset({"approved_for_bounded_exploration", "approved_for_revisit", "rejected", "resolved", "expired", "suppressed"}),
     "approved_for_bounded_exploration": frozenset({"exploration_queued", "rejected", "resolved", "expired", "suppressed"}),
     "exploration_queued": frozenset({"exploration_running", "exploration_failed", "exploration_blocked"}),
     "exploration_running": frozenset({"explored_pending_consolidation", "exploration_retryable", "exploration_failed", "exploration_blocked", "exploration_interrupted_indeterminate"}),
@@ -153,6 +153,16 @@ _CANDIDATE_TRANSITIONS: Mapping[str, frozenset[str]] = {
     "exploration_blocked": frozenset(),
     "exploration_failed": frozenset(),
     "exploration_interrupted_indeterminate": frozenset(),
+    "approved_for_revisit": frozenset({"revisit_queued", "revisit_rejected", "revisit_suppressed", "revisit_deferred"}),
+    "revisit_queued": frozenset({"revisit_running", "revisit_failed_execution", "revisit_blocked_invalid_output"}),
+    "revisit_running": frozenset({"revisited_pending_consolidation", "revisit_interrupted_indeterminate", "revisit_failed_execution", "revisit_blocked_invalid_output"}),
+    "revisited_pending_consolidation": frozenset(),
+    "revisit_rejected": frozenset(),
+    "revisit_suppressed": frozenset(),
+    "revisit_deferred": frozenset(),
+    "revisit_blocked_invalid_output": frozenset(),
+    "revisit_interrupted_indeterminate": frozenset(),
+    "revisit_failed_execution": frozenset(),
     "deferred": frozenset({"queued", "surfaced", "rejected", "expired", "suppressed"}),
     "rejected": frozenset(),
     "expired": frozenset(),
@@ -784,11 +794,11 @@ def _derive_curiosity_candidates(
             "targeted_remaining_gap",
         }:
             continue
-        trigger = (
-            "consolidation_correction"
-            if feedback.cognitive_consequence == "revisit_required"
-            else "consolidation_contradiction"
-        )
+        trigger = {
+            "revisit_required": "consolidation_correction",
+            "high_priority_contradiction_review": "consolidation_contradiction",
+            "targeted_remaining_gap": "consolidation_remaining_gap",
+        }[feedback.cognitive_consequence]
         candidates.append(CuriosityCandidate(
             candidate_id=_stable_id("curiosity-review-feedback", feedback.feedback_id),
             trigger=trigger,
@@ -991,9 +1001,9 @@ def _priority_key(thread: CognitiveThread) -> tuple[Any, ...]:
         -item.goal_importance,
         -item.contradiction_severity,
         -item.consolidation_urgency,
+        -item.association_strength,
         -item.epistemic_instability,
         -item.expected_information_gain,
-        -item.association_strength,
         -item.novelty,
         -item.operator_interest_alignment,
         -item.starvation,
@@ -1025,6 +1035,8 @@ def _posture_for(thread: CognitiveThread | None) -> str:
     if thread.thread_kind == "far_analogy":
         return "explore_far_analogy"
     if thread.thread_kind == "curiosity_candidate":
+        if thread.status in {"approved_for_revisit", "revisit_queued", "revisit_running"}:
+            return "execute_approved_revisit"
         return "inspect_curiosity_candidate"
     return "report_current_focus"
 

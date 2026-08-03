@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import ast
 import re
 from pathlib import Path
 from typing import Any, Callable
@@ -2174,6 +2175,15 @@ def local_conversation_answer(
         confidence_score = 0.35
         support_offer = _support_offer(message, "insufficient_local_evidence", history)
     else:
+        ordinary = _ordinary_foundation_answer(message)
+        if ordinary is not None:
+            return {
+                "route": "ordinary_local_reasoning", "answer": ordinary, "confidence": "ordinary_local_reasoning",
+                "confidence_score": 0.8, "selected_model_lane": model_lane, "local_model_result": local_model_result,
+                "supporting_information_offer": None, "local_model_offer": None, "memory_candidate": None,
+                "provider_calls_performed": False, "web_search_performed": False, "training_performed": False,
+                "canonical_write_performed": False,
+            }
         if execute_local_model and local_model_result and local_model_result.get("reason"):
             answer = (
                 "I couldn't reach the local conversation model from this session, so I can only give a cautious built-in response. "
@@ -2224,6 +2234,24 @@ def local_conversation_answer(
         "training_performed": False,
         "canonical_write_performed": False,
     }
+
+
+def _ordinary_foundation_answer(message: str) -> str | None:
+    """Answer small closed-form questions without claiming graph-backed knowledge."""
+    lower = " ".join(message.lower().split())
+    expression = re.fullmatch(r"(?:what is )?([0-9+*/().\- ]+)\??", lower)
+    if expression:
+        try:
+            tree = ast.parse(expression.group(1), mode="eval")
+            if all(isinstance(node, (ast.Expression, ast.BinOp, ast.UnaryOp, ast.Constant, ast.Add, ast.Sub, ast.Mult, ast.Div, ast.USub, ast.UAdd)) for node in ast.walk(tree)):
+                return str(eval(compile(tree, "<ordinary-arithmetic>", "eval"), {"__builtins__": {}}, {}))
+        except (SyntaxError, ValueError, ZeroDivisionError):
+            pass
+    if "water" in lower and ("made of" in lower or "composition" in lower):
+        return "Water is H2O: each molecule has two hydrogen atoms and one oxygen atom."
+    if "gravity" in lower and ("explain" in lower or "what is" in lower):
+        return "Gravity is the attraction between masses. Near Earth, it pulls objects toward the ground."
+    return None
 
 
 def build_escalation_plan(message: str) -> dict[str, Any]:

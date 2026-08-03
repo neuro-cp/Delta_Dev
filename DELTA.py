@@ -137,6 +137,7 @@ from orchestration.runtime.provisional_semantic_consolidation import (  # noqa: 
     ConsolidationIntegrityError,
     apply_admission as apply_consolidation_admission,
     create_administrative_overlay as create_consolidation_overlay,
+    ensure_consolidation_cohort,
     load_graph as load_provisional_semantic_graph,
     render_administrative_review as render_consolidation_review,
     save_graph as save_provisional_semantic_graph,
@@ -160,6 +161,12 @@ from orchestration.runtime.approved_association_exploration import (  # noqa: E4
     load_explorations,
     queue_exploration,
     save_explorations,
+)
+from orchestration.runtime.approved_revisit_reinquiry import (  # noqa: E402
+    execute_once as execute_revisit_reinquiry_once,
+    load_reinquiries,
+    queue_reinquiry,
+    save_reinquiries,
 )
 from orchestration.runtime.goal_oriented_ui_campaign import (  # noqa: E402
     CAMPAIGN_ID as GOAL_UI_CAMPAIGN_ID,
@@ -1766,6 +1773,8 @@ class DeltaApp:
         self.conversational_runtime_result_queue: queue.Queue = queue.Queue()
         self.association_exploration_in_flight = False
         self.association_exploration_result_queue: queue.Queue = queue.Queue()
+        self.revisit_reinquiry_in_flight = False
+        self.revisit_reinquiry_result_queue: queue.Queue = queue.Queue()
         self.dispatch_shadow_diagnostics: list[dict[str, object]] = []
         self.simple_default_surface_enabled = tk.BooleanVar(value=True)
         self.goal_ui_campaign_status = tk.StringVar(value="Goal UI campaign: not started")
@@ -1793,6 +1802,7 @@ class DeltaApp:
         self.root.after(50, self._poll_model_warm_results)
         self.root.after(50, self._poll_conversational_runtime_worker_results)
         self.root.after(50, self._poll_association_exploration_results)
+        self.root.after(50, self._poll_revisit_reinquiry_results)
         self.root.after(250, self._tick_conversational_objective_runtime)
         self._refresh_state_cards()
         self._show_welcome()
@@ -4173,8 +4183,14 @@ class DeltaApp:
         candidate = self.interactive_candidate_choices.get(candidate_id)
         if candidate is None:
             return
-        kind = "near_association" if hasattr(candidate, "association_id") else (
-            "cognitive_pressure" if getattr(candidate, "trigger", "") in {"missing_evidence", "contradiction"} else "curiosity_candidate"
+        existing_disposition = next(
+            (item for item in self.interactive_coordination_state.candidate_dispositions if item.candidate_id == candidate_id),
+            None,
+        )
+        kind = existing_disposition.candidate_kind if existing_disposition is not None else (
+            "near_association" if hasattr(candidate, "association_id") else (
+            "cognitive_pressure" if getattr(candidate, "trigger", "") in {"missing_evidence", "contradiction", "consolidation_correction", "consolidation_contradiction", "consolidation_remaining_gap"} else "curiosity_candidate"
+            )
         )
         source_ids = getattr(candidate, "provenance_refs", getattr(candidate, "source_record_ids", ()))
         try:
@@ -4193,7 +4209,10 @@ class DeltaApp:
             self.output.insert(tk.END, f"Candidate action was not applied: {exc}\n")
             return
         save_coordination_state(self.conversational_runtime_root, self.interactive_coordination_state)
-        if disposition == "accepted" and kind in {"near_association", "cognitive_pressure"}:
+        requires_operator_question = hasattr(candidate, "association_id") or getattr(candidate, "trigger", "") in {
+            "missing_evidence", "contradiction", "consolidation_correction", "consolidation_contradiction", "consolidation_remaining_gap",
+        }
+        if disposition == "accepted" and requires_operator_question:
             existing = next(
                 (
                     item for item in (
@@ -4247,7 +4266,7 @@ class DeltaApp:
                     prompt_text = f"This local step is blocked by a bounded evidence gap. Can you provide or clarify: {candidate.safe_next_step}?"
                     question_kind = "missing_evidence"
                     extra_metrics = {"pressure_state": "question_created", "pressure_trigger": candidate.trigger}
-                elif candidate.trigger in {"consolidation_correction", "consolidation_contradiction"}:
+                elif candidate.trigger in {"consolidation_correction", "consolidation_contradiction", "consolidation_remaining_gap"}:
                     pressure = "consolidation_feedback"
                     prompt_text = (
                         f"Consolidation changed the status of a provisional item: {candidate.rationale} "
@@ -4269,6 +4288,7 @@ class DeltaApp:
                 request = replace(
                     request,
                     thread_id=f"candidate:{candidate_id}",
+                    accepted_response_types=("approved", "denied") if question_kind in {"association_exploration", "consolidation_feedback"} else request.accepted_response_types,
                     baseline_metrics={
                         **request.baseline_metrics,
                         "originating_candidate_id": candidate_id,
@@ -5944,6 +5964,22 @@ class DeltaApp:
     def _request_active_goal_preemption(self, *, reason: str) -> bool:
         """Ask the coordinator to yield after the existing worker's atomic boundary."""
         marked = False
+        for reinquiry in load_reinquiries(self.conversational_runtime_root):
+            if reinquiry.lifecycle_state != "revisit_running":
+                continue
+            thread_id = f"approved-revisit:{reinquiry.reinquiry_id}"
+            updated = request_preemption(
+                self.interactive_coordination_state, thread_id=thread_id,
+                operation_id=reinquiry.reinquiry_id, candidate_id=reinquiry.candidate_id,
+                ledger_request_id=reinquiry.ledger_request_id,
+                foreground_turn_id=rc6_stable_id("revisit-preemption-foreground", self.conversational_runtime_state.runtime_id, reason, str(len(self.conversational_runtime_state.conversation) + 1)),
+                reason="foreground_operator_input",
+            )
+            if updated != self.interactive_coordination_state:
+                self.interactive_coordination_state = updated
+                save_coordination_state(self.conversational_runtime_root, updated)
+                self._append_observation("Attention", "Foreground input requested a yield after the approved revisit reaches its ledger boundary.")
+                marked = True
         for exploration in load_explorations(self.conversational_runtime_root):
             if exploration.lifecycle_state != "exploration_running":
                 continue
@@ -5964,7 +6000,7 @@ class DeltaApp:
         workspace = self.interactive_workspace_snapshot
         active = next((item for item in workspace.threads if item.thread_kind == "active_goal"), None) if workspace else None
         if active is None:
-            return False
+            return marked
         updated = request_preemption(
             self.interactive_coordination_state,
             thread_id=active.thread_id,
@@ -6291,6 +6327,11 @@ class DeltaApp:
                 break
             self.association_exploration_in_flight = False
             if error is None:
+                if result.lifecycle_state == "explored_pending_consolidation":
+                    graph, _ = ensure_consolidation_cohort(
+                        graph,
+                        trigger="approved_association_exploration",
+                    )
                 save_provisional_semantic_graph(self.conversational_runtime_root, graph)
                 records = tuple(result if item.exploration_id == result.exploration_id else item for item in load_explorations(self.conversational_runtime_root))
                 save_explorations(self.conversational_runtime_root, records)
@@ -6396,6 +6437,86 @@ class DeltaApp:
         threading.Thread(target=worker, name="delta-conversational-runtime-cycle", daemon=True).start()
         return True
 
+    def _start_approved_revisit(self, decision) -> bool:
+        """Launch one approved review correction through the existing shared ledger."""
+        if self.revisit_reinquiry_in_flight or self.conversational_runtime_inference_in_flight:
+            return False
+        workspace = getattr(self, "interactive_workspace_snapshot", None)
+        candidate = next((item for item in (workspace.curiosity_candidates if workspace else ()) if item.candidate_id == decision.target_thread_id or item.candidate_id == next((thread.originating_reference for thread in workspace.threads if thread.thread_id == decision.target_thread_id), "")), None)
+        if candidate is None or candidate.state not in {"approved_for_revisit", "revisit_queued"}:
+            return False
+        approval = next((item for item in reversed(self.conversational_runtime_state.resolved_chat_requests) if item.baseline_metrics.get("originating_candidate_id") == candidate.candidate_id and item.resolution_policy == "operator_approved_bounded_revisit"), None)
+        if approval is None:
+            return False
+        review_id, packet_id, claim_version_id = tuple(candidate.source_record_ids)[:3]
+        graph = load_provisional_semantic_graph(self.conversational_runtime_root)
+        version = next((item for item in graph.claim_versions if item.claim_version_id == claim_version_id), None)
+        original_insight_id = version.source_experience_refs[0] if version and version.source_experience_refs else ""
+        overlay = next((item for item in reversed(graph.overlays) if item.review_id == review_id and item.claim_version_id == claim_version_id), None)
+        if not original_insight_id or overlay is None:
+            return False
+        original_insight = next((item for item in graph.experiences if item.experience_id == original_insight_id), None)
+        reinquiry = queue_reinquiry(self.conversational_runtime_root, candidate_id=candidate.candidate_id, approval_request_id=approval.request_id, original_insight_id=original_insight_id, review_id=review_id, packet_id=packet_id, overlay_id=overlay.overlay_id, weakness=candidate.rationale, source_context=original_insight.content if original_insight is not None else "")
+        ledger = LocalModelRequestResultLedger(self.conversational_runtime_root / "model-ledger")
+        request = ledger.create_or_reuse_request(semantic_identity=reinquiry.reinquiry_id, question=reinquiry.inquiry_question, requester_type="approved_revisit_reinquiry", requester_reference=reinquiry.candidate_id, question_objective="one bounded provisional revision inquiry")
+        running = replace(reinquiry, lifecycle_state="revisit_running", ledger_request_id=str(request["request_id"]))
+        save_reinquiries(self.conversational_runtime_root, tuple(running if item.reinquiry_id == running.reinquiry_id else item for item in load_reinquiries(self.conversational_runtime_root)))
+        disposition_record = next(
+            (item for item in self.interactive_coordination_state.candidate_dispositions if item.candidate_id == candidate.candidate_id),
+            None,
+        )
+        candidate_kind = disposition_record.candidate_kind if disposition_record is not None else "cognitive_pressure"
+        self.interactive_coordination_state = set_candidate_disposition(self.interactive_coordination_state, candidate_id=candidate.candidate_id, candidate_kind=candidate_kind, disposition="revisit_queued" if candidate.state == "approved_for_revisit" else "revisit_running", source_record_ids=candidate.source_record_ids)
+        self.interactive_coordination_state = set_candidate_disposition(self.interactive_coordination_state, candidate_id=candidate.candidate_id, candidate_kind=candidate_kind, disposition="revisit_running", source_record_ids=candidate.source_record_ids)
+        save_coordination_state(self.conversational_runtime_root, self.interactive_coordination_state)
+        self.revisit_reinquiry_in_flight = True
+        self._append_observation("Revisit", "One approved consolidation revisit started through the shared local-model ledger.")
+        def worker():
+            try:
+                result, updated_graph = execute_revisit_reinquiry_once(self.conversational_runtime_root, graph, running)
+                error = None
+            except Exception as exc:
+                result, updated_graph, error = running, graph, exc
+            self.revisit_reinquiry_result_queue.put((candidate, result, updated_graph, error))
+        threading.Thread(target=worker, name="delta-approved-revisit-reinquiry", daemon=True).start()
+        return True
+
+    def _poll_revisit_reinquiry_results(self) -> None:
+        while True:
+            try:
+                candidate, result, graph, error = self.revisit_reinquiry_result_queue.get_nowait()
+            except queue.Empty:
+                break
+            self.revisit_reinquiry_in_flight = False
+            disposition = result.lifecycle_state if error is None else "revisit_failed_execution"
+            if error is None:
+                if result.lifecycle_state == "revisited_pending_consolidation":
+                    graph, _ = ensure_consolidation_cohort(
+                        graph,
+                        trigger="approved_revisit_reinquiry",
+                    )
+                save_provisional_semantic_graph(self.conversational_runtime_root, graph)
+                save_reinquiries(self.conversational_runtime_root, tuple(result if item.reinquiry_id == result.reinquiry_id else item for item in load_reinquiries(self.conversational_runtime_root)))
+            disposition_record = next(
+                (item for item in self.interactive_coordination_state.candidate_dispositions if item.candidate_id == candidate.candidate_id),
+                None,
+            )
+            candidate_kind = disposition_record.candidate_kind if disposition_record is not None else "cognitive_pressure"
+            self.interactive_coordination_state = set_candidate_disposition(self.interactive_coordination_state, candidate_id=candidate.candidate_id, candidate_kind=candidate_kind, disposition=disposition, source_record_ids=candidate.source_record_ids)
+            marker_id = f"approved-revisit:{result.reinquiry_id}"
+            marked = any(item.thread_id == marker_id and item.preemption_requested for item in self.interactive_coordination_state.entries)
+            self.interactive_coordination_state = clear_preemption(self.interactive_coordination_state, thread_id=marker_id)
+            save_coordination_state(self.conversational_runtime_root, self.interactive_coordination_state)
+            if marked:
+                self._record_attention_control_stage(self._refresh_interactive_cognition_shadow(reason="revisit_preemption_boundary_reached"), stage="preemption_boundary_reached", detail="The approved revisit reached its ledger boundary; its foreground preemption marker was cleared.")
+            if disposition == "revisited_pending_consolidation":
+                insight = next((item for item in graph.experiences if item.experience_id == result.revised_insight_id), None)
+                details = json.loads(insight.content) if insight is not None else {}
+                self._append_chat("DELTA", "I revisited the provisional connection.\nWhat was incomplete: " + candidate.rationale + "\nRetained: " + details.get("retained_supported_portion", "") + "\nRevised: " + details.get("revised_proposition", "") + "\nStill uncertain: " + details.get("uncertainty", "") + "\nEvidence still missing: " + details.get("evidence_still_missing", "") + "\nNext question: " + details.get("possible_next_question", "") + "\n\nStatus: Provisional - awaiting consolidation.")
+            else:
+                self._append_observation("Revisit", f"The approved revisit ended as {disposition}; no retry was started.")
+        self.root.after(100, self._poll_revisit_reinquiry_results)
+
     def _tick_conversational_objective_runtime(self) -> None:
         decision = self._refresh_interactive_cognition_shadow(reason="automatic_startup_or_idle_tick")
         # The coordinator may gate a new periodic step, but the existing runtime
@@ -6416,6 +6537,8 @@ class DeltaApp:
             self._surface_one_near_association(decision)
         elif decision is not None and decision.selected_posture == "execute_approved_association":
             self._start_approved_association_exploration(decision)
+        elif decision is not None and decision.selected_posture == "execute_approved_revisit":
+            self._start_approved_revisit(decision)
         elif decision is not None and decision.selected_posture == "inspect_curiosity_candidate":
             self._inspect_one_curiosity_candidate(decision)
         elif decision is not None and decision.selected_posture == "perform_one_consolidation_step":
@@ -6449,6 +6572,19 @@ class DeltaApp:
             self._refresh_conversational_runtime_status()
             self._refresh_state_cards()
             return True
+        if (
+            owner is not None
+            and owner.request_type == "interactive_clarification"
+            and str(owner.baseline_metrics.get("question_kind") or "") in {"association_exploration", "consolidation_feedback"}
+        ):
+            reply = self._resolve_interactive_clarification(message, request_id=owner.request_id)
+            self._append_chat("DELTA", reply)
+            self._append_session("user", message)
+            self._append_session("assistant", reply)
+            save_conversational_runtime_state(self.conversational_runtime_root, self.conversational_runtime_state)
+            self._refresh_conversational_runtime_status()
+            self._refresh_state_cards()
+            return True
         resolved = resolve_pending_chat_request(
             state,
             message,
@@ -6470,7 +6606,7 @@ class DeltaApp:
             active_objective=state.active_objective,
             recent_turns=state.conversation,
         )
-        if intent.intent_type == "ordinary_conversation" and self.association_exploration_in_flight:
+        if intent.intent_type == "ordinary_conversation" and (self.association_exploration_in_flight or self.revisit_reinquiry_in_flight):
             self._request_active_goal_preemption(reason="foreground_conversation")
         if (
             "semantic" in lower_message
@@ -7014,11 +7150,20 @@ class DeltaApp:
             None,
         )
 
-    def _resolve_interactive_clarification(self, message: str) -> str:
+    def _resolve_interactive_clarification(self, message: str, *, request_id: str = "") -> str:
         """Consume one rendered operator question without asserting semantic truth."""
 
         state = self.conversational_runtime_state
-        request = self._pending_interactive_clarification()
+        request = next(
+            (
+                item for item in self.conversational_runtime_state.pending_chat_requests
+                if item.request_id == request_id
+                and item.status == "pending"
+                and not item.consumption_count
+                and item.request_type == "interactive_clarification"
+            ),
+            None,
+        ) if request_id else self._pending_interactive_clarification()
         if request is None:
             return "[Clarification]\nThere is no active exploration question to resolve."
         metrics = dict(request.baseline_metrics)
@@ -7028,9 +7173,11 @@ class DeltaApp:
         association_rejected = candidate_kind == "near_association" and bool(
             re.search(r"\b(?:no|not\s+relevant|do\s+not|don't|shouldn't)\b", lowered)
         )
+        revisit_trigger = str(metrics.get("pressure_trigger") or "") in {"consolidation_correction", "consolidation_remaining_gap"}
         candidate_state = (
             "rejected" if association_rejected else
             "approved_for_bounded_exploration" if candidate_kind == "near_association" else
+            "approved_for_revisit" if revisit_trigger else
             "resolved"
         )
         existing_disposition = next(
@@ -7056,6 +7203,7 @@ class DeltaApp:
                 "resolution_policy": (
                     "operator_rejected_association_exploration" if association_rejected else
                     "operator_approved_bounded_association_exploration" if candidate_kind == "near_association" else
+                    "operator_approved_bounded_revisit" if revisit_trigger else
                     "operator_answered_cognitive_pressure_question"
                 ),
                 "resolution": "resolved",
@@ -7986,7 +8134,7 @@ class DeltaApp:
             and not live_plan.control.detected
             and (has_runtime_coordination_context or question_like_foreground)
         ):
-            if self.conversational_runtime_inference_in_flight or self.association_exploration_in_flight:
+            if self.conversational_runtime_inference_in_flight or self.association_exploration_in_flight or self.revisit_reinquiry_in_flight:
                 self._request_active_goal_preemption(reason="coordinated_foreground_conversation")
             foreground_message = " ".join(
                 segment.text for segment in live_plan.segments if segment.kind != "context_prefix"

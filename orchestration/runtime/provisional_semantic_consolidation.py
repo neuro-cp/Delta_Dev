@@ -406,7 +406,121 @@ def record_associative_insight(
         utc_now(),
         _semantic_fingerprint(str(insight["shared_structure"])),
     )
-    return replace(graph, experiences=graph.experiences + (experience,), rationales=graph.rationales + (rationale,)), experience_id
+    graph = replace(graph, experiences=graph.experiences + (experience,), rationales=graph.rationales + (rationale,))
+    graph, _ = _record_insight_claim(
+        graph,
+        experience_id=experience_id,
+        exact_text=str(insight["possible_implication"]),
+        rationale=rationale,
+        record_kind="provisional_associative_insight",
+        source_claim_refs=tuple(exploration.source_record_ids),
+    )
+    return graph, experience_id
+
+
+def record_revised_associative_insight(
+    graph: ProvisionalSemanticGraphState,
+    *,
+    experience: SemanticExperience,
+    original_insight_id: str,
+) -> tuple[ProvisionalSemanticGraphState, str]:
+    """Project a revised insight into the canonical provisional-claim path.
+
+    The original insight stays immutable.  This creates a separate provisional
+    claim whose provenance carries the review and revisit lineage, so an
+    existing cohort can seal it without reopening an earlier packet.
+    """
+
+    if any(item.experience_id == experience.experience_id for item in graph.experiences):
+        return graph, _insight_claim_version_id(experience.experience_id)
+    try:
+        details = json.loads(experience.content)
+    except (TypeError, json.JSONDecodeError):
+        details = {}
+    revised = str(details.get("revised_proposition") or "").strip()
+    if not revised:
+        raise ConsolidationIntegrityError("revised_insight_requires_proposition")
+    original_claim = next(
+        (item for item in graph.claim_versions if original_insight_id in item.source_experience_refs),
+        None,
+    )
+    rationale = SemanticRationale(
+        stable_id("semantic-rationale", "revised-association-insight", experience.experience_id),
+        revised,
+        (experience.experience_id,),
+        (original_claim.claim_version_id,) if original_claim is not None else (),
+        utc_now(),
+        _semantic_fingerprint(revised),
+    )
+    graph = replace(graph, experiences=graph.experiences + (experience,), rationales=graph.rationales + (rationale,))
+    graph, claim_version_id = _record_insight_claim(
+        graph,
+        experience_id=experience.experience_id,
+        exact_text=revised,
+        rationale=rationale,
+        record_kind="revised_provisional_associative_insight",
+        source_claim_refs=(original_claim.claim_version_id,) if original_claim is not None else (),
+    )
+    if original_claim is not None:
+        relation = SemanticRelation(
+            stable_id("provisional-functional-relation", "corrects", claim_version_id, original_claim.claim_version_id, experience.experience_id),
+            "corrects",
+            claim_version_id,
+            original_claim.claim_version_id,
+            utc_now(),
+            (experience.experience_id,),
+            {"epistemic_state": "pending_consolidation", "review_state": "unreviewed"},
+        )
+        graph = _append(graph, "relations", relation)
+    return graph, claim_version_id
+
+
+def _insight_claim_version_id(experience_id: str) -> str:
+    claim_id = stable_id("semantic-claim", "interactive-insight", experience_id)
+    return stable_id("semantic-claim-version", claim_id, "1")
+
+
+def _record_insight_claim(
+    graph: ProvisionalSemanticGraphState,
+    *,
+    experience_id: str,
+    exact_text: str,
+    rationale: SemanticRationale,
+    record_kind: str,
+    source_claim_refs: Sequence[str],
+) -> tuple[ProvisionalSemanticGraphState, str]:
+    """Append one source-bound provisional claim for an insight experience."""
+
+    claim_version_id = _insight_claim_version_id(experience_id)
+    if any(item.claim_version_id == claim_version_id for item in graph.claim_versions):
+        return graph, claim_version_id
+    claim_id = stable_id("semantic-claim", "interactive-insight", experience_id)
+    claim = SemanticClaim(claim_id, "interactive_cognition", record_kind, utc_now())
+    version = ClaimVersion(
+        claim_version_id,
+        claim_id,
+        1,
+        exact_text,
+        "pending_consolidation",
+        (rationale.rationale_id,),
+        (),
+        (),
+        (experience_id,),
+        _semantic_fingerprint(exact_text),
+        utc_now(),
+    )
+    fragment = ClaimFragment(stable_id("semantic-fragment", claim_version_id, "1"), claim_version_id, exact_text, 1)
+    graph = replace(
+        graph,
+        claims=graph.claims + (claim,),
+        claim_versions=graph.claim_versions + (version,),
+        claim_fragments=graph.claim_fragments + (fragment,),
+        edges=graph.edges + (
+            _edge("derived_from", claim_version_id, rationale.rationale_id),
+            _edge("grounded_in", rationale.rationale_id, experience_id),
+        ),
+    )
+    return graph, claim_version_id
 
 
 def graph_from_record(record: Mapping[str, Any]) -> ProvisionalSemanticGraphState:
@@ -581,9 +695,11 @@ def create_consolidation_cohort(
     trigger: str = "explicit_goal_closure",
     policy: Mapping[str, Any] | None = None,
 ) -> tuple[ProvisionalSemanticGraphState, ConsolidationCohort]:
+    sealed_refs = _sealed_claim_version_refs(graph)
     eligible = tuple(
         item for item in graph.claim_versions
         if item.epistemic_state in {"provisional", "pending_consolidation", "uncertain", "insufficient_local_evidence", "locally_contradicted"}
+        and item.claim_version_id not in sealed_refs
     )
     refs = tuple(sorted(item.claim_version_id for item in eligible))
     clusters = _dependency_clusters(graph, refs)
@@ -617,6 +733,35 @@ def create_consolidation_cohort(
         cohort_digest=_digest(base),
     )
     return _append(graph, "cohorts", cohort), cohort
+
+
+def ensure_consolidation_cohort(
+    graph: ProvisionalSemanticGraphState,
+    *,
+    trigger: str,
+    policy: Mapping[str, Any] | None = None,
+) -> tuple[ProvisionalSemanticGraphState, ConsolidationCohort | None]:
+    """Register one cohort for unsealed material without creating a second owner.
+
+    A cohort is only a durable cursor over already-canonical provisional claim
+    versions.  Reusing an equivalent cursor makes idle ticks and restart safe.
+    """
+
+    candidate_graph, cohort = create_consolidation_cohort(graph, trigger=trigger, policy=policy)
+    if not cohort.claim_version_refs:
+        return graph, None
+    existing = next(
+        (
+            item
+            for item in graph.cohorts
+            if item.claim_version_refs == cohort.claim_version_refs
+            and item.trigger == cohort.trigger
+        ),
+        None,
+    )
+    if existing is not None:
+        return graph, existing
+    return candidate_graph, cohort
 
 
 def compile_sealed_packet(
@@ -673,9 +818,19 @@ def compile_sealed_packet(
                                 "experience_id": experience.experience_id,
                                 "source_class": experience.source_class,
                                 "authority_class": experience.authority_class,
-                                "content_excerpt": experience.content[:800],
-                                "content_digest": experience.content_digest,
-                            }
+                "content_excerpt": experience.content[:800],
+                "content_digest": experience.content_digest,
+                "origin_refs": list(experience.origin_refs),
+                "record_kind": str(experience.metadata.get("record_kind") or ""),
+                "lineage": {
+                    key: experience.metadata[key]
+                    for key in (
+                        "association_candidate_id", "approval_request_id", "ledger_request_id", "ledger_result_id",
+                        "revises_insight_id", "review_id", "packet_id", "overlay_id",
+                    )
+                    if experience.metadata.get(key)
+                },
+            }
         clusters.append({
             "cluster_id": str(cluster["cluster_id"]),
             "requested_action": "validate_semantic_cluster",
@@ -1030,6 +1185,20 @@ def _dependency_targets(graph: ProvisionalSemanticGraphState, version_id: str) -
     return tuple(sorted(edge.target_ref for edge in graph.edges if edge.edge_type == "depends_on" and edge.source_ref == version_id))
 
 
+def _sealed_claim_version_refs(graph: ProvisionalSemanticGraphState) -> set[str]:
+    """Return exact claim versions already represented by an immutable packet."""
+
+    refs: set[str] = set()
+    for packet in graph.packets:
+        for cluster in packet.payload.get("clusters", ()):
+            if not isinstance(cluster, Mapping):
+                continue
+            for claim in cluster.get("claims", ()):
+                if isinstance(claim, Mapping) and claim.get("claim_version_id"):
+                    refs.add(str(claim["claim_version_id"]))
+    return refs
+
+
 def _dependency_clusters(graph: ProvisionalSemanticGraphState, refs: Sequence[str]) -> tuple[Mapping[str, Any], ...]:
     remaining = set(refs)
     adjacency: dict[str, set[str]] = {ref: set() for ref in refs}
@@ -1228,5 +1397,5 @@ def _packet_from_record(value: Mapping[str, Any]) -> SealedConsolidationPacket:
 
 
 __all__ = [
-    "ADMINISTRATIVE_ACTIONS", "ADMISSION_ACTIONS", "FUNCTIONAL_RELATION_TYPES", "ClaimFragment", "ClaimVersion", "ConsolidationCohort", "ConsolidationIntegrityError", "EpisodicTrace", "ProvisionalSemanticGraphState", "ReviewRecord", "SemanticClaim", "SemanticConcept", "SemanticEdge", "SemanticExperience", "SemanticRationale", "SemanticRelation", "SealedConsolidationPacket", "AdaptationTraceReference", "AdministrativeReviewOverlay", "AdmissionRecord", "apply_admission", "compile_sealed_packet", "compile_sealed_packets", "create_administrative_overlay", "create_consolidation_cohort", "empty_graph", "graph_from_record", "ingest_episode_at_runtime_root", "ingest_knowledge_episode", "load_graph", "record_provisional_functional_relation", "record_validated_oracle_response", "render_administrative_review", "save_graph", "seal_cohort_packet_once", "validate_oracle_response", "verify_sealed_packet",
+    "ADMINISTRATIVE_ACTIONS", "ADMISSION_ACTIONS", "FUNCTIONAL_RELATION_TYPES", "ClaimFragment", "ClaimVersion", "ConsolidationCohort", "ConsolidationIntegrityError", "EpisodicTrace", "ProvisionalSemanticGraphState", "ReviewRecord", "SemanticClaim", "SemanticConcept", "SemanticEdge", "SemanticExperience", "SemanticRationale", "SemanticRelation", "SealedConsolidationPacket", "AdaptationTraceReference", "AdministrativeReviewOverlay", "AdmissionRecord", "apply_admission", "compile_sealed_packet", "compile_sealed_packets", "create_administrative_overlay", "create_consolidation_cohort", "empty_graph", "ensure_consolidation_cohort", "graph_from_record", "ingest_episode_at_runtime_root", "ingest_knowledge_episode", "load_graph", "record_associative_insight", "record_provisional_functional_relation", "record_revised_associative_insight", "record_validated_oracle_response", "render_administrative_review", "save_graph", "seal_cohort_packet_once", "validate_oracle_response", "verify_sealed_packet",
 ]

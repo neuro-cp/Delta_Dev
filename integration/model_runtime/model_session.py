@@ -27,6 +27,21 @@ from integration.model_runtime.model_registry import ModelSpec
 
 
 COGNITIVE_OPERATION_FIELDS = {
+    "approved_association_exploration": (
+        "shared_structure",
+        "possible_implication",
+        "relation_limits",
+        "uncertainty",
+        "suggested_next_question",
+    ),
+    "approved_revisit_reinquiry": (
+        "revised_proposition",
+        "retained_supported_portion",
+        "discarded_or_corrected_portion",
+        "evidence_still_missing",
+        "uncertainty",
+        "possible_next_question",
+    ),
     "interpret_state": ("state_summary", "salient_observations", "evidence_refs", "unresolved_questions", "uncertainty", "recommended_next_operation"),
     "prioritize_focus": ("selected_focus_id", "selection_reason", "supporting_evidence_refs", "rejected_focus_ids", "uncertainty", "recommended_state_transition"),
     "formulate_hypothesis": ("hypothesis_statement", "scope", "supporting_evidence_refs", "assumptions", "expected_observations", "uncertainty", "recommended_state_transition"),
