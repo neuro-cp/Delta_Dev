@@ -3286,6 +3286,7 @@ def render_developer_overlay(payload: dict[str, Any]) -> str:
     provider_offer = payload.get("supporting_information_offer") or {}
     local_result = payload.get("local_model_result") or {}
     pending = payload.get("pending_action_suggestion") or {}
+    epistemic = payload.get("epistemic_answer_resolution") or {}
     pending_matched = payload.get("pending_action_matched")
     action_executed = payload.get("action_executed")
     pending_cleared = payload.get("pending_action_cleared")
@@ -3335,6 +3336,14 @@ def render_developer_overlay(payload: dict[str, Any]) -> str:
         f"Provider need: {confidence.get('provider_necessity', 'none')}",
         "Safety: no training, canonical write, autonomous action, or automatic provider call.",
     ]
+    if isinstance(epistemic, dict) and epistemic:
+        lines.extend([
+            f"Epistemic answer mode: {epistemic.get('epistemic_mode') or 'none'}",
+            f"Semantic binding: {epistemic.get('binding_status') or 'none'}",
+            f"Selected claim versions: {', '.join(epistemic.get('selected_claim_version_ids') or ()) or 'none'}",
+            f"Selected revised claim: {epistemic.get('selected_revised_claim_version_id') or 'none'}",
+            f"Reason codes: {', '.join(epistemic.get('reason_codes') or ()) or 'none'}",
+        ])
     if route == "contradiction_analysis" and isinstance(payload.get("contradiction_analysis"), dict):
         analysis = payload["contradiction_analysis"]
         lines.extend([

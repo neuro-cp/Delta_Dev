@@ -66,6 +66,145 @@ def _add_local_insufficiency(app):
     assert evaluation["status"] == "locally_insufficient"
 
 
+def test_graph_bound_question_uses_epistemic_answer_without_requests_or_writes(monkeypatch, tmp_path):
+    import hashlib
+    from orchestration.runtime.provisional_semantic_consolidation import ClaimVersion, ProvisionalSemanticGraphState, graph_path, save_graph
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        graph = ProvisionalSemanticGraphState(
+            graph_id="tk-epistemic-answer",
+            claim_versions=(
+                ClaimVersion(
+                    "claim-version-reviewed-ui",
+                    "claim-reviewed-ui",
+                    1,
+                    "The reviewed barrel record says roof runoff enters storage through a downspout.",
+                    "validated",
+                    (),
+                    (),
+                    (),
+                    (),
+                    "sha256:reviewed-ui",
+                    "2026-08-02T00:00:00+00:00",
+                ),
+            ),
+        )
+        save_graph(app.conversational_runtime_root, graph)
+        graph_file = graph_path(app.conversational_runtime_root)
+        before = hashlib.sha256(graph_file.read_bytes()).hexdigest()
+
+        _send(app, "What does claim-version-reviewed-ui say?")
+
+        chat = app.chat_history.get("1.0", tk.END)
+        after = hashlib.sha256(graph_file.read_bytes()).hexdigest()
+        assert "roof runoff enters storage through a downspout" in chat
+        assert "Would you like me to ask a local reasoning model" not in chat
+        assert app.conversational_runtime_state.pending_chat_requests == ()
+        assert before == after
+        assert app.last_payload["route"] == "epistemic_answer_mode"
+        assert app.last_payload["epistemic_answer_resolution"]["epistemic_mode"] == "reviewed_supported"
+
+        app._open_developer_diagnostics()
+        app._show_epistemic_answer_audit()
+        audit = app.output.get("1.0", tk.END)
+        assert "Epistemic answer audit" in audit
+        assert "reviewed_supported" in audit
+        assert "claim-version-reviewed-ui" in audit
+        assert "canonical_write_performed" in audit
+        assert '"canonical_write_performed": false' in audit
+    finally:
+        root.destroy()
+
+
+def test_epistemic_answer_modes_survive_tk_restart_without_graph_mutation(monkeypatch, tmp_path):
+    import hashlib
+    from orchestration.runtime.provisional_semantic_consolidation import (
+        AdmissionRecord,
+        ClaimVersion,
+        ProvisionalSemanticGraphState,
+        ReviewRecord,
+        graph_path,
+        save_graph,
+    )
+
+    def version(version_id, claim_id, text, state, supersedes=""):
+        return ClaimVersion(version_id, claim_id, 2 if supersedes else 1, text, state, (), (), (), (), "sha256:" + version_id, "2026-08-02T00:00:00+00:00", supersedes)
+
+    def review(version_id, verdict, correction=""):
+        return ReviewRecord(
+            "review-" + version_id,
+            "packet-" + version_id,
+            "sha256:packet-" + version_id,
+            {"mode": "synthetic"},
+            ({"claim_version_id": version_id, "verdict": verdict, "reviewed_fragment_ids": (), "proposed_correction": correction, "confidence": 0.8, "rationale_code": verdict},),
+            "2026-08-02T00:01:00+00:00",
+        )
+
+    graph = ProvisionalSemanticGraphState(
+        graph_id="tk-epistemic-restart",
+        claim_versions=(
+            version("claim-reviewed-tk", "claim-reviewed", "Reviewed barrels collect roof runoff through downspouts.", "validated"),
+            version("claim-partial-tk", "claim-partial", "Barrels collect runoff, but mosquito control details remain unresolved.", "partially_valid"),
+            version("claim-provisional-tk", "claim-provisional", "A mesh screen may reduce mosquito entry.", "provisional"),
+            version("claim-pending-tk", "claim-pending", "Overflow routing is pending consolidation review.", "pending_consolidation"),
+            version("claim-weak-tk", "claim-weak", "Overflow always prevents flooding.", "requires_revision"),
+            version("claim-weak-tk-v2", "claim-weak", "Overflow routing can reduce flooding risk when routed away from the foundation.", "validated", "claim-weak-tk"),
+            version("claim-unsupported-tk", "claim-unsupported", "Rain barrels eliminate all maintenance.", "unsupported"),
+            version("claim-contradicted-tk", "claim-contradicted", "Standing water cannot attract mosquitoes.", "locally_contradicted"),
+        ),
+        reviews=(
+            review("claim-reviewed-tk", "validated"),
+            review("claim-partial-tk", "partially_valid"),
+            review("claim-weak-tk", "requires_revision", "Overflow routing can reduce flooding risk when routed safely."),
+            review("claim-weak-tk-v2", "validated"),
+            review("claim-unsupported-tk", "unsupported"),
+            review("claim-contradicted-tk", "contradicted"),
+        ),
+        admissions=(AdmissionRecord("admission-weak-tk", "review-claim-weak-tk", "overlay-weak", "claim-weak-tk", "revise", "claim-weak-tk-v2", "2026-08-02T00:02:00+00:00"),),
+    )
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        save_graph(app.conversational_runtime_root, graph)
+        graph_file = graph_path(app.conversational_runtime_root)
+        before = hashlib.sha256(graph_file.read_bytes()).hexdigest()
+        cases = (
+            ("What does claim-reviewed-tk say?", "Reviewed barrels collect roof runoff", "reviewed_supported"),
+            ("What does claim-partial-tk say?", "unresolved portions", "partially_supported"),
+            ("What does claim-provisional-tk say?", "has not completed consolidation review", "provisional_unreviewed"),
+            ("What does claim-pending-tk say?", "pending consolidation review", "pending_consolidation"),
+            ("What does claim-weak-tk say?", "routed away from the foundation", "revised_supported"),
+            ("What does claim-unsupported-tk say?", "does not support", "unsupported"),
+            ("What does claim-contradicted-tk say?", "cannot give a definitive answer", "contradicted"),
+            ("What is 2 + 2?", "4", None),
+        )
+        for prompt, expected_text, expected_mode in cases:
+            _send(app, prompt)
+            chat = app.chat_history.get("1.0", tk.END)
+            assert expected_text in chat
+            if expected_mode:
+                assert app.last_payload["epistemic_answer_resolution"]["epistemic_mode"] == expected_mode
+            else:
+                assert app.last_payload["route"] == "ordinary_local_reasoning"
+        assert hashlib.sha256(graph_file.read_bytes()).hexdigest() == before
+        assert app.conversational_runtime_state.pending_chat_requests == ()
+    finally:
+        root.destroy()
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        graph_file = graph_path(app.conversational_runtime_root)
+        before_restart = hashlib.sha256(graph_file.read_bytes()).hexdigest()
+        _send(app, "What does claim-weak-tk say?")
+        assert "routed away from the foundation" in app.chat_history.get("1.0", tk.END)
+        assert app.last_payload["epistemic_answer_resolution"]["selected_revised_claim_version_id"] == "claim-weak-tk-v2"
+        assert hashlib.sha256(graph_file.read_bytes()).hexdigest() == before_restart
+        assert app.conversational_runtime_state.pending_chat_requests == ()
+    finally:
+        root.destroy()
+
+
 def test_default_surface_is_simple_and_advanced_is_inspectable(monkeypatch, tmp_path):
     root, app = _app(monkeypatch, tmp_path)
     try:

@@ -143,6 +143,11 @@ from orchestration.runtime.provisional_semantic_consolidation import (  # noqa: 
     save_graph as save_provisional_semantic_graph,
     seal_cohort_packet_once,
 )
+from orchestration.runtime.epistemic_answer_mode import (  # noqa: E402
+    bind_explicit_semantic_question,
+    compose_epistemic_answer,
+    resolve_production_epistemic_answer,
+)
 from orchestration.runtime.interactive_cognition import (  # noqa: E402
     arbitrate_attention,
     build_workspace_snapshot,
@@ -4141,6 +4146,7 @@ class DeltaApp:
         ttk.Button(left, text="Preview Evidence", command=self._preview_evidence).pack(fill=tk.X, pady=(6, 0))
         ttk.Button(left, text="Extract Propositions", command=self._extract_propositions).pack(fill=tk.X, pady=(4, 0))
         ttk.Button(left, text="Approve Extracted To Noncanonical Substrate", command=self._approve_extracted).pack(fill=tk.X, pady=(4, 0))
+        ttk.Button(left, text="Epistemic Answer Audit", command=self._show_epistemic_answer_audit).pack(fill=tk.X, pady=(4, 0))
 
         obs = ttk.LabelFrame(left, text="Operational Observation")
         obs.pack(fill=tk.X, pady=(10, 0))
@@ -4187,6 +4193,7 @@ class DeltaApp:
         buttons.pack(fill=tk.X, pady=(10, 0))
         ttk.Button(buttons, text="Status", command=self._show_status).pack(fill=tk.X)
         ttk.Button(buttons, text="Cognitive State", command=self._show_cognitive_state).pack(fill=tk.X, pady=(4, 0))
+        ttk.Button(buttons, text="Epistemic Answer Audit", command=self._show_epistemic_answer_audit).pack(fill=tk.X, pady=(4, 0))
         ttk.Button(buttons, text="Review Queue", command=self._show_review_queue).pack(fill=tk.X, pady=(4, 0))
         ttk.Button(buttons, text="Replay / Rollback", command=self._show_replay).pack(fill=tk.X, pady=(4, 0))
         ttk.Button(buttons, text="Failure Taxonomy", command=self._show_failure_taxonomy).pack(fill=tk.X, pady=(4, 0))
@@ -7192,6 +7199,18 @@ class DeltaApp:
             return
 
     def _render_coordinated_foreground(self, message: str, *, session_user_message: str, control_receipt: str = "") -> str:
+        epistemic_payload = self._read_only_epistemic_payload(message)
+        if epistemic_payload is not None:
+            self.last_message = message
+            self.last_payload = epistemic_payload
+            response = render_route(epistemic_payload, developer_overlay=self.developer_overlay_enabled.get())
+            if control_receipt:
+                response = f"{control_receipt}\n\n{response}"
+            self._append_chat("DELTA", response)
+            self._append_session("user", session_user_message)
+            self._append_session("assistant", response)
+            self._refresh_state_cards()
+            return response
         payload = route_message(
             self.mode.get(),
             message,
@@ -7218,6 +7237,50 @@ class DeltaApp:
             )
         self._refresh_state_cards()
         return response
+
+    def _read_only_epistemic_payload(self, message: str) -> dict[str, object] | None:
+        """Return a deterministic graph-bound answer payload, or None for ordinary chat."""
+        try:
+            graph = load_provisional_semantic_graph(self.conversational_runtime_root)
+            binding_ids = bind_explicit_semantic_question(message, graph)
+            resolution = resolve_production_epistemic_answer(graph, binding_ids, question=message)
+        except Exception as exc:  # noqa: BLE001 - graph lookup failure must not block ordinary chat.
+            self.last_epistemic_answer_resolution = {
+                "binding_status": "lookup_failed",
+                "epistemic_mode": "unresolved_binding",
+                "reason_codes": ("graph_lookup_failed", type(exc).__name__),
+            }
+            return None
+        self.last_epistemic_answer_resolution = resolution.as_record()
+        if resolution.epistemic_mode == "ordinary_unbound":
+            return None
+        answer = compose_epistemic_answer(resolution)
+        return {
+            "mode": "Conversation",
+            "route": "epistemic_answer_mode",
+            "answer": answer,
+            "confidence": resolution.epistemic_mode,
+            "confidence_score": 0.86 if resolution.epistemic_mode in {"reviewed_supported", "revised_supported"} else 0.55,
+            "selected_model_lane": select_model_lane(message),
+            "local_model_result": None,
+            "supporting_information_offer": None,
+            "local_model_offer": None,
+            "memory_candidate": None,
+            "provider_calls_performed": False,
+            "web_search_performed": False,
+            "training_performed": False,
+            "canonical_write_performed": False,
+            "autonomous_action_performed": False,
+            "epistemic_answer_resolution": resolution.as_record(),
+            "intent": {"intent": "graph_bound_question", "communication_act": "question", "matched_rule": "explicit_semantic_binding"},
+            "confidence_decision": {
+                "confidence": 0.86 if resolution.epistemic_mode in {"reviewed_supported", "revised_supported"} else 0.55,
+                "evidence_quality": resolution.epistemic_mode,
+                "retrieval_sufficiency": "explicit_graph_binding",
+                "provider_necessity": "none",
+            },
+            "mode_router_flags": {"read_only_epistemic_answer_routing": True},
+        }
 
     def _record_visible_local_model_request(self, message: str, payload: dict[str, object]) -> str:
         """Materialize visible local-model offers as durable chat requests."""
@@ -9374,6 +9437,24 @@ class DeltaApp:
             self._append_session("assistant", "Okay. I will keep this in the current conversation only and will not store a concept.")
             return
         self.pending_local_model_deepening = None
+        epistemic_payload = self._read_only_epistemic_payload(message)
+        if epistemic_payload is not None:
+            self.last_message = message
+            self.last_payload = epistemic_payload
+            self.pending_provider_question = None
+            self.pending_local_model_question = None
+            rendered = render_route(epistemic_payload, developer_overlay=self.developer_overlay_enabled.get())
+            self._append_chat("DELTA", rendered)
+            self._append_session("user", message)
+            self._append_session("assistant", rendered)
+            self._complete_dispatch_shadow_plan(
+                shadow_message_id,
+                legacy_consumed=False,
+                rendered_owner="epistemic_answer_mode",
+                response_text=rendered,
+            )
+            self._refresh_state_cards()
+            return
         payload = route_message(
             self.mode.get(),
             message,
@@ -10004,6 +10085,35 @@ class DeltaApp:
         developmental = build_developmental_memory_state()
         self._refresh_state_cards()
         self._write_output(_format_cognitive_state(state) + "\n\nDevelopmental concept memory\n" + json.dumps(developmental, indent=2, sort_keys=True))
+
+    def _show_epistemic_answer_audit(self) -> None:
+        resolution = getattr(self, "last_epistemic_answer_resolution", None)
+        payload = self.last_payload if isinstance(getattr(self, "last_payload", None), dict) else {}
+        if not isinstance(resolution, dict) or not resolution:
+            self._write_output("Epistemic answer audit\n\nNo graph-bound epistemic answer has been rendered in this session.")
+            return
+        audit = {
+            "title": "Epistemic answer audit",
+            "read_only": True,
+            "route": payload.get("route", ""),
+            "binding_status": resolution.get("binding_status", ""),
+            "answer_mode": resolution.get("epistemic_mode", ""),
+            "selected_semantic_unit_ids": resolution.get("selected_semantic_unit_ids", ()),
+            "selected_claim_version_ids": resolution.get("selected_claim_version_ids", ()),
+            "selected_revised_claim_version_id": resolution.get("selected_revised_claim_version_id", ""),
+            "reason_codes": resolution.get("reason_codes", ()),
+            "qualification_text": resolution.get("qualification_text", ""),
+            "contradiction_summary": resolution.get("contradiction_summary", ""),
+            "source_review_lineage": resolution.get("source_review_lineage", {}),
+            "authority": {
+                "provider_calls_performed": payload.get("provider_calls_performed", False),
+                "web_search_performed": payload.get("web_search_performed", False),
+                "training_performed": payload.get("training_performed", False),
+                "canonical_write_performed": payload.get("canonical_write_performed", False),
+                "autonomous_action_performed": payload.get("autonomous_action_performed", False),
+            },
+        }
+        self._write_output(json.dumps(audit, indent=2, sort_keys=True, default=str))
 
     def _show_review_queue(self) -> None:
         self.snapshot = build_operator_snapshot()
