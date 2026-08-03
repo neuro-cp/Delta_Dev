@@ -290,6 +290,7 @@ CLARIFICATION_PRESSURES = frozenset({
     "contradictory_claim",
     "operator_preference",
     "cross_topic_relevance",
+    "structural_analogy_boundary",
     "consolidation_feedback",
     "blocked_authority",
 })

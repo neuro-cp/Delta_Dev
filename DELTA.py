@@ -168,6 +168,28 @@ from orchestration.runtime.approved_revisit_reinquiry import (  # noqa: E402
     queue_reinquiry,
     save_reinquiries,
 )
+from orchestration.runtime.approved_structural_analogy_exploration import (  # noqa: E402
+    execute_once as execute_structural_analogy_exploration_once,
+    load_explorations as load_structural_analogy_explorations,
+    queue_exploration as queue_structural_analogy_exploration,
+    save_explorations as save_structural_analogy_explorations,
+)
+from orchestration.runtime.approved_curiosity_inquiry import (  # noqa: E402
+    execute_once as execute_curiosity_inquiry_once,
+    load_inquiries as load_curiosity_inquiries,
+    queue_inquiry as queue_curiosity_inquiry,
+    save_inquiries as save_curiosity_inquiries,
+)
+from orchestration.runtime.structural_analogy import describe_structural_analogy_candidate  # noqa: E402
+from orchestration.runtime.governed_personality_profile import (  # noqa: E402
+    approve_and_activate as approve_governed_personality,
+    load_state as load_governed_personality_state,
+    propose_profile as propose_governed_personality,
+    record_relationship_convention as record_governed_relationship_convention,
+    rollback_profile as rollback_governed_personality,
+    save_state as save_governed_personality_state,
+    shape_presentation as shape_governed_presentation,
+)
 from orchestration.runtime.goal_oriented_ui_campaign import (  # noqa: E402
     CAMPAIGN_ID as GOAL_UI_CAMPAIGN_ID,
     begin_follow_up as begin_goal_ui_campaign_follow_up,
@@ -1762,6 +1784,7 @@ class DeltaApp:
         self.model_residency_status = "not_warmed"
         self.conversational_runtime_root = CONVERSATIONAL_RUNTIME_ROOT
         self.conversational_runtime_state = start_or_restore_conversational_runtime(self.conversational_runtime_root)
+        self.governed_personality_state = load_governed_personality_state(self.conversational_runtime_root)
         self.interactive_coordination_state = load_coordination_state(
             self.conversational_runtime_root,
             runtime_id=self.conversational_runtime_state.runtime_id,
@@ -1775,6 +1798,10 @@ class DeltaApp:
         self.association_exploration_result_queue: queue.Queue = queue.Queue()
         self.revisit_reinquiry_in_flight = False
         self.revisit_reinquiry_result_queue: queue.Queue = queue.Queue()
+        self.structural_analogy_exploration_in_flight = False
+        self.structural_analogy_exploration_result_queue: queue.Queue = queue.Queue()
+        self.curiosity_inquiry_in_flight = False
+        self.curiosity_inquiry_result_queue: queue.Queue = queue.Queue()
         self.dispatch_shadow_diagnostics: list[dict[str, object]] = []
         self.simple_default_surface_enabled = tk.BooleanVar(value=True)
         self.goal_ui_campaign_status = tk.StringVar(value="Goal UI campaign: not started")
@@ -1803,6 +1830,8 @@ class DeltaApp:
         self.root.after(50, self._poll_conversational_runtime_worker_results)
         self.root.after(50, self._poll_association_exploration_results)
         self.root.after(50, self._poll_revisit_reinquiry_results)
+        self.root.after(50, self._poll_structural_analogy_exploration_results)
+        self.root.after(50, self._poll_curiosity_inquiry_results)
         self.root.after(250, self._tick_conversational_objective_runtime)
         self._refresh_state_cards()
         self._show_welcome()
@@ -2472,6 +2501,57 @@ class DeltaApp:
         self.chat_settings_detail.pack(fill=tk.BOTH, expand=True, pady=(8, 0))
         self.chat_settings_detail.insert(tk.END, json.dumps(chat_feature_settings_schema(), indent=2, sort_keys=True))
         self.chat_settings_detail.configure(state=tk.DISABLED)
+        profile = ttk.LabelFrame(self.settings_tab, text="Operator-Governed Presentation Profile")
+        profile.pack(fill=tk.X, pady=(8, 0))
+        self.personality_profile_choice = tk.StringVar(value="Direct and concise")
+        self.personality_profile_status = tk.StringVar(value="No approved presentation profile is active.")
+        ttk.Combobox(profile, textvariable=self.personality_profile_choice, values=("Direct and concise", "Detailed and formal"), state="readonly").grid(row=0, column=0, sticky="ew", padx=6, pady=4)
+        ttk.Button(profile, text="Propose Profile", command=self._propose_personality_profile).grid(row=0, column=1, padx=4, pady=4)
+        ttk.Button(profile, text="Approve and Activate", command=self._approve_personality_profile).grid(row=0, column=2, padx=4, pady=4)
+        ttk.Button(profile, text="Rollback", command=self._rollback_personality_profile).grid(row=0, column=3, padx=4, pady=4)
+        self.relationship_convention_key = tk.StringVar(value="technical_detail")
+        self.relationship_convention_value = tk.StringVar(value="concise")
+        ttk.Entry(profile, textvariable=self.relationship_convention_key, width=20).grid(row=1, column=0, sticky="ew", padx=6, pady=4)
+        ttk.Entry(profile, textvariable=self.relationship_convention_value, width=20).grid(row=1, column=1, sticky="ew", padx=4, pady=4)
+        ttk.Button(profile, text="Approve Convention", command=self._approve_relationship_convention).grid(row=1, column=2, padx=4, pady=4)
+        ttk.Label(profile, textvariable=self.personality_profile_status).grid(row=2, column=0, columnspan=4, sticky="w", padx=6, pady=(0, 6))
+        profile.columnconfigure(0, weight=1)
+
+    def _profile_traits_from_choice(self) -> dict[str, object]:
+        if self.personality_profile_choice.get() == "Detailed and formal":
+            return {"directness": 1, "explanation_depth": 3, "formality": 3, "humor_level": 0, "curiosity_expression_frequency": 1, "willingness_to_ask": 1, "initiative_level": 1, "interruption_tolerance": 1, "association_surfacing_frequency": 1, "correction_candor": 2, "background_work_visibility": 2, "uncertainty_expression_style": "cautious"}
+        return {"directness": 3, "explanation_depth": 1, "formality": 0, "humor_level": 0, "curiosity_expression_frequency": 2, "willingness_to_ask": 1, "initiative_level": 1, "interruption_tolerance": 1, "association_surfacing_frequency": 1, "correction_candor": 2, "background_work_visibility": 1, "uncertainty_expression_style": "plain"}
+
+    def _propose_personality_profile(self) -> None:
+        self.governed_personality_state = propose_governed_personality(self.governed_personality_state, traits=self._profile_traits_from_choice(), proposer_role="operator", rationale="Explicit operator proposal from the Settings surface.")
+        save_governed_personality_state(self.conversational_runtime_root, self.governed_personality_state)
+        self.personality_profile_status.set("Profile proposed. Activation still requires the explicit approval button.")
+
+    def _approve_personality_profile(self) -> None:
+        proposed = next((item for item in reversed(self.governed_personality_state.versions) if item.lifecycle_state == "proposed"), None)
+        if proposed is None:
+            self.personality_profile_status.set("No proposed profile is available to approve.")
+            return
+        self.governed_personality_state = approve_governed_personality(self.governed_personality_state, profile_version_id=proposed.profile_version_id, operator_id="local_operator", approval_ref=rc6_stable_id("personality-profile-approval", proposed.profile_version_id))
+        save_governed_personality_state(self.conversational_runtime_root, self.governed_personality_state)
+        self.personality_profile_status.set(f"Active presentation profile: {proposed.profile_version_id}")
+
+    def _rollback_personality_profile(self) -> None:
+        target = next((item for item in reversed(self.governed_personality_state.versions) if item.lifecycle_state == "superseded"), None)
+        if target is None:
+            self.personality_profile_status.set("No earlier approved profile is available to roll back to.")
+            return
+        self.governed_personality_state = rollback_governed_personality(self.governed_personality_state, target_profile_version_id=target.profile_version_id, operator_id="local_operator", approval_ref=rc6_stable_id("personality-profile-rollback", target.profile_version_id))
+        save_governed_personality_state(self.conversational_runtime_root, self.governed_personality_state)
+        self.personality_profile_status.set(f"Rolled back to presentation profile: {target.profile_version_id}")
+
+    def _approve_relationship_convention(self) -> None:
+        try:
+            self.governed_personality_state = record_governed_relationship_convention(self.governed_personality_state, key=self.relationship_convention_key.get().strip(), value=self.relationship_convention_value.get().strip(), operator_id="local_operator", approval_ref=rc6_stable_id("relationship-convention-approval", self.relationship_convention_key.get(), self.relationship_convention_value.get()))
+            save_governed_personality_state(self.conversational_runtime_root, self.governed_personality_state)
+            self.personality_profile_status.set("Operator-approved relationship convention recorded.")
+        except (PermissionError, ValueError) as exc:
+            self.personality_profile_status.set(f"Convention was not recorded: {exc}")
 
     def _operator_ux_current_runtime_state(self) -> dict[str, object]:
         for root in (LIVE_RUNTIME_4_ROOT, LIVE_RUNTIME_3_ROOT, LIVE_RUNTIME_2_ROOT, LIVE_RUNTIME_1B_ROOT):
@@ -4097,7 +4177,7 @@ class DeltaApp:
         ttk.Button(candidate_controls, text="Refresh Candidates", command=self._refresh_interactive_candidate_controls).pack(fill=tk.X, padx=6, pady=(0, 4))
         actions = ttk.Frame(candidate_controls)
         actions.pack(fill=tk.X, padx=6, pady=(0, 6))
-        for label, action in (("Accept", "accepted"), ("Defer", "deferred"), ("Reject", "rejected"), ("Suppress", "suppressed")):
+        for label, action in (("Accept", "accepted"), ("Defer / revisit later", "deferred"), ("Reject", "rejected"), ("Suppress / stop asking", "suppressed")):
             ttk.Button(actions, text=label, command=lambda value=action: self._apply_interactive_candidate_action(value)).pack(side=tk.LEFT, padx=(0, 4))
         self.interactive_candidate_detail = scrolledtext.ScrolledText(candidate_controls, wrap=tk.WORD, height=4)
         self.interactive_candidate_detail.pack(fill=tk.X, padx=6, pady=(0, 4))
@@ -4118,7 +4198,11 @@ class DeltaApp:
     def _refresh_interactive_candidate_controls(self) -> None:
         self._refresh_interactive_cognition_shadow(reason="operator_candidate_inspection")
         workspace = self.interactive_workspace_snapshot
-        candidates = [*getattr(workspace, "association_candidates", ()), *getattr(workspace, "curiosity_candidates", ())] if workspace else []
+        candidates = [
+            *getattr(workspace, "association_candidates", ()),
+            *getattr(workspace, "analogy_candidates", ()),
+            *getattr(workspace, "curiosity_candidates", ()),
+        ] if workspace else []
         self.interactive_candidate_choices = {item.candidate_id: item for item in candidates}
         values = [f"{item.candidate_id} | {getattr(item, 'state', 'generated')}" for item in candidates]
         self.interactive_candidate_selector.configure(values=values)
@@ -4168,6 +4252,16 @@ class DeltaApp:
                         detail += f"\nRaw model output: {str(raw.get('response_reference') or '')[:1200]}"
                     except (KeyError, RuntimeError):
                         pass
+        elif hasattr(candidate, "matched_relation_types"):
+            detail = (
+                "Type: far structural analogy\n"
+                f"Source cluster: {candidate.source_cluster_id}\nTarget cluster: {candidate.target_cluster_id}\n"
+                f"Matched relations: {', '.join(candidate.matched_relation_types)}\n"
+                f"Unmatched source/target: {', '.join(candidate.unmatched_source_types) or 'none'} / {', '.join(candidate.unmatched_target_types) or 'none'}\n"
+                f"Why it may matter: {candidate.implication}\nFailure boundary: {candidate.limitation}\n"
+                f"Uncertainty: {candidate.uncertainty}\nQuestion: {candidate.possible_next_question}\n"
+                f"State: {candidate.state}"
+            )
         else:
             detail = (
                 f"Type: {candidate.trigger}\n"
@@ -4189,8 +4283,9 @@ class DeltaApp:
         )
         kind = existing_disposition.candidate_kind if existing_disposition is not None else (
             "near_association" if hasattr(candidate, "association_id") else (
+            "far_analogy" if hasattr(candidate, "matched_relation_types") else (
             "cognitive_pressure" if getattr(candidate, "trigger", "") in {"missing_evidence", "contradiction", "consolidation_correction", "consolidation_contradiction", "consolidation_remaining_gap"} else "curiosity_candidate"
-            )
+            ))
         )
         source_ids = getattr(candidate, "provenance_refs", getattr(candidate, "source_record_ids", ()))
         try:
@@ -4209,7 +4304,7 @@ class DeltaApp:
             self.output.insert(tk.END, f"Candidate action was not applied: {exc}\n")
             return
         save_coordination_state(self.conversational_runtime_root, self.interactive_coordination_state)
-        requires_operator_question = hasattr(candidate, "association_id") or getattr(candidate, "trigger", "") in {
+        requires_operator_question = hasattr(candidate, "association_id") or hasattr(candidate, "matched_relation_types") or getattr(candidate, "trigger", "") in {
             "missing_evidence", "contradiction", "consolidation_correction", "consolidation_contradiction", "consolidation_remaining_gap",
         }
         if disposition == "accepted" and requires_operator_question:
@@ -4261,11 +4356,42 @@ class DeltaApp:
                         "association_rationale": candidate.shared_structure,
                         "association_inquiry_question": inquiry_question,
                     }
+                elif kind == "far_analogy":
+                    pressure = "structural_analogy_boundary"
+                    graph = load_provisional_semantic_graph(self.conversational_runtime_root)
+                    labels = {item.claim_version_id: item.exact_text for item in graph.claim_versions}
+                    prompt_text = (
+                        "I found a provisional structural analogy.\n\n"
+                        + describe_structural_analogy_candidate(candidate, record_labels=labels)
+                        + "\n\n"
+                        "Do you want me to make one bounded comparison?"
+                    )
+                    question_kind = "structural_analogy_exploration"
+                    extra_metrics = {
+                        "analogy_source_pattern_id": candidate.source_pattern_id,
+                        "analogy_target_pattern_id": candidate.target_pattern_id,
+                        "analogy_source_record_ids": tuple(candidate.source_unit_ids),
+                        "analogy_target_record_ids": tuple(candidate.target_unit_ids),
+                        "analogy_relation_ids": tuple(candidate.source_relation_ids + candidate.target_relation_ids),
+                        "analogy_failure_boundary": candidate.limitation,
+                        "analogy_source_labels": tuple(labels.get(item, item) for item in candidate.source_unit_ids),
+                        "analogy_target_labels": tuple(labels.get(item, item) for item in candidate.target_unit_ids),
+                        "analogy_matched_relation_types": tuple(candidate.matched_relation_types),
+                        "analogy_inquiry_question": candidate.possible_next_question,
+                    }
                 elif candidate.trigger == "missing_evidence":
                     pressure = "missing_evidence"
-                    prompt_text = f"This local step is blocked by a bounded evidence gap. Can you provide or clarify: {candidate.safe_next_step}?"
+                    continuation = "Independent safe work can continue." if candidate.safe_independent_work_may_continue else "Independent work should pause until this is resolved."
+                    prompt_text = (
+                        "I found a bounded evidence gap.\n\n"
+                        f"What I noticed: {candidate.rationale}\n"
+                        f"What remains unknown: {candidate.uncertainty}\n"
+                        f"Why it matters: the answer would authorize this bounded next action: {candidate.proposed_bounded_action or candidate.safe_next_step}.\n"
+                        f"{continuation}\n\n"
+                        "Should I make one local, provisional inquiry about it?"
+                    )
                     question_kind = "missing_evidence"
-                    extra_metrics = {"pressure_state": "question_created", "pressure_trigger": candidate.trigger}
+                    extra_metrics = {"pressure_state": "question_created", "pressure_trigger": candidate.trigger, "curiosity_inquiry": True, "curiosity_proposed_action": candidate.proposed_bounded_action or candidate.safe_next_step}
                 elif candidate.trigger in {"consolidation_correction", "consolidation_contradiction", "consolidation_remaining_gap"}:
                     pressure = "consolidation_feedback"
                     prompt_text = (
@@ -4280,15 +4406,27 @@ class DeltaApp:
                     prompt_text = "A provisional claim conflicts with local evidence. Which source or interpretation should guide how I treat that conflict?"
                     question_kind = "contradiction_resolution"
                     extra_metrics = {"pressure_state": "question_created", "pressure_trigger": candidate.trigger}
-                request = compile_chat_clarification_request(
-                    self.conversational_runtime_state, pressure=pressure,
-                    prompt_text=prompt_text,
-                    source_record_ids=source_ids, request_type="interactive_clarification",
-                )
+                try:
+                    request = compile_chat_clarification_request(
+                        self.conversational_runtime_state, pressure=pressure,
+                        prompt_text=prompt_text,
+                        source_record_ids=source_ids, request_type="interactive_clarification",
+                    )
+                except ValueError as exc:
+                    self.interactive_coordination_state = set_candidate_disposition(
+                        self.interactive_coordination_state,
+                        candidate_id=candidate_id,
+                        candidate_kind=kind,
+                        disposition="surfaced",
+                        source_record_ids=source_ids,
+                    )
+                    save_coordination_state(self.conversational_runtime_root, self.interactive_coordination_state)
+                    self.output.insert(tk.END, f"Candidate question was not created: {exc}\n")
+                    return
                 request = replace(
                     request,
                     thread_id=f"candidate:{candidate_id}",
-                    accepted_response_types=("approved", "denied") if question_kind in {"association_exploration", "consolidation_feedback"} else request.accepted_response_types,
+                    accepted_response_types=("approved", "denied") if question_kind in {"association_exploration", "structural_analogy_exploration", "consolidation_feedback"} or extra_metrics.get("curiosity_inquiry") else request.accepted_response_types,
                     baseline_metrics={
                         **request.baseline_metrics,
                         "originating_candidate_id": candidate_id,
@@ -5778,6 +5916,8 @@ class DeltaApp:
         self.database_detail.configure(state=tk.DISABLED)
 
     def _append_chat(self, speaker: str, text: str) -> None:
+        if speaker == "DELTA":
+            text = shape_governed_presentation(str(text), self.governed_personality_state)
         self.chat_history.configure(state=tk.NORMAL)
         self.chat_history.insert(tk.END, f"{speaker}: {text}\n\n")
         self.chat_history.see(tk.END)
@@ -5899,6 +6039,30 @@ class DeltaApp:
         )
         return True
 
+    def _surface_one_far_analogy(self, decision) -> bool:
+        """Surface a graph-derived structural comparison without asserting equivalence."""
+        workspace = getattr(self, "interactive_workspace_snapshot", None)
+        target = next((item for item in (workspace.threads if workspace else ()) if item.thread_id == decision.target_thread_id), None)
+        candidate = next((item for item in (workspace.analogy_candidates if workspace else ()) if item.candidate_id == (target.originating_reference if target else "")), None)
+        if candidate is None or candidate.state not in {"generated", "queued"}:
+            return False
+        updated = surface_candidate_once(self.interactive_coordination_state, candidate_id=candidate.candidate_id, candidate_kind="far_analogy", source_record_ids=candidate.provenance_refs)
+        if updated == self.interactive_coordination_state:
+            return False
+        self.interactive_coordination_state = updated
+        save_coordination_state(self.conversational_runtime_root, updated)
+        graph = load_provisional_semantic_graph(self.conversational_runtime_root)
+        labels = {item.claim_version_id: item.exact_text for item in graph.claim_versions}
+        self._append_chat(
+            "DELTA",
+            "I found a provisional structural analogy for review. It is not a factual conclusion.\n\n"
+            + describe_structural_analogy_candidate(candidate, record_labels=labels)
+            + "\n\nYou can inspect its provenance in Advanced and choose whether to explore it.",
+        )
+        self._append_observation("Structural analogy", f"A provisional cross-domain pattern has {len(candidate.matched_relation_types)} matched functional relations and an explicit failure boundary.")
+        self._record_attention_control_stage(decision, stage="executed_posture", detail="One graph-derived structural analogy was surfaced for operator review.")
+        return True
+
     def _inspect_one_curiosity_candidate(self, decision) -> bool:
         """Record one idle, provenance-only revisit without starting a new mission."""
 
@@ -5917,13 +6081,33 @@ class DeltaApp:
         updated = surface_candidate_once(
             self.interactive_coordination_state,
             candidate_id=candidate.candidate_id,
-            candidate_kind="curiosity_candidate",
+            candidate_kind=(
+                "cognitive_pressure"
+                if candidate.trigger in {
+                    "missing_evidence",
+                    "contradiction",
+                    "consolidation_correction",
+                    "consolidation_contradiction",
+                    "consolidation_remaining_gap",
+                }
+                else "curiosity_candidate"
+            ),
             source_record_ids=candidate.source_record_ids,
         )
         if updated == self.interactive_coordination_state:
             return False
         self.interactive_coordination_state = updated
         save_coordination_state(self.conversational_runtime_root, updated)
+        continuation = "Independent safe work can continue." if candidate.safe_independent_work_may_continue else "Independent work should pause until this is resolved."
+        self._append_chat(
+            "DELTA",
+            "I noticed a bounded evidence gap.\n\n"
+            f"What I noticed: {candidate.rationale}\n"
+            f"What remains unknown: {candidate.uncertainty}\n"
+            f"Why it matters: the answer would authorize this bounded next action: {candidate.proposed_bounded_action or candidate.safe_next_step}.\n"
+            f"{continuation}\n\n"
+            "You can inspect it in Advanced and choose whether to pursue one local, provisional inquiry.",
+        )
         self._append_observation(
             "Curiosity",
             "An unstable claim remains available through its existing review path. No model call, new goal, or memory mutation was started.",
@@ -5995,6 +6179,33 @@ class DeltaApp:
                 self.interactive_coordination_state = updated
                 save_coordination_state(self.conversational_runtime_root, updated)
                 self._append_observation("Attention", "Foreground input requested a yield after the approved association inquiry reaches its ledger boundary.")
+                marked = True
+        for exploration in load_structural_analogy_explorations(self.conversational_runtime_root):
+            if exploration.lifecycle_state != "analogy_exploration_running":
+                continue
+            updated = request_preemption(
+                self.interactive_coordination_state, thread_id=f"structural-analogy:{exploration.exploration_id}",
+                operation_id=exploration.exploration_id, candidate_id=exploration.candidate_id,
+                ledger_request_id=exploration.ledger_request_id,
+                foreground_turn_id=rc6_stable_id("structural-analogy-preemption-foreground", self.conversational_runtime_state.runtime_id, reason, str(len(self.conversational_runtime_state.conversation) + 1)),
+                reason="foreground_operator_input",
+            )
+            if updated != self.interactive_coordination_state:
+                self.interactive_coordination_state = updated
+                save_coordination_state(self.conversational_runtime_root, updated)
+                self._append_observation("Attention", "Foreground input requested a yield after the structural analogy reaches its ledger boundary.")
+                marked = True
+        for inquiry in load_curiosity_inquiries(self.conversational_runtime_root):
+            if inquiry.lifecycle_state != "curiosity_inquiry_running":
+                continue
+            updated = request_preemption(
+                self.interactive_coordination_state, thread_id=f"curiosity-inquiry:{inquiry.inquiry_id}",
+                operation_id=inquiry.inquiry_id, candidate_id=inquiry.candidate_id, ledger_request_id=inquiry.ledger_request_id,
+                foreground_turn_id=rc6_stable_id("curiosity-preemption-foreground", self.conversational_runtime_state.runtime_id, reason, str(len(self.conversational_runtime_state.conversation) + 1)), reason="foreground_operator_input",
+            )
+            if updated != self.interactive_coordination_state:
+                self.interactive_coordination_state = updated
+                save_coordination_state(self.conversational_runtime_root, updated)
                 marked = True
         decision = self._refresh_interactive_cognition_shadow(reason=reason)
         workspace = self.interactive_workspace_snapshot
@@ -6388,6 +6599,171 @@ class DeltaApp:
                 self._append_observation("Association exploration", f"The one-call inquiry ended as {disposition}; no retry was started.")
         self.root.after(100, self._poll_association_exploration_results)
 
+    def _start_approved_structural_analogy_exploration(self, decision) -> bool:
+        """Run one approved structural comparison through the shared ledger."""
+        if self.structural_analogy_exploration_in_flight or self.conversational_runtime_inference_in_flight:
+            return False
+        workspace = getattr(self, "interactive_workspace_snapshot", None)
+        target = next((item for item in (workspace.threads if workspace else ()) if item.thread_id == decision.target_thread_id), None)
+        candidate = next((item for item in (workspace.analogy_candidates if workspace else ()) if item.candidate_id == (target.originating_reference if target else "")), None)
+        if candidate is None or candidate.state not in {"approved_for_bounded_exploration", "exploration_queued"}:
+            return False
+        approval = next((item for item in reversed(self.conversational_runtime_state.resolved_chat_requests) if item.baseline_metrics.get("originating_candidate_id") == candidate.candidate_id and item.resolution_policy == "operator_approved_bounded_structural_analogy_exploration"), None)
+        if approval is None:
+            return False
+        graph = load_provisional_semantic_graph(self.conversational_runtime_root)
+        exploration = queue_structural_analogy_exploration(
+            self.conversational_runtime_root, graph, candidate_id=candidate.candidate_id,
+            source_pattern_id=candidate.source_pattern_id, target_pattern_id=candidate.target_pattern_id,
+            source_record_ids=tuple(candidate.source_unit_ids), target_record_ids=tuple(candidate.target_unit_ids),
+            relation_ids=tuple(candidate.source_relation_ids + candidate.target_relation_ids), approval_request_id=approval.request_id,
+        )
+        ledger = LocalModelRequestResultLedger(self.conversational_runtime_root / "model-ledger")
+        request = ledger.create_or_reuse_request(semantic_identity=exploration.exploration_id, question=exploration.inquiry_question, requester_type="approved_structural_analogy_exploration", requester_reference=exploration.candidate_id, question_objective="one bounded provisional structural analogy inquiry")
+        running = replace(exploration, lifecycle_state="analogy_exploration_running", ledger_request_id=str(request["request_id"]))
+        save_structural_analogy_explorations(self.conversational_runtime_root, tuple(running if item.exploration_id == running.exploration_id else item for item in load_structural_analogy_explorations(self.conversational_runtime_root)))
+        self.interactive_coordination_state = set_candidate_disposition(self.interactive_coordination_state, candidate_id=candidate.candidate_id, candidate_kind="far_analogy", disposition="exploration_queued" if candidate.state == "approved_for_bounded_exploration" else "exploration_running", source_record_ids=candidate.provenance_refs)
+        self.interactive_coordination_state = set_candidate_disposition(self.interactive_coordination_state, candidate_id=candidate.candidate_id, candidate_kind="far_analogy", disposition="exploration_running", source_record_ids=candidate.provenance_refs)
+        save_coordination_state(self.conversational_runtime_root, self.interactive_coordination_state)
+        self.structural_analogy_exploration_in_flight = True
+        self._append_observation("Structural analogy", "One approved cross-domain comparison started through the shared local-model ledger.")
+
+        def worker() -> None:
+            try:
+                result, updated_graph = execute_structural_analogy_exploration_once(self.conversational_runtime_root, graph, running)
+                error = None
+            except Exception as exc:  # noqa: BLE001 - foreground remains responsive.
+                result, updated_graph, error = running, graph, exc
+            self.structural_analogy_exploration_result_queue.put((candidate, result, updated_graph, error))
+
+        threading.Thread(target=worker, name="delta-approved-structural-analogy", daemon=True).start()
+        return True
+
+    def _poll_structural_analogy_exploration_results(self) -> None:
+        while True:
+            try:
+                candidate, result, graph, error = self.structural_analogy_exploration_result_queue.get_nowait()
+            except queue.Empty:
+                break
+            self.structural_analogy_exploration_in_flight = False
+            disposition = "explored_pending_consolidation" if error is None and result.lifecycle_state == "analogy_explored_pending_consolidation" else "exploration_failed"
+            if error is None:
+                if disposition == "explored_pending_consolidation":
+                    graph, _ = ensure_consolidation_cohort(graph, trigger="approved_structural_analogy_exploration")
+                save_provisional_semantic_graph(self.conversational_runtime_root, graph)
+                save_structural_analogy_explorations(self.conversational_runtime_root, tuple(result if item.exploration_id == result.exploration_id else item for item in load_structural_analogy_explorations(self.conversational_runtime_root)))
+            self.interactive_coordination_state = set_candidate_disposition(self.interactive_coordination_state, candidate_id=candidate.candidate_id, candidate_kind="far_analogy", disposition=disposition, source_record_ids=candidate.provenance_refs)
+            marker_id = f"structural-analogy:{result.exploration_id}"
+            preemption_marker = next(
+                (
+                    entry
+                    for entry in self.interactive_coordination_state.entries
+                    if entry.thread_id == marker_id and entry.preemption_requested
+                ),
+                None,
+            )
+            self.interactive_coordination_state = clear_preemption(self.interactive_coordination_state, thread_id=marker_id)
+            save_coordination_state(self.conversational_runtime_root, self.interactive_coordination_state)
+            if preemption_marker is not None:
+                decision = self._refresh_interactive_cognition_shadow(
+                    reason="structural_analogy_preemption_boundary_reached"
+                )
+                self._record_attention_control_stage(
+                    decision,
+                    stage="preemption_boundary_reached",
+                    detail="The approved structural analogy reached its ledger boundary; its foreground preemption marker was cleared.",
+                )
+            if disposition == "explored_pending_consolidation":
+                insight = next((item for item in graph.experiences if item.experience_id == result.insight_experience_id), None)
+                details = json.loads(insight.content) if insight else {}
+                self._append_chat("DELTA", "I compared the approved functional patterns.\nShared structure: " + details.get("shared_structure", "") + "\nWhy it may matter: " + details.get("possible_implication", "") + "\nWhere it breaks: " + details.get("relation_limits", "") + "\nUncertainty: " + details.get("uncertainty", "") + "\n\nStatus: Provisional - awaiting consolidation.")
+            else:
+                self._append_observation("Structural analogy", f"The bounded comparison ended as {result.lifecycle_state if error is None else type(error).__name__}.")
+        self.root.after(100, self._poll_structural_analogy_exploration_results)
+
+    def _start_approved_curiosity_inquiry(self, decision) -> bool:
+        """Execute one approved curiosity action with the shared ledger only."""
+        if self.curiosity_inquiry_in_flight or self.conversational_runtime_inference_in_flight:
+            return False
+        workspace = getattr(self, "interactive_workspace_snapshot", None)
+        target = next((item for item in (workspace.threads if workspace else ()) if item.thread_id == decision.target_thread_id), None)
+        candidate = next((item for item in (workspace.curiosity_candidates if workspace else ()) if item.candidate_id == (target.originating_reference if target else "")), None)
+        if candidate is None or candidate.state not in {"approved_for_bounded_exploration", "exploration_queued"}:
+            return False
+        approval = next((item for item in reversed(self.conversational_runtime_state.resolved_chat_requests) if item.baseline_metrics.get("originating_candidate_id") == candidate.candidate_id and item.resolution_policy == "operator_approved_bounded_curiosity_inquiry"), None)
+        if approval is None:
+            return False
+        graph = load_provisional_semantic_graph(self.conversational_runtime_root)
+        inquiry = queue_curiosity_inquiry(
+            self.conversational_runtime_root,
+            graph,
+            candidate_id=candidate.candidate_id,
+            source_record_ids=tuple(candidate.source_record_ids),
+            approval_request_id=approval.request_id,
+            proposed_action=str(approval.baseline_metrics.get("curiosity_proposed_action") or candidate.safe_next_step),
+            source_context=(
+                f"{candidate.rationale} Uncertainty: {candidate.uncertainty}. "
+                f"Bounded action requested: {candidate.proposed_bounded_action or candidate.safe_next_step}."
+            ),
+        )
+        ledger = LocalModelRequestResultLedger(self.conversational_runtime_root / "model-ledger")
+        request = ledger.create_or_reuse_request(semantic_identity=inquiry.inquiry_id, question=inquiry.inquiry_question, requester_type="approved_curiosity_inquiry", requester_reference=inquiry.candidate_id, question_objective="one bounded provisional curiosity inquiry")
+        running = replace(inquiry, lifecycle_state="curiosity_inquiry_running", ledger_request_id=str(request["request_id"]))
+        save_curiosity_inquiries(self.conversational_runtime_root, tuple(running if item.inquiry_id == running.inquiry_id else item for item in load_curiosity_inquiries(self.conversational_runtime_root)))
+        self.interactive_coordination_state = set_candidate_disposition(self.interactive_coordination_state, candidate_id=candidate.candidate_id, candidate_kind="cognitive_pressure", disposition="exploration_queued" if candidate.state == "approved_for_bounded_exploration" else "exploration_running", source_record_ids=candidate.source_record_ids)
+        self.interactive_coordination_state = set_candidate_disposition(self.interactive_coordination_state, candidate_id=candidate.candidate_id, candidate_kind="cognitive_pressure", disposition="exploration_running", source_record_ids=candidate.source_record_ids)
+        save_coordination_state(self.conversational_runtime_root, self.interactive_coordination_state)
+        self.curiosity_inquiry_in_flight = True
+        self._append_observation("Curiosity", "One operator-approved local inquiry started through the shared model ledger.")
+
+        def worker() -> None:
+            try:
+                result, updated_graph = execute_curiosity_inquiry_once(self.conversational_runtime_root, graph, running)
+                error = None
+            except Exception as exc:  # noqa: BLE001
+                result, updated_graph, error = running, graph, exc
+            self.curiosity_inquiry_result_queue.put((candidate, result, updated_graph, error))
+
+        threading.Thread(target=worker, name="delta-approved-curiosity-inquiry", daemon=True).start()
+        return True
+
+    def _poll_curiosity_inquiry_results(self) -> None:
+        while True:
+            try:
+                candidate, result, graph, error = self.curiosity_inquiry_result_queue.get_nowait()
+            except queue.Empty:
+                break
+            self.curiosity_inquiry_in_flight = False
+            disposition = "explored_pending_consolidation" if error is None and result.lifecycle_state == "curiosity_inquiry_pending_consolidation" else "exploration_failed"
+            if error is None:
+                if disposition == "explored_pending_consolidation":
+                    graph, _ = ensure_consolidation_cohort(graph, trigger="approved_curiosity_inquiry")
+                save_provisional_semantic_graph(self.conversational_runtime_root, graph)
+                save_curiosity_inquiries(self.conversational_runtime_root, tuple(result if item.inquiry_id == result.inquiry_id else item for item in load_curiosity_inquiries(self.conversational_runtime_root)))
+            self.interactive_coordination_state = set_candidate_disposition(self.interactive_coordination_state, candidate_id=candidate.candidate_id, candidate_kind="cognitive_pressure", disposition=disposition, source_record_ids=candidate.source_record_ids)
+            self.interactive_coordination_state = clear_preemption(self.interactive_coordination_state, thread_id=f"curiosity-inquiry:{result.inquiry_id}")
+            save_coordination_state(self.conversational_runtime_root, self.interactive_coordination_state)
+            if disposition == "explored_pending_consolidation":
+                insight = next((item for item in graph.experiences if item.experience_id == result.insight_experience_id), None)
+                try:
+                    details = json.loads(insight.content) if insight is not None else {}
+                except (TypeError, json.JSONDecodeError):
+                    details = {}
+                self._append_chat(
+                    "DELTA",
+                    "I completed the approved local inquiry.\n"
+                    + "Question addressed: " + details.get("question_addressed", "")
+                    + "\nEvidence considered: " + details.get("evidence_considered", "")
+                    + "\nBounded answer: " + details.get("bounded_answer", "")
+                    + "\nUncertainty: " + details.get("uncertainty", "")
+                    + "\nStill missing: " + details.get("relation_limits", "")
+                    + "\nNext question: " + details.get("suggested_next_question", "")
+                    + "\n\nStatus: Provisional - awaiting consolidation.",
+                )
+            else:
+                self._append_observation("Curiosity", f"The bounded inquiry ended as {result.lifecycle_state if error is None else type(error).__name__}.")
+        self.root.after(100, self._poll_curiosity_inquiry_results)
+
     def _start_conversational_background_cycle(self, reason: str) -> bool:
         state = self.conversational_runtime_state
         if not state.active_objective or state.lifecycle_state != "running":
@@ -6537,8 +6913,14 @@ class DeltaApp:
             self._surface_one_near_association(decision)
         elif decision is not None and decision.selected_posture == "execute_approved_association":
             self._start_approved_association_exploration(decision)
+        elif decision is not None and decision.selected_posture == "explore_far_analogy":
+            self._surface_one_far_analogy(decision)
+        elif decision is not None and decision.selected_posture == "execute_approved_analogy":
+            self._start_approved_structural_analogy_exploration(decision)
         elif decision is not None and decision.selected_posture == "execute_approved_revisit":
             self._start_approved_revisit(decision)
+        elif decision is not None and decision.selected_posture == "execute_approved_curiosity_inquiry":
+            self._start_approved_curiosity_inquiry(decision)
         elif decision is not None and decision.selected_posture == "inspect_curiosity_candidate":
             self._inspect_one_curiosity_candidate(decision)
         elif decision is not None and decision.selected_posture == "perform_one_consolidation_step":
@@ -6575,7 +6957,7 @@ class DeltaApp:
         if (
             owner is not None
             and owner.request_type == "interactive_clarification"
-            and str(owner.baseline_metrics.get("question_kind") or "") in {"association_exploration", "consolidation_feedback"}
+            and (str(owner.baseline_metrics.get("question_kind") or "") in {"association_exploration", "structural_analogy_exploration", "consolidation_feedback"} or bool(owner.baseline_metrics.get("curiosity_inquiry")))
         ):
             reply = self._resolve_interactive_clarification(message, request_id=owner.request_id)
             self._append_chat("DELTA", reply)
@@ -6606,7 +6988,7 @@ class DeltaApp:
             active_objective=state.active_objective,
             recent_turns=state.conversation,
         )
-        if intent.intent_type == "ordinary_conversation" and (self.association_exploration_in_flight or self.revisit_reinquiry_in_flight):
+        if intent.intent_type == "ordinary_conversation" and (self.association_exploration_in_flight or self.revisit_reinquiry_in_flight or self.structural_analogy_exploration_in_flight or self.curiosity_inquiry_in_flight):
             self._request_active_goal_preemption(reason="foreground_conversation")
         if (
             "semantic" in lower_message
@@ -7169,14 +7551,17 @@ class DeltaApp:
         metrics = dict(request.baseline_metrics)
         candidate_id = str(metrics.get("originating_candidate_id") or "")
         candidate_kind = str(metrics.get("candidate_kind") or "")
+        question_kind = str(metrics.get("question_kind") or "")
+        is_curiosity_inquiry = bool(metrics.get("curiosity_inquiry"))
         lowered = " ".join(str(message or "").lower().split())
-        association_rejected = candidate_kind == "near_association" and bool(
+        association_rejected = candidate_kind in {"near_association", "far_analogy"} and bool(
             re.search(r"\b(?:no|not\s+relevant|do\s+not|don't|shouldn't)\b", lowered)
         )
         revisit_trigger = str(metrics.get("pressure_trigger") or "") in {"consolidation_correction", "consolidation_remaining_gap"}
         candidate_state = (
             "rejected" if association_rejected else
-            "approved_for_bounded_exploration" if candidate_kind == "near_association" else
+            "approved_for_bounded_exploration" if candidate_kind in {"near_association", "far_analogy"} else
+            "approved_for_bounded_exploration" if is_curiosity_inquiry and re.search(r"\b(?:yes|approve|go ahead|continue)\b", lowered) else
             "approved_for_revisit" if revisit_trigger else
             "resolved"
         )
@@ -7203,6 +7588,8 @@ class DeltaApp:
                 "resolution_policy": (
                     "operator_rejected_association_exploration" if association_rejected else
                     "operator_approved_bounded_association_exploration" if candidate_kind == "near_association" else
+                    "operator_approved_bounded_structural_analogy_exploration" if candidate_kind == "far_analogy" else
+                    "operator_approved_bounded_curiosity_inquiry" if is_curiosity_inquiry and candidate_state == "approved_for_bounded_exploration" else
                     "operator_approved_bounded_revisit" if revisit_trigger else
                     "operator_answered_cognitive_pressure_question"
                 ),
@@ -7212,6 +7599,7 @@ class DeltaApp:
                     **metrics,
                     "association_exploration_state": candidate_state if candidate_kind == "near_association" else metrics.get("association_exploration_state", ""),
                     "association_resolution_state": "unresolved" if candidate_kind == "near_association" else metrics.get("association_resolution_state", ""),
+                    "analogy_exploration_state": candidate_state if candidate_kind == "far_analogy" else metrics.get("analogy_exploration_state", ""),
                     "pressure_state": "operator_input_recorded" if candidate_kind == "cognitive_pressure" else metrics.get("pressure_state", ""),
                 },
             }
@@ -7228,6 +7616,10 @@ class DeltaApp:
             return "[Clarification]\nThanks. I recorded that this association should not be pursued now."
         if candidate_kind == "near_association":
             return "[Clarification]\nThanks. I recorded this association as approved for bounded exploration; it is not a validated claim."
+        if candidate_kind == "far_analogy":
+            return "[Clarification]\nThanks. I recorded this analogy as approved for one bounded comparison; it remains provisional."
+        if is_curiosity_inquiry and candidate_state == "approved_for_bounded_exploration":
+            return "[Clarification]\nThanks. I recorded one bounded local inquiry; its result will remain provisional."
         return "[Clarification]\nThanks. I recorded your answer to that bounded cognitive-pressure question."
 
     def _settle_matching_local_model_request(self, question: str, resolution: str, reply: str) -> None:
@@ -8134,7 +8526,7 @@ class DeltaApp:
             and not live_plan.control.detected
             and (has_runtime_coordination_context or question_like_foreground)
         ):
-            if self.conversational_runtime_inference_in_flight or self.association_exploration_in_flight or self.revisit_reinquiry_in_flight:
+            if self.conversational_runtime_inference_in_flight or self.association_exploration_in_flight or self.revisit_reinquiry_in_flight or self.structural_analogy_exploration_in_flight or self.curiosity_inquiry_in_flight:
                 self._request_active_goal_preemption(reason="coordinated_foreground_conversation")
             foreground_message = " ".join(
                 segment.text for segment in live_plan.segments if segment.kind != "context_prefix"

@@ -18,6 +18,8 @@ from orchestration.runtime.active_cognitive_loop import ActiveCognitiveEpisodeSt
 from orchestration.runtime.conversational_runtime_operation import ConversationalRuntimeState
 from orchestration.runtime.consolidation_feedback import derive_consolidation_feedback
 from orchestration.runtime.provisional_semantic_consolidation import ProvisionalSemanticGraphState
+from orchestration.runtime.structural_analogy import StructuralAnalogyCandidate, derive_structural_analogies_from_graph
+from orchestration.runtime.curiosity_pressure import make_pressure, should_surface_question
 
 
 SCHEMA_VERSION = "interactive_cognition_v1"
@@ -198,6 +200,7 @@ class CognitiveWorkspaceSnapshot:
     question_candidates: tuple["QuestionCandidate", ...]
     association_candidates: tuple["AssociationCandidate", ...]
     curiosity_candidates: tuple["CuriosityCandidate", ...]
+    analogy_candidates: tuple[StructuralAnalogyCandidate, ...]
     source_digests: Mapping[str, str]
     ui_visibility: Mapping[str, Any]
     schema_version: str = SCHEMA_VERSION
@@ -301,6 +304,16 @@ class CuriosityCandidate:
     surface_worthy: bool
     expiry_policy: str
     state: str = "generated"
+    thread_id: str = ""
+    reason_code: str = ""
+    uncertainty: str = ""
+    expected_information_gain: int = 0
+    urgency: int = 0
+    dependencies: tuple[str, ...] = ()
+    suppression_state: str = "active"
+    safe_independent_work_may_continue: bool = True
+    answer_binding_contract: str = "ChatAddressableRequest_latest_rendered_compatible_request"
+    proposed_bounded_action: str = ""
     schema_version: str = SCHEMA_VERSION
 
     def as_record(self) -> dict[str, Any]:
@@ -595,6 +608,10 @@ def build_workspace_snapshot(
     threads = _apply_coordination_metadata(threads, metadata)
     dispositions = {item.candidate_id: item for item in (coordination.candidate_dispositions if coordination else ())}
     associations = _apply_candidate_dispositions(_derive_near_association_candidates(graph), dispositions)
+    analogies = _apply_candidate_dispositions(
+        derive_structural_analogies_from_graph(graph.relations) if graph else (),
+        dispositions,
+    )
     curiosity = _apply_candidate_dispositions(
         _derive_curiosity_candidates(graph) + _derive_cognitive_pressure_candidates(episode),
         dispositions,
@@ -613,6 +630,23 @@ def build_workspace_snapshot(
                 association_strength=association.strength,
                 expected_information_gain=3 if association.state == "approved_for_bounded_exploration" else 1,
                 operator_interest_alignment=3 if association.state == "approved_for_bounded_exploration" else association.operator_relevance,
+            ),
+        ))
+    for analogy in analogies:
+        threads.append(_thread(
+            "far_analogy", "provisional_semantic_graph", analogy.provenance_refs,
+            status=analogy.state, focus=analogy.implication, originating_reference=analogy.candidate_id,
+            created_at="", last_activity_at="", interruptibility="next_cycle_boundary",
+            authority_requirement="operator_approval_required", resource_requirements=(),
+            resume_cursor_ref=analogy.candidate_id, expiry_policy="retire_when_source_relations_change",
+            operator_visibility="observation", dependency_refs=analogy.source_unit_ids + analogy.target_unit_ids,
+            semantic_refs=analogy.source_unit_ids + analogy.target_unit_ids,
+            epistemic_status="provisional_structural_analogy",
+            inclusion_reason="multiple_graph_grounded_functional_relation_matches",
+            attention=AttentionInputs(
+                association_strength=len(analogy.matched_relation_types),
+                expected_information_gain=analogy.expected_information_gain,
+                operator_interest_alignment=analogy.operator_relevance,
             ),
         ))
     for candidate in curiosity:
@@ -657,6 +691,7 @@ def build_workspace_snapshot(
         "question_candidates": [item.as_record() for item in questions],
         "association_candidates": [item.as_record() for item in associations],
         "curiosity_candidates": [item.as_record() for item in curiosity],
+        "analogy_candidates": [item.__dict__ for item in analogies],
         "source_digests": sources,
         "ui_visibility": _jsonable(dict(ui_visibility or {})),
     }
@@ -666,7 +701,7 @@ def build_workspace_snapshot(
         runtime_id=state.runtime_id, lifecycle_state=state.lifecycle_state, foreground_message=foreground_message.strip(),
         foreground_turn_id=foreground_turn_id, active_objective_id=payload["active_objective_id"], active_episode_id=payload["active_episode_id"],
         graph_id=payload["graph_id"], threads=tuple(threads), question_candidates=questions,
-        association_candidates=associations, curiosity_candidates=curiosity,
+        association_candidates=associations, curiosity_candidates=curiosity, analogy_candidates=analogies,
         source_digests=sources, ui_visibility=_jsonable(dict(ui_visibility or {})),
     )
 
@@ -775,6 +810,13 @@ def _derive_curiosity_candidates(
         if version.epistemic_state not in {"contradicted", "locally_contradicted", "unstable", "invalidated"}:
             continue
         trigger = "contradiction" if version.epistemic_state in {"contradicted", "locally_contradicted"} else "epistemic_instability"
+        pressure = make_pressure(
+            source_owner="provisional_semantic_graph", source_record_ids=(version.claim_version_id,),
+            thread_id=_stable_id("curiosity-thread", version.claim_version_id), reason_code=trigger,
+            uncertainty=f"The claim is {version.epistemic_state} and needs source-grounded reconciliation.",
+            expected_information_gain=2, urgency=3 if trigger == "contradiction" else 1, operator_relevance=1,
+            safe_independent_work_may_continue=True, proposed_bounded_next_action="inspect_existing_provenance_or_wait_for_review",
+        )
         candidates.append(CuriosityCandidate(
             candidate_id=_stable_id("curiosity-revisit", version.claim_version_id, trigger),
             trigger=trigger,
@@ -786,6 +828,10 @@ def _derive_curiosity_candidates(
             operator_relevance=1,
             surface_worthy=False,
             expiry_policy="retire_when_claim_is_resolved_or_superseded",
+            thread_id=pressure.thread_id, reason_code=pressure.reason_code, uncertainty=pressure.uncertainty,
+            expected_information_gain=pressure.expected_information_gain, urgency=pressure.urgency,
+            dependencies=pressure.dependencies, safe_independent_work_may_continue=pressure.safe_independent_work_may_continue,
+            answer_binding_contract=pressure.answer_binding_contract, proposed_bounded_action=pressure.proposed_bounded_next_action,
         ))
     for feedback in derive_consolidation_feedback(graph):
         if feedback.cognitive_consequence not in {
@@ -799,6 +845,14 @@ def _derive_curiosity_candidates(
             "high_priority_contradiction_review": "consolidation_contradiction",
             "targeted_remaining_gap": "consolidation_remaining_gap",
         }[feedback.cognitive_consequence]
+        pressure = make_pressure(
+            source_owner="provisional_semantic_graph", source_record_ids=feedback.source_ids,
+            thread_id=_stable_id("curiosity-feedback-thread", feedback.feedback_id), reason_code=trigger,
+            uncertainty=f"Consolidation returned {feedback.verdict}; the affected item remains provisional.",
+            expected_information_gain=2, urgency=3 if feedback.cognitive_consequence == "high_priority_contradiction_review" else 2,
+            operator_relevance=3 if feedback.cognitive_consequence == "high_priority_contradiction_review" else 2,
+            safe_independent_work_may_continue=True, proposed_bounded_next_action="ask_one_bounded_revision_or_contradiction_question",
+        )
         candidates.append(CuriosityCandidate(
             candidate_id=_stable_id("curiosity-review-feedback", feedback.feedback_id),
             trigger=trigger,
@@ -809,6 +863,10 @@ def _derive_curiosity_candidates(
             operator_relevance=3 if feedback.cognitive_consequence == "high_priority_contradiction_review" else 2,
             surface_worthy=False,
             expiry_policy="retire_when_reviewed_claim_is_superseded_or_operator_rejects",
+            thread_id=pressure.thread_id, reason_code=pressure.reason_code, uncertainty=pressure.uncertainty,
+            expected_information_gain=pressure.expected_information_gain, urgency=pressure.urgency,
+            dependencies=pressure.dependencies, safe_independent_work_may_continue=pressure.safe_independent_work_may_continue,
+            answer_binding_contract=pressure.answer_binding_contract, proposed_bounded_action=pressure.proposed_bounded_next_action,
         ))
     return tuple(sorted(candidates, key=lambda item: item.candidate_id))
 
@@ -827,6 +885,13 @@ def _derive_cognitive_pressure_candidates(
         request = str(result.recommended_action or result.next_evidence_need or "").strip()
         if not request:
             continue
+        pressure = make_pressure(
+            source_owner="active_cognitive_episode", source_record_ids=(episode.episode_id, result.operation_id),
+            thread_id=_stable_id("curiosity-gap-thread", episode.episode_id, result.operation_id), reason_code="missing_evidence",
+            uncertainty=str(result.interpretation or "A bounded evidence gap blocked this local step."),
+            expected_information_gain=3, urgency=2, operator_relevance=2, dependencies=(episode.episode_id,),
+            safe_independent_work_may_continue=True, proposed_bounded_next_action=request,
+        )
         candidates.append(CuriosityCandidate(
             candidate_id=_stable_id("missing-evidence-question", episode.episode_id, result.operation_id),
             trigger="missing_evidence",
@@ -837,6 +902,10 @@ def _derive_cognitive_pressure_candidates(
             operator_relevance=2,
             surface_worthy=False,
             expiry_policy="retire_when_evidence_request_is_answered_or_episode_is_superseded",
+            thread_id=pressure.thread_id, reason_code=pressure.reason_code, uncertainty=pressure.uncertainty,
+            expected_information_gain=pressure.expected_information_gain, urgency=pressure.urgency,
+            dependencies=pressure.dependencies, safe_independent_work_may_continue=pressure.safe_independent_work_may_continue,
+            answer_binding_contract=pressure.answer_binding_contract, proposed_bounded_action=pressure.proposed_bounded_next_action,
         ))
     return tuple(sorted(candidates, key=lambda item: item.candidate_id))
 
@@ -1033,8 +1102,10 @@ def _posture_for(thread: CognitiveThread | None) -> str:
     if thread.thread_kind == "near_association":
         return "execute_approved_association" if thread.status in {"approved_for_bounded_exploration", "exploration_queued", "exploration_running"} else "explore_near_association"
     if thread.thread_kind == "far_analogy":
-        return "explore_far_analogy"
+        return "execute_approved_analogy" if thread.status in {"approved_for_bounded_exploration", "exploration_queued", "exploration_running"} else "explore_far_analogy"
     if thread.thread_kind == "curiosity_candidate":
+        if thread.status in {"approved_for_bounded_exploration", "exploration_queued", "exploration_running"}:
+            return "execute_approved_curiosity_inquiry"
         if thread.status in {"approved_for_revisit", "revisit_queued", "revisit_running"}:
             return "execute_approved_revisit"
         return "inspect_curiosity_candidate"

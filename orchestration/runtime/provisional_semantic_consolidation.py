@@ -69,7 +69,8 @@ FUNCTIONAL_RELATION_TYPES = frozenset({
     "collects_from", "transfers_through", "accumulates_in", "limited_by_capacity",
     "activates_at_threshold", "discharges_through", "regulates", "inhibits",
     "reinforces", "depends_on", "transforms", "detects", "corrects",
-    "competes_for", "resumes_after",
+    "competes_for", "resumes_after", "triggers", "buffers",
+    "degrades_under_load", "recovers_after_release",
 })
 
 
@@ -325,6 +326,11 @@ def record_provisional_functional_relation(
     target_ref: str,
     provenance_refs: Sequence[str],
     confidence: float = 0.0,
+    source_class: str = "runtime_observation",
+    originating_episode_id: str = "",
+    originating_operation_id: str = "",
+    revision_of_relation_id: str = "",
+    invalidation_state: str = "active",
 ) -> tuple[ProvisionalSemanticGraphState, SemanticRelation]:
     """Append a graph-owned functional hypothesis without granting factual authority."""
 
@@ -334,6 +340,10 @@ def record_provisional_functional_relation(
         raise ConsolidationIntegrityError("functional_relation_requires_bound_provenance")
     if not 0.0 <= float(confidence) <= 1.0:
         raise ConsolidationIntegrityError("functional_relation_confidence_out_of_range")
+    if source_class not in SOURCE_CLASSES:
+        raise ConsolidationIntegrityError("functional_relation_unknown_source_class:" + source_class)
+    if invalidation_state not in {"active", "superseded", "invalidated", "quarantined"}:
+        raise ConsolidationIntegrityError("functional_relation_invalid_invalidation_state:" + invalidation_state)
     relation = SemanticRelation(
         relation_id=stable_id("provisional-functional-relation", relation_type, source_ref, target_ref, *tuple(provenance_refs)),
         relation_type=relation_type,
@@ -345,6 +355,12 @@ def record_provisional_functional_relation(
             "epistemic_state": "pending_consolidation",
             "confidence": float(confidence),
             "review_state": "unreviewed",
+            "source_class": source_class,
+            "originating_episode_id": originating_episode_id,
+            "originating_operation_id": originating_operation_id,
+            "revision_of_relation_id": revision_of_relation_id,
+            "invalidation_state": invalidation_state,
+            "relation_version": 1,
         },
     )
     return _append(graph, "relations", relation), relation
