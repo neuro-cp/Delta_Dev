@@ -800,6 +800,56 @@ def test_periodic_attention_gates_background_work_for_rendered_operator_request(
         root.destroy()
 
 
+def test_idle_terminal_gap_pressure_queues_one_existing_background_study(monkeypatch, tmp_path):
+    """Tk only coordinates a state-derived recovery through the existing worker."""
+
+    import DELTA
+    from orchestration.runtime.active_cognitive_loop import ScriptedSemanticModel
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        app._start_conversational_background_cycle = lambda _reason: False
+        _send(app, "Teach me introductory photography.")
+        state = DELTA.run_conversational_background_cycle(
+            app.conversational_runtime_state,
+            runtime_root=app.conversational_runtime_root,
+            reason="terminal-gap-ui-setup",
+            model_runner=ScriptedSemanticModel(),
+        )
+        objective = state.active_objective
+        assert objective is not None
+        terminal = {
+            "event": "knowledge_goal_terminal_report",
+            "objective_id": objective.objective_id,
+            "status": "partially_completed",
+            "stop_reason": "blocked_insufficient_evidence",
+            "remaining_gaps": ("address Connections",),
+            "at": "2026-08-04T01:22:51+00:00",
+        }
+        app.conversational_runtime_state = replace(
+            state,
+            lifecycle_state="paused_budget",
+            objective_progress=state.objective_progress + (terminal,),
+        )
+        DELTA.save_conversational_runtime_state(app.conversational_runtime_root, app.conversational_runtime_state)
+        started = []
+        app._start_conversational_background_cycle = lambda reason: started.append(reason) or True
+
+        app._tick_conversational_objective_runtime()
+
+        followups = app.conversational_runtime_state.active_objective.provenance["teaching_followups"]
+        assert app.interactive_attention_decision.selected_posture == "perform_one_gap_recovery_study"
+        assert started == ["endogenous_terminal_gap_recovery"]
+        assert len(followups) == 1
+        assert followups[0]["origin"] == "endogenous_terminal_gap_recovery"
+        assert not any(turn.intent_type == "teaching_followup_question" for turn in app.conversational_runtime_state.conversation)
+        app._tick_conversational_objective_runtime()
+        assert started.count("endogenous_terminal_gap_recovery") == 1
+        assert len(app.conversational_runtime_state.active_objective.provenance["teaching_followups"]) == 1
+    finally:
+        root.destroy()
+
+
 def test_idle_attention_surfaces_one_explicit_dependency_without_graph_mutation(monkeypatch, tmp_path):
     import DELTA
     from orchestration.runtime.provisional_semantic_consolidation import (

@@ -118,6 +118,7 @@ from orchestration.runtime.conversational_runtime_operation import (  # noqa: E4
     mark_capability_campaign_milestone_rendered,
     mark_chat_request_rendered,
     mark_knowledge_goal_event_rendered,
+    queue_endogenous_teaching_gap_recovery,
     record_foreground_message_for_reconciliation,
     reconcile_queued_teaching_followup,
     render_knowledge_goal_event,
@@ -6550,6 +6551,13 @@ class DeltaApp:
             for item in objective.provenance.get("teaching_consolidation_records", ())
             if isinstance(item, Mapping)
         )
+        terminal_reports = tuple(
+            dict(item)
+            for item in self.conversational_runtime_state.objective_progress
+            if isinstance(item, Mapping)
+            and str(item.get("event") or "") == "knowledge_goal_terminal_report"
+            and str(item.get("objective_id") or "") == objective.objective_id
+        )
         dynamic_evidence_ids = {
             str(item.get("evidence_id") or item.get("node_id") or "")
             for item in (*followups, *prerequisites)
@@ -6612,6 +6620,7 @@ class DeltaApp:
                 followups=followups,
                 prerequisites=prerequisites,
                 consolidation_records=consolidation_records,
+                terminal_reports=terminal_reports,
                 teaching_cursor=cursor,
             ),
         )
@@ -7363,6 +7372,34 @@ class DeltaApp:
         threading.Thread(target=worker, name="delta-conversational-runtime-cycle", daemon=True).start()
         return True
 
+    def _start_endogenous_teaching_gap_recovery(self, decision) -> bool:
+        """Execute one controller-selected terminal-gap study through the existing worker."""
+
+        if self.conversational_runtime_inference_in_flight or self.live_runtime_request_in_flight:
+            return False
+        queued = queue_endogenous_teaching_gap_recovery(
+            self.conversational_runtime_state,
+            runtime_root=self.conversational_runtime_root,
+        )
+        if queued is None:
+            return False
+        self.conversational_runtime_state, action = queued
+        self._sync_developmental_teaching_progress()
+        self._append_observation(
+            "Developmental recovery",
+            f'An unresolved teaching gap ("{str(action.get("source_gap") or "unspecified")}") selected one bounded local recovery study under standing authority.',
+        )
+        self._refresh_conversational_runtime_status()
+        self._refresh_state_cards()
+        if not self._start_conversational_background_cycle("endogenous_terminal_gap_recovery"):
+            return False
+        self._record_attention_control_stage(
+            decision,
+            stage="executed_posture",
+            detail="One source-bound terminal-gap recovery study started through the existing conversational worker.",
+        )
+        return True
+
     def _start_approved_revisit(self, decision) -> bool:
         """Launch one approved review correction through the existing shared ledger."""
         if self.revisit_reinquiry_in_flight or self.conversational_runtime_inference_in_flight:
@@ -7444,6 +7481,11 @@ class DeltaApp:
         self.root.after(100, self._poll_revisit_reinquiry_results)
 
     def _tick_conversational_objective_runtime(self) -> None:
+        # Controller state is durable, but its pressures are a read-only
+        # projection of canonical runtime history. Rebuild that projection
+        # before each idle arbitration so a restored terminal gap can resume
+        # through the ordinary worker without another operator prompt.
+        self._sync_developmental_teaching_progress()
         decision = self._refresh_interactive_cognition_shadow(reason="automatic_startup_or_idle_tick")
         # The coordinator may gate a new periodic step, but the existing runtime
         # remains the only owner of model execution and objective progression.
@@ -7459,6 +7501,8 @@ class DeltaApp:
                     stage="executed_posture",
                     detail="Existing background-goal worker started one bounded step.",
                 )
+        elif decision is not None and decision.selected_posture == "perform_one_gap_recovery_study":
+            self._start_endogenous_teaching_gap_recovery(decision)
         elif decision is not None and decision.selected_posture == "explore_near_association":
             self._surface_one_near_association(decision)
         elif decision is not None and decision.selected_posture == "execute_approved_association":

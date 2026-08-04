@@ -257,6 +257,76 @@ def compile_teaching_followup(
     }
 
 
+def compile_endogenous_terminal_gap_followup(
+    plan: Mapping[str, Any],
+    *,
+    objective_id: str,
+    terminal_report: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Compile one bounded recovery study from an actual terminal gap.
+
+    This remains a thin planning adapter: the returned record is the ordinary
+    teaching-followup schema, augmented only with source-terminal lineage.  It
+    does not create a second queue, objective, or model-work owner.
+    """
+
+    terminal_status = _normalise(str(terminal_report.get("status") or terminal_report.get("terminal_status") or ""))
+    remaining_gaps = tuple(
+        _normalise(str(item))
+        for item in terminal_report.get("remaining_gaps", ())
+        if _normalise(str(item))
+    )
+    if terminal_status in {"", "completed"} or not remaining_gaps:
+        return {}
+    source_gap = remaining_gaps[0]
+    source_terminal_report_key = _stable_id(
+        "teaching-terminal-gap-report",
+        objective_id,
+        terminal_status,
+        str(terminal_report.get("stop_reason") or ""),
+        "|".join(remaining_gaps),
+    )
+    topic = str(plan.get("topic") or "this topic")
+    question = (
+        f'How does "{source_gap}" fit into {topic}? '
+        "Give one concrete connection, one practical example, and one limitation."
+    )
+    followup = compile_teaching_followup(plan, objective_id=objective_id, message=question)
+    if not followup:
+        return {}
+    gap_tokens = set(_content_tokens(source_gap))
+    source_lesson = next(
+        (
+            item
+            for item in plan.get("curriculum", ())
+            if isinstance(item, Mapping)
+            and gap_tokens & set(_content_tokens(f"{item.get('title') or ''} {item.get('goal') or ''}"))
+        ),
+        {},
+    )
+    pressure_id = _stable_id("teaching-terminal-gap-pressure", objective_id, source_terminal_report_key)
+    return {
+        **followup,
+        **(
+            {
+                "lesson_id": str(source_lesson.get("lesson_id") or ""),
+                "lesson_title": str(source_lesson.get("title") or ""),
+            }
+            if source_lesson
+            else {}
+        ),
+        "topic": topic,
+        "origin": "endogenous_terminal_gap_recovery",
+        "pressure_id": pressure_id,
+        "source_terminal_report_key": source_terminal_report_key,
+        "source_terminal_status": terminal_status,
+        "source_terminal_stop_reason": str(terminal_report.get("stop_reason") or ""),
+        "source_terminal_reported_at": str(terminal_report.get("at") or ""),
+        "source_gap": source_gap,
+        "developmental_action_state": "queued",
+    }
+
+
 def teaching_followup_requires_study(
     plan: Mapping[str, Any],
     followups: tuple[Mapping[str, Any], ...] | list[Mapping[str, Any]],
@@ -399,6 +469,7 @@ def derive_teaching_pressures(
     followups: tuple[Mapping[str, Any], ...] | list[Mapping[str, Any]] = (),
     prerequisites: tuple[Mapping[str, Any], ...] | list[Mapping[str, Any]] = (),
     consolidation_records: tuple[Mapping[str, Any], ...] | list[Mapping[str, Any]] = (),
+    terminal_reports: tuple[Mapping[str, Any], ...] | list[Mapping[str, Any]] = (),
     teaching_cursor: int = 0,
 ) -> tuple[dict[str, Any], ...]:
     """Project only evidence-backed developmental pressure from teaching state."""
@@ -470,6 +541,39 @@ def derive_teaching_pressures(
             "requires_operator": False,
             "priority": 0,
         })
+    for terminal_report in reversed(tuple(item for item in terminal_reports if isinstance(item, Mapping))):
+        recovery = compile_endogenous_terminal_gap_followup(
+            plan,
+            objective_id=str(terminal_report.get("objective_id") or ""),
+            terminal_report=terminal_report,
+        )
+        if not recovery:
+            continue
+        source_terminal_report_key = str(recovery.get("source_terminal_report_key") or "")
+        already_recorded = any(
+            str(item.get("source_terminal_report_key") or "") == source_terminal_report_key
+            for item in followups
+            if isinstance(item, Mapping)
+        )
+        if already_recorded:
+            # The normal teaching follow-up record becomes the canonical
+            # lifecycle source once this one pressure has been acted on.
+            continue
+        pressures.append({
+            "pressure_id": str(recovery.get("pressure_id") or ""),
+            "pressure_type": "unresolved_curriculum_gap",
+            "source_followup_id": str(recovery.get("followup_id") or ""),
+            "source_terminal_report_key": source_terminal_report_key,
+            "source_gap": str(recovery.get("source_gap") or ""),
+            "reason": (
+                f'The prior teaching run left "{str(recovery.get("source_gap") or "this curriculum requirement")}" '
+                "unresolved; one source-bound local recovery study is safe under standing authority."
+            ),
+            "recommended_action": "perform_one_gap_recovery_study",
+            "requires_operator": False,
+            "priority": 4,
+        })
+        break
     return tuple(sorted(pressures, key=lambda item: (-int(item["priority"]), item["pressure_type"])))
 
 
@@ -655,6 +759,7 @@ __all__ = [
     "SCHEMA_VERSION",
     "compile_teaching_plan",
     "compile_teaching_followup",
+    "compile_endogenous_terminal_gap_followup",
     "compile_physics_prerequisite",
     "physics_prerequisite_resume_target",
     "derive_teaching_pressures",

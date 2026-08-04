@@ -10,6 +10,7 @@ from orchestration.runtime.conversational_runtime_operation import (
 from dataclasses import replace
 from orchestration.runtime.active_cognitive_loop import ScriptedSemanticModel
 from orchestration.runtime.developmental_teaching_runtime import (
+    compile_endogenous_terminal_gap_followup,
     compile_teaching_plan,
     derive_teaching_pressures,
     is_teaching_instruction,
@@ -156,6 +157,47 @@ def test_consolidation_pressure_waits_for_provisional_retention_decision():
     assert len(pressures) == 1
     assert pressures[0]["pressure_type"] == "epistemic_debt"
     assert pressures[0]["recommended_action"] == "continue_consolidation_boundary"
+
+
+def test_partial_terminal_gap_projects_one_source_bound_recovery_pressure():
+    plan = compile_teaching_plan("Teach me introductory photography.")
+    report = {
+        "event": "knowledge_goal_terminal_report",
+        "objective_id": "photography-objective",
+        "status": "partially_completed",
+        "stop_reason": "blocked_insufficient_evidence",
+        "remaining_gaps": ("address Connections",),
+        "at": "2026-08-04T01:22:51+00:00",
+    }
+
+    recovery = compile_endogenous_terminal_gap_followup(
+        plan,
+        objective_id="photography-objective",
+        terminal_report=report,
+    )
+    pressures = derive_teaching_pressures(plan, terminal_reports=(report,))
+
+    assert recovery["origin"] == "endogenous_terminal_gap_recovery"
+    assert recovery["source_gap"] == "address Connections"
+    assert recovery["lesson_title"] == "Connections"
+    assert "introductory photography" in recovery["question"]
+    assert len(pressures) == 1
+    assert pressures[0]["pressure_type"] == "unresolved_curriculum_gap"
+    assert pressures[0]["recommended_action"] == "perform_one_gap_recovery_study"
+    assert pressures[0]["source_terminal_report_key"] == recovery["source_terminal_report_key"]
+    assert not derive_teaching_pressures(plan, followups=(recovery,), terminal_reports=(report,))
+
+
+def test_completed_or_gapless_terminal_reports_do_not_create_recovery_pressure():
+    plan = compile_teaching_plan("Teach me introductory photography.")
+
+    assert not derive_teaching_pressures(
+        plan,
+        terminal_reports=(
+            {"objective_id": "photography-objective", "status": "completed", "remaining_gaps": ("address Connections",)},
+            {"objective_id": "photography-objective", "status": "partially_completed", "remaining_gaps": ()},
+        ),
+    )
 
 
 def test_physics_plan_preserves_qualitative_branch_and_calculus_prerequisite():

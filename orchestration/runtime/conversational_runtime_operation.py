@@ -28,6 +28,7 @@ from orchestration.runtime.active_cognitive_loop import (
 )
 from orchestration.runtime.delta_1_0_common import stable_id, utc_now
 from orchestration.runtime.developmental_teaching_runtime import (
+    compile_endogenous_terminal_gap_followup,
     compile_physics_prerequisite,
     compile_teaching_followup,
     compile_teaching_plan,
@@ -1792,8 +1793,11 @@ def start_or_restore_runtime(root: str | Path) -> ConversationalRuntimeState:
     state_path = Path(root) / "state.json"
     if state_path.exists():
         state = _state_from_record(read_json(state_path))
+        restored = _rebase_active_episode_path(root, state)
         if state.schema_version != SCHEMA_VERSION:
-            state = _replace_state(state, schema_version=SCHEMA_VERSION)
+            restored = _replace_state(restored, schema_version=SCHEMA_VERSION)
+        if restored != state:
+            state = restored
             save_runtime_state(root, state)
         return state
     state = ConversationalRuntimeState(
@@ -1802,6 +1806,26 @@ def start_or_restore_runtime(root: str | Path) -> ConversationalRuntimeState:
     )
     save_runtime_state(root, state)
     return state
+
+
+def _rebase_active_episode_path(root: str | Path, state: ConversationalRuntimeState) -> ConversationalRuntimeState:
+    """Keep a copied runtime from resuming an episode in the source root."""
+    active_path_text = str(state.active_episode_path or "").strip()
+    if not active_path_text:
+        return state
+    root_path = Path(root).resolve()
+    active_path = Path(active_path_text)
+    if not active_path.is_absolute():
+        return state
+    try:
+        active_path.resolve().relative_to(root_path)
+        return state
+    except ValueError:
+        pass
+    local_episode_path = root_path / active_path.name
+    if not local_episode_path.is_file():
+        return state
+    return replace(state, active_episode_path=str(local_episode_path))
 
 
 def save_runtime_state(root: str | Path, state: ConversationalRuntimeState) -> None:
@@ -4218,6 +4242,7 @@ def _record_teaching_episode_results(
     progress: list[Mapping[str, Any]] = []
     changed = False
     topic = str(plan.get("topic") or "this topic")
+    endogenous_recovery_lifecycle = ""
 
     for index, followup in enumerate(followups):
         evidence_id = str(followup.get("evidence_id") or followup.get("node_id") or "")
@@ -4228,6 +4253,7 @@ def _record_teaching_episode_results(
             continue
         expected_terms = tuple(str(item) for item in followup.get("question_tokens", ()) if str(item))
         assessment = _teaching_understanding_assessment(result, expected_terms=expected_terms)
+        endogenous_recovery = str(followup.get("origin") or "") == "endogenous_terminal_gap_recovery"
         if not result.accepted:
             attempts = _teaching_attempts_for_evidence(episode, evidence_id)
             rejected_attempts = tuple(item for item in attempts if not item.accepted)
@@ -4235,6 +4261,45 @@ def _record_teaching_episode_results(
                 len(rejected_attempts) == 1
                 and "local_model_execution_blocked" not in set(result.rejection_reasons)
             )
+            # A terminal-gap recovery is one independently selected bounded
+            # action, not a hidden retry loop.  Its first failed attempt is
+            # retained as a visible deferred result; ordinary operator asked
+            # teaching follow-ups keep their established single-retry policy.
+            if endogenous_recovery:
+                followups[index] = {
+                    **followup,
+                    "status": "study_blocked",
+                    "operation_id": result.operation_id,
+                    "last_processed_operation_id": result.operation_id,
+                    "retry_count": len(rejected_attempts),
+                    "last_rejection_reasons": tuple(result.rejection_reasons),
+                    "understanding_assessment": assessment,
+                    "developmental_action_state": "deferred_after_local_failure",
+                    "completed_at": utc_now(),
+                }
+                progress.extend((
+                    {
+                        "event": "teaching_followup_study_blocked",
+                        "objective_id": objective.objective_id,
+                        "followup_id": str(followup.get("followup_id") or ""),
+                        "operation_id": result.operation_id,
+                        "at": utc_now(),
+                    },
+                    {
+                        "event": "endogenous_teaching_gap_recovery_deferred",
+                        "objective_id": objective.objective_id,
+                        "followup_id": str(followup.get("followup_id") or ""),
+                        "pressure_id": str(followup.get("pressure_id") or ""),
+                        "source_terminal_report_key": str(followup.get("source_terminal_report_key") or ""),
+                        "source_gap": str(followup.get("source_gap") or ""),
+                        "operation_id": result.operation_id,
+                        "rejection_reasons": tuple(result.rejection_reasons),
+                        "at": utc_now(),
+                    },
+                ))
+                endogenous_recovery_lifecycle = "paused_budget"
+                changed = True
+                continue
             if retryable:
                 followups[index] = {
                     **followup,
@@ -4288,6 +4353,7 @@ def _record_teaching_episode_results(
             "uncertainty": str(result.uncertainty or "").strip(),
             "understanding_assessment": assessment,
             "completed_at": utc_now(),
+            **({"developmental_action_state": "completed_pending_retention"} if endogenous_recovery else {}),
         }
         followups[index] = completed
         request_id = stable_id(
@@ -4334,6 +4400,19 @@ def _record_teaching_episode_results(
             "epistemic_state": "pending_consolidation",
             "at": utc_now(),
         })
+        if endogenous_recovery:
+            progress.append({
+                "event": "endogenous_teaching_gap_recovery_completed",
+                "objective_id": objective.objective_id,
+                "followup_id": str(completed.get("followup_id") or ""),
+                "pressure_id": str(completed.get("pressure_id") or ""),
+                "source_terminal_report_key": str(completed.get("source_terminal_report_key") or ""),
+                "source_gap": str(completed.get("source_gap") or ""),
+                "claim_version_id": claim_version_id,
+                "operation_id": result.operation_id,
+                "at": utc_now(),
+            })
+            endogenous_recovery_lifecycle = "paused_operator"
         changed = True
 
     for index, prerequisite in enumerate(prerequisites):
@@ -4471,6 +4550,7 @@ def _record_teaching_episode_results(
     updated = _replace_state(
         state,
         active_objective=updated_objective,
+        lifecycle_state=endogenous_recovery_lifecycle or state.lifecycle_state,
         pending_chat_requests=tuple(pending_by_id.values()),
         objective_progress=state.objective_progress + tuple(progress) + (({
             "event": "teaching_consolidation_eligible",
@@ -4604,6 +4684,93 @@ def _queue_teaching_followup_from_turn(
         reply=reply,
         background_cycle_started=True,
     )
+
+
+def _latest_terminal_report_for_objective(
+    state: ConversationalRuntimeState,
+    objective_id: str,
+) -> Mapping[str, Any]:
+    """Return the latest canonical knowledge terminal report for this objective."""
+
+    for item in reversed(state.objective_progress):
+        if (
+            isinstance(item, Mapping)
+            and str(item.get("event") or "") == "knowledge_goal_terminal_report"
+            and str(item.get("objective_id") or "") == objective_id
+        ):
+            return dict(item)
+    return {}
+
+
+def queue_endogenous_teaching_gap_recovery(
+    state: ConversationalRuntimeState,
+    *,
+    runtime_root: str | Path,
+) -> tuple[ConversationalRuntimeState, Mapping[str, Any]] | None:
+    """Queue one source-bound recovery from an actual terminal teaching gap.
+
+    The returned follow-up is the normal teaching-followup record. This
+    transition records why the worker is allowed to run, but deliberately does
+    not create a user turn, an assistant acknowledgement, or another queue.
+    """
+
+    objective = state.active_objective
+    plan = _teaching_plan_for_objective(objective)
+    if (
+        objective is None
+        or not plan
+        or state.lifecycle_state != "paused_budget"
+        or any(request.status == "pending" and not request.consumption_count for request in state.pending_chat_requests)
+    ):
+        return None
+    terminal_report = _latest_terminal_report_for_objective(state, objective.objective_id)
+    followup = compile_endogenous_terminal_gap_followup(
+        plan,
+        objective_id=objective.objective_id,
+        terminal_report=terminal_report,
+    )
+    if not followup:
+        return None
+    source_terminal_report_key = str(followup.get("source_terminal_report_key") or "")
+    existing = next(
+        (
+            item
+            for item in _teaching_followups_for_objective(objective)
+            if str(item.get("source_terminal_report_key") or "") == source_terminal_report_key
+        ),
+        None,
+    )
+    if existing is not None:
+        return None
+    queued_followup = {
+        **followup,
+        "created_at": utc_now(),
+        "developmental_action_state": "queued",
+    }
+    updated_objective = _replace_teaching_objective(
+        objective,
+        followups=_teaching_followups_for_objective(objective) + (queued_followup,),
+    )
+    action = {
+        "event": "endogenous_teaching_gap_recovery_queued",
+        "action_id": str(queued_followup.get("pressure_id") or ""),
+        "objective_id": objective.objective_id,
+        "followup_id": str(queued_followup.get("followup_id") or ""),
+        "source_terminal_report_key": source_terminal_report_key,
+        "source_terminal_status": str(queued_followup.get("source_terminal_status") or ""),
+        "source_terminal_stop_reason": str(queued_followup.get("source_terminal_stop_reason") or ""),
+        "source_gap": str(queued_followup.get("source_gap") or ""),
+        "authority": str(queued_followup.get("local_study_authority") or ""),
+        "at": utc_now(),
+    }
+    updated = _replace_state(
+        state,
+        lifecycle_state="running",
+        active_objective=updated_objective,
+        objective_progress=state.objective_progress + (action,),
+    )
+    save_runtime_state(runtime_root, updated)
+    return updated, action
 
 
 def reconcile_queued_teaching_followup(

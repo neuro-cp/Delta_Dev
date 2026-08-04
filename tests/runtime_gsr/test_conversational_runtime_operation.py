@@ -1,4 +1,7 @@
 from dataclasses import replace
+from pathlib import Path
+
+from orchestration.runtime.active_cognitive_loop import ScriptedSemanticModel
 
 from orchestration.runtime.conversational_runtime_operation import (
     _knowledge_node_completion_contract,
@@ -27,6 +30,7 @@ from orchestration.runtime.conversational_runtime_operation import (
     stop_active_objective,
     unrendered_knowledge_goal_events,
     mark_knowledge_goal_event_rendered,
+    queue_endogenous_teaching_gap_recovery,
 )
 
 
@@ -73,6 +77,103 @@ def test_intent_classifier_distinguishes_chat_goal_correction_and_risk(tmp_path)
     assert correction.intent_type == "direct_correction"
     assert "modify_source" in risky.authority_required
     assert "push" in risky.authority_required
+
+
+def test_endogenous_terminal_gap_recovery_queues_once_and_reaches_the_normal_retention_boundary(tmp_path):
+    state = handle_conversational_message(
+        start_or_restore_runtime(tmp_path),
+        "Teach me introductory photography.",
+        runtime_root=tmp_path,
+        run_background_cycle=False,
+    ).state
+    objective = state.active_objective
+    assert objective is not None
+    terminal = {
+        "event": "knowledge_goal_terminal_report",
+        "objective_id": objective.objective_id,
+        "status": "partially_completed",
+        "stop_reason": "blocked_insufficient_evidence",
+        "remaining_gaps": ("address Connections",),
+        "at": "2026-08-04T01:22:51+00:00",
+    }
+    state = replace(
+        state,
+        lifecycle_state="paused_budget",
+        objective_progress=state.objective_progress + (terminal,),
+    )
+    conversation_count = len(state.conversation)
+
+    queued = queue_endogenous_teaching_gap_recovery(state, runtime_root=tmp_path)
+
+    assert queued is not None
+    queued_state, action = queued
+    followup = queued_state.active_objective.provenance["teaching_followups"][0]
+    assert queued_state.lifecycle_state == "running"
+    assert len(queued_state.conversation) == conversation_count
+    assert followup["origin"] == "endogenous_terminal_gap_recovery"
+    assert followup["source_gap"] == "address Connections"
+    assert followup["lesson_title"] == "Connections"
+    assert action["event"] == "endogenous_teaching_gap_recovery_queued"
+    assert queue_endogenous_teaching_gap_recovery(queued_state, runtime_root=tmp_path) is None
+
+    def source_bound_runner(request, packet):
+        response = dict(ScriptedSemanticModel()(request, packet))
+        node = dict(packet.active_focus.get("active_frontier_node") or {})
+        statement = (
+            "In introductory photography, connections link aperture, shutter speed, and ISO because changing one exposure "
+            "control requires compensating with another to keep brightness stable. For example, opening the aperture can "
+            "permit a faster shutter speed for action, while a limitation is that the same exposure can still differ in depth "
+            "of field or motion blur."
+        )
+        response.update({
+            "hypothesis_statement": statement,
+            "interpretation": statement,
+            "scope": str(node.get("label") or "Connections"),
+            "expected_observations": ("Changing aperture or shutter speed changes depth of field or motion blur.",),
+            "raw_model_output": statement,
+        })
+        return response
+
+    studied = run_background_objective_cycle(
+        queued_state,
+        runtime_root=tmp_path,
+        reason="endogenous_terminal_gap_recovery",
+        model_runner=source_bound_runner,
+    )
+    completed = studied.active_objective.provenance["teaching_followups"][0]
+
+    assert completed["status"] == "provisional_ready_for_retention"
+    assert completed["developmental_action_state"] == "completed_pending_retention"
+    assert studied.lifecycle_state == "paused_operator"
+    assert any(item.request_type == "teaching_provisional_retention" for item in studied.pending_chat_requests)
+    assert sum(item.get("event") == "endogenous_teaching_gap_recovery_completed" for item in studied.objective_progress) == 1
+    save_runtime_state(tmp_path, studied)
+    restored = start_or_restore_runtime(tmp_path)
+    assert queue_endogenous_teaching_gap_recovery(restored, runtime_root=tmp_path) is None
+    assert len(restored.active_objective.provenance["teaching_followups"]) == 1
+
+
+def test_start_or_restore_runtime_rebases_a_copied_episode_to_its_local_root(tmp_path):
+    source_root = tmp_path / "source"
+    copied_root = tmp_path / "copied"
+    source_state = handle_conversational_message(
+        start_or_restore_runtime(source_root),
+        "Teach me introductory photography.",
+        runtime_root=source_root,
+        run_background_cycle=False,
+    ).state
+    source_episode = Path(source_state.active_episode_path)
+    copied_root.mkdir()
+    copied_episode = copied_root / source_episode.name
+    copied_episode.write_bytes(source_episode.read_bytes())
+    save_runtime_state(copied_root, replace(source_state, active_episode_path=str(source_episode)))
+    source_bytes = source_episode.read_bytes()
+
+    restored = start_or_restore_runtime(copied_root)
+
+    assert Path(restored.active_episode_path) == copied_episode.resolve()
+    assert source_episode.read_bytes() == source_bytes
+    assert Path(read_json(copied_root / "state.json")["active_episode_path"]) == copied_episode.resolve()
 
 
 def test_collection_wording_uses_a_mechanism_completion_contract():

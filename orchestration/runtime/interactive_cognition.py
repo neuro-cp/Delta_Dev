@@ -617,6 +617,7 @@ def build_workspace_snapshot(
                 str(controller.get("controller_id") or ""),
                 str(controller.get("objective_id") or ""),
                 source_id,
+                str(pressure.get("source_terminal_report_key") or ""),
                 cohort.cohort_id if cohort is not None else "",
             )
             threads.append(_thread(
@@ -630,6 +631,8 @@ def build_workspace_snapshot(
                     if waiting_for_external_review
                     else "standing_authority_for_local_consolidation"
                     if action == "continue_consolidation_boundary"
+                    else "standing_authority_for_one_bounded_gap_recovery"
+                    if action == "perform_one_gap_recovery_study"
                     else "operator_or_goal_governance"
                 ),
                 resource_requirements=(), resume_cursor_ref=f"teaching-pressure:{action or pressure_type}",
@@ -644,9 +647,9 @@ def build_workspace_snapshot(
                 # This is a bounded corrective action rooted in the current
                 # teaching objective, not a new scheduler or curiosity source.
                 attention=AttentionInputs(
-                    goal_importance=0 if waiting_for_external_review else 4,
+                    goal_importance=0 if waiting_for_external_review else 5 if action == "perform_one_gap_recovery_study" else 4,
                     consolidation_urgency=3 if action == "continue_consolidation_boundary" else 0,
-                    expected_information_gain=0 if waiting_for_external_review else 2,
+                    expected_information_gain=0 if waiting_for_external_review else 3 if action == "perform_one_gap_recovery_study" else 2,
                     operator_interest_alignment=3,
                 ),
             ))
@@ -1193,6 +1196,8 @@ def _posture_for(thread: CognitiveThread | None) -> str:
             return "perform_one_consolidation_step"
         if thread.resume_cursor_ref.endswith("resume_parent_curriculum"):
             return "continue_active_goal"
+        if thread.resume_cursor_ref.endswith("perform_one_gap_recovery_study"):
+            return "perform_one_gap_recovery_study"
         return "report_current_focus"
     if thread.thread_kind in {"active_goal", "local_inquiry", "developmental_objective"} and thread.status not in {"paused", "blocked_operator_decision", "blocked"}:
         return "continue_active_goal"

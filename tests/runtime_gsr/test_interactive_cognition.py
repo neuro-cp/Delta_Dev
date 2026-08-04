@@ -86,6 +86,40 @@ def test_shadow_arbiter_always_prefers_foreground_over_active_goal(tmp_path):
     assert "unanswered_foreground_operator_message" in decision.reason_codes
 
 
+def test_terminal_gap_pressure_selects_one_bounded_recovery_posture(tmp_path):
+    state = replace(_goal_state(tmp_path), lifecycle_state="paused_budget")
+    objective = state.active_objective
+    assert objective is not None
+    controller = {
+        "controller_id": "teaching-controller-gap",
+        "objective_id": objective.objective_id,
+        "plan": objective.provenance["teaching_plan"],
+        "teaching_cursor": 3,
+        "developmental_pressures": (
+            {
+                "pressure_id": "terminal-gap-pressure",
+                "pressure_type": "unresolved_curriculum_gap",
+                "source_followup_id": "terminal-gap-followup",
+                "source_terminal_report_key": "terminal-report-key",
+                "source_gap": "address Connections",
+                "reason": "A real terminal gap has one safe bounded recovery action.",
+                "recommended_action": "perform_one_gap_recovery_study",
+                "requires_operator": False,
+                "priority": 4,
+            },
+        ),
+    }
+
+    snapshot = build_workspace_snapshot(state, developmental_controller=controller)
+    decision = arbitrate_attention(snapshot)
+    pressure = next(item for item in snapshot.threads if item.thread_kind == "developmental_pressure")
+
+    assert pressure.authority_requirement == "standing_authority_for_one_bounded_gap_recovery"
+    assert pressure.source_record_ids[-1] == "terminal-report-key"
+    assert decision.selected_posture == "perform_one_gap_recovery_study"
+    assert decision.target_owner == "continuous_runtime_controller"
+
+
 def test_shadow_decision_journal_is_bounded_and_deduplicated(tmp_path):
     state = _goal_state(tmp_path)
     coordination = CoordinationState(runtime_id=state.runtime_id)
