@@ -478,6 +478,10 @@ def derive_teaching_pressures(
     for item in followups:
         if not isinstance(item, Mapping):
             continue
+        if bool(item.get("operator_suppressed")):
+            # The follow-up record remains canonical and auditable, but an
+            # explicit operator posture must keep it out of idle selection.
+            continue
         status = str(item.get("status") or "")
         claim_version_id = str(item.get("claim_version_id") or "")
         sealed_record = next(
@@ -526,6 +530,8 @@ def derive_teaching_pressures(
     for record in consolidation_records:
         if not isinstance(record, Mapping):
             continue
+        if bool(record.get("operator_suppressed")):
+            continue
         review_status = str(
             record.get("review_status")
             or record.get("review_authorization_status")
@@ -550,8 +556,13 @@ def derive_teaching_pressures(
         if not recovery:
             continue
         source_terminal_report_key = str(recovery.get("source_terminal_report_key") or "")
+        source_gap = str(recovery.get("source_gap") or "")
         already_recorded = any(
             str(item.get("source_terminal_report_key") or "") == source_terminal_report_key
+            or (
+                bool(item.get("operator_suppressed"))
+                and str(item.get("source_gap") or "") == source_gap
+            )
             for item in followups
             if isinstance(item, Mapping)
         )

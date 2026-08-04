@@ -114,6 +114,7 @@ from orchestration.runtime.conversational_runtime_operation import (  # noqa: E4
     evaluate_conversational_runtime,
     handle_conversational_message,
     infer_lesson_transfer,
+    is_developmental_governance_message,
     is_teaching_followup_message,
     mark_capability_campaign_milestone_rendered,
     mark_chat_request_rendered,
@@ -127,6 +128,7 @@ from orchestration.runtime.conversational_runtime_operation import (  # noqa: E4
     review_status_for_goal_completion,
     select_chat_request_owner,
     request_provider_learning_packet,
+    resolve_developmental_governance_instruction,
     resume_active_objective as resume_conversational_objective,
     resolve_pending_chat_request,
     run_background_objective_cycle as run_conversational_background_cycle,
@@ -7525,6 +7527,32 @@ class DeltaApp:
 
     def _handle_conversational_runtime_message(self, message: str) -> bool:
         state = self.conversational_runtime_state
+        governance_result = resolve_developmental_governance_instruction(
+            state,
+            message,
+            runtime_root=self.conversational_runtime_root,
+        )
+        if governance_result is not None:
+            self.conversational_runtime_state = governance_result.state
+            self._append_chat("DELTA", governance_result.reply)
+            self._append_session("user", message)
+            self._append_session("assistant", governance_result.reply)
+            self._sync_developmental_teaching_progress()
+            governance = dict(governance_result.developmental_governance or {})
+            source_id = str(
+                governance.get("source_followup_id")
+                or governance.get("source_record_id")
+                or governance.get("claim_version_id")
+                or "existing developmental record"
+            )
+            self._append_observation(
+                "Developmental governance",
+                f"{str(governance.get('action') or 'operator posture')} was bound to {source_id}; "
+                f"{str(governance.get('reason') or governance.get('posture') or 'the canonical record was updated')}",
+            )
+            self._refresh_conversational_runtime_status()
+            self._refresh_state_cards()
+            return True
         owner = select_chat_request_owner(state, message)
         normalized = " ".join(str(message or "").lower().split())
         pending = tuple(
@@ -9070,6 +9098,14 @@ class DeltaApp:
                 self._append_session("user", message)
                 self._append_chat("DELTA", reply)
                 self._append_session("assistant", reply)
+                return
+        if is_developmental_governance_message(self.conversational_runtime_state, message):
+            if self._handle_conversational_runtime_message(message):
+                self._complete_dispatch_shadow_plan(
+                    shadow_message_id,
+                    legacy_consumed=True,
+                    rendered_owner="conversational_runtime",
+                )
                 return
         if self.conversational_runtime_state.pending_chat_requests and lower in (affirm_words | cancel_words):
             if self._handle_conversational_runtime_message(message):

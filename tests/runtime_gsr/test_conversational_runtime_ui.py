@@ -66,6 +66,102 @@ def _add_local_insufficiency(app):
     assert evaluation["status"] == "locally_insufficient"
 
 
+def test_developmental_priority_instruction_is_visible_source_bound_and_restart_safe(monkeypatch, tmp_path):
+    """The normal Tk path must govern a pending teaching result before ordinary chat."""
+
+    from orchestration.runtime.conversational_runtime_operation import (
+        ChatAddressableRequest,
+        handle_conversational_message,
+        save_runtime_state,
+    )
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        created = handle_conversational_message(
+            app.conversational_runtime_state,
+            "Teach me introductory photography.",
+            runtime_root=app.conversational_runtime_root,
+            run_background_cycle=False,
+        ).state
+        objective = created.active_objective
+        assert objective is not None
+        followup = {
+            "followup_id": "ui-followup-connections",
+            "lesson_id": "ui-lesson-connections",
+            "lesson_title": "Connections",
+            "source_gap": "address Connections",
+            "question": "How do Connections fit into introductory photography?",
+            "status": "provisional_ready_for_retention",
+            "developmental_action_state": "completed_pending_retention",
+            "claim_version_id": "ui-claim-connections",
+            "operation_id": "ui-operation-connections",
+            "interpretation": "Exposure controls connect aperture, shutter speed, and ISO.",
+            "origin": "endogenous_terminal_gap_recovery",
+        }
+        request = ChatAddressableRequest(
+            request_id="ui-retention-connections",
+            request_type="teaching_provisional_retention",
+            objective_id=objective.objective_id,
+            originating_goal_id=objective.objective_id,
+            goal_label="Provisional teaching retention",
+            prompt_text="Should I remember the provisional Connections explanation?",
+            created_turn_id="ui-connections-result",
+            rendered_turn_id="ui-connections-retention",
+            created_sequence=5,
+            render_sequence=6,
+            accepted_response_types=("approved", "denied"),
+            baseline_metrics={"followup_id": followup["followup_id"], "claim_version_id": followup["claim_version_id"]},
+        )
+        objective = replace(
+            objective,
+            provenance={**objective.provenance, "teaching_followups": (followup,)},
+        )
+        app.conversational_runtime_state = replace(
+            created,
+            lifecycle_state="paused_operator",
+            active_objective=objective,
+            pending_chat_requests=(request,),
+        )
+        save_runtime_state(app.conversational_runtime_root, app.conversational_runtime_state)
+        app._ensure_developmental_teaching_controller()
+
+        _send(app, "Actually, don't prioritize Connections right now. Keep it pending and continue the broader photography structure.")
+
+        governed = app.conversational_runtime_state.active_objective.provenance["teaching_followups"][0]
+        transcript = app.chat_history.get("1.0", tk.END).lower()
+        assert governed["status"] == "retention_deferred"
+        assert governed["operator_suppressed"] is True
+        assert governed["claim_version_id"] == "ui-claim-connections"
+        assert not app.conversational_runtime_state.pending_chat_requests
+        assert app.conversational_runtime_state.resolved_chat_requests[0].resolution == "operator_deprioritized"
+        assert "deferred its retention" in transcript
+        assert "ui-followup-connections" in app.observation_stream.get("1.0", tk.END)
+
+        _send(app, "What did you change about Connections?")
+        _send(app, "What is 2 + 2?")
+        latest = app.chat_history.get("1.0", tk.END).lower()
+        assert "retention deferred" in latest
+        assert "4" in latest.rsplit("you: what is 2 + 2?", 1)[-1]
+        assert not app.conversational_runtime_state.pending_chat_requests
+        assert len(governed["operator_governance_history"]) == 1
+        objective_id = app.conversational_runtime_state.active_objective.objective_id
+    finally:
+        root.destroy()
+
+    root, restored = _app(monkeypatch, tmp_path)
+    try:
+        objective = restored.conversational_runtime_state.active_objective
+        assert objective is not None
+        assert objective.objective_id == objective_id
+        followup = objective.provenance["teaching_followups"][0]
+        assert followup["status"] == "retention_deferred"
+        assert len(followup["operator_governance_history"]) == 1
+        assert not restored.conversational_runtime_state.pending_chat_requests
+        assert len(restored.conversational_runtime_state.resolved_chat_requests) == 1
+    finally:
+        root.destroy()
+
+
 def test_graph_bound_question_uses_epistemic_answer_without_requests_or_writes(monkeypatch, tmp_path):
     import hashlib
     from orchestration.runtime.provisional_semantic_consolidation import ClaimVersion, ProvisionalSemanticGraphState, graph_path, save_graph

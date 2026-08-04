@@ -489,6 +489,7 @@ class RuntimeTurnResult:
     background_cycle_started: bool = False
     transfer_applied: bool = False
     side_thread_bound: bool = False
+    developmental_governance: Mapping[str, Any] | None = None
     schema_version: str = SCHEMA_VERSION
 
     def as_record(self) -> dict[str, Any]:
@@ -2498,6 +2499,445 @@ def select_chat_request_owner(state: ConversationalRuntimeState, message: str) -
     return _pending_request_for_reply(state, message)
 
 
+_DEVELOPMENTAL_GOVERNANCE_STOPWORDS = frozenset({
+    "actually", "answer", "before", "broader", "continue", "defer", "external", "keep", "mark",
+    "pending", "priority", "provisional", "result", "retain", "retaining", "retention", "review",
+    "right", "should", "that", "the", "this", "too", "what", "with", "without",
+})
+
+
+def _developmental_governance_action(message: str) -> str:
+    """Recognise only explicit governance of an existing developmental record."""
+
+    lower = " ".join(str(message or "").lower().split())
+    if not lower:
+        return ""
+    if (
+        "external review" in lower
+        and any(phrase in lower for phrase in ("not available", "unavailable", "keep it pending", "stop surfacing", "do not surface"))
+    ):
+        return "defer_external_review"
+    if (
+        ("too vague" in lower or "needs revision" in lower or "need revision" in lower)
+        or "mark it for revision" in lower
+        or "mark that" in lower and "revision" in lower
+        or "should not be retained" in lower
+        or "should not retain" in lower
+    ):
+        return "request_revision"
+    if any(phrase in lower for phrase in (
+        "don't prioritize", "do not prioritize", "deprioritize", "de-prioritize", "lower priority", "keep it pending",
+    )):
+        return "deprioritize"
+    if (
+        ("what did you change" in lower or "what changed" in lower)
+        and any(term in lower for term in ("result", "provisional", "retention", "review", "connection", "lesson"))
+    ):
+        return "status"
+    return ""
+
+
+def _governance_tokens(value: str) -> set[str]:
+    return {
+        token
+        for token in re.findall(r"[a-z0-9]{3,}", str(value or "").lower())
+        if token not in _DEVELOPMENTAL_GOVERNANCE_STOPWORDS
+    }
+
+
+def _retention_request_for_followup(
+    state: ConversationalRuntimeState,
+    followup_id: str,
+) -> ChatAddressableRequest | None:
+    requests = [
+        request
+        for request in state.pending_chat_requests
+        if request.status == "pending"
+        and not request.consumption_count
+        and request.request_type == "teaching_provisional_retention"
+        and str(request.baseline_metrics.get("followup_id") or "") == followup_id
+    ]
+    if not requests:
+        return None
+    return max(requests, key=lambda request: (request.render_sequence, request.created_sequence, request.request_id))
+
+
+def _select_governed_followup(
+    state: ConversationalRuntimeState,
+    message: str,
+) -> tuple[dict[str, Any], ChatAddressableRequest | None] | None:
+    objective = state.active_objective
+    if objective is None:
+        return None
+    followups = _teaching_followups_for_objective(objective)
+    if not followups:
+        return None
+    message_tokens = _governance_tokens(message)
+    candidates: list[tuple[int, int, dict[str, Any], ChatAddressableRequest | None]] = []
+    for followup in followups:
+        followup_id = str(followup.get("followup_id") or "")
+        if not followup_id:
+            continue
+        request = _retention_request_for_followup(state, followup_id)
+        labels = (
+            str(followup.get("lesson_title") or ""),
+            str(followup.get("source_gap") or ""),
+            str(followup.get("question") or ""),
+            str(followup.get("claim_version_id") or ""),
+            followup_id,
+        )
+        label_tokens = set().union(*(_governance_tokens(label) for label in labels))
+        explicit_overlap = len(message_tokens & label_tokens)
+        exact_label = any(
+            label and len(_governance_tokens(label)) == 1 and _governance_tokens(label) <= message_tokens
+            for label in labels[:2]
+        )
+        request_recency = request.render_sequence if request is not None else 0
+        if explicit_overlap or exact_label:
+            candidates.append((10 + explicit_overlap + int(exact_label), request_recency, followup, request))
+        elif request is not None:
+            candidates.append((1, request_recency, followup, request))
+    if not candidates:
+        return None
+    top_score = max(item[0] for item in candidates)
+    top = [item for item in candidates if item[0] == top_score]
+    if len(top) > 1:
+        top_request_recency = max(item[1] for item in top)
+        top = [item for item in top if item[1] == top_request_recency]
+    if len(top) != 1:
+        return None
+    _, _, followup, request = top[0]
+    return followup, request
+
+
+def _select_governed_consolidation_record(
+    state: ConversationalRuntimeState,
+    message: str,
+) -> dict[str, Any] | None:
+    objective = state.active_objective
+    if objective is None:
+        return None
+    records = [
+        record
+        for record in _teaching_consolidation_records_for_objective(objective)
+        if str(record.get("review_status") or record.get("review_authorization_status") or "")
+        in {"pending_external_review", "authorized_pending_external_review", "operator_deferred_external_review"}
+    ]
+    if not records:
+        return None
+    if len(records) == 1:
+        return records[0]
+    message_tokens = _governance_tokens(message)
+    matches = []
+    for record in records:
+        labels = (
+            str(record.get("packet_id") or ""),
+            str(record.get("cohort_id") or ""),
+            " ".join(str(item) for item in record.get("claim_version_ids", ())),
+        )
+        overlap = len(message_tokens & set().union(*(_governance_tokens(label) for label in labels)))
+        if overlap:
+            matches.append((overlap, record))
+    if not matches:
+        return None
+    top_score = max(score for score, _ in matches)
+    top = [record for score, record in matches if score == top_score]
+    return top[0] if len(top) == 1 else None
+
+
+def _developmental_governance_target(
+    state: ConversationalRuntimeState,
+    message: str,
+) -> tuple[str, str, Mapping[str, Any], ChatAddressableRequest | None] | None:
+    action = _developmental_governance_action(message)
+    if not action:
+        return None
+    if action == "defer_external_review":
+        record = _select_governed_consolidation_record(state, message)
+        return (action, "consolidation_record", record, None) if record is not None else None
+    if action == "status":
+        # A review-specific status question must read the canonical sealed-packet
+        # record, not fall through to unrelated semantic-memory answer routing.
+        review_record = _select_governed_consolidation_record(state, message)
+        lower = str(message or "").lower()
+        if review_record is not None and "external review" in lower:
+            return action, "consolidation_record", review_record, None
+        followup_target = _select_governed_followup(state, message)
+        if followup_target is not None:
+            followup, request = followup_target
+            return action, "teaching_followup", followup, request
+        if review_record is not None and "review" in lower:
+            return action, "consolidation_record", review_record, None
+        return None
+    followup_target = _select_governed_followup(state, message)
+    if followup_target is None:
+        return None
+    followup, request = followup_target
+    return action, "teaching_followup", followup, request
+
+
+def is_developmental_governance_message(
+    state: ConversationalRuntimeState,
+    message: str,
+) -> bool:
+    """Return whether wording names one unambiguous existing developmental record."""
+
+    return _developmental_governance_target(state, message) is not None
+
+
+def _governance_history(record: Mapping[str, Any]) -> tuple[Mapping[str, Any], ...]:
+    return tuple(dict(item) for item in record.get("operator_governance_history", ()) if isinstance(item, Mapping))
+
+
+def _governance_assistant_reply(
+    *,
+    action: str,
+    label: str,
+    already_applied: bool = False,
+) -> str:
+    subject = label or "that developmental result"
+    if already_applied:
+        return f"The operator-governed posture for {subject} is already recorded, so I left the same provisional evidence and suppression in place."
+    if action == "deprioritize":
+        return (
+            f"I kept {subject} provisional and deferred its retention. It will not be selected for immediate recovery, "
+            "while the broader teaching context remains available."
+        )
+    if action == "request_revision":
+        return (
+            f"I marked the provisional {subject} result for revision before retention. The original evidence remains intact, "
+            "but I will not treat it as retained or settled material."
+        )
+    if action == "defer_external_review":
+        return (
+            "I left that external review pending but suppressed it until you ask. No external call, review result, admission, "
+            "or promotion was performed."
+        )
+    return f"{subject} remains provisional and is governed by its recorded operator posture."
+
+
+def _governance_status_reply(record: Mapping[str, Any], *, source_kind: str) -> str:
+    label = str(record.get("lesson_title") or record.get("source_gap") or record.get("packet_id") or "that developmental result")
+    posture = str(record.get("operator_governance_state") or "no operator revision recorded")
+    resumption = str(record.get("operator_resumption_posture") or "unchanged")
+    status = str(record.get("status") or record.get("review_status") or "provisional")
+    return (
+        f"{label} is currently {status.replace('_', ' ')}. Its operator-governed posture is "
+        f"{posture.replace('_', ' ')}, with resumption set to {resumption.replace('_', ' ')}. "
+        "The underlying provisional evidence has not been deleted or promoted."
+    )
+
+
+def _resolve_governance_retention_request(
+    request: ChatAddressableRequest,
+    *,
+    action: str,
+    message: str,
+    turn_id: str,
+) -> ChatAddressableRequest:
+    resolution = "operator_deprioritized" if action == "deprioritize" else "operator_revision_requested"
+    status = "deferred" if action == "deprioritize" else "revision_requested"
+    policy = (
+        "operator_deferred_provisional_retention"
+        if action == "deprioritize"
+        else "operator_revision_blocks_provisional_retention"
+    )
+    return replace(
+        request,
+        status=status,
+        resolution_state=status,
+        resolution=resolution,
+        resolution_policy=policy,
+        resolution_text=message,
+        resolved_turn_id=turn_id,
+        resolved_at=utc_now(),
+        consumed_at=utc_now(),
+        consumption_count=1,
+    )
+
+
+def resolve_developmental_governance_instruction(
+    state: ConversationalRuntimeState,
+    message: str,
+    *,
+    runtime_root: str | Path,
+) -> RuntimeTurnResult | None:
+    """Apply one explicit operator posture to an existing teaching record.
+
+    The record remains the canonical owner.  This function only records an
+    append-only operator decision, updates the record's current posture, and
+    resolves the already-rendered retention request when that is the exact
+    object the operator governed.
+    """
+
+    target = _developmental_governance_target(state, message)
+    if target is None or state.active_objective is None:
+        return None
+    action, source_kind, source_record, request = target
+    objective = state.active_objective
+    record = dict(source_record)
+    label = str(record.get("lesson_title") or record.get("source_gap") or record.get("packet_id") or "that result")
+
+    if action == "status":
+        reply = _governance_status_reply(record, source_kind=source_kind)
+        user_turn = ConversationTurn(
+            turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 1), message),
+            role="user",
+            text=message,
+            intent_type="developmental_governance_status",
+            objective_id=objective.objective_id,
+        )
+        assistant_turn = ConversationTurn(
+            turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
+            role="assistant",
+            text=reply,
+            intent_type="developmental_governance_status_ack",
+            objective_id=objective.objective_id,
+        )
+        updated = _replace_state(state, conversation=state.conversation + (user_turn, assistant_turn))
+        save_runtime_state(runtime_root, updated)
+        return RuntimeTurnResult(
+            state=updated,
+            intent=ConversationIntent("developmental_governance_status", 0.9, "active_teaching_objective", "safe_internal", (), ("source_bound_governance_status",)),
+            reply=reply,
+            side_thread_bound=True,
+            developmental_governance={
+                "action": "status",
+                "source_kind": source_kind,
+                "source_followup_id": str(record.get("followup_id") or ""),
+                "source_record_id": str(record.get("packet_id") or ""),
+                "claim_version_id": str(record.get("claim_version_id") or ""),
+                "reason": "operator_requested_governance_status",
+            },
+        )
+
+    user_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 1), message),
+        role="user",
+        text=message,
+        intent_type=f"developmental_{action}_instruction",
+        objective_id=objective.objective_id,
+    )
+    history = _governance_history(record)
+    decision_id = stable_id(
+        "developmental-governance-decision",
+        objective.objective_id,
+        source_kind,
+        str(record.get("followup_id") or record.get("packet_id") or ""),
+        action,
+        message,
+    )
+    already_applied = any(str(item.get("decision_id") or "") == decision_id for item in history)
+    next_status = (
+        "retention_deferred"
+        if action == "deprioritize"
+        else "revision_requested"
+        if action == "request_revision"
+        else "operator_deferred_external_review"
+    )
+    posture = (
+        "operator_deprioritized"
+        if action == "deprioritize"
+        else "operator_revision_requested"
+        if action == "request_revision"
+        else "operator_deferred_external_review"
+    )
+    resumption_posture = (
+        "parent_context_preferred"
+        if action == "deprioritize"
+        else "revision_required_before_retention"
+        if action == "request_revision"
+        else "resume_only_when_operator_requests_external_review"
+    )
+    decision = {
+        "decision_id": decision_id,
+        "action": action,
+        "posture": posture,
+        "source_kind": source_kind,
+        "source_followup_id": str(record.get("followup_id") or ""),
+        "source_record_id": str(record.get("packet_id") or ""),
+        "claim_version_id": str(record.get("claim_version_id") or ""),
+        "request_id": request.request_id if request is not None else "",
+        "prior_status": str(record.get("status") or record.get("review_status") or ""),
+        "next_status": next_status,
+        "attention_priority": 0,
+        "suppressed": True,
+        "resumption_posture": resumption_posture,
+        "operator_text": message,
+        "at": utc_now(),
+    }
+    updated_record = {
+        **record,
+        **({"status": next_status} if source_kind == "teaching_followup" else {"review_status": next_status}),
+        "developmental_action_state": posture if source_kind == "teaching_followup" else record.get("developmental_action_state", ""),
+        "operator_governance_state": posture,
+        "operator_attention_priority": 0,
+        "operator_suppressed": True,
+        "operator_resumption_posture": resumption_posture,
+        "operator_governance_history": history if already_applied else history + (decision,),
+        "operator_governance_latest_decision_id": decision_id,
+    }
+
+    followups = list(_teaching_followups_for_objective(objective))
+    consolidation_records = list(_teaching_consolidation_records_for_objective(objective))
+    if source_kind == "teaching_followup":
+        source_id = str(record.get("followup_id") or "")
+        followups = [updated_record if str(item.get("followup_id") or "") == source_id else item for item in followups]
+        updated_objective = _replace_teaching_objective(objective, followups=followups)
+    else:
+        source_id = str(record.get("packet_id") or "")
+        consolidation_records = [updated_record if str(item.get("packet_id") or "") == source_id else item for item in consolidation_records]
+        updated_objective = _replace_teaching_objective(objective, consolidation_records=consolidation_records)
+
+    resolved_request = (
+        _resolve_governance_retention_request(request, action=action, message=message, turn_id=user_turn.turn_id)
+        if request is not None and action in {"deprioritize", "request_revision"}
+        else None
+    )
+    pending_requests = tuple(
+        item for item in state.pending_chat_requests
+        if resolved_request is None or item.request_id != resolved_request.request_id
+    )
+    resolved_requests = state.resolved_chat_requests + ((resolved_request,) if resolved_request is not None else ())
+    if already_applied:
+        progress = state.objective_progress
+    else:
+        progress = state.objective_progress + ({
+            "event": f"developmental_{action}_recorded",
+            "objective_id": objective.objective_id,
+            **decision,
+        },)
+    lifecycle_state = state.lifecycle_state
+    if action == "deprioritize" and state.lifecycle_state == "paused_operator" and not pending_requests:
+        lifecycle_state = "paused_budget"
+    reply = _governance_assistant_reply(action=action, label=label, already_applied=already_applied)
+    assistant_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
+        role="assistant",
+        text=reply,
+        intent_type=f"developmental_{action}_acknowledgement",
+        objective_id=objective.objective_id,
+    )
+    updated = _replace_state(
+        state,
+        lifecycle_state=lifecycle_state,
+        active_objective=updated_objective,
+        conversation=state.conversation + (user_turn, assistant_turn),
+        pending_chat_requests=pending_requests,
+        resolved_chat_requests=resolved_requests,
+        objective_progress=progress,
+    )
+    save_runtime_state(runtime_root, updated)
+    return RuntimeTurnResult(
+        state=updated,
+        intent=ConversationIntent(f"developmental_{action}", 0.92, "active_teaching_objective", "safe_internal", (), ("source_bound_developmental_governance",)),
+        reply=reply,
+        chat_request=resolved_request.as_record() if resolved_request is not None else None,
+        side_thread_bound=True,
+        developmental_governance=decision,
+    )
+
+
 def mark_chat_request_rendered(
     state: ConversationalRuntimeState,
     request_id: str,
@@ -3734,6 +4174,13 @@ def handle_conversational_message(
     run_background_cycle: bool = True,
     model_runner: ModelRunner | None = None,
 ) -> RuntimeTurnResult:
+    governed = resolve_developmental_governance_instruction(
+        state,
+        message,
+        runtime_root=runtime_root,
+    )
+    if governed is not None:
+        return governed
     resolved = resolve_pending_chat_request(state, message, runtime_root=runtime_root)
     if resolved is not None:
         return resolved
