@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 import re
-from typing import Mapping
+from typing import Mapping, Sequence
 
 from orchestration.runtime.provisional_semantic_consolidation import ClaimVersion, ProvisionalSemanticGraphState
 
@@ -74,6 +74,45 @@ def bind_explicit_semantic_question(question: str, graph: ProvisionalSemanticGra
         if version_id and re.search(rf"(?<![A-Za-z0-9_-]){re.escape(version_id)}(?![A-Za-z0-9_-])", text):
             candidates.append(version_id)
     return tuple(dict.fromkeys(candidates))
+
+
+def bind_teaching_followup_question(
+    question: str,
+    graph: ProvisionalSemanticGraphState,
+    followups: Sequence[Mapping[str, object]],
+) -> tuple[str, ...]:
+    """Bind only operator-retained teaching follow-ups, never a broad graph search.
+
+    The durable follow-up record supplies the explicit conversational binding.
+    Token overlap is only used to distinguish two retained answers within the
+    same active teaching thread.
+    """
+
+    question_terms = set(re.findall(r"[a-z0-9]+", str(question or "").lower()))
+    question_terms -= {"what", "why", "how", "who", "where", "when", "which", "does", "do", "did", "is", "are", "the", "a", "an", "of", "it", "me", "tell", "about"}
+    if not question_terms:
+        return ()
+    versions = {item.claim_version_id: item for item in graph.claim_versions}
+    ranked: list[tuple[int, str]] = []
+    for followup in followups:
+        status = str(followup.get("status") or "")
+        if status not in {"retained_provisional", "admitted", "reviewed_supported"}:
+            continue
+        claim_version_id = str(followup.get("claim_version_id") or "")
+        version = versions.get(claim_version_id)
+        if version is None:
+            continue
+        stored_terms = set(str(item) for item in followup.get("question_tokens", ()) if str(item))
+        overlap = question_terms & stored_terms
+        if not overlap:
+            continue
+        claim_terms = set(re.findall(r"[a-z0-9]+", version.exact_text.lower()))
+        score = len(overlap) * 4 + len(question_terms & claim_terms)
+        ranked.append((score, claim_version_id))
+    if not ranked:
+        return ()
+    highest = max(score for score, _identifier in ranked)
+    return tuple(identifier for score, identifier in sorted(ranked, key=lambda item: (-item[0], item[1])) if score == highest)
 
 
 def resolve_production_epistemic_answer(
@@ -308,6 +347,7 @@ def _reason_codes(mode: EPistemicMode, selected: tuple[ClaimVersion, ...], curre
 __all__ = [
     "EpistemicAnswerResolution",
     "bind_explicit_semantic_question",
+    "bind_teaching_followup_question",
     "compose_epistemic_answer",
     "resolve_epistemic_answer_mode",
     "resolve_production_epistemic_answer",

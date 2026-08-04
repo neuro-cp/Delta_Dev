@@ -46,6 +46,17 @@ def test_limited_graph_storage_trial_is_idempotent(monkeypatch, tmp_path):
     assert second["batch_size_limit"] == 10
 
 
+def test_limited_graph_storage_preserves_review_queue_order(monkeypatch, tmp_path):
+    _isolate_graph_store(monkeypatch, tmp_path)
+    review = graph.simulate_operator_review(graph.build_candidate_graph_links(), accept_confidence_threshold=0.75)
+
+    result = graph.approve_limited_graph_edge_batch(batch_size=3)
+
+    assert [edge["edge_id"] for edge in result["stored_edges"]] == [
+        edge["edge_id"] for edge in review["accepted_edges"][:3]
+    ]
+
+
 def test_graph_assisted_retrieval_is_read_only(monkeypatch, tmp_path):
     _isolate_graph_store(monkeypatch, tmp_path)
     graph.approve_limited_graph_edge_batch(batch_size=15)

@@ -70,10 +70,11 @@ def approve_limited_graph_edge_batch(
 
     candidate_report = build_candidate_graph_links()
     review_report = simulate_operator_review(candidate_report, accept_confidence_threshold=0.75)
-    approved = sorted(
-        review_report["accepted_edges"],
-        key=lambda edge: (-float(edge.get("confidence") or 0.0), edge.get("edge_id", "")),
-    )
+    # ``simulate_operator_review`` yields the deterministic reviewed queue.
+    # Retain that order for a bounded trial: re-sorting by opaque edge IDs can
+    # concentrate a small batch in unrelated concepts and discard the earliest
+    # reviewed, source-relevant material.
+    approved = list(review_report["accepted_edges"])
     existing = _read_jsonl(GRAPH_EDGE_STORE)
     existing_ids = {str(edge.get("edge_id")) for edge in existing}
     remaining_slots = max(0, batch_size - len(existing))
@@ -180,25 +181,30 @@ def graph_assisted_retrieval(question: str, *, max_edges: int = 5) -> dict[str, 
     edges = []
     if concept_ids:
         seen_edges = set()
-        try:
-            from orchestration.runtime.rc2_storage_adapter import get_edges_for_concept
+        # This trial may use an isolated operator-approved noncanonical store.
+        # Prefer that store over the general adapter so an empty SQLite lookup
+        # cannot hide approved trial edges.
+        index = build_runtime_graph_index()
+        for concept_id in concept_ids:
+            for edge in index["concept_edges"].get(concept_id, []):
+                edge_id = str(edge["edge_id"])
+                if edge_id in seen_edges:
+                    continue
+                seen_edges.add(edge_id)
+                edges.append(edge)
+        if not edges:
+            try:
+                from orchestration.runtime.rc2_storage_adapter import get_edges_for_concept
 
-            for concept_id in concept_ids:
-                for edge in get_edges_for_concept(concept_id, limit=max_edges * 3):
-                    edge_id = str(edge["edge_id"])
-                    if edge_id in seen_edges:
-                        continue
-                    seen_edges.add(edge_id)
-                    edges.append(edge)
-        except Exception:
-            index = build_runtime_graph_index()
-            for concept_id in concept_ids:
-                for edge in index["concept_edges"].get(concept_id, []):
-                    edge_id = str(edge["edge_id"])
-                    if edge_id in seen_edges:
-                        continue
-                    seen_edges.add(edge_id)
-                    edges.append(edge)
+                for concept_id in concept_ids:
+                    for edge in get_edges_for_concept(concept_id, limit=max_edges * 3):
+                        edge_id = str(edge["edge_id"])
+                        if edge_id in seen_edges:
+                            continue
+                        seen_edges.add(edge_id)
+                        edges.append(edge)
+            except Exception:
+                pass
     edges = sorted(edges, key=lambda edge: (-float(edge.get("confidence") or 0.0), edge["edge_id"]))[:max_edges]
     expanded_ids = set(concept_ids)
     for edge in edges:
@@ -236,30 +242,32 @@ def graph_assisted_retrieval(question: str, *, max_edges: int = 5) -> dict[str, 
 
 
 def bounded_graph_traversal(start_concept_id: str, *, max_depth: int = 2) -> dict[str, Any]:
-    try:
-        from orchestration.runtime.rc2_sqlite_substrate import backend_health, traverse_graph_sqlite
-
-        if backend_health().get("sqlite_available"):
-            result = traverse_graph_sqlite(start_concept_id, depth=max_depth)
-            return {
-                "phase": "RC2.9 Bounded Graph Traversal",
-                "start_concept_id": start_concept_id,
-                "max_depth": result["max_depth"],
-                "paths": result["paths"],
-                "path_count": result["path_count"],
-                "visited_node_count": result["visited_node_count"],
-                "visited_edge_count": result["visited_edge_count"],
-                "cycle_prevention": True,
-                "duplicate_expansion_prevention": True,
-                "read_only": True,
-                "graph_write_performed": False,
-                "backend": "sqlite",
-                "safety": _safety(),
-            }
-    except Exception:
-        pass
     max_depth = max(1, min(int(max_depth), 2))
-    adjacency = build_runtime_graph_index()["concept_edges"]
+    local_index = build_runtime_graph_index()
+    adjacency = local_index["concept_edges"]
+    if start_concept_id not in adjacency:
+        try:
+            from orchestration.runtime.rc2_sqlite_substrate import backend_health, traverse_graph_sqlite
+
+            if backend_health().get("sqlite_available"):
+                result = traverse_graph_sqlite(start_concept_id, depth=max_depth)
+                return {
+                    "phase": "RC2.9 Bounded Graph Traversal",
+                    "start_concept_id": start_concept_id,
+                    "max_depth": result["max_depth"],
+                    "paths": result["paths"],
+                    "path_count": result["path_count"],
+                    "visited_node_count": result["visited_node_count"],
+                    "visited_edge_count": result["visited_edge_count"],
+                    "cycle_prevention": True,
+                    "duplicate_expansion_prevention": True,
+                    "read_only": True,
+                    "graph_write_performed": False,
+                    "backend": "sqlite",
+                    "safety": _safety(),
+                }
+        except Exception:
+            pass
     queue: deque[tuple[str, int, list[dict[str, Any]]]] = deque([(start_concept_id, 0, [])])
     visited_nodes = {start_concept_id}
     visited_edges: set[str] = set()

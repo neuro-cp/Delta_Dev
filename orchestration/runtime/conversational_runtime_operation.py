@@ -27,9 +27,25 @@ from orchestration.runtime.active_cognitive_loop import (
     write_episode_state,
 )
 from orchestration.runtime.delta_1_0_common import stable_id, utc_now
+from orchestration.runtime.developmental_teaching_runtime import (
+    compile_physics_prerequisite,
+    compile_teaching_followup,
+    compile_teaching_plan,
+    is_teaching_instruction,
+    physics_prerequisite_resume_target,
+    render_curriculum_resumption,
+    render_physics_prerequisite_prompt,
+    render_teaching_followup_acknowledgement,
+    render_first_lesson,
+    teaching_followup_requires_study,
+    teaching_knowledge_contract,
+    teaching_retention_prompt,
+)
 from orchestration.runtime.provisional_semantic_consolidation import (
     ConsolidationIntegrityError,
+    ensure_consolidation_cohort,
     ingest_episode_at_runtime_root,
+    save_graph,
 )
 
 
@@ -535,6 +551,15 @@ def classify_conversational_intent(
             authority_required=(),
             matched_signals=("stop_or_redirect",),
         )
+    if is_teaching_instruction(text):
+        return ConversationIntent(
+            intent_type="persistent_or_session_goal",
+            confidence=0.91,
+            persistence_scope="session",
+            risk_class="safe_internal",
+            authority_required=(),
+            matched_signals=("explicit_teaching_intent",),
+        )
     temporary_signals = ("explain that more simply", "use shorter answers", "today", "for now", "don't repeat")
     if any(signal in lower for signal in temporary_signals) and not lower.startswith(("your goal", "work on", "keep studying")):
         return ConversationIntent(
@@ -597,6 +622,8 @@ def _goal_execution_mode(message: str) -> str:
     lower = " ".join(str(message or "").lower().split())
     if _is_capability_campaign_goal(message):
         return "capability_growth_campaign"
+    if is_teaching_instruction(message):
+        return "knowledge_acquisition"
     if any(term in lower for term in ("study", "learn", "research", "understand", "explain")):
         return "knowledge_acquisition"
     return "generic_conversational_cognition"
@@ -761,7 +788,14 @@ def compile_conversational_objective(message: str, intent: ConversationIntent) -
     execution_mode = _goal_execution_mode(text)
     campaign_mode = execution_mode == "capability_growth_campaign"
     unlimited_local_knowledge = execution_mode == "knowledge_acquisition"
-    knowledge_contract = _knowledge_goal_contract(text) if execution_mode == "knowledge_acquisition" else {}
+    teaching_plan = compile_teaching_plan(text) if is_teaching_instruction(text) else {}
+    knowledge_contract = (
+        teaching_knowledge_contract(teaching_plan)
+        if teaching_plan
+        else _knowledge_goal_contract(text)
+        if execution_mode == "knowledge_acquisition"
+        else {}
+    )
     if "english comprehension" in lower or "communicate better" in lower:
         interpreted = "Improve operator-specific English comprehension during conversation by observing misunderstandings, incorporating corrections, and testing later transfer."
         indicators = (
@@ -772,7 +806,8 @@ def compile_conversational_objective(message: str, intent: ConversationIntent) -
             "ordinary chat remains responsive",
         )
     elif knowledge_contract:
-        interpreted = str(knowledge_contract["normalized_topic"]).strip().capitalize()
+        topic = str(knowledge_contract["normalized_topic"]).strip()
+        interpreted = f"Teach operator introductory {topic}" if teaching_plan else topic.capitalize()
         indicators = tuple(str(item) for item in knowledge_contract["completion_criteria"])
     else:
         interpreted = _strip_goal_prefix(text)
@@ -817,6 +852,7 @@ def compile_conversational_objective(message: str, intent: ConversationIntent) -
             "compiler": "conversational_runtime_operation",
             "execution_mode": execution_mode,
             "knowledge_contract": knowledge_contract,
+            "teaching_plan": teaching_plan,
         },
     )
 
@@ -870,7 +906,169 @@ def _knowledge_frontier_evidence(objective: ConversationalObjective) -> tuple[Ev
             source="knowledge_frontier",
             kind="knowledge_frontier_node",
         ))
+    return _teaching_followup_evidence(objective) + tuple(nodes) + _teaching_prerequisite_evidence(objective)
+
+
+def _teaching_plan_for_objective(objective: ConversationalObjective | None) -> Mapping[str, Any]:
+    if objective is None or not isinstance(objective.provenance, Mapping):
+        return {}
+    plan = objective.provenance.get("teaching_plan")
+    return dict(plan) if isinstance(plan, Mapping) else {}
+
+
+def _teaching_followups_for_objective(objective: ConversationalObjective | None) -> tuple[dict[str, Any], ...]:
+    if objective is None or not isinstance(objective.provenance, Mapping):
+        return ()
+    return tuple(
+        dict(item)
+        for item in objective.provenance.get("teaching_followups", ())
+        if isinstance(item, Mapping)
+    )
+
+
+def _teaching_prerequisites_for_objective(objective: ConversationalObjective | None) -> tuple[dict[str, Any], ...]:
+    if objective is None or not isinstance(objective.provenance, Mapping):
+        return ()
+    return tuple(
+        dict(item)
+        for item in objective.provenance.get("teaching_prerequisites", ())
+        if isinstance(item, Mapping)
+    )
+
+
+def _teaching_consolidation_records_for_objective(objective: ConversationalObjective | None) -> tuple[dict[str, Any], ...]:
+    if objective is None or not isinstance(objective.provenance, Mapping):
+        return ()
+    return tuple(
+        dict(item)
+        for item in objective.provenance.get("teaching_consolidation_records", ())
+        if isinstance(item, Mapping)
+    )
+
+
+def _replace_teaching_objective(
+    objective: ConversationalObjective,
+    *,
+    followups: Sequence[Mapping[str, Any]] | None = None,
+    prerequisites: Sequence[Mapping[str, Any]] | None = None,
+    consolidation_records: Sequence[Mapping[str, Any]] | None = None,
+) -> ConversationalObjective:
+    provenance = dict(objective.provenance)
+    if followups is not None:
+        provenance["teaching_followups"] = tuple(dict(item) for item in followups)
+    if prerequisites is not None:
+        provenance["teaching_prerequisites"] = tuple(dict(item) for item in prerequisites)
+    if consolidation_records is not None:
+        provenance["teaching_consolidation_records"] = tuple(dict(item) for item in consolidation_records)
+    return replace(objective, provenance=provenance)
+
+
+def _teaching_followup_evidence(objective: ConversationalObjective) -> tuple[EvidenceRef, ...]:
+    """Expose queued in-scope questions as first-class nodes in the existing frontier."""
+
+    nodes: list[EvidenceRef] = []
+    for followup in _teaching_followups_for_objective(objective):
+        if str(followup.get("status") or "") not in {"queued", "study_running", "study_retry_scheduled"}:
+            continue
+        node_id = str(followup.get("node_id") or "")
+        evidence_id = str(followup.get("evidence_id") or node_id)
+        question = str(followup.get("question") or "").strip()
+        if not node_id or not evidence_id or not question:
+            continue
+        nodes.append(EvidenceRef(
+            evidence_id=evidence_id,
+            summary=f"Teaching follow-up: {question}",
+            content=json.dumps({
+                "node_id": node_id,
+                "followup_id": str(followup.get("followup_id") or ""),
+                "material_requirement_id": "",
+                "objective_id": objective.objective_id,
+                "label": question,
+                "parent_id": str(followup.get("lesson_id") or objective.objective_id),
+                "depth": 2,
+                "status": str(followup.get("status") or "queued"),
+                "evidence_need": f"bounded local explanation for the operator question: {question}",
+                "completion_criterion_reference": f"answer the operator's in-scope teaching question: {question}",
+                "minimum_contribution_contract": {
+                    **_knowledge_node_completion_contract(question, question),
+                    "required_topic_terms": tuple(followup.get("question_tokens") or ()),
+                },
+                "extracted_concept_ids": [],
+                "extracted_claim_ids": [],
+                "unresolved_questions": [question],
+                "attempt_count": 0,
+                "last_progress_digest": "",
+            }, sort_keys=True),
+            source="teaching_followup",
+            kind="knowledge_frontier_node",
+        ))
     return tuple(nodes)
+
+
+def _teaching_prerequisite_evidence(objective: ConversationalObjective) -> tuple[EvidenceRef, ...]:
+    """Append an approved prerequisite behind the parent curriculum's current work."""
+
+    nodes: list[EvidenceRef] = []
+    for prerequisite in _teaching_prerequisites_for_objective(objective):
+        if str(prerequisite.get("status") or "") not in {
+            "queued",
+            "prerequisite_study_running",
+            "prerequisite_retry_scheduled",
+        }:
+            continue
+        node_id = str(prerequisite.get("node_id") or "")
+        evidence_id = str(prerequisite.get("evidence_id") or node_id)
+        topic = str(prerequisite.get("topic") or "").strip()
+        if not node_id or not evidence_id or not topic:
+            continue
+        competence_requirement = str(
+            prerequisite.get("competence_requirement")
+            or f"show a concrete introductory application of {topic} to the blocked branch"
+        )
+        completion_contract = {
+            **_knowledge_node_completion_contract(topic, competence_requirement),
+            "required_topic_terms": ("derivative", "derivatives", "integral", "integrals", "rate"),
+            "requires_expected_observation": True,
+        }
+        nodes.append(EvidenceRef(
+            evidence_id=evidence_id,
+            summary=f"Linked prerequisite: {topic}",
+            content=json.dumps({
+                "node_id": node_id,
+                "prerequisite_id": str(prerequisite.get("prerequisite_id") or ""),
+                "material_requirement_id": "",
+                "objective_id": objective.objective_id,
+                "label": f"{topic}: derivatives and integrals for mechanics",
+                "parent_id": str(prerequisite.get("prerequisite_objective_id") or objective.objective_id),
+                "depth": 2,
+                "status": str(prerequisite.get("status") or "queued"),
+                "evidence_need": f"bounded prerequisite study and a simple competence check for {topic}",
+                "completion_criterion_reference": competence_requirement,
+                "minimum_contribution_contract": completion_contract,
+                "extracted_concept_ids": [],
+                "extracted_claim_ids": [],
+                "unresolved_questions": [],
+                "attempt_count": 0,
+                "last_progress_digest": "",
+            }, sort_keys=True),
+            source="teaching_prerequisite",
+            kind="knowledge_frontier_node",
+        ))
+    return tuple(nodes)
+
+
+def _ensure_pending_teaching_followup_nodes(
+    episode: ActiveCognitiveEpisodeState,
+    objective: ConversationalObjective,
+) -> ActiveCognitiveEpisodeState:
+    queued = _teaching_followup_evidence(objective)
+    prerequisites = _teaching_prerequisite_evidence(objective)
+    if not queued and not prerequisites:
+        return episode
+    existing_ids = {item.evidence_id for item in episode.evidence}
+    additions = tuple(item for item in queued if item.evidence_id not in existing_ids)
+    trailing = tuple(item for item in prerequisites if item.evidence_id not in existing_ids)
+    return replace(episode, evidence=additions + episode.evidence + trailing) if additions or trailing else episode
 
 
 def _knowledge_node_completion_contract(label: str, criterion: str) -> dict[str, Any]:
@@ -903,6 +1101,36 @@ def _knowledge_label_for_objective(objective: ConversationalObjective | None) ->
     return _goal_review_label(objective)
 
 
+def _accepted_frontier_node_ids(
+    episode: ActiveCognitiveEpisodeState,
+    frontier_nodes: Sequence[EvidenceRef],
+    *,
+    completed_operation_ids: set[str] | None = None,
+) -> set[str]:
+    """Return only nodes completed by their own accepted frontier operation.
+
+    A model packet can cite sibling frontier nodes as context. Those evidence
+    references support the current operation, but they must never complete the
+    cited siblings. The immutable cycle focus is the canonical ownership link.
+    """
+    if completed_operation_ids is None:
+        completed_operation_ids = {
+            result.operation_id
+            for result in episode.operation_results
+            if result.accepted
+        }
+    accepted_focuses = {
+        cycle.focus_id
+        for cycle in episode.cycles
+        if cycle.completed and cycle.operation_id in completed_operation_ids
+    }
+    return {
+        node.evidence_id
+        for node in frontier_nodes
+        if stable_id("focus", episode.episode_id, node.evidence_id) in accepted_focuses
+    }
+
+
 def _knowledge_progress_counters(
     objective: ConversationalObjective,
     episode: ActiveCognitiveEpisodeState,
@@ -917,33 +1145,36 @@ def _knowledge_progress_counters(
         completed_operation_ids = {result.operation_id for result in episode.operation_results if result.accepted}
     if blocked_operation_ids is None:
         blocked_operation_ids = {result.operation_id for result in episode.operation_results if not result.accepted}
+    expected_focuses = {
+        stable_id("focus", episode.episode_id, node.evidence_id)
+        for node in frontier_nodes
+    }
     completed_focuses = {
         cycle.focus_id
         for cycle in episode.cycles
         if cycle.completed
         and cycle.operation_id in completed_operation_ids
-    }
+    } & expected_focuses
     rejected_counts: dict[str, int] = {}
     for cycle in episode.cycles:
-        if cycle.completed and cycle.operation_id in blocked_operation_ids and cycle.focus_id not in completed_focuses:
+        if (
+            cycle.completed
+            and cycle.operation_id in blocked_operation_ids
+            and cycle.focus_id in expected_focuses
+            and cycle.focus_id not in completed_focuses
+        ):
             rejected_counts[cycle.focus_id] = rejected_counts.get(cycle.focus_id, 0) + 1
     blocked_focuses = {focus_id for focus_id, count in rejected_counts.items() if count >= 2}
     retryable_focuses = {focus_id for focus_id, count in rejected_counts.items() if count == 1}
-    expected_focuses = {
-        stable_id("focus", episode.episode_id, node.evidence_id)
-        for node in frontier_nodes
-    }
     unattempted_focuses = expected_focuses - completed_focuses - set(rejected_counts)
     material_requirements = _knowledge_material_requirements(objective)
     criteria_total = len(material_requirements) or len(tuple(objective.practical_success_indicators))
-    accepted_refs: set[str] = set()
-    for result in episode.operation_results:
-        if result.accepted and result.operation_id in completed_operation_ids:
-            accepted_refs.update(result.evidence_refs)
-    satisfied = 0
-    for node in frontier_nodes:
-        if node.evidence_id in accepted_refs:
-            satisfied += 1
+    completed_node_ids = _accepted_frontier_node_ids(
+        episode,
+        frontier_nodes,
+        completed_operation_ids=completed_operation_ids,
+    )
+    satisfied = sum(node.evidence_id in completed_node_ids for node in frontier_nodes)
     return {
         "frontier_nodes_completed": len(completed_focuses),
         "frontier_nodes_total": len(frontier_nodes),
@@ -1133,17 +1364,11 @@ def _knowledge_requirement_coverage(
     requirements = _knowledge_material_requirements(objective)
     nodes = tuple(item for item in episode.evidence if item.kind == "knowledge_frontier_node")
     planned_ids = {_frontier_requirement_id(node) for node in nodes}
-    accepted_refs = {
-        ref
-        for result in episode.operation_results
-        if result.accepted
-        for ref in result.evidence_refs
-        if ref
-    }
+    completed_node_ids = _accepted_frontier_node_ids(episode, nodes)
     satisfied_ids = {
         _frontier_requirement_id(node)
         for node in nodes
-        if node.evidence_id in accepted_refs
+        if node.evidence_id in completed_node_ids
     }
     satisfied = tuple(item["text"] for item in requirements if item["requirement_id"] in satisfied_ids)
     missing = tuple(item["text"] for item in requirements if item["requirement_id"] not in planned_ids)
@@ -1423,7 +1648,14 @@ def _knowledge_events_from_episode(
                     evidence_refs=result.evidence_refs,
                 ))
 
-    if episode.loop_state in {"blocked_insufficient_evidence", "blocked_capability_gap", "paused_budget"} or episode.completed:
+    terminal_frontier_closure = (
+        episode.loop_state == "blocked_insufficient_evidence"
+        and _knowledge_frontier_all_attempted(episode)
+    )
+    if (
+        episode.loop_state in {"blocked_insufficient_evidence", "blocked_capability_gap", "paused_budget"}
+        or episode.completed
+    ) and not terminal_frontier_closure:
         add(_knowledge_event(
             objective,
             event_type="knowledge_budget_updated",
@@ -2188,7 +2420,10 @@ def build_local_semantic_insufficiency(
 
 def _chat_request_resolution_kind(message: str) -> str | None:
     lower = " ".join(message.lower().split())
-    approval_terms = ("approve", "approved", "yes", "okay", "ok", "adopt it", "use approach a", "use one call", "use only one call", "1 call")
+    approval_terms = (
+        "approve", "approved", "yes", "okay", "ok", "adopt it", "use approach a",
+        "use one call", "use only one call", "may use", "you may use", "go ahead with", "1 call",
+    )
     denial_terms = ("deny", "continue locally", "not approved", "not yet", "keep the current behavior", "do not use a provider", "don't use a provider")
     if "show me the evidence" in lower or "show evidence" in lower or "evidence again" in lower:
         return "show_evidence"
@@ -3025,6 +3260,196 @@ def record_local_semantic_attempt(
     return updated, evaluation
 
 
+def _resolve_teaching_chat_request(
+    state: ConversationalRuntimeState,
+    request: ChatAddressableRequest,
+    message: str,
+    resolution_kind: str,
+    *,
+    runtime_root: str | Path,
+) -> RuntimeTurnResult:
+    """Resolve teaching retention or prerequisite approval through the normal request owner."""
+
+    objective = state.active_objective
+    plan = _teaching_plan_for_objective(objective)
+    user_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 1), message),
+        role="user",
+        text=message,
+        intent_type="teaching_request_resolution",
+        objective_id=request.objective_id,
+    )
+    approved = resolution_kind == "approved"
+    followups = list(_teaching_followups_for_objective(objective))
+    prerequisites = list(_teaching_prerequisites_for_objective(objective))
+    consolidation_records = list(_teaching_consolidation_records_for_objective(objective))
+    progress: Mapping[str, Any]
+    background_cycle_started = False
+
+    if objective is None or not plan:
+        reply = "That teaching request is no longer attached to an active teaching objective, so I left it unresolved rather than applying it elsewhere."
+        updated_objective = objective
+        progress = {"event": "teaching_request_orphaned", "request_id": request.request_id, "at": utc_now()}
+    elif request.request_type == "teaching_provisional_retention":
+        followup_id = str(request.baseline_metrics.get("followup_id") or "")
+        selected = next((item for item in followups if str(item.get("followup_id") or "") == followup_id), None)
+        if selected is None:
+            reply = "I could not find the provisional teaching result this reply was meant to govern, so I left the memory state unchanged."
+            updated_objective = objective
+            progress = {"event": "teaching_retention_binding_missing", "request_id": request.request_id, "at": utc_now()}
+        else:
+            status = "retained_provisional" if approved else "not_retained"
+            ordinal = 0
+            lesson_id = str(selected.get("lesson_id") or "")
+            for index, lesson in enumerate(plan.get("curriculum", ()), start=1):
+                if isinstance(lesson, Mapping) and str(lesson.get("lesson_id") or "") == lesson_id:
+                    ordinal = index
+                    break
+            updated_followup = {
+                **selected,
+                "status": status,
+                "retention_request_id": request.request_id,
+                "retention_decision": "approved" if approved else "denied",
+                "retained_at": utc_now() if approved else "",
+                "curriculum_resume_cursor": ordinal,
+            }
+            followups = [updated_followup if str(item.get("followup_id") or "") == followup_id else item for item in followups]
+            updated_objective = _replace_teaching_objective(objective, followups=followups)
+            if approved:
+                reply = (
+                    "I will retain that explanation as provisional material for this teaching thread. "
+                    "It is not being presented as reviewed fact, and its source and uncertainty remain attached.\n\n"
+                    + render_curriculum_resumption(plan, ordinal)
+                )
+            else:
+                reply = "Understood. I will leave that provisional explanation available only in this episode and will not use it as retained material in later teaching conversations."
+            progress = {
+                "event": "teaching_provisional_retention_resolved",
+                "objective_id": objective.objective_id,
+                "followup_id": followup_id,
+                "claim_version_id": str(selected.get("claim_version_id") or ""),
+                "resolution": "approved" if approved else "denied",
+                "at": utc_now(),
+            }
+    elif request.request_type == "teaching_prerequisite":
+        prerequisite_id = str(request.baseline_metrics.get("prerequisite_id") or "")
+        selected = next((item for item in prerequisites if str(item.get("prerequisite_id") or "") == prerequisite_id), None)
+        if selected is None:
+            reply = "I could not find the linked prerequisite this reply was meant to govern, so I left the parent lesson unchanged."
+            updated_objective = objective
+            progress = {"event": "teaching_prerequisite_binding_missing", "request_id": request.request_id, "at": utc_now()}
+        else:
+            updated_prerequisite = {
+                **selected,
+                "status": "queued" if approved else "not_authorized",
+                "approval_request_id": request.request_id,
+                "approved_at": utc_now() if approved else "",
+                "derivation_branch_state": "preparing_prerequisite" if approved else "blocked_by_operator_decision",
+            }
+            prerequisites = [updated_prerequisite if str(item.get("prerequisite_id") or "") == prerequisite_id else item for item in prerequisites]
+            updated_objective = _replace_teaching_objective(objective, prerequisites=prerequisites)
+            background_cycle_started = approved
+            reply = (
+                "Approved. I added introductory calculus as a linked bounded prerequisite while qualitative physics remains active. "
+                "I will test the prerequisite locally before using it to resume the derivation branch."
+                if approved
+                else "Understood. I will continue the qualitative physics branch and leave the calculus-dependent derivation branch visibly blocked."
+            )
+            progress = {
+                "event": "teaching_prerequisite_permission_resolved",
+                "objective_id": objective.objective_id,
+                "prerequisite_id": prerequisite_id,
+                "resolution": "approved" if approved else "denied",
+                "at": utc_now(),
+            }
+    else:
+        packet_id = str(request.baseline_metrics.get("packet_id") or "")
+        selected = next((item for item in consolidation_records if str(item.get("packet_id") or "") == packet_id), None)
+        if selected is None:
+            reply = "I could not find the sealed provisional teaching packet this reply was meant to govern, so I left review authority unchanged."
+            updated_objective = objective
+            progress = {"event": "teaching_review_authority_binding_missing", "request_id": request.request_id, "at": utc_now()}
+        else:
+            review_state = "pending_external_review" if approved else "external_review_not_authorized"
+            updated_record = {
+                **selected,
+                # Keep the prior authorization field for older exports while the
+                # canonical review state makes the post-authority boundary clear.
+                "review_authorization_status": "authorized_pending_external_review" if approved else "declined_by_operator",
+                "review_status": review_state,
+                "review_authority_granted": approved,
+                "review_authorization_request_id": request.request_id,
+                "review_authorized_at": utc_now() if approved else "",
+                "external_review_result_id": "",
+                "admission_id": "",
+            }
+            consolidation_records = [
+                updated_record if str(item.get("packet_id") or "") == packet_id else item
+                for item in consolidation_records
+            ]
+            updated_objective = _replace_teaching_objective(objective, consolidation_records=consolidation_records)
+            reply = (
+                "I recorded approval to use the existing consolidation-review boundary for that one provisional teaching packet. "
+                "No external review has run yet, and the explanation remains provisional until a real review is recorded."
+                if approved
+                else "Understood. I will leave that sealed teaching material provisional and will not submit it for external review."
+            )
+            progress = {
+                "event": "teaching_consolidation_review_authority_resolved",
+                "objective_id": objective.objective_id,
+                "packet_id": packet_id,
+                "cohort_id": str(selected.get("cohort_id") or ""),
+                "claim_version_ids": tuple(str(item) for item in selected.get("claim_version_ids", ()) if str(item)),
+                "resolution": "approved" if approved else "denied",
+                "review_status": review_state,
+                "external_review_performed": False,
+                "at": utc_now(),
+            }
+
+    resolved = replace(
+        request,
+        status="consumed" if approved else "denied",
+        resolution_state="consumed" if approved else "denied",
+        resolution="approved" if approved else "denied",
+        resolution_policy=(
+            "operator_approved_provisional_retention"
+            if request.request_type == "teaching_provisional_retention"
+            else "operator_approved_linked_prerequisite"
+            if request.request_type == "teaching_prerequisite"
+            else "operator_authorized_consolidation_review_preparation"
+        ) if approved else "operator_declined_teaching_request",
+        resolution_text=message,
+        resolved_turn_id=user_turn.turn_id,
+        resolved_at=utc_now(),
+        consumed_at=utc_now() if approved else "",
+        consumption_count=1,
+    )
+    assistant_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
+        role="assistant",
+        text=reply,
+        intent_type="teaching_request_resolution_ack",
+        objective_id=request.objective_id,
+    )
+    updated = _replace_state(
+        state,
+        active_objective=updated_objective,
+        conversation=state.conversation + (user_turn, assistant_turn),
+        pending_chat_requests=tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id),
+        resolved_chat_requests=state.resolved_chat_requests + (resolved,),
+        objective_progress=state.objective_progress + (progress,),
+    )
+    save_runtime_state(runtime_root, updated)
+    return RuntimeTurnResult(
+        state=updated,
+        intent=ConversationIntent("chat_request_resolution", 0.9, "active_teaching_objective", "safe_internal", (), ("pending_teaching_request",)),
+        reply=reply,
+        chat_request=resolved.as_record(),
+        side_thread_bound=True,
+        background_cycle_started=background_cycle_started,
+    )
+
+
 def resolve_pending_chat_request(
     state: ConversationalRuntimeState,
     message: str,
@@ -3044,6 +3469,14 @@ def resolve_pending_chat_request(
     )
     authority: Mapping[str, Any] | None = None
     policy = resolution_kind
+    if request.request_type in {"teaching_provisional_retention", "teaching_prerequisite", "teaching_consolidation_review_authority"}:
+        return _resolve_teaching_chat_request(
+            state,
+            request,
+            message,
+            resolution_kind,
+            runtime_root=runtime_root,
+        )
     if request.request_type == "provider_authority":
         policy, authority = _resolve_provider_policy(request, message, resolution_kind)
     if request.request_type == "capability_adoption_and_restart":
@@ -3370,6 +3803,10 @@ def handle_conversational_message(
         return RuntimeTurnResult(state=updated, intent=intent, reply=reply)
     if intent.intent_type == "persistent_or_session_goal":
         objective = compile_conversational_objective(message, intent)
+        teaching_plan = _teaching_plan_for_objective(objective)
+        prerequisite = compile_physics_prerequisite(teaching_plan, objective_id=objective.objective_id) if teaching_plan else {}
+        if prerequisite:
+            objective = _replace_teaching_objective(objective, prerequisites=(prerequisite,))
         if state.active_objective and state.active_objective.objective_id == objective.objective_id:
             health = _active_goal_health(state, objective)
             if health["healthy"] or health.get("repairable"):
@@ -3472,6 +3909,7 @@ def handle_conversational_message(
                 },
             )
         budget_request: ChatAddressableRequest | None = None
+        prerequisite_request: ChatAddressableRequest | None = None
         lifecycle_state = "running"
         if (
             objective.provenance.get("execution_mode") == "knowledge_acquisition"
@@ -3487,6 +3925,33 @@ def handle_conversational_message(
             )
             lifecycle_state = "paused_operator"
             progress = progress + ({"event": "knowledge_model_budget_increase_requested", "request_id": budget_request.request_id, "required_nodes": len(frontier_evidence), "current_model_call_budget": objective.model_call_budget, "recommended_model_call_budget": budget_request.max_calls, "at": utc_now()},)
+        if prerequisite and not budget_request:
+            prerequisite_request = ChatAddressableRequest(
+                request_id=stable_id("teaching-prerequisite-request", objective.objective_id, str(prerequisite.get("prerequisite_id") or "")),
+                request_type="teaching_prerequisite",
+                objective_id=objective.objective_id,
+                originating_goal_id=objective.objective_id,
+                goal_label="Physics prerequisite",
+                prompt_text=render_physics_prerequisite_prompt(prerequisite),
+                authority_impact="linked_prerequisite_objective_requires_conversational_confirmation",
+                thread_id=f"{objective.objective_id}:physics-prerequisite",
+                created_turn_id=goal_user_turn.turn_id,
+                created_sequence=len(state.conversation) + 2,
+                accepted_response_types=("approved", "denied"),
+                baseline_metrics={
+                    "teaching_request_kind": "physics_prerequisite",
+                    "prerequisite_id": str(prerequisite.get("prerequisite_id") or ""),
+                    "prerequisite_objective_id": str(prerequisite.get("prerequisite_objective_id") or ""),
+                    "parent_objective_id": objective.objective_id,
+                },
+            )
+            progress = progress + ({
+                "event": "teaching_prerequisite_permission_requested",
+                "objective_id": objective.objective_id,
+                "prerequisite_id": str(prerequisite.get("prerequisite_id") or ""),
+                "request_id": prerequisite_request.request_id,
+                "at": utc_now(),
+            },)
         updated = _replace_state(
             state,
             lifecycle_state=lifecycle_state,
@@ -3496,7 +3961,7 @@ def handle_conversational_message(
             active_episode_path=episode_path,
             completed_cycle_keys=(),
             pending_material_authority=(),
-            pending_chat_requests=((budget_request,) if budget_request else ()),
+            pending_chat_requests=((budget_request,) if budget_request else ()) + ((prerequisite_request,) if prerequisite_request else ()),
             resolved_chat_requests=(),
             provider_authorities=(),
             turn_relation_decisions=(),
@@ -3519,6 +3984,10 @@ def handle_conversational_message(
                 "I registered that as the active goal and paused at a budget boundary before local model execution.\n\n"
                 f"{budget_request.prompt_text}"
             )
+        elif objective.provenance.get("teaching_plan"):
+            reply = render_first_lesson(dict(objective.provenance["teaching_plan"]))
+            if prerequisite_request:
+                reply = f"{reply}\n\n{prerequisite_request.prompt_text}"
         assistant_turn = ConversationTurn(
             turn_id=stable_id("conversation-turn", updated.runtime_id, str(len(updated.conversation) + 1), reply),
             role="assistant",
@@ -3527,6 +3996,19 @@ def handle_conversational_message(
             objective_id=objective.objective_id,
         )
         updated = _replace_state(updated, conversation=updated.conversation + (assistant_turn,))
+        if prerequisite_request:
+            rendered_request = replace(
+                prerequisite_request,
+                rendered_turn_id=assistant_turn.turn_id,
+                render_sequence=len(updated.conversation),
+            )
+            updated = _replace_state(
+                updated,
+                pending_chat_requests=tuple(
+                    rendered_request if item.request_id == rendered_request.request_id else item
+                    for item in updated.pending_chat_requests
+                ),
+            )
         save_runtime_state(runtime_root, updated)
         return RuntimeTurnResult(state=updated, intent=intent, reply=reply, objective_created=True, background_cycle_started=run_background_cycle and budget_request is None, chat_request=budget_request.as_record() if budget_request else None)
     if intent.intent_type == "direct_correction" and state.active_objective:
@@ -3544,6 +4026,15 @@ def handle_conversational_message(
             updated = run_background_objective_cycle(updated, runtime_root=runtime_root, reason="correction_attached", model_runner=model_runner)
         save_runtime_state(runtime_root, updated)
         return RuntimeTurnResult(state=updated, intent=intent, reply=reply, correction_attached=True, background_cycle_started=run_background_cycle, transfer_applied=False)
+    teaching_followup = _queue_teaching_followup_study(
+        state,
+        message,
+        runtime_root=runtime_root,
+        run_background_cycle=run_background_cycle,
+        model_runner=model_runner,
+    )
+    if teaching_followup is not None:
+        return teaching_followup
     relation = decide_turn_relation(state, message, turn_id=user_turn.turn_id)
     transfer = infer_lesson_transfer(state, message, relation=relation)
     if transfer["applied"]:
@@ -3564,6 +4055,592 @@ def handle_conversational_message(
         updated = run_background_objective_cycle(updated, runtime_root=runtime_root, reason="ordinary_chat_yield", model_runner=model_runner)
     save_runtime_state(runtime_root, updated)
     return RuntimeTurnResult(state=updated, intent=intent, reply=reply, background_cycle_started=state.active_objective is not None and run_background_cycle, transfer_applied=bool(transfer["applied"]))
+
+
+def _teaching_result_for_evidence(
+    episode: ActiveCognitiveEpisodeState,
+    evidence_id: str,
+):
+    """Resolve a teaching result by its immutable frontier focus before refs.
+
+    Supporting evidence is intentionally shared across sibling frontier nodes,
+    so using it as the primary key can bind one node's result to another
+    teaching record. The active loop already owns the focus-to-operation
+    lineage; fall back to refs only for legacy episodes without that lineage.
+    """
+
+    focus_id = stable_id("focus", episode.episode_id, evidence_id)
+    operation_ids = [
+        cycle.operation_id
+        for cycle in episode.cycles
+        if cycle.focus_id == focus_id and cycle.operation_id
+    ]
+    if operation_ids:
+        results_by_id = {item.operation_id: item for item in episode.operation_results}
+        for operation_id in reversed(operation_ids):
+            result = results_by_id.get(operation_id)
+            if result is not None:
+                return result
+        return None
+    return next(
+        (
+            item
+            for item in reversed(episode.operation_results)
+            if evidence_id in set(item.evidence_refs)
+        ),
+        None,
+    )
+
+
+def _teaching_attempts_for_evidence(
+    episode: ActiveCognitiveEpisodeState,
+    evidence_id: str,
+) -> tuple[Any, ...]:
+    """Read retry ownership from the existing frontier-cycle history."""
+
+    focus_id = stable_id("focus", episode.episode_id, evidence_id)
+    operation_ids = {
+        cycle.operation_id
+        for cycle in episode.cycles
+        if cycle.focus_id == focus_id and cycle.operation_id
+    }
+    if operation_ids:
+        return tuple(item for item in episode.operation_results if item.operation_id in operation_ids)
+    return tuple(
+        item
+        for item in episode.operation_results
+        if evidence_id in set(item.evidence_refs)
+    )
+
+
+def _teaching_claim_version_for_node(graph: Any, node_id: str) -> str:
+    claim_ids = {
+        item.claim_id
+        for item in getattr(graph, "claims", ())
+        if str(getattr(item, "originating_node_id", "")) == node_id
+    }
+    versions = [
+        item
+        for item in getattr(graph, "claim_versions", ())
+        if item.claim_id in claim_ids
+    ]
+    if not versions:
+        return ""
+    return max(versions, key=lambda item: (item.version_index, item.created_at, item.claim_version_id)).claim_version_id
+
+
+def _teaching_understanding_assessment(
+    result: Any,
+    *,
+    expected_terms: Sequence[str] = (),
+) -> Mapping[str, Any]:
+    """Run a modest deterministic explanation/transfer check, not a truth review.
+
+    The proposing local model does not certify its own factual output.  This
+    check only verifies that the accepted response stayed tied to the requested
+    concept, offered an explanatory relation, and supplied an observable or
+    application-shaped test cue. It never serves as factual review.
+    """
+
+    interpretation = str(getattr(result, "interpretation", "")).strip()
+    lowered = interpretation.lower()
+    terms = {
+        str(item).strip().lower()
+        for item in expected_terms
+        if str(item).strip()
+    }
+    topic_bound = bool(terms & set(re.findall(r"[a-z0-9]+", lowered))) if terms else bool(interpretation)
+    explanatory_relation = any(
+        marker in lowered
+        for marker in (
+            "because",
+            "through",
+            "by ",
+            "which ",
+            "so ",
+            "so that",
+            "therefore",
+            "represents",
+            "corresponds",
+            "leads to",
+            "controls",
+            "depends on",
+        )
+    )
+    evidence_linkage = bool(tuple(getattr(result, "evidence_refs", ()) or ()))
+    transfer_prompt = bool(str(getattr(result, "next_focus_proposal", "")).strip())
+    expected_observations = tuple(
+        str(item).strip()
+        for item in getattr(result, "expected_observations", ()) or ()
+        if str(item).strip()
+    )
+    observable_application = bool(expected_observations)
+    accepted = bool(getattr(result, "accepted", False))
+    tested = accepted and topic_bound and explanatory_relation and evidence_linkage and (transfer_prompt or observable_application)
+    return {
+        "state": "tested_source_bound_explanation" if tested else "provisionally_understood_not_yet_tested",
+        "test_type": "deterministic_source_bound_explanation_and_transfer_check",
+        "topic_bound": topic_bound,
+        "explanatory_relation": explanatory_relation,
+        "evidence_linkage": evidence_linkage,
+        "transfer_prompt": transfer_prompt,
+        "observable_application": observable_application,
+        "contradiction_considered": bool(tuple(getattr(result, "contrary_evidence_considered", ()) or ())),
+        "learning_states": {
+            "encountered": True,
+            "inspected": True,
+            "provisionally_understood": accepted,
+            "explainable": bool(interpretation),
+            "tested": tested,
+            "review_status": "pending_consolidation",
+            "retained": False,
+            "transferable": tested and (transfer_prompt or observable_application),
+        },
+        "factual_status": "still_provisional_pending_consolidation",
+    }
+
+
+def _record_teaching_episode_results(
+    state: ConversationalRuntimeState,
+    episode: ActiveCognitiveEpisodeState,
+    graph: Any,
+) -> tuple[ConversationalRuntimeState, Any]:
+    """Bind accepted frontier results back to teaching state and durable requests."""
+
+    objective = state.active_objective
+    plan = _teaching_plan_for_objective(objective)
+    if objective is None or not plan:
+        return state, graph
+    followups = list(_teaching_followups_for_objective(objective))
+    prerequisites = list(_teaching_prerequisites_for_objective(objective))
+    pending_by_id = {item.request_id: item for item in state.pending_chat_requests}
+    resolved_ids = {item.request_id for item in state.resolved_chat_requests}
+    progress: list[Mapping[str, Any]] = []
+    changed = False
+    topic = str(plan.get("topic") or "this topic")
+
+    for index, followup in enumerate(followups):
+        evidence_id = str(followup.get("evidence_id") or followup.get("node_id") or "")
+        result = _teaching_result_for_evidence(episode, evidence_id)
+        if result is None or str(followup.get("status") or "") not in {"queued", "study_running", "study_retry_scheduled"}:
+            continue
+        if str(followup.get("last_processed_operation_id") or "") == result.operation_id:
+            continue
+        expected_terms = tuple(str(item) for item in followup.get("question_tokens", ()) if str(item))
+        assessment = _teaching_understanding_assessment(result, expected_terms=expected_terms)
+        if not result.accepted:
+            attempts = _teaching_attempts_for_evidence(episode, evidence_id)
+            rejected_attempts = tuple(item for item in attempts if not item.accepted)
+            retryable = (
+                len(rejected_attempts) == 1
+                and "local_model_execution_blocked" not in set(result.rejection_reasons)
+            )
+            if retryable:
+                followups[index] = {
+                    **followup,
+                    "status": "study_retry_scheduled",
+                    "operation_id": result.operation_id,
+                    "last_processed_operation_id": result.operation_id,
+                    "retry_count": 1,
+                    "last_rejection_reasons": tuple(result.rejection_reasons),
+                    "understanding_assessment": assessment,
+                }
+                progress.append({
+                    "event": "teaching_followup_study_retry_scheduled",
+                    "objective_id": objective.objective_id,
+                    "followup_id": str(followup.get("followup_id") or ""),
+                    "operation_id": result.operation_id,
+                    "rejection_reasons": tuple(result.rejection_reasons),
+                    "at": utc_now(),
+                })
+                changed = True
+                continue
+            followups[index] = {
+                **followup,
+                "status": "study_blocked",
+                "operation_id": result.operation_id,
+                "last_processed_operation_id": result.operation_id,
+                "retry_count": len(rejected_attempts),
+                "last_rejection_reasons": tuple(result.rejection_reasons),
+                "understanding_assessment": assessment,
+                "completed_at": utc_now(),
+            }
+            progress.append({
+                "event": "teaching_followup_study_blocked",
+                "objective_id": objective.objective_id,
+                "followup_id": str(followup.get("followup_id") or ""),
+                "operation_id": result.operation_id,
+                "at": utc_now(),
+            })
+            changed = True
+            continue
+        claim_version_id = _teaching_claim_version_for_node(graph, str(followup.get("node_id") or ""))
+        if not claim_version_id:
+            continue
+        completed = {
+            **followup,
+            "topic": topic,
+            "status": "provisional_ready_for_retention",
+            "claim_version_id": claim_version_id,
+            "operation_id": result.operation_id,
+            "last_processed_operation_id": result.operation_id,
+            "interpretation": str(result.interpretation or "").strip(),
+            "uncertainty": str(result.uncertainty or "").strip(),
+            "understanding_assessment": assessment,
+            "completed_at": utc_now(),
+        }
+        followups[index] = completed
+        request_id = stable_id(
+            "teaching-provisional-retention-request",
+            state.runtime_id,
+            objective.objective_id,
+            str(completed.get("followup_id") or ""),
+            claim_version_id,
+        )
+        if request_id not in pending_by_id and request_id not in resolved_ids:
+            request = ChatAddressableRequest(
+                request_id=request_id,
+                request_type="teaching_provisional_retention",
+                objective_id=objective.objective_id,
+                originating_goal_id=objective.objective_id,
+                goal_label=f"{topic} provisional material",
+                prompt_text=teaching_retention_prompt(completed),
+                authority_impact="operator_controlled_provisional_memory_retention",
+                thread_id=f"{objective.objective_id}:teaching-followup:{completed.get('followup_id')}",
+                created_sequence=len(state.conversation) + len(pending_by_id) + 1,
+                accepted_response_types=("approved", "denied"),
+                baseline_metrics={
+                    "teaching_request_kind": "provisional_retention",
+                    "followup_id": str(completed.get("followup_id") or ""),
+                    "claim_version_id": claim_version_id,
+                    "question": str(completed.get("question") or ""),
+                },
+            )
+            pending_by_id[request_id] = request
+            progress.append({
+                "event": "teaching_provisional_retention_requested",
+                "objective_id": objective.objective_id,
+                "followup_id": str(completed.get("followup_id") or ""),
+                "claim_version_id": claim_version_id,
+                "request_id": request_id,
+                "at": utc_now(),
+            })
+        progress.append({
+            "event": "teaching_followup_study_completed",
+            "objective_id": objective.objective_id,
+            "followup_id": str(completed.get("followup_id") or ""),
+            "claim_version_id": claim_version_id,
+            "operation_id": result.operation_id,
+            "epistemic_state": "pending_consolidation",
+            "at": utc_now(),
+        })
+        changed = True
+
+    for index, prerequisite in enumerate(prerequisites):
+        evidence_id = str(prerequisite.get("evidence_id") or prerequisite.get("node_id") or "")
+        result = _teaching_result_for_evidence(episode, evidence_id)
+        if result is None or str(prerequisite.get("status") or "") not in {
+            "queued",
+            "prerequisite_study_running",
+            "prerequisite_retry_scheduled",
+        }:
+            continue
+        if str(prerequisite.get("last_processed_operation_id") or "") == result.operation_id:
+            continue
+        expected_terms = tuple(
+            token
+            for token in re.findall(
+                r"[a-z0-9]+",
+                " ".join(
+                    (
+                        str(prerequisite.get("topic") or ""),
+                        str(prerequisite.get("competence_requirement") or ""),
+                    )
+                ).lower(),
+            )
+            if token not in {"the", "and", "for", "how", "or", "in", "one"}
+        )
+        assessment = _teaching_understanding_assessment(result, expected_terms=expected_terms)
+        if not result.accepted:
+            attempts = _teaching_attempts_for_evidence(episode, evidence_id)
+            rejected_attempts = tuple(item for item in attempts if not item.accepted)
+            retryable = (
+                len(rejected_attempts) == 1
+                and "local_model_execution_blocked" not in set(result.rejection_reasons)
+            )
+            if retryable:
+                prerequisites[index] = {
+                    **prerequisite,
+                    "status": "prerequisite_retry_scheduled",
+                    "operation_id": result.operation_id,
+                    "last_processed_operation_id": result.operation_id,
+                    "retry_count": 1,
+                    "last_rejection_reasons": tuple(result.rejection_reasons),
+                    "understanding_assessment": assessment,
+                }
+                progress.append({
+                    "event": "teaching_prerequisite_retry_scheduled",
+                    "objective_id": objective.objective_id,
+                    "prerequisite_id": str(prerequisite.get("prerequisite_id") or ""),
+                    "operation_id": result.operation_id,
+                    "rejection_reasons": tuple(result.rejection_reasons),
+                    "at": utc_now(),
+                })
+                changed = True
+                continue
+            prerequisites[index] = {
+                **prerequisite,
+                "status": "competence_needs_revision",
+                "competence_test_state": str(assessment["state"]),
+                "derivation_branch_state": "still_blocked",
+                "operation_id": result.operation_id,
+                "last_processed_operation_id": result.operation_id,
+                "retry_count": len(rejected_attempts),
+                "last_rejection_reasons": tuple(result.rejection_reasons),
+                "understanding_assessment": assessment,
+                "completed_at": utc_now(),
+            }
+            progress.append({
+                "event": "teaching_prerequisite_competence_checked",
+                "objective_id": objective.objective_id,
+                "prerequisite_id": str(prerequisite.get("prerequisite_id") or ""),
+                "operation_id": result.operation_id,
+                "passed": False,
+                "at": utc_now(),
+            })
+            changed = True
+            continue
+        passed = bool(assessment["learning_states"]["tested"])
+        resume_target = physics_prerequisite_resume_target(plan, prerequisite) if passed else {}
+        resumption_event_id = stable_id(
+            "teaching-prerequisite-parent-resumption",
+            objective.objective_id,
+            str(prerequisite.get("prerequisite_id") or ""),
+            result.operation_id,
+        ) if passed else ""
+        prerequisites[index] = {
+            **prerequisite,
+            "status": "competence_tested" if passed else "competence_needs_revision",
+            "competence_test_state": str(assessment["state"]),
+            "derivation_branch_state": "resumed" if passed else "still_blocked",
+            "operation_id": result.operation_id,
+            "last_processed_operation_id": result.operation_id,
+            "interpretation": str(result.interpretation or "").strip(),
+            "uncertainty": str(result.uncertainty or "").strip(),
+            "understanding_assessment": assessment,
+            "completed_at": utc_now(),
+            **resume_target,
+            "parent_branch_resume_event_id": resumption_event_id,
+            "parent_branch_resumed_at": utc_now() if passed else "",
+        }
+        progress.append({
+            "event": "teaching_prerequisite_competence_checked",
+            "objective_id": objective.objective_id,
+            "prerequisite_id": str(prerequisite.get("prerequisite_id") or ""),
+            "operation_id": result.operation_id,
+            "passed": passed,
+            "at": utc_now(),
+        })
+        if passed:
+            progress.extend((
+                {
+                    "event": "teaching_prerequisite_cleared",
+                    "objective_id": objective.objective_id,
+                    "prerequisite_id": str(prerequisite.get("prerequisite_id") or ""),
+                    "operation_id": result.operation_id,
+                    "resumption_event_id": resumption_event_id,
+                    "at": utc_now(),
+                },
+                {
+                    "event": "teaching_parent_branch_resumed",
+                    "objective_id": objective.objective_id,
+                    "parent_objective_id": str(prerequisite.get("parent_objective_id") or objective.objective_id),
+                    "prerequisite_id": str(prerequisite.get("prerequisite_id") or ""),
+                    "operation_id": result.operation_id,
+                    "resumption_event_id": resumption_event_id,
+                    **resume_target,
+                    "at": utc_now(),
+                },
+            ))
+        changed = True
+
+    if not changed:
+        return state, graph
+    updated_objective = _replace_teaching_objective(objective, followups=followups, prerequisites=prerequisites)
+    graph, cohort = ensure_consolidation_cohort(graph, trigger="conversational_teaching_followup")
+    updated = _replace_state(
+        state,
+        active_objective=updated_objective,
+        pending_chat_requests=tuple(pending_by_id.values()),
+        objective_progress=state.objective_progress + tuple(progress) + (({
+            "event": "teaching_consolidation_eligible",
+            "objective_id": objective.objective_id,
+            "cohort_id": cohort.cohort_id,
+            "at": utc_now(),
+        },) if cohort is not None else ()),
+    )
+    return updated, graph
+
+
+def is_teaching_followup_message(state: ConversationalRuntimeState, message: str) -> bool:
+    """Expose the narrow study boundary so the UI can preserve its canonical owner."""
+
+    plan = _teaching_plan_for_objective(state.active_objective)
+    if not plan:
+        return False
+    return teaching_followup_requires_study(plan, _teaching_followups_for_objective(state.active_objective), message)
+
+
+def _queue_teaching_followup_study(
+    state: ConversationalRuntimeState,
+    message: str,
+    *,
+    runtime_root: str | Path,
+    run_background_cycle: bool,
+    model_runner: ModelRunner | None,
+) -> RuntimeTurnResult | None:
+    objective = state.active_objective
+    plan = _teaching_plan_for_objective(objective)
+    if objective is None or not plan or not is_teaching_followup_message(state, message):
+        return None
+    user_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 1), message),
+        role="user",
+        text=message,
+        intent_type="teaching_followup_question",
+        objective_id=objective.objective_id,
+    )
+    return _queue_teaching_followup_from_turn(
+        state,
+        user_turn,
+        runtime_root=runtime_root,
+        run_background_cycle=run_background_cycle,
+        model_runner=model_runner,
+    )
+
+
+def _queue_teaching_followup_from_turn(
+    state: ConversationalRuntimeState,
+    user_turn: ConversationTurn,
+    *,
+    runtime_root: str | Path,
+    run_background_cycle: bool,
+    model_runner: ModelRunner | None,
+) -> RuntimeTurnResult | None:
+    """Compile one teaching study from a new or previously queued user turn.
+
+    A foreground turn may arrive while the shared local-model worker is at an
+    atomic boundary.  The turn is already durable in that case, so this helper
+    upgrades that exact turn rather than appending another user message.  Both
+    paths intentionally use the same follow-up node, acknowledgement, and
+    background-cycle contracts.
+    """
+
+    objective = state.active_objective
+    plan = _teaching_plan_for_objective(objective)
+    message = str(user_turn.text or "")
+    if objective is None or not plan or not is_teaching_followup_message(state, message):
+        return None
+    followup = compile_teaching_followup(plan, objective_id=objective.objective_id, message=message)
+    if not followup:
+        return None
+    followup = {**followup, "topic": str(plan.get("topic") or "this topic")}
+    existing_turn = any(item.turn_id == user_turn.turn_id for item in state.conversation)
+    normalized_user_turn = replace(
+        user_turn,
+        intent_type="teaching_followup_question",
+        objective_id=objective.objective_id,
+    )
+    conversation = (
+        tuple(normalized_user_turn if item.turn_id == normalized_user_turn.turn_id else item for item in state.conversation)
+        if existing_turn
+        else state.conversation + (normalized_user_turn,)
+    )
+    reply = render_teaching_followup_acknowledgement(followup)
+    assistant_turn = ConversationTurn(
+        turn_id=stable_id("teaching-followup-acknowledgement", state.runtime_id, normalized_user_turn.turn_id, str(followup.get("followup_id") or "")),
+        role="assistant",
+        text=reply,
+        intent_type="teaching_followup_study_acknowledgement",
+        objective_id=objective.objective_id,
+    )
+    updated_objective = _replace_teaching_objective(
+        objective,
+        followups=_teaching_followups_for_objective(objective) + (followup,),
+    )
+    updated = _replace_state(
+        state,
+        active_objective=updated_objective,
+        conversation=conversation + (assistant_turn,),
+        objective_progress=state.objective_progress + ({
+            "event": "queued_teaching_followup_reconciled" if existing_turn else "teaching_followup_study_queued",
+            "objective_id": objective.objective_id,
+            "followup_id": str(followup.get("followup_id") or ""),
+            "node_id": str(followup.get("node_id") or ""),
+            "question": str(followup.get("question") or ""),
+            "source_turn_id": normalized_user_turn.turn_id,
+            "authority": "standing_bounded_local_teaching",
+            "at": utc_now(),
+        },),
+    )
+    if run_background_cycle:
+        updated = run_background_objective_cycle(
+            updated,
+            runtime_root=runtime_root,
+            reason="teaching_followup_study",
+            model_runner=model_runner,
+        )
+    save_runtime_state(runtime_root, updated)
+    return RuntimeTurnResult(
+        state=updated,
+        intent=ConversationIntent(
+            intent_type="teaching_followup_question",
+            confidence=0.9,
+            persistence_scope="active_teaching_objective",
+            risk_class="safe_internal",
+            authority_required=(),
+            matched_signals=("in_scope_teaching_question",),
+        ),
+        reply=reply,
+        background_cycle_started=True,
+    )
+
+
+def reconcile_queued_teaching_followup(
+    state: ConversationalRuntimeState,
+    *,
+    runtime_root: str | Path,
+    run_background_cycle: bool = False,
+    model_runner: ModelRunner | None = None,
+) -> RuntimeTurnResult | None:
+    """Consume one in-scope queued teaching question at a worker safe boundary.
+
+    Generic queued turns remain owned by the existing reconciliation path.  This
+    deliberately handles only a foreground question that is both durable and
+    in scope for the active teaching objective, preserving its original turn ID
+    and producing no duplicate user turn on restart or later idle ticks.
+    """
+
+    objective = state.active_objective
+    if objective is None or not _teaching_plan_for_objective(objective):
+        return None
+    for turn in state.conversation:
+        if (
+            turn.role != "user"
+            or turn.intent_type != "ordinary_conversation_queued"
+            or turn.objective_id != objective.objective_id
+        ):
+            continue
+        result = _queue_teaching_followup_from_turn(
+            state,
+            turn,
+            runtime_root=runtime_root,
+            run_background_cycle=run_background_cycle,
+            model_runner=model_runner,
+        )
+        if result is not None:
+            return result
+    return None
 
 
 def run_background_objective_cycle(
@@ -3592,6 +4669,7 @@ def run_background_objective_cycle(
         state_path=episode_path,
     )
     episode = replace(episode, budgets={**episode.budgets, "max_cycles": state.active_objective.cycle_budget, "max_model_calls": state.active_objective.model_call_budget})
+    episode = _ensure_pending_teaching_followup_nodes(episode, state.active_objective)
     if episode.completed or episode.loop_state == "completed":
         if state.active_objective.provenance.get("execution_mode") != "knowledge_acquisition":
             episode_path = Path(runtime_root) / f"active_episode_{len(state.completed_cycle_keys) + 1}.json"
@@ -3707,6 +4785,8 @@ def run_background_objective_cycle(
                     "at": utc_now(),
                 },),
             )
+            updated, graph = _record_teaching_episode_results(updated, episode, graph)
+            save_graph(runtime_root, graph)
         except ConsolidationIntegrityError as exc:
             updated = _replace_state(
                 updated,

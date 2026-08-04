@@ -748,6 +748,23 @@ def create_consolidation_cohort(
         created_at=utc_now(),
         cohort_digest=_digest(base),
     )
+    existing = next(
+        (
+            item
+            for item in graph.cohorts
+            if item.cohort_id == cohort.cohort_id
+            or (
+                item.trigger == cohort.trigger
+                and item.claim_version_refs == cohort.claim_version_refs
+            )
+        ),
+        None,
+    )
+    if existing is not None:
+        # A cohort is an immutable cursor over a fixed set of claim versions.
+        # Later episode bookkeeping can add adaptation traces without changing
+        # that already-sealed eligibility boundary.
+        return graph, existing
     return _append(graph, "cohorts", cohort), cohort
 
 
@@ -766,17 +783,6 @@ def ensure_consolidation_cohort(
     candidate_graph, cohort = create_consolidation_cohort(graph, trigger=trigger, policy=policy)
     if not cohort.claim_version_refs:
         return graph, None
-    existing = next(
-        (
-            item
-            for item in graph.cohorts
-            if item.claim_version_refs == cohort.claim_version_refs
-            and item.trigger == cohort.trigger
-        ),
-        None,
-    )
-    if existing is not None:
-        return graph, existing
     return candidate_graph, cohort
 
 

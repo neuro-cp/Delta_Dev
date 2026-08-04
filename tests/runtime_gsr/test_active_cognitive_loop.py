@@ -492,6 +492,50 @@ def test_calibrated_frontier_contracts_reject_tangential_or_shallow_claims_and_a
     assert maintenance.evaluation_state == "supported"
 
 
+def test_frontier_adapter_preserves_source_binding_when_model_echoes_active_node_id_as_scope():
+    state = initialize_episode(
+        title="Knowledge acquisition objective",
+        goal_summary="Teach introductory calculus for mechanics",
+        expected_state="A prerequisite must demonstrate one mechanics application.",
+        evidence=(
+            EvidenceRef("operator-natural-goal", "ordinary_chat", "Teach me physics.", ""),
+            _knowledge_node(
+                "node-calculus",
+                "introductory calculus: derivatives and integrals for mechanics",
+                "explain how a derivative represents rate of change in one mechanics application",
+                contribution_contract={
+                    "minimum_specific_terms": 3,
+                    "requires_explanatory_relation": True,
+                    "requires_expected_observation": True,
+                    "reject_importance_only": True,
+                    "required_topic_terms": ("derivative", "derivatives", "integral", "integrals", "rate"),
+                },
+            ),
+        ),
+    )
+    state = replace(state, attention=select_attention(state, generate_candidate_focuses(state)))
+    packet = build_working_memory_packet(state, sequence=1)
+    request = build_operation_request(state, packet, operation_type="formulate_hypothesis", model_identity="qwen-test")
+    model_payload = _runtime_payload_from_operation_response("formulate_hypothesis", {
+        "hypothesis_statement": (
+            "A derivative represents the rate of change of position with time, corresponding to velocity in a mechanics example."
+        ),
+        "scope": "node-calculus",
+        "supporting_evidence_refs": ["node-calculus"],
+        "assumptions": [],
+        "expected_observations": ["Velocity changes when the position-versus-time slope changes."],
+        "uncertainty": "The motion model may not have constant acceleration.",
+        "recommended_state_transition": "propose_hypothesis",
+    })
+
+    canonical_payload = acl._canonicalize_active_frontier_scope(packet, model_payload)
+    result = validate_model_result(request, packet, canonical_payload)
+
+    assert canonical_payload["scope"] == "introductory calculus: derivatives and integrals for mechanics"
+    assert result.accepted is True
+    assert result.expected_observations == ("Velocity changes when the position-versus-time slope changes.",)
+
+
 def test_retry_prompt_names_required_frontier_contribution_shape():
     state = initialize_episode(
         title="Knowledge acquisition objective",
@@ -524,6 +568,7 @@ def test_retry_prompt_names_required_frontier_contribution_shape():
 
     assert "mechanism-path node" in prompt
     assert "route or transfer path from source" in prompt
+    assert "connector such as because, through, leads to, controls, depends on, represents, corresponds to, or prevents" in prompt
     assert "node_completion_contract_missing:mechanism_path" in prompt
     assert "Rain barrels collect water through a funnel and storage container." in prompt
 

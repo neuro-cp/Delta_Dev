@@ -47,6 +47,9 @@ HYPOTHESIS_OPERATIONS = frozenset({
     "reformulate_node_specific_hypothesis",
     "repair_node_specific_hypothesis_format",
 })
+_SUPPLEMENTAL_FRONTIER_REJECTION_REASONS = frozenset({
+    "node_completion_missing_expected_observation",
+})
 CONFIDENCE_STATES = (
     "tentative",
     "plausible",
@@ -251,6 +254,7 @@ class CognitiveOperationResult:
     raw_model_output: str
     model_identity: str
     accepted: bool
+    expected_observations: tuple[str, ...] = ()
     rejection_reasons: tuple[str, ...] = ()
     evaluation_state: str = "not_evaluated"
     evaluation_reasons: tuple[str, ...] = ()
@@ -533,6 +537,7 @@ class LedgerBackedCognitiveModelRunner:
         if self.snapshot_root is not None:
             _write_response_snapshot(self.snapshot_root, snapshot, terminal, ledger_result, adapted)
         parsed = _runtime_payload_from_operation_response(request.operation_type, dict(adapted.adapted_response))
+        parsed = _canonicalize_active_frontier_scope(packet, parsed)
         if adapted.adapter_rejection_reasons:
             parsed.setdefault("adapter_rejection_reasons", adapted.adapter_rejection_reasons)
         parsed.setdefault("raw_model_output", raw_text)
@@ -758,6 +763,14 @@ def _knowledge_hypothesis_text(raw: Mapping[str, Any]) -> str:
 def _knowledge_contract_contribution_rejections(contract: Mapping[str, Any], statement: str) -> tuple[str, ...]:
     lowered = statement.lower()
     kind = str(contract.get("contribution_kind") or "explanatory_relation")
+    required_terms = {
+        str(item).strip().lower()
+        for item in contract.get("required_topic_terms", ())
+        if str(item).strip()
+    }
+    statement_terms = _semantic_tokens(statement)
+    if required_terms and not (required_terms & statement_terms):
+        return ("node_completion_contract_missing:required_topic_terms",)
     actions = {
         token for token in (
             "address", "check", "clean", "clear", "cover", "drain", "empty", "inspect",
@@ -797,18 +810,31 @@ def _knowledge_contract_contribution_rejections(contract: Mapping[str, Any], sta
 
 
 def _knowledge_contract_prompt_hint(contract: Mapping[str, Any]) -> str:
+    required_terms = tuple(str(item).strip() for item in contract.get("required_topic_terms", ()) if str(item).strip())
+    required_hint = (
+        " Name at least one active topic term: " + ", ".join(required_terms) + "."
+        if required_terms else ""
+    )
+    relation_hint = (
+        " In hypothesis_statement, state the relationship explicitly with a connector such as because, through, leads to, controls, depends on, represents, corresponds to, or prevents; listing roles alone is not enough."
+        if contract.get("requires_explanatory_relation") else ""
+    )
+    observation_hint = (
+        " Include one concrete expected_observations entry that describes an observable application or consequence of the relationship."
+        if contract.get("requires_expected_observation") else ""
+    )
     kind = str(contract.get("contribution_kind") or "explanatory_relation")
     if kind == "mechanism_path":
-        return "For a mechanism-path node, explain the route or transfer path from source through intermediate component into storage or output."
+        return "For a mechanism-path node, explain the route or transfer path from source through intermediate component into storage or output." + relation_hint + observation_hint + required_hint
     if kind == "threshold_and_safe_mitigation":
-        return "For an overflow or threshold node, name the threshold condition and the concrete route or destination that safely carries excess flow away."
+        return "For an overflow or threshold node, name the threshold condition and the concrete route or destination that safely carries excess flow away." + relation_hint + observation_hint + required_hint
     if kind == "prevention_intervention":
-        return "For a prevention node, name the concrete intervention, the hazard being prevented, and how the intervention blocks or reduces that hazard."
+        return "For a prevention node, name the concrete intervention, the hazard being prevented, and how the intervention blocks or reduces that hazard." + relation_hint + observation_hint + required_hint
     if kind == "sizing_relation":
-        return "For a sizing node, relate at least two sizing variables such as capacity, demand, rate, duration, load, area, or usage."
+        return "For a sizing node, relate at least two sizing variables such as capacity, demand, rate, duration, load, area, or usage." + relation_hint + observation_hint + required_hint
     if kind == "recurring_actions_with_consequence":
-        return "For a maintenance node, name recurring actions and the consequence they prevent or reduce."
-    return "Provide a concrete explanatory relation rather than a relevant but static label."
+        return "For a maintenance node, name recurring actions and the consequence they prevent or reduce." + relation_hint + observation_hint + required_hint
+    return "Provide a concrete explanatory relation rather than a relevant but static label." + relation_hint + observation_hint + required_hint
 
 
 def _knowledge_independent_evaluation(
@@ -870,9 +896,16 @@ def _knowledge_completion_sufficiency_rejections(
         relation_markers = (
             "because", "when", "therefore", "caus", "lead", "depend", "determin", "constrain", "limit", "require", "must",
             "prevent", "adjust", "control", "compress", "flow", "drain", "circulat", "integrat", "affect",
+            "represent", "correspond", "relate", "connect", "through",
         )
         if not any(marker in lowered for marker in relation_markers):
             rejections.append("node_completion_missing_explanatory_relation")
+    if contract.get("requires_expected_observation") and not tuple(
+        str(item).strip()
+        for item in raw.get("expected_observations", ())
+        if str(item).strip()
+    ):
+        rejections.append("node_completion_missing_expected_observation")
     if contract.get("reject_importance_only") and re.search(r"\b(?:is|are)\s+(?:critical|important|necessary|required)\b", lowered):
         rejections.append("node_completion_generic_importance_assertion")
     rejections.extend(_knowledge_contract_contribution_rejections(contract, statement))
@@ -1074,6 +1107,9 @@ def generate_candidate_focuses(state: ActiveCognitiveEpisodeState) -> tuple[Cand
             counts = attempt_counts.get(node_focus_id, {})
             attempts = _frontier_attempt_records(state, node_focus_id)
             latest_attempt = attempts[-1] if attempts else None
+            node_source = str(node.source or "")
+            is_operator_followup = node_source == "teaching_followup"
+            is_linked_prerequisite = node_source == "teaching_prerequisite"
             format_repair = bool(
                 latest_attempt
                 and _retry_output_schema_invalid(*latest_attempt)
@@ -1089,7 +1125,11 @@ def generate_candidate_focuses(state: ActiveCognitiveEpisodeState) -> tuple[Cand
                 description=repair_description if format_repair else f"{'Retry' if retrying else 'Resolve'} knowledge frontier: {label}",
                 source="knowledge_frontier",
                 related_goal_ids=(goal.goal_id,),
-                urgency="high" if retrying or index == 1 else "medium",
+                # A newly asked in-scope teaching question is an explicit
+                # foreground obligation.  It must run before the unattended
+                # curriculum backlog, while still using the same frontier and
+                # shared model ledger as every other knowledge node.
+                urgency="critical" if is_operator_followup else "high" if retrying or is_linked_prerequisite or index == 1 else "medium",
                 expected_value="concept_progress",
                 evidence_need=(
                     "re-emit a complete typed replacement hypothesis for the same frontier node"
@@ -1344,6 +1384,14 @@ def build_working_memory_packet(state: ActiveCognitiveEpisodeState, *, sequence:
             if not result.accepted
             and any(cycle.operation_id == result.operation_id and cycle.focus_id == focus.focus_id for cycle in state.cycles)
         )
+        retry_requires_new_proposition = not (
+            prior_rejections
+            and all(
+                set(result.rejection_reasons)
+                and set(result.rejection_reasons) <= _SUPPLEMENTAL_FRONTIER_REJECTION_REASONS
+                for result in prior_rejections[-2:]
+            )
+        )
         focus_record = {
             **focus_record,
             "active_frontier_node": node_metadata,
@@ -1375,7 +1423,7 @@ def build_working_memory_packet(state: ActiveCognitiveEpisodeState, *, sequence:
                     "rejection_reasons": result.rejection_reasons,
                 }
                 for result in prior_rejections[-2:]
-                if result.interpretation
+                if result.interpretation and retry_requires_new_proposition
             ),
             "prior_rejection_reasons": tuple(reason for result in prior_rejections[-2:] for reason in result.rejection_reasons),
             "retry_rejected_hypotheses": tuple(
@@ -1384,6 +1432,7 @@ def build_working_memory_packet(state: ActiveCognitiveEpisodeState, *, sequence:
                 if result.interpretation
             ),
             "retry_attempt": len(prior_rejections) + 1 if prior_rejections else 0,
+            "retry_requires_new_proposition": retry_requires_new_proposition,
         }
     omitted = max(0, len(state.evidence) + len(state.hypotheses) + len(state.actions) + len(state.outcomes) - budget)
     cycle_id = stable_id("active-cognitive-cycle", state.episode_id, sequence)
@@ -1552,6 +1601,7 @@ def validate_model_result(
         raw_model_output=str(raw.get("raw_model_output") or raw.get("interpretation") or ""),
         model_identity=str(raw.get("model_identity") or request.model_identity),
         accepted=not rejection,
+        expected_observations=tuple(str(item) for item in raw.get("expected_observations", ()) if str(item)),
         rejection_reasons=tuple(rejection),
         evaluation_state=evaluation_state,
         evaluation_reasons=evaluation_reasons,
@@ -2289,6 +2339,7 @@ def _operation_specific_prompt_rules(schema: CognitiveOperationSchema) -> str:
         "reformulate_node_specific_hypothesis": (
             "RETRY OPERATION: formulate one new hypothesis_statement for active_frontier_node only. "
             "It must correct the stated rejection reasons, add a materially distinct proposition, and must not restate any prohibited duplicate target."
+            " If the retry explicitly says only an observable/application field was missing, retain the proposition only while adding that concrete missing evidence."
         ),
         "repair_node_specific_hypothesis_format": (
             "FORMAT REPAIR OPERATION: return a complete replacement hypothesis record for active_frontier_node. "
@@ -2362,6 +2413,30 @@ def _schema_contrary_refs(response: Mapping[str, Any], schema: CognitiveOperatio
         if isinstance(value, list):
             refs.extend(str(item) for item in value if str(item))
     return tuple(refs)
+
+
+def _canonicalize_active_frontier_scope(
+    packet: WorkingMemoryPacket,
+    response: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Replace only an exact active-node ID echoed into descriptive scope.
+
+    The immutable focus ID and supporting evidence reference own frontier
+    identity.  Small local models occasionally echo that evidence ID into the
+    human-readable ``scope`` field.  Keeping the raw response intact in the
+    ledger snapshot while replacing this one derived presentation field avoids
+    rejecting an otherwise source-bound proposition for formatting alone.
+    """
+
+    normalized = dict(response)
+    if str(packet.active_focus.get("source") or "") != "knowledge_frontier":
+        return normalized
+    node = dict(packet.active_focus.get("active_frontier_node") or {})
+    node_id = str(node.get("node_id") or "")
+    label = str(node.get("label") or "").strip()
+    if node_id and label and str(normalized.get("scope") or "").strip() == node_id:
+        normalized["scope"] = label
+    return normalized
 
 
 def _runtime_payload_from_operation_response(operation_type: str, response: dict[str, Any]) -> dict[str, Any]:
@@ -2579,10 +2654,17 @@ def compile_operation_prompt_snapshot(
             if completion_contract else ""
         )
         if int(packet.active_focus.get("retry_attempt") or 0) > 0:
+            retry_requires_new_proposition = bool(packet.active_focus.get("retry_requires_new_proposition", True))
+            retry_requirement = (
+                "Required new proposition: "
+                if retry_requires_new_proposition
+                else "Required supplemental observable/application evidence for the existing proposition: "
+            )
             retry_rule = (
                 " RETRY TARGET: The prior answer was rejected for "
                 + ", ".join(str(item) for item in packet.active_focus.get("prior_rejection_reasons", ()) if str(item))
-                + ". Required new proposition: "
+                + ". "
+                + retry_requirement
                 + str(frontier_node.get("completion_criterion_reference") or frontier_node.get("label") or "the active frontier node")
                 + ". "
                 + completion_hint
@@ -2595,10 +2677,12 @@ def compile_operation_prompt_snapshot(
                 "allowed_supporting_evidence_refs": tuple(item["evidence_id"] for item in supporting),
             }
             retry_response_reminder = (
-                "\nFINAL RETRY RESPONSE: return every required key. hypothesis_statement must be a new proposition for "
+                "\nFINAL RETRY RESPONSE: return every required key. hypothesis_statement must "
+                + ("be a new proposition for " if retry_requires_new_proposition else "remain tied to the existing proposition for ")
                 + str(frontier_node.get("label") or "the active frontier node")
                 + "; scope must exactly name that node; supporting_evidence_refs must include its node ID. "
-                "Do not return only uncertainty, interpretation, or a generic cognitive-operation record."
+                + ("" if retry_requires_new_proposition else "Add the missing concrete observable/application in expected_observations. ")
+                + "Do not return only uncertainty, interpretation, or a generic cognitive-operation record."
             )
         frontier_rule = (
             " KNOWLEDGE FRONTIER RULES: Work only on active_frontier_node. "
@@ -2607,8 +2691,7 @@ def compile_operation_prompt_snapshot(
             "Do not restate conclusions from other nodes unless they are necessary dependencies. "
             "Name the specific new relationship, constraint, failure mode, tradeoff, fact, or uncertainty reduction added for this node. "
             "Prior-node claims are checked separately by deterministic duplicate validation; do not use them as generation context unless listed in explicit_dependencies. "
-            "If retry_attempt is nonzero, this is a reformulation: correct prior_rejection_reasons with a narrower node-specific hypothesis_statement, "
-            "state the required new proposition for active_frontier_node, and do not repeat the prior hypothesis or explain another node's mechanism. "
+            "If retry_attempt is nonzero, correct prior_rejection_reasons with a node-specific response. When a prior response only missed an observable/application field, preserve its proposition only while supplying that missing field; otherwise state a required new proposition and do not repeat the prior hypothesis or explain another node's mechanism. "
             + completion_rule
             + retry_rule
         )
@@ -2937,7 +3020,7 @@ def _dedupe_focuses(focuses: Sequence[CandidateFocus]) -> tuple[CandidateFocus, 
 
 
 def _rank_focuses(candidates: Sequence[CandidateFocus]) -> tuple[CandidateFocus, ...]:
-    priority = {"high": 0, "medium": 1, "low": 2}
+    priority = {"critical": 0, "high": 1, "medium": 2, "low": 3}
     return tuple(sorted(candidates, key=lambda item: (priority.get(item.urgency, 9), item.creation_sequence, item.focus_id)))
 
 
@@ -3059,7 +3142,7 @@ def _request_from_mapping(data: Mapping[str, Any]) -> CognitiveOperationRequest:
 
 def _result_from_mapping(data: Mapping[str, Any]) -> CognitiveOperationResult:
     payload = dict(data)
-    for key in ("evidence_refs", "contrary_evidence_considered", "assumptions", "rejection_reasons", "evaluation_reasons"):
+    for key in ("evidence_refs", "contrary_evidence_considered", "assumptions", "expected_observations", "rejection_reasons", "evaluation_reasons"):
         payload[key] = tuple(payload.get(key) or ())
     return CognitiveOperationResult(**payload)
 

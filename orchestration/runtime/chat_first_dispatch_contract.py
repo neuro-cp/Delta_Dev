@@ -373,6 +373,15 @@ def _control_for_clause(state: ConversationalRuntimeState, clause: str) -> tuple
         return ControlDispatch(True, "interactive_introspection", "render_interactive_introspection", state.active_objective.objective_id if state.active_objective else "", deferred=True, should_render_acknowledgment=True), PendingRequestDispatch(False)
     if re.search(r"\b(?:are you|is the runtime|chat runtime|runtime state|goal state|pending requests?|queued|last user question|last question|recorded once|discarded)\b", lower) and re.search(r"\b(?:paused|running|working|pending|queued|state|status|exactly once|how many|last|discarded|expired)\b", lower):
         return ControlDispatch(True, "runtime_state_query", "render_runtime_state", state.active_objective.objective_id if state.active_objective else "", deferred=True, should_render_acknowledgment=True), PendingRequestDispatch(False)
+    # A stop instruction can also introduce the next foreground objective.  Let
+    # that explicit replacement own the turn before treating it as a bare stop.
+    if (
+        state.active_objective
+        and re.search(r"\bstop\b", lower)
+        and re.search(r"\b(?:instead|rather|switch)\b", lower)
+        and re.search(r"\b(?:work\s+on|study|focus\s+on|goal)\b", lower)
+    ):
+        return ControlDispatch(True, "replace_goal", "replace_objective", state.active_objective.objective_id, deferred=True, should_render_acknowledgment=True), PendingRequestDispatch(False)
     if state.active_objective and re.search(r"\bstop\s+(?:working\s+on\s+)?(?:that|this|the\s+active\s+goal|goal)\b", lower):
         return ControlDispatch(True, "stop_goal", "stop", state.active_objective.objective_id, deferred=True, should_render_acknowledgment=True), PendingRequestDispatch(False)
     clarification_owner = _clarification_request_owner(state, clause)
@@ -406,7 +415,7 @@ def _control_for_clause(state: ConversationalRuntimeState, clause: str) -> tuple
         or "continue frontier evaluation" in lower
     ):
         return ControlDispatch(True, "goal_continuation", "continue_objective", state.active_objective.objective_id if state.active_objective else "", deferred=True, should_render_acknowledgment=True), PendingRequestDispatch(False)
-    if "stop" in lower and any(marker in lower for marker in ("instead", "work on", "study batteries", "battery")):
+    if "stop" in lower and any(marker in lower for marker in ("instead", "work on", "study", "focus on")):
         return ControlDispatch(True, "replace_goal", "replace_objective", state.active_objective.objective_id if state.active_objective else "", deferred=True, should_render_acknowledgment=True), PendingRequestDispatch(False)
     if "no, i meant that earlier thing" in lower:
         return ControlDispatch(True, "clarification", "clarify_correction_reference", deferred=True, should_render_acknowledgment=True), PendingRequestDispatch(False)

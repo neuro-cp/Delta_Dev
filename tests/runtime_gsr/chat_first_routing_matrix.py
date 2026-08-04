@@ -70,7 +70,7 @@ ATOMIC_CASES = (
 
 MIXED_CASES = (
     RoutingCase("MX1", "Your new goal is to study engines. Also, why does turbo lag happen?", True, "create_goal"),
-    RoutingCase("MX2", "Your new goal is to study battery aging. Also, I'm excited to see what you find.", True, "create_goal"),
+    RoutingCase("MX2", "Your new goal is to study battery aging. Also, I'm excited to see what you find.", False, "create_goal"),
     RoutingCase("MX3", "Your new goal is to study topic transitions, and note that I meant your earlier answer.", False, "create_goal+correction"),
     RoutingCase("MX4", "Your new goal is to study reference handling, but do not use provider calls.", False, "create_goal+provider_prohibition"),
     RoutingCase("MX5", "Start studying engines. What will you do first?", True, "create_goal"),

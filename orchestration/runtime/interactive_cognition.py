@@ -37,6 +37,7 @@ THREAD_KINDS = (
     "curiosity_candidate",
     "paused_goal",
     "developmental_objective",
+    "developmental_pressure",
     "runtime_health_issue",
 )
 
@@ -530,6 +531,7 @@ def build_workspace_snapshot(
     ui_visibility: Mapping[str, Any] | None = None,
     model_request_summaries: Sequence[Mapping[str, Any]] = (),
     runtime_health: Sequence[Mapping[str, Any]] = (),
+    developmental_controller: Mapping[str, Any] | None = None,
 ) -> CognitiveWorkspaceSnapshot:
     """Build a bounded, immutable view without mutating any input owner."""
 
@@ -558,6 +560,96 @@ def build_workspace_snapshot(
             inclusion_reason="active_conversational_objective",
             attention=AttentionInputs(goal_importance=3, recency=2, interruption_cost=1, operator_interest_alignment=3),
         ))
+    controller = dict(developmental_controller or {})
+    if controller and str(controller.get("objective_id") or "") == (state.active_objective.objective_id if state.active_objective else ""):
+        cursor = int(controller.get("teaching_cursor") or 0)
+        plan = dict(controller.get("plan") or {})
+        curriculum = tuple(item for item in plan.get("curriculum", ()) if isinstance(item, Mapping))
+        next_item = curriculum[cursor] if 0 <= cursor < len(curriculum) else None
+        focus = str((next_item or {}).get("title") or plan.get("topic") or "developmental teaching")
+        threads.append(_thread(
+            "developmental_objective", "continuous_runtime_controller",
+            (str(controller.get("controller_id") or ""), str(controller.get("objective_id") or "")),
+            status="ready" if str(controller.get("stage") or "") not in {"paused", "blocked"} else str(controller.get("stage") or ""),
+            focus=focus, originating_reference=str(controller.get("controller_id") or ""),
+            created_at="", last_activity_at="", interruptibility="next_cycle_boundary",
+            authority_requirement="standing_authority_for_local_teaching", resource_requirements=("local_model",),
+            resume_cursor_ref=f"teaching-cursor:{cursor}", expiry_policy="curriculum_completion_or_operator_redirect",
+            operator_visibility="observation", dependency_refs=(str(controller.get("objective_id") or ""),),
+            semantic_refs=(), epistemic_status="developmental_teaching_state",
+            inclusion_reason="canonical_developmental_controller_projection",
+            attention=AttentionInputs(goal_importance=3, expected_information_gain=2, operator_interest_alignment=3, recency=2),
+        ))
+        open_cohorts = tuple(
+            item
+            for item in (graph.cohorts if graph else ())
+            if not any(packet.cohort_id == item.cohort_id for packet in (graph.packets if graph else ()))
+        )
+        teaching_followup_claims = {
+            str(item.get("followup_id") or ""): str(item.get("claim_version_id") or "")
+            for item in (
+                state.active_objective.provenance.get("teaching_followups", ())
+                if state.active_objective and isinstance(state.active_objective.provenance, Mapping)
+                else ()
+            )
+            if isinstance(item, Mapping)
+        }
+        for pressure in tuple(item for item in controller.get("developmental_pressures", ()) if isinstance(item, Mapping)):
+            action = str(pressure.get("recommended_action") or "")
+            pressure_type = str(pressure.get("pressure_type") or "developmental_pressure")
+            waiting_for_external_review = action == "await_external_review"
+            source_id = str(
+                pressure.get("source_followup_id")
+                or pressure.get("source_prerequisite_id")
+                or pressure.get("source_record_id")
+                or pressure_type
+            )
+            claim_version_id = teaching_followup_claims.get(str(pressure.get("source_followup_id") or ""), "")
+            cohort = next(
+                (
+                    item
+                    for item in reversed(open_cohorts)
+                    if claim_version_id and claim_version_id in set(item.claim_version_refs)
+                ),
+                None,
+            ) if action == "continue_consolidation_boundary" else None
+            source_ids = (
+                str(controller.get("controller_id") or ""),
+                str(controller.get("objective_id") or ""),
+                source_id,
+                cohort.cohort_id if cohort is not None else "",
+            )
+            threads.append(_thread(
+                "developmental_pressure", "continuous_runtime_controller", source_ids,
+                status="awaiting_external_review" if waiting_for_external_review else action or "observed",
+                focus=str(pressure.get("reason") or "A developmental pressure is active."),
+                originating_reference=cohort.cohort_id if cohort is not None else source_id,
+                created_at="", last_activity_at="", interruptibility="next_cycle_boundary",
+                authority_requirement=(
+                    "external_review_authority_already_recorded"
+                    if waiting_for_external_review
+                    else "standing_authority_for_local_consolidation"
+                    if action == "continue_consolidation_boundary"
+                    else "operator_or_goal_governance"
+                ),
+                resource_requirements=(), resume_cursor_ref=f"teaching-pressure:{action or pressure_type}",
+                expiry_policy="pressure_resolved_or_source_superseded", operator_visibility="observation",
+                dependency_refs=(str(controller.get("objective_id") or ""), source_id), semantic_refs=(),
+                epistemic_status=pressure_type,
+                inclusion_reason=(
+                    "pending_external_review_suppresses_repeat_authority_prompt"
+                    if waiting_for_external_review
+                    else "canonical_developmental_pressure_projection"
+                ),
+                # This is a bounded corrective action rooted in the current
+                # teaching objective, not a new scheduler or curiosity source.
+                attention=AttentionInputs(
+                    goal_importance=0 if waiting_for_external_review else 4,
+                    consolidation_urgency=3 if action == "continue_consolidation_boundary" else 0,
+                    expected_information_gain=0 if waiting_for_external_review else 2,
+                    operator_interest_alignment=3,
+                ),
+            ))
     for request in sorted(state.pending_chat_requests, key=lambda item: (item.render_sequence, item.created_sequence, item.request_id)):
         if request.status != "pending" or request.consumption_count:
             continue
@@ -671,6 +763,7 @@ def build_workspace_snapshot(
         "conversational_runtime": _digest(state.as_record()),
         "active_episode": _digest(episode.as_record()) if episode else "",
         "provisional_graph": _digest(graph.as_record()) if graph else "",
+        "developmental_controller": _digest(controller) if controller else "",
         # Decision history is audit output, not workspace input. Including it here
         # would make every observation create a different successor snapshot.
         "coordination": _digest({
@@ -927,7 +1020,7 @@ def arbitrate_attention(snapshot: CognitiveWorkspaceSnapshot) -> AttentionDecisi
 
     eligible = [
         thread for thread in snapshot.threads
-        if thread.status not in {"completed", "accepted", "expired", "suppressed", "deferred", "rejected", "resolved", "explored_pending_consolidation", "exploration_blocked", "exploration_failed", "exploration_interrupted_indeterminate", "awaiting_administrative_review"}
+        if thread.status not in {"completed", "accepted", "expired", "suppressed", "deferred", "rejected", "resolved", "explored_pending_consolidation", "exploration_blocked", "exploration_failed", "exploration_interrupted_indeterminate", "awaiting_administrative_review", "awaiting_external_review"}
     ]
     ranked = sorted(eligible, key=_priority_key)
     selected = ranked[0] if ranked else None
@@ -1095,7 +1188,13 @@ def _posture_for(thread: CognitiveThread | None) -> str:
         return "surface_contradiction" if thread.attention.contradiction_severity else "report_current_focus"
     if thread.thread_kind == "contradiction_review":
         return "surface_contradiction"
-    if thread.thread_kind in {"active_goal", "local_inquiry"} and thread.status not in {"paused", "blocked_operator_decision"}:
+    if thread.thread_kind == "developmental_pressure":
+        if thread.resume_cursor_ref.endswith("continue_consolidation_boundary"):
+            return "perform_one_consolidation_step"
+        if thread.resume_cursor_ref.endswith("resume_parent_curriculum"):
+            return "continue_active_goal"
+        return "report_current_focus"
+    if thread.thread_kind in {"active_goal", "local_inquiry", "developmental_objective"} and thread.status not in {"paused", "blocked_operator_decision", "blocked"}:
         return "continue_active_goal"
     if thread.thread_kind == "consolidation_cluster":
         return "perform_one_consolidation_step"

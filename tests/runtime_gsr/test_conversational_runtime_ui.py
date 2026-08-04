@@ -222,6 +222,541 @@ def test_default_surface_is_simple_and_advanced_is_inspectable(monkeypatch, tmp_
         root.destroy()
 
 
+def test_conversation_teaching_intent_creates_and_restores_canonical_controller(monkeypatch, tmp_path):
+    """The normal Conversation entry point must not bypass an explicit teaching request."""
+
+    import DELTA
+    from orchestration.runtime.developmental_teaching_runtime import teaching_snapshot
+
+    monkeypatch.setattr(DELTA.DeltaApp, "_start_conversational_background_cycle", lambda self, *args, **kwargs: False)
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, "Today I want you to teach me basic neuroanatomy.")
+
+        objective = app.conversational_runtime_state.active_objective
+        assert objective is not None
+        assert objective.provenance["execution_mode"] == "knowledge_acquisition"
+        assert objective.provenance["teaching_plan"]["domain"] == "neuroscience"
+        transcript = app.chat_history.get("1.0", tk.END)
+        assert "Let's begin with basic neuroanatomy." in transcript
+        assert "Would you like me to ask a local reasoning model" not in transcript
+
+        controller = app.developmental_teaching_controller
+        assert controller is not None
+        snapshot = teaching_snapshot(controller)
+        assert snapshot["objective_id"] == objective.objective_id
+        assert snapshot["teaching_cursor"] == 0
+        assert (app.conversational_runtime_root / "developmental-teaching" / f"{objective.objective_id}.json").exists()
+        objective_id = objective.objective_id
+    finally:
+        root.destroy()
+
+    root, restored = _app(monkeypatch, tmp_path)
+    try:
+        assert restored.conversational_runtime_state.active_objective is not None
+        assert restored.conversational_runtime_state.active_objective.objective_id == objective_id
+        assert restored.developmental_teaching_controller is not None
+        assert teaching_snapshot(restored.developmental_teaching_controller)["teaching_cursor"] == 0
+        assert len(restored.conversational_runtime_state.conversation) == 2
+    finally:
+        root.destroy()
+
+
+def test_background_merge_does_not_resurrect_consumed_teaching_prerequisite(monkeypatch, tmp_path):
+    """A foreground approval must beat an older worker snapshot of the same request."""
+
+    from orchestration.runtime.conversational_runtime_operation import (
+        handle_conversational_message,
+        resolve_pending_chat_request,
+    )
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        created = handle_conversational_message(
+            app.conversational_runtime_state,
+            "Teach me physics.",
+            runtime_root=app.conversational_runtime_root,
+            run_background_cycle=False,
+        ).state
+        request = created.pending_chat_requests[0]
+        approved = resolve_pending_chat_request(
+            created,
+            "Yes",
+            runtime_root=app.conversational_runtime_root,
+        ).state
+
+        app.conversational_runtime_state = approved
+        merged = app._merge_conversational_background_result(created, created)
+        prerequisite = merged.active_objective.provenance["teaching_prerequisites"][0]
+
+        assert merged.pending_chat_requests == ()
+        assert len(merged.resolved_chat_requests) == 1
+        assert merged.resolved_chat_requests[0].request_id == request.request_id
+        assert merged.resolved_chat_requests[0].consumption_count == 1
+        assert prerequisite["status"] == "queued"
+        assert prerequisite["derivation_branch_state"] == "preparing_prerequisite"
+    finally:
+        root.destroy()
+
+
+def test_physics_prerequisite_competence_result_renders_once_and_survives_restart(monkeypatch, tmp_path):
+    """A tested prerequisite should visibly reopen its parent branch exactly once."""
+
+    import DELTA
+    from orchestration.runtime.active_cognitive_loop import ScriptedSemanticModel
+    from orchestration.runtime.conversational_runtime_operation import save_runtime_state
+
+    def calculus_runner(request, packet):
+        response = dict(ScriptedSemanticModel()(request, packet))
+        node = dict(packet.active_focus.get("active_frontier_node") or {})
+        label = str(node.get("label") or "")
+        if "introductory calculus" in label.lower():
+            statement = (
+                "A derivative represents the rate of change of position with respect to time, "
+                "so it gives an object's velocity in a mechanics application."
+            )
+            response.update({
+                "interpretation": statement,
+                "hypothesis_statement": statement,
+                "scope": label,
+                "expected_observations": "Velocity is obtained by differentiating a position function with respect to time.",
+                "raw_model_output": statement,
+            })
+        return response
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        monkeypatch.setattr(app, "_conversational_cognitive_model_runner", lambda: calculus_runner)
+        _send(app, "Teach me physics.")
+        _pump_until(
+            root,
+            lambda: any(item.request_type == "teaching_prerequisite" for item in app.conversational_runtime_state.pending_chat_requests),
+            timeout=8.0,
+        )
+        _send(app, "Yes.")
+        _pump_until(
+            root,
+            lambda: app.conversational_runtime_state.active_objective.provenance["teaching_prerequisites"][0]["status"] == "competence_tested",
+            timeout=8.0,
+        )
+
+        prerequisite = app.conversational_runtime_state.active_objective.provenance["teaching_prerequisites"][0]
+        transcript = app.chat_history.get("1.0", tk.END)
+        assert prerequisite["derivation_branch_state"] == "resumed"
+        assert prerequisite["parent_branch_resume_cursor"] == 3
+        assert prerequisite["parent_branch_resume_lesson_title"] == "Mathematical mechanics"
+        assert prerequisite["parent_branch_resume_event_id"]
+        assert prerequisite["conversation_result_rendered"] is True
+        assert "passed its bounded competence check" in transcript
+        assert "resume Mathematical mechanics provisionally" in transcript
+        assert "derivative represents the rate of change" in transcript
+        assert transcript.count("passed its bounded competence check") == 1
+        assert app._developmental_teaching_snapshot()["teaching_cursor"] >= 3
+        assert app._developmental_teaching_snapshot()["stage"] == "derivation_branch_resumed"
+        assert sum(
+            item.get("event") == "teaching_parent_branch_resumed"
+            for item in app.conversational_runtime_state.objective_progress
+        ) == 1
+
+        app._render_unshown_teaching_followup_results()
+        assert app.chat_history.get("1.0", tk.END).count("passed its bounded competence check") == 1
+        objective_id = app.conversational_runtime_state.active_objective.objective_id
+        prerequisite_id = prerequisite["prerequisite_id"]
+
+        # Model a restart after the durable worker merge but before the UI had
+        # marked its result rendered. The canonical state, not a UI cache,
+        # must recover the one natural projection.
+        unshown_prerequisite = {
+            key: value
+            for key, value in prerequisite.items()
+            if key not in {"conversation_result_rendered", "conversation_result_rendered_at"}
+        }
+        unshown_objective = replace(
+            app.conversational_runtime_state.active_objective,
+            provenance={
+                **app.conversational_runtime_state.active_objective.provenance,
+                "teaching_prerequisites": (unshown_prerequisite,),
+            },
+        )
+        app.conversational_runtime_state = replace(
+            app.conversational_runtime_state,
+            active_objective=unshown_objective,
+            conversation=tuple(
+                turn
+                for turn in app.conversational_runtime_state.conversation
+                if turn.intent_type != "teaching_prerequisite_result"
+            ),
+        )
+        save_runtime_state(app.conversational_runtime_root, app.conversational_runtime_state)
+    finally:
+        root.destroy()
+
+    root, restored = _app(monkeypatch, tmp_path)
+    try:
+        restored_prerequisite = restored.conversational_runtime_state.active_objective.provenance["teaching_prerequisites"][0]
+        transcript = restored.chat_history.get("1.0", tk.END)
+        assert restored.conversational_runtime_state.active_objective.objective_id == objective_id
+        assert restored_prerequisite["prerequisite_id"] == prerequisite_id
+        assert restored_prerequisite["conversation_result_rendered"] is True
+        assert transcript.count("passed its bounded competence check") == 1
+        assert restored._developmental_teaching_snapshot()["teaching_cursor"] >= 3
+        assert restored._developmental_teaching_snapshot()["stage"] == "derivation_branch_resumed"
+        assert sum(
+            item.get("event") == "teaching_parent_branch_resumed"
+            for item in restored.conversational_runtime_state.objective_progress
+        ) == 1
+    finally:
+        root.destroy()
+
+
+def test_unshown_teaching_result_and_retention_prompt_project_once_after_restart(monkeypatch, tmp_path):
+    """Startup projects durable teaching output once without a UI-owned queue."""
+
+    import DELTA
+    from orchestration.runtime.active_cognitive_loop import ScriptedSemanticModel
+    from orchestration.runtime.conversational_runtime_operation import save_runtime_state
+
+    def amygdala_runner(request, packet):
+        response = dict(ScriptedSemanticModel()(request, packet))
+        node = dict(packet.active_focus.get("active_frontier_node") or {})
+        label = str(node.get("label") or "")
+        if "amygdala" in label.lower():
+            statement = (
+                "The amygdala assigns emotional salience to sensory cues because it links their appraisal "
+                "with memory and autonomic response systems."
+            )
+            response.update({
+                "interpretation": statement,
+                "hypothesis_statement": statement,
+                "scope": label,
+                "raw_model_output": statement,
+            })
+        return response
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        monkeypatch.setattr(app, "_conversational_cognitive_model_runner", lambda: amygdala_runner)
+        _send(app, "Teach me neuroanatomy.")
+        _pump_until(root, lambda: bool(app.conversational_runtime_state.completed_cycle_keys) and not app.conversational_runtime_inference_in_flight)
+        _send(app, "What does the amygdala do?")
+        _pump_until(
+            root,
+            lambda: any(
+                item.request_type == "teaching_provisional_retention"
+                for item in app.conversational_runtime_state.pending_chat_requests
+            ),
+            timeout=8.0,
+        )
+
+        objective = app.conversational_runtime_state.active_objective
+        followup = objective.provenance["teaching_followups"][0]
+        request = next(
+            item
+            for item in app.conversational_runtime_state.pending_chat_requests
+            if item.request_type == "teaching_provisional_retention"
+        )
+        followup_id = followup["followup_id"]
+        request_id = request.request_id
+        unshown_followup = {
+            key: value
+            for key, value in followup.items()
+            if key not in {"conversation_result_rendered", "conversation_result_rendered_at"}
+        }
+        unshown_request = replace(request, rendered_turn_id="", render_sequence=0)
+        unshown_objective = replace(
+            objective,
+            provenance={
+                **objective.provenance,
+                "teaching_followups": (unshown_followup,),
+            },
+        )
+        app.conversational_runtime_state = replace(
+            app.conversational_runtime_state,
+            active_objective=unshown_objective,
+            pending_chat_requests=(unshown_request,),
+            conversation=tuple(
+                turn
+                for turn in app.conversational_runtime_state.conversation
+                if turn.intent_type not in {
+                    "teaching_followup_result",
+                    "teaching_provisional_retention_prompt",
+                }
+            ),
+        )
+        save_runtime_state(app.conversational_runtime_root, app.conversational_runtime_state)
+    finally:
+        root.destroy()
+
+    root, restored = _app(monkeypatch, tmp_path)
+    try:
+        transcript = restored.chat_history.get("1.0", tk.END)
+        restored_followup = restored.conversational_runtime_state.active_objective.provenance["teaching_followups"][0]
+        restored_request = next(
+            item
+            for item in restored.conversational_runtime_state.pending_chat_requests
+            if item.request_id == request_id
+        )
+        assert restored_followup["followup_id"] == followup_id
+        assert restored_followup["conversation_result_rendered"] is True
+        assert restored_request.rendered_turn_id
+        assert transcript.count("This is newly learned provisional material") == 1
+        assert transcript.count("Should I remember it for future") == 1
+        assert sum(
+            turn.intent_type == "teaching_followup_result"
+            for turn in restored.conversational_runtime_state.conversation
+        ) == 1
+        assert sum(
+            turn.intent_type == "teaching_provisional_retention_prompt"
+            for turn in restored.conversational_runtime_state.conversation
+        ) == 1
+    finally:
+        root.destroy()
+
+    root, restored_again = _app(monkeypatch, tmp_path)
+    try:
+        transcript = restored_again.chat_history.get("1.0", tk.END)
+        assert transcript.count("This is newly learned provisional material") == 1
+        assert transcript.count("Should I remember it for future") == 1
+        assert sum(
+            turn.intent_type == "teaching_followup_result"
+            for turn in restored_again.conversational_runtime_state.conversation
+        ) == 1
+        assert sum(
+            turn.intent_type == "teaching_provisional_retention_prompt"
+            for turn in restored_again.conversational_runtime_state.conversation
+        ) == 1
+    finally:
+        root.destroy()
+
+
+def test_conversation_teaching_followup_studies_once_then_reuses_retained_provisional_answer(monkeypatch, tmp_path):
+    """The normal Tk path owns the study, request, retention, and later recall."""
+
+    import DELTA
+    from orchestration.runtime.active_cognitive_loop import ScriptedSemanticModel
+    from orchestration.runtime.provisional_semantic_consolidation import load_graph
+
+    def amygdala_runner(request, packet):
+        response = dict(ScriptedSemanticModel()(request, packet))
+        node = dict(packet.active_focus.get("active_frontier_node") or {})
+        label = str(node.get("label") or "")
+        if "amygdala" in label.lower():
+            statement = (
+                "The amygdala helps assign emotional salience to sensory information and supports threat-related learning "
+                "because it coordinates signals with memory and autonomic response systems."
+            )
+            response.update({
+                "interpretation": statement,
+                "hypothesis_statement": statement,
+                "scope": label,
+                "raw_model_output": statement,
+            })
+        return response
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        monkeypatch.setattr(app, "_conversational_cognitive_model_runner", lambda: amygdala_runner)
+        _send(app, "Today I want you to teach me basic neuroanatomy.")
+        _pump_until(root, lambda: bool(app.conversational_runtime_state.completed_cycle_keys) and not app.conversational_runtime_inference_in_flight)
+
+        _send(app, "What does the amygdala do?")
+        _pump_until(
+            root,
+            lambda: any(item.request_type == "teaching_provisional_retention" for item in app.conversational_runtime_state.pending_chat_requests),
+            timeout=8.0,
+        )
+
+        followup = app.conversational_runtime_state.active_objective.provenance["teaching_followups"][0]
+        request = next(item for item in app.conversational_runtime_state.pending_chat_requests if item.request_type == "teaching_provisional_retention")
+        transcript = app.chat_history.get("1.0", tk.END)
+        assert "bounded local study" in transcript
+        assert "emotional salience" in transcript
+        assert request.rendered_turn_id
+        assert followup["status"] == "provisional_ready_for_retention"
+        assert followup["claim_version_id"]
+        assert followup["understanding_assessment"]["factual_status"] == "still_provisional_pending_consolidation"
+        controller_id = app.developmental_teaching_controller.controller_id
+
+        # Keep the next idle step under this test's control so it can prove the
+        # state-derived consolidation pressure rather than a timing accident.
+        app._start_conversational_background_cycle = lambda _reason: False
+        _send(app, "Yes.")
+        _pump_until(root, lambda: not any(item.request_id == request.request_id for item in app.conversational_runtime_state.pending_chat_requests))
+        retained = app.conversational_runtime_state.active_objective.provenance["teaching_followups"][0]
+        assert retained["status"] == "retained_provisional"
+        assert app.conversational_runtime_state.resolved_chat_requests[-1].request_id == request.request_id
+        assert app.conversational_runtime_state.resolved_chat_requests[-1].consumption_count == 1
+        assert app._developmental_teaching_snapshot()["teaching_cursor"] == 4
+        assert "Next, we can cover Brainstem and cerebellum" in app.chat_history.get("1.0", tk.END)
+
+        followup_count = len(app.conversational_runtime_state.active_objective.provenance["teaching_followups"])
+        _send(app, "What does the amygdala do?")
+        transcript = app.chat_history.get("1.0", tk.END)
+        assert "emotional salience" in transcript
+        assert app.last_payload["route"] == "epistemic_answer_mode"
+        assert len(app.conversational_runtime_state.active_objective.provenance["teaching_followups"]) == followup_count
+        assert not any(item.request_type == "teaching_provisional_retention" for item in app.conversational_runtime_state.pending_chat_requests)
+
+        app._sync_developmental_teaching_progress()
+        app._tick_conversational_objective_runtime()
+        decision = app.interactive_attention_decision
+        assert decision.selected_posture == "perform_one_consolidation_step"
+        assert decision.target_owner == "continuous_runtime_controller"
+        assert "canonical_developmental_pressure_projection" in decision.reason_codes
+
+        graph = load_graph(app.conversational_runtime_root)
+        review_request = next(
+            item
+            for item in app.conversational_runtime_state.pending_chat_requests
+            if item.request_type == "teaching_consolidation_review_authority"
+        )
+        transcript = app.chat_history.get("1.0", tk.END)
+        assert len(graph.packets) == 1
+        assert graph.reviews == ()
+        assert graph.admissions == ()
+        assert "I finished organizing the recent basic neuroanatomy material." in transcript
+        assert "no external grounding review has run" in transcript
+        assert review_request.rendered_turn_id
+        app._tick_conversational_objective_runtime()
+        assert len(load_graph(app.conversational_runtime_root).packets) == 1
+
+        _send(app, "Yes, authorize the bounded review packet when that separate path is available.")
+        assert not any(item.request_id == review_request.request_id for item in app.conversational_runtime_state.pending_chat_requests)
+        resolved_review = app.conversational_runtime_state.resolved_chat_requests[-1]
+        assert resolved_review.request_id == review_request.request_id
+        assert resolved_review.resolution_policy == "operator_authorized_consolidation_review_preparation"
+        consolidation_record = app.conversational_runtime_state.active_objective.provenance["teaching_consolidation_records"][0]
+        assert consolidation_record["review_status"] == "pending_external_review"
+        assert consolidation_record["review_authority_granted"] is True
+        assert consolidation_record["external_review_result_id"] == ""
+        assert consolidation_record["admission_id"] == ""
+        assert "No external review has run yet" in app.chat_history.get("1.0", tk.END)
+        assert len(load_graph(app.conversational_runtime_root).packets) == 1
+        assert load_graph(app.conversational_runtime_root).reviews == ()
+        assert load_graph(app.conversational_runtime_root).admissions == ()
+
+        # Once review authority is recorded, the same debt remains visible as a
+        # waiting boundary but cannot recreate the authority request.
+        app._sync_developmental_teaching_progress()
+        waiting_pressures = app._developmental_teaching_snapshot()["developmental_pressures"]
+        assert any(
+            item["pressure_type"] == "external_review_pending"
+            and item["recommended_action"] == "await_external_review"
+            for item in waiting_pressures
+        )
+        app._refresh_interactive_cognition_shadow(reason="review-authority-suppression-proof")
+        waiting_thread = next(
+            item
+            for item in app.interactive_workspace_snapshot.threads
+            if item.inclusion_reason == "pending_external_review_suppresses_repeat_authority_prompt"
+        )
+        assert waiting_thread.status == "awaiting_external_review"
+        assert app.interactive_attention_decision.target_thread_id != waiting_thread.thread_id
+        app._tick_conversational_objective_runtime()
+        assert not any(
+            item.request_type == "teaching_consolidation_review_authority"
+            for item in app.conversational_runtime_state.pending_chat_requests
+        )
+        assert len(load_graph(app.conversational_runtime_root).packets) == 1
+        objective_id = app.conversational_runtime_state.active_objective.objective_id
+        followup_id = retained["followup_id"]
+        claim_version_id = retained["claim_version_id"]
+        packet_id = graph.packets[0].packet_id
+    finally:
+        root.destroy()
+
+    root, restored = _app(monkeypatch, tmp_path)
+    try:
+        objective = restored.conversational_runtime_state.active_objective
+        assert objective is not None
+        restored_transcript = restored.chat_history.get("1.0", tk.END)
+        assert "You: Today I want you to teach me basic neuroanatomy." in restored_transcript
+        assert "emotional salience" in restored_transcript
+        assert "Hi. I'm DELTA." not in restored_transcript
+        assert objective.objective_id == objective_id
+        restored_followup = objective.provenance["teaching_followups"][0]
+        assert restored_followup["followup_id"] == followup_id
+        assert restored_followup["claim_version_id"] == claim_version_id
+        assert len(load_graph(restored.conversational_runtime_root).packets) == 1
+        assert load_graph(restored.conversational_runtime_root).packets[0].packet_id == packet_id
+        assert not restored.conversational_runtime_state.pending_chat_requests
+        restored_record = objective.provenance["teaching_consolidation_records"][0]
+        assert restored_record["review_status"] == "pending_external_review"
+        assert restored_record["review_authority_granted"] is True
+        assert restored_record["external_review_result_id"] == ""
+        assert restored_record["admission_id"] == ""
+        assert load_graph(restored.conversational_runtime_root).reviews == ()
+        assert load_graph(restored.conversational_runtime_root).admissions == ()
+        assert sum(
+            item.get("event") == "teaching_consolidation_aftermath_reported"
+            for item in restored.conversational_runtime_state.objective_progress
+        ) == 1
+
+        _send(restored, "What does the amygdala do?")
+        assert restored.last_payload["route"] == "epistemic_answer_mode"
+        assert not restored.conversational_runtime_state.pending_chat_requests
+        assert len(load_graph(restored.conversational_runtime_root).packets) == 1
+
+        # Exact controller, request, claim, and packet lineage remains in the
+        # Developer audit; Conversation stays free of implementation IDs.
+        restored._show_developmental_teaching_audit()
+        audit_text = restored.output.get("1.0", tk.END)
+        assert objective_id in audit_text
+        assert controller_id in audit_text
+        assert claim_version_id in audit_text
+        assert packet_id in audit_text
+        assert "teaching_consolidation_review_authority" in audit_text
+        assert "Developmental teaching audit" in audit_text
+    finally:
+        root.destroy()
+
+
+def test_queued_teaching_followup_is_reconciled_once_at_worker_boundary(monkeypatch, tmp_path):
+    """An in-scope foreground question must survive a live worker and then use the normal teaching path."""
+
+    import DELTA
+    from orchestration.runtime.active_cognitive_loop import ScriptedSemanticModel
+
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        _send(app, "Today I want you to teach me basic neuroanatomy.")
+        _pump_until(root, lambda: bool(app.conversational_runtime_state.completed_cycle_keys) and not app.conversational_runtime_inference_in_flight)
+
+        original_cycle = DELTA.run_conversational_background_cycle
+
+        def slow_cycle(*args, **kwargs):
+            time.sleep(0.25)
+            kwargs["model_runner"] = ScriptedSemanticModel()
+            return original_cycle(*args, **kwargs)
+
+        monkeypatch.setattr(DELTA, "run_conversational_background_cycle", slow_cycle)
+        assert app._start_conversational_background_cycle("queued_teaching_followup_boundary") is True
+        assert app.conversational_runtime_inference_in_flight is True
+
+        _send(app, "What does the amygdala do?")
+        assert app.conversational_runtime_state.conversation[-1].intent_type == "ordinary_conversation_queued"
+
+        _pump_until(
+            root,
+            lambda: bool(app.conversational_runtime_state.active_objective.provenance.get("teaching_followups", ())),
+            timeout=5.0,
+        )
+
+        state = app.conversational_runtime_state
+        matching_users = [
+            turn
+            for turn in state.conversation
+            if turn.role == "user" and turn.text == "What does the amygdala do?"
+        ]
+        assert len(matching_users) == 1
+        assert matching_users[0].intent_type == "teaching_followup_question"
+        assert len(state.active_objective.provenance["teaching_followups"]) == 1
+        assert sum(item.get("event") == "queued_teaching_followup_reconciled" for item in state.objective_progress) == 1
+        assert "bounded local study" in app.chat_history.get("1.0", tk.END)
+    finally:
+        root.destroy()
+
+
 def test_periodic_attention_gates_background_work_for_rendered_operator_request(monkeypatch, tmp_path):
     """A durable visible request pauses the periodic tick without replacing its owner."""
     from orchestration.runtime.conversational_runtime_operation import ChatAddressableRequest

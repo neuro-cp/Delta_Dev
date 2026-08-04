@@ -110,7 +110,8 @@ def test_foreground_question_remains_owned_by_chat_in_every_relevant_runtime_sta
 
 def test_stale_duplicate_goal_creates_a_fresh_objective_instead_of_claiming_progress(tmp_path):
     state = _active_state(tmp_path)
-    stale = replace(state, lifecycle_state="paused_budget", completed_cycle_keys=("cycle-1",) * state.active_objective.cycle_budget)
+    finite_objective = replace(state.active_objective, cycle_budget=3)
+    stale = replace(state, active_objective=finite_objective, lifecycle_state="paused_budget", completed_cycle_keys=("cycle-1",) * finite_objective.cycle_budget)
 
     result = handle_conversational_message(
         stale,

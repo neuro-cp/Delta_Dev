@@ -12,6 +12,7 @@ from orchestration.runtime.conversational_runtime_operation import (
     handle_conversational_message,
     read_json,
     record_foreground_message_for_reconciliation,
+    reconcile_queued_teaching_followup,
     record_local_semantic_attempt,
     render_structured_discourse_capability_review,
     render_knowledge_goal_event,
@@ -275,6 +276,67 @@ def test_foreground_message_is_preserved_for_later_reconciliation(tmp_path):
     assert updated.conversation[-1].intent_type == "ordinary_conversation_queued"
     assert updated.conversation[-1].text == "also compare that with how I use pronouns"
     assert updated.objective_progress[-1]["event"] == "foreground_message_queued_for_reconciliation"
+
+
+def test_queued_in_scope_teaching_question_reuses_its_durable_turn_once(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(
+        state,
+        "Today I want you to teach me basic neuroanatomy.",
+        runtime_root=tmp_path,
+        run_background_cycle=False,
+    ).state
+    queued = record_foreground_message_for_reconciliation(
+        state,
+        "What does the amygdala do?",
+        runtime_root=tmp_path,
+    )
+    source_turn = queued.conversation[-1]
+
+    reconciled = reconcile_queued_teaching_followup(
+        queued,
+        runtime_root=tmp_path,
+        run_background_cycle=False,
+    )
+
+    assert reconciled is not None
+    state = reconciled.state
+    followups = state.active_objective.provenance["teaching_followups"]
+    matching_users = [
+        turn
+        for turn in state.conversation
+        if turn.role == "user" and turn.text == "What does the amygdala do?"
+    ]
+    assert len(matching_users) == 1
+    assert matching_users[0].turn_id == source_turn.turn_id
+    assert matching_users[0].intent_type == "teaching_followup_question"
+    assert len(followups) == 1
+    assert followups[0]["question"] == "What does the amygdala do?"
+    assert sum(item.get("event") == "queued_teaching_followup_reconciled" for item in state.objective_progress) == 1
+    assert reconcile_queued_teaching_followup(state, runtime_root=tmp_path) is None
+
+    restored = start_or_restore_runtime(tmp_path)
+    assert reconcile_queued_teaching_followup(restored, runtime_root=tmp_path) is None
+    assert sum(turn.role == "user" and turn.text == "What does the amygdala do?" for turn in restored.conversation) == 1
+
+
+def test_queued_unrelated_foreground_question_is_not_reclassified_as_teaching(tmp_path):
+    state = start_or_restore_runtime(tmp_path)
+    state = handle_conversational_message(
+        state,
+        "Today I want you to teach me basic neuroanatomy.",
+        runtime_root=tmp_path,
+        run_background_cycle=False,
+    ).state
+    queued = record_foreground_message_for_reconciliation(
+        state,
+        "What color is the sky?",
+        runtime_root=tmp_path,
+    )
+
+    assert reconcile_queued_teaching_followup(queued, runtime_root=tmp_path) is None
+    assert queued.conversation[-1].intent_type == "ordinary_conversation_queued"
+    assert not queued.active_objective.provenance.get("teaching_followups", ())
 
 
 def test_stop_or_redirect_pauses_active_goal_without_source_authority(tmp_path):
@@ -993,6 +1055,60 @@ def test_terminal_completion_requires_all_material_requirements(tmp_path):
     assert report["stop_reason"] == "all_material_requirements_satisfied"
     assert report["material_requirements_total"] == report["material_requirements_satisfied"] == 3
     assert report["remaining_gaps"] == ()
+    assert not any(
+        item.get("event_type") == "knowledge_budget_updated"
+        and item.get("summary") == "Budget/status update: blocked_insufficient_evidence."
+        for item in state.objective_progress
+    )
+
+
+def test_context_references_do_not_complete_sibling_material_requirements(tmp_path):
+    class BroadContextRunner:
+        model_identity = "qwen-test"
+
+        def __call__(self, request, packet):
+            node = packet.active_focus["active_frontier_node"]
+            statement = (
+                f"{node['label']} depends on a concrete collection path, outlet route, and screened opening "
+                "because each prevents unmanaged standing water."
+            )
+            # The packet intentionally supplies all frontier nodes as context.
+            # Only the operation's own focus may satisfy a curriculum requirement.
+            context_refs = [item["evidence_id"] for item in packet.relevant_evidence]
+            return {
+                "operation_result_type": request.operation_type + "_result",
+                "hypothesis_statement": statement,
+                "scope": node["label"],
+                "interpretation": statement,
+                "supporting_evidence_refs": context_refs,
+                "assumptions": [],
+                "expected_observations": [],
+                "uncertainty": "installation details vary",
+                "recommended_state_transition": "propose_hypothesis",
+            }
+
+    state = handle_conversational_message(
+        start_or_restore_runtime(tmp_path),
+        "Your new goal is to understand rain barrels: how they collect water, how overflow works, and how to prevent mosquitoes.",
+        runtime_root=tmp_path,
+        run_background_cycle=False,
+    ).state
+    state = replace(state, active_objective=replace(state.active_objective, cycle_budget=1, model_call_budget=1))
+    state = run_background_objective_cycle(
+        state,
+        runtime_root=tmp_path,
+        reason="broad-context-coverage",
+        model_runner=BroadContextRunner(),
+    )
+
+    report = next(item for item in state.objective_progress if item.get("event") == "knowledge_goal_terminal_report")
+
+    assert report["status"] != "completed"
+    assert report["material_requirements_satisfied"] == 1
+    assert report["criteria_unsatisfied"] == (
+        "address how overflow works",
+        "address how to prevent mosquitoes",
+    )
 
 
 def test_knowledge_frontier_advances_without_repeating_same_focus(tmp_path):

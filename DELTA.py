@@ -13,6 +13,7 @@ import uuid
 import sys
 import tkinter as tk
 from pathlib import Path
+from typing import Mapping
 from tkinter import messagebox, scrolledtext, simpledialog, ttk
 
 
@@ -113,10 +114,12 @@ from orchestration.runtime.conversational_runtime_operation import (  # noqa: E4
     evaluate_conversational_runtime,
     handle_conversational_message,
     infer_lesson_transfer,
+    is_teaching_followup_message,
     mark_capability_campaign_milestone_rendered,
     mark_chat_request_rendered,
     mark_knowledge_goal_event_rendered,
     record_foreground_message_for_reconciliation,
+    reconcile_queued_teaching_followup,
     render_knowledge_goal_event,
     render_structured_discourse_capability_review,
     render_goal_review,
@@ -145,6 +148,7 @@ from orchestration.runtime.provisional_semantic_consolidation import (  # noqa: 
 )
 from orchestration.runtime.epistemic_answer_mode import (  # noqa: E402
     bind_explicit_semantic_question,
+    bind_teaching_followup_question,
     compose_epistemic_answer,
     resolve_production_epistemic_answer,
 )
@@ -277,6 +281,16 @@ from orchestration.runtime.continuous_runtime_controller import (  # noqa: E402
     export_continuous_mission_restart_state,
     restore_continuous_mission_restart_state,
     start_continuous_runtime_controller,
+)
+from orchestration.runtime.developmental_teaching_runtime import (  # noqa: E402
+    derive_teaching_pressures,
+    load_teaching_controller,
+    render_teaching_followup_result,
+    render_physics_prerequisite_result,
+    save_teaching_controller,
+    start_teaching_controller,
+    teaching_snapshot,
+    update_teaching_state,
 )
 from orchestration.runtime.live_runtime_2_bounded_unattended import (  # noqa: E402
     compile_live_runtime_2_unattended_authority,
@@ -1789,6 +1803,7 @@ class DeltaApp:
         self.model_residency_status = "not_warmed"
         self.conversational_runtime_root = CONVERSATIONAL_RUNTIME_ROOT
         self.conversational_runtime_state = start_or_restore_conversational_runtime(self.conversational_runtime_root)
+        self.developmental_teaching_controller = self._restore_developmental_teaching_controller()
         self.governed_personality_state = load_governed_personality_state(self.conversational_runtime_root)
         self.interactive_coordination_state = load_coordination_state(
             self.conversational_runtime_root,
@@ -1839,7 +1854,18 @@ class DeltaApp:
         self.root.after(50, self._poll_curiosity_inquiry_results)
         self.root.after(250, self._tick_conversational_objective_runtime)
         self._refresh_state_cards()
-        self._show_welcome()
+        restored_canonical_conversation = self._restore_canonical_conversation()
+        if restored_canonical_conversation:
+            prior_runtime_state = self.conversational_runtime_state
+            self._render_unshown_teaching_followup_results()
+            self._render_unshown_teaching_requests()
+            if self.conversational_runtime_state != prior_runtime_state:
+                save_conversational_runtime_state(
+                    self.conversational_runtime_root,
+                    self.conversational_runtime_state,
+                )
+        else:
+            self._show_welcome()
         self.root.after(10, self._warm_default_model)
 
     def _build(self) -> None:
@@ -4193,6 +4219,7 @@ class DeltaApp:
         buttons.pack(fill=tk.X, pady=(10, 0))
         ttk.Button(buttons, text="Status", command=self._show_status).pack(fill=tk.X)
         ttk.Button(buttons, text="Cognitive State", command=self._show_cognitive_state).pack(fill=tk.X, pady=(4, 0))
+        ttk.Button(buttons, text="Developmental Teaching Audit", command=self._show_developmental_teaching_audit).pack(fill=tk.X, pady=(4, 0))
         ttk.Button(buttons, text="Epistemic Answer Audit", command=self._show_epistemic_answer_audit).pack(fill=tk.X, pady=(4, 0))
         ttk.Button(buttons, text="Review Queue", command=self._show_review_queue).pack(fill=tk.X, pady=(4, 0))
         ttk.Button(buttons, text="Replay / Rollback", command=self._show_replay).pack(fill=tk.X, pady=(4, 0))
@@ -5981,6 +6008,7 @@ class DeltaApp:
             coordination=coordination,
             foreground_message=foreground_message,
             foreground_turn_id=foreground_turn_id,
+            developmental_controller=self._developmental_teaching_snapshot(),
             ui_visibility={
                 "conversation_visible": True,
                 "observation_visible": hasattr(self, "observation_stream"),
@@ -6141,6 +6169,113 @@ class DeltaApp:
         if outcome != "sealed" or packet is None:
             return False
         save_provisional_semantic_graph(self.conversational_runtime_root, updated)
+        objective = self.conversational_runtime_state.active_objective
+        if objective is not None and isinstance(objective.provenance, Mapping) and objective.provenance.get("teaching_plan"):
+            followups = tuple(
+                dict(item)
+                for item in objective.provenance.get("teaching_followups", ())
+                if isinstance(item, Mapping)
+            )
+            claim_refs = tuple(str(item) for item in cohort.claim_version_refs if str(item))
+            related = tuple(
+                item
+                for item in followups
+                if str(item.get("claim_version_id") or "") in set(claim_refs)
+            )
+            existing_records = [
+                dict(item)
+                for item in objective.provenance.get("teaching_consolidation_records", ())
+                if isinstance(item, Mapping)
+            ]
+            if related and not any(str(item.get("packet_id") or "") == packet.packet_id for item in existing_records):
+                plan = dict(objective.provenance.get("teaching_plan") or {})
+                topic = str(plan.get("topic") or "this lesson")
+                covered = ", ".join(str(item.get("question") or "the teaching follow-up") for item in related)
+                record = {
+                    "packet_id": packet.packet_id,
+                    "cohort_id": cohort.cohort_id,
+                    "claim_version_ids": claim_refs,
+                    "followup_ids": tuple(str(item.get("followup_id") or "") for item in related),
+                    "review_authorization_status": "awaiting_operator_confirmation",
+                    "review_status": "awaiting_operator_confirmation",
+                    "review_authority_granted": False,
+                    "external_review_result_id": "",
+                    "admission_id": "",
+                    "created_at": datetime.now(timezone.utc).isoformat(),
+                }
+                request = ChatAddressableRequest(
+                    request_id=rc6_stable_id(
+                        "teaching-consolidation-review-authority",
+                        self.conversational_runtime_state.runtime_id,
+                        objective.objective_id,
+                        packet.packet_id,
+                    ),
+                    request_type="teaching_consolidation_review_authority",
+                    objective_id=objective.objective_id,
+                    originating_goal_id=objective.objective_id,
+                    goal_label=f"{topic} provisional review",
+                    prompt_text=(
+                        f"I organized the newly learned material about {covered} into a local review packet. "
+                        "It remains provisional because no external grounding review has run. "
+                        "May I prepare this one bounded packet for review when that governed review path is available?"
+                    ),
+                    authority_impact="external_consolidation_review_requires_conversational_confirmation",
+                    thread_id=f"{objective.objective_id}:teaching-consolidation:{packet.packet_id}",
+                    created_sequence=len(self.conversational_runtime_state.conversation) + 1,
+                    accepted_response_types=("approved", "denied"),
+                    baseline_metrics={
+                        "teaching_request_kind": "consolidation_review_authority",
+                        "packet_id": packet.packet_id,
+                        "cohort_id": cohort.cohort_id,
+                        "claim_version_ids": claim_refs,
+                        "followup_ids": record["followup_ids"],
+                    },
+                )
+                report = (
+                    f"I finished organizing the recent {topic} material.\n\n"
+                    f"Covered provisionally: {covered}.\n"
+                    "What remains uncertain: this local explanation has not completed consolidation review.\n"
+                    "What changed: it is now preserved with its source and uncertainty, not presented as verified fact.\n"
+                    "Next useful step: decide whether this bounded packet should enter the governed review path."
+                )
+                assistant_turn = ConversationTurn(
+                    turn_id=rc6_stable_id("teaching-consolidation-aftermath", self.conversational_runtime_state.runtime_id, packet.packet_id),
+                    role="assistant",
+                    text=f"{report}\n\n{request.prompt_text}",
+                    intent_type="teaching_consolidation_aftermath",
+                    objective_id=objective.objective_id,
+                )
+                updated_objective = replace(
+                    objective,
+                    provenance={
+                        **objective.provenance,
+                        "teaching_consolidation_records": tuple(existing_records + [record]),
+                    },
+                )
+                self.conversational_runtime_state = replace(
+                    self.conversational_runtime_state,
+                    active_objective=updated_objective,
+                    conversation=self.conversational_runtime_state.conversation + (assistant_turn,),
+                    pending_chat_requests=self.conversational_runtime_state.pending_chat_requests + (request,),
+                    objective_progress=self.conversational_runtime_state.objective_progress + ({
+                        "event": "teaching_consolidation_aftermath_reported",
+                        "objective_id": objective.objective_id,
+                        "packet_id": packet.packet_id,
+                        "cohort_id": cohort.cohort_id,
+                        "followup_ids": record["followup_ids"],
+                        "at": datetime.now(timezone.utc).isoformat(),
+                    },),
+                )
+                self.conversational_runtime_state = mark_chat_request_rendered(
+                    self.conversational_runtime_state,
+                    request.request_id,
+                    rendered_turn_id=assistant_turn.turn_id,
+                    render_sequence=len(self.conversational_runtime_state.conversation),
+                )
+                self._append_chat("DELTA", report + "\n\n" + request.prompt_text)
+                self._append_session("assistant", report + "\n\n" + request.prompt_text)
+                self._sync_developmental_teaching_progress()
+                save_conversational_runtime_state(self.conversational_runtime_root, self.conversational_runtime_state)
         self._append_observation(
             "Consolidation",
             "One local review packet was sealed for later administrative review. No provider call, review decision, or claim promotion occurred.",
@@ -6335,6 +6470,163 @@ class DeltaApp:
             request_identity_suffix="conversational-runtime-live",
         )
 
+    def _active_developmental_teaching_plan(self) -> dict[str, object]:
+        objective = self.conversational_runtime_state.active_objective
+        if objective is None:
+            return {}
+        plan = objective.provenance.get("teaching_plan") if isinstance(objective.provenance, Mapping) else None
+        return dict(plan) if isinstance(plan, dict) else {}
+
+    def _restore_developmental_teaching_controller(self):
+        objective = self.conversational_runtime_state.active_objective
+        if objective is None or not isinstance(objective.provenance.get("teaching_plan"), Mapping):
+            return None
+        return load_teaching_controller(
+            self.conversational_runtime_root,
+            runtime_id=self.conversational_runtime_state.runtime_id,
+            objective_id=objective.objective_id,
+        )
+
+    def _ensure_developmental_teaching_controller(self):
+        objective = self.conversational_runtime_state.active_objective
+        plan = self._active_developmental_teaching_plan()
+        if objective is None or not plan:
+            return None
+        current = getattr(self, "developmental_teaching_controller", None)
+        if current is not None:
+            snapshot = teaching_snapshot(current)
+            if snapshot.get("objective_id") == objective.objective_id:
+                return current
+        restored = self._restore_developmental_teaching_controller()
+        if restored is None:
+            restored = start_teaching_controller(
+                runtime_id=self.conversational_runtime_state.runtime_id,
+                objective_id=objective.objective_id,
+                plan=plan,
+            )
+            save_teaching_controller(
+                self.conversational_runtime_root,
+                restored,
+                objective_id=objective.objective_id,
+            )
+            self._append_observation(
+                "Teaching runtime",
+                "A persistent curriculum controller was attached to the active teaching objective.",
+            )
+        self.developmental_teaching_controller = restored
+        return restored
+
+    def _developmental_teaching_snapshot(self) -> dict[str, object]:
+        controller = self._ensure_developmental_teaching_controller() if self._active_developmental_teaching_plan() else None
+        return teaching_snapshot(controller)
+
+    def _sync_developmental_teaching_progress(self) -> None:
+        controller = getattr(self, "developmental_teaching_controller", None)
+        objective = self.conversational_runtime_state.active_objective
+        if controller is None or objective is None or not self._active_developmental_teaching_plan():
+            return
+        path = Path(self.conversational_runtime_state.active_episode_path or "")
+        if not path.exists():
+            return
+        try:
+            episode = read_active_cognitive_episode_state(path)
+        except Exception:
+            return
+        snapshot = teaching_snapshot(controller)
+        plan = dict(snapshot.get("plan") or {})
+        curriculum = tuple(item for item in plan.get("curriculum", ()) if isinstance(item, Mapping))
+        followups = tuple(
+            dict(item)
+            for item in objective.provenance.get("teaching_followups", ())
+            if isinstance(item, Mapping)
+        )
+        prerequisites = tuple(
+            dict(item)
+            for item in objective.provenance.get("teaching_prerequisites", ())
+            if isinstance(item, Mapping)
+        )
+        consolidation_records = tuple(
+            dict(item)
+            for item in objective.provenance.get("teaching_consolidation_records", ())
+            if isinstance(item, Mapping)
+        )
+        dynamic_evidence_ids = {
+            str(item.get("evidence_id") or item.get("node_id") or "")
+            for item in (*followups, *prerequisites)
+        }
+        accepted = tuple(item for item in episode.operation_results if item.accepted)
+        accepted_curriculum = tuple(
+            item for item in accepted
+            if not (set(item.evidence_refs) & dynamic_evidence_ids)
+        )
+        prior_cursor = int(snapshot.get("teaching_cursor") or 0)
+        retained_cursor = max(
+            (int(item.get("curriculum_resume_cursor") or 0) for item in followups if str(item.get("status") or "") in {"retained_provisional", "admitted", "reviewed_supported"}),
+            default=0,
+        )
+        prerequisite_resume_cursor = max(
+            (
+                int(item.get("parent_branch_resume_cursor") or 0)
+                for item in prerequisites
+                if str(item.get("status") or "") == "competence_tested"
+                and str(item.get("derivation_branch_state") or "") == "resumed"
+            ),
+            default=0,
+        )
+        cursor = min(
+            len(curriculum),
+            max(prior_cursor, len(accepted_curriculum), retained_cursor, prerequisite_resume_cursor),
+        )
+        retained = tuple(item for item in followups if str(item.get("status") or "") in {"retained_provisional", "admitted", "reviewed_supported"})
+        resumed_prerequisite = next(
+            (
+                item
+                for item in prerequisites
+                if str(item.get("status") or "") == "competence_tested"
+                and str(item.get("derivation_branch_state") or "") == "resumed"
+            ),
+            None,
+        )
+        stage = (
+            "derivation_branch_resumed"
+            if resumed_prerequisite is not None
+            else "retained_provisional_material"
+            if retained
+            else "provisional_learning_pending_consolidation"
+            if accepted
+            else str(snapshot.get("stage") or "first_lesson_delivered")
+        )
+        updated = update_teaching_state(
+            controller,
+            teaching_cursor=cursor,
+            stage=stage,
+            last_episode_id=episode.episode_id,
+            last_model_call_count=episode.model_call_count,
+            last_accepted_operation_ids=tuple(item.operation_id for item in accepted),
+            pending_studies=tuple(item for item in followups if str(item.get("status") or "") in {"queued", "study_running"}),
+            retention_records=retained,
+            prerequisite_records=prerequisites,
+            consolidation_records=consolidation_records,
+            developmental_pressures=derive_teaching_pressures(
+                plan,
+                followups=followups,
+                prerequisites=prerequisites,
+                consolidation_records=consolidation_records,
+                teaching_cursor=cursor,
+            ),
+        )
+        self.developmental_teaching_controller = updated
+        save_teaching_controller(
+            self.conversational_runtime_root,
+            updated,
+            objective_id=objective.objective_id,
+        )
+        if cursor > prior_cursor:
+            self._append_observation(
+                "Teaching progress",
+                f"The curriculum advanced to {cursor}/{len(curriculum)} sections from accepted local work.",
+            )
+
     def _stop_conversational_objective(self) -> None:
         state = self.conversational_runtime_state
         if state.active_objective is None:
@@ -6345,6 +6637,78 @@ class DeltaApp:
         self._refresh_conversational_runtime_status()
         self._append_chat("DELTA", "I stopped the active conversational objective. Ordinary chat is still available.")
         self._append_session("assistant", "I stopped the active conversational objective. Ordinary chat is still available.")
+
+    @staticmethod
+    def _merge_teaching_objective_records(current_objective, worker_objective, prior_objective=None):
+        """Retain foreground additions while accepting completed teaching work.
+
+        Background cycles operate from a durable snapshot.  A foreground
+        teaching question may be queued after that snapshot, so replacing the
+        entire objective would lose the new question; retaining it wholesale
+        would lose the completed study.  Only the canonically identified
+        teaching record collections need a record-wise merge.
+        """
+
+        if (
+            current_objective is None
+            or worker_objective is None
+            or current_objective.objective_id != worker_objective.objective_id
+        ):
+            return current_objective
+        current_provenance = dict(current_objective.provenance or {})
+        worker_provenance = dict(worker_objective.provenance or {})
+        if not current_provenance.get("teaching_plan") and not worker_provenance.get("teaching_plan"):
+            return current_objective
+
+        def merge_records(key: str, identity_key: str):
+            current_records = [dict(item) for item in current_provenance.get(key, ()) if isinstance(item, Mapping)]
+            worker_records = [dict(item) for item in worker_provenance.get(key, ()) if isinstance(item, Mapping)]
+            prior_records = [
+                dict(item)
+                for item in getattr(prior_objective, "provenance", {}).get(key, ())
+                if isinstance(item, Mapping)
+            ]
+            prior_by_id = {
+                str(item.get(identity_key) or ""): item
+                for item in prior_records
+                if str(item.get(identity_key) or "")
+            }
+            worker_by_id = {
+                str(item.get(identity_key) or ""): item
+                for item in worker_records
+                if str(item.get(identity_key) or "")
+            }
+            merged = []
+            seen = set()
+            for item in current_records:
+                identity = str(item.get(identity_key) or "")
+                replacement = worker_by_id.get(identity)
+                prior_item = prior_by_id.get(identity, {})
+                foreground_status_changed = (
+                    bool(prior_item)
+                    and str(item.get("status") or "") != str(prior_item.get("status") or "")
+                )
+                # A foreground disposition changes the canonical record after
+                # the worker snapshot was taken.  Keep it authoritative so a
+                # stale worker cannot revive a pending request or undo a
+                # prerequisite/retention transition.
+                if replacement and not foreground_status_changed:
+                    merged.append(replacement)
+                else:
+                    merged.append(item)
+                if identity:
+                    seen.add(identity)
+            merged.extend(item for identity, item in worker_by_id.items() if identity not in seen)
+            return tuple(merged)
+
+        return replace(
+            current_objective,
+            provenance={
+                **current_provenance,
+                "teaching_followups": merge_records("teaching_followups", "followup_id"),
+                "teaching_prerequisites": merge_records("teaching_prerequisites", "prerequisite_id"),
+            },
+        )
 
     def _merge_conversational_background_result(self, prior_state, worker_state):
         current = self.conversational_runtime_state
@@ -6366,15 +6730,31 @@ class DeltaApp:
             campaign_id = item.get("campaign_id")
             if campaign_id:
                 campaign_by_id[campaign_id] = item
+        prior_pending_ids = {item.request_id for item in prior_state.pending_chat_requests}
         pending_by_id = {item.request_id: item for item in current.pending_chat_requests}
-        for item in worker_state.pending_chat_requests:
-            pending_by_id[item.request_id] = item
         resolved_by_id = {item.request_id: item for item in current.resolved_chat_requests}
+        for item in worker_state.pending_chat_requests:
+            request_id = item.request_id
+            # Current conversational state owns a request once the operator
+            # has consumed it.  A worker may add a new request, but an old
+            # request from its input snapshot may never be resurrected.
+            if request_id in pending_by_id or request_id in resolved_by_id or request_id in prior_pending_ids:
+                continue
+            pending_by_id[request_id] = item
         for item in worker_state.resolved_chat_requests:
-            resolved_by_id[item.request_id] = item
+            request_id = item.request_id
+            if request_id in pending_by_id or request_id in resolved_by_id:
+                continue
+            resolved_by_id[request_id] = item
+        merged_objective = self._merge_teaching_objective_records(
+            current.active_objective,
+            worker_state.active_objective,
+            prior_state.active_objective,
+        )
         return replace(
             current,
             lifecycle_state=worker_state.lifecycle_state,
+            active_objective=merged_objective,
             active_episode_path=worker_state.active_episode_path,
             completed_cycle_keys=current.completed_cycle_keys + cycle_delta,
             objective_progress=current.objective_progress + progress_delta,
@@ -6410,6 +6790,151 @@ class DeltaApp:
                 runtime_root=self.conversational_runtime_root,
             )
 
+    def _render_unshown_teaching_followup_results(self) -> None:
+        """Surface completed teaching results without exposing graph internals."""
+
+        state = self.conversational_runtime_state
+        objective = state.active_objective
+        if objective is None or not isinstance(objective.provenance, Mapping):
+            return
+        followups = [
+            dict(item)
+            for item in objective.provenance.get("teaching_followups", ())
+            if isinstance(item, Mapping)
+        ]
+        changed = False
+        for index, followup in enumerate(followups):
+            status = str(followup.get("status") or "")
+            if status not in {"provisional_ready_for_retention", "study_blocked"} or followup.get("conversation_result_rendered"):
+                continue
+            if status == "provisional_ready_for_retention":
+                message = render_teaching_followup_result(followup)
+                intent_type = "teaching_followup_result"
+            else:
+                message = (
+                    f"I checked {str(followup.get('question') or 'that teaching question')}, "
+                    "but the bounded local study did not produce a usable explanation. I kept the gap visible instead of treating it as learned."
+                )
+                intent_type = "teaching_followup_blocked"
+            self._append_chat("DELTA", message)
+            self._append_session("assistant", message)
+            assistant_turn = ConversationTurn(
+                turn_id=rc6_stable_id(
+                    "teaching-followup-result",
+                    state.runtime_id,
+                    str(followup.get("followup_id") or ""),
+                    status,
+                ),
+                role="assistant",
+                text=message,
+                intent_type=intent_type,
+                objective_id=objective.objective_id,
+            )
+            state = replace(state, conversation=state.conversation + (assistant_turn,))
+            followups[index] = {
+                **followup,
+                "conversation_result_rendered": True,
+                "conversation_result_rendered_at": datetime.now(timezone.utc).isoformat(),
+            }
+            changed = True
+        if changed:
+            updated_objective = replace(
+                objective,
+                provenance={
+                    **objective.provenance,
+                    "teaching_followups": tuple(followups),
+                },
+            )
+            self.conversational_runtime_state = replace(state, active_objective=updated_objective)
+
+        # The prerequisite branch shares the same canonical objective and worker
+        # merge path as a teaching follow-up.  It needs its own natural result
+        # projection so the operator can see when a blocked derivation branch
+        # became eligible, without treating the result as reviewed truth.
+        state = self.conversational_runtime_state
+        objective = state.active_objective
+        if objective is None or not isinstance(objective.provenance, Mapping):
+            return
+        prerequisites = [
+            dict(item)
+            for item in objective.provenance.get("teaching_prerequisites", ())
+            if isinstance(item, Mapping)
+        ]
+        prerequisite_changed = False
+        for index, prerequisite in enumerate(prerequisites):
+            status = str(prerequisite.get("status") or "")
+            if status not in {"competence_tested", "competence_needs_revision"} or prerequisite.get("conversation_result_rendered"):
+                continue
+            message = render_physics_prerequisite_result(prerequisite)
+            intent_type = (
+                "teaching_prerequisite_result"
+                if status == "competence_tested"
+                else "teaching_prerequisite_needs_revision"
+            )
+            self._append_chat("DELTA", message)
+            self._append_session("assistant", message)
+            assistant_turn = ConversationTurn(
+                turn_id=rc6_stable_id(
+                    "teaching-prerequisite-result",
+                    state.runtime_id,
+                    str(prerequisite.get("prerequisite_id") or ""),
+                    status,
+                ),
+                role="assistant",
+                text=message,
+                intent_type=intent_type,
+                objective_id=objective.objective_id,
+            )
+            state = replace(state, conversation=state.conversation + (assistant_turn,))
+            prerequisites[index] = {
+                **prerequisite,
+                "conversation_result_rendered": True,
+                "conversation_result_rendered_at": datetime.now(timezone.utc).isoformat(),
+            }
+            prerequisite_changed = True
+        if prerequisite_changed:
+            updated_objective = replace(
+                objective,
+                provenance={
+                    **objective.provenance,
+                    "teaching_prerequisites": tuple(prerequisites),
+                },
+            )
+            self.conversational_runtime_state = replace(state, active_objective=updated_objective)
+
+    def _render_unshown_teaching_requests(self) -> None:
+        """Render durable teaching retention prompts exactly once in Conversation."""
+
+        for request in tuple(self.conversational_runtime_state.pending_chat_requests):
+            if request.request_type != "teaching_provisional_retention" or request.status != "pending" or request.consumption_count:
+                continue
+            if request.rendered_turn_id:
+                continue
+            message = request.prompt_text
+            self._append_chat("DELTA", message)
+            self._append_session("assistant", message)
+            assistant_turn = ConversationTurn(
+                turn_id=rc6_stable_id(
+                    "teaching-retention-prompt",
+                    self.conversational_runtime_state.runtime_id,
+                    request.request_id,
+                ),
+                role="assistant",
+                text=message,
+                intent_type="teaching_provisional_retention_prompt",
+                objective_id=request.objective_id,
+            )
+            self.conversational_runtime_state = replace(
+                self.conversational_runtime_state,
+                conversation=self.conversational_runtime_state.conversation + (assistant_turn,),
+            )
+            self.conversational_runtime_state = mark_chat_request_rendered(
+                self.conversational_runtime_state,
+                request.request_id,
+                rendered_turn_id=assistant_turn.turn_id,
+                render_sequence=len(self.conversational_runtime_state.conversation),
+            )
+
     def _poll_conversational_runtime_worker_results(self) -> None:
         while True:
             try:
@@ -6425,8 +6950,24 @@ class DeltaApp:
                 continue
             self.conversational_runtime_state = self._merge_conversational_background_result(prior_state, worker_state)
             self._complete_active_goal_preemption()
+            queued_teaching_followup = reconcile_queued_teaching_followup(
+                self.conversational_runtime_state,
+                runtime_root=self.conversational_runtime_root,
+                run_background_cycle=False,
+            )
+            if queued_teaching_followup is not None:
+                self.conversational_runtime_state = queued_teaching_followup.state
+                self._append_chat("DELTA", queued_teaching_followup.reply)
+                self._append_session("assistant", queued_teaching_followup.reply)
+                self._append_observation(
+                    "Teaching",
+                    "A queued in-scope teaching question reached the worker boundary and was scheduled for one bounded local study.",
+                )
+            self._sync_developmental_teaching_progress()
             self._render_unshown_conversational_campaign_milestones()
             self._render_unshown_knowledge_goal_events()
+            self._render_unshown_teaching_followup_results()
+            self._render_unshown_teaching_requests()
             if self.conversational_runtime_state.lifecycle_state == "paused_budget" and not self.conversational_runtime_state.goal_reviews:
                 self.conversational_runtime_state, review = render_goal_review(
                     self.conversational_runtime_state,
@@ -6454,6 +6995,8 @@ class DeltaApp:
                     )
             save_conversational_runtime_state(self.conversational_runtime_root, self.conversational_runtime_state)
             self._refresh_conversational_runtime_status()
+            if queued_teaching_followup is not None:
+                self._start_conversational_background_cycle("queued_teaching_followup_reconciled")
         self.root.after(100, self._poll_conversational_runtime_worker_results)
 
     def _start_approved_association_exploration(self, decision) -> bool:
@@ -6984,7 +7527,10 @@ class DeltaApp:
             self._append_chat("DELTA", resolved.reply)
             self._append_session("user", message)
             self._append_session("assistant", resolved.reply)
-            if self.conversational_runtime_state.lifecycle_state == "running":
+            self._sync_developmental_teaching_progress()
+            if resolved.background_cycle_started:
+                self._start_conversational_background_cycle("teaching_request_resolved")
+            elif self.conversational_runtime_state.lifecycle_state == "running":
                 self._start_conversational_background_cycle("pending_chat_request_resolved")
             self._refresh_conversational_runtime_status()
             self._refresh_state_cards()
@@ -7154,6 +7700,8 @@ class DeltaApp:
             run_background_cycle=False,
         )
         self.conversational_runtime_state = result.state
+        if result.objective_created and self._active_developmental_teaching_plan():
+            self._ensure_developmental_teaching_controller()
         self._append_chat("DELTA", result.reply)
         self._append_session("user", message)
         self._append_session("assistant", result.reply)
@@ -7164,6 +7712,8 @@ class DeltaApp:
             self._start_conversational_background_cycle("objective_registered")
         elif result.correction_attached:
             self._start_conversational_background_cycle("correction_attached")
+        elif result.background_cycle_started:
+            self._start_conversational_background_cycle("teaching_followup_study")
         elif result.transfer_applied:
             self._start_conversational_background_cycle("ordinary_chat_yield")
         return True
@@ -7243,6 +7793,17 @@ class DeltaApp:
         try:
             graph = load_provisional_semantic_graph(self.conversational_runtime_root)
             binding_ids = bind_explicit_semantic_question(message, graph)
+            binding_kind = "explicit_semantic_binding"
+            if not binding_ids:
+                objective = self.conversational_runtime_state.active_objective
+                followups = tuple(
+                    dict(item)
+                    for item in (objective.provenance.get("teaching_followups", ()) if objective and isinstance(objective.provenance, Mapping) else ())
+                    if isinstance(item, Mapping)
+                )
+                binding_ids = bind_teaching_followup_question(message, graph, followups)
+                if binding_ids:
+                    binding_kind = "retained_teaching_followup_binding"
             resolution = resolve_production_epistemic_answer(graph, binding_ids, question=message)
         except Exception as exc:  # noqa: BLE001 - graph lookup failure must not block ordinary chat.
             self.last_epistemic_answer_resolution = {
@@ -7272,7 +7833,7 @@ class DeltaApp:
             "canonical_write_performed": False,
             "autonomous_action_performed": False,
             "epistemic_answer_resolution": resolution.as_record(),
-            "intent": {"intent": "graph_bound_question", "communication_act": "question", "matched_rule": "explicit_semantic_binding"},
+            "intent": {"intent": "graph_bound_question", "communication_act": "question", "matched_rule": binding_kind},
             "confidence_decision": {
                 "confidence": 0.86 if resolution.epistemic_mode in {"reviewed_supported", "revised_supported"} else 0.55,
                 "evidence_quality": resolution.epistemic_mode,
@@ -7732,6 +8293,8 @@ class DeltaApp:
         if request is None:
             return "[Approval needed]\nI do not have an eligible pending capability adoption request."
         lower = " ".join(message.lower().split())
+        if "show me the evidence" in lower or "show evidence" in lower or "evidence again" in lower:
+            return f"[Capability adoption]\n{request.prompt_text}"
         denied = control.denied or lower.startswith(("no", "deny", "decline")) or "do not adopt" in lower or "don't adopt" in lower
         now = datetime.now(timezone.utc).isoformat()
         resolved = ChatAddressableRequest(
@@ -8065,6 +8628,27 @@ class DeltaApp:
             + residency,
         )
         self._append_session("assistant", "Hi. I'm DELTA. You can talk normally here.")
+
+    def _restore_canonical_conversation(self) -> bool:
+        """Hydrate the visible transcript from the runtime's existing turn owner.
+
+        A restart must not make a durable teaching episode look like a new
+        empty chat.  This only projects canonical conversation turns into the
+        Tk widget; it neither persists new turns nor changes their IDs.
+        """
+
+        turns = tuple(getattr(self.conversational_runtime_state, "conversation", ()) or ())
+        if not turns:
+            return False
+        for turn in turns:
+            text = str(getattr(turn, "text", "") or "").strip()
+            if not text:
+                continue
+            role = str(getattr(turn, "role", "") or "").lower()
+            speaker = "You" if role == "user" else "DELTA" if role == "assistant" else role.title() or "DELTA"
+            self._append_chat(speaker, text)
+            self._append_session("user" if role == "user" else "assistant", text)
+        return True
 
     def _poll_model_warm_results(self) -> None:
         while True:
@@ -8505,6 +9089,14 @@ class DeltaApp:
                 recent_turns=self.conversational_runtime_state.conversation,
             )
             if runtime_intent.intent_type == "persistent_or_session_goal" and self._handle_conversational_runtime_message(message):
+                self._complete_dispatch_shadow_plan(
+                    shadow_message_id,
+                    legacy_consumed=True,
+                    rendered_owner="conversational_runtime",
+                )
+                return
+        if is_teaching_followup_message(self.conversational_runtime_state, message):
+            if self._handle_conversational_runtime_message(message):
                 self._complete_dispatch_shadow_plan(
                     shadow_message_id,
                     legacy_consumed=True,
@@ -10085,6 +10677,139 @@ class DeltaApp:
         developmental = build_developmental_memory_state()
         self._refresh_state_cards()
         self._write_output(_format_cognitive_state(state) + "\n\nDevelopmental concept memory\n" + json.dumps(developmental, indent=2, sort_keys=True))
+
+    def _show_developmental_teaching_audit(self) -> None:
+        """Render the existing teaching/controller lineage without changing it."""
+
+        objective = self.conversational_runtime_state.active_objective
+        plan = self._active_developmental_teaching_plan()
+        if objective is None or not plan:
+            self._write_output(
+                "Developmental teaching audit\n\nNo active conversational teaching objective is available in this runtime."
+            )
+            return
+
+        controller = getattr(self, "developmental_teaching_controller", None)
+        if controller is None:
+            controller = self._restore_developmental_teaching_controller()
+        controller_snapshot = teaching_snapshot(controller)
+        graph = load_provisional_semantic_graph(self.conversational_runtime_root)
+        followups = tuple(
+            dict(item)
+            for item in objective.provenance.get("teaching_followups", ())
+            if isinstance(item, Mapping)
+        )
+        prerequisites = tuple(
+            dict(item)
+            for item in objective.provenance.get("teaching_prerequisites", ())
+            if isinstance(item, Mapping)
+        )
+        consolidation_records = tuple(
+            dict(item)
+            for item in objective.provenance.get("teaching_consolidation_records", ())
+            if isinstance(item, Mapping)
+        )
+        claim_version_ids = {
+            str(item.get("claim_version_id") or "")
+            for item in followups
+            if str(item.get("claim_version_id") or "")
+        }
+        packet_ids = {
+            str(item.get("packet_id") or "")
+            for item in consolidation_records
+            if str(item.get("packet_id") or "")
+        }
+        active_episode: dict[str, object] = {}
+        operation_ids = {
+            str(item.get("operation_id") or "")
+            for item in (*followups, *prerequisites)
+            if str(item.get("operation_id") or "")
+        }
+        episode_path = Path(self.conversational_runtime_state.active_episode_path or "")
+        if episode_path.exists():
+            try:
+                episode = read_active_cognitive_episode_state(episode_path)
+                active_episode = {
+                    "episode_id": episode.episode_id,
+                    "model_call_count": episode.model_call_count,
+                    "operation_requests": tuple(
+                        asdict(item)
+                        for item in episode.operation_requests
+                        if not operation_ids or item.operation_id in operation_ids
+                    ),
+                    "operation_results": tuple(
+                        asdict(item)
+                        for item in episode.operation_results
+                        if not operation_ids or item.operation_id in operation_ids
+                    ),
+                }
+            except (OSError, ValueError, TypeError):
+                active_episode = {"read_error": "active_episode_unavailable"}
+        ledger_records: list[dict[str, object]] = []
+        snapshot_root = self.conversational_runtime_root / "prompt-snapshots"
+        for prompt_path in sorted(snapshot_root.glob("*.json")):
+            try:
+                prompt_snapshot = json.loads(prompt_path.read_text(encoding="utf-8"))
+                operation_id = str(
+                    dict(prompt_snapshot.get("operation_request") or {}).get("operation_id") or ""
+                )
+                if operation_ids and operation_id not in operation_ids:
+                    continue
+                raw_path = snapshot_root / "raw-responses" / prompt_path.name
+                raw_snapshot = json.loads(raw_path.read_text(encoding="utf-8")) if raw_path.exists() else {}
+            except (OSError, ValueError, TypeError, json.JSONDecodeError):
+                continue
+            ledger_records.append({
+                "operation_id": operation_id,
+                "prompt_snapshot_id": str(prompt_snapshot.get("prompt_snapshot_id") or ""),
+                "ledger_request_id": str(raw_snapshot.get("ledger_request_id") or ""),
+                "ledger_result_id": str(raw_snapshot.get("ledger_result_id") or ""),
+                "model_identity": str(raw_snapshot.get("model_identity") or prompt_snapshot.get("model_identity") or ""),
+                "terminal_status": dict(raw_snapshot.get("terminal_status") or {}),
+                "raw_output": str(raw_snapshot.get("raw_response") or "")[:4000],
+            })
+        teaching_requests = tuple(
+            asdict(item)
+            for item in (
+                *self.conversational_runtime_state.pending_chat_requests,
+                *self.conversational_runtime_state.resolved_chat_requests,
+            )
+            if item.objective_id == objective.objective_id and item.request_type.startswith("teaching_")
+        )
+        audit = {
+            "title": "Developmental teaching audit",
+            "read_only": True,
+            "objective": {
+                "objective_id": objective.objective_id,
+                "operator_wording": objective.operator_wording,
+                "interpreted_objective": objective.interpreted_objective,
+                "lifecycle_state": objective.lifecycle_state,
+                "execution_mode": objective.provenance.get("execution_mode", ""),
+                "plan_id": plan.get("plan_id", ""),
+            },
+            "controller": controller_snapshot,
+            "followups": followups,
+            "prerequisites": prerequisites,
+            "consolidation_records": consolidation_records,
+            "teaching_requests": teaching_requests,
+            "active_episode": active_episode,
+            "shared_ledger_records": tuple(ledger_records),
+            "related_claim_versions": tuple(
+                asdict(item)
+                for item in graph.claim_versions
+                if item.claim_version_id in claim_version_ids
+            ),
+            "related_packets": tuple(
+                asdict(item)
+                for item in graph.packets
+                if item.packet_id in packet_ids
+            ),
+            "provenance_note": (
+                "Use the Consolidation tab to inspect the full local claim, rationale, evidence, "
+                "and review artifacts for the listed IDs."
+            ),
+        }
+        self._write_output(json.dumps(audit, indent=2, sort_keys=True, default=str))
 
     def _show_epistemic_answer_audit(self) -> None:
         resolution = getattr(self, "last_epistemic_answer_resolution", None)

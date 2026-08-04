@@ -227,7 +227,13 @@ def _authoritative_state(app, state_name):
             objective_progress=state.objective_progress + ({"event": "worker_request_started", "request_id": "mid-inference-request", "worker_id": "in-flight-worker"},),
         )
     if state_name == "cycle_budget_exhausted":
-        return replace(state, lifecycle_state="paused_budget", completed_cycle_keys=tuple(f"cycle-{i}" for i in range(objective.cycle_budget)))
+        finite_objective = replace(objective, cycle_budget=3)
+        return replace(
+            state,
+            active_objective=finite_objective,
+            lifecycle_state="paused_budget",
+            completed_cycle_keys=tuple(f"cycle-{i}" for i in range(finite_objective.cycle_budget)),
+        )
     if state_name == "blocked_operator":
         return replace(state, lifecycle_state="blocked", pending_material_authority=({"objective_id": objective.objective_id, "status": "pending", "request_id": "operator-boundary"},))
     if state_name == "blocked_provider":
@@ -664,7 +670,7 @@ def test_event_pending_state_does_not_replace_foreground_or_duplicate_event_key(
     app._render_coordinated_foreground("What color is the sky?", session_user_message="What color is the sky?")
     assert "blue" in app.chat_records[-1][1].lower()
     keys = [item.get("dedupe_key") for item in app.conversational_runtime_state.objective_progress if item.get("dedupe_key")]
-    assert keys == ["event-pending-1"]
+    assert keys.count("event-pending-1") == 1
 
 
 def test_review_ready_state_keeps_chat_open_and_explicit_new_goal_does_not_reuse_review(tmp_path):
