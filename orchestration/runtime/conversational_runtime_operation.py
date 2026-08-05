@@ -51,6 +51,11 @@ from orchestration.runtime.provisional_semantic_consolidation import (
     record_source_bound_semantic_transfer_application,
     save_graph,
 )
+from orchestration.runtime.semantic_problem_modeling import (
+    compile_semantic_problem_frame,
+    render_semantic_problem_frame,
+    render_semantic_problem_recall,
+)
 
 
 SCHEMA_VERSION = "conversational_runtime_operation_marathon_1_v1"
@@ -634,6 +639,103 @@ def _goal_execution_mode(message: str) -> str:
     return "generic_conversational_cognition"
 
 
+def _objective_execution_constraints(message: str) -> dict[str, Any]:
+    """Compile explicit operator execution limits into objective provenance.
+
+    These limits are deliberately narrow: they do not pause or replace the
+    objective, create a second authority layer, or affect foreground work.
+    They only tell the existing background-cycle owner when local inference
+    must wait for a later operator release.
+    """
+
+    lower = " ".join(str(message or "").lower().split())
+    no_local_model = any(
+        phrase in lower
+        for phrase in (
+            "do not call a model",
+            "don't call a model",
+            "do not use a local model",
+            "don't use a local model",
+            "do not run a local model",
+            "don't run a local model",
+            "without using a model",
+        )
+    )
+    no_provider = any(
+        phrase in lower
+        for phrase in (
+            "do not access a provider",
+            "don't access a provider",
+            "do not use a provider",
+            "don't use a provider",
+            "do not call a provider",
+            "don't call a provider",
+            "do not use oracle",
+            "don't use oracle",
+        )
+    ) or (no_local_model and "access a provider" in lower)
+    no_external_action = any(
+        phrase in lower
+        for phrase in (
+            "do not take an external action",
+            "don't take an external action",
+            "do not take external action",
+            "don't take external action",
+        )
+    ) or (no_local_model and "take an external action" in lower)
+    wait_for_operator_input = bool(
+        re.search(
+            r"\b(?:wait|hold off|do not begin)\s+(?:for|until)\s+(?:the\s+)?(?:next\s+)?(?:scenario|scenarios|operator input|my input|my next|further instruction)",
+            lower,
+        )
+    )
+    return {
+        "schema_version": "objective_execution_constraints_v1",
+        "source": "operator_wording",
+        "no_local_model": no_local_model,
+        "no_provider": no_provider,
+        "no_external_action": no_external_action,
+        "wait_for_operator_input": wait_for_operator_input,
+        "state": "operator_waiting" if (no_local_model or wait_for_operator_input) else "unconstrained",
+        "override_history": (),
+    }
+
+
+def _objective_execution_constraints_for_objective(
+    objective: ConversationalObjective | None,
+) -> dict[str, Any]:
+    if objective is None or not isinstance(objective.provenance, Mapping):
+        return {}
+    constraints = objective.provenance.get("execution_constraints")
+    return dict(constraints) if isinstance(constraints, Mapping) else {}
+
+
+def _objective_execution_hold_reason(objective: ConversationalObjective | None) -> str:
+    constraints = _objective_execution_constraints_for_objective(objective)
+    if bool(constraints.get("wait_for_operator_input")):
+        return "wait_for_operator_input"
+    if bool(constraints.get("no_local_model")):
+        return "no_local_model"
+    return ""
+
+
+def background_cycle_hold_reason(state: ConversationalRuntimeState) -> str:
+    """Return the canonical reason the existing background cycle must wait."""
+
+    return _objective_execution_hold_reason(state.active_objective)
+
+
+def _is_explicit_local_model_release(message: str) -> bool:
+    lower = " ".join(str(message or "").lower().split()).strip(" .!")
+    return lower in {
+        "you may use a local model now",
+        "you can use a local model now",
+        "resume local model work",
+        "resume local cognition now",
+        "you may resume local cognition",
+    }
+
+
 def _strip_goal_prefix(message: str) -> str:
     text = " ".join(str(message or "").split()).strip()
     return re.sub(r"^your (new )?goal (today )?is (to )?", "", text, flags=re.IGNORECASE).strip()
@@ -791,6 +893,7 @@ def compile_conversational_objective(message: str, intent: ConversationIntent) -
     objective_id = stable_id("conversational-objective", text, intent.persistence_scope)
     lower = text.lower()
     execution_mode = _goal_execution_mode(text)
+    execution_constraints = _objective_execution_constraints(text)
     campaign_mode = execution_mode == "capability_growth_campaign"
     unlimited_local_knowledge = execution_mode == "knowledge_acquisition"
     teaching_plan = compile_teaching_plan(text) if is_teaching_instruction(text) else {}
@@ -856,6 +959,7 @@ def compile_conversational_objective(message: str, intent: ConversationIntent) -
             "intent": intent.as_record(),
             "compiler": "conversational_runtime_operation",
             "execution_mode": execution_mode,
+            "execution_constraints": execution_constraints,
             "knowledge_contract": knowledge_contract,
             "teaching_plan": teaching_plan,
         },
@@ -987,6 +1091,20 @@ def _semantic_competence_deltas_for_objective(
     )
 
 
+def _semantic_problem_frames_for_objective(
+    objective: ConversationalObjective | None,
+) -> tuple[dict[str, Any], ...]:
+    """Read canonical, source-bound frames without creating a second memory owner."""
+
+    if objective is None or not isinstance(objective.provenance, Mapping):
+        return ()
+    return tuple(
+        dict(item)
+        for item in objective.provenance.get("semantic_problem_frames", ())
+        if isinstance(item, Mapping)
+    )
+
+
 def _replace_teaching_objective(
     objective: ConversationalObjective,
     *,
@@ -996,6 +1114,8 @@ def _replace_teaching_objective(
     semantic_transfer_applications: Sequence[Mapping[str, Any]] | None = None,
     semantic_analytical_tasks: Sequence[Mapping[str, Any]] | None = None,
     semantic_competence_deltas: Sequence[Mapping[str, Any]] | None = None,
+    semantic_problem_frames: Sequence[Mapping[str, Any]] | None = None,
+    execution_constraints: Mapping[str, Any] | None = None,
 ) -> ConversationalObjective:
     provenance = dict(objective.provenance)
     if followups is not None:
@@ -1014,7 +1134,253 @@ def _replace_teaching_objective(
         provenance["semantic_competence_deltas"] = tuple(
             dict(item) for item in semantic_competence_deltas
         )
+    if semantic_problem_frames is not None:
+        provenance["semantic_problem_frames"] = tuple(
+            dict(item) for item in semantic_problem_frames
+        )
+    if execution_constraints is not None:
+        provenance["execution_constraints"] = dict(execution_constraints)
     return replace(objective, provenance=provenance)
+
+
+def _semantic_problem_compilation_for_message(
+    state: ConversationalRuntimeState,
+    message: str,
+):
+    """Compile only a recognized operator input under its active objective provenance."""
+
+    objective = state.active_objective
+    if objective is None:
+        return None
+    return compile_semantic_problem_frame(
+        message,
+        frame_scope_id=objective.objective_id,
+        source_turn_id=stable_id(
+            "conversation-turn",
+            state.runtime_id,
+            str(len(state.conversation) + 1),
+            message,
+        ),
+        source_type="operator_text",
+    )
+
+
+def is_semantic_problem_modeling_message(
+    state: ConversationalRuntimeState,
+    message: str,
+) -> bool:
+    """Expose a narrow, source-bound perception boundary to the normal dispatcher."""
+
+    return _semantic_problem_compilation_for_message(state, message) is not None
+
+
+def _semantic_problem_frame_terms(record: Mapping[str, Any]) -> set[str]:
+    frame = record.get("semantic_input_frame") if isinstance(record.get("semantic_input_frame"), Mapping) else record
+    model = record.get("problem_model") if isinstance(record.get("problem_model"), Mapping) else {}
+    equation = (
+        record.get("equation_understanding_frame")
+        if isinstance(record.get("equation_understanding_frame"), Mapping)
+        else {}
+    )
+    text = " ".join(
+        str(value or "")
+        for value in (
+            frame.get("domain_guess"),
+            frame.get("source_text"),
+            frame.get("goal"),
+            frame.get("unknown_target"),
+            model.get("problem_type"),
+            equation.get("equation"),
+            equation.get("modeled_phenomenon"),
+            " ".join(str(item) for item in frame.get("risks", ()) if str(item)),
+        )
+    )
+    return _semantic_transfer_terms(text)
+
+
+def _semantic_problem_frame_recall_candidate(
+    state: ConversationalRuntimeState,
+    message: str,
+) -> tuple[dict[str, Any], str] | None:
+    """Resolve an explicit, unambiguous frame recall without broad memory lookup."""
+
+    objective = state.active_objective
+    if objective is None:
+        return None
+    normalized = " ".join(str(message or "").lower().split())
+    if not re.match(r"^(?:how|what|which|why|did|does|do|can|could)\b", normalized):
+        return None
+    if re.search(r"\bf\s*=\s*m\s*a\b", normalized):
+        focus = "equation"
+        required_terms = {"physics", "equation", "model"}
+    elif any(term in normalized for term in ("unknown target", "unknown", "target")):
+        focus = "unknown_target"
+        required_terms = {"incline", "block", "physics", "acceleration", "problem"}
+    elif any(term in normalized for term in ("risk", "defensive", "sql", "financial", "portfolio", "cyber")):
+        focus = "risk"
+        required_terms = {"sql", "database", "cybersecurity", "portfolio", "finance", "risk"}
+    elif any(term in normalized for term in ("perceive", "perceived", "frame", "operations", "invoice", "crew", "dependency")):
+        focus = "summary"
+        required_terms = {"operations", "logistics", "invoice", "crew", "dependency"}
+    else:
+        return None
+    message_terms = _semantic_transfer_terms(normalized)
+    candidates: list[tuple[int, dict[str, Any]]] = []
+    for record in _semantic_problem_frames_for_objective(objective):
+        frame = record.get("semantic_input_frame") if isinstance(record.get("semantic_input_frame"), Mapping) else record
+        domain = str(frame.get("domain_guess") or "")
+        terms = _semantic_problem_frame_terms(record)
+        score = len(message_terms & terms)
+        if focus == "equation" and domain == "physics_equation_model":
+            score += 4
+        if focus == "unknown_target" and terms & {"incline", "block", "acceleration"}:
+            score += 3
+        if focus == "risk" and terms & required_terms:
+            score += 2
+        if focus == "risk" and domain == "finance_portfolio_risk" and any(
+            term in normalized
+            for term in ("financial", "finance", "portfolio", "investment", "market")
+        ):
+            score += 4
+        if focus == "risk" and domain == "defensive_cybersecurity" and any(
+            term in normalized
+            for term in ("sql", "cyber", "security", "defensive", "database")
+        ):
+            score += 4
+        if focus == "summary" and terms & required_terms:
+            score += 2
+        if score:
+            candidates.append((score, record))
+    if not candidates:
+        return None
+    highest = max(score for score, _record in candidates)
+    selected = [record for score, record in candidates if score == highest]
+    return (dict(selected[0]), focus) if len(selected) == 1 else None
+
+
+def is_semantic_problem_frame_recall_message(
+    state: ConversationalRuntimeState,
+    message: str,
+) -> bool:
+    """Expose a read-only, source-specific recall boundary to the normal dispatcher."""
+
+    return _semantic_problem_frame_recall_candidate(state, message) is not None
+
+
+def _apply_semantic_problem_modeling(
+    state: ConversationalRuntimeState,
+    message: str,
+    *,
+    runtime_root: str | Path,
+) -> RuntimeTurnResult | None:
+    """Persist one deterministic frame in objective provenance and nowhere else."""
+
+    objective = state.active_objective
+    compilation = _semantic_problem_compilation_for_message(state, message)
+    if objective is None or compilation is None:
+        return None
+    frames = list(_semantic_problem_frames_for_objective(objective))
+    frame_id = compilation.semantic_input_frame.frame_id
+    record = next(
+        (item for item in frames if str(item.get("frame_id") or "") == frame_id),
+        None,
+    )
+    if record is None:
+        record = {
+            **compilation.as_record(),
+            "objective_id": objective.objective_id,
+            "provenance_status": "active_objective_source_bound_provisional",
+            "created_at": utc_now(),
+        }
+        frames.append(record)
+    reply = render_semantic_problem_frame(record)
+    user_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 1), message),
+        role="user",
+        text=message,
+        intent_type="semantic_problem_modeling",
+        objective_id=objective.objective_id,
+    )
+    assistant_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
+        role="assistant",
+        text=reply,
+        intent_type="semantic_problem_modeling_response",
+        objective_id=objective.objective_id,
+    )
+    progress = state.objective_progress
+    if not any(
+        str(item.get("event") or "") == "semantic_problem_frame_recorded"
+        and str(item.get("frame_id") or "") == frame_id
+        for item in progress
+        if isinstance(item, Mapping)
+    ):
+        progress = progress + ({
+            "event": "semantic_problem_frame_recorded",
+            "objective_id": objective.objective_id,
+            "frame_id": frame_id,
+            "domain": compilation.semantic_input_frame.domain_guess,
+            "source_turn_id": user_turn.turn_id,
+            "at": utc_now(),
+        },)
+    updated = _replace_state(
+        state,
+        active_objective=_replace_teaching_objective(objective, semantic_problem_frames=frames),
+        conversation=state.conversation + (user_turn, assistant_turn),
+        objective_progress=progress,
+    )
+    save_runtime_state(runtime_root, updated)
+    return RuntimeTurnResult(
+        state=updated,
+        intent=ConversationIntent(
+            "semantic_problem_modeling", 0.98, "active_objective_provenance", "safe_internal", (),
+            ("deterministic_source_bound_frame", "no_graph_admission", "no_external_action"),
+        ),
+        reply=reply,
+    )
+
+
+def _apply_semantic_problem_frame_recall(
+    state: ConversationalRuntimeState,
+    message: str,
+    *,
+    runtime_root: str | Path,
+) -> RuntimeTurnResult | None:
+    """Render one existing frame as a normal read-only conversation turn."""
+
+    objective = state.active_objective
+    candidate = _semantic_problem_frame_recall_candidate(state, message)
+    if objective is None or candidate is None:
+        return None
+    record, focus = candidate
+    reply = render_semantic_problem_recall(record, focus=focus)
+    user_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 1), message),
+        role="user",
+        text=message,
+        intent_type="semantic_problem_frame_recall",
+        objective_id=objective.objective_id,
+    )
+    assistant_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
+        role="assistant",
+        text=reply,
+        intent_type="semantic_problem_frame_recall_response",
+        objective_id=objective.objective_id,
+    )
+    updated = _replace_state(
+        state,
+        conversation=state.conversation + (user_turn, assistant_turn),
+    )
+    save_runtime_state(runtime_root, updated)
+    return RuntimeTurnResult(
+        state=updated,
+        intent=ConversationIntent(
+            "semantic_problem_frame_recall", 0.98, "active_objective_provenance", "safe_internal", (),
+            ("source_bound_frame", "read_only_recall", "no_new_frame"),
+        ),
+        reply=reply,
+    )
 
 
 _SEMANTIC_TRANSFER_ACTION_TERMS = frozenset({
@@ -5382,6 +5748,90 @@ def _state_from_record(payload: Mapping[str, Any]) -> ConversationalRuntimeState
     )
 
 
+def _apply_objective_execution_constraint_release(
+    state: ConversationalRuntimeState,
+    message: str,
+    *,
+    runtime_root: str | Path,
+) -> RuntimeTurnResult | None:
+    """Release only a held local-model cycle through an explicit operator turn."""
+
+    objective = state.active_objective
+    hold_reason = _objective_execution_hold_reason(objective)
+    if objective is None or not hold_reason or not _is_explicit_local_model_release(message):
+        return None
+    constraints = _objective_execution_constraints_for_objective(objective)
+    released_at = utc_now()
+    history = tuple(
+        dict(item)
+        for item in constraints.get("override_history", ())
+        if isinstance(item, Mapping)
+    ) + (
+        {
+            "event": "operator_released_local_model_hold",
+            "released_fields": ("no_local_model", "wait_for_operator_input"),
+            "prior_hold_reason": hold_reason,
+            "at": released_at,
+        },
+    )
+    updated_constraints = {
+        **constraints,
+        "no_local_model": False,
+        "wait_for_operator_input": False,
+        "state": "operator_released",
+        "override_history": history,
+    }
+    user_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 1), message),
+        role="user",
+        text=message,
+        intent_type="objective_execution_constraints_release",
+        objective_id=objective.objective_id,
+    )
+    reply = (
+        "I recorded your explicit release of the local-model hold for this active goal. "
+        "The original source-bound inputs and all provider/external-action limits remain unchanged."
+    )
+    assistant_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
+        role="assistant",
+        text=reply,
+        intent_type="objective_execution_constraints_release_ack",
+        objective_id=objective.objective_id,
+    )
+    updated = _replace_state(
+        state,
+        active_objective=_replace_teaching_objective(
+            objective,
+            execution_constraints=updated_constraints,
+        ),
+        conversation=state.conversation + (user_turn, assistant_turn),
+        objective_progress=state.objective_progress + (
+            {
+                "event": "objective_execution_constraints_released",
+                "objective_id": objective.objective_id,
+                "prior_hold_reason": hold_reason,
+                "released_fields": ("no_local_model", "wait_for_operator_input"),
+                "at": released_at,
+            },
+        ),
+    )
+    save_runtime_state(runtime_root, updated)
+    return RuntimeTurnResult(
+        state=updated,
+        intent=ConversationIntent(
+            intent_type="objective_execution_constraints_release",
+            confidence=0.99,
+            persistence_scope="active_objective",
+            risk_class="safe_internal",
+            authority_required=(),
+            matched_signals=("explicit_local_model_release",),
+        ),
+        reply=reply,
+        background_cycle_started=updated.lifecycle_state == "running",
+    )
+
+
 def handle_conversational_message(
     state: ConversationalRuntimeState,
     message: str,
@@ -5400,6 +5850,13 @@ def handle_conversational_message(
     resolved = resolve_pending_chat_request(state, message, runtime_root=runtime_root)
     if resolved is not None:
         return resolved
+    execution_constraint_release = _apply_objective_execution_constraint_release(
+        state,
+        message,
+        runtime_root=runtime_root,
+    )
+    if execution_constraint_release is not None:
+        return execution_constraint_release
     semantic_recall = _apply_source_bound_semantic_recall(
         state,
         message,
@@ -5407,6 +5864,20 @@ def handle_conversational_message(
     )
     if semantic_recall is not None:
         return semantic_recall
+    semantic_problem_recall = _apply_semantic_problem_frame_recall(
+        state,
+        message,
+        runtime_root=runtime_root,
+    )
+    if semantic_problem_recall is not None:
+        return semantic_problem_recall
+    semantic_problem_modeling = _apply_semantic_problem_modeling(
+        state,
+        message,
+        runtime_root=runtime_root,
+    )
+    if semantic_problem_modeling is not None:
+        return semantic_problem_modeling
     semantic_competence_delta = _apply_source_bound_semantic_competence_measurement(
         state,
         message,
@@ -5518,6 +5989,7 @@ def handle_conversational_message(
         return RuntimeTurnResult(state=updated, intent=intent, reply=reply)
     if intent.intent_type == "persistent_or_session_goal":
         objective = compile_conversational_objective(message, intent)
+        execution_hold_reason = _objective_execution_hold_reason(objective)
         teaching_plan = _teaching_plan_for_objective(objective)
         prerequisite = compile_physics_prerequisite(teaching_plan, objective_id=objective.objective_id) if teaching_plan else {}
         if prerequisite:
@@ -5623,11 +6095,22 @@ def handle_conversational_message(
                     "at": utc_now(),
                 },
             )
+        if execution_hold_reason:
+            progress = progress + (
+                {
+                    "event": "objective_execution_constraints_recorded",
+                    "objective_id": objective.objective_id,
+                    "hold_reason": execution_hold_reason,
+                    "constraints": _objective_execution_constraints_for_objective(objective),
+                    "at": utc_now(),
+                },
+            )
         budget_request: ChatAddressableRequest | None = None
         prerequisite_request: ChatAddressableRequest | None = None
         lifecycle_state = "running"
         if (
-            objective.provenance.get("execution_mode") == "knowledge_acquisition"
+            not execution_hold_reason
+            and objective.provenance.get("execution_mode") == "knowledge_acquisition"
             and objective.model_call_budget is not None
             and len(frontier_evidence) > objective.model_call_budget
         ):
@@ -5640,7 +6123,7 @@ def handle_conversational_message(
             )
             lifecycle_state = "paused_operator"
             progress = progress + ({"event": "knowledge_model_budget_increase_requested", "request_id": budget_request.request_id, "required_nodes": len(frontier_evidence), "current_model_call_budget": objective.model_call_budget, "recommended_model_call_budget": budget_request.max_calls, "at": utc_now()},)
-        if prerequisite and not budget_request:
+        if prerequisite and not budget_request and not execution_hold_reason:
             prerequisite_request = ChatAddressableRequest(
                 request_id=stable_id("teaching-prerequisite-request", objective.objective_id, str(prerequisite.get("prerequisite_id") or "")),
                 request_type="teaching_prerequisite",
@@ -5687,7 +6170,12 @@ def handle_conversational_message(
             archived_objectives=state.archived_objectives + ((archived,) if archived else ()),
             capability_campaigns=state.capability_campaigns + ((campaign,) if campaign else ()),
         )
-        if run_background_cycle and budget_request is None:
+        background_cycle_eligible = bool(
+            run_background_cycle
+            and budget_request is None
+            and not background_cycle_hold_reason(updated)
+        )
+        if background_cycle_eligible:
             updated = run_background_objective_cycle(updated, runtime_root=runtime_root, reason="objective_registered", model_runner=model_runner)
         reply = (
             f"I registered that as the active goal and started working on it. This is a bounded session goal under standing bounded authority.\n\n"
@@ -5698,6 +6186,12 @@ def handle_conversational_message(
             reply = (
                 "I registered that as the active goal and paused at a budget boundary before local model execution.\n\n"
                 f"{budget_request.prompt_text}"
+            )
+        elif execution_hold_reason:
+            reply = (
+                "I registered that as the active goal and kept it available for foreground source-bound work.\n\n"
+                f"[Goal update - {objective.interpreted_objective[:80]}]\n"
+                "I am waiting for your next input and will not call a local model while that instruction remains active."
             )
         elif objective.provenance.get("teaching_plan"):
             reply = render_first_lesson(dict(objective.provenance["teaching_plan"]))
@@ -5725,7 +6219,7 @@ def handle_conversational_message(
                 ),
             )
         save_runtime_state(runtime_root, updated)
-        return RuntimeTurnResult(state=updated, intent=intent, reply=reply, objective_created=True, background_cycle_started=run_background_cycle and budget_request is None, chat_request=budget_request.as_record() if budget_request else None)
+        return RuntimeTurnResult(state=updated, intent=intent, reply=reply, objective_created=True, background_cycle_started=background_cycle_eligible, chat_request=budget_request.as_record() if budget_request else None)
     if intent.intent_type == "direct_correction" and state.active_objective:
         updated, correction, lesson = attach_correction(state, user_turn, intent)
         reply = "Got it. I attached that correction to the active comprehension objective and revised the strategy for related later turns without making it a global rule."
@@ -5737,10 +6231,11 @@ def handle_conversational_message(
             objective_id=state.active_objective.objective_id,
         )
         updated = _replace_state(updated, conversation=updated.conversation + (assistant_turn,))
-        if run_background_cycle:
+        background_cycle_eligible = bool(run_background_cycle and not background_cycle_hold_reason(updated))
+        if background_cycle_eligible:
             updated = run_background_objective_cycle(updated, runtime_root=runtime_root, reason="correction_attached", model_runner=model_runner)
         save_runtime_state(runtime_root, updated)
-        return RuntimeTurnResult(state=updated, intent=intent, reply=reply, correction_attached=True, background_cycle_started=run_background_cycle, transfer_applied=False)
+        return RuntimeTurnResult(state=updated, intent=intent, reply=reply, correction_attached=True, background_cycle_started=background_cycle_eligible, transfer_applied=False)
     teaching_followup = _queue_teaching_followup_study(
         state,
         message,
@@ -5766,10 +6261,16 @@ def handle_conversational_message(
     if transfer["applied"]:
         progress = progress + ({"event": "lesson_transfer_applied", "lesson_id": transfer["lesson_id"], "message": message, "at": utc_now()},)
     updated = _replace_state(state, conversation=state.conversation + (user_turn, assistant_turn), objective_progress=progress, turn_relation_decisions=state.turn_relation_decisions + (relation,))
-    if state.active_objective and run_background_cycle and intent.intent_type == "ordinary_conversation":
+    background_cycle_eligible = bool(
+        state.active_objective
+        and run_background_cycle
+        and intent.intent_type == "ordinary_conversation"
+        and not background_cycle_hold_reason(updated)
+    )
+    if background_cycle_eligible:
         updated = run_background_objective_cycle(updated, runtime_root=runtime_root, reason="ordinary_chat_yield", model_runner=model_runner)
     save_runtime_state(runtime_root, updated)
-    return RuntimeTurnResult(state=updated, intent=intent, reply=reply, background_cycle_started=state.active_objective is not None and run_background_cycle, transfer_applied=bool(transfer["applied"]))
+    return RuntimeTurnResult(state=updated, intent=intent, reply=reply, background_cycle_started=background_cycle_eligible, transfer_applied=bool(transfer["applied"]))
 
 
 def _teaching_result_for_evidence(
@@ -6354,7 +6855,8 @@ def _queue_teaching_followup_from_turn(
             "at": utc_now(),
         },),
     )
-    if run_background_cycle:
+    background_cycle_eligible = bool(run_background_cycle and not background_cycle_hold_reason(updated))
+    if background_cycle_eligible:
         updated = run_background_objective_cycle(
             updated,
             runtime_root=runtime_root,
@@ -6373,7 +6875,7 @@ def _queue_teaching_followup_from_turn(
             matched_signals=("in_scope_teaching_question",),
         ),
         reply=reply,
-        background_cycle_started=True,
+        background_cycle_started=background_cycle_eligible,
     )
 
 
@@ -6509,6 +7011,8 @@ def run_background_objective_cycle(
     model_runner: ModelRunner | None = None,
 ) -> ConversationalRuntimeState:
     if not state.active_objective or not state.authority or state.authority.revoked:
+        return state
+    if background_cycle_hold_reason(state):
         return state
     cycle_key = stable_id("conversational-cycle", state.active_objective.objective_id, reason, str(len(state.completed_cycle_keys) + 1))
     if cycle_key in state.completed_cycle_keys:
