@@ -46,6 +46,9 @@ from orchestration.runtime.provisional_semantic_consolidation import (
     ConsolidationIntegrityError,
     ensure_consolidation_cohort,
     ingest_episode_at_runtime_root,
+    load_graph,
+    record_operator_claim_correction,
+    record_source_bound_semantic_transfer_application,
     save_graph,
 )
 
@@ -948,12 +951,51 @@ def _teaching_consolidation_records_for_objective(objective: ConversationalObjec
     )
 
 
+def _semantic_transfer_applications_for_objective(
+    objective: ConversationalObjective | None,
+) -> tuple[dict[str, Any], ...]:
+    if objective is None or not isinstance(objective.provenance, Mapping):
+        return ()
+    return tuple(
+        dict(item)
+        for item in objective.provenance.get("semantic_transfer_applications", ())
+        if isinstance(item, Mapping)
+    )
+
+
+def _semantic_analytical_tasks_for_objective(
+    objective: ConversationalObjective | None,
+) -> tuple[dict[str, Any], ...]:
+    if objective is None or not isinstance(objective.provenance, Mapping):
+        return ()
+    return tuple(
+        dict(item)
+        for item in objective.provenance.get("semantic_analytical_tasks", ())
+        if isinstance(item, Mapping)
+    )
+
+
+def _semantic_competence_deltas_for_objective(
+    objective: ConversationalObjective | None,
+) -> tuple[dict[str, Any], ...]:
+    if objective is None or not isinstance(objective.provenance, Mapping):
+        return ()
+    return tuple(
+        dict(item)
+        for item in objective.provenance.get("semantic_competence_deltas", ())
+        if isinstance(item, Mapping)
+    )
+
+
 def _replace_teaching_objective(
     objective: ConversationalObjective,
     *,
     followups: Sequence[Mapping[str, Any]] | None = None,
     prerequisites: Sequence[Mapping[str, Any]] | None = None,
     consolidation_records: Sequence[Mapping[str, Any]] | None = None,
+    semantic_transfer_applications: Sequence[Mapping[str, Any]] | None = None,
+    semantic_analytical_tasks: Sequence[Mapping[str, Any]] | None = None,
+    semantic_competence_deltas: Sequence[Mapping[str, Any]] | None = None,
 ) -> ConversationalObjective:
     provenance = dict(objective.provenance)
     if followups is not None:
@@ -962,7 +1004,1074 @@ def _replace_teaching_objective(
         provenance["teaching_prerequisites"] = tuple(dict(item) for item in prerequisites)
     if consolidation_records is not None:
         provenance["teaching_consolidation_records"] = tuple(dict(item) for item in consolidation_records)
+    if semantic_transfer_applications is not None:
+        provenance["semantic_transfer_applications"] = tuple(
+            dict(item) for item in semantic_transfer_applications
+        )
+    if semantic_analytical_tasks is not None:
+        provenance["semantic_analytical_tasks"] = tuple(dict(item) for item in semantic_analytical_tasks)
+    if semantic_competence_deltas is not None:
+        provenance["semantic_competence_deltas"] = tuple(
+            dict(item) for item in semantic_competence_deltas
+        )
     return replace(objective, provenance=provenance)
+
+
+_SEMANTIC_TRANSFER_ACTION_TERMS = frozenset({
+    "apply", "adapt", "arrange", "carry", "design", "organize", "structure", "translate", "use",
+})
+_SEMANTIC_TRANSFER_CONTEXT_TERMS = frozenset({
+    "brief", "dashboard", "document", "explanation", "interface", "layout", "message", "page",
+    "plan", "presentation", "report", "screen", "task", "workflow",
+})
+_SEMANTIC_TRANSFER_SOURCE_PHRASES = (
+    "what you revised",
+    "what was revised",
+    "revised understanding",
+    "revised explanation",
+    "prior understanding",
+    "previous understanding",
+    "earlier explanation",
+)
+_SEMANTIC_ANALYSIS_ACTION_TERMS = frozenset({"analyze", "analyse", "assess", "compare", "evaluate", "plan"})
+_SEMANTIC_COMPETENCE_ACTION_TERMS = frozenset({"assess", "compare", "evaluate", "measure", "show"})
+_SEMANTIC_COMPETENCE_CONTEXT_TERMS = frozenset({
+    "after", "baseline", "before", "changed", "competence", "delta", "difference", "improvement", "measure",
+})
+_SEMANTIC_RECALL_EFFECT_TERMS = frozenset({
+    "affect", "affected", "apply", "applied", "change", "changed", "difference", "influence", "influenced",
+})
+_SEMANTIC_RECALL_CONTEXT_TERMS = frozenset({
+    "analysis", "answer", "application", "baseline", "dashboard", "improved", "layout", "result", "screen", "task",
+})
+_SEMANTIC_RECALL_CHAIN_TERMS = frozenset({
+    "analyze", "analysis", "measure", "measurement", "revised", "revision", "transfer", "transferred",
+})
+_ANALYTICAL_RISK_TERMS = frozenset({"deadline", "expired", "overdue", "past", "unpaid"})
+_ANALYTICAL_INTERRUPTION_TERMS = frozenset({"alert", "critical", "escalation", "immediate", "urgent"})
+_ANALYTICAL_EXECUTION_TERMS = frozenset({"active", "current", "job", "scheduled", "task", "today"})
+
+
+def _semantic_transfer_terms(value: str) -> set[str]:
+    return set(re.findall(r"[a-z0-9]{3,}", str(value or "").lower()))
+
+
+def _revised_semantic_transfer_followup(
+    state: ConversationalRuntimeState,
+    message: str,
+) -> dict[str, Any] | None:
+    """Select one explicitly applied revised teaching record, never broad graph memory."""
+
+    objective = state.active_objective
+    if objective is None:
+        return None
+    normalized = " ".join(str(message or "").lower().split())
+    message_terms = _semantic_transfer_terms(normalized)
+    if not (_SEMANTIC_TRANSFER_ACTION_TERMS & message_terms):
+        return None
+    if not (
+        _SEMANTIC_TRANSFER_CONTEXT_TERMS & message_terms
+        or re.search(r"\b(?:to|for|into|within|on)\s+(?:a|an|the|this|that)?\s*[a-z]", normalized)
+    ):
+        return None
+    explicit_source_reference = any(phrase in normalized for phrase in _SEMANTIC_TRANSFER_SOURCE_PHRASES)
+    candidates: list[tuple[int, dict[str, Any]]] = []
+    for followup in _teaching_followups_for_objective(objective):
+        if str(followup.get("status") or "") != "revision_pending_consolidation":
+            continue
+        if not str(followup.get("claim_version_id") or ""):
+            continue
+        source_text = " ".join(
+            str(followup.get(key) or "")
+            for key in ("lesson_title", "source_gap", "question", "interpretation", "claim_version_id")
+        )
+        overlap = len(message_terms & _semantic_transfer_terms(source_text))
+        if overlap or explicit_source_reference:
+            candidates.append((overlap, followup))
+    if not candidates:
+        return None
+    highest = max(score for score, _followup in candidates)
+    selected = [followup for score, followup in candidates if score == highest]
+    return dict(selected[0]) if len(selected) == 1 else None
+
+
+def is_source_bound_semantic_transfer_message(
+    state: ConversationalRuntimeState,
+    message: str,
+) -> bool:
+    """Expose the narrow application boundary for the normal Tk dispatcher."""
+
+    return _revised_semantic_transfer_followup(state, message) is not None
+
+
+def _source_bound_transfer_dimensions(revision_text: str, *, fallback_label: str) -> tuple[str, ...]:
+    """Read the operator's revised contribution shape without hard-coding a lesson."""
+
+    normalized = " ".join(str(revision_text or "").split()).strip()
+    match = re.search(
+        r"\b(?:distinguish|include|separate|address|cover|clarify|describe|state)\s+(.+?)(?:\s+instead\b|\s+rather\s+than\b|[.!?]|$)",
+        normalized,
+        flags=re.IGNORECASE,
+    )
+    contribution = match.group(1) if match else ""
+    dimensions = []
+    for item in re.split(r"\s*,\s*|\s+and\s+", contribution, flags=re.IGNORECASE):
+        value = " ".join(item.strip(" ,;:").split())
+        if value and value.lower() not in {"it", "this", "that"}:
+            dimensions.append(value)
+    if dimensions:
+        return tuple(dict.fromkeys(dimensions))
+    label = " ".join(str(fallback_label or "").split()).strip()
+    return (label,) if label else ()
+
+
+def _render_source_bound_semantic_transfer(
+    *,
+    source_label: str,
+    task_text: str,
+    dimensions: Sequence[str],
+) -> tuple[str, str]:
+    """Render a deterministic, qualified application of a revised source record."""
+
+    label = " ".join(str(source_label or "revised teaching").split()).strip()
+    task = " ".join(str(task_text or "").split()).strip()
+    usable_dimensions = tuple(str(item).strip() for item in dimensions if str(item).strip()) or (label,)
+    bullets = []
+    for index, dimension in enumerate(usable_dimensions):
+        heading = dimension[:1].upper() + dimension[1:]
+        if index == 0:
+            guidance = "make this establish what receives attention first."
+        elif index == 1:
+            guidance = "use alignment, ordering, or grouping to make the scan path legible."
+        else:
+            guidance = "make its priority visibly distinct from supporting detail."
+        bullets.append(f"- {heading}: {guidance}")
+    limitations = (
+        "The source record is provisional, and this application has not been tested against the actual users, "
+        "task constraints, or outcomes."
+    )
+    reply = (
+        f"I applied the revised {label} record to this task.\n\n"
+        f"Task: {task}\n\n"
+        + "\n".join(bullets)
+        + "\n\nTogether, these choices should guide attention from the primary information toward supporting detail.\n\n"
+        + "This is a provisional, source-bound application of the revised teaching record, not a reviewed design conclusion. "
+        + limitations
+    )
+    return reply, limitations
+
+
+def _apply_source_bound_semantic_transfer(
+    state: ConversationalRuntimeState,
+    message: str,
+    *,
+    runtime_root: str | Path,
+) -> RuntimeTurnResult | None:
+    """Persist one application trace while preserving the source claim and its lineage."""
+
+    objective = state.active_objective
+    followup = _revised_semantic_transfer_followup(state, message)
+    if objective is None or followup is None:
+        return None
+    claim_version_id = str(followup.get("claim_version_id") or "")
+    graph = load_graph(runtime_root)
+    revision = next(
+        (item for item in graph.claim_versions if item.claim_version_id == claim_version_id),
+        None,
+    )
+    user_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 1), message),
+        role="user",
+        text=message,
+        intent_type="semantic_transfer_application",
+        objective_id=objective.objective_id,
+    )
+    if revision is None:
+        reply = (
+            "I could not bind that application to its revised source record, so I left it unapplied rather than "
+            "presenting an ungrounded transfer."
+        )
+        assistant_turn = ConversationTurn(
+            turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
+            role="assistant",
+            text=reply,
+            intent_type="semantic_transfer_binding_unavailable",
+            objective_id=objective.objective_id,
+        )
+        updated = _replace_state(state, conversation=state.conversation + (user_turn, assistant_turn))
+        save_runtime_state(runtime_root, updated)
+        return RuntimeTurnResult(
+            state=updated,
+            intent=ConversationIntent(
+                "semantic_transfer_binding_unavailable", 0.95, "active_teaching_objective", "safe_internal", (),
+                ("revised_source_record_missing",),
+            ),
+            reply=reply,
+        )
+
+    source_label = str(followup.get("lesson_title") or followup.get("source_gap") or "revised teaching")
+    dimensions = _source_bound_transfer_dimensions(revision.exact_text, fallback_label=source_label)
+    reply, limitations = _render_source_bound_semantic_transfer(
+        source_label=source_label,
+        task_text=message,
+        dimensions=dimensions,
+    )
+    prior_claim_version_id = str(followup.get("prior_claim_version_id") or revision.supersedes_version_id or "")
+    source_lineage_ids = tuple(
+        dict.fromkeys(item for item in (prior_claim_version_id, claim_version_id) if item)
+    )
+    application_record_id = stable_id(
+        "semantic-transfer-application",
+        objective.objective_id,
+        str(followup.get("followup_id") or ""),
+        claim_version_id,
+        " ".join(str(message or "").lower().split()),
+    )
+    applications = list(_semantic_transfer_applications_for_objective(objective))
+    existing = next(
+        (
+            item for item in applications
+            if str(item.get("application_record_id") or "") == application_record_id
+        ),
+        None,
+    )
+    if existing is not None:
+        reply = str(existing.get("output_text") or reply)
+        limitations = str(existing.get("limitations") or limitations)
+        dimensions = tuple(str(item) for item in existing.get("transfer_dimensions", dimensions) if str(item))
+    try:
+        graph, experience_id, graph_created = record_source_bound_semantic_transfer_application(
+            graph,
+            application_record_id=application_record_id,
+            source_claim_version_ids=(claim_version_id,),
+            source_lineage_ids=source_lineage_ids,
+            task_text=message,
+            output_text=reply,
+            limitations=limitations,
+            objective_id=objective.objective_id,
+            followup_id=str(followup.get("followup_id") or ""),
+            operator_turn_id=user_turn.turn_id,
+        )
+    except ConsolidationIntegrityError:
+        return None
+    if graph_created:
+        save_graph(runtime_root, graph)
+    if existing is None:
+        existing = {
+            "application_record_id": application_record_id,
+            "record_kind": "source_bound_semantic_transfer_application",
+            "objective_id": objective.objective_id,
+            "source_followup_id": str(followup.get("followup_id") or ""),
+            "source_claim_version_id": claim_version_id,
+            "prior_claim_version_id": prior_claim_version_id,
+            "source_lineage_ids": source_lineage_ids,
+            "task_family": "source_bound_semantic_application",
+            "task_text": " ".join(str(message or "").split()),
+            "transfer_dimensions": dimensions,
+            "output_text": reply,
+            "limitations": limitations,
+            "status": "provisional_application_recorded",
+            "graph_experience_id": experience_id,
+            "operator_turn_id": user_turn.turn_id,
+            "created_at": utc_now(),
+        }
+        applications.append(existing)
+    updated_objective = _replace_teaching_objective(
+        objective,
+        semantic_transfer_applications=applications,
+    )
+    assistant_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
+        role="assistant",
+        text=reply,
+        intent_type="semantic_transfer_application_response",
+        objective_id=objective.objective_id,
+    )
+    progress = state.objective_progress
+    if existing is not None and not any(
+        str(item.get("event") or "") == "semantic_transfer_application_recorded"
+        and str(item.get("application_record_id") or "") == application_record_id
+        for item in progress
+        if isinstance(item, Mapping)
+    ):
+        progress = progress + ({
+            "event": "semantic_transfer_application_recorded",
+            "objective_id": objective.objective_id,
+            "application_record_id": application_record_id,
+            "source_followup_id": str(followup.get("followup_id") or ""),
+            "source_claim_version_id": claim_version_id,
+            "source_lineage_ids": source_lineage_ids,
+            "graph_experience_id": experience_id,
+            "at": utc_now(),
+        },)
+    updated = _replace_state(
+        state,
+        active_objective=updated_objective,
+        conversation=state.conversation + (user_turn, assistant_turn),
+        objective_progress=progress,
+    )
+    save_runtime_state(runtime_root, updated)
+    return RuntimeTurnResult(
+        state=updated,
+        intent=ConversationIntent(
+            "semantic_transfer_application", 0.96, "active_teaching_objective", "safe_internal", (),
+            ("revised_teaching_source", "explicit_application_request", "source_bound_provisional_trace"),
+        ),
+        reply=reply,
+    )
+
+
+def _analytical_task_text(message: str) -> str:
+    normalized = " ".join(str(message or "").split()).strip()
+    quoted = re.search(r"[\"\u201c](.+?)[\"\u201d]", normalized)
+    if quoted:
+        return " ".join(quoted.group(1).split()).strip()
+    after_colon = normalized.split(":", 1)
+    if len(after_colon) == 2:
+        return " ".join(after_colon[1].split()).strip()
+    return normalized
+
+
+def _source_bound_semantic_analysis_application(
+    state: ConversationalRuntimeState,
+    message: str,
+) -> dict[str, Any] | None:
+    """Select one recorded transfer only when the operator asks for a bounded analysis."""
+
+    objective = state.active_objective
+    if objective is None:
+        return None
+    message_terms = _semantic_transfer_terms(message)
+    if not (_SEMANTIC_ANALYSIS_ACTION_TERMS & message_terms):
+        return None
+    task_text = _analytical_task_text(message)
+    if not task_text or not (
+        _SEMANTIC_TRANSFER_CONTEXT_TERMS & _semantic_transfer_terms(task_text)
+        or "goal" in message_terms
+    ):
+        return None
+    normalized = " ".join(str(message or "").lower().split())
+    source_reference = any(
+        phrase in normalized
+        for phrase in (*_SEMANTIC_TRANSFER_SOURCE_PHRASES, "learned", "transfer", "source record")
+    )
+    candidates: list[tuple[int, dict[str, Any]]] = []
+    for application in _semantic_transfer_applications_for_objective(objective):
+        source_text = " ".join(
+            str(application.get(key) or "")
+            for key in ("task_text", "source_claim_version_id", "source_followup_id")
+        ) + " " + " ".join(str(item) for item in application.get("transfer_dimensions", ()) if str(item))
+        overlap = len(message_terms & _semantic_transfer_terms(source_text))
+        if overlap or source_reference:
+            candidates.append((overlap, application))
+    if not candidates:
+        return None
+    highest = max(score for score, _application in candidates)
+    selected = [application for score, application in candidates if score == highest]
+    return dict(selected[0]) if len(selected) == 1 else None
+
+
+def is_source_bound_semantic_analysis_message(
+    state: ConversationalRuntimeState,
+    message: str,
+) -> bool:
+    """Expose the small analytical-task boundary to the normal dispatcher."""
+
+    return _source_bound_semantic_analysis_application(state, message) is not None
+
+
+def _analytical_task_items(task_text: str) -> tuple[str, ...]:
+    """Extract operator-named work items without assuming a fixed dashboard fixture."""
+
+    normalized = " ".join(str(task_text or "").split()).strip()
+    match = re.search(
+        r"\b(?:see|view|track|manage|monitor|prioritize)\s+(.+?)(?:\s+(?:on|in|within)\s+(?:one|a|the)?\s*(?:screen|dashboard|page|view)|[.!?]|$)",
+        normalized,
+        flags=re.IGNORECASE,
+    )
+    source = match.group(1) if match else normalized
+    items = []
+    for item in re.split(r"\s*,\s*|\s+and\s+", source, flags=re.IGNORECASE):
+        value = " ".join(item.strip(" ,;:").split())
+        if value:
+            items.append(value)
+    return tuple(dict.fromkeys(items))
+
+
+def _analytical_priority(item: str) -> tuple[str, str]:
+    terms = _semantic_transfer_terms(item)
+    if terms & _ANALYTICAL_RISK_TERMS:
+        return "financial_or_commitment_risk", "show it as a high-priority risk that needs a decision."
+    if terms & _ANALYTICAL_INTERRUPTION_TERMS:
+        return "interruption_or_escalation", "surface it as an interruption or escalation channel."
+    if terms & _ANALYTICAL_EXECUTION_TERMS:
+        return "schedule_or_execution_focus", "keep it visible in the main execution flow."
+    return "supporting_information", "keep it available without competing with immediate decisions."
+
+
+def _render_source_bound_semantic_analysis(
+    *,
+    task_text: str,
+    dimensions: Sequence[str],
+) -> tuple[tuple[Mapping[str, Any], ...], str, str]:
+    """Complete one small analysis deterministically from operator task text and source dimensions."""
+
+    items = _analytical_task_items(task_text)
+    priorities = tuple({
+        "item": item,
+        "priority_kind": _analytical_priority(item)[0],
+        "reason": _analytical_priority(item)[1],
+    } for item in items)
+    dimension_text = ", ".join(str(item) for item in dimensions if str(item)) or "the revised source dimensions"
+    priority_lines = "\n".join(
+        f"- {item['item']}: {item['priority_kind'].replace('_', ' ')}; {item['reason']}"
+        for item in priorities
+    ) or "- No distinct work items were extracted; keep the screen organized around the next concrete decision."
+    layout_lines = "\n".join(
+        f"- {item['item']}: place this in the {item['priority_kind'].replace('_', ' ')} region."
+        for item in priorities
+    ) or "- Use one primary region and reserve secondary regions for supporting detail."
+    substeps: tuple[Mapping[str, Any], ...] = (
+        {
+            "step_id": "identify_user_goal",
+            "label": "Identify the user goal",
+            "status": "completed",
+            "finding": "The screen should help the operator decide what needs attention and action next.",
+        },
+        {
+            "step_id": "identify_information_priorities",
+            "label": "Identify information priorities",
+            "status": "completed",
+            "finding": priority_lines,
+        },
+        {
+            "step_id": "apply_revised_semantic_source",
+            "label": "Apply the revised semantic source",
+            "status": "completed",
+            "finding": f"Use {dimension_text} to organize the reading order and attention path.",
+        },
+        {
+            "step_id": "propose_layout",
+            "label": "Propose the layout",
+            "status": "completed",
+            "finding": layout_lines,
+        },
+        {
+            "step_id": "state_uncertainty_and_next_test",
+            "label": "State uncertainty and next validation step",
+            "status": "completed",
+            "finding": "Test the proposed ordering with the actual operator, screen constraints, and representative work scenarios.",
+        },
+    )
+    limitations = (
+        "This is a provisional task analysis. It has not been validated against the contractor's real workflow, "
+        "screen size, notification policy, or usability evidence."
+    )
+    synthesis = (
+        f"For this task, use an action-first composition.\n\n"
+        f"Information priorities:\n{priority_lines}\n\n"
+        f"Apply {dimension_text} so the screen gives the most consequential information the strongest visual treatment, "
+        "uses alignment and grouping to make the path through the screen legible, and separates supporting detail from the next action.\n\n"
+        f"Proposed layout:\n{layout_lines}\n\n"
+        f"Limitation: {limitations}"
+    )
+    return substeps, synthesis, limitations
+
+
+def _apply_source_bound_semantic_analysis(
+    state: ConversationalRuntimeState,
+    message: str,
+    *,
+    runtime_root: str | Path,
+) -> RuntimeTurnResult | None:
+    """Persist one bounded multi-step analysis that is tied to an existing transfer record."""
+
+    objective = state.active_objective
+    application = _source_bound_semantic_analysis_application(state, message)
+    if objective is None or application is None:
+        return None
+    task_text = _analytical_task_text(message)
+    source_semantic_ids = tuple(
+        dict.fromkeys(str(item) for item in application.get("source_lineage_ids", ()) if str(item))
+    )
+    source_transfer_application_id = str(application.get("application_record_id") or "")
+    source_transfer_experience_id = str(application.get("graph_experience_id") or "")
+    if not task_text or not source_semantic_ids or not source_transfer_application_id:
+        return None
+    analytical_task_id = stable_id(
+        "semantic-analytical-task",
+        objective.objective_id,
+        source_transfer_application_id,
+        " ".join(task_text.lower().split()),
+    )
+    tasks = list(_semantic_analytical_tasks_for_objective(objective))
+    existing = next(
+        (item for item in tasks if str(item.get("analytical_task_id") or "") == analytical_task_id),
+        None,
+    )
+    if existing is None:
+        dimensions = tuple(str(item) for item in application.get("transfer_dimensions", ()) if str(item))
+        substeps, synthesis, limitations = _render_source_bound_semantic_analysis(
+            task_text=task_text,
+            dimensions=dimensions,
+        )
+        existing = {
+            "analytical_task_id": analytical_task_id,
+            "record_kind": "source_bound_semantic_multistep_analysis",
+            "objective_id": objective.objective_id,
+            "source_semantic_ids": source_semantic_ids,
+            "source_transfer_application_id": source_transfer_application_id,
+            "source_transfer_experience_id": source_transfer_experience_id,
+            "source_transfer_dimensions": dimensions,
+            "task_text": task_text,
+            "substeps": substeps,
+            "decision_notes": tuple(item["finding"] for item in substeps[:4]),
+            "final_synthesis": synthesis,
+            "limitations": limitations,
+            "status": "provisional_analysis_recorded",
+            "restart_summary": "Persisted as one source-bound analytical task with no model execution or admission.",
+            "created_at": utc_now(),
+        }
+        tasks.append(existing)
+    reply = str(existing.get("final_synthesis") or "")
+    user_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 1), message),
+        role="user",
+        text=message,
+        intent_type="semantic_multistep_analytical_task",
+        objective_id=objective.objective_id,
+    )
+    assistant_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
+        role="assistant",
+        text=reply,
+        intent_type="semantic_multistep_analytical_task_response",
+        objective_id=objective.objective_id,
+    )
+    progress = state.objective_progress
+    if not any(
+        str(item.get("event") or "") == "semantic_multistep_analytical_task_recorded"
+        and str(item.get("analytical_task_id") or "") == analytical_task_id
+        for item in progress
+        if isinstance(item, Mapping)
+    ):
+        progress = progress + ({
+            "event": "semantic_multistep_analytical_task_recorded",
+            "objective_id": objective.objective_id,
+            "analytical_task_id": analytical_task_id,
+            "source_semantic_ids": source_semantic_ids,
+            "source_transfer_application_id": source_transfer_application_id,
+            "at": utc_now(),
+        },)
+    updated = _replace_state(
+        state,
+        active_objective=_replace_teaching_objective(objective, semantic_analytical_tasks=tasks),
+        conversation=state.conversation + (user_turn, assistant_turn),
+        objective_progress=progress,
+    )
+    save_runtime_state(runtime_root, updated)
+    return RuntimeTurnResult(
+        state=updated,
+        intent=ConversationIntent(
+            "semantic_multistep_analytical_task", 0.96, "active_teaching_objective", "safe_internal", (),
+            ("source_bound_transfer_application", "bounded_multistep_analysis", "provisional_task_synthesis"),
+        ),
+        reply=reply,
+    )
+
+
+def _source_bound_semantic_competence_task(
+    state: ConversationalRuntimeState,
+    message: str,
+) -> dict[str, Any] | None:
+    """Select one completed source-bound analysis for a task-local comparison."""
+
+    objective = state.active_objective
+    if objective is None:
+        return None
+    normalized = " ".join(str(message or "").lower().split())
+    message_terms = _semantic_transfer_terms(normalized)
+    if not (_SEMANTIC_COMPETENCE_ACTION_TERMS & message_terms):
+        return None
+    if not (_SEMANTIC_COMPETENCE_CONTEXT_TERMS & message_terms):
+        return None
+    source_reference = any(
+        phrase in normalized
+        for phrase in (*_SEMANTIC_TRANSFER_SOURCE_PHRASES, "learned", "revised", "semantic", "source-bound")
+    )
+    candidates: list[tuple[int, dict[str, Any]]] = []
+    for task in _semantic_analytical_tasks_for_objective(objective):
+        if str(task.get("status") or "") != "provisional_analysis_recorded":
+            continue
+        source_text = " ".join(
+            str(task.get(key) or "")
+            for key in ("task_text", "source_transfer_application_id", "source_transfer_dimensions")
+        ) + " " + " ".join(str(item) for item in task.get("source_transfer_dimensions", ()) if str(item))
+        overlap = len(message_terms & _semantic_transfer_terms(source_text))
+        if overlap or source_reference:
+            candidates.append((overlap, task))
+    if not candidates:
+        return None
+    highest = max(score for score, _task in candidates)
+    selected = [task for score, task in candidates if score == highest]
+    return dict(selected[0]) if len(selected) == 1 else None
+
+
+def is_source_bound_semantic_competence_measurement_message(
+    state: ConversationalRuntimeState,
+    message: str,
+) -> bool:
+    """Expose a narrow task-local measurement boundary to the normal dispatcher."""
+
+    return _source_bound_semantic_competence_task(state, message) is not None
+
+
+def _task_local_competence_measurement(
+    task: Mapping[str, Any],
+) -> tuple[dict[str, Any], ...]:
+    """Compare a declared source-bound task record to an explicit non-source baseline shape."""
+
+    source_semantic_ids = tuple(str(item) for item in task.get("source_semantic_ids", ()) if str(item))
+    source_dimensions = tuple(str(item) for item in task.get("source_transfer_dimensions", ()) if str(item))
+    task_text = str(task.get("task_text") or "")
+    substeps = tuple(item for item in task.get("substeps", ()) if isinstance(item, Mapping))
+    step_ids = {str(item.get("step_id") or "") for item in substeps}
+    priority_kinds = {
+        _analytical_priority(item)[0]
+        for item in _analytical_task_items(task_text)
+    }
+    synthesis = str(task.get("final_synthesis") or "").lower()
+    limitation = str(task.get("limitations") or "")
+    visual_hierarchy_used = (
+        any("visual hierarchy" in item.lower() for item in source_dimensions)
+        and "visual hierarchy" in synthesis
+    )
+    dimensions = (
+        {
+            "dimension_id": "uses_source_semantic_lineage",
+            "baseline": "absent",
+            "improved": "present" if source_semantic_ids else "not_observed",
+            "observed": bool(source_semantic_ids),
+            "evidence": source_semantic_ids,
+        },
+        {
+            "dimension_id": "distinguishes_information_priority",
+            "baseline": "absent",
+            "improved": "present" if "identify_information_priorities" in step_ids else "not_observed",
+            "observed": "identify_information_priorities" in step_ids,
+            "evidence": tuple(sorted(priority_kinds)),
+        },
+        {
+            "dimension_id": "uses_visual_hierarchy",
+            "baseline": "absent",
+            "improved": "present" if visual_hierarchy_used else "not_observed",
+            "observed": visual_hierarchy_used,
+            "evidence": tuple(item for item in source_dimensions if "visual hierarchy" in item.lower()),
+        },
+        {
+            "dimension_id": "maps_work_items_to_distinct_attention_roles",
+            "baseline": "absent",
+            "improved": "present" if len(priority_kinds) > 1 else "not_observed",
+            "observed": len(priority_kinds) > 1,
+            "evidence": tuple(sorted(priority_kinds)),
+        },
+        {
+            "dimension_id": "states_uncertainty_or_next_test",
+            "baseline": "absent",
+            "improved": "present" if "state_uncertainty_and_next_test" in step_ids and limitation else "not_observed",
+            "observed": "state_uncertainty_and_next_test" in step_ids and bool(limitation),
+            "evidence": (limitation,) if limitation else (),
+        },
+    )
+    return tuple(dict(item) for item in dimensions)
+
+
+def _render_source_bound_semantic_competence_delta(
+    *,
+    task: Mapping[str, Any],
+    measured_dimensions: Sequence[Mapping[str, Any]],
+) -> tuple[str, str]:
+    """Render only the observed record-level difference, never a global intelligence claim."""
+
+    lines = []
+    for item in measured_dimensions:
+        label = str(item.get("dimension_id") or "observed change").replace("_", " ")
+        after = str(item.get("improved") or "not_observed")
+        lines.append(f"- {label}: {item.get('baseline', 'absent')} -> {after}")
+    limitations = (
+        "This is a task-local structural comparison between an explicit non-source baseline shape and one source-bound "
+        "analysis record. It is not a global competence score, an independently benchmarked result, or evidence that the "
+        "semantic source alone caused every difference."
+    )
+    reply = (
+        "I recorded a task-local competence comparison for the source-bound analysis.\n\n"
+        "Observed record differences:\n"
+        + "\n".join(lines)
+        + "\n\n"
+        + f"Source-bound task: {str(task.get('analytical_task_id') or '')}\n\n"
+        + f"Limitation: {limitations}"
+    )
+    return reply, limitations
+
+
+def _apply_source_bound_semantic_competence_measurement(
+    state: ConversationalRuntimeState,
+    message: str,
+    *,
+    runtime_root: str | Path,
+) -> RuntimeTurnResult | None:
+    """Persist one restart-safe, task-local competence delta without creating semantic authority."""
+
+    objective = state.active_objective
+    task = _source_bound_semantic_competence_task(state, message)
+    if objective is None or task is None:
+        return None
+    analytical_task_id = str(task.get("analytical_task_id") or "")
+    source_transfer_application_id = str(task.get("source_transfer_application_id") or "")
+    source_semantic_ids = tuple(str(item) for item in task.get("source_semantic_ids", ()) if str(item))
+    if not analytical_task_id or not source_transfer_application_id or not source_semantic_ids:
+        return None
+    competence_delta_id = stable_id(
+        "semantic-competence-delta",
+        objective.objective_id,
+        analytical_task_id,
+        source_transfer_application_id,
+        "task-local-structural-comparison-v1",
+    )
+    deltas = list(_semantic_competence_deltas_for_objective(objective))
+    existing = next(
+        (
+            item for item in deltas
+            if str(item.get("competence_delta_id") or "") == competence_delta_id
+        ),
+        None,
+    )
+    if existing is None:
+        measured_dimensions = _task_local_competence_measurement(task)
+        baseline_result_id = stable_id(
+            "semantic-competence-baseline",
+            analytical_task_id,
+            "non-source-task-shape-v1",
+        )
+        reply, limitations = _render_source_bound_semantic_competence_delta(
+            task=task,
+            measured_dimensions=measured_dimensions,
+        )
+        existing = {
+            "competence_delta_id": competence_delta_id,
+            "competence_probe_id": competence_delta_id,
+            "record_kind": "source_bound_task_local_competence_delta",
+            "objective_id": objective.objective_id,
+            "task_family": "source_bound_multistep_analysis",
+            "baseline_result_id": baseline_result_id,
+            "improved_result_id": analytical_task_id,
+            "baseline_result": {
+                "result_id": baseline_result_id,
+                "record_kind": "explicit_non_source_structural_baseline",
+                "task_text": str(task.get("task_text") or ""),
+                "source_semantic_ids": (),
+                "summary": (
+                    "A deterministic reference for the same task without an explicitly bound semantic source. "
+                    "It is not an independently generated model answer."
+                ),
+            },
+            "improved_result": {
+                "result_id": analytical_task_id,
+                "record_kind": str(task.get("record_kind") or "source_bound_semantic_multistep_analysis"),
+                "source_semantic_ids": source_semantic_ids,
+                "substep_ids": tuple(
+                    str(item.get("step_id") or "")
+                    for item in task.get("substeps", ())
+                    if isinstance(item, Mapping)
+                ),
+            },
+            "source_semantic_ids": source_semantic_ids,
+            "source_transfer_application_id": source_transfer_application_id,
+            "source_analytical_task_id": analytical_task_id,
+            "measured_dimensions": measured_dimensions,
+            "observed_delta": tuple(
+                {
+                    "dimension_id": str(item.get("dimension_id") or ""),
+                    "before": str(item.get("baseline") or "absent"),
+                    "after": str(item.get("improved") or "not_observed"),
+                }
+                for item in measured_dimensions
+                if bool(item.get("observed"))
+            ),
+            "limitations": limitations,
+            "status": "task_local_observed_delta_recorded",
+            "restart_summary": "Persisted as one task-local comparison with no model execution, graph mutation, or admission.",
+            "reply": reply,
+            "created_at": utc_now(),
+        }
+        deltas.append(existing)
+    reply = str(existing.get("reply") or "")
+    user_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 1), message),
+        role="user",
+        text=message,
+        intent_type="semantic_competence_delta_measurement",
+        objective_id=objective.objective_id,
+    )
+    assistant_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
+        role="assistant",
+        text=reply,
+        intent_type="semantic_competence_delta_measurement_response",
+        objective_id=objective.objective_id,
+    )
+    progress = state.objective_progress
+    if not any(
+        str(item.get("event") or "") == "semantic_competence_delta_recorded"
+        and str(item.get("competence_delta_id") or "") == competence_delta_id
+        for item in progress
+        if isinstance(item, Mapping)
+    ):
+        progress = progress + ({
+            "event": "semantic_competence_delta_recorded",
+            "objective_id": objective.objective_id,
+            "competence_delta_id": competence_delta_id,
+            "source_analytical_task_id": analytical_task_id,
+            "source_transfer_application_id": source_transfer_application_id,
+            "at": utc_now(),
+        },)
+    updated = _replace_state(
+        state,
+        active_objective=_replace_teaching_objective(objective, semantic_competence_deltas=deltas),
+        conversation=state.conversation + (user_turn, assistant_turn),
+        objective_progress=progress,
+    )
+    save_runtime_state(runtime_root, updated)
+    return RuntimeTurnResult(
+        state=updated,
+        intent=ConversationIntent(
+            "semantic_competence_delta_measurement", 0.96, "active_teaching_objective", "safe_internal", (),
+            ("source_bound_analysis", "task_local_structural_comparison", "no_global_competence_claim"),
+        ),
+        reply=reply,
+    )
+
+
+def _source_bound_semantic_recall(
+    state: ConversationalRuntimeState,
+    message: str,
+) -> dict[str, Any] | None:
+    """Resolve an operator's follow-up against one unambiguous applied semantic chain."""
+
+    objective = state.active_objective
+    if objective is None:
+        return None
+    normalized = " ".join(str(message or "").lower().split())
+    if not re.match(r"^(?:how|what|which|why|did|does|do|has|have|can|could)\b", normalized):
+        return None
+    message_terms = _semantic_transfer_terms(normalized)
+    applications = _semantic_transfer_applications_for_objective(objective)
+    tasks = _semantic_analytical_tasks_for_objective(objective)
+    deltas = _semantic_competence_deltas_for_objective(objective)
+    if not applications or not tasks:
+        return None
+    followups = _teaching_followups_for_objective(objective)
+    followups_by_claim = {
+        str(item.get("claim_version_id") or ""): item
+        for item in followups
+        if str(item.get("claim_version_id") or "")
+    }
+
+    def supporting_records(task: Mapping[str, Any]) -> tuple[dict[str, Any] | None, dict[str, Any] | None, dict[str, Any] | None]:
+        application_id = str(task.get("source_transfer_application_id") or "")
+        application = next(
+            (item for item in applications if str(item.get("application_record_id") or "") == application_id),
+            None,
+        )
+        delta = next(
+            (
+                item for item in deltas
+                if str(item.get("source_analytical_task_id") or "") == str(task.get("analytical_task_id") or "")
+            ),
+            None,
+        )
+        claim_ids = tuple(str(item) for item in task.get("source_semantic_ids", ()) if str(item))
+        followup = next((followups_by_claim[item] for item in reversed(claim_ids) if item in followups_by_claim), None)
+        return application, delta, followup
+
+    chain_requested = len(message_terms & _SEMANTIC_RECALL_CHAIN_TERMS) >= 2
+    if chain_requested and len(applications) == len(tasks) == len(deltas) == 1:
+        application, delta, followup = supporting_records(tasks[0])
+        if application is not None and delta is not None:
+            return {
+                "mode": "chain_summary",
+                "application": application,
+                "task": tasks[0],
+                "delta": delta,
+                "followup": followup,
+            }
+
+    delta_requested = bool(message_terms & {"baseline", "improved", "delta", "difference", "measurement"})
+    if delta_requested and deltas:
+        candidates: list[tuple[int, dict[str, Any], dict[str, Any], dict[str, Any] | None, dict[str, Any] | None]] = []
+        for delta in deltas:
+            task = next(
+                (
+                    item for item in tasks
+                    if str(item.get("analytical_task_id") or "") == str(delta.get("source_analytical_task_id") or "")
+                ),
+                None,
+            )
+            if task is None:
+                continue
+            application, _linked_delta, followup = supporting_records(task)
+            if application is None:
+                continue
+            source_text = " ".join(
+                (
+                    str(task.get("task_text") or ""),
+                    " ".join(str(item) for item in task.get("source_transfer_dimensions", ()) if str(item)),
+                )
+            )
+            overlap = len(message_terms & _semantic_transfer_terms(source_text))
+            if overlap or len(deltas) == 1:
+                candidates.append((overlap, delta, task, application, followup))
+        if candidates:
+            highest = max(score for score, *_records in candidates)
+            selected = [records for score, *records in candidates if score == highest]
+            if len(selected) == 1:
+                delta, task, application, followup = selected[0]
+                return {
+                    "mode": "competence_delta",
+                    "application": application,
+                    "task": task,
+                    "delta": delta,
+                    "followup": followup,
+                }
+
+    effect_requested = bool(message_terms & _SEMANTIC_RECALL_EFFECT_TERMS)
+    if effect_requested and (_SEMANTIC_RECALL_CONTEXT_TERMS & message_terms):
+        candidates: list[tuple[int, dict[str, Any], dict[str, Any], dict[str, Any] | None, dict[str, Any] | None]] = []
+        for task in tasks:
+            application, delta, followup = supporting_records(task)
+            if application is None:
+                continue
+            source_text = " ".join(
+                (
+                    str(task.get("task_text") or ""),
+                    " ".join(str(item) for item in task.get("source_transfer_dimensions", ()) if str(item)),
+                    str(application.get("task_text") or ""),
+                )
+            )
+            overlap = len(message_terms & _semantic_transfer_terms(source_text))
+            if overlap:
+                candidates.append((overlap, task, application, delta, followup))
+        if candidates:
+            highest = max(score for score, *_records in candidates)
+            selected = [records for score, *records in candidates if score == highest]
+            if len(selected) == 1:
+                task, application, delta, followup = selected[0]
+                return {
+                    "mode": "application_effect",
+                    "application": application,
+                    "task": task,
+                    "delta": delta,
+                    "followup": followup,
+                }
+    return None
+
+
+def is_source_bound_semantic_recall_message(
+    state: ConversationalRuntimeState,
+    message: str,
+) -> bool:
+    """Expose read-only applied-semantic follow-up recall to the normal dispatcher."""
+
+    return _source_bound_semantic_recall(state, message) is not None
+
+
+def _render_source_bound_semantic_recall(recall: Mapping[str, Any]) -> str:
+    """Make the existing applied chain legible without presenting it as reviewed truth."""
+
+    mode = str(recall.get("mode") or "")
+    task = dict(recall.get("task") or {})
+    application = dict(recall.get("application") or {})
+    delta = dict(recall.get("delta") or {})
+    followup = dict(recall.get("followup") or {})
+    source_label = str(followup.get("lesson_title") or followup.get("source_gap") or "the revised source")
+    dimensions = tuple(str(item) for item in task.get("source_transfer_dimensions", ()) if str(item))
+    dimension_text = ", ".join(dimensions) or source_label
+    if mode == "competence_delta":
+        lines = [
+            f"- {str(item.get('dimension_id') or 'observed change').replace('_', ' ')}: "
+            f"{item.get('before', 'absent')} -> {item.get('after', 'not observed')}"
+            for item in delta.get("observed_delta", ())
+            if isinstance(item, Mapping)
+        ]
+        return (
+            "The recorded baseline-to-improved comparison is task-local, not a global competence claim.\n\n"
+            + "\n".join(lines or ("- No observed difference was recorded.",))
+            + "\n\n"
+            + f"It compares the explicit non-source baseline with the source-bound analysis for: {str(task.get('task_text') or 'the recorded task').rstrip('.!?')}. "
+            + f"The result remains provisional: {delta.get('limitations') or 'it has not been independently benchmarked.'}"
+        )
+    if mode == "chain_summary":
+        return (
+            "Here is the recorded applied-semantic chain.\n\n"
+            f"- Revised: {source_label} now keeps {dimension_text} distinct.\n"
+            "- Transferred: those dimensions were applied to a dashboard attention-guidance task.\n"
+            f"- Analyzed: {str(task.get('task_text') or 'the task').rstrip('.!?')} was organized into explicit priorities, layout, and a next test.\n"
+            f"- Measured: the task-local comparison recorded {len(tuple(delta.get('observed_delta') or ()))} concrete differences.\n\n"
+            "All four records remain provisional and source-bound; none has been promoted to reviewed semantic truth."
+        )
+    priority_step = next(
+        (
+            item for item in task.get("substeps", ())
+            if isinstance(item, Mapping) and str(item.get("step_id") or "") == "identify_information_priorities"
+        ),
+        {},
+    )
+    limitation = str(task.get("limitations") or "the actual workflow and outcomes have not been tested.").strip()
+    return (
+        f"The revised {source_label} record affected the dashboard analysis by applying {dimension_text} to the attention path.\n\n"
+        f"The transfer framed the screen around what should receive attention first; the analysis then mapped task-specific work into distinct roles:\n"
+        f"{priority_step.get('finding') or 'the recorded task did not retain a priority breakdown.'}\n\n"
+        f"The layout remains provisional. {limitation}"
+    )
+
+
+def _apply_source_bound_semantic_recall(
+    state: ConversationalRuntimeState,
+    message: str,
+    *,
+    runtime_root: str | Path,
+) -> RuntimeTurnResult | None:
+    """Render a read-only source-bound follow-up without changing any semantic record."""
+
+    objective = state.active_objective
+    recall = _source_bound_semantic_recall(state, message)
+    if objective is None or recall is None:
+        return None
+    reply = _render_source_bound_semantic_recall(recall)
+    user_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 1), message),
+        role="user",
+        text=message,
+        intent_type="semantic_source_bound_recall",
+        objective_id=objective.objective_id,
+    )
+    assistant_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
+        role="assistant",
+        text=reply,
+        intent_type="semantic_source_bound_recall_response",
+        objective_id=objective.objective_id,
+    )
+    updated = _replace_state(state, conversation=state.conversation + (user_turn, assistant_turn))
+    save_runtime_state(runtime_root, updated)
+    return RuntimeTurnResult(
+        state=updated,
+        intent=ConversationIntent(
+            "semantic_source_bound_recall", 0.96, "active_teaching_objective", "safe_internal", (),
+            ("read_only_source_bound_recall", "no_semantic_mutation", str(recall.get("mode") or "")),
+        ),
+        reply=reply,
+    )
 
 
 def _teaching_followup_evidence(objective: ConversationalObjective) -> tuple[EvidenceRef, ...]:
@@ -2517,6 +3626,8 @@ def _developmental_governance_action(message: str) -> str:
         and any(phrase in lower for phrase in ("not available", "unavailable", "keep it pending", "stop surfacing", "do not surface"))
     ):
         return "defer_external_review"
+    if _material_developmental_correction(message):
+        return "apply_source_correction"
     if (
         ("too vague" in lower or "needs revision" in lower or "need revision" in lower)
         or "mark it for revision" in lower
@@ -2535,6 +3646,33 @@ def _developmental_governance_action(message: str) -> str:
     ):
         return "status"
     return ""
+
+
+def _material_developmental_correction(message: str) -> bool:
+    """Recognise an operator-supplied replacement proposition, not a posture-only request."""
+
+    lower = " ".join(str(message or "").lower().split())
+    if not any(marker in lower for marker in ("incomplete", "incorrect", "wrong", "misleading", "overbroad")):
+        return False
+    return bool(re.search(
+        r"\b(?:it|this|that)\s+should\s+(?:distinguish|include|describe|separate|state|clarify|avoid)\b",
+        lower,
+    ))
+
+
+def _operator_correction_proposition(message: str, *, label: str) -> str:
+    """Convert a bounded operator correction into the next claim's exact wording."""
+
+    match = re.search(
+        r"\b(?:it|this|that)\s+should\s+(.+?)(?:[.!?]|$)",
+        str(message or ""),
+        flags=re.IGNORECASE,
+    )
+    correction = " ".join(match.group(1).split()).strip() if match else ""
+    subject = " ".join(str(label or "that result").split()).strip()
+    if not correction or not subject:
+        return ""
+    return f"{subject} should {correction}"
 
 
 def _governance_tokens(value: str) -> set[str]:
@@ -2708,6 +3846,11 @@ def _governance_assistant_reply(
             f"I marked the provisional {subject} result for revision before retention. The original evidence remains intact, "
             "but I will not treat it as retained or settled material."
         )
+    if action == "apply_source_correction":
+        return (
+            f"I recorded your correction as a new provisional version of {subject}. The earlier wording remains preserved, "
+            "and graph-bound answers will use the revised posture while it awaits consolidation."
+        )
     if action == "defer_external_review":
         return (
             "I left that external review pending but suppressed it until you ask. No external call, review result, admission, "
@@ -2735,11 +3878,19 @@ def _resolve_governance_retention_request(
     message: str,
     turn_id: str,
 ) -> ChatAddressableRequest:
-    resolution = "operator_deprioritized" if action == "deprioritize" else "operator_revision_requested"
-    status = "deferred" if action == "deprioritize" else "revision_requested"
+    resolution = (
+        "operator_deprioritized"
+        if action == "deprioritize"
+        else "operator_source_correction_recorded"
+        if action == "apply_source_correction"
+        else "operator_revision_requested"
+    )
+    status = "deferred" if action == "deprioritize" else "revision_pending_consolidation" if action == "apply_source_correction" else "revision_requested"
     policy = (
         "operator_deferred_provisional_retention"
         if action == "deprioritize"
+        else "operator_source_correction_replaces_provisional_retention"
+        if action == "apply_source_correction"
         else "operator_revision_blocks_provisional_retention"
     )
     return replace(
@@ -2819,6 +3970,51 @@ def resolve_developmental_governance_instruction(
         objective_id=objective.objective_id,
     )
     history = _governance_history(record)
+    label = str(record.get("lesson_title") or record.get("source_gap") or "that result")
+    correction_text = _operator_correction_proposition(message, label=label) if action == "apply_source_correction" else ""
+    source_claim_version_id = str(record.get("claim_version_id") or "")
+    prior_claim_version_id = source_claim_version_id
+    revision_claim_version_id = ""
+    revision_cohort_id = ""
+    correction_created = False
+    requested_decision_id = stable_id(
+        "developmental-governance-decision",
+        objective.objective_id,
+        source_kind,
+        str(record.get("followup_id") or record.get("packet_id") or ""),
+        action,
+        message,
+    )
+    already_recorded = any(str(item.get("decision_id") or "") == requested_decision_id for item in history)
+    if action == "apply_source_correction":
+        if not correction_text or not source_claim_version_id:
+            action = "request_revision"
+        elif already_recorded:
+            # The stored follow-up already points to the earlier correction.
+            # Do not attach the same operator wording as a revision of itself.
+            prior_claim_version_id = str(record.get("prior_claim_version_id") or source_claim_version_id)
+            revision_claim_version_id = source_claim_version_id
+            revision_cohort_id = str(record.get("revision_consolidation_cohort_id") or "")
+        else:
+            try:
+                graph = load_graph(runtime_root)
+                graph, revision_claim_version_id, correction_created = record_operator_claim_correction(
+                    graph,
+                    prior_claim_version_id=source_claim_version_id,
+                    corrected_text=correction_text,
+                    operator_statement=message,
+                    operator_turn_id=user_turn.turn_id,
+                    objective_id=objective.objective_id,
+                    followup_id=str(record.get("followup_id") or ""),
+                )
+                graph, cohort = ensure_consolidation_cohort(graph, trigger="operator_developmental_correction")
+                revision_cohort_id = cohort.cohort_id if cohort is not None else ""
+                save_graph(runtime_root, graph)
+            except ConsolidationIntegrityError:
+                # A correction without its exact canonical source remains a
+                # posture-only revision request; it must not fabricate graph lineage.
+                action = "request_revision"
+
     decision_id = stable_id(
         "developmental-governance-decision",
         objective.objective_id,
@@ -2828,9 +4024,12 @@ def resolve_developmental_governance_instruction(
         message,
     )
     already_applied = any(str(item.get("decision_id") or "") == decision_id for item in history)
+
     next_status = (
         "retention_deferred"
         if action == "deprioritize"
+        else "revision_pending_consolidation"
+        if action == "apply_source_correction"
         else "revision_requested"
         if action == "request_revision"
         else "operator_deferred_external_review"
@@ -2838,6 +4037,8 @@ def resolve_developmental_governance_instruction(
     posture = (
         "operator_deprioritized"
         if action == "deprioritize"
+        else "operator_source_correction_pending_consolidation"
+        if action == "apply_source_correction"
         else "operator_revision_requested"
         if action == "request_revision"
         else "operator_deferred_external_review"
@@ -2845,6 +4046,8 @@ def resolve_developmental_governance_instruction(
     resumption_posture = (
         "parent_context_preferred"
         if action == "deprioritize"
+        else "awaiting_consolidation_of_operator_correction"
+        if action == "apply_source_correction"
         else "revision_required_before_retention"
         if action == "request_revision"
         else "resume_only_when_operator_requests_external_review"
@@ -2856,7 +4059,12 @@ def resolve_developmental_governance_instruction(
         "source_kind": source_kind,
         "source_followup_id": str(record.get("followup_id") or ""),
         "source_record_id": str(record.get("packet_id") or ""),
-        "claim_version_id": str(record.get("claim_version_id") or ""),
+        "claim_version_id": revision_claim_version_id or prior_claim_version_id,
+        "prior_claim_version_id": prior_claim_version_id,
+        "revision_claim_version_id": revision_claim_version_id,
+        "revision_consolidation_cohort_id": revision_cohort_id,
+        "correction_created": correction_created,
+        "corrected_proposition": correction_text if action == "apply_source_correction" else "",
         "request_id": request.request_id if request is not None else "",
         "prior_status": str(record.get("status") or record.get("review_status") or ""),
         "next_status": next_status,
@@ -2870,6 +4078,14 @@ def resolve_developmental_governance_instruction(
         **record,
         **({"status": next_status} if source_kind == "teaching_followup" else {"review_status": next_status}),
         "developmental_action_state": posture if source_kind == "teaching_followup" else record.get("developmental_action_state", ""),
+        **({
+            "claim_version_id": revision_claim_version_id,
+            "prior_claim_version_id": prior_claim_version_id,
+            "revision_claim_version_id": revision_claim_version_id,
+            "revision_consolidation_cohort_id": revision_cohort_id,
+            "revision_consolidation_eligible": bool(revision_cohort_id),
+            "operator_correction_text": correction_text,
+        } if action == "apply_source_correction" else {}),
         "operator_governance_state": posture,
         "operator_attention_priority": 0,
         "operator_suppressed": True,
@@ -2891,7 +4107,7 @@ def resolve_developmental_governance_instruction(
 
     resolved_request = (
         _resolve_governance_retention_request(request, action=action, message=message, turn_id=user_turn.turn_id)
-        if request is not None and action in {"deprioritize", "request_revision"}
+        if request is not None and action in {"deprioritize", "request_revision", "apply_source_correction"}
         else None
     )
     pending_requests = tuple(
@@ -4184,6 +5400,34 @@ def handle_conversational_message(
     resolved = resolve_pending_chat_request(state, message, runtime_root=runtime_root)
     if resolved is not None:
         return resolved
+    semantic_recall = _apply_source_bound_semantic_recall(
+        state,
+        message,
+        runtime_root=runtime_root,
+    )
+    if semantic_recall is not None:
+        return semantic_recall
+    semantic_competence_delta = _apply_source_bound_semantic_competence_measurement(
+        state,
+        message,
+        runtime_root=runtime_root,
+    )
+    if semantic_competence_delta is not None:
+        return semantic_competence_delta
+    semantic_analysis = _apply_source_bound_semantic_analysis(
+        state,
+        message,
+        runtime_root=runtime_root,
+    )
+    if semantic_analysis is not None:
+        return semantic_analysis
+    semantic_transfer = _apply_source_bound_semantic_transfer(
+        state,
+        message,
+        runtime_root=runtime_root,
+    )
+    if semantic_transfer is not None:
+        return semantic_transfer
     if _is_provider_learning_packet_request(message, state):
         return request_provider_learning_packet(state, message, runtime_root=runtime_root)
     if state.active_objective and state.lifecycle_state == "paused_operator" and re.search(r"\bresume(?:\s+the)?\s+(?:active\s+)?goal\b", message, flags=re.IGNORECASE):

@@ -213,6 +213,461 @@ def test_graph_bound_question_uses_epistemic_answer_without_requests_or_writes(m
         root.destroy()
 
 
+def test_operator_correction_prefers_revised_teaching_claim_in_future_tk_answer(monkeypatch, tmp_path):
+    """A later teaching question must render the corrected provisional version."""
+
+    import hashlib
+    from orchestration.runtime.conversational_runtime_operation import (
+        ChatAddressableRequest,
+        handle_conversational_message,
+        save_runtime_state,
+    )
+    from orchestration.runtime.provisional_semantic_consolidation import (
+        ClaimVersion,
+        ProvisionalSemanticGraphState,
+        SemanticClaim,
+        graph_path,
+        save_graph,
+    )
+
+    source_version_id = "ui-connections-source"
+    correction = (
+        "Actually, that Connections explanation is incomplete. It should distinguish composition, leading lines, "
+        "and visual hierarchy instead of treating Connections as a generic idea."
+    )
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        created = handle_conversational_message(
+            app.conversational_runtime_state,
+            "Teach me introductory photography.",
+            runtime_root=app.conversational_runtime_root,
+            run_background_cycle=False,
+        ).state
+        objective = created.active_objective
+        assert objective is not None
+        graph = ProvisionalSemanticGraphState(
+            graph_id="ui-connections-revision",
+            claims=(SemanticClaim("ui-claim-connections", objective.objective_id, "ui-lesson-connections", "2026-08-04T00:00:00+00:00"),),
+            claim_versions=(ClaimVersion(
+                source_version_id,
+                "ui-claim-connections",
+                1,
+                "Connections is a generic introductory photography idea.",
+                "pending_consolidation",
+                (), (), (), (), "sha256:ui-connections-source", "2026-08-04T00:00:00+00:00",
+            ),),
+        )
+        save_graph(app.conversational_runtime_root, graph)
+        followup = {
+            "followup_id": "ui-followup-connections-revision",
+            "lesson_id": "ui-lesson-connections",
+            "lesson_title": "Connections",
+            "source_gap": "address Connections",
+            "question": "How do Connections fit into introductory photography?",
+            "question_tokens": ("connections", "photography"),
+            "status": "provisional_ready_for_retention",
+            "developmental_action_state": "completed_pending_retention",
+            "claim_version_id": source_version_id,
+        }
+        request = ChatAddressableRequest(
+            request_id="ui-retention-connections-revision",
+            request_type="teaching_provisional_retention",
+            objective_id=objective.objective_id,
+            originating_goal_id=objective.objective_id,
+            goal_label="Provisional teaching retention",
+            prompt_text="Should I remember the provisional Connections explanation?",
+            created_sequence=5,
+            render_sequence=6,
+            accepted_response_types=("approved", "denied"),
+            baseline_metrics={"followup_id": followup["followup_id"], "claim_version_id": source_version_id},
+        )
+        app.conversational_runtime_state = replace(
+            created,
+            lifecycle_state="paused_operator",
+            active_objective=replace(objective, provenance={**objective.provenance, "teaching_followups": (followup,)}),
+            pending_chat_requests=(request,),
+        )
+        save_runtime_state(app.conversational_runtime_root, app.conversational_runtime_state)
+
+        _send(app, correction)
+        revised = app.conversational_runtime_state.active_objective.provenance["teaching_followups"][0]
+        graph_file = graph_path(app.conversational_runtime_root)
+        graph_hash = hashlib.sha256(graph_file.read_bytes()).hexdigest()
+        _send(app, "What should I understand about Connections now?")
+        answer = app.chat_history.get("1.0", tk.END)
+
+        assert revised["status"] == "revision_pending_consolidation"
+        assert revised["prior_claim_version_id"] == source_version_id
+        assert revised["claim_version_id"] != source_version_id
+        assert "Connections should distinguish composition, leading lines, and visual hierarchy" in answer
+        assert "pending consolidation review" in answer.lower()
+        assert app.last_payload["route"] == "epistemic_answer_mode"
+        resolution = app.last_payload["epistemic_answer_resolution"]
+        assert resolution["selected_claim_version_ids"] == (revised["claim_version_id"],)
+        assert resolution["epistemic_mode"] == "pending_consolidation"
+        assert hashlib.sha256(graph_file.read_bytes()).hexdigest() == graph_hash
+        assert not app.conversational_runtime_state.pending_chat_requests
+        _send(app, "What is 2 + 2?")
+        assert "4" in app.chat_history.get("1.0", tk.END).rsplit("You: What is 2 + 2?", 1)[-1]
+        runtime_root = app.conversational_runtime_root
+    finally:
+        root.destroy()
+
+    root, restored = _app(monkeypatch, tmp_path)
+    try:
+        assert restored.conversational_runtime_root == runtime_root
+        _send(restored, "What should I understand about Connections now?")
+        answer = restored.chat_history.get("1.0", tk.END)
+        resolution = restored.last_payload["epistemic_answer_resolution"]
+        assert "Connections should distinguish composition, leading lines, and visual hierarchy" in answer
+        assert resolution["selected_claim_version_ids"] == (revised["claim_version_id"],)
+        assert resolution["epistemic_mode"] == "pending_consolidation"
+        assert not restored.conversational_runtime_state.pending_chat_requests
+    finally:
+        root.destroy()
+
+
+def test_revised_teaching_semantics_transfer_to_dashboard_through_tk(monkeypatch, tmp_path):
+    """The normal Tk dispatcher must record one qualified, source-bound application."""
+
+    from orchestration.runtime.conversational_runtime_operation import (
+        ChatAddressableRequest,
+        handle_conversational_message,
+        save_runtime_state,
+    )
+    from orchestration.runtime.provisional_semantic_consolidation import (
+        ClaimVersion,
+        ProvisionalSemanticGraphState,
+        SemanticClaim,
+        load_graph,
+        save_graph,
+    )
+
+    source_version_id = "ui-transfer-connections-source"
+    correction = (
+        "Actually, that Connections explanation is incomplete. It should distinguish composition, leading lines, "
+        "and visual hierarchy instead of treating Connections as a generic idea."
+    )
+    transfer_prompt = (
+        "Use what you revised about Connections, composition, leading lines, and visual hierarchy to organize a short "
+        "explanation of how a dashboard screen should guide a user's attention."
+    )
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        created = handle_conversational_message(
+            app.conversational_runtime_state,
+            "Teach me introductory photography.",
+            runtime_root=app.conversational_runtime_root,
+            run_background_cycle=False,
+        ).state
+        objective = created.active_objective
+        assert objective is not None
+        graph = ProvisionalSemanticGraphState(
+            graph_id="ui-semantic-transfer",
+            claims=(SemanticClaim("ui-transfer-claim", objective.objective_id, "ui-transfer-lesson", "2026-08-04T00:00:00+00:00"),),
+            claim_versions=(ClaimVersion(
+                source_version_id,
+                "ui-transfer-claim",
+                1,
+                "Connections is a generic introductory photography idea.",
+                "pending_consolidation",
+                (), (), (), (), "sha256:ui-transfer-source", "2026-08-04T00:00:00+00:00",
+            ),),
+        )
+        save_graph(app.conversational_runtime_root, graph)
+        followup = {
+            "followup_id": "ui-transfer-followup",
+            "lesson_id": "ui-transfer-lesson",
+            "lesson_title": "Connections",
+            "source_gap": "address Connections",
+            "question": "How do Connections fit into introductory photography?",
+            "question_tokens": ("connections", "photography"),
+            "status": "provisional_ready_for_retention",
+            "developmental_action_state": "completed_pending_retention",
+            "claim_version_id": source_version_id,
+            "interpretation": "Connections is a generic introductory photography idea.",
+        }
+        request = ChatAddressableRequest(
+            request_id="ui-transfer-retention",
+            request_type="teaching_provisional_retention",
+            objective_id=objective.objective_id,
+            originating_goal_id=objective.objective_id,
+            goal_label="Provisional teaching retention",
+            prompt_text="Should I remember the provisional Connections explanation?",
+            created_sequence=5,
+            render_sequence=6,
+            accepted_response_types=("approved", "denied"),
+            baseline_metrics={"followup_id": followup["followup_id"], "claim_version_id": source_version_id},
+        )
+        app.conversational_runtime_state = replace(
+            created,
+            lifecycle_state="paused_operator",
+            active_objective=replace(objective, provenance={**objective.provenance, "teaching_followups": (followup,)}),
+            pending_chat_requests=(request,),
+        )
+        save_runtime_state(app.conversational_runtime_root, app.conversational_runtime_state)
+
+        _send(app, correction)
+        revised_followup = app.conversational_runtime_state.active_objective.provenance["teaching_followups"][0]
+        _send(app, transfer_prompt)
+
+        applications = app.conversational_runtime_state.active_objective.provenance["semantic_transfer_applications"]
+        application = applications[0]
+        persisted_graph = load_graph(app.conversational_runtime_root)
+        transfer_experience = next(
+            item for item in persisted_graph.experiences if item.experience_id == application["graph_experience_id"]
+        )
+        transcript = app.chat_history.get("1.0", tk.END).lower()
+
+        assert len(applications) == 1
+        assert application["source_claim_version_id"] == revised_followup["claim_version_id"]
+        assert application["prior_claim_version_id"] == source_version_id
+        assert "composition" in transcript
+        assert "leading lines" in transcript
+        assert "visual hierarchy" in transcript
+        assert "dashboard" in transcript
+        assert "provisional, source-bound application" in transcript
+        assert transfer_experience.metadata["record_kind"] == "source_bound_semantic_transfer_application"
+        assert not persisted_graph.packets
+        assert not persisted_graph.reviews
+        assert not persisted_graph.admissions
+        assert not app.conversational_runtime_state.pending_chat_requests
+        assert app.dispatch_shadow_diagnostics[-1]["actual"]["rendered_owner"] == "conversational_runtime"
+        assert "semantic transfer" in app.observation_stream.get("1.0", tk.END).lower()
+
+        _send(app, "What is 2 + 2?")
+        assert "4" in app.chat_history.get("1.0", tk.END).rsplit("You: What is 2 + 2?", 1)[-1]
+        runtime_root = app.conversational_runtime_root
+        application_id = application["application_record_id"]
+        experience_id = application["graph_experience_id"]
+    finally:
+        root.destroy()
+
+    root, restored = _app(monkeypatch, tmp_path)
+    try:
+        assert restored.conversational_runtime_root == runtime_root
+        _send(restored, transfer_prompt)
+        applications = restored.conversational_runtime_state.active_objective.provenance["semantic_transfer_applications"]
+        graph = load_graph(restored.conversational_runtime_root)
+        assert len(applications) == 1
+        assert applications[0]["application_record_id"] == application_id
+        assert applications[0]["graph_experience_id"] == experience_id
+        assert sum(
+            1
+            for item in graph.experiences
+            if item.metadata.get("record_kind") == "source_bound_semantic_transfer_application"
+        ) == 1
+    finally:
+        root.destroy()
+
+
+def test_source_bound_multistep_dashboard_analysis_through_tk(monkeypatch, tmp_path):
+    """The normal UI route must persist one task analysis from an existing transfer."""
+
+    from orchestration.runtime.conversational_runtime_operation import (
+        ChatAddressableRequest,
+        handle_conversational_message,
+        save_runtime_state,
+    )
+    from orchestration.runtime.provisional_semantic_consolidation import (
+        ClaimVersion,
+        ProvisionalSemanticGraphState,
+        SemanticClaim,
+        load_graph,
+        save_graph,
+    )
+
+    source_version_id = "ui-analysis-connections-source"
+    correction = (
+        "Actually, that Connections explanation is incomplete. It should distinguish composition, leading lines, "
+        "and visual hierarchy instead of treating Connections as a generic idea."
+    )
+    transfer_prompt = (
+        "Use what you revised about Connections, composition, leading lines, and visual hierarchy to organize a short "
+        "explanation of how a dashboard screen should guide a user's attention."
+    )
+    analysis_prompt = (
+        "Analyze this simple dashboard goal: \"A contractor wants to see overdue invoices, today's jobs, and urgent client "
+        "messages on one screen.\" Use the learned visual-hierarchy/Connections concept to propose a layout and explain the reasoning."
+    )
+    competence_prompt = (
+        "Compare a baseline dashboard analysis with the revised source-bound dashboard analysis. Measure how the revised "
+        "Connections concept changed the dashboard analysis and record the observed differences."
+    )
+    effect_recall_prompt = "How did that affect the dashboard answer?"
+    delta_recall_prompt = "What changed from the baseline to the improved dashboard analysis?"
+    chain_recall_prompt = "What did you revise, transfer, analyze, and measure?"
+    root, app = _app(monkeypatch, tmp_path)
+    try:
+        created = handle_conversational_message(
+            app.conversational_runtime_state,
+            "Teach me introductory photography.",
+            runtime_root=app.conversational_runtime_root,
+            run_background_cycle=False,
+        ).state
+        objective = created.active_objective
+        assert objective is not None
+        graph = ProvisionalSemanticGraphState(
+            graph_id="ui-semantic-analysis",
+            claims=(SemanticClaim("ui-analysis-claim", objective.objective_id, "ui-analysis-lesson", "2026-08-04T00:00:00+00:00"),),
+            claim_versions=(ClaimVersion(
+                source_version_id,
+                "ui-analysis-claim",
+                1,
+                "Connections is a generic introductory photography idea.",
+                "pending_consolidation",
+                (), (), (), (), "sha256:ui-analysis-source", "2026-08-04T00:00:00+00:00",
+            ),),
+        )
+        save_graph(app.conversational_runtime_root, graph)
+        followup = {
+            "followup_id": "ui-analysis-followup",
+            "lesson_id": "ui-analysis-lesson",
+            "lesson_title": "Connections",
+            "source_gap": "address Connections",
+            "question": "How do Connections fit into introductory photography?",
+            "question_tokens": ("connections", "photography"),
+            "status": "provisional_ready_for_retention",
+            "developmental_action_state": "completed_pending_retention",
+            "claim_version_id": source_version_id,
+            "interpretation": "Connections is a generic introductory photography idea.",
+        }
+        request = ChatAddressableRequest(
+            request_id="ui-analysis-retention",
+            request_type="teaching_provisional_retention",
+            objective_id=objective.objective_id,
+            originating_goal_id=objective.objective_id,
+            goal_label="Provisional teaching retention",
+            prompt_text="Should I remember the provisional Connections explanation?",
+            created_sequence=5,
+            render_sequence=6,
+            accepted_response_types=("approved", "denied"),
+            baseline_metrics={"followup_id": followup["followup_id"], "claim_version_id": source_version_id},
+        )
+        app.conversational_runtime_state = replace(
+            created,
+            lifecycle_state="paused_operator",
+            active_objective=replace(objective, provenance={**objective.provenance, "teaching_followups": (followup,)}),
+            pending_chat_requests=(request,),
+        )
+        save_runtime_state(app.conversational_runtime_root, app.conversational_runtime_state)
+        corrected = handle_conversational_message(
+            app.conversational_runtime_state,
+            correction,
+            runtime_root=app.conversational_runtime_root,
+            run_background_cycle=False,
+        ).state
+        app.conversational_runtime_state = handle_conversational_message(
+            corrected,
+            transfer_prompt,
+            runtime_root=app.conversational_runtime_root,
+            run_background_cycle=False,
+        ).state
+        save_runtime_state(app.conversational_runtime_root, app.conversational_runtime_state)
+        graph_before_analysis = load_graph(app.conversational_runtime_root)
+
+        _send(app, analysis_prompt)
+
+        tasks = app.conversational_runtime_state.active_objective.provenance["semantic_analytical_tasks"]
+        task = tasks[0]
+        graph_after_analysis = load_graph(app.conversational_runtime_root)
+        transcript = app.chat_history.get("1.0", tk.END).lower()
+
+        assert len(tasks) == 1
+        assert len(task["substeps"]) == 5
+        assert task["status"] == "provisional_analysis_recorded"
+        assert "overdue invoices" in transcript
+        assert "today's jobs" in transcript
+        assert "urgent client messages" in transcript
+        assert "composition" in transcript
+        assert "leading lines" in transcript
+        assert "visual hierarchy" in transcript
+        assert "limitation" in transcript
+        assert len(graph_after_analysis.experiences) == len(graph_before_analysis.experiences)
+        assert len(graph_after_analysis.claim_versions) == len(graph_before_analysis.claim_versions)
+        assert not graph_after_analysis.packets
+        assert not graph_after_analysis.reviews
+        assert not graph_after_analysis.admissions
+        assert not app.conversational_runtime_state.pending_chat_requests
+        assert app.dispatch_shadow_diagnostics[-1]["actual"]["rendered_owner"] == "conversational_runtime"
+        assert "semantic analysis" in app.observation_stream.get("1.0", tk.END).lower()
+
+        _send(app, competence_prompt)
+
+        deltas = app.conversational_runtime_state.active_objective.provenance["semantic_competence_deltas"]
+        delta = deltas[0]
+        graph_after_delta = load_graph(app.conversational_runtime_root)
+        delta_transcript = app.chat_history.get("1.0", tk.END).lower()
+
+        assert len(deltas) == 1
+        assert delta["source_analytical_task_id"] == task["analytical_task_id"]
+        assert delta["source_transfer_application_id"] == task["source_transfer_application_id"]
+        assert delta["baseline_result_id"] != delta["improved_result_id"]
+        assert "observed record differences" in delta_transcript
+        assert "not a global competence score" in delta_transcript
+        assert len(graph_after_delta.experiences) == len(graph_after_analysis.experiences)
+        assert len(graph_after_delta.claim_versions) == len(graph_after_analysis.claim_versions)
+        assert not graph_after_delta.packets
+        assert not graph_after_delta.reviews
+        assert not graph_after_delta.admissions
+        assert app.dispatch_shadow_diagnostics[-1]["actual"]["rendered_owner"] == "conversational_runtime"
+        assert "competence delta" in app.observation_stream.get("1.0", tk.END).lower()
+
+        _send(app, effect_recall_prompt)
+        effect_transcript = app.chat_history.get("1.0", tk.END).lower()
+        assert "revised connections record affected the dashboard analysis" in effect_transcript
+        assert "financial or commitment risk" in effect_transcript
+        assert "semantic lineage" in app.observation_stream.get("1.0", tk.END).lower()
+        assert not app.conversational_runtime_state.pending_chat_requests
+
+        _send(app, delta_recall_prompt)
+        delta_recall_transcript = app.chat_history.get("1.0", tk.END).lower()
+        assert "baseline-to-improved comparison is task-local" in delta_recall_transcript
+        assert "not a global competence claim" in delta_recall_transcript
+        assert not app.conversational_runtime_state.pending_chat_requests
+
+        _send(app, "What is 2 + 2?")
+        assert "4" in app.chat_history.get("1.0", tk.END).rsplit("You: What is 2 + 2?", 1)[-1]
+        runtime_root = app.conversational_runtime_root
+        task_id = task["analytical_task_id"]
+        transfer_id = task["source_transfer_application_id"]
+        delta_id = delta["competence_delta_id"]
+    finally:
+        root.destroy()
+
+    root, restored = _app(monkeypatch, tmp_path)
+    try:
+        assert restored.conversational_runtime_root == runtime_root
+        _send(restored, analysis_prompt)
+        _send(restored, competence_prompt)
+        _send(restored, chain_recall_prompt)
+        tasks = restored.conversational_runtime_state.active_objective.provenance["semantic_analytical_tasks"]
+        deltas = restored.conversational_runtime_state.active_objective.provenance["semantic_competence_deltas"]
+        graph = load_graph(restored.conversational_runtime_root)
+        assert len(tasks) == 1
+        assert tasks[0]["analytical_task_id"] == task_id
+        assert tasks[0]["source_transfer_application_id"] == transfer_id
+        assert len(deltas) == 1
+        assert deltas[0]["competence_delta_id"] == delta_id
+        assert deltas[0]["source_analytical_task_id"] == task_id
+        assert "recorded applied-semantic chain" in restored.chat_history.get("1.0", tk.END).lower()
+        assert sum(
+            1
+            for event in restored.conversational_runtime_state.objective_progress
+            if event.get("event") == "semantic_multistep_analytical_task_recorded"
+        ) == 1
+        assert sum(
+            1
+            for event in restored.conversational_runtime_state.objective_progress
+            if event.get("event") == "semantic_competence_delta_recorded"
+        ) == 1
+        assert not graph.packets
+        assert not graph.reviews
+        assert not graph.admissions
+    finally:
+        root.destroy()
+
+
 def test_epistemic_answer_modes_survive_tk_restart_without_graph_mutation(monkeypatch, tmp_path):
     import hashlib
     from orchestration.runtime.provisional_semantic_consolidation import (

@@ -96,7 +96,7 @@ def bind_teaching_followup_question(
     ranked: list[tuple[int, str]] = []
     for followup in followups:
         status = str(followup.get("status") or "")
-        if status not in {"retained_provisional", "admitted", "reviewed_supported"}:
+        if status not in {"retained_provisional", "admitted", "reviewed_supported", "revision_pending_consolidation"}:
             continue
         claim_version_id = str(followup.get("claim_version_id") or "")
         version = versions.get(claim_version_id)

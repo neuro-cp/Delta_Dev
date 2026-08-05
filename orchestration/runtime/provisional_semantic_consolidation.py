@@ -385,6 +385,83 @@ def save_graph(runtime_root: str | Path, graph: ProvisionalSemanticGraphState) -
     _atomic_write_json(graph_path(runtime_root), graph.as_record())
 
 
+def record_source_bound_semantic_transfer_application(
+    graph: ProvisionalSemanticGraphState,
+    *,
+    application_record_id: str,
+    source_claim_version_ids: Sequence[str],
+    source_lineage_ids: Sequence[str],
+    task_text: str,
+    output_text: str,
+    limitations: str,
+    objective_id: str = "",
+    followup_id: str = "",
+    operator_turn_id: str = "",
+) -> tuple[ProvisionalSemanticGraphState, str, bool]:
+    """Append one source-bound application trace without admitting a new claim.
+
+    Applying a provisional semantic record to a new task is evidence about the
+    application's provenance and limits, not a factual promotion of either the
+    source or the resulting recommendation.  The graph therefore keeps this as
+    a runtime-observation experience rather than manufacturing a new claim.
+    """
+
+    record_id = str(application_record_id or "").strip()
+    source_ids = tuple(dict.fromkeys(str(item) for item in source_claim_version_ids if str(item)))
+    lineage_ids = tuple(dict.fromkeys(str(item) for item in source_lineage_ids if str(item)))
+    task = " ".join(str(task_text or "").split()).strip()
+    output = " ".join(str(output_text or "").split()).strip()
+    limit = " ".join(str(limitations or "").split()).strip()
+    if not record_id or not source_ids or not task or not output or not limit:
+        raise ConsolidationIntegrityError("semantic_transfer_application_requires_source_task_output_and_limits")
+    known_versions = {item.claim_version_id for item in graph.claim_versions}
+    if any(item not in known_versions for item in source_ids):
+        raise ConsolidationIntegrityError("semantic_transfer_application_source_claim_missing")
+    existing = next(
+        (
+            item
+            for item in graph.experiences
+            if str(item.metadata.get("application_record_id") or "") == record_id
+        ),
+        None,
+    )
+    if existing is not None:
+        return graph, existing.experience_id, False
+
+    experience_id = stable_id("semantic-experience", "source-bound-semantic-transfer", record_id)
+    content = json.dumps(
+        {
+            "task_text": task,
+            "output_text": output,
+            "limitations": limit,
+            "source_claim_version_ids": source_ids,
+            "source_lineage_ids": lineage_ids,
+        },
+        sort_keys=True,
+    )
+    experience = _experience(
+        experience_id,
+        "runtime_observation",
+        "deterministic_source_bound_semantic_application",
+        content,
+        source_ids + tuple(item for item in lineage_ids if item not in source_ids) + tuple(
+            item for item in (objective_id, followup_id, operator_turn_id) if item
+        ),
+        {
+            "record_kind": "source_bound_semantic_transfer_application",
+            "application_record_id": record_id,
+            "source_claim_version_ids": source_ids,
+            "source_lineage_ids": lineage_ids,
+            "objective_id": objective_id,
+            "followup_id": followup_id,
+            "operator_turn_id": operator_turn_id,
+            "epistemic_state": "pending_consolidation",
+            "review_state": "unreviewed",
+        },
+    )
+    return _append(graph, "experiences", experience), experience_id, True
+
+
 def record_associative_insight(
     graph: ProvisionalSemanticGraphState,
     *,
@@ -489,6 +566,130 @@ def record_revised_associative_insight(
         )
         graph = _append(graph, "relations", relation)
     return graph, claim_version_id
+
+
+def record_operator_claim_correction(
+    graph: ProvisionalSemanticGraphState,
+    *,
+    prior_claim_version_id: str,
+    corrected_text: str,
+    operator_statement: str,
+    operator_turn_id: str = "",
+    objective_id: str = "",
+    followup_id: str = "",
+) -> tuple[ProvisionalSemanticGraphState, str, bool]:
+    """Append one operator-corrected provisional claim version.
+
+    This is intentionally narrower than administrative admission.  An operator
+    can correct the wording of a source-bound provisional teaching result, but
+    the correction remains pending consolidation and cannot validate, replace,
+    or erase the earlier version.
+    """
+
+    prior = _by_id(graph.claim_versions, prior_claim_version_id, "claim_version_id")
+    text = " ".join(str(corrected_text or "").split()).strip()
+    statement = " ".join(str(operator_statement or "").split()).strip()
+    if not text or not statement:
+        raise ConsolidationIntegrityError("operator_correction_requires_text_and_statement")
+    fingerprint = _semantic_fingerprint(text)
+    if fingerprint == prior.semantic_fingerprint:
+        raise ConsolidationIntegrityError("operator_correction_must_change_proposition")
+    existing = next(
+        (
+            item
+            for item in graph.claim_versions
+            if item.supersedes_version_id == prior.claim_version_id
+            and item.semantic_fingerprint == fingerprint
+        ),
+        None,
+    )
+    if existing is not None:
+        return graph, existing.claim_version_id, False
+
+    prior_versions = [item for item in graph.claim_versions if item.claim_id == prior.claim_id]
+    version_index = max(item.version_index for item in prior_versions) + 1
+    experience_id = stable_id(
+        "semantic-experience",
+        "operator-developmental-correction",
+        prior.claim_version_id,
+        text,
+    )
+    rationale_id = stable_id("semantic-rationale", "operator-developmental-correction", prior.claim_version_id, text)
+    version_id = stable_id(
+        "semantic-claim-version",
+        prior.claim_id,
+        str(version_index),
+        text,
+        "pending_consolidation",
+        "operator_developmental_correction",
+        prior.claim_version_id,
+    )
+    experience = SemanticExperience(
+        experience_id=experience_id,
+        source_class="operator_statement",
+        authority_class="operator_provided",
+        content=statement,
+        origin_refs=tuple(item for item in (prior.claim_version_id, operator_turn_id, objective_id, followup_id) if item),
+        created_at=utc_now(),
+        content_digest=_digest(statement),
+        metadata={
+            "record_kind": "developmental_claim_correction",
+            "prior_claim_version_id": prior.claim_version_id,
+            "objective_id": objective_id,
+            "followup_id": followup_id,
+        },
+    )
+    rationale = SemanticRationale(
+        rationale_id=rationale_id,
+        summary=text,
+        experience_refs=(experience_id,),
+        source_claim_refs=(prior.claim_version_id,),
+        created_at=utc_now(),
+        fingerprint=fingerprint,
+    )
+    version = ClaimVersion(
+        claim_version_id=version_id,
+        claim_id=prior.claim_id,
+        version_index=version_index,
+        exact_text=text,
+        epistemic_state="pending_consolidation",
+        rationale_refs=(rationale_id,),
+        assumption_refs=(),
+        uncertainty_refs=(),
+        source_experience_refs=(experience_id,),
+        semantic_fingerprint=fingerprint,
+        created_at=utc_now(),
+        supersedes_version_id=prior.claim_version_id,
+    )
+    fragment = ClaimFragment(stable_id("semantic-fragment", version_id, "1"), version_id, text, 1)
+    relation = SemanticRelation(
+        relation_id=stable_id("provisional-functional-relation", "corrects", version_id, prior.claim_version_id, experience_id),
+        relation_type="corrects",
+        source_ref=version_id,
+        target_ref=prior.claim_version_id,
+        created_at=utc_now(),
+        provenance_refs=(experience_id,),
+        metadata={
+            "epistemic_state": "pending_consolidation",
+            "review_state": "unreviewed",
+            "source_class": "operator_statement",
+            "operator_correction": True,
+        },
+    )
+    graph = replace(
+        graph,
+        experiences=graph.experiences + (experience,),
+        rationales=graph.rationales + (rationale,),
+        claim_versions=graph.claim_versions + (version,),
+        claim_fragments=graph.claim_fragments + (fragment,),
+        relations=graph.relations + (relation,),
+        edges=graph.edges + (
+            _edge("derived_from", version_id, rationale_id),
+            _edge("grounded_in", rationale_id, experience_id),
+            _edge("supersedes", version_id, prior.claim_version_id),
+        ),
+    )
+    return graph, version_id, True
 
 
 def _insight_claim_version_id(experience_id: str) -> str:
@@ -1419,5 +1620,5 @@ def _packet_from_record(value: Mapping[str, Any]) -> SealedConsolidationPacket:
 
 
 __all__ = [
-    "ADMINISTRATIVE_ACTIONS", "ADMISSION_ACTIONS", "FUNCTIONAL_RELATION_TYPES", "ClaimFragment", "ClaimVersion", "ConsolidationCohort", "ConsolidationIntegrityError", "EpisodicTrace", "ProvisionalSemanticGraphState", "ReviewRecord", "SemanticClaim", "SemanticConcept", "SemanticEdge", "SemanticExperience", "SemanticRationale", "SemanticRelation", "SealedConsolidationPacket", "AdaptationTraceReference", "AdministrativeReviewOverlay", "AdmissionRecord", "apply_admission", "compile_sealed_packet", "compile_sealed_packets", "create_administrative_overlay", "create_consolidation_cohort", "empty_graph", "ensure_consolidation_cohort", "graph_from_record", "ingest_episode_at_runtime_root", "ingest_knowledge_episode", "load_graph", "record_associative_insight", "record_provisional_functional_relation", "record_revised_associative_insight", "record_validated_oracle_response", "render_administrative_review", "save_graph", "seal_cohort_packet_once", "validate_oracle_response", "verify_sealed_packet",
+    "ADMINISTRATIVE_ACTIONS", "ADMISSION_ACTIONS", "FUNCTIONAL_RELATION_TYPES", "ClaimFragment", "ClaimVersion", "ConsolidationCohort", "ConsolidationIntegrityError", "EpisodicTrace", "ProvisionalSemanticGraphState", "ReviewRecord", "SemanticClaim", "SemanticConcept", "SemanticEdge", "SemanticExperience", "SemanticRationale", "SemanticRelation", "SealedConsolidationPacket", "AdaptationTraceReference", "AdministrativeReviewOverlay", "AdmissionRecord", "apply_admission", "compile_sealed_packet", "compile_sealed_packets", "create_administrative_overlay", "create_consolidation_cohort", "empty_graph", "ensure_consolidation_cohort", "graph_from_record", "ingest_episode_at_runtime_root", "ingest_knowledge_episode", "load_graph", "record_associative_insight", "record_operator_claim_correction", "record_provisional_functional_relation", "record_revised_associative_insight", "record_source_bound_semantic_transfer_application", "record_validated_oracle_response", "render_administrative_review", "save_graph", "seal_cohort_packet_once", "validate_oracle_response", "verify_sealed_packet",
 ]

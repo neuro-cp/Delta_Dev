@@ -115,6 +115,10 @@ from orchestration.runtime.conversational_runtime_operation import (  # noqa: E4
     handle_conversational_message,
     infer_lesson_transfer,
     is_developmental_governance_message,
+    is_source_bound_semantic_analysis_message,
+    is_source_bound_semantic_competence_measurement_message,
+    is_source_bound_semantic_recall_message,
+    is_source_bound_semantic_transfer_message,
     is_teaching_followup_message,
     mark_capability_campaign_milestone_rendered,
     mark_chat_request_rendered,
@@ -7607,6 +7611,66 @@ class DeltaApp:
             self._refresh_conversational_runtime_status()
             self._refresh_state_cards()
             return True
+        if (
+            is_source_bound_semantic_recall_message(state, message)
+            or is_source_bound_semantic_competence_measurement_message(state, message)
+            or is_source_bound_semantic_analysis_message(state, message)
+            or is_source_bound_semantic_transfer_message(state, message)
+        ):
+            if (
+                self.conversational_runtime_inference_in_flight
+                or self.association_exploration_in_flight
+                or self.revisit_reinquiry_in_flight
+                or self.structural_analogy_exploration_in_flight
+                or self.curiosity_inquiry_in_flight
+            ):
+                self._request_active_goal_preemption(reason="foreground_semantic_application")
+            result = handle_conversational_message(
+                state,
+                message,
+                runtime_root=self.conversational_runtime_root,
+                run_background_cycle=False,
+            )
+            if result.intent.intent_type.startswith("semantic_"):
+                self.conversational_runtime_state = result.state
+                self._append_chat("DELTA", result.reply)
+                self._append_session("user", message)
+                self._append_session("assistant", result.reply)
+                objective = result.state.active_objective
+                if result.intent.intent_type == "semantic_source_bound_recall":
+                    self._append_observation(
+                        "Semantic lineage",
+                        "Rendered a read-only source-bound recap without changing the recorded semantic chain.",
+                    )
+                else:
+                    record_key = {
+                        "semantic_competence_delta_measurement": "semantic_competence_deltas",
+                        "semantic_multistep_analytical_task": "semantic_analytical_tasks",
+                    }.get(result.intent.intent_type, "semantic_transfer_applications")
+                    records = (
+                        objective.provenance.get(record_key, ())
+                        if objective is not None and isinstance(objective.provenance, Mapping)
+                        else ()
+                    )
+                    record = next((item for item in reversed(records) if isinstance(item, Mapping)), {})
+                    if record:
+                        title = {
+                            "semantic_competence_deltas": "Competence delta",
+                            "semantic_analytical_tasks": "Semantic analysis",
+                        }.get(record_key, "Semantic transfer")
+                        record_id = str(
+                            record.get("competence_delta_id")
+                            or record.get("analytical_task_id")
+                            or record.get("application_record_id")
+                            or ""
+                        )
+                        self._append_observation(
+                            title,
+                            f"Recorded provisional source-bound {record_key.replace('_', ' ')} {record_id}.",
+                        )
+                self._refresh_conversational_runtime_status()
+                self._refresh_state_cards()
+                return True
         lower_message = " ".join(message.lower().split())
         intent = classify_conversational_intent(
             message,
@@ -9175,7 +9239,12 @@ class DeltaApp:
                     rendered_owner="conversational_runtime",
                 )
                 return
-        if is_teaching_followup_message(self.conversational_runtime_state, message):
+        if (
+            is_source_bound_semantic_recall_message(self.conversational_runtime_state, message)
+            or is_source_bound_semantic_competence_measurement_message(self.conversational_runtime_state, message)
+            or is_source_bound_semantic_analysis_message(self.conversational_runtime_state, message)
+            or is_source_bound_semantic_transfer_message(self.conversational_runtime_state, message)
+        ):
             if self._handle_conversational_runtime_message(message):
                 self._complete_dispatch_shadow_plan(
                     shadow_message_id,
@@ -10127,6 +10196,14 @@ class DeltaApp:
             )
             self._refresh_state_cards()
             return
+        if is_teaching_followup_message(self.conversational_runtime_state, message):
+            if self._handle_conversational_runtime_message(message):
+                self._complete_dispatch_shadow_plan(
+                    shadow_message_id,
+                    legacy_consumed=True,
+                    rendered_owner="conversational_runtime",
+                )
+                return
         payload = route_message(
             self.mode.get(),
             message,
