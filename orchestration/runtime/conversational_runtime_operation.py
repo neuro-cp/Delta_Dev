@@ -56,6 +56,11 @@ from orchestration.runtime.semantic_problem_modeling import (
     render_semantic_problem_frame,
     render_semantic_problem_recall,
 )
+from orchestration.runtime.evidence_bound_analysis import (
+    compile_evidence_bound_analysis,
+    render_evidence_bound_analysis,
+    render_evidence_bound_analysis_recall,
+)
 
 
 SCHEMA_VERSION = "conversational_runtime_operation_marathon_1_v1"
@@ -1105,6 +1110,20 @@ def _semantic_problem_frames_for_objective(
     )
 
 
+def _evidence_bound_analyses_for_objective(
+    objective: ConversationalObjective | None,
+) -> tuple[dict[str, Any], ...]:
+    """Read task-local analyses from the canonical objective provenance only."""
+
+    if objective is None or not isinstance(objective.provenance, Mapping):
+        return ()
+    return tuple(
+        dict(item)
+        for item in objective.provenance.get("evidence_bound_analyses", ())
+        if isinstance(item, Mapping)
+    )
+
+
 def _replace_teaching_objective(
     objective: ConversationalObjective,
     *,
@@ -1115,6 +1134,7 @@ def _replace_teaching_objective(
     semantic_analytical_tasks: Sequence[Mapping[str, Any]] | None = None,
     semantic_competence_deltas: Sequence[Mapping[str, Any]] | None = None,
     semantic_problem_frames: Sequence[Mapping[str, Any]] | None = None,
+    evidence_bound_analyses: Sequence[Mapping[str, Any]] | None = None,
     execution_constraints: Mapping[str, Any] | None = None,
 ) -> ConversationalObjective:
     provenance = dict(objective.provenance)
@@ -1137,6 +1157,10 @@ def _replace_teaching_objective(
     if semantic_problem_frames is not None:
         provenance["semantic_problem_frames"] = tuple(
             dict(item) for item in semantic_problem_frames
+        )
+    if evidence_bound_analyses is not None:
+        provenance["evidence_bound_analyses"] = tuple(
+            dict(item) for item in evidence_bound_analyses
         )
     if execution_constraints is not None:
         provenance["execution_constraints"] = dict(execution_constraints)
@@ -1229,6 +1253,8 @@ def _semantic_problem_frame_recall_candidate(
     for record in _semantic_problem_frames_for_objective(objective):
         frame = record.get("semantic_input_frame") if isinstance(record.get("semantic_input_frame"), Mapping) else record
         domain = str(frame.get("domain_guess") or "")
+        if focus == "equation" and domain != "physics_equation_model":
+            continue
         terms = _semantic_problem_frame_terms(record)
         score = len(message_terms & terms)
         if focus == "equation" and domain == "physics_equation_model":
@@ -1267,6 +1293,95 @@ def is_semantic_problem_frame_recall_message(
     return _semantic_problem_frame_recall_candidate(state, message) is not None
 
 
+def _evidence_bound_analysis_terms(record: Mapping[str, Any]) -> set[str]:
+    """Build a local selector vocabulary from one persisted analysis only."""
+
+    evidence = tuple(item for item in record.get("evidence_items", ()) if isinstance(item, Mapping))
+    text = " ".join(
+        str(value or "")
+        for value in (
+            record.get("domain"),
+            record.get("source_text"),
+            record.get("analysis_type"),
+            record.get("selected_method"),
+            record.get("method_rationale"),
+            record.get("result_summary"),
+            " ".join(str(item) for item in record.get("extracted_facts", ()) if str(item)),
+            " ".join(str(item.get("text") or "") for item in evidence),
+        )
+    )
+    return _semantic_transfer_terms(text)
+
+
+def _evidence_bound_analysis_recall_candidate(
+    state: ConversationalRuntimeState,
+    message: str,
+) -> tuple[dict[str, Any], str] | None:
+    """Resolve one explicit analysis recall without broad memory retrieval."""
+
+    objective = state.active_objective
+    if objective is None:
+        return None
+    normalized = " ".join(str(message or "").lower().split())
+    if not re.match(r"^(?:how|what|which|why|did|does|do|can|could)\b", normalized):
+        return None
+    if "bottleneck" in normalized or ("operational" in normalized and "identify" in normalized):
+        focus = "bottleneck"
+        target_domain = "operations_logistics_receivables"
+        required_terms = {"pump", "crew", "invoice", "delivery", "bottleneck"}
+    elif "incline" in normalized and "method" in normalized:
+        focus = "method"
+        target_domain = "physics_mechanics"
+        required_terms = {"incline", "newtonian", "force", "method"}
+    elif "sql" in normalized and "case" in normalized and any(
+        term in normalized for term in ("defensive", "defence", "security", "safe")
+    ):
+        focus = "defensive"
+        target_domain = "defensive_cybersecurity"
+        required_terms = {"sql", "defensive", "input", "parameter"}
+    elif "main" in normalized and "risks" in normalized and any(
+        term in normalized for term in ("finance", "financial", "portfolio", "market")
+    ):
+        focus = "finance_risk"
+        target_domain = "finance_portfolio_risk"
+        required_terms = {"portfolio", "finance", "risk", "concentration"}
+    elif re.search(r"\bf\s*=\s*m\s*a\b", normalized) and any(
+        term in normalized for term in ("validation", "check", "validate")
+    ):
+        focus = "validation"
+        target_domain = "physics_equation_model"
+        required_terms = {"force", "mass", "acceleration", "validation"}
+    else:
+        return None
+    message_terms = _semantic_transfer_terms(normalized)
+    candidates: list[tuple[int, dict[str, Any]]] = []
+    for record in _evidence_bound_analyses_for_objective(objective):
+        if str(record.get("status") or "") not in {"provisional_analysis", "recalled_read_only"}:
+            continue
+        terms = _evidence_bound_analysis_terms(record)
+        score = len(message_terms & terms)
+        if str(record.get("domain") or "") == target_domain:
+            score += 6
+        if terms & required_terms:
+            score += 2
+        if score:
+            candidates.append((score, record))
+    if not candidates:
+        return None
+    highest = max(score for score, _record in candidates)
+    selected = [record for score, record in candidates if score == highest]
+    return (dict(selected[0]), focus) if len(selected) == 1 else None
+
+
+def is_evidence_bound_analysis_recall_message(
+    state: ConversationalRuntimeState,
+    message: str,
+) -> bool:
+    """Expose only explicit task-local analysis recaps to the normal dispatcher."""
+
+    return _evidence_bound_analysis_recall_candidate(state, message) is not None
+
+
 def _apply_semantic_problem_modeling(
     state: ConversationalRuntimeState,
     message: str,
@@ -1293,7 +1408,28 @@ def _apply_semantic_problem_modeling(
             "created_at": utc_now(),
         }
         frames.append(record)
-    reply = render_semantic_problem_frame(record)
+    analyses = list(_evidence_bound_analyses_for_objective(objective))
+    analysis_compilation = compile_evidence_bound_analysis(record)
+    analysis = None
+    if analysis_compilation is not None:
+        analysis_id = analysis_compilation.analysis_id
+        analysis = next(
+            (item for item in analyses if str(item.get("analysis_id") or "") == analysis_id),
+            None,
+        )
+        if analysis is None:
+            analysis = {
+                **analysis_compilation.as_record(),
+                "objective_id": objective.objective_id,
+                "provenance_status": "active_objective_source_bound_provisional",
+                "created_at": utc_now(),
+            }
+            analyses.append(analysis)
+    reply = (
+        render_evidence_bound_analysis(analysis)
+        if isinstance(analysis, Mapping)
+        else render_semantic_problem_frame(record)
+    )
     user_turn = ConversationTurn(
         turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 1), message),
         role="user",
@@ -1323,9 +1459,28 @@ def _apply_semantic_problem_modeling(
             "source_turn_id": user_turn.turn_id,
             "at": utc_now(),
         },)
+    if isinstance(analysis, Mapping) and not any(
+        str(item.get("event") or "") == "evidence_bound_analysis_recorded"
+        and str(item.get("analysis_id") or "") == str(analysis.get("analysis_id") or "")
+        for item in progress
+        if isinstance(item, Mapping)
+    ):
+        progress = progress + ({
+            "event": "evidence_bound_analysis_recorded",
+            "objective_id": objective.objective_id,
+            "analysis_id": str(analysis.get("analysis_id") or ""),
+            "source_frame_id": frame_id,
+            "domain": str(analysis.get("domain") or compilation.semantic_input_frame.domain_guess),
+            "source_turn_id": user_turn.turn_id,
+            "at": utc_now(),
+        },)
     updated = _replace_state(
         state,
-        active_objective=_replace_teaching_objective(objective, semantic_problem_frames=frames),
+        active_objective=_replace_teaching_objective(
+            objective,
+            semantic_problem_frames=frames,
+            evidence_bound_analyses=analyses,
+        ),
         conversation=state.conversation + (user_turn, assistant_turn),
         objective_progress=progress,
     )
@@ -1334,7 +1489,12 @@ def _apply_semantic_problem_modeling(
         state=updated,
         intent=ConversationIntent(
             "semantic_problem_modeling", 0.98, "active_objective_provenance", "safe_internal", (),
-            ("deterministic_source_bound_frame", "no_graph_admission", "no_external_action"),
+            (
+                "deterministic_source_bound_frame",
+                "deterministic_evidence_bound_analysis",
+                "no_graph_admission",
+                "no_external_action",
+            ),
         ),
         reply=reply,
     )
@@ -1378,6 +1538,49 @@ def _apply_semantic_problem_frame_recall(
         intent=ConversationIntent(
             "semantic_problem_frame_recall", 0.98, "active_objective_provenance", "safe_internal", (),
             ("source_bound_frame", "read_only_recall", "no_new_frame"),
+        ),
+        reply=reply,
+    )
+
+
+def _apply_evidence_bound_analysis_recall(
+    state: ConversationalRuntimeState,
+    message: str,
+    *,
+    runtime_root: str | Path,
+) -> RuntimeTurnResult | None:
+    """Render one existing analysis as a read-only normal conversation turn."""
+
+    objective = state.active_objective
+    candidate = _evidence_bound_analysis_recall_candidate(state, message)
+    if objective is None or candidate is None:
+        return None
+    record, focus = candidate
+    reply = render_evidence_bound_analysis_recall(record, focus=focus)
+    user_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 1), message),
+        role="user",
+        text=message,
+        intent_type="semantic_evidence_bound_analysis_recall",
+        objective_id=objective.objective_id,
+    )
+    assistant_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
+        role="assistant",
+        text=reply,
+        intent_type="semantic_evidence_bound_analysis_recall_response",
+        objective_id=objective.objective_id,
+    )
+    updated = _replace_state(
+        state,
+        conversation=state.conversation + (user_turn, assistant_turn),
+    )
+    save_runtime_state(runtime_root, updated)
+    return RuntimeTurnResult(
+        state=updated,
+        intent=ConversationIntent(
+            "semantic_evidence_bound_analysis_recall", 0.98, "active_objective_provenance", "safe_internal", (),
+            ("source_bound_analysis", "read_only_recall", "no_new_analysis"),
         ),
         reply=reply,
     )
@@ -5864,6 +6067,13 @@ def handle_conversational_message(
     )
     if semantic_recall is not None:
         return semantic_recall
+    evidence_bound_analysis_recall = _apply_evidence_bound_analysis_recall(
+        state,
+        message,
+        runtime_root=runtime_root,
+    )
+    if evidence_bound_analysis_recall is not None:
+        return evidence_bound_analysis_recall
     semantic_problem_recall = _apply_semantic_problem_frame_recall(
         state,
         message,

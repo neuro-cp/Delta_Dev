@@ -41,6 +41,10 @@ class SemanticInputFrame:
     limitations: tuple[str, ...]
     risks: tuple[str, ...]
     source_spans: tuple[Mapping[str, Any], ...]
+    semantic_signature: Mapping[str, Any]
+    matched_roles: tuple[str, ...]
+    missing_roles: tuple[str, ...]
+    confidence_label: str
     schema_version: str = SCHEMA_VERSION
 
     def as_record(self) -> dict[str, Any]:
@@ -136,15 +140,50 @@ class SemanticProblemCompilation:
         }
 
 
+@dataclass(frozen=True)
+class _RoleExtraction:
+    """One deterministic semantic-role reading of an operator source.
+
+    This is deliberately local to the existing semantic-frame compiler.  It
+    makes the compiler's recognition boundary inspectable without creating a
+    second interpretation, persistence, or runtime owner.
+    """
+
+    domain: str
+    required_roles: tuple[str, ...]
+    role_values: Mapping[str, str]
+    source_spans: tuple[Mapping[str, Any], ...]
+
+    @property
+    def matched_roles(self) -> tuple[str, ...]:
+        return tuple(role for role in self.required_roles if str(self.role_values.get(role) or ""))
+
+    @property
+    def missing_roles(self) -> tuple[str, ...]:
+        return tuple(role for role in self.required_roles if role not in self.matched_roles)
+
+    @property
+    def is_complete(self) -> bool:
+        return not self.missing_roles
+
+    def value(self, role: str, fallback: str = "") -> str:
+        return str(self.role_values.get(role) or fallback)
+
+    def signature(self) -> Mapping[str, Any]:
+        return {
+            "domain": self.domain,
+            "required_roles": self.required_roles,
+            "role_signature": f"{self.domain}:" + "|".join(self.required_roles),
+            "role_values": dict(self.role_values),
+        }
+
+
 def extract_semantic_source_text(message: str) -> str:
     """Keep a raw input intact while dropping a short framing request when present."""
 
     normalized = " ".join(str(message or "").split()).strip()
     if not normalized:
         return ""
-    equation_match = re.search(r"\bf\s*=\s*m\s*a\b", normalized, flags=re.IGNORECASE)
-    if equation_match:
-        return "F = ma"
     if ":" in normalized:
         prefix, candidate = normalized.split(":", 1)
         if candidate.strip() and any(
@@ -167,41 +206,50 @@ def compile_semantic_problem_frame(
     source = extract_semantic_source_text(source_text)
     if not source:
         return None
-    normalized = " ".join(source.lower().split())
-    if re.search(r"\bf\s*=\s*m\s*a\b", normalized, flags=re.IGNORECASE):
+    equation_roles = _extract_newtons_second_law_roles(source)
+    if equation_roles.is_complete:
         return _compile_newtons_second_law(
             source,
             frame_scope_id=frame_scope_id,
             source_turn_id=source_turn_id,
             source_type=source_type,
+            roles=equation_roles,
         )
-    if _looks_like_incline_problem(normalized):
+    incline_roles = _extract_incline_roles(source)
+    if incline_roles.is_complete:
         return _compile_incline_problem(
             source,
             frame_scope_id=frame_scope_id,
             source_turn_id=source_turn_id,
             source_type=source_type,
+            roles=incline_roles,
         )
-    if _looks_like_defensive_sql_finding(normalized):
+    cyber_roles = _extract_defensive_sql_roles(source)
+    if cyber_roles.is_complete:
         return _compile_defensive_sql_finding(
             source,
             frame_scope_id=frame_scope_id,
             source_turn_id=source_turn_id,
             source_type=source_type,
+            roles=cyber_roles,
         )
-    if _looks_like_portfolio_risk(normalized):
+    portfolio_roles = _extract_portfolio_roles(source)
+    if portfolio_roles.is_complete:
         return _compile_portfolio_risk(
             source,
             frame_scope_id=frame_scope_id,
             source_turn_id=source_turn_id,
             source_type=source_type,
+            roles=portfolio_roles,
         )
-    if _looks_like_operations_dependency(normalized):
+    operations_roles = _extract_operations_roles(source)
+    if operations_roles.is_complete:
         return _compile_operations_dependency(
             source,
             frame_scope_id=frame_scope_id,
             source_turn_id=source_turn_id,
             source_type=source_type,
+            roles=operations_roles,
         )
     return None
 
@@ -335,6 +383,82 @@ def _spans(source: str, items: tuple[tuple[str, str], ...]) -> tuple[Mapping[str
     return tuple(values)
 
 
+def _merge_spans(*groups: tuple[Mapping[str, Any], ...]) -> tuple[Mapping[str, Any], ...]:
+    """Merge provenance spans without discarding the role that found them."""
+
+    values: list[Mapping[str, Any]] = []
+    seen: set[tuple[str, int, int]] = set()
+    for group in groups:
+        for span in group:
+            if not isinstance(span, Mapping):
+                continue
+            kind = str(span.get("kind") or "source_text")
+            start = int(span.get("start") or 0)
+            end = int(span.get("end") or 0)
+            key = (kind, start, end)
+            if key in seen:
+                continue
+            seen.add(key)
+            values.append(dict(span))
+    return tuple(values)
+
+
+def _role_span(source: str, match: re.Match[str], role: str, group: str | int = 0) -> Mapping[str, Any]:
+    return {
+        "kind": f"role:{role}",
+        "text": source[match.start(group):match.end(group)],
+        "start": match.start(group),
+        "end": match.end(group),
+    }
+
+
+def _role_entry(
+    source: str,
+    role: str,
+    match: re.Match[str] | None,
+    *,
+    group: str | int = 0,
+    value: str = "",
+) -> tuple[str, str, Mapping[str, Any]] | None:
+    if match is None:
+        return None
+    label = _clean_capture(value or match.group(group))
+    if not label:
+        return None
+    return role, label, _role_span(source, match, role, group)
+
+
+def _make_role_extraction(
+    domain: str,
+    required_roles: tuple[str, ...],
+    entries: tuple[tuple[str, str, Mapping[str, Any]] | None, ...],
+) -> _RoleExtraction:
+    values: dict[str, str] = {}
+    spans: list[Mapping[str, Any]] = []
+    for entry in entries:
+        if entry is None:
+            continue
+        role, value, span = entry
+        if role not in values:
+            values[role] = value
+            spans.append(span)
+    return _RoleExtraction(
+        domain=domain,
+        required_roles=required_roles,
+        role_values=values,
+        source_spans=tuple(spans),
+    )
+
+
+def _frame_role_fields(roles: _RoleExtraction) -> Mapping[str, Any]:
+    return {
+        "semantic_signature": roles.signature(),
+        "matched_roles": roles.matched_roles,
+        "missing_roles": roles.missing_roles,
+        "confidence_label": "deterministic_pattern_match",
+    }
+
+
 def _entity(source: str, label: str, role: str) -> Mapping[str, Any]:
     item: dict[str, Any] = {"label": label, "role": role}
     span = _span(source, label, "entity")
@@ -358,14 +482,93 @@ def _render_relationship(item: Mapping[str, Any]) -> str:
     return " ".join(part for part in (subject, predicate, obj) if part)
 
 
+def _extract_operations_roles(source: str) -> _RoleExtraction:
+    """Recognize a logistics dependency from its required semantic roles.
+
+    The roles intentionally require both the receivable and the blocked-work
+    dependency.  A dashboard that merely mentions invoices or jobs therefore
+    remains ordinary conversation rather than becoming a false analysis.
+    """
+
+    invoice_match = re.search(
+        r"\b(?:invoice|receivable)\s*(?:#\s*)?(?P<identifier>[A-Za-z0-9-]+)\b",
+        source,
+        flags=re.IGNORECASE,
+    )
+    overdue_match = re.search(
+        r"\b(?P<duration>\d+(?:\.\d+)?\s*(?:days?|weeks?|months?))\s+(?:overdue|unpaid)\b",
+        source,
+        flags=re.IGNORECASE,
+    ) or re.search(
+        r"\b(?:overdue|unpaid)\s+(?:(?:for|by)\s+)?(?P<duration>\d+(?:\.\d+)?\s*(?:days?|weeks?|months?))\b",
+        source,
+        flags=re.IGNORECASE,
+    )
+    crew_match = re.search(r"\b(?P<crew>(?:crew|team)\s+[A-Za-z0-9-]+)\b", source, flags=re.IGNORECASE)
+    job_match = re.search(
+        r"\b(?:start|begin|starting)\s+(?:the\s+)?(?P<job>[A-Za-z0-9][A-Za-z0-9\s-]{0,60}?)\s+(?:until|because)\b",
+        source,
+        flags=re.IGNORECASE,
+    ) or re.search(
+        r"\bbefore\s+(?:the\s+)?(?:crew|team)\s+[A-Za-z0-9-]+\s+can\s+start\s+(?:the\s+)?(?P<job>[A-Za-z0-9][A-Za-z0-9\s-]{0,60}?)(?:,|[.!?]|$)",
+        source,
+        flags=re.IGNORECASE,
+    ) or re.search(
+        r"\bbefore\s+(?:the\s+)?(?P<job>[A-Za-z0-9][A-Za-z0-9\s-]{0,60}?)\s+can\s+start\b",
+        source,
+        flags=re.IGNORECASE,
+    ) or re.search(
+        r"\bblocked\s+from\s+starting\s+(?:the\s+)?(?P<job>[A-Za-z0-9][A-Za-z0-9\s-]{0,60}?)(?:[.!?]|$)",
+        source,
+        flags=re.IGNORECASE,
+    )
+    resource_match = re.search(
+        r"\b(?:until|because)\s+(?:the\s+)?(?P<resource>[A-Za-z][A-Za-z0-9-]*(?:\s+[A-Za-z0-9-]+){0,3}?)\s+(?:is\s+)?(?:still\s+)?(?:not\s+)?(?:delivered|available|arrives?|pending\s+delivery)\b",
+        source,
+        flags=re.IGNORECASE,
+    ) or re.search(
+        r"\b(?:the\s+)?(?P<resource>[A-Za-z][A-Za-z0-9-]*(?:\s+[A-Za-z0-9-]+){0,3}?)\s+(?:must\s+be|has\s+not\s+been|is\s+still\s+pending)\s+(?:delivered|delivery)\b",
+        source,
+        flags=re.IGNORECASE,
+    )
+    blocking_match = re.search(
+        r"\b(?:cannot|can't|is\s+unable\s+to|blocked\s+from)\s+(?:begin|start|starting)\b",
+        source,
+        flags=re.IGNORECASE,
+    ) or re.search(r"\bbefore\b.+\bcan\s+start\b", source, flags=re.IGNORECASE)
+    return _make_role_extraction(
+        "operations_logistics_receivables",
+        (
+            "receivable_or_invoice_state",
+            "overdue_or_unpaid_time_relation",
+            "work_party_or_crew",
+            "work_item_or_job",
+            "blocking_dependency",
+            "delivery_or_resource_condition",
+        ),
+        (
+            _role_entry(source, "receivable_or_invoice_state", invoice_match),
+            _role_entry(source, "overdue_or_unpaid_time_relation", overdue_match),
+            _role_entry(source, "work_party_or_crew", crew_match, group="crew"),
+            _role_entry(source, "work_item_or_job", job_match, group="job"),
+            _role_entry(source, "blocking_dependency", blocking_match),
+            _role_entry(source, "delivery_or_resource_condition", resource_match, group="resource"),
+        ),
+    )
+
+
 def _looks_like_operations_dependency(text: str) -> bool:
-    overdue_invoice = "invoice" in text and "overdue" in text
-    blocked_start = bool(re.search(r"\bcrew\s+\S+\s+(?:cannot|can't|is unable to)\s+start\b", text))
-    delivery_dependency = bool(re.search(r"\buntil\b.+\b(?:delivered|available|arrives?)\b", text))
-    return overdue_invoice and blocked_start and delivery_dependency
+    return _extract_operations_roles(text).is_complete
 
 
-def _compile_operations_dependency(source: str, *, frame_scope_id: str, source_turn_id: str, source_type: str) -> SemanticProblemCompilation:
+def _compile_operations_dependency(
+    source: str,
+    *,
+    frame_scope_id: str,
+    source_turn_id: str,
+    source_type: str,
+    roles: _RoleExtraction,
+) -> SemanticProblemCompilation:
     invoice_match = re.search(r"\binvoice\s*(?:#\s*)?(?P<invoice>[A-Za-z0-9-]+)", source, flags=re.IGNORECASE)
     overdue_match = re.search(r"\boverdue\s+(?P<value>\d+(?:\.\d+)?)\s*(?P<unit>days?|weeks?|months?)\b", source, flags=re.IGNORECASE)
     if overdue_match is None:
@@ -375,13 +578,14 @@ def _compile_operations_dependency(source: str, *, frame_scope_id: str, source_t
         source,
         flags=re.IGNORECASE,
     )
-    invoice = f"Invoice #{invoice_match.group('invoice')}" if invoice_match else "Invoice"
-    crew = f"Crew {dependency_match.group('crew')}" if dependency_match else "Crew"
-    job = _clean_capture(dependency_match.group("job")) if dependency_match else "job start"
-    resource = _clean_capture(dependency_match.group("resource")) if dependency_match else "delivery dependency"
-    duration_value = overdue_match.group("value") if overdue_match else ""
-    duration_unit = overdue_match.group("unit").lower() if overdue_match else ""
-    duration_text = overdue_match.group(0) if overdue_match else ""
+    invoice = roles.value("receivable_or_invoice_state") or (f"Invoice #{invoice_match.group('invoice')}" if invoice_match else "Invoice")
+    crew = roles.value("work_party_or_crew") or (f"Crew {dependency_match.group('crew')}" if dependency_match else "Crew")
+    job = roles.value("work_item_or_job") or (_clean_capture(dependency_match.group("job")) if dependency_match else "job start")
+    resource = roles.value("delivery_or_resource_condition") or (_clean_capture(dependency_match.group("resource")) if dependency_match else "delivery dependency")
+    duration_text = roles.value("overdue_or_unpaid_time_relation") or (overdue_match.group(0) if overdue_match else "")
+    duration_match = re.search(r"(?P<value>\d+(?:\.\d+)?)\s*(?P<unit>days?|weeks?|months?)", duration_text, flags=re.IGNORECASE)
+    duration_value = duration_match.group("value") if duration_match else ""
+    duration_unit = duration_match.group("unit").lower() if duration_match else ""
     frame_id = _frame_id(frame_scope_id, "operations_logistics", source)
     entities = (
         _entity(source, invoice, "receivable"),
@@ -429,7 +633,11 @@ def _compile_operations_dependency(source: str, *, frame_scope_id: str, source_t
         status="provisional_interpreted",
         limitations=("The note does not establish payment status, delivery ETA, alternate availability, or client priority.",),
         risks=risks,
-        source_spans=_spans(source, ((invoice, "entity"), (crew, "entity"), (job, "entity"), (resource, "entity"), (duration_text, "quantity"))),
+        source_spans=_merge_spans(
+            _spans(source, ((invoice, "entity"), (crew, "entity"), (job, "entity"), (resource, "entity"), (duration_text, "quantity"))),
+            roles.source_spans,
+        ),
+        **_frame_role_fields(roles),
     )
     model = ProblemModel(
         problem_model_id=_problem_model_id(frame_id, "dependency_and_receivables_risk"),
@@ -458,13 +666,53 @@ def _compile_operations_dependency(source: str, *, frame_scope_id: str, source_t
     return SemanticProblemCompilation(frame, model, None, affordances, "The note describes two linked operational pressures: an overdue receivable and a delivery dependency that prevents the crew from starting the named job.")
 
 
+def _extract_incline_roles(source: str) -> _RoleExtraction:
+    body_match = re.search(r"\b(?P<body>block|object|body)\b", source, flags=re.IGNORECASE)
+    surface_match = re.search(r"\b(?P<surface>incline|ramp|slope)\b", source, flags=re.IGNORECASE)
+    angle_match = re.search(r"\b(?P<angle>\d+(?:\.\d+)?)(?:\s*\u00b0|\s*-?\s*degrees?)\b", source, flags=re.IGNORECASE)
+    friction_match = re.search(
+        r"\b(?P<friction>frictionless|without\s+friction|ignoring\s+friction|ignore\s+friction)\b",
+        source,
+        flags=re.IGNORECASE,
+    )
+    motion_match = re.search(
+        r"\b(?P<motion>acceleration|accelerat(?:e|es|ing)|slides?|released|moves?\s+down|down)\b",
+        source,
+        flags=re.IGNORECASE,
+    )
+    return _make_role_extraction(
+        "physics_mechanics",
+        (
+            "body",
+            "inclined_surface",
+            "incline_angle",
+            "friction_condition",
+            "motion_or_requested_output",
+        ),
+        (
+            _role_entry(source, "body", body_match, group="body"),
+            _role_entry(source, "inclined_surface", surface_match, group="surface"),
+            _role_entry(source, "incline_angle", angle_match, group="angle"),
+            _role_entry(source, "friction_condition", friction_match, group="friction"),
+            _role_entry(source, "motion_or_requested_output", motion_match, group="motion"),
+        ),
+    )
+
+
 def _looks_like_incline_problem(text: str) -> bool:
-    return "incline" in text and ("frictionless" in text or "friction" in text) and ("block" in text or "slides" in text)
+    return _extract_incline_roles(text).is_complete
 
 
-def _compile_incline_problem(source: str, *, frame_scope_id: str, source_turn_id: str, source_type: str) -> SemanticProblemCompilation:
+def _compile_incline_problem(
+    source: str,
+    *,
+    frame_scope_id: str,
+    source_turn_id: str,
+    source_type: str,
+    roles: _RoleExtraction,
+) -> SemanticProblemCompilation:
     mass_match = re.search(r"\b(?P<value>\d+(?:\.\d+)?)\s*kg\b", source, flags=re.IGNORECASE)
-    angle_match = re.search(r"\b(?P<value>\d+(?:\.\d+)?)\s*(?:\u00b0|degrees?)\b", source, flags=re.IGNORECASE)
+    angle_match = re.search(r"\b(?P<value>\d+(?:\.\d+)?)(?:\s*\u00b0|\s*-?\s*degrees?)\b", source, flags=re.IGNORECASE)
     mass = mass_match.group("value") if mass_match else "not supplied"
     angle = angle_match.group("value") if angle_match else "not supplied"
     frame_id = _frame_id(frame_scope_id, "physics_incline_problem", source)
@@ -476,7 +724,10 @@ def _compile_incline_problem(source: str, *, frame_scope_id: str, source_turn_id
         source_text=source,
         source_type=source_type,
         domain_guess="physics_mechanics",
-        entities=(_entity(source, "block", "system_body"), _entity(source, "incline", "constraint_surface")),
+        entities=(
+            _entity(source, roles.value("body", "block"), "system_body"),
+            _entity(source, roles.value("inclined_surface", "incline"), "constraint_surface"),
+        ),
         quantities=tuple(item for item in (
             _quantity(source, "mass", mass, "kg", mass_match.group(0) if mass_match else ""),
             _quantity(source, "incline angle", angle, "degrees", angle_match.group(0) if angle_match else ""),
@@ -494,7 +745,11 @@ def _compile_incline_problem(source: str, *, frame_scope_id: str, source_turn_id
         status="provisional_interpreted",
         limitations=("The frame models the problem; it does not claim an experimental measurement or solve an unstated variant.",),
         risks=(),
-        source_spans=_spans(source, (("block", "entity"), ("incline", "entity"), (mass_match.group(0) if mass_match else "", "quantity"), (angle_match.group(0) if angle_match else "", "quantity"), ("frictionless", "constraint"))),
+        source_spans=_merge_spans(
+            _spans(source, ((roles.value("body", "block"), "entity"), (roles.value("inclined_surface", "incline"), "entity"), (mass_match.group(0) if mass_match else "", "quantity"), (angle_match.group(0) if angle_match else "", "quantity"), (roles.value("friction_condition", "frictionless"), "constraint"))),
+            roles.source_spans,
+        ),
+        **_frame_role_fields(roles),
     )
     model = ProblemModel(
         problem_model_id=_problem_model_id(frame_id, "frictionless_incline_acceleration"),
@@ -523,11 +778,55 @@ def _compile_incline_problem(source: str, *, frame_scope_id: str, source_turn_id
     return SemanticProblemCompilation(frame, model, None, affordances, "The block-and-incline system is a frictionless mechanics problem whose target is acceleration along the plane, not the normal force or a generic equation lookup.")
 
 
+def _extract_defensive_sql_roles(source: str) -> _RoleExtraction:
+    normalized = " ".join(source.lower().split())
+    safe_binding = bool(re.search(
+        r"\b(?:uses?|with|via)\s+(?:a\s+)?(?:prepared\s+statement|parameterized\s+quer(?:y|ies)|bound\s+parameter|parameter\s+binding)\b",
+        normalized,
+    )) or bool(re.search(r"\binput\s+(?:is\s+)?validated\s+as\s+(?:a\s+)?bound\s+parameter\b", normalized))
+    explicit_binding_absence = bool(re.search(r"\b(?:without|no|not)\s+(?:parameter(?:ized)?\s+binding|parameterization|binding)\b", normalized))
+    if safe_binding and not explicit_binding_absence:
+        return _make_role_extraction("defensive_cybersecurity", ("unsafe_construction",), ())
+    source_match = re.search(
+        r"\b(?P<input>user(?:[-\s]?(?:controlled|supplied))?\s+(?:input|text)|request\s+parameter|external\s+input|untrusted\s+input|input)\b",
+        source,
+        flags=re.IGNORECASE,
+    )
+    sink_match = re.search(
+        r"\b(?P<sink>sql(?:\s+(?:query|command|statement|execution))?|database\s+query)\b",
+        source,
+        flags=re.IGNORECASE,
+    )
+    construction_match = re.search(
+        r"\b(?P<construction>concatenat(?:e|ed|ing|ion)?|string[-\s]?build|interpolat(?:e|ed|ing|ion)?|append(?:ed|ing)?|without\s+(?:parameter(?:ized)?\s+binding|parameterization|binding))\b",
+        source,
+        flags=re.IGNORECASE,
+    )
+    execution_match = re.search(r"\b(?P<execution>execut(?:e|ed|ion)|run)\b", source, flags=re.IGNORECASE)
+    return _make_role_extraction(
+        "defensive_cybersecurity",
+        ("untrusted_input", "sql_command_sink", "unsafe_construction"),
+        (
+            _role_entry(source, "untrusted_input", source_match, group="input"),
+            _role_entry(source, "sql_command_sink", sink_match, group="sink"),
+            _role_entry(source, "unsafe_construction", construction_match, group="construction"),
+            _role_entry(source, "execution_boundary", execution_match, group="execution"),
+        ),
+    )
+
+
 def _looks_like_defensive_sql_finding(text: str) -> bool:
-    return ("sql" in text or "database query" in text) and "input" in text and any(term in text for term in ("concatenat", "string build", "interpolat"))
+    return _extract_defensive_sql_roles(text).is_complete
 
 
-def _compile_defensive_sql_finding(source: str, *, frame_scope_id: str, source_turn_id: str, source_type: str) -> SemanticProblemCompilation:
+def _compile_defensive_sql_finding(
+    source: str,
+    *,
+    frame_scope_id: str,
+    source_turn_id: str,
+    source_type: str,
+    roles: _RoleExtraction,
+) -> SemanticProblemCompilation:
     frame_id = _frame_id(frame_scope_id, "defensive_sql_source_to_sink", source)
     constraints = ("External input crosses into a database command construction path.", "No exploit behavior or target-specific instruction is produced by this frame.")
     mitigation = "Use parameterized queries or prepared statements, validate input at the boundary, and apply least-privilege database access."
@@ -538,9 +837,9 @@ def _compile_defensive_sql_finding(source: str, *, frame_scope_id: str, source_t
         source_type=source_type,
         domain_guess="defensive_cybersecurity",
         entities=(
-            _entity(source, "User input", "untrusted_source"),
-            _entity(source, "SQL query", "database_command_sink"),
-            _entity(source, "execution", "command_execution_boundary"),
+            _entity(source, roles.value("untrusted_input", "User input"), "untrusted_source"),
+            _entity(source, roles.value("sql_command_sink", "SQL query"), "database_command_sink"),
+            _entity(source, roles.value("execution_boundary", "execution"), "command_execution_boundary"),
         ),
         quantities=(),
         relationships=(
@@ -559,7 +858,11 @@ def _compile_defensive_sql_finding(source: str, *, frame_scope_id: str, source_t
         status="provisional_interpreted",
         limitations=("This is a defensive classification, not exploit validation, target instruction, or an offensive chain.",),
         risks=("SQL injection candidate caused by untrusted input reaching a command sink through concatenation",),
-        source_spans=_spans(source, (("User input", "entity"), ("SQL query", "entity"), ("execution", "entity"), ("concatenated", "relationship"))),
+        source_spans=_merge_spans(
+            _spans(source, ((roles.value("untrusted_input", "User input"), "entity"), (roles.value("sql_command_sink", "SQL query"), "entity"), (roles.value("execution_boundary", "execution"), "entity"), (roles.value("unsafe_construction", "concatenated"), "relationship"))),
+            roles.source_spans,
+        ),
+        **_frame_role_fields(roles),
     )
     model = ProblemModel(
         problem_model_id=_problem_model_id(frame_id, "defensive_source_to_sink_review"),
@@ -588,22 +891,71 @@ def _compile_defensive_sql_finding(source: str, *, frame_scope_id: str, source_t
     return SemanticProblemCompilation(frame, model, None, affordances, "The statement describes a defensive source-to-sink finding: untrusted input is crossing into SQL command construction, so the safe focus is parameterization and boundary validation rather than exploitation.")
 
 
+def _portfolio_allocation_matches(source: str) -> tuple[re.Match[str], ...]:
+    pattern = re.compile(
+        r"\b(?P<weight>\d+(?:\.\d+)?)\s*(?:%|percent)\s*(?:of\s+)?(?P<asset>.+?)(?=(?:,|;|\.|\band\s+\d+(?:\.\d+)?\s*(?:%|percent)\b|$))",
+        flags=re.IGNORECASE,
+    )
+    return tuple(pattern.finditer(source))
+
+
+def _extract_portfolio_roles(source: str) -> _RoleExtraction:
+    allocations = _portfolio_allocation_matches(source)
+    portfolio_match = re.search(r"\b(?P<portfolio>portfolio|account|allocation)\b", source, flags=re.IGNORECASE)
+    horizon_match = re.search(
+        r"\b(?P<horizon>(?:one|two|three|four|five|six|seven|eight|nine|ten|\d+)\s*(?:-|\s)?(?:day|week|month|year)s?|half[-\s]?year)\b",
+        source,
+        flags=re.IGNORECASE,
+    )
+    scenario_match = re.search(
+        r"\b(?P<scenario>(?:(?:ai|technology|tech|growth)[A-Za-z\s/-]{0,45}(?:correction|drops?|dropp(?:ed|ing)|drawdown|declines?|declin(?:ed|ing)|sell[-\s]?off)|(?:correction|drops?|dropp(?:ed|ing)|drawdown|declines?|declin(?:ed|ing)|sell[-\s]?off)[A-Za-z\s/-]{0,45}(?:ai|technology|tech|growth)))\b",
+        source,
+        flags=re.IGNORECASE,
+    )
+    concentration_match = re.search(r"\b(?P<concentration>high[-\s]?growth|tech(?:nology)?|ai|small[-\s]?cap)\b", source, flags=re.IGNORECASE)
+    allocation_entry = None
+    if len(allocations) >= 2:
+        first = allocations[0]
+        allocation_entry = (
+            "allocation_composition",
+            _clean_capture(first.group(0)),
+            _role_span(source, first, "allocation_composition"),
+        )
+    return _make_role_extraction(
+        "finance_portfolio_risk",
+        ("portfolio_context", "allocation_composition", "concentration_exposure", "time_horizon", "stress_scenario"),
+        (
+            _role_entry(source, "portfolio_context", portfolio_match, group="portfolio"),
+            allocation_entry,
+            _role_entry(source, "concentration_exposure", concentration_match, group="concentration"),
+            _role_entry(source, "time_horizon", horizon_match, group="horizon"),
+            _role_entry(source, "stress_scenario", scenario_match, group="scenario"),
+        ),
+    )
+
+
 def _looks_like_portfolio_risk(text: str) -> bool:
-    return "portfolio" in text and bool(re.search(r"\b\d+(?:\.\d+)?\s*%", text))
+    return _extract_portfolio_roles(text).is_complete
 
 
-def _compile_portfolio_risk(source: str, *, frame_scope_id: str, source_turn_id: str, source_type: str) -> SemanticProblemCompilation:
+def _compile_portfolio_risk(
+    source: str,
+    *,
+    frame_scope_id: str,
+    source_turn_id: str,
+    source_type: str,
+    roles: _RoleExtraction,
+) -> SemanticProblemCompilation:
     allocations = []
-    for match in re.finditer(r"(?P<weight>\d+(?:\.\d+)?)\s*%\s*(?P<asset>[^,.;]+)", source, flags=re.IGNORECASE):
+    for match in _portfolio_allocation_matches(source):
         asset = _clean_capture(match.group("asset"))
         if asset:
             allocations.append((match.group("weight"), asset, match.group(0)))
-    horizon_match = re.search(r"\b(?P<value>one|two|three|four|five|six|seven|eight|nine|ten|\d+)[-\s](?P<unit>day|week|month|year)s?\b", source, flags=re.IGNORECASE)
+    horizon_match = re.search(r"\b(?P<value>one|two|three|four|five|six|seven|eight|nine|ten|\d+)[-\s]?(?P<unit>day|week|month|year)s?\b", source, flags=re.IGNORECASE)
+    if horizon_match is None:
+        horizon_match = re.search(r"\b(?P<value>half)[-\s]?(?P<unit>year)\b", source, flags=re.IGNORECASE)
     horizon_text = horizon_match.group(0) if horizon_match else "not supplied"
-    scenario_match = re.search(r"\b(?:worr(?:y|ies)|concern(?:ed)?\s+about)\s+(?:a|an|the)?\s*(?P<scenario>.+?)(?:[.!?]|$)", source, flags=re.IGNORECASE)
-    scenario = _clean_capture(scenario_match.group("scenario")) if scenario_match else "sector correction scenario"
-    if "ai" in source.lower() or "tech" in source.lower():
-        scenario = "AI/tech correction scenario"
+    scenario = roles.value("stress_scenario", "sector correction scenario")
     frame_id = _frame_id(frame_scope_id, "finance_portfolio_risk", source)
     entities = tuple(_entity(source, asset, "portfolio_exposure") for _weight, asset, _source in allocations)
     quantities = tuple(_quantity(source, "allocation", weight, "percent", raw) for weight, _asset, raw in allocations)
@@ -645,7 +997,8 @@ def _compile_portfolio_risk(source: str, *, frame_scope_id: str, source_turn_id:
         status="provisional_interpreted",
         limitations=("This is a risk frame, not personalized investment advice, a live valuation, or a trade instruction.",),
         risks=risks,
-        source_spans=_spans(source, span_items),
+        source_spans=_merge_spans(_spans(source, span_items), roles.source_spans),
+        **_frame_role_fields(roles),
     )
     model = ProblemModel(
         problem_model_id=_problem_model_id(frame_id, "portfolio_concentration_scenario"),
@@ -670,18 +1023,58 @@ def _compile_portfolio_risk(source: str, *, frame_scope_id: str, source_turn_id:
     return SemanticProblemCompilation(frame, model, None, affordances, "The portfolio is framed as a six-month concentration and scenario-risk question, with a cash buffer and data limits that must be understood before any supervised decision proposal.")
 
 
-def _compile_newtons_second_law(source: str, *, frame_scope_id: str, source_turn_id: str, source_type: str) -> SemanticProblemCompilation:
+def _extract_newtons_second_law_roles(source: str) -> _RoleExtraction:
+    equation_match = re.search(r"\b(?P<equation>f\s*=\s*m\s*a)\b", source, flags=re.IGNORECASE) or re.search(
+        r"\b(?P<equation>force\s+equals\s+mass\s+times\s+acceleration)\b",
+        source,
+        flags=re.IGNORECASE,
+    )
+    purpose_match = re.search(
+        r"\b(?P<purpose>explain|mean(?:ing)?|model|solve|solving|use|understand)\b",
+        source,
+        flags=re.IGNORECASE,
+    )
+    variable_match = re.search(
+        r"\b(?P<variables>force|mass|acceleration)\b",
+        source,
+        flags=re.IGNORECASE,
+    )
+    return _make_role_extraction(
+        "physics_equation_model",
+        ("equation_expression", "modeled_variables"),
+        (
+            _role_entry(source, "equation_expression", equation_match, group="equation"),
+            _role_entry(
+                source,
+                "modeled_variables",
+                variable_match or equation_match,
+                group="variables" if variable_match else "equation",
+                value="force, mass, acceleration" if equation_match else "",
+            ),
+            _role_entry(source, "modeling_intent", purpose_match, group="purpose"),
+        ),
+    )
+
+
+def _compile_newtons_second_law(
+    source: str,
+    *,
+    frame_scope_id: str,
+    source_turn_id: str,
+    source_type: str,
+    roles: _RoleExtraction,
+) -> SemanticProblemCompilation:
     frame_id = _frame_id(frame_scope_id, "physics_equation_model", source)
     frame = SemanticInputFrame(
         frame_id=frame_id,
         source_turn_id=source_turn_id,
-        source_text="F = ma",
+        source_text=source,
         source_type=source_type,
         domain_guess="physics_equation_model",
         entities=(
-            _entity("F = ma", "net force", "modeled_quantity"),
-            _entity("F = ma", "mass", "system_property"),
-            _entity("F = ma", "acceleration", "motion_response"),
+            _entity(source, "net force", "modeled_quantity"),
+            _entity(source, "mass", "system_property"),
+            _entity(source, "acceleration", "motion_response"),
         ),
         quantities=(),
         relationships=({"subject": "net force", "predicate": "equals", "object": "mass times acceleration"},),
@@ -697,7 +1090,11 @@ def _compile_newtons_second_law(source: str, *, frame_scope_id: str, source_turn
         status="provisional_interpreted",
         limitations=("The equation is a model, not a complete description of every force or a substitute for a free-body diagram.",),
         risks=(),
-        source_spans=_spans("F = ma", (("F", "variable"), ("m", "variable"), ("a", "variable"))),
+        source_spans=_merge_spans(
+            _spans(source, (("F", "variable"), ("m", "variable"), ("a", "variable"), ("force", "variable"), ("mass", "variable"), ("acceleration", "variable"))),
+            roles.source_spans,
+        ),
+        **_frame_role_fields(roles),
     )
     equation = EquationUnderstandingFrame(
         equation_frame_id=stable_id("equation-understanding-frame", frame_id, "F=ma"),

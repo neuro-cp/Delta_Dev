@@ -118,6 +118,7 @@ from orchestration.runtime.conversational_runtime_operation import (  # noqa: E4
     is_developmental_governance_message,
     is_source_bound_semantic_analysis_message,
     is_source_bound_semantic_competence_measurement_message,
+    is_evidence_bound_analysis_recall_message,
     is_semantic_problem_frame_recall_message,
     is_semantic_problem_modeling_message,
     is_source_bound_semantic_recall_message,
@@ -7623,6 +7624,7 @@ class DeltaApp:
             return True
         if (
             is_source_bound_semantic_recall_message(state, message)
+            or is_evidence_bound_analysis_recall_message(state, message)
             or is_semantic_problem_frame_recall_message(state, message)
             or is_semantic_problem_modeling_message(state, message)
             or is_source_bound_semantic_competence_measurement_message(state, message)
@@ -7651,25 +7653,34 @@ class DeltaApp:
                 objective = result.state.active_objective
                 if result.intent.intent_type in {
                     "semantic_source_bound_recall",
+                    "semantic_evidence_bound_analysis_recall",
                     "semantic_problem_frame_recall",
                 }:
                     self._append_observation(
                         (
+                            "Evidence-bound analysis"
+                            if result.intent.intent_type == "semantic_evidence_bound_analysis_recall"
+                            else (
                             "Semantic frame"
                             if result.intent.intent_type == "semantic_problem_frame_recall"
                             else "Semantic lineage"
+                            )
                         ),
                         (
+                            "Rendered a read-only source-bound analysis recap without changing the recorded analysis."
+                            if result.intent.intent_type == "semantic_evidence_bound_analysis_recall"
+                            else (
                             "Rendered a read-only source-bound frame recap without changing the recorded frame."
                             if result.intent.intent_type == "semantic_problem_frame_recall"
                             else "Rendered a read-only source-bound recap without changing the recorded semantic chain."
+                            )
                         ),
                     )
                 else:
                     record_key = {
                         "semantic_competence_delta_measurement": "semantic_competence_deltas",
                         "semantic_multistep_analytical_task": "semantic_analytical_tasks",
-                        "semantic_problem_modeling": "semantic_problem_frames",
+                        "semantic_problem_modeling": "evidence_bound_analyses",
                     }.get(result.intent.intent_type, "semantic_transfer_applications")
                     records = (
                         objective.provenance.get(record_key, ())
@@ -7681,19 +7692,27 @@ class DeltaApp:
                         title = {
                             "semantic_competence_deltas": "Competence delta",
                             "semantic_analytical_tasks": "Semantic analysis",
-                            "semantic_problem_frames": "Semantic frame",
+                            "evidence_bound_analyses": "Evidence-bound analysis",
                         }.get(record_key, "Semantic transfer")
                         record_id = str(
                             record.get("competence_delta_id")
                             or record.get("analytical_task_id")
+                            or record.get("analysis_id")
                             or record.get("frame_id")
                             or record.get("application_record_id")
                             or ""
                         )
-                        self._append_observation(
-                            title,
-                            f"Recorded provisional source-bound {record_key.replace('_', ' ')} {record_id}.",
-                        )
+                        if record_key == "evidence_bound_analyses":
+                            self._append_observation(
+                                title,
+                                "Recorded provisional source-bound semantic frame "
+                                f"{str(record.get('source_frame_id') or '')} and evidence-bound analysis {record_id}.",
+                            )
+                        else:
+                            self._append_observation(
+                                title,
+                                f"Recorded provisional source-bound {record_key.replace('_', ' ')} {record_id}.",
+                            )
                 self._refresh_conversational_runtime_status()
                 self._refresh_state_cards()
                 return True
@@ -9267,6 +9286,7 @@ class DeltaApp:
                 return
         if (
             is_source_bound_semantic_recall_message(self.conversational_runtime_state, message)
+            or is_evidence_bound_analysis_recall_message(self.conversational_runtime_state, message)
             or is_semantic_problem_frame_recall_message(self.conversational_runtime_state, message)
             or is_semantic_problem_modeling_message(self.conversational_runtime_state, message)
             or is_source_bound_semantic_competence_measurement_message(self.conversational_runtime_state, message)
