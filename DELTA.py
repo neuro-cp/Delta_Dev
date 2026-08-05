@@ -119,6 +119,7 @@ from orchestration.runtime.conversational_runtime_operation import (  # noqa: E4
     is_source_bound_semantic_analysis_message,
     is_source_bound_semantic_competence_measurement_message,
     is_evidence_bound_analysis_recall_message,
+    is_evidence_bound_analysis_refinement_recall_message,
     is_semantic_problem_frame_recall_message,
     is_semantic_problem_modeling_message,
     is_source_bound_semantic_recall_message,
@@ -7614,6 +7615,21 @@ class DeltaApp:
             self._append_chat("DELTA", resolved.reply)
             self._append_session("user", message)
             self._append_session("assistant", resolved.reply)
+            if resolved.intent.intent_type == "semantic_evidence_bound_analysis_question_answer":
+                objective = resolved.state.active_objective
+                refinements = (
+                    objective.provenance.get("analysis_refinements", ())
+                    if objective is not None and isinstance(objective.provenance, Mapping)
+                    else ()
+                )
+                refinement = next((item for item in reversed(refinements) if isinstance(item, Mapping)), {})
+                if refinement:
+                    self._append_observation(
+                        "Analysis refinement",
+                        "Bound one operator answer to analysis "
+                        f"{str(refinement.get('source_analysis_id') or '')} and appended refinement "
+                        f"{str(refinement.get('refinement_id') or '')} without graph or external side effects.",
+                    )
             self._sync_developmental_teaching_progress()
             if resolved.background_cycle_started:
                 self._start_conversational_background_cycle("teaching_request_resolved")
@@ -7625,6 +7641,7 @@ class DeltaApp:
         if (
             is_source_bound_semantic_recall_message(state, message)
             or is_evidence_bound_analysis_recall_message(state, message)
+            or is_evidence_bound_analysis_refinement_recall_message(state, message)
             or is_semantic_problem_frame_recall_message(state, message)
             or is_semantic_problem_modeling_message(state, message)
             or is_source_bound_semantic_competence_measurement_message(state, message)
@@ -7654,6 +7671,7 @@ class DeltaApp:
                 if result.intent.intent_type in {
                     "semantic_source_bound_recall",
                     "semantic_evidence_bound_analysis_recall",
+                    "semantic_evidence_bound_analysis_refinement_recall",
                     "semantic_problem_frame_recall",
                 }:
                     self._append_observation(
@@ -7661,18 +7679,26 @@ class DeltaApp:
                             "Evidence-bound analysis"
                             if result.intent.intent_type == "semantic_evidence_bound_analysis_recall"
                             else (
+                            "Analysis refinement"
+                            if result.intent.intent_type == "semantic_evidence_bound_analysis_refinement_recall"
+                            else (
                             "Semantic frame"
                             if result.intent.intent_type == "semantic_problem_frame_recall"
                             else "Semantic lineage"
+                            )
                             )
                         ),
                         (
                             "Rendered a read-only source-bound analysis recap without changing the recorded analysis."
                             if result.intent.intent_type == "semantic_evidence_bound_analysis_recall"
                             else (
+                            "Rendered a read-only source-bound refinement recap without creating a new question or refinement."
+                            if result.intent.intent_type == "semantic_evidence_bound_analysis_refinement_recall"
+                            else (
                             "Rendered a read-only source-bound frame recap without changing the recorded frame."
                             if result.intent.intent_type == "semantic_problem_frame_recall"
                             else "Rendered a read-only source-bound recap without changing the recorded semantic chain."
+                            )
                             )
                         ),
                     )
@@ -7713,6 +7739,13 @@ class DeltaApp:
                                 title,
                                 f"Recorded provisional source-bound {record_key.replace('_', ' ')} {record_id}.",
                             )
+                    if result.chat_request and str(result.chat_request.get("request_type") or "") == "evidence_bound_analysis_question":
+                        metrics = result.chat_request.get("baseline_metrics") or {}
+                        self._append_observation(
+                            "Analysis question",
+                            "Selected one safe clarification for analysis "
+                            f"{str(metrics.get('source_analysis_id') or '')}: {str(metrics.get('why_it_matters') or 'the recorded uncertainty blocks refinement')}",
+                        )
                 self._refresh_conversational_runtime_status()
                 self._refresh_state_cards()
                 return True
@@ -9216,6 +9249,14 @@ class DeltaApp:
                     rendered_owner="conversational_runtime",
                 )
                 return
+        if select_chat_request_owner(self.conversational_runtime_state, message) is not None:
+            if self._handle_conversational_runtime_message(message):
+                self._complete_dispatch_shadow_plan(
+                    shadow_message_id,
+                    legacy_consumed=True,
+                    rendered_owner="conversational_runtime",
+                )
+                return
         if self.conversational_runtime_state.pending_chat_requests and lower in (affirm_words | cancel_words):
             if self._handle_conversational_runtime_message(message):
                 self._complete_dispatch_shadow_plan(
@@ -9287,6 +9328,7 @@ class DeltaApp:
         if (
             is_source_bound_semantic_recall_message(self.conversational_runtime_state, message)
             or is_evidence_bound_analysis_recall_message(self.conversational_runtime_state, message)
+            or is_evidence_bound_analysis_refinement_recall_message(self.conversational_runtime_state, message)
             or is_semantic_problem_frame_recall_message(self.conversational_runtime_state, message)
             or is_semantic_problem_modeling_message(self.conversational_runtime_state, message)
             or is_source_bound_semantic_competence_measurement_message(self.conversational_runtime_state, message)

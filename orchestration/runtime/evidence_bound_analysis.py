@@ -18,6 +18,7 @@ from orchestration.runtime.delta_1_0_common import stable_id
 
 
 SCHEMA_VERSION = "evidence_bound_analysis_v1"
+QUESTION_LOOP_SCHEMA_VERSION = "evidence_bound_operator_question_v1"
 
 
 @dataclass(frozen=True)
@@ -205,6 +206,616 @@ def render_evidence_bound_analysis_recall(record: Mapping[str, Any], *, focus: s
         f"{prefix}: {detail}\n\n"
         f"Analysis: {analysis_id}\n"
         "This is a read-only source-bound analysis recall; it did not create or change an analysis record."
+    )
+
+
+@dataclass(frozen=True)
+class OperatorQuestionCandidate:
+    """One deterministic question that could reduce a recorded analysis uncertainty.
+
+    This remains task-local and provisional.  The conversational runtime owns
+    candidate selection, request rendering, answer binding, persistence, and
+    exact-once behavior.
+    """
+
+    question_id: str
+    question_binding_key: str
+    source_frame_id: str
+    source_analysis_id: str
+    domain: str
+    unknown_slot_id: str
+    question_intent: str
+    unknown_label: str
+    question_text: str
+    why_it_matters: str
+    expected_answer_type: str
+    priority: int
+    priority_reason: str
+    safety_boundary: str
+    status: str
+    created_event_id: str
+    restart_summary: str
+    source_role_refs: tuple[str, ...] = ()
+    schema_version: str = QUESTION_LOOP_SCHEMA_VERSION
+
+    def as_record(self) -> dict[str, Any]:
+        record = asdict(self)
+        record["record_kind"] = "operator_question_candidate"
+        return record
+
+
+@dataclass(frozen=True)
+class OperatorQuestionAnswer:
+    """A compatible operator response bound to one selected analysis question."""
+
+    answer_id: str
+    question_id: str
+    question_binding_key: str
+    source_frame_id: str
+    source_analysis_id: str
+    answer_text: str
+    interpreted_value: str
+    confidence_label: str
+    changes_unknowns: tuple[str, ...]
+    status: str
+    created_event_id: str
+    restart_summary: str
+    schema_version: str = QUESTION_LOOP_SCHEMA_VERSION
+
+    def as_record(self) -> dict[str, Any]:
+        record = asdict(self)
+        record["record_kind"] = "operator_question_answer"
+        return record
+
+
+@dataclass(frozen=True)
+class AnalysisRefinement:
+    """An append-only, source-bound continuation of a prior analysis."""
+
+    refinement_id: str
+    source_analysis_id: str
+    source_frame_id: str
+    source_question_id: str
+    source_answer_id: str
+    question_binding_key: str
+    changed_unknown_slots: tuple[str, ...]
+    before_summary: str
+    after_summary: str
+    changed_fields: tuple[str, ...]
+    remaining_uncertainty: tuple[str, ...]
+    safe_next_actions: tuple[str, ...]
+    prohibited_actions: tuple[str, ...]
+    status: str
+    created_event_id: str
+    restart_summary: str
+    schema_version: str = QUESTION_LOOP_SCHEMA_VERSION
+
+    def as_record(self) -> dict[str, Any]:
+        record = asdict(self)
+        record["record_kind"] = "evidence_bound_analysis_refinement"
+        return record
+
+
+def compile_operator_question_candidates(
+    analysis: Mapping[str, Any],
+    *,
+    objective_id: str,
+) -> tuple[OperatorQuestionCandidate, ...]:
+    """Derive inspectable question candidates from one persisted analysis record.
+
+    Candidate identity is determined by the source analysis and semantic unknown
+    slot.  It never depends on the operator's later answer wording, so replay or
+    restart cannot create another candidate for the same analytic uncertainty.
+    """
+
+    source_frame_id = str(analysis.get("source_frame_id") or "")
+    source_analysis_id = str(analysis.get("analysis_id") or "")
+    domain = str(analysis.get("domain") or "")
+    if not objective_id or not source_frame_id or not source_analysis_id or not domain:
+        return ()
+    candidates = []
+    for specification in _question_specifications(analysis):
+        unknown_slot_id = str(specification["unknown_slot_id"])
+        question_intent = "resolve_unknown"
+        binding_key = "|".join(
+            (
+                objective_id,
+                source_frame_id,
+                source_analysis_id,
+                domain,
+                unknown_slot_id,
+                question_intent,
+            )
+        )
+        question_id = stable_id("analysis-operator-question", binding_key)
+        candidates.append(
+            OperatorQuestionCandidate(
+                question_id=question_id,
+                question_binding_key=binding_key,
+                source_frame_id=source_frame_id,
+                source_analysis_id=source_analysis_id,
+                domain=domain,
+                unknown_slot_id=unknown_slot_id,
+                question_intent=question_intent,
+                unknown_label=str(specification["unknown_label"]),
+                question_text=str(specification["question_text"]),
+                why_it_matters=str(specification["why_it_matters"]),
+                expected_answer_type=str(specification["expected_answer_type"]),
+                priority=int(specification["priority"]),
+                priority_reason=str(specification["priority_reason"]),
+                safety_boundary=str(specification["safety_boundary"]),
+                status="candidate",
+                created_event_id=stable_id("analysis-question-candidate-event", question_id),
+                restart_summary=(
+                    "Deterministic task-local candidate derived from one evidence-bound analysis; "
+                    "it has not created a request, graph claim, review, model call, provider call, tool execution, or external action."
+                ),
+                source_role_refs=tuple(str(item) for item in specification.get("source_role_refs", ()) if str(item)),
+            )
+        )
+    return tuple(candidates)
+
+
+def select_operator_question_candidates(
+    candidates: Sequence[Mapping[str, Any]],
+    *,
+    initiative_allowed: bool,
+    existing_pending_request: bool,
+) -> tuple[dict[str, Any], ...]:
+    """Choose at most one candidate while recording why every other candidate waits.
+
+    The caller persists these records under the active objective provenance.  This
+    helper has no runtime state and never creates a ChatAddressableRequest.
+    """
+
+    ordered = sorted(
+        (dict(item) for item in candidates if isinstance(item, Mapping)),
+        key=lambda item: (-int(item.get("priority") or 0), str(item.get("question_id") or "")),
+    )
+    selections: list[dict[str, Any]] = []
+    for ordinal, candidate in enumerate(ordered):
+        question_id = str(candidate.get("question_id") or "")
+        if not question_id:
+            continue
+        if not initiative_allowed:
+            status = "deferred_not_authorized"
+            candidate_status = "deferred_not_authorized"
+            reason = "The active objective did not authorize DELTA to interrupt with an analysis question."
+        elif existing_pending_request:
+            status = "suppressed_existing_request"
+            candidate_status = "suppressed_existing_request"
+            reason = "A different unresolved ChatAddressableRequest already owns the next operator reply."
+        elif ordinal == 0:
+            status = "selected"
+            candidate_status = "selected"
+            reason = str(candidate.get("priority_reason") or "This uncertainty blocks the clearest safe refinement.")
+        else:
+            status = "suppressed_low_priority"
+            candidate_status = "suppressed_low_priority"
+            reason = "A higher-priority uncertainty blocks refinement first; this candidate remains recorded without surfacing another question."
+        selection_id = stable_id("analysis-question-selection", question_id, status)
+        selections.append(
+            {
+                "selection_id": selection_id,
+                "candidate_id": question_id,
+                "question_binding_key": str(candidate.get("question_binding_key") or ""),
+                "source_frame_id": str(candidate.get("source_frame_id") or ""),
+                "source_analysis_id": str(candidate.get("source_analysis_id") or ""),
+                "domain": str(candidate.get("domain") or ""),
+                "status": status,
+                "candidate_status": candidate_status,
+                "selection_reason": reason,
+                "created_event_id": stable_id("analysis-question-selection-event", selection_id),
+                "restart_summary": "Deterministic one-question selection recorded without creating a second queue or background worker.",
+                "schema_version": QUESTION_LOOP_SCHEMA_VERSION,
+            }
+        )
+    return tuple(selections)
+
+
+def operator_question_answer_is_compatible(candidate: Mapping[str, Any], message: str) -> bool:
+    """Check an answer's semantic shape before binding it to a selected question.
+
+    This is intentionally a conservative answer-shape check, not a truth check.
+    It prevents a fresh foreground question or unrelated declarative statement
+    from being silently consumed by a pending analysis question.
+    """
+
+    text = " ".join(str(message or "").split())
+    lower = text.lower()
+    if not text or text.endswith("?"):
+        return False
+    if re.match(r"^(?:what|why|how|who|where|when|can|could|would|should|is|are|do|does|did)\b", lower):
+        return False
+    if re.match(r"^(?:your\s+new\s+goal|please\s+|help\s+me\s+|do\s+not\s+|don't\s+)", lower):
+        return False
+    if _operator_declares_unknown(lower):
+        return True
+    expected = str(candidate.get("expected_answer_type") or "")
+    matchers = {
+        "temporal_commitment": _looks_like_temporal_commitment,
+        "payment_status": _looks_like_payment_status,
+        "availability_status": _looks_like_availability_status,
+        "urgency_classification": _looks_like_urgency_classification,
+        "explanation_preference": _looks_like_explanation_preference,
+        "ownership_context": _looks_like_ownership_context,
+        "risk_threshold": _looks_like_risk_threshold,
+        "account_context": _looks_like_account_context,
+        "target_variable": _looks_like_target_variable,
+    }
+    matcher = matchers.get(expected)
+    return bool(matcher and matcher(lower))
+
+
+def compile_operator_question_answer(
+    candidate: Mapping[str, Any],
+    answer_text: str,
+) -> OperatorQuestionAnswer | None:
+    """Compile one operator-provided, non-authoritative answer record."""
+
+    if not operator_question_answer_is_compatible(candidate, answer_text):
+        return None
+    normalized = " ".join(str(answer_text or "").split())
+    question_id = str(candidate.get("question_id") or "")
+    binding_key = str(candidate.get("question_binding_key") or "")
+    if not question_id or not binding_key:
+        return None
+    declared_unknown = _operator_declares_unknown(normalized.lower())
+    answer_id = stable_id("analysis-question-answer", question_id, normalized)
+    return OperatorQuestionAnswer(
+        answer_id=answer_id,
+        question_id=question_id,
+        question_binding_key=binding_key,
+        source_frame_id=str(candidate.get("source_frame_id") or ""),
+        source_analysis_id=str(candidate.get("source_analysis_id") or ""),
+        answer_text=normalized,
+        interpreted_value=("operator reports this value is not currently known" if declared_unknown else normalized),
+        confidence_label=("operator_declared_unknown" if declared_unknown else "operator_stated_compatible_shape"),
+        changes_unknowns=(str(candidate.get("unknown_slot_id") or ""),),
+        status=("bound_unknown" if declared_unknown else "bound_operator_answer"),
+        created_event_id=stable_id("analysis-question-answer-event", answer_id),
+        restart_summary="Operator answer is bound only to the selected source-bound analysis question; it is not graph truth or external verification.",
+    )
+
+
+def compile_analysis_refinement(
+    analysis: Mapping[str, Any],
+    candidate: Mapping[str, Any],
+    answer: Mapping[str, Any],
+) -> AnalysisRefinement:
+    """Append a limited refinement without modifying the original analysis."""
+
+    source_analysis_id = str(analysis.get("analysis_id") or "")
+    source_frame_id = str(analysis.get("source_frame_id") or "")
+    question_id = str(candidate.get("question_id") or "")
+    answer_id = str(answer.get("answer_id") or "")
+    unknown_slot_id = str(candidate.get("unknown_slot_id") or "")
+    before_summary = str(analysis.get("result_summary") or "")
+    answer_value = str(answer.get("interpreted_value") or answer.get("answer_text") or "")
+    after_summary = _refined_summary(analysis, candidate, answer_value)
+    remaining = _remaining_uncertainty(analysis, candidate, answer)
+    safe_next_actions = tuple(
+        str(item.get("action") or "")
+        for item in analysis.get("safe_next_actions", ())
+        if isinstance(item, Mapping) and str(item.get("action") or "")
+    )
+    refinement_id = stable_id("evidence-bound-analysis-refinement", source_analysis_id, question_id, answer_id)
+    return AnalysisRefinement(
+        refinement_id=refinement_id,
+        source_analysis_id=source_analysis_id,
+        source_frame_id=source_frame_id,
+        source_question_id=question_id,
+        source_answer_id=answer_id,
+        question_binding_key=str(candidate.get("question_binding_key") or ""),
+        changed_unknown_slots=(unknown_slot_id,) if unknown_slot_id else (),
+        before_summary=before_summary,
+        after_summary=after_summary,
+        changed_fields=(unknown_slot_id, "operator_provided_context") if unknown_slot_id else ("operator_provided_context",),
+        remaining_uncertainty=remaining,
+        safe_next_actions=safe_next_actions,
+        prohibited_actions=tuple(str(item) for item in analysis.get("prohibited_actions", ()) if str(item)),
+        status="provisional_refinement",
+        created_event_id=stable_id("evidence-bound-analysis-refinement-event", refinement_id),
+        restart_summary="Append-only source-bound refinement retained beside the original analysis; no graph truth, review, admission, model, provider, tool, or external action occurred.",
+    )
+
+
+def render_evidence_bound_analysis_question(
+    analysis: Mapping[str, Any],
+    candidate: Mapping[str, Any],
+) -> str:
+    """Render one concise, inspectable question on the normal conversation path."""
+
+    return "\n".join(
+        (
+            "I created a bounded, source-bound analysis from the supplied scenario.",
+            f"Summary: {str(analysis.get('result_summary') or '')}",
+            f"Why one clarification matters: {str(candidate.get('why_it_matters') or '')}",
+            f"Question: {str(candidate.get('question_text') or '')}",
+            f"Safety boundary: {str(candidate.get('safety_boundary') or '')}",
+            "Status: provisional analysis only. Your answer will refine this one analysis record; it will not create graph truth, review, admission, a model request, provider call, tool execution, or external action.",
+        )
+    )
+
+
+def render_evidence_bound_analysis_refinement(refinement: Mapping[str, Any]) -> str:
+    """Show the operator exactly how one answer changed a provisional analysis."""
+
+    uncertainty = tuple(str(item) for item in refinement.get("remaining_uncertainty", ()) if str(item))
+    return "\n".join(
+        (
+            "I appended your answer as a source-bound refinement of the existing analysis.",
+            f"What changed: {str(refinement.get('after_summary') or '')}",
+            "Still uncertain: " + ("; ".join(uncertainty) if uncertainty else "No additional uncertainty was recorded for this bounded refinement."),
+            "Status: provisional refinement only. The original analysis is preserved, and this did not create graph truth, review, admission, a model request, provider call, tool execution, or external action.",
+        )
+    )
+
+
+def render_evidence_bound_analysis_refinement_recall(
+    refinement: Mapping[str, Any],
+    *,
+    focus: str,
+    analysis: Mapping[str, Any] | None = None,
+    candidate: Mapping[str, Any] | None = None,
+    answer: Mapping[str, Any] | None = None,
+) -> str:
+    """Read one existing refinement without creating a new candidate or request."""
+
+    if focus == "uncertainty":
+        detail = "; ".join(str(item) for item in refinement.get("remaining_uncertainty", ()) if str(item))
+        prefix = "The remaining uncertainty is"
+    elif focus == "chain":
+        source_summary = str(refinement.get("before_summary") or (analysis or {}).get("result_summary") or "")
+        question_text = str((candidate or {}).get("question_text") or refinement.get("source_question_id") or "")
+        answer_text = str((answer or {}).get("answer_text") or refinement.get("source_answer_id") or "")
+        detail = "\n".join(
+            (
+                f"Analysis: {source_summary}",
+                f"Question asked: {question_text}",
+                f"Operator answer: {answer_text}",
+                f"What changed: {str(refinement.get('after_summary') or '')}",
+                "Still uncertain: "
+                + (
+                    "; ".join(str(item) for item in refinement.get("remaining_uncertainty", ()) if str(item))
+                    or "No additional uncertainty was recorded."
+                ),
+            )
+        )
+        prefix = "The recorded chain is"
+    else:
+        detail = str(refinement.get("after_summary") or "")
+        prefix = "The recorded change is"
+    return (
+        f"{prefix}: {detail}\n\n"
+        f"Refinement: {str(refinement.get('refinement_id') or '')}\n"
+        "This is a read-only source-bound refinement recall; it did not create a question, answer, or refinement."
+    )
+
+
+def _question_specifications(analysis: Mapping[str, Any]) -> tuple[dict[str, Any], ...]:
+    domain = str(analysis.get("domain") or "")
+    role_values = _analysis_role_values(analysis)
+    if domain == "operations_logistics_receivables":
+        resource = str(role_values.get("delivery_or_resource_condition") or "the delivery dependency")
+        job = str(role_values.get("work_item_or_job") or "the blocked job")
+        invoice = str(role_values.get("receivable_or_invoice_state") or "the overdue invoice")
+        return (
+            _question_spec(
+                "logistics.pump_delivery_eta", "delivery ETA", f"When is {resource} expected to arrive?",
+                f"The delivery timing determines whether {job} is blocked now or can be scheduled around a known date.",
+                "temporal_commitment", 100, "The delivery dependency directly blocks the named work.",
+                "Record only operator-provided timing; do not contact a vendor or change the schedule.",
+                ("delivery_or_resource_condition", "work_item_or_job"),
+            ),
+            _question_spec(
+                "logistics.invoice_payment_status", "invoice payment status", f"Is {invoice} disputed, paid, or simply still unpaid?",
+                "Payment status determines whether the receivable is an active cashflow risk or an already-resolved record.",
+                "payment_status", 80, "The receivable remains material but does not unblock the job before delivery timing is known.",
+                "Record only operator-provided status; do not contact the customer or represent payment as verified.",
+                ("receivable_or_invoice_state",),
+            ),
+            _question_spec(
+                "logistics.alternate_resource_available", "alternate resource availability", f"Is another {resource} available for {job}?",
+                "An alternate could reduce the schedule dependency if delivery timing is unfavorable.",
+                "availability_status", 70, "This matters after the expected delivery timing is known.",
+                "Do not reserve, borrow, buy, or deploy equipment.",
+                ("delivery_or_resource_condition", "work_item_or_job"),
+            ),
+            _question_spec(
+                "logistics.job_priority", "job priority", f"How urgent is {job} relative to the other work?",
+                "Priority affects the safe scheduling interpretation once delivery and payment context are known.",
+                "urgency_classification", 60, "Priority helps rank follow-up but does not resolve the immediate delivery blocker.",
+                "Do not reschedule work or make commitments.",
+                ("work_item_or_job",),
+            ),
+        )
+    if domain == "physics_mechanics":
+        return (
+            _question_spec(
+                "physics.requested_output_form", "requested explanation form", "Would a numeric result, a derivation, or both be most useful?",
+                "The same frictionless-incline model can be presented at different useful levels without changing the underlying assumptions.",
+                "explanation_preference", 80, "The mathematical result is available, but the requested explanation depth is not explicit.",
+                "Keep the idealized model provisional; do not present it as an experimental measurement.",
+                ("inclined_surface", "friction_condition"),
+            ),
+        )
+    if domain == "defensive_cybersecurity":
+        return (
+            _question_spec(
+                "cyber.authorization_context", "defensive ownership context", "Is this code or a fixture you own and are reviewing defensively?",
+                "Ownership and defensive scope determine which safe review or mitigation discussion is appropriate.",
+                "ownership_context", 100, "Defensive authorization must be clear before discussing a code-path-specific follow-up.",
+                "Do not generate payloads, scan targets, bypass controls, or run code.",
+                ("untrusted_input", "sql_command_sink", "execution_boundary"),
+            ),
+        )
+    if domain == "finance_portfolio_risk":
+        return (
+            _question_spec(
+                "finance.drawdown_tolerance", "six-month drawdown tolerance", "What six-month decline would be unacceptable for this account?",
+                "A risk threshold is needed to interpret the concentration scenario without issuing a trade instruction.",
+                "risk_threshold", 100, "Tolerance is the most decision-relevant missing constraint in the stated scenario.",
+                "Do not recommend or execute a trade, and do not fabricate market data.",
+                ("stress_scenario",),
+            ),
+            _question_spec(
+                "finance.risk_tolerance", "risk tolerance", "How would you describe the account's risk tolerance: cautious, balanced, or aggressive?",
+                "Risk tolerance helps qualify the scenario discussion after the unacceptable drawdown is known.",
+                "risk_threshold", 90, "It is material but less specific than a stated loss threshold.",
+                "Do not recommend or execute a trade, and do not fabricate market data.",
+                ("stress_scenario",),
+            ),
+            _question_spec(
+                "finance.account_constraints", "account constraints", "Are there tax, retirement, liquidity, or other account constraints that matter here?",
+                "Account constraints can change how a hypothetical risk discussion should be qualified.",
+                "account_context", 70, "This refines the context but does not outrank the stated risk threshold.",
+                "Do not recommend or execute a trade, and do not fabricate market data.",
+                ("stress_scenario",),
+            ),
+        )
+    if domain == "physics_equation_model":
+        return (
+            _question_spec(
+                "equation.target_unknown", "target variable", "Which quantity do you want to solve for: net force, mass, or acceleration?",
+                "The model can solve for different variables, and the required known values depend on the intended target.",
+                "target_variable", 100, "The requested output is the key missing modeling choice.",
+                "Keep the explanation within the classical net-force model; do not infer unstated forces.",
+                ("equation",),
+            ),
+        )
+    return ()
+
+
+def _question_spec(
+    unknown_slot_id: str,
+    unknown_label: str,
+    question_text: str,
+    why_it_matters: str,
+    expected_answer_type: str,
+    priority: int,
+    priority_reason: str,
+    safety_boundary: str,
+    source_role_refs: Sequence[str],
+) -> dict[str, Any]:
+    return {
+        "unknown_slot_id": unknown_slot_id,
+        "unknown_label": unknown_label,
+        "question_text": question_text,
+        "why_it_matters": why_it_matters,
+        "expected_answer_type": expected_answer_type,
+        "priority": priority,
+        "priority_reason": priority_reason,
+        "safety_boundary": safety_boundary,
+        "source_role_refs": tuple(source_role_refs),
+    }
+
+
+def _analysis_role_values(analysis: Mapping[str, Any]) -> Mapping[str, Any]:
+    signature = analysis.get("semantic_signature")
+    if not isinstance(signature, Mapping):
+        return {}
+    values = signature.get("role_values")
+    return values if isinstance(values, Mapping) else {}
+
+
+def _operator_declares_unknown(lower: str) -> bool:
+    return bool(re.search(r"\b(?:i\s+(?:do\s+not|don't)\s+know|not\s+sure|unknown|no\s+idea|cannot\s+say)\b", lower))
+
+
+def _looks_like_temporal_commitment(lower: str) -> bool:
+    return bool(re.search(
+        r"\b(?:today|tomorrow|tonight|monday|tuesday|wednesday|thursday|friday|saturday|sunday|next\s+(?:week|month)|this\s+(?:week|month)|end\s+of\s+(?:the\s+)?(?:week|month)|within\s+\d+\s*(?:day|week|month)s?|in\s+\d+\s*(?:day|week|month)s?|on\s+\w+\s+\d{1,2}|eta|arriv(?:e|es|ing)|deliver(?:y|ed|ing))\b",
+        lower,
+    ))
+
+
+def _looks_like_payment_status(lower: str) -> bool:
+    return bool(re.search(r"\b(?:paid|unpaid|overdue|disputed|settled|pending|payment|invoice|remittance|commit(?:ted|ment))\b", lower))
+
+
+def _looks_like_availability_status(lower: str) -> bool:
+    return bool(re.search(r"\b(?:available|unavailable|not\s+available|spare|replacement|alternate|backup|borrow(?:ed|able)?|none\s+available)\b", lower))
+
+
+def _looks_like_urgency_classification(lower: str) -> bool:
+    return bool(re.search(r"\b(?:urgent|urgency|critical|high|medium|low|priority|asap|can\s+wait|time[-\s]?sensitive)\b", lower))
+
+
+def _looks_like_explanation_preference(lower: str) -> bool:
+    return bool(re.search(r"\b(?:numeric|number|derivation|derive|both|diagram|free[-\s]?body|step[-\s]?by[-\s]?step|brief|detailed|explain)\b", lower))
+
+
+def _looks_like_ownership_context(lower: str) -> bool:
+    return bool(re.search(r"\b(?:i\s+own|we\s+own|our\s+code|my\s+code|internal|fixture|test|authorized|defensive\s+review|codebase)\b", lower))
+
+
+def _looks_like_risk_threshold(lower: str) -> bool:
+    has_threshold = bool(re.search(r"\b\d+(?:\.\d+)?\s*(?:%|percent)\b", lower))
+    has_context = bool(re.search(r"\b(?:drawdown|decline|loss|drop|tolerat(?:e|ion)|unacceptable|risk|cautious|balanced|aggressive)\b", lower))
+    return has_threshold and has_context or bool(re.search(r"\b(?:cautious|balanced|aggressive)\b", lower))
+
+
+def _looks_like_account_context(lower: str) -> bool:
+    return bool(re.search(r"\b(?:taxable|retirement|ira|401\(k\)|brokerage|liquidity|margin|trust|education|cash\s+need)\b", lower))
+
+
+def _looks_like_target_variable(lower: str) -> bool:
+    return bool(re.search(r"\b(?:force|net\s+force|mass|acceleration|solve\s+for\s+[fma])\b", lower))
+
+
+def _remaining_uncertainty(
+    analysis: Mapping[str, Any],
+    candidate: Mapping[str, Any],
+    answer: Mapping[str, Any],
+) -> tuple[str, ...]:
+    if str(answer.get("status") or "") == "bound_unknown":
+        return tuple(str(item) for item in analysis.get("uncertainty", ()) if str(item))
+    expected = str(candidate.get("expected_answer_type") or "")
+    exclusions = {
+        "temporal_commitment": ("eta", "delivery", "arriv"),
+        "payment_status": ("payment", "dispute", "committed payment"),
+        "availability_status": ("alternate", "available"),
+        "urgency_classification": ("urgent", "priority"),
+        "risk_threshold": ("risk tolerance", "drawdown", "risk"),
+        "account_context": ("tax", "account"),
+        "target_variable": ("unknown", "solve"),
+        "explanation_preference": ("numerical", "precision", "diagram"),
+    }.get(expected, ())
+    return tuple(
+        str(item)
+        for item in analysis.get("uncertainty", ())
+        if str(item) and not any(token in str(item).lower() for token in exclusions)
+    )
+
+
+def _refined_summary(
+    analysis: Mapping[str, Any],
+    candidate: Mapping[str, Any],
+    answer_value: str,
+) -> str:
+    before = str(analysis.get("result_summary") or "The original source-bound analysis remains available.")
+    slot = str(candidate.get("unknown_slot_id") or "")
+    label = str(candidate.get("unknown_label") or "the selected uncertainty")
+    answer_sentence = str(answer_value or "").rstrip(".?! ") or str(answer_value or "")
+    if slot == "logistics.pump_delivery_eta":
+        return (
+            f"{before} The operator-stated delivery timing is {answer_sentence}. "
+            "The schedule blocker is now time-bounded by that stated timing; payment status, alternate availability, and work priority remain provisional unless separately clarified."
+        )
+    if slot == "finance.drawdown_tolerance":
+        return (
+            f"{before} The operator-stated unacceptable six-month decline is {answer_sentence}. "
+            "That threshold now qualifies the scenario discussion without becoming a trade instruction or live-market conclusion."
+        )
+    if slot == "cyber.authorization_context":
+        return (
+            f"{before} The operator supplied this defensive ownership context: {answer_sentence}. "
+            "Any later follow-up remains limited to defensive review and does not authorize testing, scanning, payloads, or code execution."
+        )
+    return (
+        f"{before} The operator supplied {label}: {answer_sentence}. "
+        "This narrows one source-bound uncertainty while the remaining assumptions and limits stay provisional."
     )
 
 

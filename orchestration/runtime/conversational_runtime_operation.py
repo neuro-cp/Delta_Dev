@@ -58,8 +58,16 @@ from orchestration.runtime.semantic_problem_modeling import (
 )
 from orchestration.runtime.evidence_bound_analysis import (
     compile_evidence_bound_analysis,
+    compile_analysis_refinement,
+    compile_operator_question_answer,
+    compile_operator_question_candidates,
+    operator_question_answer_is_compatible,
     render_evidence_bound_analysis,
     render_evidence_bound_analysis_recall,
+    render_evidence_bound_analysis_question,
+    render_evidence_bound_analysis_refinement,
+    render_evidence_bound_analysis_refinement_recall,
+    select_operator_question_candidates,
 )
 
 
@@ -644,6 +652,23 @@ def _goal_execution_mode(message: str) -> str:
     return "generic_conversational_cognition"
 
 
+def _operator_question_initiative_authorized(message: str) -> bool:
+    """Recognize bounded permission to seek one clarification for refinement.
+
+    This is an objective-local authority signal, not a global conversational
+    policy.  It looks for the semantic combination of operator-directed inquiry
+    and an uncertainty/refinement boundary, while honoring explicit no-question
+    instructions.
+    """
+
+    lower = " ".join(str(message or "").lower().split())
+    if re.search(r"\b(?:do\s+not|don't|never)\s+(?:ask|question|interrupt|seek\s+clarification)\b", lower):
+        return False
+    inquiry = bool(re.search(r"\b(?:ask(?:\s+me)?|question(?:\s+me)?|seek\s+(?:my\s+)?(?:input|clarification)|clarify\s+with\s+me)\b", lower))
+    boundary = bool(re.search(r"\b(?:uncertaint(?:y|ies)|unknown|missing\s+(?:information|context|evidence)|ambigu(?:ity|ous)|refin(?:e|ement)|update\s+the\s+analysis|use\s+my\s+answer)\b", lower))
+    return inquiry and boundary
+
+
 def _objective_execution_constraints(message: str) -> dict[str, Any]:
     """Compile explicit operator execution limits into objective provenance.
 
@@ -701,6 +726,7 @@ def _objective_execution_constraints(message: str) -> dict[str, Any]:
         "no_provider": no_provider,
         "no_external_action": no_external_action,
         "wait_for_operator_input": wait_for_operator_input,
+        "operator_question_initiative_allowed": _operator_question_initiative_authorized(message),
         "state": "operator_waiting" if (no_local_model or wait_for_operator_input) else "unconstrained",
         "override_history": (),
     }
@@ -1124,6 +1150,56 @@ def _evidence_bound_analyses_for_objective(
     )
 
 
+def _operator_question_candidates_for_objective(
+    objective: ConversationalObjective | None,
+) -> tuple[dict[str, Any], ...]:
+    """Read question candidates from the active objective's canonical provenance."""
+
+    if objective is None or not isinstance(objective.provenance, Mapping):
+        return ()
+    return tuple(
+        dict(item)
+        for item in objective.provenance.get("operator_question_candidates", ())
+        if isinstance(item, Mapping)
+    )
+
+
+def _operator_question_selections_for_objective(
+    objective: ConversationalObjective | None,
+) -> tuple[dict[str, Any], ...]:
+    if objective is None or not isinstance(objective.provenance, Mapping):
+        return ()
+    return tuple(
+        dict(item)
+        for item in objective.provenance.get("operator_question_selections", ())
+        if isinstance(item, Mapping)
+    )
+
+
+def _operator_question_answers_for_objective(
+    objective: ConversationalObjective | None,
+) -> tuple[dict[str, Any], ...]:
+    if objective is None or not isinstance(objective.provenance, Mapping):
+        return ()
+    return tuple(
+        dict(item)
+        for item in objective.provenance.get("operator_question_answers", ())
+        if isinstance(item, Mapping)
+    )
+
+
+def _analysis_refinements_for_objective(
+    objective: ConversationalObjective | None,
+) -> tuple[dict[str, Any], ...]:
+    if objective is None or not isinstance(objective.provenance, Mapping):
+        return ()
+    return tuple(
+        dict(item)
+        for item in objective.provenance.get("analysis_refinements", ())
+        if isinstance(item, Mapping)
+    )
+
+
 def _replace_teaching_objective(
     objective: ConversationalObjective,
     *,
@@ -1135,6 +1211,10 @@ def _replace_teaching_objective(
     semantic_competence_deltas: Sequence[Mapping[str, Any]] | None = None,
     semantic_problem_frames: Sequence[Mapping[str, Any]] | None = None,
     evidence_bound_analyses: Sequence[Mapping[str, Any]] | None = None,
+    operator_question_candidates: Sequence[Mapping[str, Any]] | None = None,
+    operator_question_selections: Sequence[Mapping[str, Any]] | None = None,
+    operator_question_answers: Sequence[Mapping[str, Any]] | None = None,
+    analysis_refinements: Sequence[Mapping[str, Any]] | None = None,
     execution_constraints: Mapping[str, Any] | None = None,
 ) -> ConversationalObjective:
     provenance = dict(objective.provenance)
@@ -1161,6 +1241,22 @@ def _replace_teaching_objective(
     if evidence_bound_analyses is not None:
         provenance["evidence_bound_analyses"] = tuple(
             dict(item) for item in evidence_bound_analyses
+        )
+    if operator_question_candidates is not None:
+        provenance["operator_question_candidates"] = tuple(
+            dict(item) for item in operator_question_candidates
+        )
+    if operator_question_selections is not None:
+        provenance["operator_question_selections"] = tuple(
+            dict(item) for item in operator_question_selections
+        )
+    if operator_question_answers is not None:
+        provenance["operator_question_answers"] = tuple(
+            dict(item) for item in operator_question_answers
+        )
+    if analysis_refinements is not None:
+        provenance["analysis_refinements"] = tuple(
+            dict(item) for item in analysis_refinements
         )
     if execution_constraints is not None:
         provenance["execution_constraints"] = dict(execution_constraints)
@@ -1382,6 +1478,244 @@ def is_evidence_bound_analysis_recall_message(
     return _evidence_bound_analysis_recall_candidate(state, message) is not None
 
 
+def _analysis_refinement_recall_candidate(
+    state: ConversationalRuntimeState,
+    message: str,
+) -> tuple[dict[str, Any], str] | None:
+    objective = state.active_objective
+    refinements = _analysis_refinements_for_objective(objective)
+    if objective is None or not refinements:
+        return None
+    lower = " ".join(str(message or "").lower().split())
+    if (
+        ("what did we analyze" in lower or "what have we analyzed" in lower)
+        and re.search(r"\b(?:ask|question)\b", lower)
+        and re.search(r"\b(?:answer|change|refin)\b", lower)
+    ):
+        focus = "chain"
+    elif re.search(r"\b(?:still|remain(?:ing)?|left)\s+(?:uncertain|unknown|unclear)\b|\bwhat\s+(?:is|remains)\s+uncertain\b", lower):
+        focus = "uncertainty"
+    elif re.search(r"\b(?:what|how)\s+(?:did\s+)?(?:my\s+)?(?:answer|response)?\s*(?:change|changed|refin)|\bwhat\s+changed\b|\bafter\s+my\s+answer\b", lower):
+        focus = "change"
+    else:
+        return None
+    return dict(refinements[-1]), focus
+
+
+def is_evidence_bound_analysis_refinement_recall_message(
+    state: ConversationalRuntimeState,
+    message: str,
+) -> bool:
+    """Expose only explicit recap questions about an existing answer refinement."""
+
+    return _analysis_refinement_recall_candidate(state, message) is not None
+
+
+def _apply_evidence_bound_analysis_refinement_recall(
+    state: ConversationalRuntimeState,
+    message: str,
+    *,
+    runtime_root: str | Path,
+) -> RuntimeTurnResult | None:
+    objective = state.active_objective
+    candidate = _analysis_refinement_recall_candidate(state, message)
+    if objective is None or candidate is None:
+        return None
+    refinement, focus = candidate
+    source_analysis_id = str(refinement.get("source_analysis_id") or "")
+    source_question_id = str(refinement.get("source_question_id") or "")
+    source_answer_id = str(refinement.get("source_answer_id") or "")
+    source_analysis = next(
+        (item for item in _evidence_bound_analyses_for_objective(objective) if str(item.get("analysis_id") or "") == source_analysis_id),
+        None,
+    )
+    source_question = next(
+        (item for item in _operator_question_candidates_for_objective(objective) if str(item.get("question_id") or "") == source_question_id),
+        None,
+    )
+    source_answer = next(
+        (item for item in _operator_question_answers_for_objective(objective) if str(item.get("answer_id") or "") == source_answer_id),
+        None,
+    )
+    reply = render_evidence_bound_analysis_refinement_recall(
+        refinement,
+        focus=focus,
+        analysis=source_analysis,
+        candidate=source_question,
+        answer=source_answer,
+    )
+    user_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 1), message),
+        role="user",
+        text=message,
+        intent_type="semantic_evidence_bound_analysis_refinement_recall",
+        objective_id=objective.objective_id,
+    )
+    assistant_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
+        role="assistant",
+        text=reply,
+        intent_type="semantic_evidence_bound_analysis_refinement_recall_response",
+        objective_id=objective.objective_id,
+    )
+    updated = _replace_state(state, conversation=state.conversation + (user_turn, assistant_turn))
+    save_runtime_state(runtime_root, updated)
+    return RuntimeTurnResult(
+        state=updated,
+        intent=ConversationIntent(
+            "semantic_evidence_bound_analysis_refinement_recall",
+            0.98,
+            "active_objective_provenance",
+            "safe_internal",
+            (),
+            ("source_bound_refinement", "read_only_recall", "no_new_question"),
+        ),
+        reply=reply,
+    )
+
+
+def _analysis_question_initiative_allowed(objective: ConversationalObjective | None) -> bool:
+    constraints = _objective_execution_constraints_for_objective(objective)
+    return bool(constraints.get("operator_question_initiative_allowed"))
+
+
+def _candidate_with_status(
+    candidate: Mapping[str, Any],
+    *,
+    status: str,
+    **fields: Any,
+) -> dict[str, Any]:
+    return {**dict(candidate), "status": status, **fields}
+
+
+def _selection_with_status(
+    selection: Mapping[str, Any],
+    *,
+    status: str,
+    **fields: Any,
+) -> dict[str, Any]:
+    return {**dict(selection), "status": status, **fields}
+
+
+def _compile_analysis_question_request(
+    state: ConversationalRuntimeState,
+    *,
+    objective: ConversationalObjective,
+    candidate: Mapping[str, Any],
+    created_turn_id: str,
+    created_sequence: int,
+) -> ChatAddressableRequest:
+    """Use the existing durable chat-request envelope for one analysis question."""
+
+    question_id = str(candidate.get("question_id") or "")
+    binding_key = str(candidate.get("question_binding_key") or "")
+    request_id = stable_id("evidence-bound-analysis-question-request", state.runtime_id, question_id, binding_key)
+    return ChatAddressableRequest(
+        request_id=request_id,
+        request_type="evidence_bound_analysis_question",
+        objective_id=objective.objective_id,
+        originating_goal_id=objective.objective_id,
+        goal_label="Evidence-bound analysis clarification",
+        prompt_text=str(candidate.get("question_text") or ""),
+        created_turn_id=created_turn_id,
+        thread_id=objective.objective_id,
+        created_sequence=created_sequence,
+        accepted_response_types=("analysis_answer",),
+        baseline_metrics={
+            "question_id": question_id,
+            "question_binding_key": binding_key,
+            "source_frame_id": str(candidate.get("source_frame_id") or ""),
+            "source_analysis_id": str(candidate.get("source_analysis_id") or ""),
+            "domain": str(candidate.get("domain") or ""),
+            "unknown_slot_id": str(candidate.get("unknown_slot_id") or ""),
+            "unknown_label": str(candidate.get("unknown_label") or ""),
+            "expected_answer_type": str(candidate.get("expected_answer_type") or ""),
+            "question_intent": str(candidate.get("question_intent") or "resolve_unknown"),
+            "why_it_matters": str(candidate.get("why_it_matters") or ""),
+            "priority_reason": str(candidate.get("priority_reason") or ""),
+            "safety_boundary": str(candidate.get("safety_boundary") or ""),
+        },
+    )
+
+
+def _compile_analysis_question_lifecycle(
+    state: ConversationalRuntimeState,
+    *,
+    objective: ConversationalObjective,
+    analysis: Mapping[str, Any],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any] | None, tuple[Mapping[str, Any], ...]]:
+    """Append candidate/selection provenance for one new analysis exactly once."""
+
+    candidates = list(_operator_question_candidates_for_objective(objective))
+    selections = list(_operator_question_selections_for_objective(objective))
+    existing_ids = {str(item.get("question_id") or "") for item in candidates}
+    derived = [
+        item.as_record()
+        for item in compile_operator_question_candidates(analysis, objective_id=objective.objective_id)
+        if item.question_id not in existing_ids
+    ]
+    if not derived:
+        return candidates, selections, None, ()
+    has_pending_request = any(
+        request.status == "pending" and not request.consumption_count
+        for request in state.pending_chat_requests
+    )
+    lifecycle = select_operator_question_candidates(
+        derived,
+        initiative_allowed=_analysis_question_initiative_allowed(objective),
+        existing_pending_request=has_pending_request,
+    )
+    status_by_id = {
+        str(selection.get("candidate_id") or ""): str(selection.get("candidate_status") or "candidate")
+        for selection in lifecycle
+    }
+    candidates.extend(
+        _candidate_with_status(candidate, status=status_by_id.get(str(candidate.get("question_id") or ""), "candidate"))
+        for candidate in derived
+    )
+    prior_selection_ids = {str(item.get("selection_id") or "") for item in selections}
+    selections.extend(item for item in lifecycle if str(item.get("selection_id") or "") not in prior_selection_ids)
+    selected = next(
+        (
+            candidate
+            for candidate in candidates
+            if str(candidate.get("question_id") or "") in {
+                str(item.get("candidate_id") or "")
+                for item in lifecycle
+                if str(item.get("status") or "") == "selected"
+            }
+        ),
+        None,
+    )
+    events: list[Mapping[str, Any]] = []
+    for candidate in derived:
+        events.append(
+            {
+                "event": "operator_question_candidate_recorded",
+                "objective_id": objective.objective_id,
+                "question_id": str(candidate.get("question_id") or ""),
+                "source_analysis_id": str(candidate.get("source_analysis_id") or ""),
+                "source_frame_id": str(candidate.get("source_frame_id") or ""),
+                "unknown_slot_id": str(candidate.get("unknown_slot_id") or ""),
+                "status": status_by_id.get(str(candidate.get("question_id") or ""), "candidate"),
+                "at": utc_now(),
+            }
+        )
+    for selection in lifecycle:
+        events.append(
+            {
+                "event": "operator_question_selection_recorded",
+                "objective_id": objective.objective_id,
+                "selection_id": str(selection.get("selection_id") or ""),
+                "question_id": str(selection.get("candidate_id") or ""),
+                "status": str(selection.get("status") or ""),
+                "reason": str(selection.get("selection_reason") or ""),
+                "at": utc_now(),
+            }
+        )
+    return candidates, selections, dict(selected) if isinstance(selected, Mapping) else None, tuple(events)
+
+
 def _apply_semantic_problem_modeling(
     state: ConversationalRuntimeState,
     message: str,
@@ -1411,6 +1745,7 @@ def _apply_semantic_problem_modeling(
     analyses = list(_evidence_bound_analyses_for_objective(objective))
     analysis_compilation = compile_evidence_bound_analysis(record)
     analysis = None
+    analysis_created = False
     if analysis_compilation is not None:
         analysis_id = analysis_compilation.analysis_id
         analysis = next(
@@ -1425,11 +1760,7 @@ def _apply_semantic_problem_modeling(
                 "created_at": utc_now(),
             }
             analyses.append(analysis)
-    reply = (
-        render_evidence_bound_analysis(analysis)
-        if isinstance(analysis, Mapping)
-        else render_semantic_problem_frame(record)
-    )
+            analysis_created = True
     user_turn = ConversationTurn(
         turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 1), message),
         role="user",
@@ -1437,6 +1768,32 @@ def _apply_semantic_problem_modeling(
         intent_type="semantic_problem_modeling",
         objective_id=objective.objective_id,
     )
+    candidates = list(_operator_question_candidates_for_objective(objective))
+    selections = list(_operator_question_selections_for_objective(objective))
+    lifecycle_events: tuple[Mapping[str, Any], ...] = ()
+    selected_candidate: dict[str, Any] | None = None
+    if isinstance(analysis, Mapping) and analysis_created:
+        candidates, selections, selected_candidate, lifecycle_events = _compile_analysis_question_lifecycle(
+            state,
+            objective=objective,
+            analysis=analysis,
+        )
+    question_request: ChatAddressableRequest | None = None
+    if isinstance(analysis, Mapping) and selected_candidate is not None:
+        question_request = _compile_analysis_question_request(
+            state,
+            objective=objective,
+            candidate=selected_candidate,
+            created_turn_id=user_turn.turn_id,
+            created_sequence=len(state.conversation) + 1,
+        )
+        reply = render_evidence_bound_analysis_question(analysis, selected_candidate)
+    else:
+        reply = (
+            render_evidence_bound_analysis(analysis)
+            if isinstance(analysis, Mapping)
+            else render_semantic_problem_frame(record)
+        )
     assistant_turn = ConversationTurn(
         turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
         role="assistant",
@@ -1474,14 +1831,65 @@ def _apply_semantic_problem_modeling(
             "source_turn_id": user_turn.turn_id,
             "at": utc_now(),
         },)
+    if question_request is not None:
+        question_request = replace(
+            question_request,
+            rendered_turn_id=assistant_turn.turn_id,
+            render_sequence=len(state.conversation) + 2,
+        )
+        selected_question_id = str(selected_candidate.get("question_id") or "") if selected_candidate else ""
+        candidates = [
+            _candidate_with_status(
+                item,
+                status="asked",
+                asked_turn_id=assistant_turn.turn_id,
+                request_id=question_request.request_id,
+            )
+            if str(item.get("question_id") or "") == selected_question_id
+            else item
+            for item in candidates
+        ]
+        selections = [
+            _selection_with_status(
+                item,
+                status="asked",
+                asked_turn_id=assistant_turn.turn_id,
+                request_id=question_request.request_id,
+            )
+            if str(item.get("candidate_id") or "") == selected_question_id
+            and str(item.get("status") or "") == "selected"
+            else item
+            for item in selections
+        ]
+        progress = progress + (
+            {
+                "event": "operator_question_rendered",
+                "objective_id": objective.objective_id,
+                "question_id": selected_question_id,
+                "request_id": question_request.request_id,
+                "source_analysis_id": str(selected_candidate.get("source_analysis_id") or "") if selected_candidate else "",
+                "source_frame_id": str(selected_candidate.get("source_frame_id") or "") if selected_candidate else "",
+                "assistant_turn_id": assistant_turn.turn_id,
+                "at": utc_now(),
+            },
+        )
+    if lifecycle_events:
+        progress = progress + lifecycle_events
     updated = _replace_state(
         state,
         active_objective=_replace_teaching_objective(
             objective,
             semantic_problem_frames=frames,
             evidence_bound_analyses=analyses,
+            operator_question_candidates=candidates,
+            operator_question_selections=selections,
         ),
         conversation=state.conversation + (user_turn, assistant_turn),
+        pending_chat_requests=(
+            state.pending_chat_requests + (question_request,)
+            if question_request is not None
+            else state.pending_chat_requests
+        ),
         objective_progress=progress,
     )
     save_runtime_state(runtime_root, updated)
@@ -1497,6 +1905,7 @@ def _apply_semantic_problem_modeling(
             ),
         ),
         reply=reply,
+        chat_request=question_request.as_record() if question_request is not None else None,
     )
 
 
@@ -4143,12 +4552,39 @@ def _chat_request_resolution_kind(message: str) -> str | None:
     return None
 
 
+def _pending_analysis_question_for_reply(
+    state: ConversationalRuntimeState,
+    message: str,
+) -> ChatAddressableRequest | None:
+    """Bind only a semantically compatible reply to the latest analysis question.
+
+    A pending analysis question never turns a new foreground question, a new
+    recognized source scenario, or an unrelated declaration into an answer.
+    """
+
+    pending = [
+        request
+        for request in state.pending_chat_requests
+        if request.status == "pending" and not request.consumption_count
+    ]
+    candidates = [request for request in pending if request.request_type == "evidence_bound_analysis_question"]
+    if not candidates:
+        return None
+    latest_pending = max(pending, key=lambda item: (item.render_sequence, item.created_sequence, item.request_id))
+    candidate = max(candidates, key=lambda item: (item.render_sequence, item.created_sequence, item.request_id))
+    if candidate.request_id != latest_pending.request_id:
+        return None
+    if _semantic_problem_compilation_for_message(state, message) is not None:
+        return None
+    if not operator_question_answer_is_compatible(candidate.baseline_metrics, message):
+        return None
+    return candidate
+
+
 def _pending_request_for_reply(state: ConversationalRuntimeState, message: str) -> ChatAddressableRequest | None:
     if not state.pending_chat_requests:
         return None
     kind = _chat_request_resolution_kind(message)
-    if kind is None:
-        return None
     compatibility_defaults = {
         "provider_authority": ("approved", "denied"),
         "directional_question": ("directional", "denied", "approved"),
@@ -4157,19 +4593,20 @@ def _pending_request_for_reply(state: ConversationalRuntimeState, message: str) 
         "capability_adoption_and_restart": ("approved", "denied", "show_evidence"),
     }
     candidates = []
-    for index, request in enumerate(state.pending_chat_requests):
-        if request.status != "pending" or request.consumption_count:
-            continue
-        accepted = tuple(request.accepted_response_types or compatibility_defaults.get(request.request_type, ()))
-        if kind not in accepted:
-            continue
-        candidates.append((request.render_sequence, request.created_sequence, index, request))
-    if not candidates:
-        return None
-    if len(candidates) > 1 and max(item[0] for item in candidates) <= 0:
-        return None
-    # The most recently rendered compatible prompt owns an otherwise ambiguous reply.
-    return max(candidates, key=lambda item: item[:3])[3]
+    if kind is not None:
+        for index, request in enumerate(state.pending_chat_requests):
+            if request.status != "pending" or request.consumption_count:
+                continue
+            accepted = tuple(request.accepted_response_types or compatibility_defaults.get(request.request_type, ()))
+            if kind not in accepted:
+                continue
+            candidates.append((request.render_sequence, request.created_sequence, index, request))
+        if candidates:
+            if len(candidates) > 1 and max(item[0] for item in candidates) <= 0:
+                return None
+            # The most recently rendered compatible prompt owns an otherwise ambiguous reply.
+            return max(candidates, key=lambda item: item[:3])[3]
+    return _pending_analysis_question_for_reply(state, message)
 
 
 def select_chat_request_owner(state: ConversationalRuntimeState, message: str) -> ChatAddressableRequest | None:
@@ -5699,6 +6136,164 @@ def _resolve_teaching_chat_request(
     )
 
 
+def _resolve_evidence_bound_analysis_question(
+    state: ConversationalRuntimeState,
+    request: ChatAddressableRequest,
+    message: str,
+    *,
+    user_turn: ConversationTurn,
+    runtime_root: str | Path,
+) -> RuntimeTurnResult | None:
+    """Bind one compatible answer and append one refinement to objective provenance."""
+
+    objective = state.active_objective
+    if objective is None or objective.objective_id != request.objective_id:
+        return None
+    question_id = str(request.baseline_metrics.get("question_id") or "")
+    binding_key = str(request.baseline_metrics.get("question_binding_key") or "")
+    candidate = next(
+        (
+            item
+            for item in _operator_question_candidates_for_objective(objective)
+            if str(item.get("question_id") or "") == question_id
+            and str(item.get("question_binding_key") or "") == binding_key
+        ),
+        None,
+    )
+    if candidate is None:
+        return None
+    analysis = next(
+        (
+            item
+            for item in _evidence_bound_analyses_for_objective(objective)
+            if str(item.get("analysis_id") or "") == str(candidate.get("source_analysis_id") or "")
+            and str(item.get("source_frame_id") or "") == str(candidate.get("source_frame_id") or "")
+        ),
+        None,
+    )
+    if analysis is None:
+        return None
+    answer = compile_operator_question_answer(candidate, message)
+    if answer is None:
+        return None
+    answer_record = answer.as_record()
+    refinement = compile_analysis_refinement(analysis, candidate, answer_record)
+    refinement_record = refinement.as_record()
+    answers = list(_operator_question_answers_for_objective(objective))
+    refinements = list(_analysis_refinements_for_objective(objective))
+    answer_added = not any(str(item.get("answer_id") or "") == answer.answer_id for item in answers)
+    refinement_added = not any(str(item.get("refinement_id") or "") == refinement.refinement_id for item in refinements)
+    if answer_added:
+        answers.append(answer_record)
+    if refinement_added:
+        refinements.append(refinement_record)
+    candidate_status = "answered_unknown" if answer.status == "bound_unknown" else "resolved"
+    candidates = [
+        _candidate_with_status(
+            item,
+            status=candidate_status,
+            resolved_turn_id=user_turn.turn_id,
+            answer_id=answer.answer_id,
+            refinement_id=refinement.refinement_id,
+        )
+        if str(item.get("question_id") or "") == question_id
+        else item
+        for item in _operator_question_candidates_for_objective(objective)
+    ]
+    selections = [
+        _selection_with_status(
+            item,
+            status=candidate_status,
+            resolved_turn_id=user_turn.turn_id,
+            answer_id=answer.answer_id,
+            refinement_id=refinement.refinement_id,
+        )
+        if str(item.get("candidate_id") or "") == question_id
+        else item
+        for item in _operator_question_selections_for_objective(objective)
+    ]
+    resolved_request = replace(
+        request,
+        status="resolved",
+        resolution_state="answered",
+        resolution="analysis_answer",
+        resolution_policy="bound_to_exact_source_analysis_question",
+        resolution_text=message,
+        resolved_turn_id=user_turn.turn_id,
+        consumption_count=1,
+        resolved_at=utc_now(),
+        consumed_at=utc_now(),
+    )
+    reply = render_evidence_bound_analysis_refinement(refinement_record)
+    assistant_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
+        role="assistant",
+        text=reply,
+        intent_type="semantic_evidence_bound_analysis_refinement",
+        objective_id=objective.objective_id,
+    )
+    progress = state.objective_progress
+    if answer_added:
+        progress = progress + (
+            {
+                "event": "operator_question_answer_bound",
+                "objective_id": objective.objective_id,
+                "question_id": question_id,
+                "answer_id": answer.answer_id,
+                "source_analysis_id": str(candidate.get("source_analysis_id") or ""),
+                "source_frame_id": str(candidate.get("source_frame_id") or ""),
+                "user_turn_id": user_turn.turn_id,
+                "at": utc_now(),
+            },
+        )
+    if refinement_added:
+        progress = progress + (
+            {
+                "event": "evidence_bound_analysis_refinement_recorded",
+                "objective_id": objective.objective_id,
+                "refinement_id": refinement.refinement_id,
+                "source_analysis_id": str(candidate.get("source_analysis_id") or ""),
+                "question_id": question_id,
+                "answer_id": answer.answer_id,
+                "at": utc_now(),
+            },
+        )
+    updated = _replace_state(
+        state,
+        active_objective=_replace_teaching_objective(
+            objective,
+            operator_question_candidates=candidates,
+            operator_question_selections=selections,
+            operator_question_answers=answers,
+            analysis_refinements=refinements,
+        ),
+        conversation=state.conversation + (user_turn, assistant_turn),
+        pending_chat_requests=tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id),
+        resolved_chat_requests=state.resolved_chat_requests + (resolved_request,),
+        objective_progress=progress,
+    )
+    save_runtime_state(runtime_root, updated)
+    return RuntimeTurnResult(
+        state=updated,
+        intent=ConversationIntent(
+            "semantic_evidence_bound_analysis_question_answer",
+            0.98,
+            "active_objective_provenance",
+            "safe_internal",
+            (),
+            (
+                "exact_question_binding",
+                "append_only_analysis_refinement",
+                "no_graph_admission",
+                "no_external_action",
+            ),
+        ),
+        reply=reply,
+        chat_request=resolved_request.as_record(),
+        side_thread_bound=True,
+    )
+
+
 def resolve_pending_chat_request(
     state: ConversationalRuntimeState,
     message: str,
@@ -5718,6 +6313,14 @@ def resolve_pending_chat_request(
     )
     authority: Mapping[str, Any] | None = None
     policy = resolution_kind
+    if request.request_type == "evidence_bound_analysis_question":
+        return _resolve_evidence_bound_analysis_question(
+            state,
+            request,
+            message,
+            user_turn=user_turn,
+            runtime_root=runtime_root,
+        )
     if request.request_type in {"teaching_provisional_retention", "teaching_prerequisite", "teaching_consolidation_review_authority"}:
         return _resolve_teaching_chat_request(
             state,
@@ -6060,6 +6663,13 @@ def handle_conversational_message(
     )
     if execution_constraint_release is not None:
         return execution_constraint_release
+    evidence_bound_refinement_recall = _apply_evidence_bound_analysis_refinement_recall(
+        state,
+        message,
+        runtime_root=runtime_root,
+    )
+    if evidence_bound_refinement_recall is not None:
+        return evidence_bound_refinement_recall
     semantic_recall = _apply_source_bound_semantic_recall(
         state,
         message,
