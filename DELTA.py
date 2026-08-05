@@ -120,6 +120,7 @@ from orchestration.runtime.conversational_runtime_operation import (  # noqa: E4
     is_source_bound_semantic_competence_measurement_message,
     is_evidence_bound_analysis_recall_message,
     is_evidence_bound_analysis_refinement_recall_message,
+    is_internal_work_recall_message,
     is_semantic_problem_frame_recall_message,
     is_semantic_problem_modeling_message,
     is_source_bound_semantic_recall_message,
@@ -7630,6 +7631,29 @@ class DeltaApp:
                         f"{str(refinement.get('source_analysis_id') or '')} and appended refinement "
                         f"{str(refinement.get('refinement_id') or '')} without graph or external side effects.",
                     )
+                if resolved.chat_request and str(resolved.chat_request.get("request_type") or "") == "internal_work_continuation":
+                    metrics = resolved.chat_request.get("baseline_metrics") or {}
+                    self._append_observation(
+                        "Internal continuation",
+                        "Selected one safe proposal for analysis "
+                        f"{str(metrics.get('source_analysis_id') or '')}: "
+                        f"{str(metrics.get('why_it_matters') or 'a recorded unresolved issue remains')}",
+                    )
+            elif resolved.intent.intent_type == "semantic_internal_work_disposition":
+                objective = resolved.state.active_objective
+                dispositions = (
+                    objective.provenance.get("internal_work_dispositions", ())
+                    if objective is not None and isinstance(objective.provenance, Mapping)
+                    else ()
+                )
+                disposition = next((item for item in reversed(dispositions) if isinstance(item, Mapping)), {})
+                if disposition:
+                    self._append_observation(
+                        "Internal continuation",
+                        "Recorded one source-bound operator disposition for candidate "
+                        f"{str(disposition.get('candidate_id') or '')}: {str(disposition.get('status') or 'recorded')}. "
+                        "No internal work started.",
+                    )
             self._sync_developmental_teaching_progress()
             if resolved.background_cycle_started:
                 self._start_conversational_background_cycle("teaching_request_resolved")
@@ -7642,6 +7666,7 @@ class DeltaApp:
             is_source_bound_semantic_recall_message(state, message)
             or is_evidence_bound_analysis_recall_message(state, message)
             or is_evidence_bound_analysis_refinement_recall_message(state, message)
+            or is_internal_work_recall_message(state, message)
             or is_semantic_problem_frame_recall_message(state, message)
             or is_semantic_problem_modeling_message(state, message)
             or is_source_bound_semantic_competence_measurement_message(state, message)
@@ -7672,35 +7697,24 @@ class DeltaApp:
                     "semantic_source_bound_recall",
                     "semantic_evidence_bound_analysis_recall",
                     "semantic_evidence_bound_analysis_refinement_recall",
+                    "semantic_internal_work_recall",
                     "semantic_problem_frame_recall",
                 }:
+                    title = {
+                        "semantic_evidence_bound_analysis_recall": "Evidence-bound analysis",
+                        "semantic_evidence_bound_analysis_refinement_recall": "Analysis refinement",
+                        "semantic_internal_work_recall": "Internal continuation",
+                        "semantic_problem_frame_recall": "Semantic frame",
+                    }.get(result.intent.intent_type, "Semantic lineage")
+                    detail = {
+                        "semantic_evidence_bound_analysis_recall": "Rendered a read-only source-bound analysis recap without changing the recorded analysis.",
+                        "semantic_evidence_bound_analysis_refinement_recall": "Rendered a read-only source-bound refinement recap without creating a new question or refinement.",
+                        "semantic_internal_work_recall": "Rendered a read-only source-bound internal continuation recap without changing a candidate or disposition.",
+                        "semantic_problem_frame_recall": "Rendered a read-only source-bound frame recap without changing the recorded frame.",
+                    }.get(result.intent.intent_type, "Rendered a read-only source-bound recap without changing the recorded semantic chain.")
                     self._append_observation(
-                        (
-                            "Evidence-bound analysis"
-                            if result.intent.intent_type == "semantic_evidence_bound_analysis_recall"
-                            else (
-                            "Analysis refinement"
-                            if result.intent.intent_type == "semantic_evidence_bound_analysis_refinement_recall"
-                            else (
-                            "Semantic frame"
-                            if result.intent.intent_type == "semantic_problem_frame_recall"
-                            else "Semantic lineage"
-                            )
-                            )
-                        ),
-                        (
-                            "Rendered a read-only source-bound analysis recap without changing the recorded analysis."
-                            if result.intent.intent_type == "semantic_evidence_bound_analysis_recall"
-                            else (
-                            "Rendered a read-only source-bound refinement recap without creating a new question or refinement."
-                            if result.intent.intent_type == "semantic_evidence_bound_analysis_refinement_recall"
-                            else (
-                            "Rendered a read-only source-bound frame recap without changing the recorded frame."
-                            if result.intent.intent_type == "semantic_problem_frame_recall"
-                            else "Rendered a read-only source-bound recap without changing the recorded semantic chain."
-                            )
-                            )
-                        ),
+                        title,
+                        detail,
                     )
                 else:
                     record_key = {
@@ -7745,6 +7759,13 @@ class DeltaApp:
                             "Analysis question",
                             "Selected one safe clarification for analysis "
                             f"{str(metrics.get('source_analysis_id') or '')}: {str(metrics.get('why_it_matters') or 'the recorded uncertainty blocks refinement')}",
+                        )
+                    elif result.chat_request and str(result.chat_request.get("request_type") or "") == "internal_work_continuation":
+                        metrics = result.chat_request.get("baseline_metrics") or {}
+                        self._append_observation(
+                            "Internal continuation",
+                            "Selected one safe proposal for analysis "
+                            f"{str(metrics.get('source_analysis_id') or '')}: {str(metrics.get('why_it_matters') or 'a recorded unresolved issue remains')} ",
                         )
                 self._refresh_conversational_runtime_status()
                 self._refresh_state_cards()
@@ -9334,6 +9355,7 @@ class DeltaApp:
             or is_source_bound_semantic_competence_measurement_message(self.conversational_runtime_state, message)
             or is_source_bound_semantic_analysis_message(self.conversational_runtime_state, message)
             or is_source_bound_semantic_transfer_message(self.conversational_runtime_state, message)
+            or is_internal_work_recall_message(self.conversational_runtime_state, message)
         ):
             if self._handle_conversational_runtime_message(message):
                 self._complete_dispatch_shadow_plan(

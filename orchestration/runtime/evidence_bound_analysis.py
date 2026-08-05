@@ -19,6 +19,7 @@ from orchestration.runtime.delta_1_0_common import stable_id
 
 SCHEMA_VERSION = "evidence_bound_analysis_v1"
 QUESTION_LOOP_SCHEMA_VERSION = "evidence_bound_operator_question_v1"
+INTERNAL_WORK_SCHEMA_VERSION = "evidence_bound_internal_work_v1"
 
 
 @dataclass(frozen=True)
@@ -296,6 +297,49 @@ class AnalysisRefinement:
         return record
 
 
+@dataclass(frozen=True)
+class InternalWorkCandidate:
+    """One safe, deterministic continuation proposed from unresolved analysis state.
+
+    This is deliberately a task-local proposal rather than a worker task.  The
+    conversational runtime owns persistence, selection, request rendering,
+    operator disposition, and exact-once behavior.  Nothing in this record
+    authorizes a model call, provider call, tool, graph mutation, or external
+    action.
+    """
+
+    internal_work_candidate_id: str
+    active_objective_id: str
+    source_frame_id: str
+    source_analysis_id: str
+    source_refinement_id: str
+    source_question_candidate_id: str
+    domain: str
+    unresolved_slot_id: str
+    candidate_intent: str
+    semantic_binding_key: str
+    latest_state_id: str
+    unresolved_label: str
+    why_it_matters: str
+    safe_deterministic_next_step: str
+    continuation_prompt: str
+    expected_answer_type: str
+    priority: int
+    authority_boundary: str
+    prohibited_actions: tuple[str, ...]
+    risk_class: str
+    status: str
+    created_event_id: str
+    restart_summary: str
+    schema_version: str = INTERNAL_WORK_SCHEMA_VERSION
+
+    def as_record(self) -> dict[str, Any]:
+        record = asdict(self)
+        record["prohibited_actions"] = list(self.prohibited_actions)
+        record["record_kind"] = "internal_work_candidate"
+        return record
+
+
 def compile_operator_question_candidates(
     analysis: Mapping[str, Any],
     *,
@@ -411,6 +455,248 @@ def select_operator_question_candidates(
             }
         )
     return tuple(selections)
+
+
+def compile_internal_work_candidates(
+    analysis: Mapping[str, Any],
+    *,
+    objective_id: str,
+    source_question_candidates: Sequence[Mapping[str, Any]],
+    source_refinement: Mapping[str, Any] | None = None,
+) -> tuple[InternalWorkCandidate, ...]:
+    """Derive safe continuation candidates from the latest unresolved slots.
+
+    A refinement supersedes the base analysis only for candidate identity and
+    selection context.  It never overwrites the original analysis.  Candidate
+    derivation therefore uses the latest refinement when present, filters out
+    already-resolved slots, and preserves earlier candidates as history.
+    """
+
+    source_frame_id = str(analysis.get("source_frame_id") or "")
+    source_analysis_id = str(analysis.get("analysis_id") or "")
+    domain = str(analysis.get("domain") or "")
+    refinement_id = str((source_refinement or {}).get("refinement_id") or "")
+    latest_state_id = refinement_id or source_analysis_id
+    if not objective_id or not source_frame_id or not source_analysis_id or not domain or not latest_state_id:
+        return ()
+
+    resolved_statuses = {
+        "resolved",
+        "answered_unknown",
+        "operator_dismissed",
+        "suppressed_resolved",
+    }
+    candidates: list[InternalWorkCandidate] = []
+    seen_slots: set[str] = set()
+    for source in sorted(
+        (dict(item) for item in source_question_candidates if isinstance(item, Mapping)),
+        key=lambda item: (-int(item.get("priority") or 0), str(item.get("question_id") or "")),
+    ):
+        if str(source.get("source_analysis_id") or "") != source_analysis_id:
+            continue
+        slot_id = str(source.get("unknown_slot_id") or "")
+        source_id = str(source.get("question_id") or "")
+        if not slot_id or not source_id or slot_id in seen_slots:
+            continue
+        if str(source.get("status") or "") in resolved_statuses:
+            continue
+        seen_slots.add(slot_id)
+        candidate_intent = "propose_deterministic_continuation"
+        binding_key = "|".join(
+            (
+                objective_id,
+                source_frame_id,
+                source_analysis_id,
+                latest_state_id,
+                domain,
+                slot_id,
+                candidate_intent,
+            )
+        )
+        candidate_id = stable_id("analysis-internal-work-candidate", binding_key)
+        label = str(source.get("unknown_label") or slot_id.replace("_", " "))
+        why = str(source.get("why_it_matters") or "This source-bound uncertainty still limits a safe refinement.")
+        prompt = str(source.get("question_text") or "")
+        candidates.append(
+            InternalWorkCandidate(
+                internal_work_candidate_id=candidate_id,
+                active_objective_id=objective_id,
+                source_frame_id=source_frame_id,
+                source_analysis_id=source_analysis_id,
+                source_refinement_id=refinement_id,
+                source_question_candidate_id=source_id,
+                domain=domain,
+                unresolved_slot_id=slot_id,
+                candidate_intent=candidate_intent,
+                semantic_binding_key=binding_key,
+                latest_state_id=latest_state_id,
+                unresolved_label=label,
+                why_it_matters=why,
+                safe_deterministic_next_step=(
+                    f"Keep {label} explicitly unresolved and, only if the operator chooses, record source-bound context for it."
+                ),
+                continuation_prompt=prompt,
+                expected_answer_type=str(source.get("expected_answer_type") or ""),
+                priority=int(source.get("priority") or 0),
+                authority_boundary=(
+                    "This is a proposal and a possible operator-answer boundary only; it does not authorize execution."
+                ),
+                prohibited_actions=tuple(
+                    dict.fromkeys(
+                        (
+                            *(str(item) for item in analysis.get("prohibited_actions", ()) if str(item)),
+                            "Do not call a model, provider, tool, or external action.",
+                            "Do not create graph truth, review, admission, a worker, or a scheduler.",
+                        )
+                    )
+                ),
+                risk_class=str(analysis.get("risk_class") or "safe_internal"),
+                status="candidate",
+                created_event_id=stable_id("analysis-internal-work-candidate-event", candidate_id),
+                restart_summary=(
+                    "Deterministic source-bound internal continuation candidate retained under active-objective provenance; "
+                    "it has not executed work or created model, provider, tool, graph, review, admission, or external side effects."
+                ),
+            )
+        )
+    return tuple(candidates)
+
+
+def select_internal_work_candidates(
+    candidates: Sequence[Mapping[str, Any]],
+    *,
+    initiative_allowed: bool,
+    existing_pending_request: bool,
+) -> tuple[dict[str, Any], ...]:
+    """Select at most one safe continuation without executing it."""
+
+    ordered = sorted(
+        (dict(item) for item in candidates if isinstance(item, Mapping)),
+        key=lambda item: (-int(item.get("priority") or 0), str(item.get("internal_work_candidate_id") or "")),
+    )
+    selections: list[dict[str, Any]] = []
+    for ordinal, candidate in enumerate(ordered):
+        candidate_id = str(candidate.get("internal_work_candidate_id") or "")
+        if not candidate_id:
+            continue
+        if not initiative_allowed:
+            status = "deferred_not_authorized"
+            reason = "The active objective did not authorize DELTA to surface an internal continuation proposal."
+        elif existing_pending_request:
+            status = "suppressed_existing_request"
+            reason = "An unresolved ChatAddressableRequest already owns the next operator reply."
+        elif ordinal == 0:
+            status = "selected"
+            reason = str(candidate.get("why_it_matters") or "This is the highest-value unresolved source-bound issue.")
+        else:
+            status = "suppressed_low_priority"
+            reason = "A higher-priority unresolved issue was selected first; this candidate remains recorded without another proposal."
+        selection_id = stable_id("analysis-internal-work-selection", candidate_id, status)
+        selections.append(
+            {
+                "internal_work_selection_id": selection_id,
+                "candidate_id": candidate_id,
+                "semantic_binding_key": str(candidate.get("semantic_binding_key") or ""),
+                "source_frame_id": str(candidate.get("source_frame_id") or ""),
+                "source_analysis_id": str(candidate.get("source_analysis_id") or ""),
+                "source_refinement_id": str(candidate.get("source_refinement_id") or ""),
+                "unresolved_slot_id": str(candidate.get("unresolved_slot_id") or ""),
+                "selection_status": status,
+                "status": status,
+                "selection_reason": reason,
+                "created_event_id": stable_id("analysis-internal-work-selection-event", selection_id),
+                "restart_summary": "One deterministic continuation selection was recorded without creating a second queue, worker, or scheduler.",
+                "schema_version": INTERNAL_WORK_SCHEMA_VERSION,
+            }
+        )
+    return tuple(selections)
+
+
+def classify_internal_work_operator_response(candidate: Mapping[str, Any], message: str) -> str | None:
+    """Classify a bounded disposition or semantically compatible direct answer.
+
+    The returned state is only a conversational disposition.  It never grants
+    execution authority, and a bare refusal defaults to deferral rather than
+    destructive suppression.
+    """
+
+    text = " ".join(str(message or "").split())
+    lower = text.lower()
+    if not text or text.endswith("?") or re.match(r"^(?:(?:what|why|how|who|where|when|can|could|would|should|is|are)\b|(?:do|does|did)\s+(?!not\b))", lower):
+        return None
+    if operator_question_answer_is_compatible(candidate, text):
+        return "answered_unknown" if _operator_declares_unknown(lower) else "resolved_by_answer"
+    if re.search(
+        r"\b(?:ignore|dismiss|suppress|do\s+not\s+(?:surface|raise|ask|bring(?:\s+up)?|mention|show)|don't\s+(?:surface|raise|ask|bring(?:\s+up)?|mention|show))\b",
+        lower,
+    ):
+        return "operator_dismissed"
+    if re.search(r"\b(?:keep|retain|leave|preserve)\b.{0,64}\b(?:ready|available|open)\b", lower):
+        return "accepted"
+    if re.search(r"\b(?:later|not\s+now|defer|hold|wait|park|postpone|set\s+aside|revisit\s+later|not\s+a\s+priority)\b", lower) or lower in {"no", "nope"}:
+        return "operator_deferred"
+    if re.search(r"\b(?:yes|okay|ok|go\s+ahead|continue|proceed|keep\s+(?:it|that)|refine)\b", lower):
+        return "accepted"
+    return None
+
+
+def render_internal_work_proposal(candidate: Mapping[str, Any]) -> str:
+    """Render one inspectable proposal without implying that work has started."""
+
+    return "\n".join(
+        (
+            "One safe internal continuation is available.",
+            f"Unresolved issue: {str(candidate.get('unresolved_label') or '')}",
+            f"Why it matters: {str(candidate.get('why_it_matters') or '')}",
+            f"Proposed next step: {str(candidate.get('safe_deterministic_next_step') or '')}",
+            "You can keep it ready, defer it, dismiss it for this analysis, or provide the missing context now.",
+            "Status: proposal only. No model, provider, tool, external action, graph claim, review, admission, worker, or scheduler has started.",
+        )
+    )
+
+
+def render_internal_work_disposition(
+    candidate: Mapping[str, Any],
+    disposition: Mapping[str, Any],
+) -> str:
+    """Acknowledge one operator disposition without executing the proposal."""
+
+    status = str(disposition.get("status") or "")
+    label = str(candidate.get("unresolved_label") or "the unresolved issue")
+    if status == "accepted":
+        detail = "I recorded the continuation as ready for a later explicit, bounded step. It has not started work."
+    elif status == "operator_deferred":
+        detail = "I kept the continuation deferred and will not resurface it automatically for this analysis."
+    elif status == "operator_dismissed":
+        detail = "I suppressed this continuation for the current analysis while preserving the original evidence and analysis history."
+    elif status == "answered_unknown":
+        detail = "I recorded that the context remains unknown and left the source-bound issue unresolved without starting work."
+    else:
+        detail = "I recorded the supplied context against this continuation proposal without executing it or changing the original analysis."
+    return (
+        f"Internal continuation update for {label}: {detail}\n\n"
+        "This is a provenance-only disposition; it did not create graph truth, review, admission, a model request, provider call, tool execution, or external action."
+    )
+
+
+def render_internal_work_recall(
+    candidate: Mapping[str, Any],
+    selection: Mapping[str, Any] | None = None,
+    disposition: Mapping[str, Any] | None = None,
+) -> str:
+    """Read a recorded continuation posture without changing it."""
+
+    status = str((disposition or {}).get("status") or (selection or {}).get("status") or candidate.get("status") or "candidate")
+    return "\n".join(
+        (
+            "The recorded internal continuation is:",
+            f"Unresolved issue: {str(candidate.get('unresolved_label') or '')}",
+            f"Why it matters: {str(candidate.get('why_it_matters') or '')}",
+            f"Status: {status.replace('_', ' ')}",
+            f"Next safe step: {str(candidate.get('safe_deterministic_next_step') or '')}",
+            "This is a read-only provenance recall; it did not create a candidate, request, disposition, model call, provider call, tool execution, or external action.",
+        )
+    )
 
 
 def operator_question_answer_is_compatible(candidate: Mapping[str, Any], message: str) -> bool:
@@ -731,7 +1017,12 @@ def _looks_like_temporal_commitment(lower: str) -> bool:
 
 
 def _looks_like_payment_status(lower: str) -> bool:
-    return bool(re.search(r"\b(?:paid|unpaid|overdue|disputed|settled|pending|payment|invoice|remittance|commit(?:ted|ment))\b", lower))
+    return bool(
+        re.search(
+            r"\b(?:paid|unpaid|overdue|disputed|settled|pending|payment|invoice|remittance|commit(?:ted|ment)|bill(?:ing)?|charge|receivable|cash|funds?|collection|customer\s+(?:contests?|challenges?))\b",
+            lower,
+        )
+    )
 
 
 def _looks_like_availability_status(lower: str) -> bool:
@@ -1267,10 +1558,18 @@ def _bullet_lines(values: Sequence[str]) -> tuple[str, ...]:
 __all__ = [
     "EvidenceBoundAnalysisRecord",
     "EvidenceItem",
+    "INTERNAL_WORK_SCHEMA_VERSION",
+    "InternalWorkCandidate",
     "SafeNextAction",
     "SCHEMA_VERSION",
     "ValidationCheck",
     "compile_evidence_bound_analysis",
+    "compile_internal_work_candidates",
+    "classify_internal_work_operator_response",
     "render_evidence_bound_analysis",
     "render_evidence_bound_analysis_recall",
+    "render_internal_work_disposition",
+    "render_internal_work_proposal",
+    "render_internal_work_recall",
+    "select_internal_work_candidates",
 ]

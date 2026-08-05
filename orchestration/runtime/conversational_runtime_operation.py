@@ -57,8 +57,10 @@ from orchestration.runtime.semantic_problem_modeling import (
     render_semantic_problem_recall,
 )
 from orchestration.runtime.evidence_bound_analysis import (
+    classify_internal_work_operator_response,
     compile_evidence_bound_analysis,
     compile_analysis_refinement,
+    compile_internal_work_candidates,
     compile_operator_question_answer,
     compile_operator_question_candidates,
     operator_question_answer_is_compatible,
@@ -67,6 +69,10 @@ from orchestration.runtime.evidence_bound_analysis import (
     render_evidence_bound_analysis_question,
     render_evidence_bound_analysis_refinement,
     render_evidence_bound_analysis_refinement_recall,
+    render_internal_work_disposition,
+    render_internal_work_proposal,
+    render_internal_work_recall,
+    select_internal_work_candidates,
     select_operator_question_candidates,
 )
 
@@ -664,9 +670,27 @@ def _operator_question_initiative_authorized(message: str) -> bool:
     lower = " ".join(str(message or "").lower().split())
     if re.search(r"\b(?:do\s+not|don't|never)\s+(?:ask|question|interrupt|seek\s+clarification)\b", lower):
         return False
-    inquiry = bool(re.search(r"\b(?:ask(?:\s+me)?|question(?:\s+me)?|seek\s+(?:my\s+)?(?:input|clarification)|clarify\s+with\s+me)\b", lower))
+    inquiry = bool(re.search(r"\b(?:ask(?:\s+me)?|question(?:\s+me)?|seek\s+(?:(?:a|an|one|my)\s+)?(?:input|clarification)|clarify\s+with\s+me)\b", lower))
     boundary = bool(re.search(r"\b(?:uncertaint(?:y|ies)|unknown|missing\s+(?:information|context|evidence)|ambigu(?:ity|ous)|refin(?:e|ement)|update\s+the\s+analysis|use\s+my\s+answer)\b", lower))
     return inquiry and boundary
+
+
+def _internal_work_initiative_authorized(message: str) -> bool:
+    """Recognize objective-local permission to surface one safe continuation.
+
+    This remains narrower than a standing execution authority.  It permits one
+    provenance-only proposal at an unresolved analysis boundary and nothing
+    beyond the existing conversational request surface.
+    """
+
+    lower = " ".join(str(message or "").lower().split())
+    if re.search(r"\b(?:do\s+not|don't|never)\s+(?:create|surface|propose|raise)\s+(?:an?\s+)?(?:internal|next|follow[- ]?up|continuation)\b", lower):
+        return False
+    self_directed = bool(re.search(r"\b(?:internally|on\s+your\s+own|yourself|self-directed|independently)\b", lower))
+    continuation = bool(re.search(r"\b(?:continuation|follow[- ]?up|next[-\s]+(?:step|issue|task|candidate)|remaining\s+(?:issue|uncertainty|context|detail)|unresolved\s+(?:issue|detail|context)|internal\s+(?:work|task|candidate|proposal))\b", lower))
+    proposal = bool(re.search(r"\b(?:create|identify|surface|propose|keep|record|offer)\b", lower))
+    uncertainty = bool(re.search(r"\b(?:uncertaint(?:y|ies)|unknown|missing\s+(?:information|context|evidence)|unresolved|refin(?:e|ement))\b", lower))
+    return bool((self_directed and continuation and proposal) or (continuation and proposal and uncertainty))
 
 
 def _objective_execution_constraints(message: str) -> dict[str, Any]:
@@ -727,6 +751,7 @@ def _objective_execution_constraints(message: str) -> dict[str, Any]:
         "no_external_action": no_external_action,
         "wait_for_operator_input": wait_for_operator_input,
         "operator_question_initiative_allowed": _operator_question_initiative_authorized(message),
+        "internal_work_initiative_allowed": _internal_work_initiative_authorized(message),
         "state": "operator_waiting" if (no_local_model or wait_for_operator_input) else "unconstrained",
         "override_history": (),
     }
@@ -1200,6 +1225,44 @@ def _analysis_refinements_for_objective(
     )
 
 
+def _internal_work_candidates_for_objective(
+    objective: ConversationalObjective | None,
+) -> tuple[dict[str, Any], ...]:
+    """Read analyst-local internal continuations from canonical provenance only."""
+
+    if objective is None or not isinstance(objective.provenance, Mapping):
+        return ()
+    return tuple(
+        dict(item)
+        for item in objective.provenance.get("internal_work_candidates", ())
+        if isinstance(item, Mapping)
+    )
+
+
+def _internal_work_selections_for_objective(
+    objective: ConversationalObjective | None,
+) -> tuple[dict[str, Any], ...]:
+    if objective is None or not isinstance(objective.provenance, Mapping):
+        return ()
+    return tuple(
+        dict(item)
+        for item in objective.provenance.get("internal_work_selections", ())
+        if isinstance(item, Mapping)
+    )
+
+
+def _internal_work_dispositions_for_objective(
+    objective: ConversationalObjective | None,
+) -> tuple[dict[str, Any], ...]:
+    if objective is None or not isinstance(objective.provenance, Mapping):
+        return ()
+    return tuple(
+        dict(item)
+        for item in objective.provenance.get("internal_work_dispositions", ())
+        if isinstance(item, Mapping)
+    )
+
+
 def _replace_teaching_objective(
     objective: ConversationalObjective,
     *,
@@ -1215,6 +1278,9 @@ def _replace_teaching_objective(
     operator_question_selections: Sequence[Mapping[str, Any]] | None = None,
     operator_question_answers: Sequence[Mapping[str, Any]] | None = None,
     analysis_refinements: Sequence[Mapping[str, Any]] | None = None,
+    internal_work_candidates: Sequence[Mapping[str, Any]] | None = None,
+    internal_work_selections: Sequence[Mapping[str, Any]] | None = None,
+    internal_work_dispositions: Sequence[Mapping[str, Any]] | None = None,
     execution_constraints: Mapping[str, Any] | None = None,
 ) -> ConversationalObjective:
     provenance = dict(objective.provenance)
@@ -1257,6 +1323,18 @@ def _replace_teaching_objective(
     if analysis_refinements is not None:
         provenance["analysis_refinements"] = tuple(
             dict(item) for item in analysis_refinements
+        )
+    if internal_work_candidates is not None:
+        provenance["internal_work_candidates"] = tuple(
+            dict(item) for item in internal_work_candidates
+        )
+    if internal_work_selections is not None:
+        provenance["internal_work_selections"] = tuple(
+            dict(item) for item in internal_work_selections
+        )
+    if internal_work_dispositions is not None:
+        provenance["internal_work_dispositions"] = tuple(
+            dict(item) for item in internal_work_dispositions
         )
     if execution_constraints is not None:
         provenance["execution_constraints"] = dict(execution_constraints)
@@ -1574,9 +1652,121 @@ def _apply_evidence_bound_analysis_refinement_recall(
     )
 
 
+def _internal_work_recall_candidate(
+    state: ConversationalRuntimeState,
+    message: str,
+) -> tuple[dict[str, Any], dict[str, Any] | None, dict[str, Any] | None] | None:
+    """Resolve one explicit continuation recap without broad memory retrieval."""
+
+    objective = state.active_objective
+    candidates = _internal_work_candidates_for_objective(objective)
+    if objective is None or not candidates:
+        return None
+    lower = " ".join(str(message or "").lower().split())
+    if not re.match(r"^(?:what|which|how|show|tell)\b", lower):
+        return None
+    references_continuation = bool(re.search(r"\b(?:internal|continuation|next|follow[- ]?up)\b", lower))
+    references_work_state = bool(re.search(r"\b(?:work|candidate|proposal|issue|uncertain|unknown|pending|remain(?:s|ing)?)\b", lower))
+    if not (references_continuation and references_work_state):
+        return None
+    selections = _internal_work_selections_for_objective(objective)
+    dispositions = _internal_work_dispositions_for_objective(objective)
+    disposition = next((item for item in reversed(dispositions) if isinstance(item, Mapping)), None)
+    candidate_id = str((disposition or {}).get("candidate_id") or "")
+    selection = next(
+        (
+            item
+            for item in reversed(selections)
+            if isinstance(item, Mapping)
+            and (
+                not candidate_id
+                or str(item.get("candidate_id") or "") == candidate_id
+            )
+            and str(item.get("status") or "")
+            in {"surfaced", "selected", "accepted", "operator_deferred", "operator_dismissed", "resolved_by_answer", "answered_unknown"}
+        ),
+        None,
+    )
+    if not candidate_id:
+        candidate_id = str((selection or {}).get("candidate_id") or "")
+    candidate = next(
+        (item for item in candidates if str(item.get("internal_work_candidate_id") or "") == candidate_id),
+        None,
+    )
+    if candidate is None:
+        candidate = candidates[-1]
+        candidate_id = str(candidate.get("internal_work_candidate_id") or "")
+        selection = next(
+            (item for item in reversed(selections) if str(item.get("candidate_id") or "") == candidate_id),
+            None,
+        )
+    if disposition is None or str(disposition.get("candidate_id") or "") != candidate_id:
+        disposition = next(
+            (item for item in reversed(dispositions) if str(item.get("candidate_id") or "") == candidate_id),
+            None,
+        )
+    return dict(candidate), dict(selection) if isinstance(selection, Mapping) else None, dict(disposition) if isinstance(disposition, Mapping) else None
+
+
+def is_internal_work_recall_message(
+    state: ConversationalRuntimeState,
+    message: str,
+) -> bool:
+    """Expose explicit read-only internal-continuation recaps to the dispatcher."""
+
+    return _internal_work_recall_candidate(state, message) is not None
+
+
+def _apply_internal_work_recall(
+    state: ConversationalRuntimeState,
+    message: str,
+    *,
+    runtime_root: str | Path,
+) -> RuntimeTurnResult | None:
+    objective = state.active_objective
+    recalled = _internal_work_recall_candidate(state, message)
+    if objective is None or recalled is None:
+        return None
+    candidate, selection, disposition = recalled
+    reply = render_internal_work_recall(candidate, selection, disposition)
+    user_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 1), message),
+        role="user",
+        text=message,
+        intent_type="semantic_internal_work_recall",
+        objective_id=objective.objective_id,
+    )
+    assistant_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
+        role="assistant",
+        text=reply,
+        intent_type="semantic_internal_work_recall_response",
+        objective_id=objective.objective_id,
+    )
+    updated = _replace_state(state, conversation=state.conversation + (user_turn, assistant_turn))
+    save_runtime_state(runtime_root, updated)
+    return RuntimeTurnResult(
+        state=updated,
+        intent=ConversationIntent(
+            "semantic_internal_work_recall",
+            0.98,
+            "active_objective_provenance",
+            "safe_internal",
+            (),
+            ("source_bound_internal_work", "read_only_recall", "no_new_candidate"),
+        ),
+        reply=reply,
+    )
+
+
 def _analysis_question_initiative_allowed(objective: ConversationalObjective | None) -> bool:
     constraints = _objective_execution_constraints_for_objective(objective)
     return bool(constraints.get("operator_question_initiative_allowed"))
+
+
+def _internal_work_initiative_allowed(objective: ConversationalObjective | None) -> bool:
+    constraints = _objective_execution_constraints_for_objective(objective)
+    return bool(constraints.get("internal_work_initiative_allowed"))
 
 
 def _candidate_with_status(
@@ -1716,6 +1906,229 @@ def _compile_analysis_question_lifecycle(
     return candidates, selections, dict(selected) if isinstance(selected, Mapping) else None, tuple(events)
 
 
+def _compile_internal_work_request(
+    state: ConversationalRuntimeState,
+    *,
+    objective: ConversationalObjective,
+    candidate: Mapping[str, Any],
+    selection: Mapping[str, Any],
+    created_turn_id: str,
+    created_sequence: int,
+) -> ChatAddressableRequest:
+    """Compile one existing chat request for a proposal that cannot execute itself."""
+
+    candidate_id = str(candidate.get("internal_work_candidate_id") or "")
+    binding_key = str(candidate.get("semantic_binding_key") or "")
+    request_id = stable_id("analysis-internal-work-request", state.runtime_id, candidate_id, binding_key)
+    return ChatAddressableRequest(
+        request_id=request_id,
+        request_type="internal_work_continuation",
+        objective_id=objective.objective_id,
+        originating_goal_id=objective.objective_id,
+        goal_label="Evidence-bound internal continuation proposal",
+        prompt_text=render_internal_work_proposal(candidate),
+        created_turn_id=created_turn_id,
+        thread_id=objective.objective_id,
+        created_sequence=created_sequence,
+        accepted_response_types=(
+            "internal_work_accept",
+            "internal_work_defer",
+            "internal_work_dismiss",
+            "internal_work_answer",
+        ),
+        baseline_metrics={
+            "internal_work_candidate_id": candidate_id,
+            "internal_work_selection_id": str(selection.get("internal_work_selection_id") or ""),
+            "semantic_binding_key": binding_key,
+            "source_frame_id": str(candidate.get("source_frame_id") or ""),
+            "source_analysis_id": str(candidate.get("source_analysis_id") or ""),
+            "source_refinement_id": str(candidate.get("source_refinement_id") or ""),
+            "source_question_candidate_id": str(candidate.get("source_question_candidate_id") or ""),
+            "domain": str(candidate.get("domain") or ""),
+            "unresolved_slot_id": str(candidate.get("unresolved_slot_id") or ""),
+            "unresolved_label": str(candidate.get("unresolved_label") or ""),
+            "expected_answer_type": str(candidate.get("expected_answer_type") or ""),
+            "why_it_matters": str(candidate.get("why_it_matters") or ""),
+            "authority_boundary": str(candidate.get("authority_boundary") or ""),
+        },
+    )
+
+
+def _compile_internal_work_lifecycle(
+    state: ConversationalRuntimeState,
+    *,
+    objective: ConversationalObjective,
+    analysis: Mapping[str, Any],
+    source_refinement: Mapping[str, Any] | None = None,
+    source_question_candidates: Sequence[Mapping[str, Any]] | None = None,
+    existing_candidates: Sequence[Mapping[str, Any]] | None = None,
+    existing_selections: Sequence[Mapping[str, Any]] | None = None,
+    ignored_pending_request_id: str = "",
+    force_existing_pending_request: bool = False,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any] | None, dict[str, Any] | None, tuple[Mapping[str, Any], ...]]:
+    """Append one provenance-only continuation lifecycle for the latest analysis state."""
+
+    candidates = [
+        dict(item)
+        for item in (
+            existing_candidates
+            if existing_candidates is not None
+            else _internal_work_candidates_for_objective(objective)
+        )
+        if isinstance(item, Mapping)
+    ]
+    selections = [
+        dict(item)
+        for item in (
+            existing_selections
+            if existing_selections is not None
+            else _internal_work_selections_for_objective(objective)
+        )
+        if isinstance(item, Mapping)
+    ]
+    existing_ids = {str(item.get("internal_work_candidate_id") or "") for item in candidates}
+    derived = [
+        item.as_record()
+        for item in compile_internal_work_candidates(
+            analysis,
+            objective_id=objective.objective_id,
+            source_question_candidates=(
+                source_question_candidates
+                if source_question_candidates is not None
+                else _operator_question_candidates_for_objective(objective)
+            ),
+            source_refinement=source_refinement,
+        )
+        if item.internal_work_candidate_id not in existing_ids
+    ]
+    if not derived:
+        return candidates, selections, None, None, ()
+    has_pending_request = force_existing_pending_request or any(
+        request.status == "pending"
+        and not request.consumption_count
+        and request.request_id != ignored_pending_request_id
+        for request in state.pending_chat_requests
+    )
+    lifecycle = select_internal_work_candidates(
+        derived,
+        initiative_allowed=_internal_work_initiative_allowed(objective),
+        existing_pending_request=has_pending_request,
+    )
+    status_by_id = {
+        str(selection.get("candidate_id") or ""): str(selection.get("status") or "candidate")
+        for selection in lifecycle
+    }
+    candidates.extend(
+        _candidate_with_status(
+            candidate,
+            status=status_by_id.get(str(candidate.get("internal_work_candidate_id") or ""), "candidate"),
+        )
+        for candidate in derived
+    )
+    prior_selection_ids = {str(item.get("internal_work_selection_id") or "") for item in selections}
+    selections.extend(
+        item
+        for item in lifecycle
+        if str(item.get("internal_work_selection_id") or "") not in prior_selection_ids
+    )
+    selected_ids = {
+        str(item.get("candidate_id") or "")
+        for item in lifecycle
+        if str(item.get("status") or "") == "selected"
+    }
+    selected_candidate = next(
+        (
+            candidate
+            for candidate in candidates
+            if str(candidate.get("internal_work_candidate_id") or "") in selected_ids
+        ),
+        None,
+    )
+    selected_selection = next(
+        (
+            selection
+            for selection in selections
+            if str(selection.get("candidate_id") or "") in selected_ids
+            and str(selection.get("status") or "") == "selected"
+        ),
+        None,
+    )
+    events: list[Mapping[str, Any]] = []
+    for candidate in derived:
+        events.append(
+            {
+                "event": "internal_work_candidate_recorded",
+                "objective_id": objective.objective_id,
+                "internal_work_candidate_id": str(candidate.get("internal_work_candidate_id") or ""),
+                "source_analysis_id": str(candidate.get("source_analysis_id") or ""),
+                "source_refinement_id": str(candidate.get("source_refinement_id") or ""),
+                "unresolved_slot_id": str(candidate.get("unresolved_slot_id") or ""),
+                "status": status_by_id.get(str(candidate.get("internal_work_candidate_id") or ""), "candidate"),
+                "at": utc_now(),
+            }
+        )
+    for selection in lifecycle:
+        events.append(
+            {
+                "event": "internal_work_selection_recorded",
+                "objective_id": objective.objective_id,
+                "internal_work_selection_id": str(selection.get("internal_work_selection_id") or ""),
+                "internal_work_candidate_id": str(selection.get("candidate_id") or ""),
+                "status": str(selection.get("status") or ""),
+                "reason": str(selection.get("selection_reason") or ""),
+                "at": utc_now(),
+            }
+        )
+    return (
+        candidates,
+        selections,
+        dict(selected_candidate) if isinstance(selected_candidate, Mapping) else None,
+        dict(selected_selection) if isinstance(selected_selection, Mapping) else None,
+        tuple(events),
+    )
+
+
+def _retire_internal_work_slots(
+    candidates: Sequence[Mapping[str, Any]],
+    selections: Sequence[Mapping[str, Any]],
+    *,
+    source_analysis_id: str,
+    resolved_slots: Sequence[str],
+    refinement_id: str,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Mark historical candidate states resolved without deleting their provenance."""
+
+    slots = {str(item) for item in resolved_slots if str(item)}
+    if not slots:
+        return [dict(item) for item in candidates], [dict(item) for item in selections]
+    updated_candidates = [
+        _candidate_with_status(
+            item,
+            status="suppressed_resolved",
+            superseded_by_refinement_id=refinement_id,
+        )
+        if str(item.get("source_analysis_id") or "") == source_analysis_id
+        and str(item.get("unresolved_slot_id") or "") in slots
+        else dict(item)
+        for item in candidates
+        if isinstance(item, Mapping)
+    ]
+    updated_selections = [
+        _selection_with_status(
+            item,
+            status="suppressed_resolved",
+            selection_status="suppressed_resolved",
+            superseded_by_refinement_id=refinement_id,
+        )
+        if str(item.get("source_analysis_id") or "") == source_analysis_id
+        and str(item.get("unresolved_slot_id") or "") in slots
+        else dict(item)
+        for item in selections
+        if isinstance(item, Mapping)
+    ]
+    return updated_candidates, updated_selections
+
+
 def _apply_semantic_problem_modeling(
     state: ConversationalRuntimeState,
     message: str,
@@ -1787,6 +2200,36 @@ def _apply_semantic_problem_modeling(
             created_turn_id=user_turn.turn_id,
             created_sequence=len(state.conversation) + 1,
         )
+    internal_candidates = list(_internal_work_candidates_for_objective(objective))
+    internal_selections = list(_internal_work_selections_for_objective(objective))
+    internal_lifecycle_events: tuple[Mapping[str, Any], ...] = ()
+    selected_internal_candidate: dict[str, Any] | None = None
+    selected_internal_selection: dict[str, Any] | None = None
+    if isinstance(analysis, Mapping) and analysis_created:
+        (
+            internal_candidates,
+            internal_selections,
+            selected_internal_candidate,
+            selected_internal_selection,
+            internal_lifecycle_events,
+        ) = _compile_internal_work_lifecycle(
+            state,
+            objective=objective,
+            analysis=analysis,
+            source_question_candidates=candidates,
+            force_existing_pending_request=question_request is not None,
+        )
+    internal_work_request: ChatAddressableRequest | None = None
+    if selected_internal_candidate is not None and selected_internal_selection is not None:
+        internal_work_request = _compile_internal_work_request(
+            state,
+            objective=objective,
+            candidate=selected_internal_candidate,
+            selection=selected_internal_selection,
+            created_turn_id=user_turn.turn_id,
+            created_sequence=len(state.conversation) + 1,
+        )
+    if question_request is not None:
         reply = render_evidence_bound_analysis_question(analysis, selected_candidate)
     else:
         reply = (
@@ -1794,6 +2237,8 @@ def _apply_semantic_problem_modeling(
             if isinstance(analysis, Mapping)
             else render_semantic_problem_frame(record)
         )
+        if internal_work_request is not None and selected_internal_candidate is not None:
+            reply = f"{reply}\n\n{render_internal_work_proposal(selected_internal_candidate)}"
     assistant_turn = ConversationTurn(
         turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
         role="assistant",
@@ -1873,8 +2318,54 @@ def _apply_semantic_problem_modeling(
                 "at": utc_now(),
             },
         )
+    if internal_work_request is not None and selected_internal_candidate is not None and selected_internal_selection is not None:
+        internal_work_request = replace(
+            internal_work_request,
+            rendered_turn_id=assistant_turn.turn_id,
+            render_sequence=len(state.conversation) + 2,
+        )
+        selected_internal_id = str(selected_internal_candidate.get("internal_work_candidate_id") or "")
+        selected_internal_selection_id = str(selected_internal_selection.get("internal_work_selection_id") or "")
+        internal_candidates = [
+            _candidate_with_status(
+                item,
+                status="surfaced",
+                surfaced_turn_id=assistant_turn.turn_id,
+                request_id=internal_work_request.request_id,
+            )
+            if str(item.get("internal_work_candidate_id") or "") == selected_internal_id
+            else item
+            for item in internal_candidates
+        ]
+        internal_selections = [
+            _selection_with_status(
+                item,
+                status="surfaced",
+                selection_status="surfaced",
+                surfaced_turn_id=assistant_turn.turn_id,
+                request_id=internal_work_request.request_id,
+            )
+            if str(item.get("internal_work_selection_id") or "") == selected_internal_selection_id
+            else item
+            for item in internal_selections
+        ]
+        progress = progress + (
+            {
+                "event": "internal_work_proposal_rendered",
+                "objective_id": objective.objective_id,
+                "internal_work_candidate_id": selected_internal_id,
+                "internal_work_selection_id": selected_internal_selection_id,
+                "request_id": internal_work_request.request_id,
+                "source_analysis_id": str(selected_internal_candidate.get("source_analysis_id") or ""),
+                "source_frame_id": str(selected_internal_candidate.get("source_frame_id") or ""),
+                "assistant_turn_id": assistant_turn.turn_id,
+                "at": utc_now(),
+            },
+        )
     if lifecycle_events:
         progress = progress + lifecycle_events
+    if internal_lifecycle_events:
+        progress = progress + internal_lifecycle_events
     updated = _replace_state(
         state,
         active_objective=_replace_teaching_objective(
@@ -1883,11 +2374,15 @@ def _apply_semantic_problem_modeling(
             evidence_bound_analyses=analyses,
             operator_question_candidates=candidates,
             operator_question_selections=selections,
+            internal_work_candidates=internal_candidates,
+            internal_work_selections=internal_selections,
         ),
         conversation=state.conversation + (user_turn, assistant_turn),
         pending_chat_requests=(
-            state.pending_chat_requests + (question_request,)
-            if question_request is not None
+            state.pending_chat_requests + tuple(
+                request for request in (question_request, internal_work_request) if request is not None
+            )
+            if question_request is not None or internal_work_request is not None
             else state.pending_chat_requests
         ),
         objective_progress=progress,
@@ -1905,7 +2400,13 @@ def _apply_semantic_problem_modeling(
             ),
         ),
         reply=reply,
-        chat_request=question_request.as_record() if question_request is not None else None,
+        chat_request=(
+            question_request.as_record()
+            if question_request is not None
+            else internal_work_request.as_record()
+            if internal_work_request is not None
+            else None
+        ),
     )
 
 
@@ -4581,9 +5082,37 @@ def _pending_analysis_question_for_reply(
     return candidate
 
 
+def _pending_internal_work_continuation_for_reply(
+    state: ConversationalRuntimeState,
+    message: str,
+) -> ChatAddressableRequest | None:
+    """Bind only a compatible disposition to the latest surfaced continuation."""
+
+    pending = [
+        request
+        for request in state.pending_chat_requests
+        if request.status == "pending" and not request.consumption_count
+    ]
+    candidates = [request for request in pending if request.request_type == "internal_work_continuation"]
+    if not candidates:
+        return None
+    latest_pending = max(pending, key=lambda item: (item.render_sequence, item.created_sequence, item.request_id))
+    candidate = max(candidates, key=lambda item: (item.render_sequence, item.created_sequence, item.request_id))
+    if candidate.request_id != latest_pending.request_id:
+        return None
+    if _semantic_problem_compilation_for_message(state, message) is not None:
+        return None
+    if classify_internal_work_operator_response(candidate.baseline_metrics, message) is None:
+        return None
+    return candidate
+
+
 def _pending_request_for_reply(state: ConversationalRuntimeState, message: str) -> ChatAddressableRequest | None:
     if not state.pending_chat_requests:
         return None
+    internal_work = _pending_internal_work_continuation_for_reply(state, message)
+    if internal_work is not None:
+        return internal_work
     kind = _chat_request_resolution_kind(message)
     compatibility_defaults = {
         "provider_authority": ("approved", "denied"),
@@ -6212,6 +6741,32 @@ def _resolve_evidence_bound_analysis_question(
         else item
         for item in _operator_question_selections_for_objective(objective)
     ]
+    internal_candidates = list(_internal_work_candidates_for_objective(objective))
+    internal_selections = list(_internal_work_selections_for_objective(objective))
+    if answer.status != "bound_unknown":
+        internal_candidates, internal_selections = _retire_internal_work_slots(
+            internal_candidates,
+            internal_selections,
+            source_analysis_id=str(analysis.get("analysis_id") or ""),
+            resolved_slots=refinement.changed_unknown_slots,
+            refinement_id=refinement.refinement_id,
+        )
+    (
+        internal_candidates,
+        internal_selections,
+        selected_internal_candidate,
+        selected_internal_selection,
+        internal_lifecycle_events,
+    ) = _compile_internal_work_lifecycle(
+        state,
+        objective=objective,
+        analysis=analysis,
+        source_refinement=refinement_record,
+        source_question_candidates=candidates,
+        existing_candidates=internal_candidates,
+        existing_selections=internal_selections,
+        ignored_pending_request_id=request.request_id,
+    )
     resolved_request = replace(
         request,
         status="resolved",
@@ -6224,7 +6779,19 @@ def _resolve_evidence_bound_analysis_question(
         resolved_at=utc_now(),
         consumed_at=utc_now(),
     )
+    internal_work_request: ChatAddressableRequest | None = None
+    if selected_internal_candidate is not None and selected_internal_selection is not None:
+        internal_work_request = _compile_internal_work_request(
+            state,
+            objective=objective,
+            candidate=selected_internal_candidate,
+            selection=selected_internal_selection,
+            created_turn_id=user_turn.turn_id,
+            created_sequence=len(state.conversation) + 1,
+        )
     reply = render_evidence_bound_analysis_refinement(refinement_record)
+    if internal_work_request is not None and selected_internal_candidate is not None:
+        reply = f"{reply}\n\n{render_internal_work_proposal(selected_internal_candidate)}"
     assistant_turn = ConversationTurn(
         turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
         role="assistant",
@@ -6258,6 +6825,52 @@ def _resolve_evidence_bound_analysis_question(
                 "at": utc_now(),
             },
         )
+    if internal_lifecycle_events:
+        progress = progress + internal_lifecycle_events
+    if internal_work_request is not None and selected_internal_candidate is not None and selected_internal_selection is not None:
+        internal_work_request = replace(
+            internal_work_request,
+            rendered_turn_id=assistant_turn.turn_id,
+            render_sequence=len(state.conversation) + 2,
+        )
+        selected_internal_id = str(selected_internal_candidate.get("internal_work_candidate_id") or "")
+        selected_internal_selection_id = str(selected_internal_selection.get("internal_work_selection_id") or "")
+        internal_candidates = [
+            _candidate_with_status(
+                item,
+                status="surfaced",
+                surfaced_turn_id=assistant_turn.turn_id,
+                request_id=internal_work_request.request_id,
+            )
+            if str(item.get("internal_work_candidate_id") or "") == selected_internal_id
+            else item
+            for item in internal_candidates
+        ]
+        internal_selections = [
+            _selection_with_status(
+                item,
+                status="surfaced",
+                selection_status="surfaced",
+                surfaced_turn_id=assistant_turn.turn_id,
+                request_id=internal_work_request.request_id,
+            )
+            if str(item.get("internal_work_selection_id") or "") == selected_internal_selection_id
+            else item
+            for item in internal_selections
+        ]
+        progress = progress + (
+            {
+                "event": "internal_work_proposal_rendered",
+                "objective_id": objective.objective_id,
+                "internal_work_candidate_id": selected_internal_id,
+                "internal_work_selection_id": selected_internal_selection_id,
+                "request_id": internal_work_request.request_id,
+                "source_analysis_id": str(selected_internal_candidate.get("source_analysis_id") or ""),
+                "source_refinement_id": str(selected_internal_candidate.get("source_refinement_id") or ""),
+                "assistant_turn_id": assistant_turn.turn_id,
+                "at": utc_now(),
+            },
+        )
     updated = _replace_state(
         state,
         active_objective=_replace_teaching_objective(
@@ -6266,9 +6879,14 @@ def _resolve_evidence_bound_analysis_question(
             operator_question_selections=selections,
             operator_question_answers=answers,
             analysis_refinements=refinements,
+            internal_work_candidates=internal_candidates,
+            internal_work_selections=internal_selections,
         ),
         conversation=state.conversation + (user_turn, assistant_turn),
-        pending_chat_requests=tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id),
+        pending_chat_requests=(
+            tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id)
+            + ((internal_work_request,) if internal_work_request is not None else ())
+        ),
         resolved_chat_requests=state.resolved_chat_requests + (resolved_request,),
         objective_progress=progress,
     )
@@ -6287,6 +6905,158 @@ def _resolve_evidence_bound_analysis_question(
                 "no_graph_admission",
                 "no_external_action",
             ),
+        ),
+        reply=reply,
+        chat_request=(internal_work_request.as_record() if internal_work_request is not None else resolved_request.as_record()),
+        side_thread_bound=True,
+    )
+
+
+def _resolve_internal_work_continuation(
+    state: ConversationalRuntimeState,
+    request: ChatAddressableRequest,
+    message: str,
+    *,
+    user_turn: ConversationTurn,
+    runtime_root: str | Path,
+) -> RuntimeTurnResult | None:
+    """Record a bounded continuation disposition without executing the proposal."""
+
+    objective = state.active_objective
+    if objective is None or objective.objective_id != request.objective_id:
+        return None
+    candidate_id = str(request.baseline_metrics.get("internal_work_candidate_id") or "")
+    binding_key = str(request.baseline_metrics.get("semantic_binding_key") or "")
+    candidate = next(
+        (
+            item
+            for item in _internal_work_candidates_for_objective(objective)
+            if str(item.get("internal_work_candidate_id") or "") == candidate_id
+            and str(item.get("semantic_binding_key") or "") == binding_key
+        ),
+        None,
+    )
+    if candidate is None:
+        return None
+    status = classify_internal_work_operator_response(candidate, message)
+    if status is None:
+        return None
+    selection_id = str(request.baseline_metrics.get("internal_work_selection_id") or "")
+    disposition_id = stable_id(
+        "analysis-internal-work-disposition",
+        request.request_id,
+        candidate_id,
+        status,
+        " ".join(str(message or "").split()),
+    )
+    disposition = {
+        "internal_work_disposition_id": disposition_id,
+        "candidate_id": candidate_id,
+        "internal_work_selection_id": selection_id,
+        "semantic_binding_key": binding_key,
+        "source_frame_id": str(candidate.get("source_frame_id") or ""),
+        "source_analysis_id": str(candidate.get("source_analysis_id") or ""),
+        "source_refinement_id": str(candidate.get("source_refinement_id") or ""),
+        "source_question_candidate_id": str(candidate.get("source_question_candidate_id") or ""),
+        "surface_request_id": request.request_id,
+        "operator_turn_id": user_turn.turn_id,
+        "operator_response_text": " ".join(str(message or "").split()),
+        "status": status,
+        "authority_boundary": "Operator disposition recorded; no continuation execution was authorized or started.",
+        "created_event_id": stable_id("analysis-internal-work-disposition-event", disposition_id),
+        "restart_summary": "Source-bound continuation disposition persists without worker, model, provider, tool, graph, review, admission, or external-action side effects.",
+        "schema_version": "evidence_bound_internal_work_v1",
+    }
+    dispositions = list(_internal_work_dispositions_for_objective(objective))
+    disposition_added = not any(
+        str(item.get("internal_work_disposition_id") or "") == disposition_id
+        for item in dispositions
+    )
+    if disposition_added:
+        dispositions.append(disposition)
+    candidates = [
+        _candidate_with_status(
+            item,
+            status=status,
+            disposition_id=disposition_id,
+            disposition_turn_id=user_turn.turn_id,
+            surface_request_id=request.request_id,
+        )
+        if str(item.get("internal_work_candidate_id") or "") == candidate_id
+        else item
+        for item in _internal_work_candidates_for_objective(objective)
+    ]
+    selections = [
+        _selection_with_status(
+            item,
+            status=status,
+            selection_status=status,
+            disposition_id=disposition_id,
+            disposition_turn_id=user_turn.turn_id,
+            surface_request_id=request.request_id,
+        )
+        if str(item.get("internal_work_selection_id") or "") == selection_id
+        else item
+        for item in _internal_work_selections_for_objective(objective)
+    ]
+    resolved_request = replace(
+        request,
+        status="resolved",
+        resolution_state=status,
+        resolution=status,
+        resolution_policy="bound_to_exact_source_bound_internal_work_proposal",
+        resolution_text=message,
+        resolved_turn_id=user_turn.turn_id,
+        consumption_count=1,
+        resolved_at=utc_now(),
+        consumed_at=utc_now(),
+    )
+    reply = render_internal_work_disposition(candidate, disposition)
+    assistant_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
+        role="assistant",
+        text=reply,
+        intent_type="semantic_internal_work_disposition",
+        objective_id=objective.objective_id,
+    )
+    progress = state.objective_progress
+    if disposition_added:
+        progress = progress + (
+            {
+                "event": "internal_work_disposition_recorded",
+                "objective_id": objective.objective_id,
+                "internal_work_disposition_id": disposition_id,
+                "internal_work_candidate_id": candidate_id,
+                "internal_work_selection_id": selection_id,
+                "request_id": request.request_id,
+                "status": status,
+                "operator_turn_id": user_turn.turn_id,
+                "at": utc_now(),
+            },
+        )
+    updated = _replace_state(
+        state,
+        active_objective=_replace_teaching_objective(
+            objective,
+            internal_work_candidates=candidates,
+            internal_work_selections=selections,
+            internal_work_dispositions=dispositions,
+        ),
+        conversation=state.conversation + (user_turn, assistant_turn),
+        pending_chat_requests=tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id),
+        resolved_chat_requests=state.resolved_chat_requests + (resolved_request,),
+        objective_progress=progress,
+    )
+    save_runtime_state(runtime_root, updated)
+    return RuntimeTurnResult(
+        state=updated,
+        intent=ConversationIntent(
+            "semantic_internal_work_disposition",
+            0.98,
+            "active_objective_provenance",
+            "safe_internal",
+            (),
+            ("exact_internal_work_binding", "provenance_only_disposition", "no_execution"),
         ),
         reply=reply,
         chat_request=resolved_request.as_record(),
@@ -6315,6 +7085,14 @@ def resolve_pending_chat_request(
     policy = resolution_kind
     if request.request_type == "evidence_bound_analysis_question":
         return _resolve_evidence_bound_analysis_question(
+            state,
+            request,
+            message,
+            user_turn=user_turn,
+            runtime_root=runtime_root,
+        )
+    if request.request_type == "internal_work_continuation":
+        return _resolve_internal_work_continuation(
             state,
             request,
             message,
@@ -6670,6 +7448,13 @@ def handle_conversational_message(
     )
     if evidence_bound_refinement_recall is not None:
         return evidence_bound_refinement_recall
+    internal_work_recall = _apply_internal_work_recall(
+        state,
+        message,
+        runtime_root=runtime_root,
+    )
+    if internal_work_recall is not None:
+        return internal_work_recall
     semantic_recall = _apply_source_bound_semantic_recall(
         state,
         message,
