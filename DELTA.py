@@ -7699,6 +7699,28 @@ class DeltaApp:
                         f"{str(disposition.get('evidence_next_operation_proposal_id') or '')}: "
                         f"{str(disposition.get('status') or 'recorded')}. No evidence gathering started.",
                     )
+                if resolved.chat_request and str(resolved.chat_request.get("request_type") or "") == "evidence_execution_authority":
+                    metrics = resolved.chat_request.get("baseline_metrics") or {}
+                    self._append_observation(
+                        "Evidence execution authority",
+                        "Surfaced one inert future-execution authority request for proposal "
+                        f"{str(metrics.get('evidence_next_operation_proposal_id') or '')}; no execution started.",
+                    )
+            elif resolved.intent.intent_type == "semantic_evidence_execution_authority_record":
+                objective = resolved.state.active_objective
+                authorities = (
+                    objective.provenance.get("evidence_execution_authorities", ())
+                    if objective is not None and isinstance(objective.provenance, Mapping)
+                    else ()
+                )
+                authority = next((item for item in reversed(authorities) if isinstance(item, Mapping)), {})
+                if authority:
+                    self._append_observation(
+                        "Evidence execution authority",
+                        "Recorded one inert future-execution authority posture "
+                        f"{str(authority.get('evidence_execution_authority_id') or '')}: "
+                        f"{str(authority.get('status') or 'recorded')}. No execution started.",
+                    )
             self._sync_developmental_teaching_progress()
             if resolved.background_cycle_started:
                 self._start_conversational_background_cycle("teaching_request_resolved")

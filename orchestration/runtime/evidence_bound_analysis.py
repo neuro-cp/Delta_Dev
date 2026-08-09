@@ -22,6 +22,7 @@ QUESTION_LOOP_SCHEMA_VERSION = "evidence_bound_operator_question_v1"
 INTERNAL_WORK_SCHEMA_VERSION = "evidence_bound_internal_work_v1"
 EVIDENCE_PERMISSION_SCHEMA_VERSION = "evidence_bound_evidence_permission_v1"
 EVIDENCE_NEXT_OPERATION_SCHEMA_VERSION = "evidence_bound_next_operation_proposal_v1"
+EVIDENCE_EXECUTION_AUTHORITY_SCHEMA_VERSION = "evidence_bound_execution_authority_v1"
 
 
 @dataclass(frozen=True)
@@ -423,6 +424,42 @@ class EvidenceNextOperationProposal:
         record["permitted_inputs"] = list(self.permitted_inputs)
         record["prohibited_actions"] = list(self.prohibited_actions)
         record["record_kind"] = "evidence_next_operation_proposal"
+        return record
+
+
+@dataclass(frozen=True)
+class EvidenceExecutionAuthorityRecord:
+    """One inert authority posture for a proposed future evidence operation.
+
+    The record deliberately does not grant immediate execution.  It preserves an
+    operator decision for a later separate gate, so the action boundary remains
+    explicit and restartable.
+    """
+
+    evidence_execution_authority_id: str
+    active_objective_id: str
+    source_evidence_request_id: str
+    source_evidence_authorization_id: str
+    source_evidence_next_operation_proposal_id: str
+    source_evidence_next_operation_disposition_id: str
+    proposed_operation_type: str
+    proposed_scope: str
+    operator_decision: str
+    operator_response_text: str
+    operator_context_text: str
+    may_execute_now: bool
+    execution_requires_future_gate: bool
+    prohibited_actions: tuple[str, ...]
+    authority_boundary: str
+    status: str
+    created_event_id: str
+    restart_summary: str
+    schema_version: str = EVIDENCE_EXECUTION_AUTHORITY_SCHEMA_VERSION
+
+    def as_record(self) -> dict[str, Any]:
+        record = asdict(self)
+        record["prohibited_actions"] = list(self.prohibited_actions)
+        record["record_kind"] = "evidence_execution_authority_record"
         return record
 
 
@@ -948,6 +985,144 @@ def _next_operation_specification(
             "expected_evidence": "The specific delivery, invoice, or payment status needed by the recorded analysis.",
         }
     return {}
+
+
+def compile_evidence_execution_authority_records(
+    proposal: Mapping[str, Any],
+    disposition: Mapping[str, Any],
+    *,
+    objective_id: str,
+    operator_decision: str,
+    operator_response_text: str,
+) -> tuple[EvidenceExecutionAuthorityRecord, ...]:
+    """Derive one inert execution-authority posture from a proposal decision."""
+
+    proposal_id = str(proposal.get("evidence_next_operation_proposal_id") or "")
+    disposition_id = str(disposition.get("evidence_next_operation_disposition_id") or "")
+    if not objective_id or not proposal_id or not disposition_id:
+        return ()
+    if str(disposition.get("status") or "") != "accepted_pending_separate_execution":
+        return ()
+    if str(disposition.get("evidence_next_operation_proposal_id") or "") != proposal_id:
+        return ()
+    decision = str(operator_decision or "")
+    if decision not in {"approved_for_future_gate", "declined", "deferred", "context_provided"}:
+        return ()
+    normalized = " ".join(str(operator_response_text or "").split())
+    authority_id = stable_id(
+        "analysis-evidence-execution-authority",
+        objective_id,
+        proposal_id,
+        disposition_id,
+        decision,
+        normalized,
+    )
+    prohibited = tuple(
+        dict.fromkeys(
+            (
+                *(str(item) for item in proposal.get("prohibited_actions", ()) if str(item)),
+                "Do not execute this authority record in the current phase.",
+                "Do not gather evidence, read files, access networks, call providers or models, use tools, run sandboxes, mutate graph truth, perform review or admission, start a worker, start a scheduler, or take external action.",
+            )
+        )
+    )
+    return (
+        EvidenceExecutionAuthorityRecord(
+            evidence_execution_authority_id=authority_id,
+            active_objective_id=objective_id,
+            source_evidence_request_id=str(proposal.get("source_evidence_request_id") or ""),
+            source_evidence_authorization_id=str(proposal.get("source_evidence_authorization_id") or ""),
+            source_evidence_next_operation_proposal_id=proposal_id,
+            source_evidence_next_operation_disposition_id=disposition_id,
+            proposed_operation_type=str(proposal.get("proposed_operation_type") or ""),
+            proposed_scope=str(proposal.get("proposed_scope") or ""),
+            operator_decision=decision,
+            operator_response_text=normalized,
+            operator_context_text=normalized if decision == "context_provided" else "",
+            may_execute_now=False,
+            execution_requires_future_gate=True,
+            prohibited_actions=prohibited,
+            authority_boundary=(
+                "This records only the operator's posture for a future bounded execution gate. "
+                "It does not authorize immediate evidence gathering or any action in this phase."
+            ),
+            status=decision,
+            created_event_id=stable_id("analysis-evidence-execution-authority-event", authority_id),
+            restart_summary=(
+                "Evidence execution authority posture persists exactly once and remains inert; "
+                "future execution still requires a separate explicit gate."
+            ),
+        ),
+    )
+
+
+def classify_evidence_execution_authority_operator_response(request: Mapping[str, Any], message: str) -> str | None:
+    """Classify a reply to an inert future-execution authority prompt."""
+
+    text = " ".join(str(message or "").split())
+    lower = text.lower()
+    if not text or text.endswith("?"):
+        return None
+    if re.match(r"^(?:what|why|how|who|where|when|can|could|would|should|is|are|do|does|did)\b", lower):
+        return None
+    if re.search(r"\b(?:later|not\s+now|defer|hold|wait|park|postpone|leave\s+(?:it|that)\s+open|keep\s+(?:it|that)\s+open)\b", lower):
+        return "deferred"
+    if re.search(r"\b(?:no|nope|deny|decline|reject|do\s+not|don't|not\s+authorized|not\s+approved|stop)\b", lower):
+        return "declined"
+    if re.search(r"\b(?:yes|approve|approved|accept|accepted|authorize|authorized|allow|allowed|go\s+ahead|you\s+may|permission\s+granted|record\s+(?:the\s+)?approval)\b", lower):
+        return "approved_for_future_gate"
+    if re.search(r"\b(?:maybe|not\s+sure|unclear|depends)\b", lower):
+        return "unclear_pending"
+    if len(text.split()) >= 4:
+        return "context_provided"
+    return None
+
+
+def render_evidence_execution_authority_request(proposal: Mapping[str, Any], disposition: Mapping[str, Any]) -> str:
+    """Ask to record future execution authority without implying execution now."""
+
+    prohibited = tuple(str(item) for item in proposal.get("prohibited_actions", ()) if str(item))
+    return "\n".join(
+        (
+            "The bounded evidence operation proposal is accepted as worth considering.",
+            f"Proposed operation: {str(proposal.get('proposed_operation_type') or '').replace('_', ' ')}",
+            f"Scope: {str(proposal.get('proposed_scope') or '')}",
+            "Question: Should I record approval for a future bounded execution gate, decline it, defer it, or add context?",
+            "Important: I will not run the lookup, inspect files, call a model/provider/tool, use a network, run a sandbox, mutate graph truth, review/admit anything, start a worker, or take external action in this gate.",
+            "Prohibited now: " + ("; ".join(prohibited) if prohibited else "No execution or external action."),
+            f"Proposal disposition: {str(disposition.get('status') or '').replace('_', ' ')}",
+            "Status: execution authority request only. Future execution would require a separate gate.",
+        )
+    )
+
+
+def render_evidence_execution_authority_record(
+    proposal: Mapping[str, Any],
+    authority: Mapping[str, Any],
+) -> str:
+    """Acknowledge one inert future-execution authority posture."""
+
+    decision = str(authority.get("operator_decision") or authority.get("status") or "")
+    if decision == "approved_for_future_gate":
+        detail = "I recorded approval for a future bounded execution gate. Nothing executed now."
+    elif decision == "declined":
+        detail = "I recorded that this future execution authority is declined."
+    elif decision == "deferred":
+        detail = "I left this future execution authority deferred."
+    elif decision == "context_provided":
+        detail = "I recorded your context with the authority request without authorizing execution."
+    else:
+        detail = "I recorded the response without authorizing execution."
+    return "\n".join(
+        (
+            f"Evidence execution authority update: {detail}",
+            f"Authority record: {str(authority.get('evidence_execution_authority_id') or '')}",
+            f"Proposal: {str(proposal.get('evidence_next_operation_proposal_id') or '')}",
+            f"Decision: {decision.replace('_', ' ')}",
+            f"Context supplied: {str(authority.get('operator_context_text') or 'None')}",
+            "Execution state: no evidence gathering, file read, network access, model/provider/tool call, sandbox execution, graph mutation, review, admission, worker, scheduler, or external action started.",
+        )
+    )
 
 
 def select_internal_work_candidates(
@@ -2131,9 +2306,11 @@ def _bullet_lines(values: Sequence[str]) -> tuple[str, ...]:
 
 __all__ = [
     "EvidenceBoundAnalysisRecord",
+    "EvidenceExecutionAuthorityRecord",
     "EvidenceNextOperationProposal",
     "EvidencePermissionRequest",
     "EvidenceItem",
+    "EVIDENCE_EXECUTION_AUTHORITY_SCHEMA_VERSION",
     "EVIDENCE_NEXT_OPERATION_SCHEMA_VERSION",
     "EVIDENCE_PERMISSION_SCHEMA_VERSION",
     "INTERNAL_WORK_SCHEMA_VERSION",
@@ -2141,9 +2318,11 @@ __all__ = [
     "SafeNextAction",
     "SCHEMA_VERSION",
     "ValidationCheck",
+    "classify_evidence_execution_authority_operator_response",
     "classify_evidence_next_operation_operator_response",
     "classify_evidence_permission_operator_response",
     "compile_evidence_bound_analysis",
+    "compile_evidence_execution_authority_records",
     "compile_evidence_next_operation_proposals",
     "compile_evidence_permission_requests",
     "compile_internal_work_candidates",
@@ -2151,6 +2330,8 @@ __all__ = [
     "render_evidence_authorization",
     "render_evidence_bound_analysis",
     "render_evidence_bound_analysis_recall",
+    "render_evidence_execution_authority_record",
+    "render_evidence_execution_authority_request",
     "render_evidence_next_operation_disposition",
     "render_evidence_next_operation_proposal",
     "render_evidence_next_operation_recall",

@@ -164,13 +164,14 @@ def test_proposal_disposition_binds_exact_request_without_execution_and_restarts
     assert dispositions[0]["source_evidence_authorization_id"] == proposal["source_evidence_authorization_id"]
     assert dispositions[0]["may_execute_now"] is False
     assert proposals[0]["status"] == "accepted_pending_separate_execution"
-    assert not result.state.pending_chat_requests
+    assert result.state.pending_chat_requests[0].request_type == "evidence_execution_authority"
     assert result.state.resolved_chat_requests[-1].request_id == proposal_request.request_id
     assert "no evidence gathering" in result.reply.lower()
 
     restored = start_or_restore_runtime(tmp_path)
     assert _records(restored, "evidence_next_operation_proposals") == proposals
     assert _records(restored, "evidence_next_operation_dispositions") == dispositions
-    duplicate = _send(restored, "Yes, keep that proposal ready.", tmp_path)
-    assert len(_records(duplicate.state, "evidence_next_operation_proposals")) == 1
-    assert len(_records(duplicate.state, "evidence_next_operation_dispositions")) == 1
+    ordinary = _send(restored, "What is 2 + 2?", tmp_path)
+    assert "4" in ordinary.reply
+    assert len(_records(ordinary.state, "evidence_next_operation_proposals")) == 1
+    assert len(_records(ordinary.state, "evidence_next_operation_dispositions")) == 1
