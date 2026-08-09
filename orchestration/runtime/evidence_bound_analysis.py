@@ -33,6 +33,7 @@ EVIDENCE_MINIMAL_FIXTURE_RESULT_SCHEMA_VERSION = "evidence_bound_minimal_fixture
 LONG_HORIZON_SELF_CORRECTION_SCHEMA_VERSION = "objective_local_self_correction_v1"
 ADAPTIVE_ROUTE_ARBITRATION_SCHEMA_VERSION = "adaptive_route_arbitration_v1"
 LONG_HORIZON_CORRECTION_EFFECT_SCHEMA_VERSION = "objective_local_correction_effect_v1"
+LONG_HORIZON_CORRECTION_EFFECT_CONSOLIDATION_SCHEMA_VERSION = "objective_local_correction_effect_consolidation_v1"
 
 
 @dataclass(frozen=True)
@@ -770,6 +771,41 @@ class LongHorizonCorrectionEffect:
         ):
             record[field_name] = list(record[field_name])
         record["record_kind"] = "objective_local_long_horizon_correction_effect"
+        return record
+
+
+@dataclass(frozen=True)
+class LongHorizonCorrectionEffectConsolidation:
+    """One current, non-executing posture over objective-local correction effects."""
+
+    consolidation_id: str
+    objective_id: str
+    active_correction_effect_ids: tuple[str, ...]
+    obsolete_correction_effect_ids: tuple[str, ...]
+    affected_frame_ids: tuple[str, ...]
+    affected_route_ids: tuple[str, ...]
+    affected_result_ids: tuple[str, ...]
+    affected_refinement_ids: tuple[str, ...]
+    consolidation_type: str
+    selected_nonexecuting_posture: str
+    forbidden_actions: tuple[str, ...]
+    may_execute_now: bool
+    status: str
+    schema_version: str = LONG_HORIZON_CORRECTION_EFFECT_CONSOLIDATION_SCHEMA_VERSION
+
+    def as_record(self) -> dict[str, Any]:
+        record = asdict(self)
+        for field_name in (
+            "active_correction_effect_ids",
+            "obsolete_correction_effect_ids",
+            "affected_frame_ids",
+            "affected_route_ids",
+            "affected_result_ids",
+            "affected_refinement_ids",
+            "forbidden_actions",
+        ):
+            record[field_name] = list(record[field_name])
+        record["record_kind"] = "objective_local_long_horizon_correction_effect_consolidation"
         return record
 
 
@@ -2539,12 +2575,208 @@ def _correction_effect(
     )
 
 
+def compile_long_horizon_correction_effect_consolidation(
+    *,
+    objective_id: str,
+    semantic_frames: Sequence[Mapping[str, Any]],
+    correction_candidates: Sequence[Mapping[str, Any]],
+    correction_effects: Sequence[Mapping[str, Any]],
+) -> LongHorizonCorrectionEffectConsolidation | None:
+    """Consolidate existing correction effects into one current safe posture.
+
+    The projection is deliberately read-only: it only classifies persisted
+    source lineage and never recomputes a result, changes a claim, or grants
+    authority.  Temporal precedence comes from source-frame order, never from
+    record insertion order or a model judgment.
+    """
+
+    if not objective_id:
+        return None
+    frames = [dict(item) for item in semantic_frames if isinstance(item, Mapping)]
+    frame_order = {str(item.get("frame_id") or ""): index for index, item in enumerate(frames)}
+    frame_by_id = {str(item.get("frame_id") or ""): item for item in frames if str(item.get("frame_id") or "")}
+    candidates = {
+        str(item.get("correction_candidate_id") or ""): dict(item)
+        for item in correction_candidates
+        if isinstance(item, Mapping) and str(item.get("correction_candidate_id") or "")
+    }
+    effects = [dict(item) for item in correction_effects if isinstance(item, Mapping) and str(item.get("effect_id") or "")]
+    if not effects:
+        return None
+
+    def unique(values: Sequence[str]) -> tuple[str, ...]:
+        return tuple(dict.fromkeys(value for value in values if value))
+
+    def domain_for(candidate: Mapping[str, Any]) -> str:
+        frame_ids = tuple(str(item) for item in candidate.get("source_frame_ids", ()) if str(item))
+        frame = _semantic_input_frame(frame_by_id.get(frame_ids[-1], {})) if frame_ids else {}
+        return str(frame.get("domain_guess") or "")
+
+    def latest_index(candidate: Mapping[str, Any]) -> int:
+        return max((frame_order.get(str(frame_id), -1) for frame_id in candidate.get("source_frame_ids", ())), default=-1)
+
+    def explicit_retraction(frame: Mapping[str, Any]) -> bool:
+        source = str(_semantic_input_frame(frame).get("source_text") or "").lower()
+        return bool(re.search(r"\b(?:ignore|retract|withdraw|restore)\b.*\b(?:correction|original|earlier)\b|\boriginal\b.*\b(?:correct|restore)\b", source))
+
+    def same_signature(left: Mapping[str, Any], right: Mapping[str, Any]) -> bool:
+        left_frame = _semantic_input_frame(left)
+        right_frame = _semantic_input_frame(right)
+        domain = str(left_frame.get("domain_guess") or "")
+        if domain != str(right_frame.get("domain_guess") or ""):
+            return False
+        if domain == "physics_mechanics":
+            left_angle = _frictionless_incline_angle(left_frame)
+            right_angle = _frictionless_incline_angle(right_frame)
+            return left_angle is not None and right_angle is not None and math.isclose(left_angle, right_angle)
+        if domain == "finance_portfolio_risk":
+            left_allocation = _portfolio_allocation_signature(left_frame)
+            right_allocation = _portfolio_allocation_signature(right_frame)
+            return left_allocation is not None and left_allocation == right_allocation
+        return False
+
+    metadata: list[dict[str, Any]] = []
+    for effect in effects:
+        candidate = candidates.get(str(effect.get("correction_id") or ""), {})
+        metadata.append(
+            {
+                "effect": effect,
+                "candidate": candidate,
+                "domain": domain_for(candidate),
+                "latest_index": latest_index(candidate),
+                "prior_index": max(
+                    (frame_order.get(str(item), -1) for item in tuple(candidate.get("source_frame_ids", ()))[:-1]),
+                    default=-1,
+                ),
+            }
+        )
+    dynamic = [item for item in metadata if str(item["effect"].get("effect_type") or "") in {"stale_suppression", "resolved_context"}]
+    blocked = [item for item in metadata if str(item["effect"].get("effect_type") or "") == "blocked_persists"]
+    stable = [item for item in metadata if str(item["effect"].get("effect_type") or "") == "stable_completed"]
+
+    active: list[dict[str, Any]] = []
+    obsolete: list[dict[str, Any]] = []
+    consolidation_type = "stable_unaffected"
+    posture = "Retain the existing source-bound posture without recomputation or execution."
+    retraction = None
+    for item in sorted(dynamic, key=lambda value: (int(value["latest_index"]), str(value["effect"].get("effect_id") or "")), reverse=True):
+        candidate = item["candidate"]
+        frame_ids = tuple(str(value) for value in candidate.get("source_frame_ids", ()) if str(value))
+        latest_frame = frame_by_id.get(frame_ids[-1], {}) if frame_ids else {}
+        if explicit_retraction(latest_frame) and frame_ids:
+            restored = next(
+                (
+                    frame_by_id.get(frame_id, {})
+                    for frame_id in frame_order
+                    if frame_order[frame_id] < int(item["latest_index"])
+                    and same_signature(frame_by_id.get(frame_id, {}), latest_frame)
+                ),
+                {},
+            )
+            if restored:
+                retraction = (item, restored)
+                break
+    if retraction is not None:
+        active = [retraction[0]]
+        restored_frame_id = str(retraction[1].get("frame_id") or "")
+        restored_route_id = str(_capability_route_candidate_from_frame(retraction[1]).get("capability_route_candidate_id") or "")
+        obsolete = [
+            item for item in dynamic
+            if item is not retraction[0] and restored_route_id in tuple(str(value) for value in item["effect"].get("affected_route_ids", ()))
+        ]
+        consolidation_type = "retraction_restores_stable"
+        posture = (
+            "An explicit later source restores the exact earlier recorded assumption. Retain the historical controlled result as stable "
+            "without recomputation; preserve every correction record and do not infer replacement inputs."
+        )
+    elif dynamic:
+        current_by_domain: dict[str, dict[str, Any]] = {}
+        for item in dynamic:
+            domain = str(item["domain"] or "unknown")
+            current = current_by_domain.get(domain)
+            if current is None or (
+                int(item["latest_index"]),
+                int(item["prior_index"]),
+                str(item["effect"].get("effect_id") or ""),
+            ) > (
+                int(current["latest_index"]),
+                int(current["prior_index"]),
+                str(current["effect"].get("effect_id") or ""),
+            ):
+                current_by_domain[domain] = item
+        active = [current_by_domain[key] for key in sorted(current_by_domain)]
+        obsolete = [item for item in dynamic if item not in active]
+        active_types = {str(item["effect"].get("effect_type") or "") for item in active}
+        if len(active) > 1:
+            consolidation_type = "compound_separate_effects"
+            posture = "Retain separate current correction effects by source domain; do not merge their uncertainty, authority, or safety boundaries."
+        elif "resolved_context" in active_types:
+            consolidation_type = "partial_resolution"
+            posture = "Later context narrows one recorded uncertainty, but unresolved safety or evidence limits remain clarify-only and non-executing."
+        else:
+            consolidation_type = "latest_supersedes_prior"
+            posture = "The newest source-bound correction supersedes prior correction effects for this route; preserve historical results without recomputation."
+    elif blocked:
+        active = blocked
+        consolidation_type = "blocked_persists"
+        posture = "Retain the blocked safety boundary despite later descriptive or unsupported authority language; no contact, read, scan, status claim, or execution occurs."
+    elif stable:
+        active = stable
+        consolidation_type = "stable_unaffected"
+        posture = "The completed provisional lineage remains stable because no source-bound correction affects it; do not repeat the result, refinement, or selection."
+
+    active_effects = [item["effect"] for item in active]
+    obsolete_effects = [item["effect"] for item in obsolete]
+    affected_frames = unique(
+        [str(value) for effect in active_effects for value in effect.get("affected_frame_ids", ())]
+    )
+    if retraction is not None:
+        affected_frames = unique((*affected_frames, str(retraction[1].get("frame_id") or "")))
+    affected_routes = unique(
+        [str(value) for effect in active_effects for value in effect.get("affected_route_ids", ())]
+    )
+    affected_results = unique(
+        [str(value) for effect in (*active_effects, *obsolete_effects) for value in effect.get("affected_result_ids", ())]
+    )
+    affected_refinements = unique(
+        [str(value) for effect in (*active_effects, *obsolete_effects) for value in effect.get("affected_refinement_ids", ())]
+    )
+    forbidden_actions = unique(
+        [str(value) for effect in active_effects for value in effect.get("forbidden_actions", ())]
+        + ["No automatic authority, execution, graph mutation, review, admission, scheduler, planner, or worker."]
+    )
+    active_ids = unique([str(effect.get("effect_id") or "") for effect in active_effects])
+    obsolete_ids = unique([str(effect.get("effect_id") or "") for effect in obsolete_effects])
+    return LongHorizonCorrectionEffectConsolidation(
+        consolidation_id=stable_id(
+            "long-horizon-correction-effect-consolidation",
+            objective_id,
+            consolidation_type,
+            *active_ids,
+            *obsolete_ids,
+        ),
+        objective_id=objective_id,
+        active_correction_effect_ids=active_ids,
+        obsolete_correction_effect_ids=obsolete_ids,
+        affected_frame_ids=affected_frames,
+        affected_route_ids=affected_routes,
+        affected_result_ids=affected_results,
+        affected_refinement_ids=affected_refinements,
+        consolidation_type=consolidation_type,
+        selected_nonexecuting_posture=posture,
+        forbidden_actions=forbidden_actions,
+        may_execute_now=False,
+        status="deterministic_correction_effect_consolidation_only",
+    )
+
+
 def compile_adaptive_route_arbitration(
     *,
     objective_id: str,
     semantic_frames: Sequence[Mapping[str, Any]],
     correction_candidates: Sequence[Mapping[str, Any]] = (),
     correction_effects: Sequence[Mapping[str, Any]] = (),
+    correction_effect_consolidation: Mapping[str, Any] | None = None,
 ) -> AdaptiveRouteArbitration | None:
     """Select one safe, non-executing posture from existing objective-local routes.
 
@@ -2595,8 +2827,16 @@ def compile_adaptive_route_arbitration(
         reason: str,
     ) -> AdaptiveRouteArbitration:
         selected_route_id = str((route or {}).get("capability_route_candidate_id") or "")
-        selected_correction_id = str((correction or {}).get("correction_candidate_id") or "")
+        selected_correction_id = str(
+            (correction or {}).get("correction_candidate_id")
+            or (correction or {}).get("consolidation_id")
+            or ""
+        )
         selected_correction_effect_id = str((correction or {}).get("effect_id") or "")
+        if not selected_correction_effect_id and isinstance(correction, Mapping):
+            selected_correction_effect_id = str(
+                next(iter(correction.get("active_correction_effect_ids", ())), "")
+            )
         forbidden = tuple(
             dict.fromkeys(
                 str(item)
@@ -2650,6 +2890,35 @@ def compile_adaptive_route_arbitration(
             "blocked",
             correction=malformed,
             reason="A malformed controlled input remains fail-closed and outranks clarify, eligible, and completed routes.",
+        )
+    consolidation = dict(correction_effect_consolidation or {})
+    consolidation_type = str(consolidation.get("consolidation_type") or "")
+    active_effect_ids = tuple(
+        str(item) for item in consolidation.get("active_correction_effect_ids", ()) if str(item)
+    )
+    if consolidation_type == "retraction_restores_stable":
+        return build(
+            "completed",
+            correction=consolidation,
+            reason="The consolidated correction posture preserves the current completed lineage without rerunning it.",
+        )
+    if consolidation_type in {"compound_separate_effects", "partial_resolution"}:
+        clarify_route = next(
+            (route for _, route in routes if str(route.get("decision") or "") == "clarify"),
+            None,
+        )
+        if clarify_route is not None:
+            return build(
+                "clarify",
+                route=clarify_route,
+                correction=consolidation,
+                reason="A consolidated multi-effect posture retains the source-bound clarification safety boundary.",
+            )
+    if active_effect_ids and consolidation_type != "stable_unaffected":
+        return build(
+            "clarify",
+            correction=consolidation,
+            reason="The consolidated current correction effect changes the posture without authorizing recomputation or execution.",
         )
     correction_effect = next(
         (
@@ -4504,6 +4773,7 @@ __all__ = [
     "EvidenceItem",
     "LongHorizonSelfCorrectionCandidate",
     "LongHorizonCorrectionEffect",
+    "LongHorizonCorrectionEffectConsolidation",
     "EVIDENCE_EXECUTION_AUTHORITY_SCHEMA_VERSION",
     "EVIDENCE_ANALYSIS_REVISION_CANDIDATE_SCHEMA_VERSION",
     "EVIDENCE_FIXTURE_DRY_RUN_SCHEMA_VERSION",
@@ -4536,6 +4806,7 @@ __all__ = [
     "compile_internal_work_candidates",
     "compile_long_horizon_self_correction_candidates",
     "compile_long_horizon_correction_effects",
+    "compile_long_horizon_correction_effect_consolidation",
     "classify_internal_work_operator_response",
     "render_evidence_analysis_revision_candidate",
     "render_evidence_authorization",
