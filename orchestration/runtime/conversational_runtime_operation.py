@@ -53,6 +53,7 @@ from orchestration.runtime.provisional_semantic_consolidation import (
 )
 from orchestration.runtime.semantic_problem_modeling import (
     compile_semantic_problem_frame,
+    compile_semantic_problem_frames,
     render_semantic_problem_frame,
     render_semantic_problem_recall,
 )
@@ -1593,13 +1594,35 @@ def _semantic_problem_compilation_for_message(
     )
 
 
+def _semantic_problem_compilations_for_message(
+    state: ConversationalRuntimeState,
+    message: str,
+) -> tuple[Any, ...]:
+    """Return independent recognized clauses under one objective-local turn."""
+
+    objective = state.active_objective
+    if objective is None:
+        return ()
+    return compile_semantic_problem_frames(
+        message,
+        frame_scope_id=objective.objective_id,
+        source_turn_id=stable_id(
+            "conversation-turn",
+            state.runtime_id,
+            str(len(state.conversation) + 1),
+            message,
+        ),
+        source_type="operator_text",
+    )
+
+
 def is_semantic_problem_modeling_message(
     state: ConversationalRuntimeState,
     message: str,
 ) -> bool:
     """Expose a narrow, source-bound perception boundary to the normal dispatcher."""
 
-    return _semantic_problem_compilation_for_message(state, message) is not None
+    return bool(_semantic_problem_compilations_for_message(state, message))
 
 
 def _semantic_problem_frame_terms(record: Mapping[str, Any]) -> set[str]:
@@ -3550,31 +3573,35 @@ def _apply_semantic_problem_modeling(
     *,
     runtime_root: str | Path,
 ) -> RuntimeTurnResult | None:
-    """Persist one deterministic frame in objective provenance and nowhere else."""
+    """Persist recognized semantic clauses atomically in objective provenance."""
 
     objective = state.active_objective
-    compilation = _semantic_problem_compilation_for_message(state, message)
-    if objective is None or compilation is None:
+    compilations = _semantic_problem_compilations_for_message(state, message)
+    if objective is None or not compilations:
         return None
     frames = list(_semantic_problem_frames_for_objective(objective))
-    frame_id = compilation.semantic_input_frame.frame_id
-    record = next(
-        (item for item in frames if str(item.get("frame_id") or "") == frame_id),
-        None,
-    )
-    if record is None:
-        record = {
-            **compilation.as_record(),
-            "objective_id": objective.objective_id,
-            "provenance_status": "active_objective_source_bound_provisional",
-            "created_at": utc_now(),
-        }
-        frames.append(record)
     analyses = list(_evidence_bound_analyses_for_objective(objective))
-    analysis_compilation = compile_evidence_bound_analysis(record)
-    analysis = None
-    analysis_created = False
-    if analysis_compilation is not None:
+    turn_records: list[dict[str, Any]] = []
+    turn_analyses: list[dict[str, Any]] = []
+    created_analysis_ids: set[str] = set()
+    for compilation in compilations:
+        frame_id = compilation.semantic_input_frame.frame_id
+        record = next(
+            (item for item in frames if str(item.get("frame_id") or "") == frame_id),
+            None,
+        )
+        if record is None:
+            record = {
+                **compilation.as_record(),
+                "objective_id": objective.objective_id,
+                "provenance_status": "active_objective_source_bound_provisional",
+                "created_at": utc_now(),
+            }
+            frames.append(record)
+        turn_records.append(dict(record))
+        analysis_compilation = compile_evidence_bound_analysis(record)
+        if analysis_compilation is None:
+            continue
         analysis_id = analysis_compilation.analysis_id
         analysis = next(
             (item for item in analyses if str(item.get("analysis_id") or "") == analysis_id),
@@ -3588,7 +3615,15 @@ def _apply_semantic_problem_modeling(
                 "created_at": utc_now(),
             }
             analyses.append(analysis)
-            analysis_created = True
+            created_analysis_ids.add(analysis_id)
+        turn_analyses.append(dict(analysis))
+    record = turn_records[0]
+    analysis = turn_analyses[0] if turn_analyses else None
+    analysis_created = bool(
+        isinstance(analysis, Mapping)
+        and str(analysis.get("analysis_id") or "") in created_analysis_ids
+    )
+    is_compound = len(compilations) > 1
     user_turn = ConversationTurn(
         turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 1), message),
         role="user",
@@ -3624,7 +3659,12 @@ def _apply_semantic_problem_modeling(
     selections = list(_operator_question_selections_for_objective(objective))
     lifecycle_events: tuple[Mapping[str, Any], ...] = ()
     selected_candidate: dict[str, Any] | None = None
-    if isinstance(analysis, Mapping) and analysis_created and not correction_suppresses_new_selection:
+    if (
+        isinstance(analysis, Mapping)
+        and analysis_created
+        and not correction_suppresses_new_selection
+        and not is_compound
+    ):
         candidates, selections, selected_candidate, lifecycle_events = _compile_analysis_question_lifecycle(
             state,
             objective=objective,
@@ -3644,7 +3684,12 @@ def _apply_semantic_problem_modeling(
     internal_lifecycle_events: tuple[Mapping[str, Any], ...] = ()
     selected_internal_candidate: dict[str, Any] | None = None
     selected_internal_selection: dict[str, Any] | None = None
-    if isinstance(analysis, Mapping) and analysis_created and not correction_suppresses_new_selection:
+    if (
+        isinstance(analysis, Mapping)
+        and analysis_created
+        and not correction_suppresses_new_selection
+        and not is_compound
+    ):
         (
             internal_candidates,
             internal_selections,
@@ -3676,6 +3721,19 @@ def _apply_semantic_problem_modeling(
     )
     if question_request is not None:
         reply = render_evidence_bound_analysis_question(analysis, selected_candidate)
+    elif is_compound:
+        analyses_by_frame = {
+            str(item.get("source_frame_id") or ""): item
+            for item in turn_analyses
+            if str(item.get("source_frame_id") or "")
+        }
+        reply = "\n\n".join(
+            render_evidence_bound_analysis(analyses_by_frame[frame_id])
+            if frame_id in analyses_by_frame
+            else render_semantic_problem_frame(turn_record)
+            for turn_record in turn_records
+            for frame_id in (str(turn_record.get("frame_id") or ""),)
+        )
     else:
         reply = (
             render_evidence_bound_analysis(analysis)
@@ -3692,12 +3750,15 @@ def _apply_semantic_problem_modeling(
         objective_id=objective.objective_id,
     )
     progress = state.objective_progress
-    if not any(
-        str(item.get("event") or "") == "semantic_problem_frame_recorded"
-        and str(item.get("frame_id") or "") == frame_id
-        for item in progress
-        if isinstance(item, Mapping)
-    ):
+    for compilation, turn_record in zip(compilations, turn_records):
+        frame_id = str(turn_record.get("frame_id") or compilation.semantic_input_frame.frame_id)
+        if any(
+            str(item.get("event") or "") == "semantic_problem_frame_recorded"
+            and str(item.get("frame_id") or "") == frame_id
+            for item in progress
+            if isinstance(item, Mapping)
+        ):
+            continue
         progress = progress + ({
             "event": "semantic_problem_frame_recorded",
             "objective_id": objective.objective_id,
@@ -3706,18 +3767,21 @@ def _apply_semantic_problem_modeling(
             "source_turn_id": user_turn.turn_id,
             "at": utc_now(),
         },)
-    if isinstance(analysis, Mapping) and not any(
-        str(item.get("event") or "") == "evidence_bound_analysis_recorded"
-        and str(item.get("analysis_id") or "") == str(analysis.get("analysis_id") or "")
-        for item in progress
-        if isinstance(item, Mapping)
-    ):
+    for turn_analysis in turn_analyses:
+        analysis_id = str(turn_analysis.get("analysis_id") or "")
+        if not analysis_id or any(
+            str(item.get("event") or "") == "evidence_bound_analysis_recorded"
+            and str(item.get("analysis_id") or "") == analysis_id
+            for item in progress
+            if isinstance(item, Mapping)
+        ):
+            continue
         progress = progress + ({
             "event": "evidence_bound_analysis_recorded",
             "objective_id": objective.objective_id,
-            "analysis_id": str(analysis.get("analysis_id") or ""),
-            "source_frame_id": frame_id,
-            "domain": str(analysis.get("domain") or compilation.semantic_input_frame.domain_guess),
+            "analysis_id": analysis_id,
+            "source_frame_id": str(turn_analysis.get("source_frame_id") or ""),
+            "domain": str(turn_analysis.get("domain") or ""),
             "source_turn_id": user_turn.turn_id,
             "at": utc_now(),
         },)

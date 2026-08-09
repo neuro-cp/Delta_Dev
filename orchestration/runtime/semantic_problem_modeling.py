@@ -282,6 +282,76 @@ def compile_semantic_problem_frame(
     return None
 
 
+def compile_semantic_problem_frames(
+    source_text: str,
+    *,
+    frame_scope_id: str,
+    source_turn_id: str = "",
+    source_type: str = "operator_text",
+) -> tuple[SemanticProblemCompilation, ...]:
+    """Compile independent source clauses without merging their domains.
+
+    This is a projection over the existing single-frame compiler.  Each clause
+    retains its own source text, spans, stable ID, and route candidate; this
+    helper neither creates a planner nor broadens any capability boundary.
+    """
+
+    raw_source = str(source_text or "")
+    if not raw_source.strip():
+        return ()
+    whole_compilation = compile_semantic_problem_frame(
+        raw_source,
+        frame_scope_id=frame_scope_id,
+        source_turn_id=source_turn_id,
+        source_type=source_type,
+    )
+    clauses = [
+        match.group(0).strip()
+        for match in re.finditer(r"[^.!?;\n]+(?:[.!?;]+|$)", raw_source)
+        if match.group(0).strip()
+    ]
+    if len(clauses) < 2:
+        return (whole_compilation,) if whole_compilation is not None else ()
+    clause_compilations = [
+        compile_semantic_problem_frame(
+            clause,
+            frame_scope_id=frame_scope_id,
+            source_turn_id=source_turn_id,
+            source_type=source_type,
+        )
+        for clause in clauses
+    ]
+    compiled: list[SemanticProblemCompilation] = []
+    frame_ids: set[str] = set()
+    index = 0
+    while index < len(clauses):
+        compilation = clause_compilations[index]
+        if compilation is None and index + 1 < len(clauses) and clause_compilations[index + 1] is None:
+            compilation = compile_semantic_problem_frame(
+                f"{clauses[index]} {clauses[index + 1]}",
+                frame_scope_id=frame_scope_id,
+                source_turn_id=source_turn_id,
+                source_type=source_type,
+            )
+            if compilation is not None:
+                index += 1
+        if compilation is None:
+            index += 1
+            continue
+        frame_id = compilation.semantic_input_frame.frame_id
+        if frame_id in frame_ids:
+            index += 1
+            continue
+        frame_ids.add(frame_id)
+        compiled.append(compilation)
+        index += 1
+    if len(compiled) > 1:
+        return tuple(compiled)
+    if compiled:
+        return tuple(compiled)
+    return (whole_compilation,) if whole_compilation is not None else ()
+
+
 def render_semantic_problem_frame(record: Mapping[str, Any]) -> str:
     """Render a concise, human-readable, provisional interpretation from one record."""
 
@@ -1578,6 +1648,7 @@ __all__ = [
     "SemanticInputFrame",
     "SemanticProblemCompilation",
     "compile_semantic_problem_frame",
+    "compile_semantic_problem_frames",
     "extract_semantic_source_text",
     "render_semantic_problem_frame",
     "render_semantic_problem_recall",
