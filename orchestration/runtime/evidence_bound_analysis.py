@@ -10,6 +10,8 @@ exact-once behavior.
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+import hashlib
+import json
 import math
 import re
 from typing import Any, Mapping, Sequence
@@ -24,6 +26,7 @@ EVIDENCE_PERMISSION_SCHEMA_VERSION = "evidence_bound_evidence_permission_v1"
 EVIDENCE_NEXT_OPERATION_SCHEMA_VERSION = "evidence_bound_next_operation_proposal_v1"
 EVIDENCE_EXECUTION_AUTHORITY_SCHEMA_VERSION = "evidence_bound_execution_authority_v1"
 EVIDENCE_FIXTURE_EXECUTION_PLAN_SCHEMA_VERSION = "evidence_bound_fixture_execution_plan_v1"
+EVIDENCE_FIXTURE_DRY_RUN_SCHEMA_VERSION = "evidence_bound_fixture_dry_run_result_v1"
 
 
 @dataclass(frozen=True)
@@ -504,6 +507,46 @@ class EvidenceFixtureExecutionPlan:
         record["validation_requirements"] = list(self.validation_requirements)
         record["proof_requirements"] = list(self.proof_requirements)
         record["record_kind"] = "evidence_fixture_execution_plan"
+        return record
+
+
+@dataclass(frozen=True)
+class EvidenceFixtureDryRunResult:
+    """One deterministic inert dry-run result for an accepted fixture plan.
+
+    The dry-run evaluates only the already-recorded plan boundary.  It does not
+    read files, inspect repositories, call models/providers/tools, execute
+    commands, update graph truth, or ingest evidence into analysis.
+    """
+
+    evidence_fixture_dry_run_result_id: str
+    source_plan_id: str
+    source_execution_authority_id: str
+    source_proposal_id: str
+    source_evidence_request_id: str
+    source_evidence_authorization_id: str
+    objective_id: str
+    fixture_kind: str
+    proposed_operation_type: str
+    evidence_source_class: str
+    input_digest: str
+    deterministic_result: str
+    limitations: tuple[str, ...]
+    blocked_actions: tuple[str, ...]
+    proof_summary: str
+    may_update_analysis: bool
+    may_update_graph: bool
+    requires_result_ingestion_gate: bool
+    status: str
+    created_event_id: str
+    restart_summary: str
+    schema_version: str = EVIDENCE_FIXTURE_DRY_RUN_SCHEMA_VERSION
+
+    def as_record(self) -> dict[str, Any]:
+        record = asdict(self)
+        record["limitations"] = list(self.limitations)
+        record["blocked_actions"] = list(self.blocked_actions)
+        record["record_kind"] = "evidence_fixture_dry_run_result"
         return record
 
 
@@ -1569,6 +1612,156 @@ def render_evidence_fixture_execution_plan_update(plan: Mapping[str, Any]) -> st
     )
 
 
+def compile_evidence_fixture_dry_run_results(
+    plan: Mapping[str, Any],
+    *,
+    objective_id: str,
+) -> tuple[EvidenceFixtureDryRunResult, ...]:
+    """Compile one deterministic non-executing dry-run result from an accepted plan."""
+
+    plan_id = str(plan.get("evidence_fixture_execution_plan_id") or "")
+    authority_id = str(plan.get("source_evidence_execution_authority_id") or "")
+    proposal_id = str(plan.get("source_evidence_next_operation_proposal_id") or "")
+    evidence_request_id = str(plan.get("source_evidence_request_id") or "")
+    evidence_authorization_id = str(plan.get("source_evidence_authorization_id") or "")
+    if not objective_id or not plan_id or not authority_id or not proposal_id or not evidence_request_id or not evidence_authorization_id:
+        return ()
+    if str(plan.get("status") or "") not in {"accepted_pending_execution_gate", "accepted", "approved"}:
+        return ()
+    if bool(plan.get("may_execute_now")) or not bool(plan.get("execution_requires_future_gate")):
+        return ()
+
+    source_class = str(plan.get("evidence_source_class") or "")
+    operation = str(plan.get("proposed_operation_type") or "")
+    specification = _fixture_dry_run_specification(source_class, operation)
+    if not specification:
+        return ()
+
+    input_payload = {
+        "plan_id": plan_id,
+        "objective_id": objective_id,
+        "operation": operation,
+        "source_class": source_class,
+        "allowed_inputs": list(plan.get("allowed_inputs", ())),
+        "expected_result_shape": str(plan.get("expected_result_shape") or ""),
+    }
+    input_digest = _canonical_digest(input_payload)
+    result_id = stable_id("analysis-evidence-fixture-dry-run-result", objective_id, plan_id, input_digest)
+    blocked_actions = tuple(
+        dict.fromkeys(
+            (
+                *(str(item) for item in plan.get("forbidden_actions", ()) if str(item)),
+                "No repository file read.",
+                "No local filesystem read.",
+                "No network or external source lookup.",
+                "No model, provider, or tool call.",
+                "No sandbox command execution.",
+                "No source mutation.",
+                "No graph truth mutation, review, admission, analysis update, result ingestion, replanning, worker, scheduler, or external action.",
+            )
+        )
+    )
+    return (
+        EvidenceFixtureDryRunResult(
+            evidence_fixture_dry_run_result_id=result_id,
+            source_plan_id=plan_id,
+            source_execution_authority_id=authority_id,
+            source_proposal_id=proposal_id,
+            source_evidence_request_id=evidence_request_id,
+            source_evidence_authorization_id=evidence_authorization_id,
+            objective_id=objective_id,
+            fixture_kind=str(specification["fixture_kind"]),
+            proposed_operation_type=operation,
+            evidence_source_class=source_class,
+            input_digest=input_digest,
+            deterministic_result=str(specification["deterministic_result"]),
+            limitations=tuple(str(item) for item in specification["limitations"] if str(item)),
+            blocked_actions=blocked_actions,
+            proof_summary=str(specification["proof_summary"]),
+            may_update_analysis=False,
+            may_update_graph=False,
+            requires_result_ingestion_gate=True,
+            status="dry_run_completed",
+            created_event_id=stable_id("analysis-evidence-fixture-dry-run-result-event", result_id),
+            restart_summary=(
+                "Evidence fixture dry-run result persists exactly once from plan fields only; "
+                "analysis revision, graph mutation, review, admission, and real execution remain deferred."
+            ),
+        ),
+    )
+
+
+def _fixture_dry_run_specification(source_class: str, operation: str) -> Mapping[str, Any]:
+    if source_class == "market_source_context_plan_only" or operation == "finance_market_context_proposal_only":
+        return {
+            "fixture_kind": "synthetic_market_context_blocked",
+            "deterministic_result": (
+                "Dry-run confirms only a synthetic market-context result shape can be produced from the accepted plan. "
+                "It did not fetch prices, correlations, market data, account data, recommendations, or trades."
+            ),
+            "limitations": (
+                "No live market data was read.",
+                "No portfolio advice was updated.",
+                "A later result-ingestion gate is required before analysis can use any result.",
+            ),
+            "proof_summary": "Market dry-run used plan metadata only and blocked lookup, provider/model/tool use, network access, account access, and trading.",
+        }
+    if source_class == "owned_fixture_read_only_plan" or operation == "defensive_owned_fixture_read_only_proposal":
+        return {
+            "fixture_kind": "synthetic_owned_fixture_inspection_blocked",
+            "deterministic_result": (
+                "Dry-run confirms the owned-fixture inspection boundary without reading a repository file, local file, snippet, or fixture. "
+                "It did not scan, execute payloads, mutate files, or inspect code."
+            ),
+            "limitations": (
+                "No file or repository content was read.",
+                "No security conclusion was produced.",
+                "A later explicitly bounded fixture gate is required before any inspection result can exist.",
+            ),
+            "proof_summary": "Owned-fixture dry-run used plan metadata only and blocked file reads, repo reads, scanning, payloads, commands, mutation, and network access.",
+        }
+    if source_class == "bounded_operational_status_plan" or operation == "bounded_operational_status_lookup_proposal":
+        return {
+            "fixture_kind": "synthetic_operational_status_blocked",
+            "deterministic_result": (
+                "Dry-run confirms only a synthetic operational-status result shape can be represented. "
+                "It did not contact people or systems, fetch a status, schedule work, pay invoices, or create commitments."
+            ),
+            "limitations": (
+                "No live status source was contacted.",
+                "No operational decision was changed.",
+                "A later result-ingestion gate is required before analysis can use any result.",
+            ),
+            "proof_summary": "Operations dry-run used plan metadata only and blocked contact, network/tool/provider/model use, commitments, payments, scheduling, and external action.",
+        }
+    return {}
+
+
+def render_evidence_fixture_dry_run_result(result: Mapping[str, Any]) -> str:
+    """Render one deterministic non-executing dry-run result."""
+
+    limitations = tuple(str(item) for item in result.get("limitations", ()) if str(item))
+    blocked = tuple(str(item) for item in result.get("blocked_actions", ()) if str(item))
+    return "\n".join(
+        (
+            "Evidence fixture dry-run result recorded.",
+            f"Dry-run result: {str(result.get('evidence_fixture_dry_run_result_id') or '')}",
+            f"Source plan: {str(result.get('source_plan_id') or '')}",
+            f"Fixture kind: {str(result.get('fixture_kind') or '').replace('_', ' ')}",
+            f"Deterministic result: {str(result.get('deterministic_result') or '')}",
+            "Limitations: " + ("; ".join(limitations) if limitations else "No live evidence was gathered."),
+            f"Proof summary: {str(result.get('proof_summary') or '')}",
+            "Blocked actions: " + ("; ".join(blocked) if blocked else "No execution, file read, network, model, provider, tool, sandbox, graph, review, admission, analysis update, or external action."),
+            "Result boundary: may_update_analysis=false; may_update_graph=false; requires_result_ingestion_gate=true.",
+        )
+    )
+
+
+def _canonical_digest(value: Mapping[str, Any]) -> str:
+    payload = json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
+    return "sha256:" + hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
 def classify_evidence_next_operation_operator_response(proposal: Mapping[str, Any], message: str) -> str | None:
     """Classify a reply to a non-executing next-operation proposal."""
 
@@ -2562,11 +2755,13 @@ def _bullet_lines(values: Sequence[str]) -> tuple[str, ...]:
 __all__ = [
     "EvidenceBoundAnalysisRecord",
     "EvidenceExecutionAuthorityRecord",
+    "EvidenceFixtureDryRunResult",
     "EvidenceFixtureExecutionPlan",
     "EvidenceNextOperationProposal",
     "EvidencePermissionRequest",
     "EvidenceItem",
     "EVIDENCE_EXECUTION_AUTHORITY_SCHEMA_VERSION",
+    "EVIDENCE_FIXTURE_DRY_RUN_SCHEMA_VERSION",
     "EVIDENCE_FIXTURE_EXECUTION_PLAN_SCHEMA_VERSION",
     "EVIDENCE_NEXT_OPERATION_SCHEMA_VERSION",
     "EVIDENCE_PERMISSION_SCHEMA_VERSION",
@@ -2581,6 +2776,7 @@ __all__ = [
     "classify_evidence_permission_operator_response",
     "compile_evidence_bound_analysis",
     "compile_evidence_execution_authority_records",
+    "compile_evidence_fixture_dry_run_results",
     "compile_evidence_fixture_execution_plans",
     "compile_evidence_next_operation_proposals",
     "compile_evidence_permission_requests",
@@ -2591,6 +2787,7 @@ __all__ = [
     "render_evidence_bound_analysis_recall",
     "render_evidence_execution_authority_record",
     "render_evidence_execution_authority_request",
+    "render_evidence_fixture_dry_run_result",
     "render_evidence_fixture_execution_plan",
     "render_evidence_fixture_execution_plan_update",
     "render_evidence_next_operation_disposition",

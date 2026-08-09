@@ -65,6 +65,7 @@ from orchestration.runtime.evidence_bound_analysis import (
     compile_evidence_bound_analysis,
     compile_analysis_refinement,
     compile_evidence_execution_authority_records,
+    compile_evidence_fixture_dry_run_results,
     compile_evidence_fixture_execution_plans,
     compile_evidence_next_operation_proposals,
     compile_evidence_permission_requests,
@@ -77,6 +78,7 @@ from orchestration.runtime.evidence_bound_analysis import (
     render_evidence_bound_analysis_recall,
     render_evidence_execution_authority_record,
     render_evidence_execution_authority_request,
+    render_evidence_fixture_dry_run_result,
     render_evidence_fixture_execution_plan,
     render_evidence_fixture_execution_plan_update,
     render_evidence_next_operation_disposition,
@@ -1372,6 +1374,18 @@ def _evidence_fixture_execution_plans_for_objective(
     )
 
 
+def _evidence_fixture_dry_run_results_for_objective(
+    objective: ConversationalObjective | None,
+) -> tuple[dict[str, Any], ...]:
+    if objective is None or not isinstance(objective.provenance, Mapping):
+        return ()
+    return tuple(
+        dict(item)
+        for item in objective.provenance.get("evidence_fixture_dry_run_results", ())
+        if isinstance(item, Mapping)
+    )
+
+
 def _replace_teaching_objective(
     objective: ConversationalObjective,
     *,
@@ -1396,6 +1410,7 @@ def _replace_teaching_objective(
     evidence_next_operation_dispositions: Sequence[Mapping[str, Any]] | None = None,
     evidence_execution_authorities: Sequence[Mapping[str, Any]] | None = None,
     evidence_fixture_execution_plans: Sequence[Mapping[str, Any]] | None = None,
+    evidence_fixture_dry_run_results: Sequence[Mapping[str, Any]] | None = None,
     execution_constraints: Mapping[str, Any] | None = None,
 ) -> ConversationalObjective:
     provenance = dict(objective.provenance)
@@ -1470,6 +1485,10 @@ def _replace_teaching_objective(
     if evidence_fixture_execution_plans is not None:
         provenance["evidence_fixture_execution_plans"] = tuple(
             dict(item) for item in evidence_fixture_execution_plans
+        )
+    if evidence_fixture_dry_run_results is not None:
+        provenance["evidence_fixture_dry_run_results"] = tuple(
+            dict(item) for item in evidence_fixture_dry_run_results
         )
     if execution_constraints is not None:
         provenance["execution_constraints"] = dict(execution_constraints)
@@ -2556,6 +2575,72 @@ def _compile_evidence_fixture_execution_plan_lifecycle(
         },
     )
     return records, plan, events
+
+
+def _compile_evidence_fixture_dry_run_result_lifecycle(
+    state: ConversationalRuntimeState,
+    *,
+    objective: ConversationalObjective,
+    plan: Mapping[str, Any],
+    existing_results: Sequence[Mapping[str, Any]] | None = None,
+    ignored_pending_request_id: str = "",
+) -> tuple[list[dict[str, Any]], dict[str, Any] | None, tuple[Mapping[str, Any], ...]]:
+    """Append one deterministic result for an accepted inert fixture plan."""
+
+    records = [
+        dict(item)
+        for item in (
+            existing_results
+            if existing_results is not None
+            else _evidence_fixture_dry_run_results_for_objective(objective)
+        )
+        if isinstance(item, Mapping)
+    ]
+    plan_id = str(plan.get("evidence_fixture_execution_plan_id") or "")
+    if not plan_id:
+        return records, None, ()
+    if any(str(item.get("source_plan_id") or "") == plan_id for item in records):
+        return records, None, ()
+    if str(plan.get("status") or "") != "accepted_pending_execution_gate":
+        return records, None, ()
+    if bool(plan.get("may_execute_now")) or not bool(plan.get("execution_requires_future_gate")):
+        return records, None, ()
+    has_pending_request = any(
+        request.status == "pending"
+        and not request.consumption_count
+        and request.request_id != ignored_pending_request_id
+        for request in state.pending_chat_requests
+    )
+    if has_pending_request:
+        event = {
+            "event": "evidence_fixture_dry_run_suppressed_existing_request",
+            "objective_id": objective.objective_id,
+            "evidence_fixture_execution_plan_id": plan_id,
+            "at": utc_now(),
+        }
+        return records, None, (event,)
+    derived = [
+        item.as_record()
+        for item in compile_evidence_fixture_dry_run_results(
+            plan,
+            objective_id=objective.objective_id,
+        )
+    ]
+    if not derived:
+        return records, None, ()
+    result = dict(derived[0])
+    records.append(result)
+    events = (
+        {
+            "event": "evidence_fixture_dry_run_result_recorded",
+            "objective_id": objective.objective_id,
+            "evidence_fixture_dry_run_result_id": str(result.get("evidence_fixture_dry_run_result_id") or ""),
+            "source_plan_id": plan_id,
+            "status": str(result.get("status") or ""),
+            "at": utc_now(),
+        },
+    )
+    return records, result, events
 
 
 def _compile_evidence_permission_lifecycle(
@@ -8714,6 +8799,21 @@ def _resolve_evidence_fixture_execution_plan_request(
         else item
         for item in _evidence_fixture_execution_plans_for_objective(objective)
     ]
+    dry_run_results = list(_evidence_fixture_dry_run_results_for_objective(objective))
+    dry_run_result: dict[str, Any] | None = None
+    dry_run_events: tuple[Mapping[str, Any], ...] = ()
+    if status == "accepted_pending_execution_gate":
+        (
+            dry_run_results,
+            dry_run_result,
+            dry_run_events,
+        ) = _compile_evidence_fixture_dry_run_result_lifecycle(
+            state,
+            objective=objective,
+            plan=updated_plan,
+            existing_results=dry_run_results,
+            ignored_pending_request_id=request.request_id,
+        )
     resolved_request = replace(
         request,
         status="resolved",
@@ -8727,6 +8827,8 @@ def _resolve_evidence_fixture_execution_plan_request(
         consumed_at=utc_now(),
     )
     reply = render_evidence_fixture_execution_plan_update(updated_plan)
+    if dry_run_result is not None:
+        reply = f"{reply}\n\n{render_evidence_fixture_dry_run_result(dry_run_result)}"
     assistant_turn = ConversationTurn(
         turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
         role="assistant",
@@ -8745,11 +8847,14 @@ def _resolve_evidence_fixture_execution_plan_request(
             "at": utc_now(),
         },
     )
+    if dry_run_events:
+        progress = progress + dry_run_events
     updated = _replace_state(
         state,
         active_objective=_replace_teaching_objective(
             objective,
             evidence_fixture_execution_plans=plans,
+            evidence_fixture_dry_run_results=dry_run_results,
         ),
         conversation=state.conversation + (user_turn, assistant_turn),
         pending_chat_requests=tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id),
@@ -8765,7 +8870,7 @@ def _resolve_evidence_fixture_execution_plan_request(
             "active_objective_provenance",
             "safe_internal",
             (),
-            ("exact_fixture_execution_plan_binding", "plan_record_only", "no_execution"),
+            ("exact_fixture_execution_plan_binding", "dry_run_result_record_only", "no_execution"),
         ),
         reply=reply,
         chat_request=resolved_request.as_record(),
