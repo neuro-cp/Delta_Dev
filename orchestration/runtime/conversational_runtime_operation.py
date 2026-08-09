@@ -57,10 +57,12 @@ from orchestration.runtime.semantic_problem_modeling import (
     render_semantic_problem_recall,
 )
 from orchestration.runtime.evidence_bound_analysis import (
+    classify_evidence_next_operation_operator_response,
     classify_evidence_permission_operator_response,
     classify_internal_work_operator_response,
     compile_evidence_bound_analysis,
     compile_analysis_refinement,
+    compile_evidence_next_operation_proposals,
     compile_evidence_permission_requests,
     compile_internal_work_candidates,
     compile_operator_question_answer,
@@ -69,6 +71,9 @@ from orchestration.runtime.evidence_bound_analysis import (
     render_evidence_authorization,
     render_evidence_bound_analysis,
     render_evidence_bound_analysis_recall,
+    render_evidence_next_operation_disposition,
+    render_evidence_next_operation_proposal,
+    render_evidence_next_operation_recall,
     render_evidence_bound_analysis_question,
     render_evidence_bound_analysis_refinement,
     render_evidence_bound_analysis_refinement_recall,
@@ -1311,6 +1316,30 @@ def _evidence_authorizations_for_objective(
     )
 
 
+def _evidence_next_operation_proposals_for_objective(
+    objective: ConversationalObjective | None,
+) -> tuple[dict[str, Any], ...]:
+    if objective is None or not isinstance(objective.provenance, Mapping):
+        return ()
+    return tuple(
+        dict(item)
+        for item in objective.provenance.get("evidence_next_operation_proposals", ())
+        if isinstance(item, Mapping)
+    )
+
+
+def _evidence_next_operation_dispositions_for_objective(
+    objective: ConversationalObjective | None,
+) -> tuple[dict[str, Any], ...]:
+    if objective is None or not isinstance(objective.provenance, Mapping):
+        return ()
+    return tuple(
+        dict(item)
+        for item in objective.provenance.get("evidence_next_operation_dispositions", ())
+        if isinstance(item, Mapping)
+    )
+
+
 def _replace_teaching_objective(
     objective: ConversationalObjective,
     *,
@@ -1331,6 +1360,8 @@ def _replace_teaching_objective(
     internal_work_dispositions: Sequence[Mapping[str, Any]] | None = None,
     evidence_requests: Sequence[Mapping[str, Any]] | None = None,
     evidence_authorizations: Sequence[Mapping[str, Any]] | None = None,
+    evidence_next_operation_proposals: Sequence[Mapping[str, Any]] | None = None,
+    evidence_next_operation_dispositions: Sequence[Mapping[str, Any]] | None = None,
     execution_constraints: Mapping[str, Any] | None = None,
 ) -> ConversationalObjective:
     provenance = dict(objective.provenance)
@@ -1390,6 +1421,14 @@ def _replace_teaching_objective(
         provenance["evidence_requests"] = tuple(dict(item) for item in evidence_requests)
     if evidence_authorizations is not None:
         provenance["evidence_authorizations"] = tuple(dict(item) for item in evidence_authorizations)
+    if evidence_next_operation_proposals is not None:
+        provenance["evidence_next_operation_proposals"] = tuple(
+            dict(item) for item in evidence_next_operation_proposals
+        )
+    if evidence_next_operation_dispositions is not None:
+        provenance["evidence_next_operation_dispositions"] = tuple(
+            dict(item) for item in evidence_next_operation_dispositions
+        )
     if execution_constraints is not None:
         provenance["execution_constraints"] = dict(execution_constraints)
     return replace(objective, provenance=provenance)
@@ -2140,6 +2179,131 @@ def _compile_evidence_permission_chat_request(
             "authority_boundary": str(evidence_request.get("authority_boundary") or ""),
         },
     )
+
+
+def _compile_evidence_next_operation_chat_request(
+    state: ConversationalRuntimeState,
+    *,
+    objective: ConversationalObjective,
+    proposal: Mapping[str, Any],
+    created_turn_id: str,
+    created_sequence: int,
+) -> ChatAddressableRequest:
+    """Use the canonical chat request surface for one non-executing proposal."""
+
+    proposal_id = str(proposal.get("evidence_next_operation_proposal_id") or "")
+    request_id = stable_id("analysis-evidence-next-operation-chat-request", state.runtime_id, proposal_id)
+    return ChatAddressableRequest(
+        request_id=request_id,
+        request_type="evidence_next_operation_proposal",
+        objective_id=objective.objective_id,
+        originating_goal_id=objective.objective_id,
+        goal_label="Evidence next-operation proposal",
+        prompt_text=render_evidence_next_operation_proposal(proposal),
+        created_turn_id=created_turn_id,
+        thread_id=objective.objective_id,
+        created_sequence=created_sequence,
+        accepted_response_types=(
+            "evidence_next_operation_accept",
+            "evidence_next_operation_decline",
+            "evidence_next_operation_defer",
+            "evidence_next_operation_context",
+        ),
+        baseline_metrics={
+            "evidence_next_operation_proposal_id": proposal_id,
+            "source_evidence_request_id": str(proposal.get("source_evidence_request_id") or ""),
+            "source_evidence_authorization_id": str(proposal.get("source_evidence_authorization_id") or ""),
+            "source_frame_id": str(proposal.get("source_frame_id") or ""),
+            "source_analysis_id": str(proposal.get("source_analysis_id") or ""),
+            "source_refinement_id": str(proposal.get("source_refinement_id") or ""),
+            "domain": str(proposal.get("domain") or ""),
+            "evidence_gap_slot_id": str(proposal.get("evidence_gap_slot_id") or ""),
+            "proposed_operation_type": str(proposal.get("proposed_operation_type") or ""),
+        },
+    )
+
+
+def _compile_evidence_next_operation_lifecycle(
+    state: ConversationalRuntimeState,
+    *,
+    objective: ConversationalObjective,
+    evidence_request: Mapping[str, Any],
+    evidence_authorization: Mapping[str, Any],
+    existing_proposals: Sequence[Mapping[str, Any]] | None = None,
+    ignored_pending_request_id: str = "",
+) -> tuple[list[dict[str, Any]], dict[str, Any] | None, tuple[Mapping[str, Any], ...]]:
+    """Append at most one granted-authorization proposal without execution."""
+
+    records = [
+        dict(item)
+        for item in (
+            existing_proposals
+            if existing_proposals is not None
+            else _evidence_next_operation_proposals_for_objective(objective)
+        )
+        if isinstance(item, Mapping)
+    ]
+    request_id = str(evidence_authorization.get("evidence_request_id") or "")
+    authorization_id = str(evidence_authorization.get("evidence_authorization_id") or "")
+    if not request_id or not authorization_id:
+        return records, None, ()
+    pair_exists = any(
+        str(item.get("source_evidence_request_id") or "") == request_id
+        and str(item.get("source_evidence_authorization_id") or "") == authorization_id
+        for item in records
+    )
+    if pair_exists:
+        return records, None, ()
+    derived = [
+        item.as_record()
+        for item in compile_evidence_next_operation_proposals(
+            evidence_request,
+            evidence_authorization,
+            objective_id=objective.objective_id,
+        )
+    ]
+    if not derived:
+        return records, None, ()
+    has_pending_request = any(
+        request.status == "pending"
+        and not request.consumption_count
+        and request.request_id != ignored_pending_request_id
+        for request in state.pending_chat_requests
+    )
+    selected: dict[str, Any] | None = None
+    updated_derived: list[dict[str, Any]] = []
+    for ordinal, record in enumerate(sorted(derived, key=lambda item: str(item.get("evidence_next_operation_proposal_id") or ""))):
+        if has_pending_request:
+            status = "suppressed_existing_request"
+            reason = "An unresolved ChatAddressableRequest already owns the next operator reply."
+        elif ordinal == 0:
+            status = "selected"
+            reason = "This is the first bounded next-operation proposal derived from the granted evidence authorization."
+        else:
+            status = "suppressed_low_priority"
+            reason = "A higher-priority next-operation proposal was selected first."
+        updated = {
+            **record,
+            "status": status,
+            "selection_reason": reason,
+        }
+        if status == "selected":
+            selected = dict(updated)
+        updated_derived.append(updated)
+    records.extend(updated_derived)
+    events = tuple(
+        {
+            "event": "evidence_next_operation_proposal_recorded",
+            "objective_id": objective.objective_id,
+            "evidence_next_operation_proposal_id": str(item.get("evidence_next_operation_proposal_id") or ""),
+            "source_evidence_request_id": str(item.get("source_evidence_request_id") or ""),
+            "source_evidence_authorization_id": str(item.get("source_evidence_authorization_id") or ""),
+            "status": str(item.get("status") or ""),
+            "at": utc_now(),
+        }
+        for item in updated_derived
+    )
+    return records, selected, events
 
 
 def _compile_evidence_permission_lifecycle(
@@ -5416,9 +5580,37 @@ def _pending_evidence_permission_for_reply(
     return candidate
 
 
+def _pending_evidence_next_operation_for_reply(
+    state: ConversationalRuntimeState,
+    message: str,
+) -> ChatAddressableRequest | None:
+    """Bind only a compatible reply to the latest next-operation proposal."""
+
+    pending = [
+        request
+        for request in state.pending_chat_requests
+        if request.status == "pending" and not request.consumption_count
+    ]
+    candidates = [request for request in pending if request.request_type == "evidence_next_operation_proposal"]
+    if not candidates:
+        return None
+    latest_pending = max(pending, key=lambda item: (item.render_sequence, item.created_sequence, item.request_id))
+    candidate = max(candidates, key=lambda item: (item.render_sequence, item.created_sequence, item.request_id))
+    if candidate.request_id != latest_pending.request_id:
+        return None
+    if _semantic_problem_compilation_for_message(state, message) is not None:
+        return None
+    if classify_evidence_next_operation_operator_response(candidate.baseline_metrics, message) is None:
+        return None
+    return candidate
+
+
 def _pending_request_for_reply(state: ConversationalRuntimeState, message: str) -> ChatAddressableRequest | None:
     if not state.pending_chat_requests:
         return None
+    evidence_next_operation = _pending_evidence_next_operation_for_reply(state, message)
+    if evidence_next_operation is not None:
+        return evidence_next_operation
     evidence_permission = _pending_evidence_permission_for_reply(state, message)
     if evidence_permission is not None:
         return evidence_permission
@@ -7606,6 +7798,31 @@ def _resolve_evidence_permission_request(
         else item
         for item in _evidence_permission_requests_for_objective(objective)
     ]
+    evidence_next_operation_proposals = list(_evidence_next_operation_proposals_for_objective(objective))
+    evidence_next_operation_events: tuple[Mapping[str, Any], ...] = ()
+    evidence_next_operation_chat_request: ChatAddressableRequest | None = None
+    selected_evidence_next_operation: dict[str, Any] | None = None
+    if decision == "granted_pending_separate_execution" and authorization_added:
+        (
+            evidence_next_operation_proposals,
+            selected_evidence_next_operation,
+            evidence_next_operation_events,
+        ) = _compile_evidence_next_operation_lifecycle(
+            state,
+            objective=objective,
+            evidence_request=evidence_request,
+            evidence_authorization=authorization,
+            existing_proposals=evidence_next_operation_proposals,
+            ignored_pending_request_id=request.request_id,
+        )
+        if selected_evidence_next_operation is not None:
+            evidence_next_operation_chat_request = _compile_evidence_next_operation_chat_request(
+                state,
+                objective=objective,
+                proposal=selected_evidence_next_operation,
+                created_turn_id=user_turn.turn_id,
+                created_sequence=len(state.conversation) + 2,
+            )
     resolved_request = replace(
         request,
         status="resolved" if resolution_status != "denied" else "denied",
@@ -7619,6 +7836,8 @@ def _resolve_evidence_permission_request(
         consumed_at=utc_now(),
     )
     reply = render_evidence_authorization(evidence_request, authorization)
+    if evidence_next_operation_chat_request is not None and selected_evidence_next_operation is not None:
+        reply = f"{reply}\n\n{render_evidence_next_operation_proposal(selected_evidence_next_operation)}"
     assistant_turn = ConversationTurn(
         turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
         role="assistant",
@@ -7639,15 +7858,53 @@ def _resolve_evidence_permission_request(
                 "at": utc_now(),
             },
         )
+    if evidence_next_operation_events:
+        progress = progress + evidence_next_operation_events
+    if evidence_next_operation_chat_request is not None and selected_evidence_next_operation is not None:
+        evidence_next_operation_chat_request = replace(
+            evidence_next_operation_chat_request,
+            rendered_turn_id=assistant_turn.turn_id,
+            render_sequence=len(state.conversation) + 2,
+        )
+        selected_proposal_id = str(selected_evidence_next_operation.get("evidence_next_operation_proposal_id") or "")
+        evidence_next_operation_proposals = [
+            {
+                **dict(item),
+                "status": "surfaced",
+                "surfaced_turn_id": assistant_turn.turn_id,
+                "request_id": evidence_next_operation_chat_request.request_id,
+                "rendered_turn_id": assistant_turn.turn_id,
+                "render_sequence": len(state.conversation) + 2,
+            }
+            if str(item.get("evidence_next_operation_proposal_id") or "") == selected_proposal_id
+            else item
+            for item in evidence_next_operation_proposals
+        ]
+        progress = progress + (
+            {
+                "event": "evidence_next_operation_proposal_rendered",
+                "objective_id": objective.objective_id,
+                "evidence_next_operation_proposal_id": selected_proposal_id,
+                "source_evidence_request_id": str(selected_evidence_next_operation.get("source_evidence_request_id") or ""),
+                "source_evidence_authorization_id": str(selected_evidence_next_operation.get("source_evidence_authorization_id") or ""),
+                "request_id": evidence_next_operation_chat_request.request_id,
+                "assistant_turn_id": assistant_turn.turn_id,
+                "at": utc_now(),
+            },
+        )
     updated = _replace_state(
         state,
         active_objective=_replace_teaching_objective(
             objective,
             evidence_requests=evidence_requests,
             evidence_authorizations=authorizations,
+            evidence_next_operation_proposals=evidence_next_operation_proposals,
         ),
         conversation=state.conversation + (user_turn, assistant_turn),
-        pending_chat_requests=tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id),
+        pending_chat_requests=(
+            tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id)
+            + ((evidence_next_operation_chat_request,) if evidence_next_operation_chat_request is not None else ())
+        ),
         resolved_chat_requests=state.resolved_chat_requests + (resolved_request,),
         objective_progress=progress,
     )
@@ -7661,6 +7918,143 @@ def _resolve_evidence_permission_request(
             "safe_internal",
             (),
             ("exact_evidence_request_binding", "authorization_only", "no_evidence_execution"),
+        ),
+        reply=reply,
+        chat_request=resolved_request.as_record(),
+        side_thread_bound=True,
+    )
+
+
+def _resolve_evidence_next_operation_proposal(
+    state: ConversationalRuntimeState,
+    request: ChatAddressableRequest,
+    message: str,
+    *,
+    user_turn: ConversationTurn,
+    runtime_root: str | Path,
+) -> RuntimeTurnResult | None:
+    """Bind one operator disposition to one non-executing proposal."""
+
+    objective = state.active_objective
+    if objective is None or objective.objective_id != request.objective_id:
+        return None
+    proposal_id = str(request.baseline_metrics.get("evidence_next_operation_proposal_id") or "")
+    proposal = next(
+        (
+            item
+            for item in _evidence_next_operation_proposals_for_objective(objective)
+            if str(item.get("evidence_next_operation_proposal_id") or "") == proposal_id
+        ),
+        None,
+    )
+    if proposal is None:
+        return None
+    status = classify_evidence_next_operation_operator_response(proposal, message)
+    if status is None:
+        return None
+    normalized = " ".join(str(message or "").split())
+    disposition_id = stable_id(
+        "analysis-evidence-next-operation-disposition",
+        request.request_id,
+        proposal_id,
+        status,
+        normalized,
+    )
+    disposition = {
+        "evidence_next_operation_disposition_id": disposition_id,
+        "evidence_next_operation_proposal_id": proposal_id,
+        "source_evidence_request_id": str(proposal.get("source_evidence_request_id") or ""),
+        "source_evidence_authorization_id": str(proposal.get("source_evidence_authorization_id") or ""),
+        "source_frame_id": str(proposal.get("source_frame_id") or ""),
+        "source_analysis_id": str(proposal.get("source_analysis_id") or ""),
+        "source_refinement_id": str(proposal.get("source_refinement_id") or ""),
+        "surface_request_id": request.request_id,
+        "operator_turn_id": user_turn.turn_id,
+        "operator_response_text": normalized,
+        "operator_context_text": normalized if status == "context_provided" else "",
+        "status": status,
+        "may_execute_now": False,
+        "execution_state": "no_evidence_execution_started",
+        "authority_boundary": "Proposal disposition recorded; execution still requires a separate later gate.",
+        "created_event_id": stable_id("analysis-evidence-next-operation-disposition-event", disposition_id),
+        "restart_summary": "Evidence next-operation disposition persists exactly once without file, network, model, provider, tool, sandbox, graph, review, admission, worker, scheduler, or external-action side effects.",
+        "schema_version": "evidence_bound_next_operation_proposal_v1",
+    }
+    dispositions = list(_evidence_next_operation_dispositions_for_objective(objective))
+    disposition_added = not any(
+        str(item.get("evidence_next_operation_disposition_id") or "") == disposition_id
+        for item in dispositions
+    )
+    if disposition_added:
+        dispositions.append(disposition)
+    proposals = [
+        {
+            **dict(item),
+            "status": status,
+            "disposition_id": disposition_id,
+            "disposition_turn_id": user_turn.turn_id,
+            "surface_request_id": request.request_id,
+        }
+        if str(item.get("evidence_next_operation_proposal_id") or "") == proposal_id
+        else item
+        for item in _evidence_next_operation_proposals_for_objective(objective)
+    ]
+    resolved_request = replace(
+        request,
+        status="resolved",
+        resolution_state=status,
+        resolution=status,
+        resolution_policy="bound_to_exact_evidence_next_operation_proposal",
+        resolution_text=message,
+        resolved_turn_id=user_turn.turn_id,
+        consumption_count=1,
+        resolved_at=utc_now(),
+        consumed_at=utc_now(),
+    )
+    reply = render_evidence_next_operation_disposition(proposal, disposition)
+    assistant_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
+        role="assistant",
+        text=reply,
+        intent_type="semantic_evidence_next_operation_disposition",
+        objective_id=objective.objective_id,
+    )
+    progress = state.objective_progress
+    if disposition_added:
+        progress = progress + (
+            {
+                "event": "evidence_next_operation_disposition_recorded",
+                "objective_id": objective.objective_id,
+                "evidence_next_operation_disposition_id": disposition_id,
+                "evidence_next_operation_proposal_id": proposal_id,
+                "request_id": request.request_id,
+                "status": status,
+                "operator_turn_id": user_turn.turn_id,
+                "at": utc_now(),
+            },
+        )
+    updated = _replace_state(
+        state,
+        active_objective=_replace_teaching_objective(
+            objective,
+            evidence_next_operation_proposals=proposals,
+            evidence_next_operation_dispositions=dispositions,
+        ),
+        conversation=state.conversation + (user_turn, assistant_turn),
+        pending_chat_requests=tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id),
+        resolved_chat_requests=state.resolved_chat_requests + (resolved_request,),
+        objective_progress=progress,
+    )
+    save_runtime_state(runtime_root, updated)
+    return RuntimeTurnResult(
+        state=updated,
+        intent=ConversationIntent(
+            "semantic_evidence_next_operation_disposition",
+            0.98,
+            "active_objective_provenance",
+            "safe_internal",
+            (),
+            ("exact_next_operation_binding", "proposal_only_disposition", "no_evidence_execution"),
         ),
         reply=reply,
         chat_request=resolved_request.as_record(),
@@ -7705,6 +8099,14 @@ def resolve_pending_chat_request(
         )
     if request.request_type == "evidence_permission":
         return _resolve_evidence_permission_request(
+            state,
+            request,
+            message,
+            user_turn=user_turn,
+            runtime_root=runtime_root,
+        )
+    if request.request_type == "evidence_next_operation_proposal":
+        return _resolve_evidence_next_operation_proposal(
             state,
             request,
             message,

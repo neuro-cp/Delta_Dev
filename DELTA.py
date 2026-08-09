@@ -7647,6 +7647,13 @@ class DeltaApp:
                         "Selected one permission request for evidence gap "
                         f"{str(metrics.get('evidence_gap_slot_id') or '')}; no evidence gathering started.",
                     )
+                elif resolved.chat_request and str(resolved.chat_request.get("request_type") or "") == "evidence_next_operation_proposal":
+                    metrics = resolved.chat_request.get("baseline_metrics") or {}
+                    self._append_observation(
+                        "Evidence next operation",
+                        "Surfaced one non-executing proposal for evidence gap "
+                        f"{str(metrics.get('evidence_gap_slot_id') or '')}; no evidence gathering started.",
+                    )
             elif resolved.intent.intent_type == "semantic_internal_work_disposition":
                 objective = resolved.state.active_objective
                 dispositions = (
@@ -7676,6 +7683,21 @@ class DeltaApp:
                         "Bound one operator decision to evidence request "
                         f"{str(authorization.get('evidence_request_id') or authorization.get('evidence_permission_request_id') or '')}: "
                         f"{str(authorization.get('status') or 'recorded')}. No evidence gathering started.",
+                    )
+            elif resolved.intent.intent_type == "semantic_evidence_next_operation_disposition":
+                objective = resolved.state.active_objective
+                dispositions = (
+                    objective.provenance.get("evidence_next_operation_dispositions", ())
+                    if objective is not None and isinstance(objective.provenance, Mapping)
+                    else ()
+                )
+                disposition = next((item for item in reversed(dispositions) if isinstance(item, Mapping)), {})
+                if disposition:
+                    self._append_observation(
+                        "Evidence next operation",
+                        "Bound one operator disposition to proposal "
+                        f"{str(disposition.get('evidence_next_operation_proposal_id') or '')}: "
+                        f"{str(disposition.get('status') or 'recorded')}. No evidence gathering started.",
                     )
             self._sync_developmental_teaching_progress()
             if resolved.background_cycle_started:

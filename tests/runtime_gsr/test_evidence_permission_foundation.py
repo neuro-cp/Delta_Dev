@@ -142,6 +142,7 @@ def test_permission_authorization_decisions_bind_once_and_never_execute(tmp_path
         result = _send(prepared.state, response, root)
         authorizations = _records(result.state, "evidence_authorizations")
         evidence_requests = _records(result.state, "evidence_requests")
+        proposals = _records(result.state, "evidence_next_operation_proposals")
 
         assert result.intent.intent_type == "semantic_evidence_permission_authorization"
         assert len(authorizations) == 1
@@ -151,7 +152,15 @@ def test_permission_authorization_decisions_bind_once_and_never_execute(tmp_path
         assert authorizations[0]["may_execute_now"] is False
         assert authorizations[0]["execution_state"] == "no_evidence_execution_started"
         assert evidence_requests[0]["status"] == expected_status
-        assert not result.state.pending_chat_requests
+        if expected_status == "granted_pending_separate_execution":
+            assert len(proposals) == 1
+            assert proposals[0]["source_evidence_request_id"] == evidence_request["evidence_permission_request_id"]
+            assert proposals[0]["source_evidence_authorization_id"] == authorizations[0]["evidence_authorization_id"]
+            assert proposals[0]["may_execute_now"] is False
+            assert result.state.pending_chat_requests[0].request_type == "evidence_next_operation_proposal"
+        else:
+            assert not proposals
+            assert not result.state.pending_chat_requests
         assert result.state.resolved_chat_requests[-1].request_id == request.request_id
         assert result.state.resolved_chat_requests[-1].consumption_count == 1
         assert "no evidence gathering" in result.reply.lower()
@@ -159,8 +168,13 @@ def test_permission_authorization_decisions_bind_once_and_never_execute(tmp_path
 
         restored = start_or_restore_runtime(root)
         assert _records(restored, "evidence_authorizations") == authorizations
-        duplicate = _send(restored, response, root)
-        assert len(_records(duplicate.state, "evidence_authorizations")) == 1
+        if expected_status == "granted_pending_separate_execution":
+            ordinary = _send(restored, "What is 2 + 2?", root)
+            assert "4" in ordinary.reply
+            assert len(_records(ordinary.state, "evidence_authorizations")) == 1
+        else:
+            duplicate = _send(restored, response, root)
+            assert len(_records(duplicate.state, "evidence_authorizations")) == 1
 
 
 def test_operator_context_resolves_operations_gap_without_lookup(tmp_path):

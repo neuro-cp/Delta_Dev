@@ -21,6 +21,7 @@ SCHEMA_VERSION = "evidence_bound_analysis_v1"
 QUESTION_LOOP_SCHEMA_VERSION = "evidence_bound_operator_question_v1"
 INTERNAL_WORK_SCHEMA_VERSION = "evidence_bound_internal_work_v1"
 EVIDENCE_PERMISSION_SCHEMA_VERSION = "evidence_bound_evidence_permission_v1"
+EVIDENCE_NEXT_OPERATION_SCHEMA_VERSION = "evidence_bound_next_operation_proposal_v1"
 
 
 @dataclass(frozen=True)
@@ -383,6 +384,45 @@ class EvidencePermissionRequest:
         record["proposed_source_scope"] = list(self.proposed_source_scope)
         record["prohibited_actions"] = list(self.prohibited_actions)
         record["record_kind"] = "evidence_permission_request"
+        return record
+
+
+@dataclass(frozen=True)
+class EvidenceNextOperationProposal:
+    """One bounded proposal derived from a granted evidence authorization.
+
+    This is still not evidence gathering.  It names a safe next operation that
+    would require another explicit operator decision in a later gate.  The
+    conversational runtime owns persistence, request rendering, answer binding,
+    and exact-once behavior.
+    """
+
+    evidence_next_operation_proposal_id: str
+    active_objective_id: str
+    source_evidence_request_id: str
+    source_evidence_authorization_id: str
+    source_frame_id: str
+    source_analysis_id: str
+    source_refinement_id: str
+    domain: str
+    evidence_gap_slot_id: str
+    proposed_operation_type: str
+    proposed_scope: str
+    permitted_inputs: tuple[str, ...]
+    expected_evidence: str
+    prohibited_actions: tuple[str, ...]
+    authority_required_next: str
+    may_execute_now: bool
+    status: str
+    created_event_id: str
+    restart_summary: str
+    schema_version: str = EVIDENCE_NEXT_OPERATION_SCHEMA_VERSION
+
+    def as_record(self) -> dict[str, Any]:
+        record = asdict(self)
+        record["permitted_inputs"] = list(self.permitted_inputs)
+        record["prohibited_actions"] = list(self.prohibited_actions)
+        record["record_kind"] = "evidence_next_operation_proposal"
         return record
 
 
@@ -780,6 +820,136 @@ def compile_evidence_permission_requests(
     return tuple(records)
 
 
+def compile_evidence_next_operation_proposals(
+    evidence_request: Mapping[str, Any],
+    evidence_authorization: Mapping[str, Any],
+    *,
+    objective_id: str,
+) -> tuple[EvidenceNextOperationProposal, ...]:
+    """Derive one non-executing next-operation proposal from a granted request.
+
+    The helper deliberately requires both sides of the exact permission lineage.
+    A returned proposal is only a surfaceable plan for a future approval step;
+    it cannot execute, inspect, fetch, call, mutate, review, or admit anything.
+    """
+
+    request_id = str(
+        evidence_request.get("evidence_permission_request_id")
+        or evidence_request.get("evidence_request_id")
+        or ""
+    )
+    authorization_id = str(evidence_authorization.get("evidence_authorization_id") or "")
+    if not objective_id or not request_id or not authorization_id:
+        return ()
+    if str(evidence_authorization.get("status") or "") != "granted_pending_separate_execution":
+        return ()
+    if bool(evidence_authorization.get("may_execute_now")):
+        return ()
+    if str(evidence_authorization.get("evidence_request_id") or "") != request_id:
+        return ()
+
+    domain = str(evidence_request.get("domain") or evidence_authorization.get("domain") or "")
+    evidence_kind = str(evidence_request.get("evidence_kind") or "")
+    interpreted_scope = str(evidence_authorization.get("interpreted_scope") or "")
+    operation = _next_operation_specification(domain, evidence_kind, interpreted_scope)
+    if not operation:
+        return ()
+
+    proposal_id = stable_id(
+        "analysis-evidence-next-operation-proposal",
+        objective_id,
+        request_id,
+        authorization_id,
+        str(operation["proposed_operation_type"]),
+    )
+    prohibited = tuple(
+        dict.fromkeys(
+            (
+                *(str(item) for item in evidence_authorization.get("preserved_limits", ()) if str(item)),
+                "Do not execute this proposal in the current phase.",
+                "Do not read files, access networks, contact providers, call models, use tools, run sandboxes, mutate source, create graph truth, review, admit, trade, scan, or take external action.",
+            )
+        )
+    )
+    return (
+        EvidenceNextOperationProposal(
+            evidence_next_operation_proposal_id=proposal_id,
+            active_objective_id=objective_id,
+            source_evidence_request_id=request_id,
+            source_evidence_authorization_id=authorization_id,
+            source_frame_id=str(evidence_request.get("source_frame_id") or ""),
+            source_analysis_id=str(evidence_request.get("source_analysis_id") or ""),
+            source_refinement_id=str(evidence_request.get("source_refinement_id") or ""),
+            domain=domain,
+            evidence_gap_slot_id=str(evidence_request.get("evidence_gap_slot_id") or ""),
+            proposed_operation_type=str(operation["proposed_operation_type"]),
+            proposed_scope=str(operation["proposed_scope"]),
+            permitted_inputs=tuple(str(item) for item in operation["permitted_inputs"] if str(item)),
+            expected_evidence=str(operation["expected_evidence"]),
+            prohibited_actions=prohibited,
+            authority_required_next=(
+                "A separate operator approval is required before any evidence gathering or fixture execution. "
+                "Accepting this proposal only records that the next operation is worth considering."
+            ),
+            may_execute_now=False,
+            status="proposed",
+            created_event_id=stable_id("analysis-evidence-next-operation-proposal-event", proposal_id),
+            restart_summary=(
+                "Evidence next-operation proposal persists exactly once under active-objective provenance; "
+                "it has not started file, network, model, provider, tool, sandbox, graph, review, admission, worker, scheduler, or external-action side effects."
+            ),
+        ),
+    )
+
+
+def _next_operation_specification(
+    domain: str,
+    evidence_kind: str,
+    interpreted_scope: str,
+) -> Mapping[str, Any]:
+    scope_text = f"{domain} {evidence_kind} {interpreted_scope}".lower()
+    if domain == "finance_portfolio_risk" or (not domain and "market" in scope_text):
+        return {
+            "proposed_operation_type": "finance_market_context_proposal_only",
+            "proposed_scope": (
+                "Propose a bounded evidence step that would later inspect approved market-data or correlation context for the recorded allocation scenario."
+            ),
+            "permitted_inputs": (
+                "recorded portfolio allocation",
+                "recorded six-month correction concern",
+                "operator-approved market-data source if later separately authorized",
+            ),
+            "expected_evidence": "Current price and correlation context, if a later gate separately authorizes retrieval.",
+        }
+    if domain == "defensive_cybersecurity" or (not domain and ("fixture" in scope_text or "inspection" in scope_text)):
+        return {
+            "proposed_operation_type": "defensive_owned_fixture_read_only_proposal",
+            "proposed_scope": (
+                "Propose a later read-only inspection of the operator-owned defensive fixture boundary named in the analysis."
+            ),
+            "permitted_inputs": (
+                "recorded local owned fixture description",
+                "recorded SQL construction boundary",
+                "operator-provided path only if a later gate separately authorizes reading it",
+            ),
+            "expected_evidence": "Whether the owned fixture uses parameter binding at the recorded SQL boundary.",
+        }
+    if domain == "operations_logistics_receivables" or (not domain and "status" in scope_text):
+        return {
+            "proposed_operation_type": "bounded_operational_status_lookup_proposal",
+            "proposed_scope": (
+                "Propose a later bounded status lookup limited to the recorded delivery or payment uncertainty."
+            ),
+            "permitted_inputs": (
+                "recorded invoice or delivery identifier",
+                "recorded operational dependency",
+                "operator-approved status source if later separately authorized",
+            ),
+            "expected_evidence": "The specific delivery, invoice, or payment status needed by the recorded analysis.",
+        }
+    return {}
+
+
 def select_internal_work_candidates(
     candidates: Sequence[Mapping[str, Any]],
     *,
@@ -965,6 +1135,96 @@ def render_evidence_permission_recall(
             f"Decision: {decision.replace('_', ' ')}",
             f"Provided context: {str((authorization or {}).get('operator_provided_context_text') or 'None')}",
             "This is read-only recall; it did not gather evidence or create a new authorization.",
+        )
+    )
+
+
+def classify_evidence_next_operation_operator_response(proposal: Mapping[str, Any], message: str) -> str | None:
+    """Classify a reply to a non-executing next-operation proposal."""
+
+    text = " ".join(str(message or "").split())
+    lower = text.lower()
+    if not text or text.endswith("?"):
+        return None
+    if re.match(r"^(?:what|why|how|who|where|when|can|could|would|should|is|are|do|does|did)\b", lower):
+        return None
+    if re.search(r"\b(?:later|not\s+now|defer|hold|wait|park|postpone|leave\s+(?:it|that)\s+open|keep\s+(?:it|that)\s+open)\b", lower):
+        return "deferred"
+    if re.search(r"\b(?:no|nope|deny|decline|do\s+not|don't|not\s+authorized|not\s+approved|stop)\b", lower):
+        return "declined"
+    if re.search(r"\b(?:yes|approve|approved|accept|accepted|authorize|authorized|allow|allowed|go\s+ahead|you\s+may|permission\s+granted|keep\s+(?:it|that)|sounds\s+good)\b", lower):
+        return "accepted_pending_separate_execution"
+    if re.search(r"\b(?:maybe|not\s+sure|unclear|depends)\b", lower):
+        return "unclear_pending"
+    if len(text.split()) >= 4:
+        return "context_provided"
+    return None
+
+
+def render_evidence_next_operation_proposal(proposal: Mapping[str, Any]) -> str:
+    """Render one proposed next operation without starting it."""
+
+    permitted = tuple(str(item) for item in proposal.get("permitted_inputs", ()) if str(item))
+    prohibited = tuple(str(item) for item in proposal.get("prohibited_actions", ()) if str(item))
+    return "\n".join(
+        (
+            "A bounded next evidence operation can be proposed from your authorization.",
+            f"Evidence gap: {str(proposal.get('evidence_gap_slot_id') or '')}",
+            f"Proposed operation: {str(proposal.get('proposed_operation_type') or '').replace('_', ' ')}",
+            f"Scope: {str(proposal.get('proposed_scope') or '')}",
+            "Permitted inputs: " + ("; ".join(permitted) if permitted else "Only the already-recorded source-bound analysis and authorization."),
+            f"Expected evidence: {str(proposal.get('expected_evidence') or '')}",
+            f"Next authority required: {str(proposal.get('authority_required_next') or '')}",
+            "Prohibited now: " + ("; ".join(prohibited) if prohibited else "No execution, file read, network, provider, model, tool, sandbox, graph, review, admission, or external action."),
+            "Question: Should I keep this proposal ready for a later separate execution gate, decline it, defer it, or add context?",
+            "Status: proposal only. It cannot execute in this phase.",
+        )
+    )
+
+
+def render_evidence_next_operation_disposition(
+    proposal: Mapping[str, Any],
+    disposition: Mapping[str, Any],
+) -> str:
+    """Acknowledge one proposal disposition without executing it."""
+
+    status = str(disposition.get("status") or "")
+    if status == "accepted_pending_separate_execution":
+        detail = "I kept this bounded next operation ready for a later separate execution gate. It has not started."
+    elif status == "declined":
+        detail = "I recorded that this next operation is declined for the current analysis."
+    elif status == "deferred":
+        detail = "I left this next operation deferred and will not execute or resurface it as a new proposal automatically."
+    elif status == "context_provided":
+        detail = "I recorded your added context with the proposal without executing the operation."
+    else:
+        detail = "I recorded the response as unclear and did not authorize execution."
+    return "\n".join(
+        (
+            f"Evidence next-operation update: {detail}",
+            f"Proposal: {str(proposal.get('evidence_next_operation_proposal_id') or '')}",
+            f"Decision: {status.replace('_', ' ')}",
+            f"Context supplied: {str(disposition.get('operator_context_text') or 'None')}",
+            "Execution state: no evidence gathering, model call, provider call, tool use, file read, network access, sandbox execution, graph mutation, review, admission, worker, scheduler, or external action started.",
+        )
+    )
+
+
+def render_evidence_next_operation_recall(
+    proposal: Mapping[str, Any],
+    disposition: Mapping[str, Any] | None = None,
+) -> str:
+    """Read one next-operation proposal posture without changing it."""
+
+    status = str((disposition or {}).get("status") or proposal.get("status") or "proposed")
+    return "\n".join(
+        (
+            "The recorded evidence next-operation proposal is:",
+            f"Proposal: {str(proposal.get('evidence_next_operation_proposal_id') or '')}",
+            f"Evidence gap: {str(proposal.get('evidence_gap_slot_id') or '')}",
+            f"Proposed operation: {str(proposal.get('proposed_operation_type') or '').replace('_', ' ')}",
+            f"Status: {status.replace('_', ' ')}",
+            "This is read-only recall; it did not execute evidence gathering or create a new proposal disposition.",
         )
     )
 
@@ -1871,22 +2131,29 @@ def _bullet_lines(values: Sequence[str]) -> tuple[str, ...]:
 
 __all__ = [
     "EvidenceBoundAnalysisRecord",
+    "EvidenceNextOperationProposal",
     "EvidencePermissionRequest",
     "EvidenceItem",
+    "EVIDENCE_NEXT_OPERATION_SCHEMA_VERSION",
     "EVIDENCE_PERMISSION_SCHEMA_VERSION",
     "INTERNAL_WORK_SCHEMA_VERSION",
     "InternalWorkCandidate",
     "SafeNextAction",
     "SCHEMA_VERSION",
     "ValidationCheck",
+    "classify_evidence_next_operation_operator_response",
     "classify_evidence_permission_operator_response",
     "compile_evidence_bound_analysis",
+    "compile_evidence_next_operation_proposals",
     "compile_evidence_permission_requests",
     "compile_internal_work_candidates",
     "classify_internal_work_operator_response",
     "render_evidence_authorization",
     "render_evidence_bound_analysis",
     "render_evidence_bound_analysis_recall",
+    "render_evidence_next_operation_disposition",
+    "render_evidence_next_operation_proposal",
+    "render_evidence_next_operation_recall",
     "render_evidence_permission_recall",
     "render_evidence_permission_request",
     "render_internal_work_disposition",
