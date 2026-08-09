@@ -104,6 +104,27 @@ class SandboxActionReceipt:
         return record
 
 
+@dataclass(frozen=True)
+class SandboxResourceRequest:
+    """A DELTA-originated request for a configured local mission resource."""
+
+    request_id: str
+    mission_id: str
+    requester: str
+    resource_type: str
+    purpose: str
+    allowed_scope: str
+    prompt_summary: str
+    status: str
+    response_summary: str
+    raw_response_digest: str
+    used_for_next_action: bool
+    timestamp: float
+
+    def as_record(self) -> dict[str, Any]:
+        return asdict(self)
+
+
 class SandboxActionAdapter:
     """Enforce one fixture-root action scope and persist every decision."""
 
@@ -130,6 +151,7 @@ class SandboxActionAdapter:
             "requests": [],
             "decisions": [],
             "receipts": [],
+            "resource_requests": [],
         }
 
     def _write_state(self, state: Mapping[str, Any]) -> None:
@@ -139,6 +161,51 @@ class SandboxActionAdapter:
 
     def records(self) -> dict[str, Any]:
         return self._load_state()
+
+    def request_resource(
+        self,
+        *,
+        resource_type: str,
+        purpose: str,
+        prompt_summary: str,
+        raw_response: str,
+        available: bool,
+        used_for_next_action: bool = False,
+        requester: str = "DELTA",
+    ) -> dict[str, Any]:
+        """Record a local-only resource escalation without executing a mission action."""
+
+        state = self._load_state()
+        digest = hashlib.sha256(str(raw_response or "").encode("utf-8")).hexdigest()
+        request_id = _stable_id(
+            "sandbox-resource-request",
+            self.authorization.mission_id,
+            requester,
+            resource_type,
+            purpose,
+            digest,
+        )
+        existing = next((item for item in state["resource_requests"] if item.get("request_id") == request_id), None)
+        if existing is not None:
+            return dict(existing)
+        status = "available_local_resource" if available else "resource_unavailable"
+        record = SandboxResourceRequest(
+            request_id=request_id,
+            mission_id=self.authorization.mission_id,
+            requester=str(requester or ""),
+            resource_type=str(resource_type or ""),
+            purpose=str(purpose or ""),
+            allowed_scope="local_fixture_only_no_external_resource_access",
+            prompt_summary=_summary(prompt_summary, limit=1200),
+            status=status,
+            response_summary="configured local resource selected" if available else "no configured approved resource was available",
+            raw_response_digest=digest,
+            used_for_next_action=bool(used_for_next_action),
+            timestamp=time.time(),
+        )
+        state["resource_requests"].append(record.as_record())
+        self._write_state(state)
+        return record.as_record()
 
     def _fixture_path(self, target: str) -> tuple[Path | None, str]:
         candidate = (self.fixture_root / str(target or "")).resolve()

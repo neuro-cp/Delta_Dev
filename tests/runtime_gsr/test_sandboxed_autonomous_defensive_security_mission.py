@@ -10,6 +10,7 @@ from orchestration.runtime.conversational_runtime_operation import (
 )
 from orchestration.runtime.sandboxed_defensive_action_adapter import SandboxActionAdapter
 from orchestration.runtime.sandboxed_defensive_security_mission import (
+    _parse_action,
     build_path_traversal_fixture,
     create_sandbox_authorization,
     evaluate_path_traversal_mission,
@@ -125,6 +126,8 @@ def test_delta_requested_actions_complete_transport_qualification_and_hidden_sco
         assert score["vulnerability_blocked"] is True
         assert score["normal_behavior_preserved"] is True
         assert score["action_requesters_are_delta"] is True
+        assert score["max_progress_stage"] == 7
+        assert score["local_demonstration_success"] is True
         assert provenance_path.exists()
     finally:
         adapter.cleanup()
@@ -168,6 +171,98 @@ def test_invalid_model_schema_gets_bounded_format_recovery_without_codex_action(
         assert provenance["status"] == "delta_reported_completion"
         assert len(provenance["model_calls"]) == 2
         assert not provenance["action_receipts"]
+        assert len(provenance["recovery_events"]) == 1
+        assert "ACTION READ_FILE" in provenance["recovery_events"][0]["recovery_prompt"]
+        assert provenance["codex_solution_help"] is False
+    finally:
+        adapter.cleanup()
+
+
+def test_action_only_protocol_rejects_prose_bare_url_and_bare_get_without_dispatch(tmp_path):
+    _fixture, authorization, adapter = _arena(tmp_path)
+    try:
+        assert _parse_action("I will read app.py next.", service_port=authorization.service_port) is None
+        assert _parse_action(f"http://localhost:{authorization.service_port}/download?name=public.txt", service_port=authorization.service_port) is None
+        assert _parse_action("GET /download?name=public.txt", service_port=authorization.service_port) is None
+        assert _parse_action("ACTION_READ_FILE app.py", service_port=authorization.service_port)["action_type"] == "read_file"
+        assert not adapter.records()["requests"]
+    finally:
+        adapter.cleanup()
+
+
+def test_action_only_protocol_routes_local_http_and_requires_json_for_writes(tmp_path):
+    _fixture, authorization, adapter = _arena(tmp_path)
+    try:
+        adapter.dispatch(action_type="start_service", target="app.py", requested_by="DELTA")
+        http_action = _parse_action("ACTION HTTP_GET /download?name=public.txt", service_port=authorization.service_port)
+        assert http_action == {
+            "kind": "action",
+            "action_type": "http_request",
+            "target": f"http://localhost:{authorization.service_port}/download?name=public.txt",
+            "payload": {"method": "GET"},
+        }
+        receipt = adapter.dispatch(**{key: value for key, value in http_action.items() if key in {"action_type", "target", "payload"}}, requested_by="DELTA")
+        assert receipt["status_code"] == 200
+        assert _parse_action("ACTION WRITE_FILE app.py", service_port=authorization.service_port) is None
+        write_action = _parse_action(
+            json.dumps({"action": "write_file", "target": "notes.txt", "content": "bounded", "reason_summary": "record test"}),
+            service_port=authorization.service_port,
+        )
+        assert write_action and write_action["action_type"] == "write_file"
+    finally:
+        adapter.cleanup()
+
+
+def test_delta_resource_request_is_logged_and_unavailable_without_codex_fallback(tmp_path):
+    _fixture, _authorization, adapter = _arena(tmp_path)
+    responses = iter((
+        {
+            "executed": True,
+            "answer": json.dumps({"action": "request_resource", "resource_type": "approved_model", "purpose": "patch_synthesis"}),
+            "model_id": "test",
+            "execution_adapter": "test",
+        },
+    ))
+    try:
+        provenance = run_delta_sandbox_mission(adapter=adapter, model_executor=lambda _prompt: next(responses))
+        assert provenance["status"] == "blocked_resource_unavailable"
+        assert provenance["resource_requests"][0]["requester"] == "DELTA"
+        assert provenance["resource_requests"][0]["status"] == "resource_unavailable"
+        assert provenance["controller_metrics"]["resource_request_count"] == 1
+        assert not provenance["action_receipts"]
+    finally:
+        adapter.cleanup()
+
+
+def test_delta_resource_request_can_route_to_an_explicit_local_executor(tmp_path):
+    _fixture, _authorization, adapter = _arena(tmp_path)
+    primary = iter((
+        {
+            "executed": True,
+            "answer": json.dumps({"action": "request_resource", "resource_type": "approved_model", "purpose": "patch_synthesis"}),
+            "model_id": "primary-local-model",
+            "execution_adapter": "test.primary",
+        },
+    ))
+
+    def approved_local_resource(_prompt):
+        return {
+            "executed": True,
+            "answer": json.dumps({"action": "final_report", "reason_summary": "A/B/C/D/E: resource-assisted bounded mission was stopped before any target mutation."}),
+            "model_id": "approved-local-resource",
+            "execution_adapter": "test.approved_local_resource",
+        }
+
+    try:
+        provenance = run_delta_sandbox_mission(
+            adapter=adapter,
+            model_executor=lambda _prompt: next(primary),
+            resource_executors={"approved-local-resource": approved_local_resource},
+        )
+        assert provenance["status"] == "delta_reported_completion"
+        assert provenance["resource_requests"][0]["status"] == "available_local_resource"
+        assert provenance["resource_requests"][0]["used_for_next_action"] is True
+        assert provenance["model_calls"][-1]["model_id"] == "approved-local-resource"
         assert provenance["codex_solution_help"] is False
     finally:
         adapter.cleanup()
@@ -206,6 +301,14 @@ def test_real_delta_attempt_is_scored_without_harness_rescue(tmp_path):
 
         assert provenance["codex_solution_help"] is False
         assert provenance["model_calls"]
-        assert score["failure_mode"] in {"solved", "partial_identification_only", "unsupported_by_current_delta"}
+        assert score["failure_mode"] in {
+            "solved",
+            "action_format_failure",
+            "identified_no_demo",
+            "demo_no_patch",
+            "patch_no_tests",
+            "tests_no_report",
+            "unsupported_by_current_delta",
+        }
     finally:
         adapter.cleanup()
