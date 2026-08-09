@@ -77,6 +77,7 @@ from orchestration.runtime.evidence_bound_analysis import (
     compile_evidence_result_ingestion_candidates,
     compile_internal_work_candidates,
     compile_long_horizon_self_correction_candidates,
+    compile_long_horizon_correction_effects,
     compile_operator_question_answer,
     compile_operator_question_candidates,
     operator_question_answer_is_compatible,
@@ -1462,6 +1463,7 @@ def _replace_teaching_objective(
     evidence_result_ingestion_candidates: Sequence[Mapping[str, Any]] | None = None,
     evidence_analysis_revision_candidates: Sequence[Mapping[str, Any]] | None = None,
     long_horizon_self_correction_candidates: Sequence[Mapping[str, Any]] | None = None,
+    long_horizon_correction_effects: Sequence[Mapping[str, Any]] | None = None,
     adaptive_route_arbitration: Mapping[str, Any] | None = None,
     execution_constraints: Mapping[str, Any] | None = None,
 ) -> ConversationalObjective:
@@ -1557,6 +1559,10 @@ def _replace_teaching_objective(
     if long_horizon_self_correction_candidates is not None:
         provenance["long_horizon_self_correction_candidates"] = tuple(
             dict(item) for item in long_horizon_self_correction_candidates
+        )
+    if long_horizon_correction_effects is not None:
+        provenance["long_horizon_correction_effects"] = tuple(
+            dict(item) for item in long_horizon_correction_effects
         )
     if adaptive_route_arbitration is not None:
         provenance["adaptive_route_arbitration"] = dict(adaptive_route_arbitration)
@@ -3590,11 +3596,35 @@ def _apply_semantic_problem_modeling(
         intent_type="semantic_problem_modeling",
         objective_id=objective.objective_id,
     )
+    long_horizon_corrections = [
+        item.as_record()
+        for item in compile_long_horizon_self_correction_candidates(
+            objective_id=objective.objective_id,
+            semantic_frames=frames,
+            analyses=analyses,
+            fixture_results=_evidence_minimal_fixture_results_for_objective(objective),
+        )
+    ]
+    long_horizon_correction_effects = [
+        item.as_record()
+        for item in compile_long_horizon_correction_effects(
+            objective_id=objective.objective_id,
+            semantic_frames=frames,
+            correction_candidates=long_horizon_corrections,
+            analyses=analyses,
+            fixture_results=_evidence_minimal_fixture_results_for_objective(objective),
+            refinements=_analysis_refinements_for_objective(objective),
+        )
+    ]
+    correction_suppresses_new_selection = any(
+        str(item.get("effect_type") or "") == "stale_suppression"
+        for item in long_horizon_correction_effects
+    )
     candidates = list(_operator_question_candidates_for_objective(objective))
     selections = list(_operator_question_selections_for_objective(objective))
     lifecycle_events: tuple[Mapping[str, Any], ...] = ()
     selected_candidate: dict[str, Any] | None = None
-    if isinstance(analysis, Mapping) and analysis_created:
+    if isinstance(analysis, Mapping) and analysis_created and not correction_suppresses_new_selection:
         candidates, selections, selected_candidate, lifecycle_events = _compile_analysis_question_lifecycle(
             state,
             objective=objective,
@@ -3614,7 +3644,7 @@ def _apply_semantic_problem_modeling(
     internal_lifecycle_events: tuple[Mapping[str, Any], ...] = ()
     selected_internal_candidate: dict[str, Any] | None = None
     selected_internal_selection: dict[str, Any] | None = None
-    if isinstance(analysis, Mapping) and analysis_created:
+    if isinstance(analysis, Mapping) and analysis_created and not correction_suppresses_new_selection:
         (
             internal_candidates,
             internal_selections,
@@ -3638,19 +3668,11 @@ def _apply_semantic_problem_modeling(
             created_turn_id=user_turn.turn_id,
             created_sequence=len(state.conversation) + 1,
         )
-    long_horizon_corrections = [
-        item.as_record()
-        for item in compile_long_horizon_self_correction_candidates(
-            objective_id=objective.objective_id,
-            semantic_frames=frames,
-            analyses=analyses,
-            fixture_results=_evidence_minimal_fixture_results_for_objective(objective),
-        )
-    ]
     adaptive_route_arbitration = compile_adaptive_route_arbitration(
         objective_id=objective.objective_id,
         semantic_frames=frames,
         correction_candidates=long_horizon_corrections,
+        correction_effects=long_horizon_correction_effects,
     )
     if question_request is not None:
         reply = render_evidence_bound_analysis_question(analysis, selected_candidate)
@@ -3800,6 +3822,7 @@ def _apply_semantic_problem_modeling(
             internal_work_candidates=internal_candidates,
             internal_work_selections=internal_selections,
             long_horizon_self_correction_candidates=long_horizon_corrections,
+            long_horizon_correction_effects=long_horizon_correction_effects,
             adaptive_route_arbitration=(
                 adaptive_route_arbitration.as_record()
                 if adaptive_route_arbitration is not None
@@ -9573,10 +9596,22 @@ def _resolve_evidence_fixture_execution_plan_request(
             fixture_results=minimal_fixture_results,
         )
     ]
+    long_horizon_correction_effects = [
+        item.as_record()
+        for item in compile_long_horizon_correction_effects(
+            objective_id=objective.objective_id,
+            semantic_frames=_semantic_problem_frames_for_objective(objective),
+            correction_candidates=long_horizon_corrections,
+            analyses=_evidence_bound_analyses_for_objective(objective),
+            fixture_results=minimal_fixture_results,
+            refinements=refinements,
+        )
+    ]
     adaptive_route_arbitration = compile_adaptive_route_arbitration(
         objective_id=objective.objective_id,
         semantic_frames=_semantic_problem_frames_for_objective(objective),
         correction_candidates=long_horizon_corrections,
+        correction_effects=long_horizon_correction_effects,
     )
     resolved_request = replace(
         request,
@@ -9658,6 +9693,7 @@ def _resolve_evidence_fixture_execution_plan_request(
             internal_work_candidates=internal_candidates,
             internal_work_selections=internal_selections,
             long_horizon_self_correction_candidates=long_horizon_corrections,
+            long_horizon_correction_effects=long_horizon_correction_effects,
             adaptive_route_arbitration=(
                 adaptive_route_arbitration.as_record()
                 if adaptive_route_arbitration is not None

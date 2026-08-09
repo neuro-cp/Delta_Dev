@@ -32,6 +32,7 @@ EVIDENCE_ANALYSIS_REVISION_CANDIDATE_SCHEMA_VERSION = "evidence_bound_analysis_r
 EVIDENCE_MINIMAL_FIXTURE_RESULT_SCHEMA_VERSION = "evidence_bound_minimal_fixture_result_v1"
 LONG_HORIZON_SELF_CORRECTION_SCHEMA_VERSION = "objective_local_self_correction_v1"
 ADAPTIVE_ROUTE_ARBITRATION_SCHEMA_VERSION = "adaptive_route_arbitration_v1"
+LONG_HORIZON_CORRECTION_EFFECT_SCHEMA_VERSION = "objective_local_correction_effect_v1"
 
 
 @dataclass(frozen=True)
@@ -721,6 +722,7 @@ class AdaptiveRouteArbitration:
     decision: str
     selected_route_id: str
     selected_correction_id: str
+    selected_correction_effect_id: str
     considered_route_ids: tuple[str, ...]
     considered_correction_ids: tuple[str, ...]
     priority_reason: str
@@ -736,6 +738,38 @@ class AdaptiveRouteArbitration:
         record["considered_correction_ids"] = list(self.considered_correction_ids)
         record["forbidden_actions"] = list(self.forbidden_actions)
         record["record_kind"] = "objective_local_adaptive_route_arbitration"
+        return record
+
+
+@dataclass(frozen=True)
+class LongHorizonCorrectionEffect:
+    """A non-executing effect of a correction on prior objective-local lineage."""
+
+    effect_id: str
+    objective_id: str
+    correction_id: str
+    affected_frame_ids: tuple[str, ...]
+    affected_route_ids: tuple[str, ...]
+    affected_result_ids: tuple[str, ...]
+    affected_refinement_ids: tuple[str, ...]
+    effect_type: str
+    selected_nonexecuting_posture: str
+    forbidden_actions: tuple[str, ...]
+    may_execute_now: bool
+    status: str
+    schema_version: str = LONG_HORIZON_CORRECTION_EFFECT_SCHEMA_VERSION
+
+    def as_record(self) -> dict[str, Any]:
+        record = asdict(self)
+        for field_name in (
+            "affected_frame_ids",
+            "affected_route_ids",
+            "affected_result_ids",
+            "affected_refinement_ids",
+            "forbidden_actions",
+        ):
+            record[field_name] = list(record[field_name])
+        record["record_kind"] = "objective_local_long_horizon_correction_effect"
         return record
 
 
@@ -2259,6 +2293,43 @@ def compile_long_horizon_self_correction_candidates(
                             may_route_next=True,
                         )
                     )
+            if earlier_domain == "finance_portfolio_risk":
+                earlier_allocation = _portfolio_allocation_signature(earlier_frame)
+                later_allocation = _portfolio_allocation_signature(later_frame)
+                if (
+                    earlier_allocation is not None
+                    and later_allocation is not None
+                    and earlier_allocation != later_allocation
+                ):
+                    values.append(
+                        _self_correction_candidate(
+                            objective_id=objective_id,
+                            correction_type="contradiction_or_supersession",
+                            source_frame_ids=(earlier_id, later_id),
+                            source_route_ids=(earlier_route_id, later_route_id),
+                            reason=(
+                                "The later source-bound allocation conflicts with the earlier portfolio allocation, "
+                                "so the earlier controlled result is no longer current."
+                            ),
+                            prior_state=(
+                                "portfolio allocation assumption: "
+                                f"{earlier_allocation[0]:g}/{earlier_allocation[1]:g}/{earlier_allocation[2]:g}"
+                            ),
+                            current_state=(
+                                "later source-bound correction: "
+                                f"{later_allocation[0]:g}/{later_allocation[1]:g}/{later_allocation[2]:g}; "
+                                "earlier assumption is superseded for future framing only"
+                            ),
+                            posture=(
+                                "Retain both source records and require the existing authority path before any new "
+                                "deterministic table; do not infer replacement weights or recompute automatically."
+                            ),
+                            forbidden_actions=tuple(
+                                str(item) for item in later_route.get("forbidden_actions", ()) if str(item)
+                            ),
+                            may_route_next=True,
+                        )
+                    )
 
     analysis_by_id = {
         str(item.get("analysis_id") or ""): dict(item)
@@ -2310,11 +2381,170 @@ def compile_long_horizon_self_correction_candidates(
     return tuple(unique[key] for key in sorted(unique))
 
 
+def compile_long_horizon_correction_effects(
+    *,
+    objective_id: str,
+    semantic_frames: Sequence[Mapping[str, Any]],
+    correction_candidates: Sequence[Mapping[str, Any]],
+    analyses: Sequence[Mapping[str, Any]] = (),
+    fixture_results: Sequence[Mapping[str, Any]] = (),
+    refinements: Sequence[Mapping[str, Any]] = (),
+) -> tuple[LongHorizonCorrectionEffect, ...]:
+    """Project correction consequences over existing local lineage without mutation.
+
+    A correction effect can suppress a stale route/result from later selection,
+    but it cannot recompute, revise, execute, or change graph truth.
+    """
+
+    if not objective_id:
+        return ()
+    analyses_by_frame: dict[str, list[Mapping[str, Any]]] = {}
+    for analysis in analyses:
+        if not isinstance(analysis, Mapping):
+            continue
+        frame_id = str(analysis.get("source_frame_id") or "")
+        if frame_id:
+            analyses_by_frame.setdefault(frame_id, []).append(analysis)
+    result_by_analysis: dict[str, list[Mapping[str, Any]]] = {}
+    for result in fixture_results:
+        if not isinstance(result, Mapping):
+            continue
+        analysis_id = str(result.get("source_analysis_id") or "")
+        if analysis_id:
+            result_by_analysis.setdefault(analysis_id, []).append(result)
+    refinements_by_result: dict[str, list[Mapping[str, Any]]] = {}
+    for refinement in refinements:
+        if not isinstance(refinement, Mapping):
+            continue
+        result_id = str(refinement.get("source_evidence_minimal_fixture_result_id") or "")
+        if result_id:
+            refinements_by_result.setdefault(result_id, []).append(refinement)
+
+    candidates = [dict(item) for item in correction_candidates if isinstance(item, Mapping)]
+    superseded_route_ids = {
+        str(route_id)
+        for item in candidates
+        if str(item.get("correction_type") or "") == "contradiction_or_supersession"
+        for route_id in item.get("source_route_ids", ())
+        if str(route_id)
+    }
+    effects: list[LongHorizonCorrectionEffect] = []
+    for correction in candidates:
+        correction_id = str(correction.get("correction_candidate_id") or "")
+        correction_type = str(correction.get("correction_type") or "")
+        frame_ids = tuple(str(item) for item in correction.get("source_frame_ids", ()) if str(item))
+        route_ids = tuple(str(item) for item in correction.get("source_route_ids", ()) if str(item))
+        if not correction_id:
+            continue
+        effect_type = ""
+        selected_posture = ""
+        affected_frame_ids = frame_ids
+        affected_route_ids = route_ids
+        if correction_type == "contradiction_or_supersession":
+            affected_frame_ids = frame_ids[:-1] or frame_ids
+            affected_route_ids = route_ids[:-1] or route_ids
+            effect_type = "stale_suppression"
+            selected_posture = (
+                "Treat the earlier route and its controlled result as stale. Preserve both sources and wait for the existing "
+                "authority path before any new source-bound calculation or scenario table; do not infer replacement weights or inputs."
+            )
+        elif correction_type == "resolved_missing_context":
+            effect_type = "resolved_context"
+            selected_posture = (
+                "Use the later operator-supplied context only to narrow the existing clarification posture; do not execute evidence work."
+            )
+        elif correction_type == "blocked_external_boundary":
+            effect_type = "blocked_persists"
+            selected_posture = "Retain the blocked safety boundary until its exact authority and source constraints are resolved."
+        elif correction_type == "completed_positive_loop":
+            if any(route_id in superseded_route_ids for route_id in route_ids):
+                continue
+            effect_type = "stable_completed"
+            selected_posture = "Retain the completed provisional result without repeating its fixture, refinement, or selection."
+        else:
+            continue
+
+        result_ids: list[str] = []
+        for frame_id in affected_frame_ids:
+            for analysis in analyses_by_frame.get(frame_id, ()):
+                analysis_id = str(analysis.get("analysis_id") or "")
+                for result in result_by_analysis.get(analysis_id, ()):
+                    result_id = str(result.get("evidence_minimal_fixture_result_id") or "")
+                    if result_id:
+                        result_ids.append(result_id)
+        if correction_type == "completed_positive_loop":
+            result_ids.extend(str(item) for item in correction.get("source_result_ids", ()) if str(item))
+        result_ids = list(dict.fromkeys(result_ids))
+        refinement_ids = list(
+            dict.fromkeys(
+                str(refinement.get("refinement_id") or "")
+                for result_id in result_ids
+                for refinement in refinements_by_result.get(result_id, ())
+                if str(refinement.get("refinement_id") or "")
+            )
+        )
+        effects.append(
+            _correction_effect(
+                objective_id=objective_id,
+                correction_id=correction_id,
+                affected_frame_ids=affected_frame_ids,
+                affected_route_ids=affected_route_ids,
+                affected_result_ids=tuple(result_ids),
+                affected_refinement_ids=tuple(refinement_ids),
+                effect_type=effect_type,
+                posture=selected_posture,
+                forbidden_actions=tuple(str(item) for item in correction.get("forbidden_actions", ()) if str(item)),
+            )
+        )
+    unique: dict[str, LongHorizonCorrectionEffect] = {}
+    for effect in effects:
+        unique.setdefault(effect.effect_id, effect)
+    return tuple(unique[key] for key in sorted(unique))
+
+
+def _correction_effect(
+    *,
+    objective_id: str,
+    correction_id: str,
+    affected_frame_ids: tuple[str, ...],
+    affected_route_ids: tuple[str, ...],
+    affected_result_ids: tuple[str, ...],
+    affected_refinement_ids: tuple[str, ...],
+    effect_type: str,
+    posture: str,
+    forbidden_actions: tuple[str, ...],
+) -> LongHorizonCorrectionEffect:
+    return LongHorizonCorrectionEffect(
+        effect_id=stable_id(
+            "long-horizon-correction-effect",
+            objective_id,
+            correction_id,
+            effect_type,
+            *affected_frame_ids,
+            *affected_route_ids,
+            *affected_result_ids,
+            *affected_refinement_ids,
+        ),
+        objective_id=objective_id,
+        correction_id=correction_id,
+        affected_frame_ids=affected_frame_ids,
+        affected_route_ids=affected_route_ids,
+        affected_result_ids=affected_result_ids,
+        affected_refinement_ids=affected_refinement_ids,
+        effect_type=effect_type,
+        selected_nonexecuting_posture=posture,
+        forbidden_actions=tuple(dict.fromkeys(forbidden_actions)),
+        may_execute_now=False,
+        status="deterministic_correction_effect_only",
+    )
+
+
 def compile_adaptive_route_arbitration(
     *,
     objective_id: str,
     semantic_frames: Sequence[Mapping[str, Any]],
     correction_candidates: Sequence[Mapping[str, Any]] = (),
+    correction_effects: Sequence[Mapping[str, Any]] = (),
 ) -> AdaptiveRouteArbitration | None:
     """Select one safe, non-executing posture from existing objective-local routes.
 
@@ -2335,6 +2565,7 @@ def compile_adaptive_route_arbitration(
     if not routes:
         return None
     corrections = [dict(item) for item in correction_candidates if isinstance(item, Mapping)]
+    effects = [dict(item) for item in correction_effects if isinstance(item, Mapping)]
     considered_route_ids = tuple(str(route.get("capability_route_candidate_id") or "") for _, route in routes)
     considered_correction_ids = tuple(
         str(item.get("correction_candidate_id") or "")
@@ -2348,6 +2579,13 @@ def compile_adaptive_route_arbitration(
         for route_id in item.get("source_route_ids", ())
         if str(route_id)
     }
+    stale_route_ids = {
+        str(route_id)
+        for effect in effects
+        if str(effect.get("effect_type") or "") == "stale_suppression"
+        for route_id in effect.get("affected_route_ids", ())
+        if str(route_id)
+    }
 
     def build(
         decision: str,
@@ -2358,6 +2596,7 @@ def compile_adaptive_route_arbitration(
     ) -> AdaptiveRouteArbitration:
         selected_route_id = str((route or {}).get("capability_route_candidate_id") or "")
         selected_correction_id = str((correction or {}).get("correction_candidate_id") or "")
+        selected_correction_effect_id = str((correction or {}).get("effect_id") or "")
         forbidden = tuple(
             dict.fromkeys(
                 str(item)
@@ -2375,6 +2614,7 @@ def compile_adaptive_route_arbitration(
             decision,
             selected_route_id,
             selected_correction_id,
+            selected_correction_effect_id,
             *considered_route_ids,
             *considered_correction_ids,
         )
@@ -2384,6 +2624,7 @@ def compile_adaptive_route_arbitration(
             decision=decision,
             selected_route_id=selected_route_id,
             selected_correction_id=selected_correction_id,
+            selected_correction_effect_id=selected_correction_effect_id,
             considered_route_ids=considered_route_ids,
             considered_correction_ids=considered_correction_ids,
             priority_reason=reason,
@@ -2410,6 +2651,23 @@ def compile_adaptive_route_arbitration(
             correction=malformed,
             reason="A malformed controlled input remains fail-closed and outranks clarify, eligible, and completed routes.",
         )
+    correction_effect = next(
+        (
+            item
+            for item in effects
+            if str(item.get("effect_type") or "") in {"stale_suppression", "resolved_context"}
+        ),
+        None,
+    )
+    if correction_effect is not None:
+        return build(
+            "clarify",
+            correction=correction_effect,
+            reason=(
+                "A later source-bound correction changes the current posture; stale completed lineage is suppressed "
+                "until the existing authority path is explicitly revisited."
+            ),
+        )
     for _, route in routes:
         if str(route.get("decision") or "") == "clarify":
             return build(
@@ -2419,7 +2677,11 @@ def compile_adaptive_route_arbitration(
             )
     for _, route in routes:
         route_id = str(route.get("capability_route_candidate_id") or "")
-        if str(route.get("decision") or "") == "eligible" and route_id not in completed_route_ids:
+        if (
+            str(route.get("decision") or "") == "eligible"
+            and route_id not in completed_route_ids
+            and route_id not in stale_route_ids
+        ):
             return build(
                 "eligible",
                 route=route,
@@ -2472,6 +2734,25 @@ def _frictionless_incline_angle(frame: Mapping[str, Any]) -> float | None:
         return float(match.group(1))
     except (TypeError, ValueError):
         return None
+
+
+def _portfolio_allocation_signature(frame: Mapping[str, Any]) -> tuple[float, float, float] | None:
+    if str(frame.get("domain_guess") or "") != "finance_portfolio_risk":
+        return None
+    source_text = str(frame.get("source_text") or "")
+    lowered = source_text.lower()
+    if not all(marker in lowered for marker in ("tech", "cash", "small")):
+        return None
+    values = re.findall(r"(?<!\d)(\d+(?:\.\d+)?)\s*%", source_text)
+    if len(values) < 3:
+        return None
+    try:
+        allocation = tuple(float(value) for value in values[:3])
+    except ValueError:
+        return None
+    if not math.isclose(sum(allocation), 100.0):
+        return None
+    return allocation
 
 
 def _self_correction_candidate(
@@ -4222,6 +4503,7 @@ __all__ = [
     "EvidenceResultIngestionCandidate",
     "EvidenceItem",
     "LongHorizonSelfCorrectionCandidate",
+    "LongHorizonCorrectionEffect",
     "EVIDENCE_EXECUTION_AUTHORITY_SCHEMA_VERSION",
     "EVIDENCE_ANALYSIS_REVISION_CANDIDATE_SCHEMA_VERSION",
     "EVIDENCE_FIXTURE_DRY_RUN_SCHEMA_VERSION",
@@ -4253,6 +4535,7 @@ __all__ = [
     "compile_evidence_result_ingestion_candidates",
     "compile_internal_work_candidates",
     "compile_long_horizon_self_correction_candidates",
+    "compile_long_horizon_correction_effects",
     "classify_internal_work_operator_response",
     "render_evidence_analysis_revision_candidate",
     "render_evidence_authorization",
