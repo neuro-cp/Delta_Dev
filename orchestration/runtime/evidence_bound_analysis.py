@@ -2120,6 +2120,99 @@ def render_evidence_analysis_revision_candidate(candidate: Mapping[str, Any]) ->
     )
 
 
+def compile_analysis_revision_internal_work_candidates(
+    revision_candidate: Mapping[str, Any],
+    *,
+    objective_id: str,
+    source_evidence_request: Mapping[str, Any] | None = None,
+) -> tuple[InternalWorkCandidate, ...]:
+    """Adapt an inert revision candidate into the existing internal-work shape."""
+
+    revision_id = str(revision_candidate.get("evidence_analysis_revision_candidate_id") or "")
+    source_analysis_id = str(revision_candidate.get("source_analysis_id") or "")
+    source_request = dict(source_evidence_request or {})
+    source_frame_id = str(source_request.get("source_frame_id") or "")
+    domain = str(source_request.get("domain") or "")
+    proposed_revision_type = str(revision_candidate.get("proposed_revision_type") or "")
+    if not objective_id or not revision_id or not source_analysis_id or not proposed_revision_type:
+        return ()
+    if bool(revision_candidate.get("may_append_refinement")):
+        return ()
+    if bool(revision_candidate.get("may_update_analysis")):
+        return ()
+    if bool(revision_candidate.get("may_update_problem_state")):
+        return ()
+    if bool(revision_candidate.get("may_change_answer")):
+        return ()
+    if bool(revision_candidate.get("may_update_graph")):
+        return ()
+    if not bool(revision_candidate.get("requires_analysis_revision_gate")):
+        return ()
+
+    candidate_intent = "route_analysis_revision_candidate_to_existing_internal_work"
+    binding_key = "|".join(
+        (
+            objective_id,
+            source_frame_id,
+            source_analysis_id,
+            revision_id,
+            proposed_revision_type,
+            candidate_intent,
+        )
+    )
+    internal_id = stable_id("analysis-internal-work-candidate", binding_key)
+    label = proposed_revision_type.replace("_", " ")
+    return (
+        InternalWorkCandidate(
+            internal_work_candidate_id=internal_id,
+            active_objective_id=objective_id,
+            source_frame_id=source_frame_id,
+            source_analysis_id=source_analysis_id,
+            source_refinement_id=str(source_request.get("source_refinement_id") or ""),
+            source_question_candidate_id=str(source_request.get("source_question_candidate_id") or ""),
+            domain=domain or "source_bound_analysis",
+            unresolved_slot_id=proposed_revision_type,
+            candidate_intent=candidate_intent,
+            semantic_binding_key=binding_key,
+            latest_state_id=revision_id,
+            unresolved_label=label,
+            why_it_matters=str(
+                revision_candidate.get("proposed_revision_scope")
+                or "A dry-run boundary indicates this analysis may need later revision when real evidence is available."
+            ),
+            safe_deterministic_next_step=(
+                "Keep this evidence boundary unresolved in the existing continuation path. "
+                "Do not append an analysis refinement unless a later explicit source and revision gate authorize it."
+            ),
+            continuation_prompt=(
+                "This remains pending internal work: revisit the analysis only after real evidence or operator context is available."
+            ),
+            expected_answer_type="",
+            priority=1,
+            authority_boundary=(
+                "This routes a revision candidate into the existing internal-work path only; it does not approve or append a refinement."
+            ),
+            prohibited_actions=tuple(
+                dict.fromkeys(
+                    (
+                        *(str(item) for item in revision_candidate.get("blocked_change", ()) if str(item)),
+                        "Do not append AnalysisRefinement.",
+                        "Do not mutate analysis, problem state, answer state, graph truth, review, admission, or replanning.",
+                        "Do not read files, access networks, call models/providers/tools, execute sandboxes, mutate source, start workers, or start schedulers.",
+                    )
+                )
+            ),
+            risk_class="safe_internal",
+            status="candidate",
+            created_event_id=stable_id("analysis-internal-work-candidate-event", internal_id),
+            restart_summary=(
+                "Existing internal-work candidate created from an evidence analysis revision candidate; "
+                "no new approval ladder, refinement append, analysis update, graph mutation, review, admission, execution, worker, scheduler, or external action occurred."
+            ),
+        ),
+    )
+
+
 def _canonical_digest(value: Mapping[str, Any]) -> str:
     payload = json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
     return "sha256:" + hashlib.sha256(payload.encode("utf-8")).hexdigest()
@@ -3141,6 +3234,7 @@ __all__ = [
     "classify_evidence_fixture_execution_plan_operator_response",
     "classify_evidence_next_operation_operator_response",
     "classify_evidence_permission_operator_response",
+    "compile_analysis_revision_internal_work_candidates",
     "compile_evidence_analysis_revision_candidates",
     "compile_evidence_bound_analysis",
     "compile_evidence_execution_authority_records",

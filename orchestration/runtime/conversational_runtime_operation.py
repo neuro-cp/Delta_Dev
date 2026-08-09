@@ -62,6 +62,7 @@ from orchestration.runtime.evidence_bound_analysis import (
     classify_evidence_next_operation_operator_response,
     classify_evidence_permission_operator_response,
     classify_internal_work_operator_response,
+    compile_analysis_revision_internal_work_candidates,
     compile_evidence_analysis_revision_candidates,
     compile_evidence_bound_analysis,
     compile_analysis_refinement,
@@ -2831,6 +2832,93 @@ def _compile_evidence_analysis_revision_candidate_lifecycle(
         },
     )
     return records, candidate, events
+
+
+def _route_analysis_revision_candidate_to_internal_work(
+    state: ConversationalRuntimeState,
+    *,
+    objective: ConversationalObjective,
+    revision_candidate: Mapping[str, Any],
+    existing_internal_candidates: Sequence[Mapping[str, Any]] | None = None,
+    ignored_pending_request_id: str = "",
+) -> tuple[list[dict[str, Any]], dict[str, Any] | None, tuple[Mapping[str, Any], ...]]:
+    """Route a revision candidate through existing internal-work provenance."""
+
+    records = [
+        dict(item)
+        for item in (
+            existing_internal_candidates
+            if existing_internal_candidates is not None
+            else _internal_work_candidates_for_objective(objective)
+        )
+        if isinstance(item, Mapping)
+    ]
+    revision_id = str(revision_candidate.get("evidence_analysis_revision_candidate_id") or "")
+    if not revision_id:
+        return records, None, ()
+    if any(str(item.get("source_evidence_analysis_revision_candidate_id") or "") == revision_id for item in records):
+        return records, None, ()
+    if bool(revision_candidate.get("may_append_refinement")):
+        return records, None, ()
+    if bool(revision_candidate.get("may_update_analysis")):
+        return records, None, ()
+    if bool(revision_candidate.get("may_update_problem_state")):
+        return records, None, ()
+    if bool(revision_candidate.get("may_change_answer")):
+        return records, None, ()
+    if bool(revision_candidate.get("may_update_graph")):
+        return records, None, ()
+    if not bool(revision_candidate.get("requires_analysis_revision_gate")):
+        return records, None, ()
+    has_pending_request = any(
+        request.status == "pending"
+        and not request.consumption_count
+        and request.request_id != ignored_pending_request_id
+        for request in state.pending_chat_requests
+    )
+    if has_pending_request:
+        event = {
+            "event": "analysis_revision_internal_work_route_suppressed_existing_request",
+            "objective_id": objective.objective_id,
+            "evidence_analysis_revision_candidate_id": revision_id,
+            "at": utc_now(),
+        }
+        return records, None, (event,)
+    source_request_id = str(revision_candidate.get("source_evidence_request_id") or "")
+    source_request = next(
+        (
+            item
+            for item in _evidence_permission_requests_for_objective(objective)
+            if str(item.get("evidence_permission_request_id") or item.get("evidence_request_id") or "") == source_request_id
+        ),
+        {},
+    )
+    derived = [
+        item.as_record()
+        for item in compile_analysis_revision_internal_work_candidates(
+            revision_candidate,
+            objective_id=objective.objective_id,
+            source_evidence_request=source_request,
+        )
+    ]
+    if not derived:
+        return records, None, ()
+    routed = {
+        **dict(derived[0]),
+        "source_evidence_analysis_revision_candidate_id": revision_id,
+        "route_status": "routed_to_existing_internal_work",
+    }
+    records.append(routed)
+    events = (
+        {
+            "event": "analysis_revision_routed_to_existing_internal_work",
+            "objective_id": objective.objective_id,
+            "evidence_analysis_revision_candidate_id": revision_id,
+            "internal_work_candidate_id": str(routed.get("internal_work_candidate_id") or ""),
+            "at": utc_now(),
+        },
+    )
+    return records, routed, events
 
 
 def _compile_evidence_permission_lifecycle(
@@ -8998,6 +9086,9 @@ def _resolve_evidence_fixture_execution_plan_request(
     revision_candidates = list(_evidence_analysis_revision_candidates_for_objective(objective))
     revision_candidate: dict[str, Any] | None = None
     revision_candidate_events: tuple[Mapping[str, Any], ...] = ()
+    internal_candidates = list(_internal_work_candidates_for_objective(objective))
+    routed_internal_candidate: dict[str, Any] | None = None
+    routed_internal_events: tuple[Mapping[str, Any], ...] = ()
     if status == "accepted_pending_execution_gate":
         (
             dry_run_results,
@@ -9034,6 +9125,32 @@ def _resolve_evidence_fixture_execution_plan_request(
                     existing_candidates=revision_candidates,
                     ignored_pending_request_id=request.request_id,
                 )
+                if revision_candidate is not None:
+                    (
+                        internal_candidates,
+                        routed_internal_candidate,
+                        routed_internal_events,
+                    ) = _route_analysis_revision_candidate_to_internal_work(
+                        state,
+                        objective=objective,
+                        revision_candidate=revision_candidate,
+                        existing_internal_candidates=internal_candidates,
+                        ignored_pending_request_id=request.request_id,
+                    )
+                    if routed_internal_candidate is not None:
+                        routed_revision_id = str(revision_candidate.get("evidence_analysis_revision_candidate_id") or "")
+                        routed_internal_id = str(routed_internal_candidate.get("internal_work_candidate_id") or "")
+                        revision_candidate = {
+                            **revision_candidate,
+                            "status": "routed_to_existing_internal_work",
+                            "routed_internal_work_candidate_id": routed_internal_id,
+                        }
+                        revision_candidates = [
+                            revision_candidate
+                            if str(item.get("evidence_analysis_revision_candidate_id") or "") == routed_revision_id
+                            else item
+                            for item in revision_candidates
+                        ]
     resolved_request = replace(
         request,
         status="resolved",
@@ -9053,6 +9170,12 @@ def _resolve_evidence_fixture_execution_plan_request(
         reply = f"{reply}\n\n{render_evidence_result_ingestion_candidate(ingestion_candidate)}"
     if revision_candidate is not None:
         reply = f"{reply}\n\n{render_evidence_analysis_revision_candidate(revision_candidate)}"
+    if routed_internal_candidate is not None:
+        reply = (
+            f"{reply}\n\nExisting continuation path: routed to internal work candidate "
+            f"{str(routed_internal_candidate.get('internal_work_candidate_id') or '')}. "
+            "No new approval request, AnalysisRefinement append, analysis update, graph mutation, review, admission, execution, worker, scheduler, or replanning started."
+        )
     assistant_turn = ConversationTurn(
         turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
         role="assistant",
@@ -9077,6 +9200,8 @@ def _resolve_evidence_fixture_execution_plan_request(
         progress = progress + ingestion_candidate_events
     if revision_candidate_events:
         progress = progress + revision_candidate_events
+    if routed_internal_events:
+        progress = progress + routed_internal_events
     updated = _replace_state(
         state,
         active_objective=_replace_teaching_objective(
@@ -9085,6 +9210,7 @@ def _resolve_evidence_fixture_execution_plan_request(
             evidence_fixture_dry_run_results=dry_run_results,
             evidence_result_ingestion_candidates=ingestion_candidates,
             evidence_analysis_revision_candidates=revision_candidates,
+            internal_work_candidates=internal_candidates,
         ),
         conversation=state.conversation + (user_turn, assistant_turn),
         pending_chat_requests=tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id),
