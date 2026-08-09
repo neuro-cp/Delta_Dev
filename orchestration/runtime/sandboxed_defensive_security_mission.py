@@ -229,6 +229,24 @@ def _action_context(receipts: list[Mapping[str, Any]]) -> str:
 def _stage_state(provenance: Mapping[str, Any]) -> dict[str, Any]:
     receipts = tuple(item for item in provenance.get("action_receipts", ()) if isinstance(item, Mapping))
     completed = tuple(item for item in receipts if item.get("status") == "completed")
+    discovered_visible_files: dict[str, str] = {}
+    for item in completed:
+        if item.get("action_type") != "list_files":
+            continue
+        for raw_path in str(item.get("stdout_summary") or "").splitlines():
+            candidate = raw_path.strip().rstrip("/")
+            if not candidate or candidate == "... truncated ...":
+                continue
+            lower = candidate.lower()
+            if lower.endswith((".md", ".rst", ".txt")):
+                category = "documentation"
+            elif lower.startswith("tests/") or lower.startswith("test_"):
+                category = "visible_tests"
+            elif lower.endswith((".py", ".js", ".ts", ".java", ".go", ".rs")) or lower.startswith(("src/", "app/", "service/", "routes/", "handlers/")):
+                category = "source_like"
+            else:
+                category = "unknown"
+            discovered_visible_files[candidate] = category
     list_files_used = any(item.get("action_type") == "list_files" and not item.get("replayed") for item in completed)
     distinct_reads = {
         str(item.get("target") or "")
@@ -241,6 +259,15 @@ def _stage_state(provenance: Mapping[str, Any]) -> dict[str, Any]:
         and "/tests/" not in str(item.get("target") or "").replace("\\", "/")
         and not str(item.get("target") or "").startswith("tests/")
         for item in completed
+    )
+    observed_files = sorted(
+        {str(item.get("target") or "") for item in completed if item.get("action_type") == "read_file"}
+    )
+    unseen_source_candidates = sorted(
+        path for path, category in discovered_visible_files.items() if category == "source_like" and path not in observed_files
+    )
+    seen_low_value_files = sorted(
+        path for path in observed_files if discovered_visible_files.get(path) in {"documentation", "visible_tests"}
     )
     local_demo_attempted = any(item.get("action_type") == "http_request" for item in receipts)
     patch_attempted = any(
@@ -279,6 +306,8 @@ def _stage_state(provenance: Mapping[str, Any]) -> dict[str, Any]:
     repeated = sum(1 for item in receipts if item.get("replayed"))
     stagnation = repeated >= 2
     valid_families = ["LIST_FILES", "READ_FILE", "RUN_TESTS", "HTTP_GET", "REQUEST_RESOURCE", "BLOCKED"]
+    if not source_observed and unseen_source_candidates:
+        valid_families = ["READ_FILE_UNSEEN_SOURCE", "REQUEST_RESOURCE", "BLOCKED"]
     if source_observed:
         valid_families.append("WRITE_FILE_JSON")
     if local_demo_attempted and patch_attempted and tests_after_patch:
@@ -290,12 +319,17 @@ def _stage_state(provenance: Mapping[str, Any]) -> dict[str, Any]:
         "completed_stage_ids": completed_stage_ids,
         "missing_stage_ids": [item for item in all_stages if item not in completed_stage_ids],
         "list_files_used": list_files_used,
+        "discovered_visible_files": discovered_visible_files,
+        "observed_files": observed_files,
+        "unseen_source_candidates": unseen_source_candidates,
+        "seen_low_value_files": seen_low_value_files,
         "source_observed": source_observed,
         "local_demo_attempted": local_demo_attempted,
         "patch_attempted": patch_attempted,
         "tests_after_patch_attempted": tests_after_patch,
         "repeated_equivalent_action_count": repeated,
         "stagnation_detected": stagnation,
+        "no_progress_action_count": repeated,
         "valid_next_action_families": valid_families,
     }
 
@@ -340,6 +374,7 @@ def run_delta_sandbox_mission(
         "recovery_events": [],
         "stage_progression": [],
         "stagnation_events": [],
+        "source_candidate_prompts": [],
         "structured_hypotheses": [],
         "final_report": "",
         "final_report_received": False,
@@ -351,6 +386,11 @@ def run_delta_sandbox_mission(
     needs_recovery = False
     executors = dict(resource_executors or {})
     for step in range(maximum_steps):
+        turn_stage = _stage_state(provenance)
+        if turn_stage["unseen_source_candidates"]:
+            provenance["source_candidate_prompts"].append(
+                {"step": step + 1, "candidates": list(turn_stage["unseen_source_candidates"])}
+            )
         recovery = _format_recovery_prompt(provenance["action_receipts"]) if needs_recovery else ""
         model_prompt = (
             f"{prompt}\n\nMission controller state:\n{_controller_state(provenance)}\n"
@@ -517,11 +557,19 @@ def _controller_metrics(provenance: Mapping[str, Any]) -> dict[str, Any]:
         "max_progress_stage": stage,
         "stage_progression": stage_state["completed_stage_ids"],
         "list_files_used": stage_state["list_files_used"],
+        "discovered_visible_files": stage_state["discovered_visible_files"],
+        "discovered_source_candidates": [
+            path for path, category in stage_state["discovered_visible_files"].items() if category == "source_like"
+        ],
+        "unseen_source_candidates": stage_state["unseen_source_candidates"],
+        "source_candidate_prompted": bool(provenance.get("source_candidate_prompts")),
+        "source_candidate_read": stage_state["source_observed"],
         "source_observed": stage_state["source_observed"],
         "tests_after_patch_attempted": stage_state["tests_after_patch_attempted"],
         "repeated_equivalent_action_count": stage_state["repeated_equivalent_action_count"],
         "stagnation_detected": stage_state["stagnation_detected"],
         "stagnation_events": len(provenance.get("stagnation_events", ())),
+        "no_progress_action_count": stage_state["no_progress_action_count"],
         "resource_request_count": len(provenance.get("resource_requests", ())),
         "resource_used": any(item.get("used_for_next_action") for item in provenance.get("resource_requests", ()) if isinstance(item, Mapping)),
         "model_name": str(calls[0].get("model_id") or "") if calls else "",
