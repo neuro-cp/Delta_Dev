@@ -30,6 +30,7 @@ EVIDENCE_FIXTURE_DRY_RUN_SCHEMA_VERSION = "evidence_bound_fixture_dry_run_result
 EVIDENCE_RESULT_INGESTION_CANDIDATE_SCHEMA_VERSION = "evidence_bound_result_ingestion_candidate_v1"
 EVIDENCE_ANALYSIS_REVISION_CANDIDATE_SCHEMA_VERSION = "evidence_bound_analysis_revision_candidate_v1"
 EVIDENCE_MINIMAL_FIXTURE_RESULT_SCHEMA_VERSION = "evidence_bound_minimal_fixture_result_v1"
+LONG_HORIZON_SELF_CORRECTION_SCHEMA_VERSION = "objective_local_self_correction_v1"
 
 
 @dataclass(frozen=True)
@@ -675,6 +676,38 @@ class EvidenceAnalysisRevisionCandidate:
         record["blocked_change"] = list(self.blocked_change)
         record["limitation_summary"] = list(self.limitation_summary)
         record["record_kind"] = "evidence_analysis_revision_candidate"
+        return record
+
+
+@dataclass(frozen=True)
+class LongHorizonSelfCorrectionCandidate:
+    """One deterministic correction posture over existing objective-local history."""
+
+    correction_candidate_id: str
+    objective_id: str
+    correction_type: str
+    source_frame_ids: tuple[str, ...]
+    source_route_ids: tuple[str, ...]
+    source_result_ids: tuple[str, ...]
+    source_plan_ids: tuple[str, ...]
+    reason: str
+    prior_state: str
+    corrected_or_current_state: str
+    recommended_nonexecuting_posture: str
+    forbidden_actions: tuple[str, ...]
+    may_route_next: bool
+    may_execute_now: bool
+    status: str
+    schema_version: str = LONG_HORIZON_SELF_CORRECTION_SCHEMA_VERSION
+
+    def as_record(self) -> dict[str, Any]:
+        record = asdict(self)
+        record["source_frame_ids"] = list(self.source_frame_ids)
+        record["source_route_ids"] = list(self.source_route_ids)
+        record["source_result_ids"] = list(self.source_result_ids)
+        record["source_plan_ids"] = list(self.source_plan_ids)
+        record["forbidden_actions"] = list(self.forbidden_actions)
+        record["record_kind"] = "objective_local_self_correction_candidate"
         return record
 
 
@@ -2083,6 +2116,285 @@ def compile_evidence_minimal_fixture_results(
                 "it remains provisional until the controlled existing-refinement transition records its local effect."
             ),
         ),
+    )
+
+
+def compile_long_horizon_self_correction_candidates(
+    *,
+    objective_id: str,
+    semantic_frames: Sequence[Mapping[str, Any]],
+    analyses: Sequence[Mapping[str, Any]] = (),
+    fixture_results: Sequence[Mapping[str, Any]] = (),
+    rejected_fixture_inputs: Sequence[tuple[Mapping[str, Any], Mapping[str, Any]]] = (),
+) -> tuple[LongHorizonSelfCorrectionCandidate, ...]:
+    """Derive non-executing correction posture from existing objective history.
+
+    Inputs are already-persisted semantic frames and controlled-loop records.
+    The helper cannot inspect new evidence, create authority, mutate graph truth,
+    or execute a route. The runtime remains the only persistence owner.
+    """
+
+    if not objective_id:
+        return ()
+    frames = [dict(item) for item in semantic_frames if isinstance(item, Mapping)]
+    frame_by_id = {
+        str(item.get("frame_id") or ""): item
+        for item in frames
+        if str(item.get("frame_id") or "")
+    }
+    values: list[LongHorizonSelfCorrectionCandidate] = []
+    for frame in frames:
+        candidate = _capability_route_candidate_from_frame(frame)
+        frame_id = str(frame.get("frame_id") or "")
+        route_id = str(candidate.get("capability_route_candidate_id") or "")
+        decision = str(candidate.get("decision") or "")
+        if not frame_id or not route_id:
+            continue
+        if decision == "blocked":
+            values.append(
+                _self_correction_candidate(
+                    objective_id=objective_id,
+                    correction_type="blocked_external_boundary",
+                    source_frame_ids=(frame_id,),
+                    source_route_ids=(route_id,),
+                    reason=str(candidate.get("rationale") or "The route remains blocked by its safety boundary."),
+                    prior_state="blocked route selected",
+                    current_state="blocked boundary remains unresolved",
+                    posture="Retain the blocked boundary and wait for explicitly authorized, source-bound evidence; do not execute or infer the missing result.",
+                    forbidden_actions=tuple(str(item) for item in candidate.get("forbidden_actions", ()) if str(item)),
+                    may_route_next=False,
+                )
+            )
+        elif decision == "clarify":
+            values.append(
+                _self_correction_candidate(
+                    objective_id=objective_id,
+                    correction_type="unsupported_to_clarify",
+                    source_frame_ids=(frame_id,),
+                    source_route_ids=(route_id,),
+                    reason=str(candidate.get("rationale") or "The source remains under-specified for a safe route."),
+                    prior_state="clarification or unsupported boundary",
+                    current_state="clarification remains required",
+                    posture="Preserve uncertainty and request only source-grounded clarification through an existing operator-facing path if one is later selected.",
+                    forbidden_actions=tuple(str(item) for item in candidate.get("forbidden_actions", ()) if str(item)),
+                    may_route_next=True,
+                )
+            )
+
+    for index, earlier in enumerate(frames):
+        earlier_frame = _semantic_input_frame(earlier)
+        earlier_domain = str(earlier_frame.get("domain_guess") or "")
+        earlier_route = _capability_route_candidate_from_frame(earlier)
+        earlier_requires_clarification = str(earlier_route.get("decision") or "") == "clarify"
+        earlier_id = str(earlier.get("frame_id") or "")
+        earlier_route_id = str(earlier_route.get("capability_route_candidate_id") or "")
+        if not earlier_id or not earlier_route_id:
+            continue
+        for later in frames[index + 1 :]:
+            later_frame = _semantic_input_frame(later)
+            later_id = str(later.get("frame_id") or "")
+            if not later_id or str(later_frame.get("domain_guess") or "") != earlier_domain:
+                continue
+            later_route = _capability_route_candidate_from_frame(later)
+            later_route_id = str(later_route.get("capability_route_candidate_id") or "")
+            later_text = str(later_frame.get("source_text") or "")
+            if earlier_requires_clarification and _has_material_context_resolution(later_text):
+                values.append(
+                    _self_correction_candidate(
+                        objective_id=objective_id,
+                        correction_type="resolved_missing_context",
+                        source_frame_ids=(earlier_id, later_id),
+                        source_route_ids=(earlier_route_id, later_route_id),
+                        reason="A later source-bound frame supplies an explicit context-resolution marker for an earlier clarification posture.",
+                        prior_state="clarification required because context was missing",
+                        current_state="later source provides material context; prior uncertainty is narrowed but not promoted as truth",
+                        posture="Use the later source as bounded context for an existing route only after its normal authority boundary; do not execute automatically.",
+                        forbidden_actions=tuple(str(item) for item in later_route.get("forbidden_actions", ()) if str(item)),
+                        may_route_next=True,
+                    )
+                )
+            if earlier_domain == "physics_mechanics":
+                earlier_angle = _frictionless_incline_angle(earlier_frame)
+                later_angle = _frictionless_incline_angle(later_frame)
+                if earlier_angle is not None and later_angle is not None and not math.isclose(earlier_angle, later_angle):
+                    values.append(
+                        _self_correction_candidate(
+                            objective_id=objective_id,
+                            correction_type="contradiction_or_supersession",
+                            source_frame_ids=(earlier_id, later_id),
+                            source_route_ids=(earlier_route_id, later_route_id),
+                            reason=f"The later source-bound physics frame records {later_angle:g} degrees, which conflicts with the earlier {earlier_angle:g}-degree assumption.",
+                            prior_state=f"frictionless incline assumption: {earlier_angle:g} degrees",
+                            current_state=f"later source-bound correction: {later_angle:g} degrees; earlier assumption is superseded for future framing only",
+                            posture="Retain both frames and require the existing authority path before any new deterministic calculation; do not recompute automatically.",
+                            forbidden_actions=tuple(str(item) for item in later_route.get("forbidden_actions", ()) if str(item)),
+                            may_route_next=True,
+                        )
+                    )
+
+    analysis_by_id = {
+        str(item.get("analysis_id") or ""): dict(item)
+        for item in analyses
+        if isinstance(item, Mapping) and str(item.get("analysis_id") or "")
+    }
+    for result in fixture_results:
+        if not isinstance(result, Mapping):
+            continue
+        result_id = str(result.get("evidence_minimal_fixture_result_id") or "")
+        analysis = analysis_by_id.get(str(result.get("source_analysis_id") or ""))
+        frame_id = str((analysis or {}).get("source_frame_id") or "")
+        frame = frame_by_id.get(frame_id, {})
+        route = _capability_route_candidate_from_frame(frame)
+        route_id = str(route.get("capability_route_candidate_id") or "")
+        if not result_id or not frame_id or not route_id:
+            continue
+        values.append(
+            _self_correction_candidate(
+                objective_id=objective_id,
+                correction_type="completed_positive_loop",
+                source_frame_ids=(frame_id,),
+                source_route_ids=(route_id,),
+                source_result_ids=(result_id,),
+                source_plan_ids=(str(result.get("source_plan_id") or ""),),
+                reason="An existing controlled fixture result already completed this bounded source-to-refinement path.",
+                prior_state="eligible controlled route awaiting its existing authority chain",
+                current_state="completed bounded positive loop remains stable and provisional",
+                posture="Do not repeat the fixture, refinement, or selection. Retain the completed record and wait for a genuinely new source-bound correction.",
+                forbidden_actions=tuple(str(item) for item in result.get("blocked_actions", ()) if str(item)),
+                may_route_next=False,
+            )
+        )
+
+    for plan, source_analysis in rejected_fixture_inputs:
+        if not isinstance(plan, Mapping) or not isinstance(source_analysis, Mapping):
+            continue
+        correction = _malformed_fixture_rejection_correction(
+            objective_id=objective_id,
+            plan=plan,
+            source_analysis=source_analysis,
+        )
+        if correction is not None:
+            values.append(correction)
+
+    unique: dict[str, LongHorizonSelfCorrectionCandidate] = {}
+    for item in values:
+        unique.setdefault(item.correction_candidate_id, item)
+    return tuple(unique[key] for key in sorted(unique))
+
+
+def _semantic_input_frame(record: Mapping[str, Any]) -> Mapping[str, Any]:
+    candidate = record.get("semantic_input_frame")
+    return candidate if isinstance(candidate, Mapping) else record
+
+
+def _capability_route_candidate_from_frame(record: Mapping[str, Any]) -> Mapping[str, Any]:
+    candidate = record.get("capability_route_candidate")
+    return candidate if isinstance(candidate, Mapping) else {}
+
+
+def _has_material_context_resolution(source_text: str) -> bool:
+    return bool(re.search(
+        r"\b(?:now\s+(?:know|known)|confirmed|identified|error\s+is|owner\s+is|no\s+fever|not\s+spreading)\b",
+        source_text,
+        flags=re.IGNORECASE,
+    ))
+
+
+def _frictionless_incline_angle(frame: Mapping[str, Any]) -> float | None:
+    if str(frame.get("domain_guess") or "") != "physics_mechanics":
+        return None
+    source_text = str(frame.get("source_text") or "")
+    if "frictionless" not in source_text.lower() and "without friction" not in source_text.lower():
+        return None
+    match = re.search(r"(?<!\d)(\d+(?:\.\d+)?)\s*[-\s]*(?:degrees?|degree)\b", source_text, flags=re.IGNORECASE)
+    if match is None:
+        return None
+    try:
+        return float(match.group(1))
+    except (TypeError, ValueError):
+        return None
+
+
+def _self_correction_candidate(
+    *,
+    objective_id: str,
+    correction_type: str,
+    source_frame_ids: tuple[str, ...],
+    source_route_ids: tuple[str, ...],
+    reason: str,
+    prior_state: str,
+    current_state: str,
+    posture: str,
+    forbidden_actions: tuple[str, ...],
+    may_route_next: bool,
+    source_result_ids: tuple[str, ...] = (),
+    source_plan_ids: tuple[str, ...] = (),
+) -> LongHorizonSelfCorrectionCandidate:
+    correction_id = stable_id(
+        "objective-local-self-correction",
+        objective_id,
+        correction_type,
+        *source_frame_ids,
+        *source_route_ids,
+        *source_result_ids,
+        *source_plan_ids,
+    )
+    return LongHorizonSelfCorrectionCandidate(
+        correction_candidate_id=correction_id,
+        objective_id=objective_id,
+        correction_type=correction_type,
+        source_frame_ids=source_frame_ids,
+        source_route_ids=source_route_ids,
+        source_result_ids=source_result_ids,
+        source_plan_ids=source_plan_ids,
+        reason=reason,
+        prior_state=prior_state,
+        corrected_or_current_state=current_state,
+        recommended_nonexecuting_posture=posture,
+        forbidden_actions=tuple(dict.fromkeys(forbidden_actions)),
+        may_route_next=may_route_next,
+        may_execute_now=False,
+        status="deterministic_correction_candidate_only",
+    )
+
+
+def _malformed_fixture_rejection_correction(
+    *,
+    objective_id: str,
+    plan: Mapping[str, Any],
+    source_analysis: Mapping[str, Any],
+) -> LongHorizonSelfCorrectionCandidate | None:
+    domain = str(source_analysis.get("domain") or "")
+    accepted = str(plan.get("status") or "") in {"accepted_pending_execution_gate", "accepted", "approved"}
+    if not accepted or domain not in {"finance_portfolio_risk", "physics_mechanics"}:
+        return None
+    source_text = str(source_analysis.get("source_text") or "")
+    malformed = (
+        domain == "finance_portfolio_risk" and _minimal_portfolio_fixture(source_analysis) is None
+    ) or (
+        domain == "physics_mechanics" and _minimal_frictionless_thirty_degree_incline_fixture(source_analysis) is None
+    )
+    if not malformed:
+        return None
+    frame_id = str(source_analysis.get("source_frame_id") or "")
+    plan_id = str(plan.get("evidence_fixture_execution_plan_id") or "")
+    if not frame_id or not plan_id or not source_text:
+        return None
+    return _self_correction_candidate(
+        objective_id=objective_id,
+        correction_type="malformed_to_fail_closed",
+        source_frame_ids=(frame_id,),
+        source_route_ids=(),
+        source_plan_ids=(plan_id,),
+        reason="An accepted-looking controlled plan has malformed or internally inconsistent source-bound inputs, so the evaluator must reject it without fallback data.",
+        prior_state="accepted-looking plan with incomplete or inconsistent source inputs",
+        current_state="fail-closed evaluator rejection; no fixture result, refinement, posture update, or selection",
+        posture="Preserve the rejection reason and request corrected source-bound input through an existing clarification path; do not infer replacement values or execute.",
+        forbidden_actions=(
+            "No fallback data, inferred weights, calculation, fixture result, refinement, posture update, or selection.",
+            "No graph truth mutation, review, admission, external action, model, provider, tool, network, filesystem, sandbox, worker, scheduler, or planner.",
+        ),
+        may_route_next=True,
     )
 
 
@@ -3749,6 +4061,7 @@ __all__ = [
     "EvidencePermissionRequest",
     "EvidenceResultIngestionCandidate",
     "EvidenceItem",
+    "LongHorizonSelfCorrectionCandidate",
     "EVIDENCE_EXECUTION_AUTHORITY_SCHEMA_VERSION",
     "EVIDENCE_ANALYSIS_REVISION_CANDIDATE_SCHEMA_VERSION",
     "EVIDENCE_FIXTURE_DRY_RUN_SCHEMA_VERSION",
@@ -3778,6 +4091,7 @@ __all__ = [
     "compile_evidence_permission_requests",
     "compile_evidence_result_ingestion_candidates",
     "compile_internal_work_candidates",
+    "compile_long_horizon_self_correction_candidates",
     "classify_internal_work_operator_response",
     "render_evidence_analysis_revision_candidate",
     "render_evidence_authorization",

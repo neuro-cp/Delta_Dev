@@ -1290,7 +1290,7 @@ def _extract_generic_structured_problem_roles(source: str) -> _RoleExtraction:
         flags=re.IGNORECASE,
     )
     uncertainty_match = re.search(
-        r"\b(?P<uncertainty>unknown|unclear|uncertain|no\s+one\s+knows|no\s+\w+\s+(?:details|information|owner|deadline)|need\s+to\s+know|whether|what\s+should|how\s+can)\b",
+        r"\b(?P<uncertainty>unknown|unclear|uncertain|no\s+one\s+knows|now\s+(?:know|known)|confirmed|no\s+\w+\s+(?:details|information|owner|deadline)|need\s+to\s+know|whether|what\s+should|how\s+can)\b",
         source,
         flags=re.IGNORECASE,
     )
