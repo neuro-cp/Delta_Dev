@@ -31,6 +31,7 @@ EVIDENCE_RESULT_INGESTION_CANDIDATE_SCHEMA_VERSION = "evidence_bound_result_inge
 EVIDENCE_ANALYSIS_REVISION_CANDIDATE_SCHEMA_VERSION = "evidence_bound_analysis_revision_candidate_v1"
 EVIDENCE_MINIMAL_FIXTURE_RESULT_SCHEMA_VERSION = "evidence_bound_minimal_fixture_result_v1"
 LONG_HORIZON_SELF_CORRECTION_SCHEMA_VERSION = "objective_local_self_correction_v1"
+ADAPTIVE_ROUTE_ARBITRATION_SCHEMA_VERSION = "adaptive_route_arbitration_v1"
 
 
 @dataclass(frozen=True)
@@ -708,6 +709,33 @@ class LongHorizonSelfCorrectionCandidate:
         record["source_plan_ids"] = list(self.source_plan_ids)
         record["forbidden_actions"] = list(self.forbidden_actions)
         record["record_kind"] = "objective_local_self_correction_candidate"
+        return record
+
+
+@dataclass(frozen=True)
+class AdaptiveRouteArbitration:
+    """One objective-local, non-executing priority projection over persisted routes."""
+
+    arbitration_id: str
+    objective_id: str
+    decision: str
+    selected_route_id: str
+    selected_correction_id: str
+    considered_route_ids: tuple[str, ...]
+    considered_correction_ids: tuple[str, ...]
+    priority_reason: str
+    forbidden_actions: tuple[str, ...]
+    requires_existing_authority: bool
+    may_execute_now: bool
+    status: str
+    schema_version: str = ADAPTIVE_ROUTE_ARBITRATION_SCHEMA_VERSION
+
+    def as_record(self) -> dict[str, Any]:
+        record = asdict(self)
+        record["considered_route_ids"] = list(self.considered_route_ids)
+        record["considered_correction_ids"] = list(self.considered_correction_ids)
+        record["forbidden_actions"] = list(self.forbidden_actions)
+        record["record_kind"] = "objective_local_adaptive_route_arbitration"
         return record
 
 
@@ -2280,6 +2308,137 @@ def compile_long_horizon_self_correction_candidates(
     for item in values:
         unique.setdefault(item.correction_candidate_id, item)
     return tuple(unique[key] for key in sorted(unique))
+
+
+def compile_adaptive_route_arbitration(
+    *,
+    objective_id: str,
+    semantic_frames: Sequence[Mapping[str, Any]],
+    correction_candidates: Sequence[Mapping[str, Any]] = (),
+) -> AdaptiveRouteArbitration | None:
+    """Select one safe, non-executing posture from existing objective-local routes.
+
+    This is intentionally a projection only. It does not create an authority,
+    request, queue, task, or execution path. The caller owns persistence.
+    """
+
+    if not objective_id:
+        return None
+    routes: list[tuple[int, Mapping[str, Any]]] = []
+    for index, frame in enumerate(semantic_frames):
+        if not isinstance(frame, Mapping):
+            continue
+        candidate = _capability_route_candidate_from_frame(frame)
+        route_id = str(candidate.get("capability_route_candidate_id") or "")
+        if route_id:
+            routes.append((index, candidate))
+    if not routes:
+        return None
+    corrections = [dict(item) for item in correction_candidates if isinstance(item, Mapping)]
+    considered_route_ids = tuple(str(route.get("capability_route_candidate_id") or "") for _, route in routes)
+    considered_correction_ids = tuple(
+        str(item.get("correction_candidate_id") or "")
+        for item in corrections
+        if str(item.get("correction_candidate_id") or "")
+    )
+    completed_route_ids = {
+        route_id
+        for item in corrections
+        if str(item.get("correction_type") or "") == "completed_positive_loop"
+        for route_id in item.get("source_route_ids", ())
+        if str(route_id)
+    }
+
+    def build(
+        decision: str,
+        *,
+        route: Mapping[str, Any] | None = None,
+        correction: Mapping[str, Any] | None = None,
+        reason: str,
+    ) -> AdaptiveRouteArbitration:
+        selected_route_id = str((route or {}).get("capability_route_candidate_id") or "")
+        selected_correction_id = str((correction or {}).get("correction_candidate_id") or "")
+        forbidden = tuple(
+            dict.fromkeys(
+                str(item)
+                for item in (
+                    *(route or {}).get("forbidden_actions", ()),
+                    *(correction or {}).get("forbidden_actions", ()),
+                    "No automatic authority, execution, graph mutation, review, admission, scheduler, planner, or worker.",
+                )
+                if str(item)
+            )
+        )
+        arbitration_id = stable_id(
+            "adaptive-route-arbitration",
+            objective_id,
+            decision,
+            selected_route_id,
+            selected_correction_id,
+            *considered_route_ids,
+            *considered_correction_ids,
+        )
+        return AdaptiveRouteArbitration(
+            arbitration_id=arbitration_id,
+            objective_id=objective_id,
+            decision=decision,
+            selected_route_id=selected_route_id,
+            selected_correction_id=selected_correction_id,
+            considered_route_ids=considered_route_ids,
+            considered_correction_ids=considered_correction_ids,
+            priority_reason=reason,
+            forbidden_actions=forbidden,
+            requires_existing_authority=bool((route or {}).get("required_authority_if_any")) and decision == "eligible",
+            may_execute_now=False,
+            status="deterministic_route_arbitration_only",
+        )
+
+    for _, route in routes:
+        if str(route.get("decision") or "") == "blocked":
+            return build(
+                "blocked",
+                route=route,
+                reason="A source-bound blocked safety boundary outranks every clarify, eligible, and completed route.",
+            )
+    malformed = next(
+        (item for item in corrections if str(item.get("correction_type") or "") == "malformed_to_fail_closed"),
+        None,
+    )
+    if malformed is not None:
+        return build(
+            "blocked",
+            correction=malformed,
+            reason="A malformed controlled input remains fail-closed and outranks clarify, eligible, and completed routes.",
+        )
+    for _, route in routes:
+        if str(route.get("decision") or "") == "clarify":
+            return build(
+                "clarify",
+                route=route,
+                reason="An unresolved source-bound safety or context clarification outranks any eligible controlled route.",
+            )
+    for _, route in routes:
+        route_id = str(route.get("capability_route_candidate_id") or "")
+        if str(route.get("decision") or "") == "eligible" and route_id not in completed_route_ids:
+            return build(
+                "eligible",
+                route=route,
+                reason="No blocked or clarify posture remains; the first persisted eligible route is the stable non-executing next posture.",
+            )
+    completed = next(
+        (item for item in corrections if str(item.get("correction_type") or "") == "completed_positive_loop"),
+        None,
+    )
+    if completed is not None:
+        return build(
+            "completed",
+            correction=completed,
+            reason="All remaining eligible routes already have stable completed-loop evidence, so no new controlled work is selected.",
+        )
+    return build(
+        "ordinary_none",
+        reason="No route requires a new posture beyond the existing source-bound records.",
+    )
 
 
 def _semantic_input_frame(record: Mapping[str, Any]) -> Mapping[str, Any]:
@@ -4052,6 +4211,7 @@ def _bullet_lines(values: Sequence[str]) -> tuple[str, ...]:
 
 __all__ = [
     "EvidenceBoundAnalysisRecord",
+    "AdaptiveRouteArbitration",
     "EvidenceAnalysisRevisionCandidate",
     "EvidenceExecutionAuthorityRecord",
     "EvidenceFixtureDryRunResult",
@@ -4089,6 +4249,7 @@ __all__ = [
     "compile_evidence_minimal_fixture_results",
     "compile_evidence_next_operation_proposals",
     "compile_evidence_permission_requests",
+    "compile_adaptive_route_arbitration",
     "compile_evidence_result_ingestion_candidates",
     "compile_internal_work_candidates",
     "compile_long_horizon_self_correction_candidates",

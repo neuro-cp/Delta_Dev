@@ -64,6 +64,7 @@ from orchestration.runtime.evidence_bound_analysis import (
     classify_internal_work_operator_response,
     compile_analysis_revision_internal_work_candidates,
     compile_evidence_analysis_revision_candidates,
+    compile_adaptive_route_arbitration,
     compile_evidence_bound_analysis,
     compile_analysis_refinement,
     compile_controlled_fixture_analysis_refinement,
@@ -1461,6 +1462,7 @@ def _replace_teaching_objective(
     evidence_result_ingestion_candidates: Sequence[Mapping[str, Any]] | None = None,
     evidence_analysis_revision_candidates: Sequence[Mapping[str, Any]] | None = None,
     long_horizon_self_correction_candidates: Sequence[Mapping[str, Any]] | None = None,
+    adaptive_route_arbitration: Mapping[str, Any] | None = None,
     execution_constraints: Mapping[str, Any] | None = None,
 ) -> ConversationalObjective:
     provenance = dict(objective.provenance)
@@ -1556,6 +1558,8 @@ def _replace_teaching_objective(
         provenance["long_horizon_self_correction_candidates"] = tuple(
             dict(item) for item in long_horizon_self_correction_candidates
         )
+    if adaptive_route_arbitration is not None:
+        provenance["adaptive_route_arbitration"] = dict(adaptive_route_arbitration)
     if execution_constraints is not None:
         provenance["execution_constraints"] = dict(execution_constraints)
     return replace(objective, provenance=provenance)
@@ -3643,6 +3647,11 @@ def _apply_semantic_problem_modeling(
             fixture_results=_evidence_minimal_fixture_results_for_objective(objective),
         )
     ]
+    adaptive_route_arbitration = compile_adaptive_route_arbitration(
+        objective_id=objective.objective_id,
+        semantic_frames=frames,
+        correction_candidates=long_horizon_corrections,
+    )
     if question_request is not None:
         reply = render_evidence_bound_analysis_question(analysis, selected_candidate)
     else:
@@ -3791,6 +3800,11 @@ def _apply_semantic_problem_modeling(
             internal_work_candidates=internal_candidates,
             internal_work_selections=internal_selections,
             long_horizon_self_correction_candidates=long_horizon_corrections,
+            adaptive_route_arbitration=(
+                adaptive_route_arbitration.as_record()
+                if adaptive_route_arbitration is not None
+                else None
+            ),
         ),
         conversation=state.conversation + (user_turn, assistant_turn),
         pending_chat_requests=(
@@ -9559,6 +9573,11 @@ def _resolve_evidence_fixture_execution_plan_request(
             fixture_results=minimal_fixture_results,
         )
     ]
+    adaptive_route_arbitration = compile_adaptive_route_arbitration(
+        objective_id=objective.objective_id,
+        semantic_frames=_semantic_problem_frames_for_objective(objective),
+        correction_candidates=long_horizon_corrections,
+    )
     resolved_request = replace(
         request,
         status="resolved",
@@ -9639,6 +9658,11 @@ def _resolve_evidence_fixture_execution_plan_request(
             internal_work_candidates=internal_candidates,
             internal_work_selections=internal_selections,
             long_horizon_self_correction_candidates=long_horizon_corrections,
+            adaptive_route_arbitration=(
+                adaptive_route_arbitration.as_record()
+                if adaptive_route_arbitration is not None
+                else None
+            ),
         ),
         conversation=state.conversation + (user_turn, assistant_turn),
         pending_chat_requests=tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id),
