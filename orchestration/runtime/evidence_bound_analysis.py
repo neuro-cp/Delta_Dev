@@ -20,6 +20,7 @@ from orchestration.runtime.delta_1_0_common import stable_id
 SCHEMA_VERSION = "evidence_bound_analysis_v1"
 QUESTION_LOOP_SCHEMA_VERSION = "evidence_bound_operator_question_v1"
 INTERNAL_WORK_SCHEMA_VERSION = "evidence_bound_internal_work_v1"
+EVIDENCE_PERMISSION_SCHEMA_VERSION = "evidence_bound_evidence_permission_v1"
 
 
 @dataclass(frozen=True)
@@ -340,6 +341,51 @@ class InternalWorkCandidate:
         return record
 
 
+@dataclass(frozen=True)
+class EvidencePermissionRequest:
+    """One source-bound request for later evidence authority, never execution.
+
+    The record is intentionally narrower than an evidence-acquisition plan. It
+    records why supplied evidence cannot close a particular analytic gap and
+    what a later, separately-authorized action could inspect. The
+    conversational runtime owns persistence, ChatAddressableRequest rendering,
+    operator binding, and exact-once behavior.
+    """
+
+    evidence_permission_request_id: str
+    active_objective_id: str
+    source_frame_id: str
+    source_analysis_id: str
+    source_refinement_id: str
+    source_question_candidate_id: str
+    source_question_answer_id: str
+    source_validation_check_id: str
+    domain: str
+    evidence_gap_slot_id: str
+    evidence_kind: str
+    semantic_binding_key: str
+    latest_state_id: str
+    exact_information_needed: str
+    why_existing_evidence_is_insufficient: str
+    proposed_source_scope: tuple[str, ...]
+    context_answer_type: str
+    permitted_next_stage: str
+    authority_boundary: str
+    prohibited_actions: tuple[str, ...]
+    risk_class: str
+    status: str
+    created_event_id: str
+    restart_summary: str
+    schema_version: str = EVIDENCE_PERMISSION_SCHEMA_VERSION
+
+    def as_record(self) -> dict[str, Any]:
+        record = asdict(self)
+        record["proposed_source_scope"] = list(self.proposed_source_scope)
+        record["prohibited_actions"] = list(self.prohibited_actions)
+        record["record_kind"] = "evidence_permission_request"
+        return record
+
+
 def compile_operator_question_candidates(
     analysis: Mapping[str, Any],
     *,
@@ -562,6 +608,178 @@ def compile_internal_work_candidates(
     return tuple(candidates)
 
 
+def compile_evidence_permission_requests(
+    analysis: Mapping[str, Any],
+    *,
+    objective_id: str,
+    source_question_candidates: Sequence[Mapping[str, Any]],
+    source_question_answers: Sequence[Mapping[str, Any]],
+    source_refinement: Mapping[str, Any] | None = None,
+) -> tuple[EvidencePermissionRequest, ...]:
+    """Derive one later-evidence permission candidate from typed analytic state.
+
+    This helper deliberately consumes persisted analysis/check/refinement
+    metadata rather than free-form prompt wording. It cannot inspect a path,
+    call a provider, create a packet, or start any work. A returned record is
+    only a request for a later authority decision through the existing chat
+    request surface.
+    """
+
+    source_frame_id = str(analysis.get("source_frame_id") or "")
+    source_analysis_id = str(analysis.get("analysis_id") or "")
+    domain = str(analysis.get("domain") or "")
+    refinement_id = str((source_refinement or {}).get("refinement_id") or "")
+    latest_state_id = refinement_id or source_analysis_id
+    if not objective_id or not source_frame_id or not source_analysis_id or not domain or not refinement_id:
+        return ()
+
+    question_id = str((source_refinement or {}).get("source_question_id") or "")
+    answer_id = str((source_refinement or {}).get("source_answer_id") or "")
+    candidate_by_id = {
+        str(item.get("question_id") or ""): dict(item)
+        for item in source_question_candidates
+        if isinstance(item, Mapping) and str(item.get("question_id") or "")
+    }
+    answer_by_id = {
+        str(item.get("answer_id") or ""): dict(item)
+        for item in source_question_answers
+        if isinstance(item, Mapping) and str(item.get("answer_id") or "")
+    }
+    source_question = candidate_by_id.get(question_id, {})
+    source_answer = answer_by_id.get(answer_id, {})
+    check_text = " ".join(
+        " ".join(
+            str(item.get(field) or "")
+            for field in ("check_id", "description", "expected_property", "result", "limitation")
+        ).lower()
+        for item in analysis.get("validation_checks", ())
+        if isinstance(item, Mapping)
+    )
+    source_slot_id = str(source_question.get("unknown_slot_id") or "")
+    context_answer_type = str(source_question.get("expected_answer_type") or "")
+    answer_status = str(source_answer.get("status") or "")
+    request_specs: list[dict[str, Any]] = []
+
+    if domain == "finance_portfolio_risk" and "live" in check_text and "correlation" in check_text:
+        request_specs.append(
+            {
+                "evidence_gap_slot_id": "finance.live_market_data_or_correlation_gap",
+                "evidence_kind": "approved_market_data_context",
+                "source_validation_check_id": "live_data_unavailable",
+                "exact_information_needed": "Current price and correlation context needed to evaluate the recorded concentration scenario without fabricating live market facts.",
+                "why_existing_evidence_is_insufficient": "The analysis records allocations and a correction scenario, but its validation check explicitly marks live prices and correlations unavailable.",
+                "proposed_source_scope": (
+                    "A later bounded read-only market-data lookup limited to current price and correlation context relevant to the recorded scenario.",
+                    "No trade, recommendation, account access, provider call, or data retrieval is authorized by this request.",
+                ),
+                "context_answer_type": "",
+            }
+        )
+    elif (
+        domain == "defensive_cybersecurity"
+        and "unsafe" in check_text
+        and "construction" in check_text
+        and context_answer_type == "ownership_context"
+        and answer_status == "bound_operator_answer"
+    ):
+        request_specs.append(
+            {
+                "evidence_gap_slot_id": "cyber.local_owned_fixture_verification_gap",
+                "evidence_kind": "read_only_owned_fixture_inspection",
+                "source_validation_check_id": "unsafe_construction_exists",
+                "exact_information_needed": "Whether the recorded owned local fixture uses parameter binding at the identified SQL construction boundary.",
+                "why_existing_evidence_is_insufficient": "The source establishes a defensive source-to-sink concern, but the analysis records that prepared-statement use still needs verification in code.",
+                "proposed_source_scope": (
+                    "A later read-only inspection of the operator-described owned local defensive fixture, limited to the named SQL construction path.",
+                    "No file read, execution, mutation, scanning, payload generation, target interaction, provider call, or network access is authorized by this request.",
+                ),
+                "context_answer_type": "",
+            }
+        )
+    elif (
+        domain == "operations_logistics_receivables"
+        and "external" in check_text
+        and "status" in check_text
+        and source_slot_id
+        and answer_status == "bound_unknown"
+    ):
+        request_specs.append(
+            {
+                "evidence_gap_slot_id": f"operations.{source_slot_id.rsplit('.', 1)[-1]}_status_gap",
+                "evidence_kind": "bounded_operational_status_lookup",
+                "source_validation_check_id": "external_status_not_verified",
+                "exact_information_needed": (
+                    f"The current recorded {str(source_question.get('unknown_label') or 'operational status')} needed to resolve the source-bound schedule or receivable uncertainty."
+                ),
+                "why_existing_evidence_is_insufficient": "The analysis has an explicit unverified external-status check and the operator reported that the selected source-bound value is still unknown.",
+                "proposed_source_scope": (
+                    "A later bounded status lookup limited to the recorded delivery or payment uncertainty.",
+                    "No contact, commitment, schedule change, purchase, file access, provider call, or network action is authorized by this request.",
+                ),
+                "context_answer_type": context_answer_type,
+            }
+        )
+
+    records: list[EvidencePermissionRequest] = []
+    for spec in request_specs:
+        gap_slot_id = str(spec["evidence_gap_slot_id"])
+        binding_key = "|".join(
+            (
+                objective_id,
+                source_frame_id,
+                source_analysis_id,
+                refinement_id,
+                domain,
+                gap_slot_id,
+                "request_later_bounded_evidence_permission",
+            )
+        )
+        evidence_permission_request_id = stable_id("analysis-evidence-permission-request", binding_key)
+        records.append(
+            EvidencePermissionRequest(
+                evidence_permission_request_id=evidence_permission_request_id,
+                active_objective_id=objective_id,
+                source_frame_id=source_frame_id,
+                source_analysis_id=source_analysis_id,
+                source_refinement_id=refinement_id,
+                source_question_candidate_id=question_id,
+                source_question_answer_id=answer_id,
+                source_validation_check_id=str(spec["source_validation_check_id"]),
+                domain=domain,
+                evidence_gap_slot_id=gap_slot_id,
+                evidence_kind=str(spec["evidence_kind"]),
+                semantic_binding_key=binding_key,
+                latest_state_id=latest_state_id,
+                exact_information_needed=str(spec["exact_information_needed"]),
+                why_existing_evidence_is_insufficient=str(spec["why_existing_evidence_is_insufficient"]),
+                proposed_source_scope=tuple(str(item) for item in spec["proposed_source_scope"] if str(item)),
+                context_answer_type=str(spec["context_answer_type"]),
+                permitted_next_stage="separate_explicit_evidence_execution_review",
+                authority_boundary=(
+                    "This asks only whether DELTA may retain a narrow later evidence scope. It does not authorize evidence gathering, a file read, network access, a provider or model call, tool use, sandbox work, packet creation, graph mutation, review, admission, a worker, or a scheduler."
+                ),
+                prohibited_actions=tuple(
+                    dict.fromkeys(
+                        (
+                            *(str(item) for item in analysis.get("prohibited_actions", ()) if str(item)),
+                            "Do not gather evidence or inspect files now.",
+                            "Do not access a network, provider, model, tool, sandbox, or external system.",
+                            "Do not create graph truth, review, admission, a packet, worker, or scheduler.",
+                        )
+                    )
+                ),
+                risk_class=str(analysis.get("risk_class") or "safe_internal"),
+                status="candidate",
+                created_event_id=stable_id("analysis-evidence-permission-request-event", evidence_permission_request_id),
+                restart_summary=(
+                    "Deterministic source-bound evidence-permission candidate retained under active-objective provenance; "
+                    "it has not gathered evidence or created model, provider, tool, file, network, graph, review, admission, worker, scheduler, or external-action side effects."
+                ),
+            )
+        )
+    return tuple(records)
+
+
 def select_internal_work_candidates(
     candidates: Sequence[Mapping[str, Any]],
     *,
@@ -640,6 +858,36 @@ def classify_internal_work_operator_response(candidate: Mapping[str, Any], messa
     return None
 
 
+def classify_evidence_permission_operator_response(request: Mapping[str, Any], message: str) -> str | None:
+    """Classify an operator response to a later-evidence permission request.
+
+    The classification is about authority posture only. A grant is retained as
+    permission for a separately reviewed later step; it never means evidence
+    collection should begin in this turn.
+    """
+
+    text = " ".join(str(message or "").split())
+    lower = text.lower()
+    if not text or text.endswith("?"):
+        return None
+    if re.match(r"^(?:what|why|how|who|where|when|can|could|would|should|is|are|do|does|did)\b", lower):
+        return None
+    if re.search(r"\b(?:later|not\s+now|defer|hold|wait|park|postpone|leave\s+(?:it|that)\s+open|keep\s+(?:it|that)\s+open)\b", lower):
+        return "deferred"
+    context_answer_type = str(request.get("context_answer_type") or "")
+    if context_answer_type and operator_question_answer_is_compatible({"expected_answer_type": context_answer_type}, text):
+        return "operator_provided_context"
+    if re.search(r"\b(?:no|nope|deny|decline|do\s+not\s+authorize|don't\s+authorize|do\s+not\s+approve|don't\s+approve|not\s+authorized|keep\s+it\s+hypothetical)\b", lower):
+        return "denied"
+    if re.search(r"\b(?:yes|approve|approved|authorize|authorized|allow|allowed|go\s+ahead|you\s+may|permission\s+granted|use\s+an?\s+approved|local\s+fixture)\b", lower):
+        return "granted_pending_separate_execution"
+    if re.search(r"\b(?:maybe|not\s+sure|unclear|depends)\b", lower):
+        return "unclear"
+    if len(text.split()) >= 3 and context_answer_type:
+        return "operator_provided_context"
+    return None
+
+
 def render_internal_work_proposal(candidate: Mapping[str, Any]) -> str:
     """Render one inspectable proposal without implying that work has started."""
 
@@ -651,6 +899,72 @@ def render_internal_work_proposal(candidate: Mapping[str, Any]) -> str:
             f"Proposed next step: {str(candidate.get('safe_deterministic_next_step') or '')}",
             "You can keep it ready, defer it, dismiss it for this analysis, or provide the missing context now.",
             "Status: proposal only. No model, provider, tool, external action, graph claim, review, admission, worker, or scheduler has started.",
+        )
+    )
+
+
+def render_evidence_permission_request(request: Mapping[str, Any]) -> str:
+    """Render one exact evidence permission request without starting evidence work."""
+
+    scope = tuple(str(item) for item in request.get("proposed_source_scope", ()) if str(item))
+    prohibited = tuple(str(item) for item in request.get("prohibited_actions", ()) if str(item))
+    return "\n".join(
+        (
+            "A bounded evidence gap remains in the source-bound analysis.",
+            f"Missing evidence: {str(request.get('exact_information_needed') or '')}",
+            f"Why the current evidence is insufficient: {str(request.get('why_existing_evidence_is_insufficient') or '')}",
+            "Possible later scope: " + (" ".join(scope) if scope else str(request.get("evidence_kind") or "")),
+            f"Question: May I retain this narrow evidence scope for a separately reviewed later step, or would you rather deny, defer, or provide the missing context now?",
+            f"Safety boundary: {str(request.get('authority_boundary') or '')}",
+            "Prohibited now: " + ("; ".join(prohibited) if prohibited else "No evidence gathering, tool, provider, model, file, network, graph, review, admission, worker, scheduler, or external action."),
+            "Status: permission request only. No evidence gathering has started.",
+        )
+    )
+
+
+def render_evidence_authorization(
+    request: Mapping[str, Any],
+    authorization: Mapping[str, Any],
+) -> str:
+    """Acknowledge one bound authorization without executing evidence gathering."""
+
+    status = str(authorization.get("status") or authorization.get("authorization_decision") or "")
+    if status == "granted_pending_separate_execution":
+        detail = "I recorded your grant as permission to consider this narrow source in a later separately reviewed step. I did not gather evidence."
+    elif status == "denied":
+        detail = "I recorded that this evidence source is denied for the current analysis and will keep the analysis hypothetical or provisional."
+    elif status == "deferred":
+        detail = "I left this evidence request deferred and will not resurface it automatically as a new request."
+    elif status == "operator_provided_context":
+        detail = "I bound your supplied context to this evidence gap instead of using any external lookup."
+    else:
+        detail = "I recorded that the response was unclear and did not authorize evidence gathering."
+    return "\n".join(
+        (
+            f"Evidence permission update: {detail}",
+            f"Evidence gap: {str(request.get('evidence_gap_slot_id') or '')}",
+            f"Decision: {status.replace('_', ' ')}",
+            f"Context supplied: {str(authorization.get('operator_provided_context_text') or 'None')}",
+            "Execution state: no evidence gathering, model call, provider call, tool use, file read, network access, graph mutation, review, admission, worker, scheduler, or external action started.",
+        )
+    )
+
+
+def render_evidence_permission_recall(
+    request: Mapping[str, Any],
+    authorization: Mapping[str, Any] | None = None,
+) -> str:
+    """Read one evidence permission posture without changing it."""
+
+    decision = str((authorization or {}).get("status") or request.get("status") or "pending")
+    return "\n".join(
+        (
+            "The recorded evidence request is:",
+            f"Gap: {str(request.get('evidence_gap_slot_id') or '')}",
+            f"Needed: {str(request.get('exact_information_needed') or '')}",
+            f"Decision: {decision.replace('_', ' ')}",
+            f"Provided context: {str((authorization or {}).get('operator_provided_context_text') or 'None')}",
+            "This is read-only recall; it did not gather evidence or create a new authorization.",
         )
     )
 
@@ -1042,7 +1356,7 @@ def _looks_like_ownership_context(lower: str) -> bool:
 
 
 def _looks_like_risk_threshold(lower: str) -> bool:
-    has_threshold = bool(re.search(r"\b\d+(?:\.\d+)?\s*(?:%|percent)\b", lower))
+    has_threshold = bool(re.search(r"\b\d+(?:\.\d+)?\s*(?:%|percent\b)", lower))
     has_context = bool(re.search(r"\b(?:drawdown|decline|loss|drop|tolerat(?:e|ion)|unacceptable|risk|cautious|balanced|aggressive)\b", lower))
     return has_threshold and has_context or bool(re.search(r"\b(?:cautious|balanced|aggressive)\b", lower))
 
@@ -1557,17 +1871,24 @@ def _bullet_lines(values: Sequence[str]) -> tuple[str, ...]:
 
 __all__ = [
     "EvidenceBoundAnalysisRecord",
+    "EvidencePermissionRequest",
     "EvidenceItem",
+    "EVIDENCE_PERMISSION_SCHEMA_VERSION",
     "INTERNAL_WORK_SCHEMA_VERSION",
     "InternalWorkCandidate",
     "SafeNextAction",
     "SCHEMA_VERSION",
     "ValidationCheck",
+    "classify_evidence_permission_operator_response",
     "compile_evidence_bound_analysis",
+    "compile_evidence_permission_requests",
     "compile_internal_work_candidates",
     "classify_internal_work_operator_response",
+    "render_evidence_authorization",
     "render_evidence_bound_analysis",
     "render_evidence_bound_analysis_recall",
+    "render_evidence_permission_recall",
+    "render_evidence_permission_request",
     "render_internal_work_disposition",
     "render_internal_work_proposal",
     "render_internal_work_recall",

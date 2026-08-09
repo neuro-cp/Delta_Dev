@@ -120,6 +120,7 @@ from orchestration.runtime.conversational_runtime_operation import (  # noqa: E4
     is_source_bound_semantic_competence_measurement_message,
     is_evidence_bound_analysis_recall_message,
     is_evidence_bound_analysis_refinement_recall_message,
+    is_evidence_permission_recall_message,
     is_internal_work_recall_message,
     is_semantic_problem_frame_recall_message,
     is_semantic_problem_modeling_message,
@@ -7639,6 +7640,13 @@ class DeltaApp:
                         f"{str(metrics.get('source_analysis_id') or '')}: "
                         f"{str(metrics.get('why_it_matters') or 'a recorded unresolved issue remains')}",
                     )
+                elif resolved.chat_request and str(resolved.chat_request.get("request_type") or "") == "evidence_permission":
+                    metrics = resolved.chat_request.get("baseline_metrics") or {}
+                    self._append_observation(
+                        "Evidence permission",
+                        "Selected one permission request for evidence gap "
+                        f"{str(metrics.get('evidence_gap_slot_id') or '')}; no evidence gathering started.",
+                    )
             elif resolved.intent.intent_type == "semantic_internal_work_disposition":
                 objective = resolved.state.active_objective
                 dispositions = (
@@ -7654,6 +7662,21 @@ class DeltaApp:
                         f"{str(disposition.get('candidate_id') or '')}: {str(disposition.get('status') or 'recorded')}. "
                         "No internal work started.",
                     )
+            elif resolved.intent.intent_type == "semantic_evidence_permission_authorization":
+                objective = resolved.state.active_objective
+                authorizations = (
+                    objective.provenance.get("evidence_authorizations", ())
+                    if objective is not None and isinstance(objective.provenance, Mapping)
+                    else ()
+                )
+                authorization = next((item for item in reversed(authorizations) if isinstance(item, Mapping)), {})
+                if authorization:
+                    self._append_observation(
+                        "Evidence authorization",
+                        "Bound one operator decision to evidence request "
+                        f"{str(authorization.get('evidence_request_id') or authorization.get('evidence_permission_request_id') or '')}: "
+                        f"{str(authorization.get('status') or 'recorded')}. No evidence gathering started.",
+                    )
             self._sync_developmental_teaching_progress()
             if resolved.background_cycle_started:
                 self._start_conversational_background_cycle("teaching_request_resolved")
@@ -7666,6 +7689,7 @@ class DeltaApp:
             is_source_bound_semantic_recall_message(state, message)
             or is_evidence_bound_analysis_recall_message(state, message)
             or is_evidence_bound_analysis_refinement_recall_message(state, message)
+            or is_evidence_permission_recall_message(state, message)
             or is_internal_work_recall_message(state, message)
             or is_semantic_problem_frame_recall_message(state, message)
             or is_semantic_problem_modeling_message(state, message)
@@ -7697,18 +7721,21 @@ class DeltaApp:
                     "semantic_source_bound_recall",
                     "semantic_evidence_bound_analysis_recall",
                     "semantic_evidence_bound_analysis_refinement_recall",
+                    "semantic_evidence_permission_recall",
                     "semantic_internal_work_recall",
                     "semantic_problem_frame_recall",
                 }:
                     title = {
                         "semantic_evidence_bound_analysis_recall": "Evidence-bound analysis",
                         "semantic_evidence_bound_analysis_refinement_recall": "Analysis refinement",
+                        "semantic_evidence_permission_recall": "Evidence permission",
                         "semantic_internal_work_recall": "Internal continuation",
                         "semantic_problem_frame_recall": "Semantic frame",
                     }.get(result.intent.intent_type, "Semantic lineage")
                     detail = {
                         "semantic_evidence_bound_analysis_recall": "Rendered a read-only source-bound analysis recap without changing the recorded analysis.",
                         "semantic_evidence_bound_analysis_refinement_recall": "Rendered a read-only source-bound refinement recap without creating a new question or refinement.",
+                        "semantic_evidence_permission_recall": "Rendered a read-only evidence-permission recap without creating a request or authorization.",
                         "semantic_internal_work_recall": "Rendered a read-only source-bound internal continuation recap without changing a candidate or disposition.",
                         "semantic_problem_frame_recall": "Rendered a read-only source-bound frame recap without changing the recorded frame.",
                     }.get(result.intent.intent_type, "Rendered a read-only source-bound recap without changing the recorded semantic chain.")
@@ -7766,6 +7793,13 @@ class DeltaApp:
                             "Internal continuation",
                             "Selected one safe proposal for analysis "
                             f"{str(metrics.get('source_analysis_id') or '')}: {str(metrics.get('why_it_matters') or 'a recorded unresolved issue remains')} ",
+                        )
+                    elif result.chat_request and str(result.chat_request.get("request_type") or "") == "evidence_permission":
+                        metrics = result.chat_request.get("baseline_metrics") or {}
+                        self._append_observation(
+                            "Evidence permission",
+                            "Asked for permission around evidence gap "
+                            f"{str(metrics.get('evidence_gap_slot_id') or '')}. No evidence gathering started.",
                         )
                 self._refresh_conversational_runtime_status()
                 self._refresh_state_cards()
@@ -9350,6 +9384,7 @@ class DeltaApp:
             is_source_bound_semantic_recall_message(self.conversational_runtime_state, message)
             or is_evidence_bound_analysis_recall_message(self.conversational_runtime_state, message)
             or is_evidence_bound_analysis_refinement_recall_message(self.conversational_runtime_state, message)
+            or is_evidence_permission_recall_message(self.conversational_runtime_state, message)
             or is_semantic_problem_frame_recall_message(self.conversational_runtime_state, message)
             or is_semantic_problem_modeling_message(self.conversational_runtime_state, message)
             or is_source_bound_semantic_competence_measurement_message(self.conversational_runtime_state, message)
