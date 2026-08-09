@@ -23,6 +23,7 @@ INTERNAL_WORK_SCHEMA_VERSION = "evidence_bound_internal_work_v1"
 EVIDENCE_PERMISSION_SCHEMA_VERSION = "evidence_bound_evidence_permission_v1"
 EVIDENCE_NEXT_OPERATION_SCHEMA_VERSION = "evidence_bound_next_operation_proposal_v1"
 EVIDENCE_EXECUTION_AUTHORITY_SCHEMA_VERSION = "evidence_bound_execution_authority_v1"
+EVIDENCE_FIXTURE_EXECUTION_PLAN_SCHEMA_VERSION = "evidence_bound_fixture_execution_plan_v1"
 
 
 @dataclass(frozen=True)
@@ -460,6 +461,49 @@ class EvidenceExecutionAuthorityRecord:
         record = asdict(self)
         record["prohibited_actions"] = list(self.prohibited_actions)
         record["record_kind"] = "evidence_execution_authority_record"
+        return record
+
+
+@dataclass(frozen=True)
+class EvidenceFixtureExecutionPlan:
+    """One inert plan for a future bounded evidence operation.
+
+    This record names the exact evidence target and proof boundary for a later
+    execution gate.  It is not an executor and never grants immediate action.
+    """
+
+    evidence_fixture_execution_plan_id: str
+    active_objective_id: str
+    source_evidence_request_id: str
+    source_evidence_authorization_id: str
+    source_evidence_next_operation_proposal_id: str
+    source_evidence_next_operation_disposition_id: str
+    source_evidence_execution_authority_id: str
+    proposed_operation_type: str
+    proposed_scope: str
+    evidence_source_class: str
+    allowed_inputs: tuple[str, ...]
+    forbidden_actions: tuple[str, ...]
+    expected_result_shape: str
+    abort_conditions: tuple[str, ...]
+    validation_requirements: tuple[str, ...]
+    proof_requirements: tuple[str, ...]
+    authority_required_next: str
+    may_execute_now: bool
+    execution_requires_future_gate: bool
+    status: str
+    created_event_id: str
+    restart_summary: str
+    schema_version: str = EVIDENCE_FIXTURE_EXECUTION_PLAN_SCHEMA_VERSION
+
+    def as_record(self) -> dict[str, Any]:
+        record = asdict(self)
+        record["allowed_inputs"] = list(self.allowed_inputs)
+        record["forbidden_actions"] = list(self.forbidden_actions)
+        record["abort_conditions"] = list(self.abort_conditions)
+        record["validation_requirements"] = list(self.validation_requirements)
+        record["proof_requirements"] = list(self.proof_requirements)
+        record["record_kind"] = "evidence_fixture_execution_plan"
         return record
 
 
@@ -1310,6 +1354,217 @@ def render_evidence_permission_recall(
             f"Decision: {decision.replace('_', ' ')}",
             f"Provided context: {str((authorization or {}).get('operator_provided_context_text') or 'None')}",
             "This is read-only recall; it did not gather evidence or create a new authorization.",
+        )
+    )
+
+
+def compile_evidence_fixture_execution_plans(
+    proposal: Mapping[str, Any],
+    disposition: Mapping[str, Any],
+    authority: Mapping[str, Any],
+    *,
+    objective_id: str,
+) -> tuple[EvidenceFixtureExecutionPlan, ...]:
+    """Derive one inert fixture/evidence execution plan from approved authority."""
+
+    proposal_id = str(proposal.get("evidence_next_operation_proposal_id") or "")
+    disposition_id = str(disposition.get("evidence_next_operation_disposition_id") or "")
+    authority_id = str(authority.get("evidence_execution_authority_id") or "")
+    if not objective_id or not proposal_id or not disposition_id or not authority_id:
+        return ()
+    if str(authority.get("operator_decision") or authority.get("status") or "") != "approved_for_future_gate":
+        return ()
+    if bool(authority.get("may_execute_now")) or not bool(authority.get("execution_requires_future_gate")):
+        return ()
+    if str(authority.get("source_evidence_next_operation_proposal_id") or "") != proposal_id:
+        return ()
+    if str(authority.get("source_evidence_next_operation_disposition_id") or "") != disposition_id:
+        return ()
+
+    specification = _fixture_execution_plan_specification(str(proposal.get("proposed_operation_type") or ""))
+    if not specification:
+        return ()
+    plan_id = stable_id("analysis-evidence-fixture-execution-plan", objective_id, proposal_id, disposition_id, authority_id)
+    forbidden = tuple(
+        dict.fromkeys(
+            (
+                *(str(item) for item in authority.get("prohibited_actions", ()) if str(item)),
+                *(str(item) for item in proposal.get("prohibited_actions", ()) if str(item)),
+                "Do not execute this plan in the current phase.",
+                "Do not gather evidence, read files, access networks, call models or providers, use tools, run sandboxes, mutate graph truth, review, admit, start a worker, start a scheduler, or take external action.",
+            )
+        )
+    )
+    return (
+        EvidenceFixtureExecutionPlan(
+            evidence_fixture_execution_plan_id=plan_id,
+            active_objective_id=objective_id,
+            source_evidence_request_id=str(proposal.get("source_evidence_request_id") or authority.get("source_evidence_request_id") or ""),
+            source_evidence_authorization_id=str(proposal.get("source_evidence_authorization_id") or authority.get("source_evidence_authorization_id") or ""),
+            source_evidence_next_operation_proposal_id=proposal_id,
+            source_evidence_next_operation_disposition_id=disposition_id,
+            source_evidence_execution_authority_id=authority_id,
+            proposed_operation_type=str(proposal.get("proposed_operation_type") or ""),
+            proposed_scope=str(proposal.get("proposed_scope") or ""),
+            evidence_source_class=str(specification["evidence_source_class"]),
+            allowed_inputs=tuple(str(item) for item in specification["allowed_inputs"] if str(item)),
+            forbidden_actions=forbidden,
+            expected_result_shape=str(specification["expected_result_shape"]),
+            abort_conditions=tuple(str(item) for item in specification["abort_conditions"] if str(item)),
+            validation_requirements=tuple(str(item) for item in specification["validation_requirements"] if str(item)),
+            proof_requirements=tuple(str(item) for item in specification["proof_requirements"] if str(item)),
+            authority_required_next=(
+                "A later explicit execution gate must approve running this plan. Recording or accepting this plan does not execute it."
+            ),
+            may_execute_now=False,
+            execution_requires_future_gate=True,
+            status="planned",
+            created_event_id=stable_id("analysis-evidence-fixture-execution-plan-event", plan_id),
+            restart_summary=(
+                "Evidence fixture execution plan persists exactly once and remains inert; "
+                "actual execution, result ingestion, graph mutation, review, and replanning are deferred to later gates."
+            ),
+        ),
+    )
+
+
+def _fixture_execution_plan_specification(proposed_operation_type: str) -> Mapping[str, Any]:
+    operation = str(proposed_operation_type or "")
+    if operation == "finance_market_context_proposal_only":
+        return {
+            "evidence_source_class": "market_source_context_plan_only",
+            "allowed_inputs": (
+                "recorded portfolio allocation",
+                "recorded risk threshold",
+                "hypothetical or later-approved market context source identifier",
+            ),
+            "expected_result_shape": "A bounded table or summary identifying market/context fields needed, with source, timestamp, limitation, and no recommendation or trade.",
+            "abort_conditions": (
+                "Abort if live data retrieval would be required in this gate.",
+                "Abort if account access, trading, provider calls, model calls, or network access would be needed.",
+            ),
+            "validation_requirements": (
+                "Plan must name exact fields before execution.",
+                "Plan must preserve the hypothetical/provisional analysis boundary.",
+            ),
+            "proof_requirements": (
+                "Future execution proof must show no trade, no account access, and no unapproved provider/model/network use.",
+            ),
+        }
+    if operation == "defensive_owned_fixture_read_only_proposal":
+        return {
+            "evidence_source_class": "owned_fixture_read_only_plan",
+            "allowed_inputs": (
+                "operator-provided owned fixture identifier",
+                "recorded defensive SQL construction boundary",
+                "later-approved read-only path or snippet",
+            ),
+            "expected_result_shape": "A bounded observation of whether the owned fixture uses parameter binding at the recorded boundary.",
+            "abort_conditions": (
+                "Abort if file reading is not separately approved in a later gate.",
+                "Abort if scanning, payload generation, execution, mutation, or network access would be required.",
+            ),
+            "validation_requirements": (
+                "Plan must identify the exact owned fixture boundary.",
+                "Plan must remain defensive and read-only.",
+            ),
+            "proof_requirements": (
+                "Future execution proof must show read-only scope, no payloads, no mutation, no scan, and no external target.",
+            ),
+        }
+    if operation == "bounded_operational_status_lookup_proposal":
+        return {
+            "evidence_source_class": "bounded_operational_status_plan",
+            "allowed_inputs": (
+                "recorded invoice or delivery identifier",
+                "recorded operational dependency",
+                "later-approved status source",
+            ),
+            "expected_result_shape": "A bounded status fact with source label, timestamp if available, uncertainty, and no contact or commitment.",
+            "abort_conditions": (
+                "Abort if contacting a person/system or network access would be required in this gate.",
+                "Abort if schedule, purchase, payment, or operational commitments would be created.",
+            ),
+            "validation_requirements": (
+                "Plan must name the exact status field and source class before execution.",
+                "Plan must separate status observation from operational decision.",
+            ),
+            "proof_requirements": (
+                "Future execution proof must show no contact, no commitment, no provider/tool/network use without a separate gate.",
+            ),
+        }
+    return {}
+
+
+def classify_evidence_fixture_execution_plan_operator_response(plan: Mapping[str, Any], message: str) -> str | None:
+    """Classify a reply to an inert fixture/evidence execution plan."""
+
+    text = " ".join(str(message or "").split())
+    lower = text.lower()
+    if not text or text.endswith("?"):
+        return None
+    if re.match(r"^(?:what|why|how|who|where|when|can|could|would|should|is|are|do|does|did)\b", lower):
+        return None
+    if re.search(r"\b(?:later|not\s+now|defer|hold|wait|park|postpone|leave\s+(?:it|that)\s+open|keep\s+(?:it|that)\s+open)\b", lower):
+        return "deferred"
+    if re.search(r"\b(?:no|nope|deny|decline|reject|do\s+not|don't|not\s+approved|not\s+accepted|stop)\b", lower):
+        return "declined"
+    if re.search(r"\b(?:yes|approve|approved|accept|accepted|record|keep\s+(?:the\s+)?plan|looks\s+good|sounds\s+good)\b", lower):
+        return "accepted_pending_execution_gate"
+    if re.search(r"\b(?:maybe|not\s+sure|unclear|depends)\b", lower):
+        return "unclear_pending"
+    if len(text.split()) >= 4:
+        return "context_provided"
+    return None
+
+
+def render_evidence_fixture_execution_plan(plan: Mapping[str, Any]) -> str:
+    """Render one inert fixture/evidence execution plan."""
+
+    allowed = tuple(str(item) for item in plan.get("allowed_inputs", ()) if str(item))
+    forbidden = tuple(str(item) for item in plan.get("forbidden_actions", ()) if str(item))
+    abort = tuple(str(item) for item in plan.get("abort_conditions", ()) if str(item))
+    proof = tuple(str(item) for item in plan.get("proof_requirements", ()) if str(item))
+    return "\n".join(
+        (
+            "I prepared a bounded evidence execution plan for a later separate gate.",
+            f"Plan: {str(plan.get('evidence_fixture_execution_plan_id') or '')}",
+            f"Operation: {str(plan.get('proposed_operation_type') or '').replace('_', ' ')}",
+            f"Evidence source class: {str(plan.get('evidence_source_class') or '')}",
+            f"Scope: {str(plan.get('proposed_scope') or '')}",
+            "Allowed inputs: " + ("; ".join(allowed) if allowed else "Only already-recorded source-bound context."),
+            f"Expected result shape: {str(plan.get('expected_result_shape') or '')}",
+            "Abort conditions: " + ("; ".join(abort) if abort else "Abort if any unapproved execution is required."),
+            "Proof requirements: " + ("; ".join(proof) if proof else "Future execution must prove the authorized boundary was respected."),
+            f"Next authority required: {str(plan.get('authority_required_next') or '')}",
+            "Forbidden now: " + ("; ".join(forbidden) if forbidden else "No execution, file read, network, tool, provider, model, sandbox, graph, review, admission, worker, scheduler, or external action."),
+            "Question: Record this bounded execution plan for a later separate execution gate, decline it, defer it, or add context?",
+            "Status: plan only. It cannot execute in this phase.",
+        )
+    )
+
+
+def render_evidence_fixture_execution_plan_update(plan: Mapping[str, Any]) -> str:
+    """Acknowledge one operator disposition on an inert plan."""
+
+    status = str(plan.get("status") or "")
+    if status == "accepted_pending_execution_gate":
+        detail = "I recorded this bounded plan as accepted for a later separate execution gate. It has not run."
+    elif status == "declined":
+        detail = "I recorded that this plan is declined."
+    elif status == "deferred":
+        detail = "I left this plan deferred."
+    elif status == "context_provided":
+        detail = "I recorded your added context with the plan without executing it."
+    else:
+        detail = "I left the plan pending because the response was unclear."
+    return "\n".join(
+        (
+            f"Evidence execution plan update: {detail}",
+            f"Plan: {str(plan.get('evidence_fixture_execution_plan_id') or '')}",
+            f"Decision: {status.replace('_', ' ')}",
+            f"Context supplied: {str(plan.get('operator_plan_context_text') or 'None')}",
+            "Execution state: no evidence gathering, file read, network access, model/provider/tool call, sandbox execution, graph mutation, review, admission, worker, scheduler, or external action started.",
         )
     )
 
@@ -2307,10 +2562,12 @@ def _bullet_lines(values: Sequence[str]) -> tuple[str, ...]:
 __all__ = [
     "EvidenceBoundAnalysisRecord",
     "EvidenceExecutionAuthorityRecord",
+    "EvidenceFixtureExecutionPlan",
     "EvidenceNextOperationProposal",
     "EvidencePermissionRequest",
     "EvidenceItem",
     "EVIDENCE_EXECUTION_AUTHORITY_SCHEMA_VERSION",
+    "EVIDENCE_FIXTURE_EXECUTION_PLAN_SCHEMA_VERSION",
     "EVIDENCE_NEXT_OPERATION_SCHEMA_VERSION",
     "EVIDENCE_PERMISSION_SCHEMA_VERSION",
     "INTERNAL_WORK_SCHEMA_VERSION",
@@ -2319,10 +2576,12 @@ __all__ = [
     "SCHEMA_VERSION",
     "ValidationCheck",
     "classify_evidence_execution_authority_operator_response",
+    "classify_evidence_fixture_execution_plan_operator_response",
     "classify_evidence_next_operation_operator_response",
     "classify_evidence_permission_operator_response",
     "compile_evidence_bound_analysis",
     "compile_evidence_execution_authority_records",
+    "compile_evidence_fixture_execution_plans",
     "compile_evidence_next_operation_proposals",
     "compile_evidence_permission_requests",
     "compile_internal_work_candidates",
@@ -2332,6 +2591,8 @@ __all__ = [
     "render_evidence_bound_analysis_recall",
     "render_evidence_execution_authority_record",
     "render_evidence_execution_authority_request",
+    "render_evidence_fixture_execution_plan",
+    "render_evidence_fixture_execution_plan_update",
     "render_evidence_next_operation_disposition",
     "render_evidence_next_operation_proposal",
     "render_evidence_next_operation_recall",

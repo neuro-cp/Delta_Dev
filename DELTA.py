@@ -7721,6 +7721,28 @@ class DeltaApp:
                         f"{str(authority.get('evidence_execution_authority_id') or '')}: "
                         f"{str(authority.get('status') or 'recorded')}. No execution started.",
                     )
+                if resolved.chat_request and str(resolved.chat_request.get("request_type") or "") == "evidence_fixture_execution_plan":
+                    metrics = resolved.chat_request.get("baseline_metrics") or {}
+                    self._append_observation(
+                        "Evidence execution plan",
+                        "Surfaced one inert bounded execution plan "
+                        f"{str(metrics.get('evidence_fixture_execution_plan_id') or '')}; no execution started.",
+                    )
+            elif resolved.intent.intent_type == "semantic_evidence_fixture_execution_plan_update":
+                objective = resolved.state.active_objective
+                plans = (
+                    objective.provenance.get("evidence_fixture_execution_plans", ())
+                    if objective is not None and isinstance(objective.provenance, Mapping)
+                    else ()
+                )
+                plan = next((item for item in reversed(plans) if isinstance(item, Mapping)), {})
+                if plan:
+                    self._append_observation(
+                        "Evidence execution plan",
+                        "Recorded one plan disposition for "
+                        f"{str(plan.get('evidence_fixture_execution_plan_id') or '')}: "
+                        f"{str(plan.get('status') or 'recorded')}. No execution started.",
+                    )
             self._sync_developmental_teaching_progress()
             if resolved.background_cycle_started:
                 self._start_conversational_background_cycle("teaching_request_resolved")

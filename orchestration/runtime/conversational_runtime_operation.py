@@ -58,12 +58,14 @@ from orchestration.runtime.semantic_problem_modeling import (
 )
 from orchestration.runtime.evidence_bound_analysis import (
     classify_evidence_execution_authority_operator_response,
+    classify_evidence_fixture_execution_plan_operator_response,
     classify_evidence_next_operation_operator_response,
     classify_evidence_permission_operator_response,
     classify_internal_work_operator_response,
     compile_evidence_bound_analysis,
     compile_analysis_refinement,
     compile_evidence_execution_authority_records,
+    compile_evidence_fixture_execution_plans,
     compile_evidence_next_operation_proposals,
     compile_evidence_permission_requests,
     compile_internal_work_candidates,
@@ -75,6 +77,8 @@ from orchestration.runtime.evidence_bound_analysis import (
     render_evidence_bound_analysis_recall,
     render_evidence_execution_authority_record,
     render_evidence_execution_authority_request,
+    render_evidence_fixture_execution_plan,
+    render_evidence_fixture_execution_plan_update,
     render_evidence_next_operation_disposition,
     render_evidence_next_operation_proposal,
     render_evidence_next_operation_recall,
@@ -1356,6 +1360,18 @@ def _evidence_execution_authorities_for_objective(
     )
 
 
+def _evidence_fixture_execution_plans_for_objective(
+    objective: ConversationalObjective | None,
+) -> tuple[dict[str, Any], ...]:
+    if objective is None or not isinstance(objective.provenance, Mapping):
+        return ()
+    return tuple(
+        dict(item)
+        for item in objective.provenance.get("evidence_fixture_execution_plans", ())
+        if isinstance(item, Mapping)
+    )
+
+
 def _replace_teaching_objective(
     objective: ConversationalObjective,
     *,
@@ -1379,6 +1395,7 @@ def _replace_teaching_objective(
     evidence_next_operation_proposals: Sequence[Mapping[str, Any]] | None = None,
     evidence_next_operation_dispositions: Sequence[Mapping[str, Any]] | None = None,
     evidence_execution_authorities: Sequence[Mapping[str, Any]] | None = None,
+    evidence_fixture_execution_plans: Sequence[Mapping[str, Any]] | None = None,
     execution_constraints: Mapping[str, Any] | None = None,
 ) -> ConversationalObjective:
     provenance = dict(objective.provenance)
@@ -1449,6 +1466,10 @@ def _replace_teaching_objective(
     if evidence_execution_authorities is not None:
         provenance["evidence_execution_authorities"] = tuple(
             dict(item) for item in evidence_execution_authorities
+        )
+    if evidence_fixture_execution_plans is not None:
+        provenance["evidence_fixture_execution_plans"] = tuple(
+            dict(item) for item in evidence_fixture_execution_plans
         )
     if execution_constraints is not None:
         provenance["execution_constraints"] = dict(execution_constraints)
@@ -2426,6 +2447,115 @@ def _compile_evidence_execution_authority_lifecycle(
             "at": utc_now(),
         },
     )
+
+
+def _compile_evidence_fixture_execution_plan_chat_request(
+    state: ConversationalRuntimeState,
+    *,
+    objective: ConversationalObjective,
+    plan: Mapping[str, Any],
+    created_turn_id: str,
+    created_sequence: int,
+) -> ChatAddressableRequest:
+    """Use the canonical chat request surface for one inert execution plan."""
+
+    plan_id = str(plan.get("evidence_fixture_execution_plan_id") or "")
+    request_id = stable_id("analysis-evidence-fixture-execution-plan-chat-request", state.runtime_id, plan_id)
+    return ChatAddressableRequest(
+        request_id=request_id,
+        request_type="evidence_fixture_execution_plan",
+        objective_id=objective.objective_id,
+        originating_goal_id=objective.objective_id,
+        goal_label="Evidence fixture execution plan",
+        prompt_text=render_evidence_fixture_execution_plan(plan),
+        created_turn_id=created_turn_id,
+        thread_id=objective.objective_id,
+        created_sequence=created_sequence,
+        accepted_response_types=(
+            "evidence_fixture_execution_plan_accept",
+            "evidence_fixture_execution_plan_decline",
+            "evidence_fixture_execution_plan_defer",
+            "evidence_fixture_execution_plan_context",
+        ),
+        baseline_metrics={
+            "evidence_fixture_execution_plan_id": plan_id,
+            "source_evidence_request_id": str(plan.get("source_evidence_request_id") or ""),
+            "source_evidence_authorization_id": str(plan.get("source_evidence_authorization_id") or ""),
+            "source_evidence_next_operation_proposal_id": str(plan.get("source_evidence_next_operation_proposal_id") or ""),
+            "source_evidence_next_operation_disposition_id": str(plan.get("source_evidence_next_operation_disposition_id") or ""),
+            "source_evidence_execution_authority_id": str(plan.get("source_evidence_execution_authority_id") or ""),
+            "proposed_operation_type": str(plan.get("proposed_operation_type") or ""),
+            "evidence_source_class": str(plan.get("evidence_source_class") or ""),
+        },
+    )
+
+
+def _compile_evidence_fixture_execution_plan_lifecycle(
+    state: ConversationalRuntimeState,
+    *,
+    objective: ConversationalObjective,
+    proposal: Mapping[str, Any],
+    disposition: Mapping[str, Any],
+    authority: Mapping[str, Any],
+    existing_plans: Sequence[Mapping[str, Any]] | None = None,
+    ignored_pending_request_id: str = "",
+) -> tuple[list[dict[str, Any]], dict[str, Any] | None, tuple[Mapping[str, Any], ...]]:
+    """Append at most one inert plan for an approved future authority record."""
+
+    records = [
+        dict(item)
+        for item in (
+            existing_plans
+            if existing_plans is not None
+            else _evidence_fixture_execution_plans_for_objective(objective)
+        )
+        if isinstance(item, Mapping)
+    ]
+    authority_id = str(authority.get("evidence_execution_authority_id") or "")
+    if not authority_id:
+        return records, None, ()
+    if str(authority.get("operator_decision") or authority.get("status") or "") != "approved_for_future_gate":
+        return records, None, ()
+    if any(str(item.get("source_evidence_execution_authority_id") or "") == authority_id for item in records):
+        return records, None, ()
+    derived = [
+        item.as_record()
+        for item in compile_evidence_fixture_execution_plans(
+            proposal,
+            disposition,
+            authority,
+            objective_id=objective.objective_id,
+        )
+    ]
+    if not derived:
+        return records, None, ()
+    has_pending_request = any(
+        request.status == "pending"
+        and not request.consumption_count
+        and request.request_id != ignored_pending_request_id
+        for request in state.pending_chat_requests
+    )
+    if has_pending_request:
+        event = {
+            "event": "evidence_fixture_execution_plan_suppressed_existing_request",
+            "objective_id": objective.objective_id,
+            "evidence_execution_authority_id": authority_id,
+            "at": utc_now(),
+        }
+        return records, None, (event,)
+    plan = {**dict(derived[0]), "status": "selected", "selection_reason": "Approved inert execution authority can now be represented as a bounded non-executing plan."}
+    records.append(plan)
+    events = (
+        {
+            "event": "evidence_fixture_execution_plan_recorded",
+            "objective_id": objective.objective_id,
+            "evidence_fixture_execution_plan_id": str(plan.get("evidence_fixture_execution_plan_id") or ""),
+            "source_evidence_execution_authority_id": authority_id,
+            "status": "selected",
+            "at": utc_now(),
+        },
+    )
+    return records, plan, events
 
 
 def _compile_evidence_permission_lifecycle(
@@ -5752,9 +5882,37 @@ def _pending_evidence_execution_authority_for_reply(
     return candidate
 
 
+def _pending_evidence_fixture_execution_plan_for_reply(
+    state: ConversationalRuntimeState,
+    message: str,
+) -> ChatAddressableRequest | None:
+    """Bind only a compatible reply to the latest inert execution-plan prompt."""
+
+    pending = [
+        request
+        for request in state.pending_chat_requests
+        if request.status == "pending" and not request.consumption_count
+    ]
+    candidates = [request for request in pending if request.request_type == "evidence_fixture_execution_plan"]
+    if not candidates:
+        return None
+    latest_pending = max(pending, key=lambda item: (item.render_sequence, item.created_sequence, item.request_id))
+    candidate = max(candidates, key=lambda item: (item.render_sequence, item.created_sequence, item.request_id))
+    if candidate.request_id != latest_pending.request_id:
+        return None
+    if _semantic_problem_compilation_for_message(state, message) is not None:
+        return None
+    if classify_evidence_fixture_execution_plan_operator_response(candidate.baseline_metrics, message) is None:
+        return None
+    return candidate
+
+
 def _pending_request_for_reply(state: ConversationalRuntimeState, message: str) -> ChatAddressableRequest | None:
     if not state.pending_chat_requests:
         return None
+    evidence_fixture_execution_plan = _pending_evidence_fixture_execution_plan_for_reply(state, message)
+    if evidence_fixture_execution_plan is not None:
+        return evidence_fixture_execution_plan
     evidence_execution_authority = _pending_evidence_execution_authority_for_reply(state, message)
     if evidence_execution_authority is not None:
         return evidence_execution_authority
@@ -8353,6 +8511,32 @@ def _resolve_evidence_execution_authority_request(
     )
     if authority_added:
         records.append(authority)
+    fixture_execution_plans = list(_evidence_fixture_execution_plans_for_objective(objective))
+    fixture_execution_plan_events: tuple[Mapping[str, Any], ...] = ()
+    fixture_execution_plan_chat_request: ChatAddressableRequest | None = None
+    selected_fixture_execution_plan: dict[str, Any] | None = None
+    if decision == "approved_for_future_gate" and authority_added:
+        (
+            fixture_execution_plans,
+            selected_fixture_execution_plan,
+            fixture_execution_plan_events,
+        ) = _compile_evidence_fixture_execution_plan_lifecycle(
+            state,
+            objective=objective,
+            proposal=proposal,
+            disposition=disposition,
+            authority=authority,
+            existing_plans=fixture_execution_plans,
+            ignored_pending_request_id=request.request_id,
+        )
+        if selected_fixture_execution_plan is not None:
+            fixture_execution_plan_chat_request = _compile_evidence_fixture_execution_plan_chat_request(
+                state,
+                objective=objective,
+                plan=selected_fixture_execution_plan,
+                created_turn_id=user_turn.turn_id,
+                created_sequence=len(state.conversation) + 2,
+            )
     resolved_request = replace(
         request,
         status="resolved",
@@ -8366,6 +8550,8 @@ def _resolve_evidence_execution_authority_request(
         consumed_at=utc_now(),
     )
     reply = render_evidence_execution_authority_record(proposal, authority)
+    if fixture_execution_plan_chat_request is not None and selected_fixture_execution_plan is not None:
+        reply = f"{reply}\n\n{render_evidence_fixture_execution_plan(selected_fixture_execution_plan)}"
     assistant_turn = ConversationTurn(
         turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
         role="assistant",
@@ -8388,14 +8574,51 @@ def _resolve_evidence_execution_authority_request(
                 "at": utc_now(),
             },
         )
+    if fixture_execution_plan_events:
+        progress = progress + fixture_execution_plan_events
+    if fixture_execution_plan_chat_request is not None and selected_fixture_execution_plan is not None:
+        fixture_execution_plan_chat_request = replace(
+            fixture_execution_plan_chat_request,
+            rendered_turn_id=assistant_turn.turn_id,
+            render_sequence=len(state.conversation) + 2,
+        )
+        selected_plan_id = str(selected_fixture_execution_plan.get("evidence_fixture_execution_plan_id") or "")
+        fixture_execution_plans = [
+            {
+                **dict(item),
+                "status": "surfaced",
+                "surfaced_turn_id": assistant_turn.turn_id,
+                "request_id": fixture_execution_plan_chat_request.request_id,
+                "rendered_turn_id": assistant_turn.turn_id,
+                "render_sequence": len(state.conversation) + 2,
+            }
+            if str(item.get("evidence_fixture_execution_plan_id") or "") == selected_plan_id
+            else item
+            for item in fixture_execution_plans
+        ]
+        progress = progress + (
+            {
+                "event": "evidence_fixture_execution_plan_rendered",
+                "objective_id": objective.objective_id,
+                "evidence_fixture_execution_plan_id": selected_plan_id,
+                "source_evidence_execution_authority_id": str(selected_fixture_execution_plan.get("source_evidence_execution_authority_id") or ""),
+                "request_id": fixture_execution_plan_chat_request.request_id,
+                "assistant_turn_id": assistant_turn.turn_id,
+                "at": utc_now(),
+            },
+        )
     updated = _replace_state(
         state,
         active_objective=_replace_teaching_objective(
             objective,
             evidence_execution_authorities=records,
+            evidence_fixture_execution_plans=fixture_execution_plans,
         ),
         conversation=state.conversation + (user_turn, assistant_turn),
-        pending_chat_requests=tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id),
+        pending_chat_requests=(
+            tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id)
+            + ((fixture_execution_plan_chat_request,) if fixture_execution_plan_chat_request is not None else ())
+        ),
         resolved_chat_requests=state.resolved_chat_requests + (resolved_request,),
         objective_progress=progress,
     )
@@ -8409,6 +8632,140 @@ def _resolve_evidence_execution_authority_request(
             "safe_internal",
             (),
             ("exact_execution_authority_binding", "authority_record_only", "no_execution"),
+        ),
+        reply=reply,
+        chat_request=resolved_request.as_record(),
+        side_thread_bound=True,
+    )
+
+
+def _resolve_evidence_fixture_execution_plan_request(
+    state: ConversationalRuntimeState,
+    request: ChatAddressableRequest,
+    message: str,
+    *,
+    user_turn: ConversationTurn,
+    runtime_root: str | Path,
+) -> RuntimeTurnResult | None:
+    """Bind one operator disposition to an inert fixture/evidence plan."""
+
+    objective = state.active_objective
+    if objective is None or objective.objective_id != request.objective_id:
+        return None
+    plan_id = str(request.baseline_metrics.get("evidence_fixture_execution_plan_id") or "")
+    plan = next(
+        (
+            item
+            for item in _evidence_fixture_execution_plans_for_objective(objective)
+            if str(item.get("evidence_fixture_execution_plan_id") or "") == plan_id
+        ),
+        None,
+    )
+    if plan is None:
+        return None
+    status = classify_evidence_fixture_execution_plan_operator_response(plan, message)
+    if status is None:
+        return None
+    normalized = " ".join(str(message or "").split())
+    if status == "unclear_pending":
+        reply = (
+            "I cannot bind that as a plan disposition yet. Please accept the bounded plan for a later separate execution gate, decline it, defer it, or add context.\n\n"
+            "No evidence gathering, file read, network access, model/provider/tool call, sandbox execution, graph mutation, review, admission, worker, scheduler, or external action started."
+        )
+        assistant_turn = ConversationTurn(
+            turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
+            role="assistant",
+            text=reply,
+            intent_type="semantic_evidence_fixture_execution_plan_clarification",
+            objective_id=objective.objective_id,
+        )
+        updated = _replace_state(
+            state,
+            conversation=state.conversation + (user_turn, assistant_turn),
+        )
+        save_runtime_state(runtime_root, updated)
+        return RuntimeTurnResult(
+            state=updated,
+            intent=ConversationIntent(
+                "semantic_evidence_fixture_execution_plan_clarification",
+                0.82,
+                "active_objective_provenance",
+                "safe_internal",
+                (),
+                ("evidence_fixture_execution_plan_unclear", "request_remains_pending", "no_execution"),
+            ),
+            reply=reply,
+            chat_request=request.as_record(),
+            side_thread_bound=True,
+        )
+    updated_plan = {
+        **dict(plan),
+        "status": status,
+        "operator_plan_response_text": normalized,
+        "operator_plan_context_text": normalized if status == "context_provided" else "",
+        "plan_disposition_turn_id": user_turn.turn_id,
+        "surface_request_id": request.request_id,
+        "may_execute_now": False,
+        "execution_requires_future_gate": True,
+    }
+    plans = [
+        updated_plan
+        if str(item.get("evidence_fixture_execution_plan_id") or "") == plan_id
+        else item
+        for item in _evidence_fixture_execution_plans_for_objective(objective)
+    ]
+    resolved_request = replace(
+        request,
+        status="resolved",
+        resolution_state=status,
+        resolution=status,
+        resolution_policy="bound_to_exact_evidence_fixture_execution_plan",
+        resolution_text=message,
+        resolved_turn_id=user_turn.turn_id,
+        consumption_count=1,
+        resolved_at=utc_now(),
+        consumed_at=utc_now(),
+    )
+    reply = render_evidence_fixture_execution_plan_update(updated_plan)
+    assistant_turn = ConversationTurn(
+        turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
+        role="assistant",
+        text=reply,
+        intent_type="semantic_evidence_fixture_execution_plan_update",
+        objective_id=objective.objective_id,
+    )
+    progress = state.objective_progress + (
+        {
+            "event": "evidence_fixture_execution_plan_disposition_recorded",
+            "objective_id": objective.objective_id,
+            "evidence_fixture_execution_plan_id": plan_id,
+            "status": status,
+            "request_id": request.request_id,
+            "operator_turn_id": user_turn.turn_id,
+            "at": utc_now(),
+        },
+    )
+    updated = _replace_state(
+        state,
+        active_objective=_replace_teaching_objective(
+            objective,
+            evidence_fixture_execution_plans=plans,
+        ),
+        conversation=state.conversation + (user_turn, assistant_turn),
+        pending_chat_requests=tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id),
+        resolved_chat_requests=state.resolved_chat_requests + (resolved_request,),
+        objective_progress=progress,
+    )
+    save_runtime_state(runtime_root, updated)
+    return RuntimeTurnResult(
+        state=updated,
+        intent=ConversationIntent(
+            "semantic_evidence_fixture_execution_plan_update",
+            0.98,
+            "active_objective_provenance",
+            "safe_internal",
+            (),
+            ("exact_fixture_execution_plan_binding", "plan_record_only", "no_execution"),
         ),
         reply=reply,
         chat_request=resolved_request.as_record(),
@@ -8469,6 +8826,14 @@ def resolve_pending_chat_request(
         )
     if request.request_type == "evidence_execution_authority":
         return _resolve_evidence_execution_authority_request(
+            state,
+            request,
+            message,
+            user_turn=user_turn,
+            runtime_root=runtime_root,
+        )
+    if request.request_type == "evidence_fixture_execution_plan":
+        return _resolve_evidence_fixture_execution_plan_request(
             state,
             request,
             message,

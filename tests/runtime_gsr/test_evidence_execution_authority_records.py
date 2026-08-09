@@ -82,7 +82,7 @@ def test_operator_approval_creates_one_inert_execution_authority_record(tmp_path
     assert authority["source_evidence_next_operation_disposition_id"] == disposition["evidence_next_operation_disposition_id"]
     assert authority["may_execute_now"] is False
     assert authority["execution_requires_future_gate"] is True
-    assert not result.state.pending_chat_requests
+    assert result.state.pending_chat_requests[0].request_type == "evidence_fixture_execution_plan"
     assert result.state.resolved_chat_requests[-1].request_id == request.request_id
     assert "nothing executed now" in result.reply.lower()
 
@@ -137,9 +137,10 @@ def test_restart_preserves_execution_authority_once_and_ordinary_chat_stays_ordi
     resolved = _send(ordinary.state, "Yes, record approval for a future bounded execution gate.", tmp_path)
     authorities = _records(resolved.state, "evidence_execution_authorities")
     assert len(authorities) == 1
+    assert resolved.state.pending_chat_requests[0].request_type == "evidence_fixture_execution_plan"
 
     restored = start_or_restore_runtime(tmp_path)
     assert _records(restored, "evidence_execution_authorities") == authorities
-    duplicate = _send(restored, "Yes, record approval for a future bounded execution gate.", tmp_path)
+    duplicate = _send(restored, "What is 2 + 2?", tmp_path)
     assert len(_records(duplicate.state, "evidence_execution_authorities")) == 1
     assert duplicate.intent.intent_type == "ordinary_conversation"
