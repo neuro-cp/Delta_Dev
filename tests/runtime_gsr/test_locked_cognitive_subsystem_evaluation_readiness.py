@@ -11,6 +11,7 @@ from orchestration.runtime.conversational_runtime_operation import (
     start_or_restore_runtime,
 )
 from orchestration.runtime.evidence_bound_analysis import (
+    compile_adaptive_precondition_selection,
     compile_long_horizon_self_correction_candidates,
 )
 from orchestration.runtime.provisional_semantic_consolidation import load_graph
@@ -27,6 +28,7 @@ FINANCE = "My account is 70% aggressive tech funds, 20% cash, and 10% small-cap 
 FINANCE_50 = "Correction: my account is 50% tech funds, 40% cash, and 10% small-cap value. The earlier 70% allocation was wrong, and I remain worried about AI stocks dropping over six months."
 PHYSICS_30 = "A 5 kg block slides down a frictionless 30-degree incline. I want the acceleration."
 PHYSICS_45 = "Correction: the same 5 kg block slides down a frictionless 45-degree incline. I want the acceleration."
+FINANCE_RETRACTION = "Retraction: ignore that correction; the original account is 70% aggressive tech funds, 20% cash, and 10% small-cap value, and it was correct. I remain worried about AI stocks dropping over six months."
 OPERATIONS = "Invoice #331 is overdue 45 days. Crew A cannot start the Jackson job until the pump is delivered."
 CYBER = "A request parameter is appended into a SQL command before execution."
 HEALTH = "I have an itchy rash for two days and I am worried it may be spreading. Should I seek care?"
@@ -68,6 +70,14 @@ def _graph_snapshot(root):
 
 def _route(state):
     return _one_record(state, "semantic_problem_frames")["capability_route_candidate"]
+
+
+def _precondition(state):
+    objective = state.active_objective
+    assert objective is not None
+    selection = objective.provenance.get("adaptive_precondition_selection")
+    assert isinstance(selection, dict)
+    return selection
 
 
 def _correction(state, correction_type):
@@ -177,6 +187,7 @@ def test_finance_full_path_composes_frame_route_correction_and_controlled_loop(t
     assert correction["source_result_ids"] == [result["evidence_minimal_fixture_result_id"]]
     assert correction["may_execute_now"] is False
     assert selection["may_execute_now"] is False
+    assert _precondition(completed.state)["precondition_state"] == "completed_stable"
     assert _graph_snapshot(tmp_path) == graph_before
 
 
@@ -194,6 +205,45 @@ def test_physics_full_path_composes_frame_route_correction_and_controlled_loop(t
     assert "4.9 m/s^2" in result["deterministic_output"]
     assert refinement["source_evidence_minimal_fixture_result_id"] == result["evidence_minimal_fixture_result_id"]
     assert correction["source_result_ids"] == [result["evidence_minimal_fixture_result_id"]]
+    assert _precondition(completed.state)["precondition_state"] == "completed_stable"
+    assert _graph_snapshot(tmp_path) == graph_before
+
+
+def test_locked_precondition_ladder_requires_each_existing_authority_boundary(tmp_path):
+    graph_before = _graph_snapshot(tmp_path)
+    started = _send(start_or_restore_runtime(tmp_path), GOAL, tmp_path)
+    framed = _send(started.state, FINANCE, tmp_path)
+    refined = _send(framed.state, "Assume losing more than 10% over six months is unacceptable.", tmp_path)
+    granted = _send(refined.state, "Yes, but only a local fixture.", tmp_path)
+    proposal_accepted = _send(granted.state, "Yes, keep that proposal ready.", tmp_path)
+    authority = _send(proposal_accepted.state, "Yes, record approval for a future bounded execution gate.", tmp_path)
+
+    assert _precondition(framed.state)["precondition_state"] == "eligible_needs_permission"
+    assert _precondition(granted.state)["precondition_state"] == "permission_granted_needs_proposal_or_authority"
+    assert _precondition(authority.state)["precondition_state"] == "authority_exists_needs_plan_acceptance"
+    assert not _records(authority.state, "evidence_minimal_fixture_results")
+    assert authority.state.pending_chat_requests[0].request_type == "evidence_fixture_execution_plan"
+
+    objective = authority.state.active_objective
+    assert objective is not None
+    accepted_plan = {
+        **dict(_one_record(authority.state, "evidence_fixture_execution_plans")),
+        "status": "accepted_pending_execution_gate",
+    }
+    projection = compile_adaptive_precondition_selection(
+        objective_id=objective.objective_id,
+        semantic_frames=_records(authority.state, "semantic_problem_frames"),
+        evidence_requests=_records(authority.state, "evidence_requests"),
+        evidence_authorizations=_records(authority.state, "evidence_authorizations"),
+        evidence_next_operation_proposals=_records(authority.state, "evidence_next_operation_proposals"),
+        evidence_execution_authorities=_records(authority.state, "evidence_execution_authorities"),
+        evidence_fixture_execution_plans=(accepted_plan,),
+        analyses=_records(authority.state, "evidence_bound_analyses"),
+    )
+    assert projection is not None
+    assert projection.precondition_state == "accepted_plan_ready_nonexecuting"
+    assert projection.may_execute_now is False
+    assert not _records(authority.state, "evidence_minimal_fixture_results")
     assert _graph_snapshot(tmp_path) == graph_before
 
 
@@ -216,6 +266,7 @@ def test_unsafe_domains_remain_blocked_without_controlled_execution(tmp_path, so
     assert route["decision"] == "blocked"
     assert correction["may_execute_now"] is False
     assert correction["may_route_next"] is False
+    assert _precondition(result.state)["precondition_state"] == "blocked_safety_boundary"
     assert all(term in forbidden for term in forbidden_terms)
     _assert_no_controlled_completion(result.state)
     assert _graph_snapshot(tmp_path) == graph_before
@@ -240,6 +291,7 @@ def test_safe_and_generic_domains_preserve_clarify_only_posture(tmp_path, source
     assert route["route_name"] == route_name
     assert route["decision"] == "clarify"
     assert correction["may_execute_now"] is False
+    assert _precondition(result.state)["precondition_state"] == "clarify_needed"
     assert "clarification" in correction["corrected_or_current_state"]
     assert required_limit in " ".join(frame["limitations"]).lower()
     _assert_no_controlled_completion(result.state)
@@ -276,6 +328,7 @@ def test_locked_physics_stale_suppression_replaces_completed_posture_without_rec
     assert arbitration["decision"] == "clarify"
     assert arbitration["selected_correction_effect_id"] == effect["effect_id"]
     assert arbitration["may_execute_now"] is False
+    assert _precondition(corrected.state)["precondition_state"] == "completed_stale_needs_new_authorized_cycle"
     assert _controlled_lineage(corrected.state) == prior_lineage
     assert _graph_snapshot(tmp_path) == graph_before
 
@@ -291,6 +344,7 @@ def test_locked_finance_stale_suppression_replaces_completed_posture_without_fal
     assert "infer replacement weights" in effect["selected_nonexecuting_posture"].lower()
     assert arbitration["decision"] == "clarify"
     assert arbitration["selected_correction_effect_id"] == effect["effect_id"]
+    assert _precondition(corrected.state)["precondition_state"] == "completed_stale_needs_new_authorized_cycle"
     assert _controlled_lineage(corrected.state) == prior_lineage
     assert _graph_snapshot(tmp_path) == graph_before
 
@@ -303,6 +357,7 @@ def test_locked_resolved_context_and_blocked_effects_remain_nonexecuting(tmp_pat
     resolved_effect = _correction_effect(resolved.state, "resolved_context")
     assert resolved.state.active_objective.provenance["adaptive_route_arbitration"]["selected_correction_effect_id"] == resolved_effect["effect_id"]
     assert resolved_effect["may_execute_now"] is False
+    assert _precondition(resolved.state)["precondition_state"] == "clarify_needed"
     _assert_no_controlled_completion(resolved.state)
     assert _graph_snapshot(tmp_path / "resolved") == graph_before
 
@@ -326,6 +381,7 @@ def test_locked_stable_completion_and_mixed_safety_ordering_do_not_duplicate_wor
     arbitration = mixed.state.active_objective.provenance["adaptive_route_arbitration"]
     assert arbitration["decision"] == "blocked"
     assert arbitration["may_execute_now"] is False
+    assert _precondition(mixed.state)["precondition_state"] == "blocked_safety_boundary"
     assert _correction_effect(mixed.state, "blocked_persists")["may_execute_now"] is False
     assert _controlled_lineage(mixed.state) == prior_lineage
 
@@ -371,6 +427,7 @@ def test_ordinary_chat_remains_unframed_and_does_not_create_cognitive_records(tm
     ):
         assert not _records(ordinary.state, key)
     assert "adaptive_route_arbitration" not in ordinary.state.active_objective.provenance
+    assert "adaptive_precondition_selection" not in ordinary.state.active_objective.provenance
 
 
 def test_source_objective_isolation_and_restart_replay_are_exact_once(tmp_path):
@@ -407,6 +464,51 @@ def test_source_objective_isolation_and_restart_replay_are_exact_once(tmp_path):
     assert {key: _canonical(_records(replayed.state, key)) for key in keys} == expected
     assert {key: _canonical(_records(restored, key)) for key in keys} == expected
     assert _canonical(replayed.state.active_objective.provenance["adaptive_route_arbitration"]) == _canonical(restored.active_objective.provenance["adaptive_route_arbitration"])
+    assert _canonical(replayed.state.active_objective.provenance["adaptive_precondition_selection"]) == _canonical(restored.active_objective.provenance["adaptive_precondition_selection"])
+
+
+def test_locked_compound_and_mixed_preconditions_use_safety_first_ordering(tmp_path):
+    graph_before = _graph_snapshot(tmp_path)
+    started = _send(start_or_restore_runtime(tmp_path), GOAL, tmp_path)
+    compound = _send(started.state, f"{FINANCE} {HEALTH}", tmp_path)
+
+    frames = _records(compound.state, "semantic_problem_frames")
+    assert len(frames) == 2
+    assert {frame["semantic_input_frame"]["domain_guess"] for frame in frames} == {
+        "finance_portfolio_risk",
+        "health_information_safety",
+    }
+    assert _precondition(compound.state)["precondition_state"] == "clarify_needed"
+    _assert_no_controlled_completion(compound.state)
+
+    completed = _closed_loop_state(
+        tmp_path / "mixed",
+        FINANCE,
+        "Assume losing more than 10% over six months is unacceptable.",
+    )
+    stale = _send(completed.state, FINANCE_50, tmp_path / "mixed")
+    assert _precondition(stale.state)["precondition_state"] == "completed_stale_needs_new_authorized_cycle"
+    mixed = _send(stale.state, f"{OPERATIONS} {HEALTH} {PHYSICS_30}", tmp_path / "mixed")
+    assert _precondition(mixed.state)["precondition_state"] == "blocked_safety_boundary"
+    assert len(_records(mixed.state, "evidence_minimal_fixture_results")) == 1
+    assert _graph_snapshot(tmp_path) == graph_before
+
+
+def test_locked_precondition_consumes_latest_retraction_and_partial_correction_postures(tmp_path):
+    completed = _closed_loop_state(
+        tmp_path / "finance",
+        FINANCE,
+        "Assume losing more than 10% over six months is unacceptable.",
+    )
+    superseded = _send(completed.state, FINANCE_50, tmp_path / "finance")
+    assert _precondition(superseded.state)["precondition_state"] == "completed_stale_needs_new_authorized_cycle"
+    retracted = _send(superseded.state, FINANCE_RETRACTION, tmp_path / "finance")
+    assert _precondition(retracted.state)["precondition_state"] == "completed_stable"
+
+    generic_started = _send(start_or_restore_runtime(tmp_path / "generic"), GOAL, tmp_path / "generic")
+    missing = _send(generic_started.state, GENERIC, tmp_path / "generic")
+    resolved = _send(missing.state, GENERIC_RESOLVED, tmp_path / "generic")
+    assert _precondition(resolved.state)["precondition_state"] == "clarify_needed"
 
 
 def test_locked_battery_reaches_no_external_side_effects(monkeypatch, tmp_path):
