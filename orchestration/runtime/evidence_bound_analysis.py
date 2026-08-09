@@ -28,6 +28,7 @@ EVIDENCE_EXECUTION_AUTHORITY_SCHEMA_VERSION = "evidence_bound_execution_authorit
 EVIDENCE_FIXTURE_EXECUTION_PLAN_SCHEMA_VERSION = "evidence_bound_fixture_execution_plan_v1"
 EVIDENCE_FIXTURE_DRY_RUN_SCHEMA_VERSION = "evidence_bound_fixture_dry_run_result_v1"
 EVIDENCE_RESULT_INGESTION_CANDIDATE_SCHEMA_VERSION = "evidence_bound_result_ingestion_candidate_v1"
+EVIDENCE_ANALYSIS_REVISION_CANDIDATE_SCHEMA_VERSION = "evidence_bound_analysis_revision_candidate_v1"
 
 
 @dataclass(frozen=True)
@@ -585,6 +586,47 @@ class EvidenceResultIngestionCandidate:
         record["blocked_update_scope"] = list(self.blocked_update_scope)
         record["limitations"] = list(self.limitations)
         record["record_kind"] = "evidence_result_ingestion_candidate"
+        return record
+
+
+@dataclass(frozen=True)
+class EvidenceAnalysisRevisionCandidate:
+    """One inert candidate saying an ingestion candidate may justify revision."""
+
+    evidence_analysis_revision_candidate_id: str
+    source_ingestion_candidate_id: str
+    source_dry_run_result_id: str
+    source_plan_id: str
+    source_execution_authority_id: str
+    source_proposal_id: str
+    source_evidence_request_id: str
+    source_evidence_authorization_id: str
+    source_analysis_id: str
+    objective_id: str
+    proposed_revision_type: str
+    proposed_revision_scope: str
+    candidate_basis: str
+    supported_change: tuple[str, ...]
+    blocked_change: tuple[str, ...]
+    limitation_summary: tuple[str, ...]
+    required_operator_authority_next: str
+    may_append_refinement: bool
+    may_update_analysis: bool
+    may_update_problem_state: bool
+    may_change_answer: bool
+    may_update_graph: bool
+    requires_analysis_revision_gate: bool
+    status: str
+    created_event_id: str
+    restart_summary: str
+    schema_version: str = EVIDENCE_ANALYSIS_REVISION_CANDIDATE_SCHEMA_VERSION
+
+    def as_record(self) -> dict[str, Any]:
+        record = asdict(self)
+        record["supported_change"] = list(self.supported_change)
+        record["blocked_change"] = list(self.blocked_change)
+        record["limitation_summary"] = list(self.limitation_summary)
+        record["record_kind"] = "evidence_analysis_revision_candidate"
         return record
 
 
@@ -1927,6 +1969,157 @@ def render_evidence_result_ingestion_candidate(candidate: Mapping[str, Any]) -> 
     )
 
 
+def compile_evidence_analysis_revision_candidates(
+    ingestion_candidate: Mapping[str, Any],
+    *,
+    objective_id: str,
+) -> tuple[EvidenceAnalysisRevisionCandidate, ...]:
+    """Compile one non-mutating analysis-revision candidate from ingestion state."""
+
+    ingestion_id = str(ingestion_candidate.get("evidence_result_ingestion_candidate_id") or "")
+    dry_run_id = str(ingestion_candidate.get("source_dry_run_result_id") or "")
+    plan_id = str(ingestion_candidate.get("source_plan_id") or "")
+    authority_id = str(ingestion_candidate.get("source_execution_authority_id") or "")
+    proposal_id = str(ingestion_candidate.get("source_proposal_id") or "")
+    evidence_request_id = str(ingestion_candidate.get("source_evidence_request_id") or "")
+    evidence_authorization_id = str(ingestion_candidate.get("source_evidence_authorization_id") or "")
+    if not objective_id or not ingestion_id or not dry_run_id or not plan_id or not authority_id or not proposal_id or not evidence_request_id or not evidence_authorization_id:
+        return ()
+    if bool(ingestion_candidate.get("may_update_analysis")):
+        return ()
+    if bool(ingestion_candidate.get("may_append_refinement")):
+        return ()
+    if bool(ingestion_candidate.get("may_update_problem_state")):
+        return ()
+    if bool(ingestion_candidate.get("may_change_answer")):
+        return ()
+    if bool(ingestion_candidate.get("may_update_graph")):
+        return ()
+    if not bool(ingestion_candidate.get("requires_analysis_revision_gate")):
+        return ()
+
+    source_analysis_id = str(ingestion_candidate.get("source_analysis_id") or "")
+    effect_type = str(ingestion_candidate.get("candidate_effect_type") or "")
+    proposed_revision_type = _analysis_revision_candidate_type(effect_type)
+    candidate_id = stable_id("analysis-evidence-analysis-revision-candidate", objective_id, ingestion_id, proposed_revision_type, source_analysis_id)
+    status = "candidate" if source_analysis_id else "analysis_binding_required"
+    blocked_change = tuple(
+        dict.fromkeys(
+            (
+                "analysis_update",
+                "analysis_refinement_append",
+                "problem_state_update",
+                "answer_change",
+                "graph_update",
+                "review_admission",
+                "replanning",
+                "objective_completion_claim",
+                "evidence_truth_claim",
+                "file_read",
+                "repo_read",
+                "network",
+                "tool",
+                "model",
+                "provider",
+                "sandbox",
+                "source_mutation",
+            )
+        )
+    )
+    return (
+        EvidenceAnalysisRevisionCandidate(
+            evidence_analysis_revision_candidate_id=candidate_id,
+            source_ingestion_candidate_id=ingestion_id,
+            source_dry_run_result_id=dry_run_id,
+            source_plan_id=plan_id,
+            source_execution_authority_id=authority_id,
+            source_proposal_id=proposal_id,
+            source_evidence_request_id=evidence_request_id,
+            source_evidence_authorization_id=evidence_authorization_id,
+            source_analysis_id=source_analysis_id,
+            objective_id=objective_id,
+            proposed_revision_type=proposed_revision_type,
+            proposed_revision_scope=_analysis_revision_scope(proposed_revision_type),
+            candidate_basis=(
+                "Deterministic classifier over an inert evidence-result ingestion candidate. "
+                "The source candidate records a dry-run boundary only, not external evidence or an operator answer."
+            ),
+            supported_change=(
+                "later_operator_reviewable_analysis_revision_candidate",
+                "later_note_about_unresolved_evidence_boundary",
+            ),
+            blocked_change=blocked_change,
+            limitation_summary=tuple(
+                dict.fromkeys(
+                    (
+                        *(str(item) for item in ingestion_candidate.get("limitations", ()) if str(item)),
+                        "Synthetic or blocked dry-run material cannot revise analysis in this gate.",
+                        "This candidate does not append an AnalysisRefinement.",
+                        "This candidate does not change answers, problem state, graph truth, review, admission, or replanning.",
+                    )
+                )
+            ),
+            required_operator_authority_next=(
+                "A later explicit analysis-revision approval gate is required before appending a refinement or changing analysis-facing state."
+            ),
+            may_append_refinement=False,
+            may_update_analysis=False,
+            may_update_problem_state=False,
+            may_change_answer=False,
+            may_update_graph=False,
+            requires_analysis_revision_gate=True,
+            status=status,
+            created_event_id=stable_id("analysis-evidence-analysis-revision-candidate-event", candidate_id),
+            restart_summary=(
+                "Evidence analysis revision candidate persists exactly once from an ingestion candidate; "
+                "refinement append, analysis mutation, answer change, graph mutation, review, admission, and replanning remain deferred."
+            ),
+        ),
+    )
+
+
+def _analysis_revision_candidate_type(effect_type: str) -> str:
+    if effect_type == "evidence_gap_remains_lookup_blocked":
+        return "note_lookup_still_blocked"
+    if effect_type == "evidence_gap_remains_file_read_blocked":
+        return "note_file_read_still_blocked"
+    if effect_type == "evidence_gap_remains_external_contact_blocked":
+        return "note_external_contact_still_blocked"
+    return "note_dry_run_boundary_only"
+
+
+def _analysis_revision_scope(revision_type: str) -> str:
+    if revision_type == "note_lookup_still_blocked":
+        return "A later revision may note that live lookup/correlation evidence remains unavailable and analysis should remain hypothetical."
+    if revision_type == "note_file_read_still_blocked":
+        return "A later revision may note that file or fixture inspection was not performed and security analysis remains unverified."
+    if revision_type == "note_external_contact_still_blocked":
+        return "A later revision may note that external contact or status verification was not performed and operational status remains unresolved."
+    return "A later revision may note that the dry-run was boundary-only and does not change analysis content."
+
+
+def render_evidence_analysis_revision_candidate(candidate: Mapping[str, Any]) -> str:
+    """Render one inert analysis-revision candidate."""
+
+    supported = tuple(str(item) for item in candidate.get("supported_change", ()) if str(item))
+    blocked = tuple(str(item) for item in candidate.get("blocked_change", ()) if str(item))
+    limitations = tuple(str(item) for item in candidate.get("limitation_summary", ()) if str(item))
+    return "\n".join(
+        (
+            "Evidence analysis revision candidate recorded.",
+            f"Candidate: {str(candidate.get('evidence_analysis_revision_candidate_id') or '')}",
+            f"Source ingestion candidate: {str(candidate.get('source_ingestion_candidate_id') or '')}",
+            f"Proposed revision type: {str(candidate.get('proposed_revision_type') or '').replace('_', ' ')}",
+            f"Proposed revision scope: {str(candidate.get('proposed_revision_scope') or '')}",
+            "Supported later change: " + ("; ".join(supported) if supported else "Later operator-reviewable analysis revision candidate only."),
+            "Blocked now: " + ("; ".join(blocked) if blocked else "No refinement, analysis, answer, problem, graph, review, admission, or replan mutation."),
+            "Limitations: " + ("; ".join(limitations) if limitations else "Candidate is inert boundary material only."),
+            f"Next authority required: {str(candidate.get('required_operator_authority_next') or '')}",
+            "Candidate boundary: may_append_refinement=false; may_update_analysis=false; may_update_problem_state=false; may_change_answer=false; may_update_graph=false; requires_analysis_revision_gate=true.",
+        )
+    )
+
+
 def _canonical_digest(value: Mapping[str, Any]) -> str:
     payload = json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
     return "sha256:" + hashlib.sha256(payload.encode("utf-8")).hexdigest()
@@ -2924,6 +3117,7 @@ def _bullet_lines(values: Sequence[str]) -> tuple[str, ...]:
 
 __all__ = [
     "EvidenceBoundAnalysisRecord",
+    "EvidenceAnalysisRevisionCandidate",
     "EvidenceExecutionAuthorityRecord",
     "EvidenceFixtureDryRunResult",
     "EvidenceFixtureExecutionPlan",
@@ -2932,6 +3126,7 @@ __all__ = [
     "EvidenceResultIngestionCandidate",
     "EvidenceItem",
     "EVIDENCE_EXECUTION_AUTHORITY_SCHEMA_VERSION",
+    "EVIDENCE_ANALYSIS_REVISION_CANDIDATE_SCHEMA_VERSION",
     "EVIDENCE_FIXTURE_DRY_RUN_SCHEMA_VERSION",
     "EVIDENCE_FIXTURE_EXECUTION_PLAN_SCHEMA_VERSION",
     "EVIDENCE_NEXT_OPERATION_SCHEMA_VERSION",
@@ -2946,6 +3141,7 @@ __all__ = [
     "classify_evidence_fixture_execution_plan_operator_response",
     "classify_evidence_next_operation_operator_response",
     "classify_evidence_permission_operator_response",
+    "compile_evidence_analysis_revision_candidates",
     "compile_evidence_bound_analysis",
     "compile_evidence_execution_authority_records",
     "compile_evidence_fixture_dry_run_results",
@@ -2955,6 +3151,7 @@ __all__ = [
     "compile_evidence_result_ingestion_candidates",
     "compile_internal_work_candidates",
     "classify_internal_work_operator_response",
+    "render_evidence_analysis_revision_candidate",
     "render_evidence_authorization",
     "render_evidence_bound_analysis",
     "render_evidence_bound_analysis_recall",
