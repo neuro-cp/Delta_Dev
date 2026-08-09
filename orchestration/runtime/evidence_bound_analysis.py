@@ -27,6 +27,7 @@ EVIDENCE_NEXT_OPERATION_SCHEMA_VERSION = "evidence_bound_next_operation_proposal
 EVIDENCE_EXECUTION_AUTHORITY_SCHEMA_VERSION = "evidence_bound_execution_authority_v1"
 EVIDENCE_FIXTURE_EXECUTION_PLAN_SCHEMA_VERSION = "evidence_bound_fixture_execution_plan_v1"
 EVIDENCE_FIXTURE_DRY_RUN_SCHEMA_VERSION = "evidence_bound_fixture_dry_run_result_v1"
+EVIDENCE_RESULT_INGESTION_CANDIDATE_SCHEMA_VERSION = "evidence_bound_result_ingestion_candidate_v1"
 
 
 @dataclass(frozen=True)
@@ -547,6 +548,43 @@ class EvidenceFixtureDryRunResult:
         record["limitations"] = list(self.limitations)
         record["blocked_actions"] = list(self.blocked_actions)
         record["record_kind"] = "evidence_fixture_dry_run_result"
+        return record
+
+
+@dataclass(frozen=True)
+class EvidenceResultIngestionCandidate:
+    """One inert candidate saying a dry-run result could inform later revision."""
+
+    evidence_result_ingestion_candidate_id: str
+    source_dry_run_result_id: str
+    source_plan_id: str
+    source_execution_authority_id: str
+    source_proposal_id: str
+    source_evidence_request_id: str
+    source_evidence_authorization_id: str
+    source_analysis_id: str
+    objective_id: str
+    candidate_effect_type: str
+    supported_update_scope: tuple[str, ...]
+    blocked_update_scope: tuple[str, ...]
+    confidence_basis: str
+    limitations: tuple[str, ...]
+    required_operator_authority_next: str
+    may_update_analysis: bool
+    may_update_problem_state: bool
+    may_update_graph: bool
+    requires_analysis_revision_gate: bool
+    status: str
+    created_event_id: str
+    restart_summary: str
+    schema_version: str = EVIDENCE_RESULT_INGESTION_CANDIDATE_SCHEMA_VERSION
+
+    def as_record(self) -> dict[str, Any]:
+        record = asdict(self)
+        record["supported_update_scope"] = list(self.supported_update_scope)
+        record["blocked_update_scope"] = list(self.blocked_update_scope)
+        record["limitations"] = list(self.limitations)
+        record["record_kind"] = "evidence_result_ingestion_candidate"
         return record
 
 
@@ -1757,6 +1795,138 @@ def render_evidence_fixture_dry_run_result(result: Mapping[str, Any]) -> str:
     )
 
 
+def compile_evidence_result_ingestion_candidates(
+    dry_run_result: Mapping[str, Any],
+    *,
+    objective_id: str,
+    source_evidence_request: Mapping[str, Any] | None = None,
+) -> tuple[EvidenceResultIngestionCandidate, ...]:
+    """Compile one non-mutating ingestion candidate from a dry-run boundary result."""
+
+    dry_run_id = str(dry_run_result.get("evidence_fixture_dry_run_result_id") or "")
+    plan_id = str(dry_run_result.get("source_plan_id") or "")
+    authority_id = str(dry_run_result.get("source_execution_authority_id") or "")
+    proposal_id = str(dry_run_result.get("source_proposal_id") or "")
+    evidence_request_id = str(dry_run_result.get("source_evidence_request_id") or "")
+    evidence_authorization_id = str(dry_run_result.get("source_evidence_authorization_id") or "")
+    if not objective_id or not dry_run_id or not plan_id or not authority_id or not proposal_id or not evidence_request_id or not evidence_authorization_id:
+        return ()
+    if str(dry_run_result.get("status") or "") not in {"recorded", "completed", "dry_run_completed", "blocked_boundary_result", "synthetic_boundary_result"}:
+        return ()
+    if bool(dry_run_result.get("may_update_analysis")) or bool(dry_run_result.get("may_update_graph")):
+        return ()
+    if not bool(dry_run_result.get("requires_result_ingestion_gate")):
+        return ()
+
+    source_request = dict(source_evidence_request or {})
+    if source_request and str(source_request.get("evidence_permission_request_id") or source_request.get("evidence_request_id") or "") != evidence_request_id:
+        return ()
+    source_analysis_id = str(source_request.get("source_analysis_id") or "")
+    fixture_kind = str(dry_run_result.get("fixture_kind") or "")
+    effect_type = _ingestion_candidate_effect_type(fixture_kind)
+    candidate_id = stable_id("analysis-evidence-result-ingestion-candidate", objective_id, dry_run_id, effect_type, source_analysis_id)
+    status = "candidate" if source_analysis_id else "analysis_binding_required"
+    blocked_scope = tuple(
+        dict.fromkeys(
+            (
+                "analysis_update",
+                "analysis_refinement",
+                "problem_state_update",
+                "graph_update",
+                "review_admission",
+                "replanning",
+                "objective_completion_claim",
+                "evidence_truth_claim",
+                "file_read",
+                "repo_read",
+                "network",
+                "tool",
+                "model",
+                "provider",
+                "sandbox",
+                "source_mutation",
+            )
+        )
+    )
+    return (
+        EvidenceResultIngestionCandidate(
+            evidence_result_ingestion_candidate_id=candidate_id,
+            source_dry_run_result_id=dry_run_id,
+            source_plan_id=plan_id,
+            source_execution_authority_id=authority_id,
+            source_proposal_id=proposal_id,
+            source_evidence_request_id=evidence_request_id,
+            source_evidence_authorization_id=evidence_authorization_id,
+            source_analysis_id=source_analysis_id,
+            objective_id=objective_id,
+            candidate_effect_type=effect_type,
+            supported_update_scope=(
+                "later_analysis_revision_candidate",
+                "operator_reviewable_evidence_posture",
+            ),
+            blocked_update_scope=blocked_scope,
+            confidence_basis=(
+                "Deterministic classifier over the dry-run result boundary only; "
+                "the dry-run is synthetic and records blocked evidence activity, not external evidence."
+            ),
+            limitations=tuple(
+                dict.fromkeys(
+                    (
+                        *(str(item) for item in dry_run_result.get("limitations", ()) if str(item)),
+                        "This candidate does not revise analysis.",
+                        "This candidate does not update graph truth.",
+                        "This candidate does not prove evidence was gathered.",
+                    )
+                )
+            ),
+            required_operator_authority_next=(
+                "A later explicit analysis-revision gate is required before this candidate can affect any analysis, problem state, graph, review, admission, or plan."
+            ),
+            may_update_analysis=False,
+            may_update_problem_state=False,
+            may_update_graph=False,
+            requires_analysis_revision_gate=True,
+            status=status,
+            created_event_id=stable_id("analysis-evidence-result-ingestion-candidate-event", candidate_id),
+            restart_summary=(
+                "Evidence result ingestion candidate persists exactly once from a dry-run boundary result; "
+                "analysis mutation, graph mutation, review, admission, and replanning remain deferred."
+            ),
+        ),
+    )
+
+
+def _ingestion_candidate_effect_type(fixture_kind: str) -> str:
+    if fixture_kind == "synthetic_market_context_blocked":
+        return "evidence_gap_remains_lookup_blocked"
+    if fixture_kind == "synthetic_owned_fixture_inspection_blocked":
+        return "evidence_gap_remains_file_read_blocked"
+    if fixture_kind == "synthetic_operational_status_blocked":
+        return "evidence_gap_remains_external_contact_blocked"
+    return "dry_run_boundary_observed"
+
+
+def render_evidence_result_ingestion_candidate(candidate: Mapping[str, Any]) -> str:
+    """Render one inert result-ingestion candidate."""
+
+    supported = tuple(str(item) for item in candidate.get("supported_update_scope", ()) if str(item))
+    blocked = tuple(str(item) for item in candidate.get("blocked_update_scope", ()) if str(item))
+    limitations = tuple(str(item) for item in candidate.get("limitations", ()) if str(item))
+    return "\n".join(
+        (
+            "Evidence result ingestion candidate recorded.",
+            f"Candidate: {str(candidate.get('evidence_result_ingestion_candidate_id') or '')}",
+            f"Source dry-run result: {str(candidate.get('source_dry_run_result_id') or '')}",
+            f"Effect type: {str(candidate.get('candidate_effect_type') or '').replace('_', ' ')}",
+            "Supported later scope: " + ("; ".join(supported) if supported else "Later operator-reviewable analysis revision only."),
+            "Blocked now: " + ("; ".join(blocked) if blocked else "No analysis, problem, graph, review, admission, or replan mutation."),
+            "Limitations: " + ("; ".join(limitations) if limitations else "Dry-run is synthetic boundary material only."),
+            f"Next authority required: {str(candidate.get('required_operator_authority_next') or '')}",
+            "Candidate boundary: may_update_analysis=false; may_update_problem_state=false; may_update_graph=false; requires_analysis_revision_gate=true.",
+        )
+    )
+
+
 def _canonical_digest(value: Mapping[str, Any]) -> str:
     payload = json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
     return "sha256:" + hashlib.sha256(payload.encode("utf-8")).hexdigest()
@@ -2759,12 +2929,14 @@ __all__ = [
     "EvidenceFixtureExecutionPlan",
     "EvidenceNextOperationProposal",
     "EvidencePermissionRequest",
+    "EvidenceResultIngestionCandidate",
     "EvidenceItem",
     "EVIDENCE_EXECUTION_AUTHORITY_SCHEMA_VERSION",
     "EVIDENCE_FIXTURE_DRY_RUN_SCHEMA_VERSION",
     "EVIDENCE_FIXTURE_EXECUTION_PLAN_SCHEMA_VERSION",
     "EVIDENCE_NEXT_OPERATION_SCHEMA_VERSION",
     "EVIDENCE_PERMISSION_SCHEMA_VERSION",
+    "EVIDENCE_RESULT_INGESTION_CANDIDATE_SCHEMA_VERSION",
     "INTERNAL_WORK_SCHEMA_VERSION",
     "InternalWorkCandidate",
     "SafeNextAction",
@@ -2780,6 +2952,7 @@ __all__ = [
     "compile_evidence_fixture_execution_plans",
     "compile_evidence_next_operation_proposals",
     "compile_evidence_permission_requests",
+    "compile_evidence_result_ingestion_candidates",
     "compile_internal_work_candidates",
     "classify_internal_work_operator_response",
     "render_evidence_authorization",
@@ -2793,6 +2966,7 @@ __all__ = [
     "render_evidence_next_operation_disposition",
     "render_evidence_next_operation_proposal",
     "render_evidence_next_operation_recall",
+    "render_evidence_result_ingestion_candidate",
     "render_evidence_permission_recall",
     "render_evidence_permission_request",
     "render_internal_work_disposition",

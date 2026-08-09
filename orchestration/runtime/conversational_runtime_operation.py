@@ -69,6 +69,7 @@ from orchestration.runtime.evidence_bound_analysis import (
     compile_evidence_fixture_execution_plans,
     compile_evidence_next_operation_proposals,
     compile_evidence_permission_requests,
+    compile_evidence_result_ingestion_candidates,
     compile_internal_work_candidates,
     compile_operator_question_answer,
     compile_operator_question_candidates,
@@ -89,6 +90,7 @@ from orchestration.runtime.evidence_bound_analysis import (
     render_evidence_bound_analysis_refinement_recall,
     render_evidence_permission_recall,
     render_evidence_permission_request,
+    render_evidence_result_ingestion_candidate,
     render_internal_work_disposition,
     render_internal_work_proposal,
     render_internal_work_recall,
@@ -1386,6 +1388,18 @@ def _evidence_fixture_dry_run_results_for_objective(
     )
 
 
+def _evidence_result_ingestion_candidates_for_objective(
+    objective: ConversationalObjective | None,
+) -> tuple[dict[str, Any], ...]:
+    if objective is None or not isinstance(objective.provenance, Mapping):
+        return ()
+    return tuple(
+        dict(item)
+        for item in objective.provenance.get("evidence_result_ingestion_candidates", ())
+        if isinstance(item, Mapping)
+    )
+
+
 def _replace_teaching_objective(
     objective: ConversationalObjective,
     *,
@@ -1411,6 +1425,7 @@ def _replace_teaching_objective(
     evidence_execution_authorities: Sequence[Mapping[str, Any]] | None = None,
     evidence_fixture_execution_plans: Sequence[Mapping[str, Any]] | None = None,
     evidence_fixture_dry_run_results: Sequence[Mapping[str, Any]] | None = None,
+    evidence_result_ingestion_candidates: Sequence[Mapping[str, Any]] | None = None,
     execution_constraints: Mapping[str, Any] | None = None,
 ) -> ConversationalObjective:
     provenance = dict(objective.provenance)
@@ -1489,6 +1504,10 @@ def _replace_teaching_objective(
     if evidence_fixture_dry_run_results is not None:
         provenance["evidence_fixture_dry_run_results"] = tuple(
             dict(item) for item in evidence_fixture_dry_run_results
+        )
+    if evidence_result_ingestion_candidates is not None:
+        provenance["evidence_result_ingestion_candidates"] = tuple(
+            dict(item) for item in evidence_result_ingestion_candidates
         )
     if execution_constraints is not None:
         provenance["execution_constraints"] = dict(execution_constraints)
@@ -2641,6 +2660,83 @@ def _compile_evidence_fixture_dry_run_result_lifecycle(
         },
     )
     return records, result, events
+
+
+def _compile_evidence_result_ingestion_candidate_lifecycle(
+    state: ConversationalRuntimeState,
+    *,
+    objective: ConversationalObjective,
+    dry_run_result: Mapping[str, Any],
+    existing_candidates: Sequence[Mapping[str, Any]] | None = None,
+    ignored_pending_request_id: str = "",
+) -> tuple[list[dict[str, Any]], dict[str, Any] | None, tuple[Mapping[str, Any], ...]]:
+    """Append one inert ingestion candidate for a dry-run result."""
+
+    records = [
+        dict(item)
+        for item in (
+            existing_candidates
+            if existing_candidates is not None
+            else _evidence_result_ingestion_candidates_for_objective(objective)
+        )
+        if isinstance(item, Mapping)
+    ]
+    dry_run_id = str(dry_run_result.get("evidence_fixture_dry_run_result_id") or "")
+    if not dry_run_id:
+        return records, None, ()
+    if any(str(item.get("source_dry_run_result_id") or "") == dry_run_id for item in records):
+        return records, None, ()
+    if bool(dry_run_result.get("may_update_analysis")) or bool(dry_run_result.get("may_update_graph")):
+        return records, None, ()
+    if not bool(dry_run_result.get("requires_result_ingestion_gate")):
+        return records, None, ()
+    has_pending_request = any(
+        request.status == "pending"
+        and not request.consumption_count
+        and request.request_id != ignored_pending_request_id
+        for request in state.pending_chat_requests
+    )
+    if has_pending_request:
+        event = {
+            "event": "evidence_result_ingestion_candidate_suppressed_existing_request",
+            "objective_id": objective.objective_id,
+            "source_dry_run_result_id": dry_run_id,
+            "at": utc_now(),
+        }
+        return records, None, (event,)
+    source_request_id = str(dry_run_result.get("source_evidence_request_id") or "")
+    source_request = next(
+        (
+            item
+            for item in _evidence_permission_requests_for_objective(objective)
+            if str(item.get("evidence_permission_request_id") or item.get("evidence_request_id") or "") == source_request_id
+        ),
+        {},
+    )
+    derived = [
+        item.as_record()
+        for item in compile_evidence_result_ingestion_candidates(
+            dry_run_result,
+            objective_id=objective.objective_id,
+            source_evidence_request=source_request,
+        )
+    ]
+    if not derived:
+        return records, None, ()
+    candidate = dict(derived[0])
+    records.append(candidate)
+    events = (
+        {
+            "event": "evidence_result_ingestion_candidate_recorded",
+            "objective_id": objective.objective_id,
+            "evidence_result_ingestion_candidate_id": str(candidate.get("evidence_result_ingestion_candidate_id") or ""),
+            "source_dry_run_result_id": dry_run_id,
+            "candidate_effect_type": str(candidate.get("candidate_effect_type") or ""),
+            "status": str(candidate.get("status") or ""),
+            "at": utc_now(),
+        },
+    )
+    return records, candidate, events
 
 
 def _compile_evidence_permission_lifecycle(
@@ -8802,6 +8898,9 @@ def _resolve_evidence_fixture_execution_plan_request(
     dry_run_results = list(_evidence_fixture_dry_run_results_for_objective(objective))
     dry_run_result: dict[str, Any] | None = None
     dry_run_events: tuple[Mapping[str, Any], ...] = ()
+    ingestion_candidates = list(_evidence_result_ingestion_candidates_for_objective(objective))
+    ingestion_candidate: dict[str, Any] | None = None
+    ingestion_candidate_events: tuple[Mapping[str, Any], ...] = ()
     if status == "accepted_pending_execution_gate":
         (
             dry_run_results,
@@ -8814,6 +8913,18 @@ def _resolve_evidence_fixture_execution_plan_request(
             existing_results=dry_run_results,
             ignored_pending_request_id=request.request_id,
         )
+        if dry_run_result is not None:
+            (
+                ingestion_candidates,
+                ingestion_candidate,
+                ingestion_candidate_events,
+            ) = _compile_evidence_result_ingestion_candidate_lifecycle(
+                state,
+                objective=objective,
+                dry_run_result=dry_run_result,
+                existing_candidates=ingestion_candidates,
+                ignored_pending_request_id=request.request_id,
+            )
     resolved_request = replace(
         request,
         status="resolved",
@@ -8829,6 +8940,8 @@ def _resolve_evidence_fixture_execution_plan_request(
     reply = render_evidence_fixture_execution_plan_update(updated_plan)
     if dry_run_result is not None:
         reply = f"{reply}\n\n{render_evidence_fixture_dry_run_result(dry_run_result)}"
+    if ingestion_candidate is not None:
+        reply = f"{reply}\n\n{render_evidence_result_ingestion_candidate(ingestion_candidate)}"
     assistant_turn = ConversationTurn(
         turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
         role="assistant",
@@ -8849,12 +8962,15 @@ def _resolve_evidence_fixture_execution_plan_request(
     )
     if dry_run_events:
         progress = progress + dry_run_events
+    if ingestion_candidate_events:
+        progress = progress + ingestion_candidate_events
     updated = _replace_state(
         state,
         active_objective=_replace_teaching_objective(
             objective,
             evidence_fixture_execution_plans=plans,
             evidence_fixture_dry_run_results=dry_run_results,
+            evidence_result_ingestion_candidates=ingestion_candidates,
         ),
         conversation=state.conversation + (user_turn, assistant_turn),
         pending_chat_requests=tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id),
