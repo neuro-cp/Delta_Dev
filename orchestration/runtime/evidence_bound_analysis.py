@@ -743,6 +743,43 @@ class AdaptiveRouteArbitration:
 
 
 @dataclass(frozen=True)
+class AdaptivePreconditionSelection:
+    """A read-only current posture over one route and its existing prerequisites."""
+
+    precondition_selection_id: str
+    objective_id: str
+    selected_route_id: str
+    selected_correction_effect_id: str
+    considered_route_ids: tuple[str, ...]
+    considered_authority_ids: tuple[str, ...]
+    considered_proposal_ids: tuple[str, ...]
+    considered_plan_ids: tuple[str, ...]
+    considered_result_ids: tuple[str, ...]
+    precondition_state: str
+    missing_precondition: str
+    selected_nonexecuting_posture: str
+    priority_reason: str
+    forbidden_actions: tuple[str, ...]
+    may_execute_now: bool
+    status: str
+    schema_version: str = ADAPTIVE_ROUTE_ARBITRATION_SCHEMA_VERSION
+
+    def as_record(self) -> dict[str, Any]:
+        record = asdict(self)
+        for field_name in (
+            "considered_route_ids",
+            "considered_authority_ids",
+            "considered_proposal_ids",
+            "considered_plan_ids",
+            "considered_result_ids",
+            "forbidden_actions",
+        ):
+            record[field_name] = list(record[field_name])
+        record["record_kind"] = "objective_local_adaptive_precondition_selection"
+        return record
+
+
+@dataclass(frozen=True)
 class LongHorizonCorrectionEffect:
     """A non-executing effect of a correction on prior objective-local lineage."""
 
@@ -2770,6 +2807,247 @@ def compile_long_horizon_correction_effect_consolidation(
     )
 
 
+def compile_adaptive_precondition_selection(
+    *,
+    objective_id: str,
+    semantic_frames: Sequence[Mapping[str, Any]],
+    arbitration: Mapping[str, Any] | None = None,
+    correction_effect_consolidation: Mapping[str, Any] | None = None,
+    evidence_requests: Sequence[Mapping[str, Any]] = (),
+    evidence_authorizations: Sequence[Mapping[str, Any]] = (),
+    evidence_next_operation_proposals: Sequence[Mapping[str, Any]] = (),
+    evidence_execution_authorities: Sequence[Mapping[str, Any]] = (),
+    evidence_fixture_execution_plans: Sequence[Mapping[str, Any]] = (),
+    evidence_minimal_fixture_results: Sequence[Mapping[str, Any]] = (),
+    analyses: Sequence[Mapping[str, Any]] = (),
+) -> AdaptivePreconditionSelection | None:
+    """Classify one objective-local route's existing prerequisite posture.
+
+    This consumes only persisted records.  It cannot manufacture a request,
+    authority, proposal, plan, result, or execution transition.
+    """
+
+    if not objective_id:
+        return None
+
+    def records(values: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+        return [dict(item) for item in values if isinstance(item, Mapping)]
+
+    def ids(values: Sequence[Mapping[str, Any]], field: str) -> tuple[str, ...]:
+        return tuple(dict.fromkeys(str(item.get(field) or "") for item in values if str(item.get(field) or "")))
+
+    frames = records(semantic_frames)
+    routes = [
+        _capability_route_candidate_from_frame(frame)
+        for frame in frames
+        if str(_capability_route_candidate_from_frame(frame).get("capability_route_candidate_id") or "")
+    ]
+    if not routes:
+        return None
+    requests = records(evidence_requests)
+    authorizations = records(evidence_authorizations)
+    proposals = records(evidence_next_operation_proposals)
+    authorities = records(evidence_execution_authorities)
+    plans = records(evidence_fixture_execution_plans)
+    results = records(evidence_minimal_fixture_results)
+    analysis_records = records(analyses)
+    considered_route_ids = ids(routes, "capability_route_candidate_id")
+    considered_authority_ids = ids(authorities, "evidence_execution_authority_id")
+    considered_proposal_ids = ids(proposals, "evidence_next_operation_proposal_id")
+    considered_plan_ids = ids(plans, "evidence_fixture_execution_plan_id")
+    considered_result_ids = ids(results, "evidence_minimal_fixture_result_id")
+    consolidation = dict(correction_effect_consolidation or {})
+    consolidation_type = str(consolidation.get("consolidation_type") or "")
+    active_effect_ids = tuple(str(item) for item in consolidation.get("active_correction_effect_ids", ()) if str(item))
+    generic_forbidden = ("No automatic authority, execution, graph mutation, review, admission, scheduler, planner, or worker.",)
+
+    def build(
+        *,
+        state: str,
+        route: Mapping[str, Any] | None = None,
+        effect_id: str = "",
+        missing: str,
+        posture: str,
+        reason: str,
+        extra_forbidden: Sequence[str] = (),
+    ) -> AdaptivePreconditionSelection:
+        route_forbidden = tuple(str(item) for item in (route or {}).get("forbidden_actions", ()) if str(item))
+        forbidden = tuple(dict.fromkeys((*route_forbidden, *extra_forbidden, *generic_forbidden)))
+        route_id = str((route or {}).get("capability_route_candidate_id") or "")
+        selection_id = stable_id(
+            "adaptive-precondition-selection",
+            objective_id,
+            state,
+            route_id,
+            effect_id,
+            *considered_authority_ids,
+            *considered_proposal_ids,
+            *considered_plan_ids,
+            *considered_result_ids,
+        )
+        return AdaptivePreconditionSelection(
+            precondition_selection_id=selection_id,
+            objective_id=objective_id,
+            selected_route_id=route_id,
+            selected_correction_effect_id=effect_id,
+            considered_route_ids=considered_route_ids,
+            considered_authority_ids=considered_authority_ids,
+            considered_proposal_ids=considered_proposal_ids,
+            considered_plan_ids=considered_plan_ids,
+            considered_result_ids=considered_result_ids,
+            precondition_state=state,
+            missing_precondition=missing,
+            selected_nonexecuting_posture=posture,
+            priority_reason=reason,
+            forbidden_actions=forbidden,
+            may_execute_now=False,
+            status="deterministic_precondition_selection_only",
+        )
+
+    blocked_route = next((route for route in routes if str(route.get("decision") or "") == "blocked"), None)
+    if blocked_route is not None:
+        return build(
+            state="blocked_safety_boundary",
+            route=blocked_route,
+            missing="explicit accepted authority and a later bounded execution gate",
+            posture="Retain the blocked safety boundary; do not contact, read, scan, inspect, pay, schedule, or execute.",
+            reason="A blocked safety route outranks every correction, clarification, and eligible route.",
+        )
+    if consolidation_type == "latest_supersedes_prior" and consolidation.get("affected_result_ids"):
+        return build(
+            state="completed_stale_needs_new_authorized_cycle",
+            effect_id=active_effect_ids[0] if active_effect_ids else "",
+            missing="a new source-bound authority and accepted plan for any later controlled cycle",
+            posture="The prior completed result is historical and stale. Preserve it without recomputation or duplicate selection.",
+            reason="A current supersession effect affects an existing controlled result.",
+            extra_forbidden=tuple(str(item) for item in consolidation.get("forbidden_actions", ()) if str(item)),
+        )
+    clarify_route = next((route for route in routes if str(route.get("decision") or "") == "clarify"), None)
+    if clarify_route is not None:
+        return build(
+            state="clarify_needed",
+            route=clarify_route,
+            effect_id=active_effect_ids[0] if consolidation_type in {"partial_resolution", "compound_separate_effects"} and active_effect_ids else "",
+            missing="source-bound clarification or unresolved safety context",
+            posture="Keep the route clarify-only; do not diagnose, provide legal certainty, or execute evidence work.",
+            reason="An unresolved clarification safety boundary outranks eligible and stable completed routes.",
+        )
+
+    analyses_by_frame: dict[str, list[dict[str, Any]]] = {}
+    for analysis in analysis_records:
+        frame_id = str(analysis.get("source_frame_id") or "")
+        if frame_id:
+            analyses_by_frame.setdefault(frame_id, []).append(analysis)
+    results_by_analysis: dict[str, list[dict[str, Any]]] = {}
+    for result in results:
+        analysis_id = str(result.get("source_analysis_id") or "")
+        if analysis_id:
+            results_by_analysis.setdefault(analysis_id, []).append(result)
+    requests_by_frame: dict[str, list[dict[str, Any]]] = {}
+    for request in requests:
+        frame_id = str(request.get("source_frame_id") or "")
+        if frame_id:
+            requests_by_frame.setdefault(frame_id, []).append(request)
+    authorizations_by_request: dict[str, list[dict[str, Any]]] = {}
+    for authorization in authorizations:
+        request_id = str(authorization.get("evidence_request_id") or authorization.get("source_evidence_request_id") or "")
+        if request_id:
+            authorizations_by_request.setdefault(request_id, []).append(authorization)
+    proposals_by_frame: dict[str, list[dict[str, Any]]] = {}
+    for proposal in proposals:
+        frame_id = str(proposal.get("source_frame_id") or "")
+        if frame_id:
+            proposals_by_frame.setdefault(frame_id, []).append(proposal)
+    authorities_by_proposal: dict[str, list[dict[str, Any]]] = {}
+    for authority in authorities:
+        proposal_id = str(authority.get("source_evidence_next_operation_proposal_id") or "")
+        if proposal_id:
+            authorities_by_proposal.setdefault(proposal_id, []).append(authority)
+    plans_by_authority: dict[str, list[dict[str, Any]]] = {}
+    for plan in plans:
+        authority_id = str(plan.get("source_evidence_execution_authority_id") or "")
+        if authority_id:
+            plans_by_authority.setdefault(authority_id, []).append(plan)
+
+    eligible_route = next((route for route in routes if str(route.get("decision") or "") == "eligible"), None)
+    if eligible_route is None:
+        return build(
+            state="ordinary_no_selectable_route",
+            missing="a source-bound eligible route",
+            posture="No route has an actionable non-executing posture beyond the persisted safety records.",
+            reason=str((arbitration or {}).get("priority_reason") or "No eligible source-bound route is present."),
+        )
+    source_frame_id = str(eligible_route.get("source_frame_id") or "")
+    route_analyses = analyses_by_frame.get(source_frame_id, [])
+    route_results = [result for analysis in route_analyses for result in results_by_analysis.get(str(analysis.get("analysis_id") or ""), [])]
+    if route_results:
+        return build(
+            state="completed_stable",
+            route=eligible_route,
+            missing="",
+            posture="The existing controlled result is stable and provisional; do not duplicate its result, refinement, or selection.",
+            reason="A matching existing controlled result is present with no current stale correction effect.",
+        )
+    route_requests = requests_by_frame.get(source_frame_id, [])
+    route_request_ids = {str(item.get("evidence_permission_request_id") or "") for item in route_requests}
+    route_authorizations = [
+        authorization
+        for request_id in route_request_ids
+        for authorization in authorizations_by_request.get(request_id, [])
+    ]
+    route_proposals = proposals_by_frame.get(source_frame_id, [])
+    route_authorities = [
+        authority
+        for proposal in route_proposals
+        for authority in authorities_by_proposal.get(str(proposal.get("evidence_next_operation_proposal_id") or ""), [])
+    ]
+    route_plans = [
+        plan
+        for authority in route_authorities
+        for plan in plans_by_authority.get(str(authority.get("evidence_execution_authority_id") or ""), [])
+    ]
+    if route_plans:
+        accepted = any(str(plan.get("status") or "") in {"accepted", "approved", "accepted_pending_execution_gate"} for plan in route_plans)
+        if accepted:
+            return build(
+                state="accepted_plan_ready_nonexecuting",
+                route=eligible_route,
+                missing="a separate existing gated execution transition",
+                posture="An accepted plan is present, but this selector remains record-only and does not invoke an evaluator.",
+                reason="The route has an existing accepted plan and is ready only for its separately-governed path.",
+            )
+        return build(
+            state="authority_exists_needs_plan_acceptance",
+            route=eligible_route,
+            missing="accepted_execution_plan",
+            posture="Authority exists, but the plan remains unaccepted; do not execute or infer acceptance.",
+            reason="An inert authority lineage exists without an accepted plan.",
+        )
+    if route_authorities:
+        return build(
+            state="authority_exists_needs_plan_acceptance",
+            route=eligible_route,
+            missing="accepted_execution_plan",
+            posture="Authority exists but no accepted plan is recorded; do not create one automatically.",
+            reason="The authority boundary is present but the next plan boundary is unresolved.",
+        )
+    if route_authorizations:
+        return build(
+            state="permission_granted_needs_proposal_or_authority",
+            route=eligible_route,
+            missing="bounded proposal and inert execution authority",
+            posture="Permission is recorded, but no proposal or authority may be created by this selector.",
+            reason="The permission lineage exists without the next explicit governance records.",
+        )
+    return build(
+        state="eligible_needs_permission",
+        route=eligible_route,
+        missing="evidence permission and a later explicit authority chain",
+        posture="The route is eligible only in principle; request creation and execution remain outside this selector.",
+        reason="No matching evidence permission or authorization record exists for the eligible route.",
+    )
+
+
 def compile_adaptive_route_arbitration(
     *,
     objective_id: str,
@@ -4762,6 +5040,7 @@ def _bullet_lines(values: Sequence[str]) -> tuple[str, ...]:
 __all__ = [
     "EvidenceBoundAnalysisRecord",
     "AdaptiveRouteArbitration",
+    "AdaptivePreconditionSelection",
     "EvidenceAnalysisRevisionCandidate",
     "EvidenceExecutionAuthorityRecord",
     "EvidenceFixtureDryRunResult",
@@ -4802,6 +5081,7 @@ __all__ = [
     "compile_evidence_next_operation_proposals",
     "compile_evidence_permission_requests",
     "compile_adaptive_route_arbitration",
+    "compile_adaptive_precondition_selection",
     "compile_evidence_result_ingestion_candidates",
     "compile_internal_work_candidates",
     "compile_long_horizon_self_correction_candidates",

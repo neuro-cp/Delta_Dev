@@ -66,6 +66,7 @@ from orchestration.runtime.evidence_bound_analysis import (
     compile_analysis_revision_internal_work_candidates,
     compile_evidence_analysis_revision_candidates,
     compile_adaptive_route_arbitration,
+    compile_adaptive_precondition_selection,
     compile_evidence_bound_analysis,
     compile_analysis_refinement,
     compile_controlled_fixture_analysis_refinement,
@@ -1436,6 +1437,69 @@ def _evidence_analysis_revision_candidates_for_objective(
     )
 
 
+def _adaptive_precondition_selection_for_objective(
+    objective: ConversationalObjective,
+    *,
+    semantic_frames: Sequence[Mapping[str, Any]] | None = None,
+    analyses: Sequence[Mapping[str, Any]] | None = None,
+    evidence_requests: Sequence[Mapping[str, Any]] | None = None,
+    evidence_authorizations: Sequence[Mapping[str, Any]] | None = None,
+    evidence_next_operation_proposals: Sequence[Mapping[str, Any]] | None = None,
+    evidence_execution_authorities: Sequence[Mapping[str, Any]] | None = None,
+    evidence_fixture_execution_plans: Sequence[Mapping[str, Any]] | None = None,
+    evidence_minimal_fixture_results: Sequence[Mapping[str, Any]] | None = None,
+    adaptive_route_arbitration: Mapping[str, Any] | None = None,
+    correction_effect_consolidation: Mapping[str, Any] | None = None,
+):
+    """Project the current evidence ladder without creating another lifecycle owner."""
+
+    return compile_adaptive_precondition_selection(
+        objective_id=objective.objective_id,
+        semantic_frames=(
+            _semantic_problem_frames_for_objective(objective)
+            if semantic_frames is None
+            else semantic_frames
+        ),
+        arbitration=adaptive_route_arbitration,
+        correction_effect_consolidation=correction_effect_consolidation,
+        evidence_requests=(
+            _evidence_permission_requests_for_objective(objective)
+            if evidence_requests is None
+            else evidence_requests
+        ),
+        evidence_authorizations=(
+            _evidence_authorizations_for_objective(objective)
+            if evidence_authorizations is None
+            else evidence_authorizations
+        ),
+        evidence_next_operation_proposals=(
+            _evidence_next_operation_proposals_for_objective(objective)
+            if evidence_next_operation_proposals is None
+            else evidence_next_operation_proposals
+        ),
+        evidence_execution_authorities=(
+            _evidence_execution_authorities_for_objective(objective)
+            if evidence_execution_authorities is None
+            else evidence_execution_authorities
+        ),
+        evidence_fixture_execution_plans=(
+            _evidence_fixture_execution_plans_for_objective(objective)
+            if evidence_fixture_execution_plans is None
+            else evidence_fixture_execution_plans
+        ),
+        evidence_minimal_fixture_results=(
+            _evidence_minimal_fixture_results_for_objective(objective)
+            if evidence_minimal_fixture_results is None
+            else evidence_minimal_fixture_results
+        ),
+        analyses=(
+            _evidence_bound_analyses_for_objective(objective)
+            if analyses is None
+            else analyses
+        ),
+    )
+
+
 def _replace_teaching_objective(
     objective: ConversationalObjective,
     *,
@@ -1468,6 +1532,7 @@ def _replace_teaching_objective(
     long_horizon_correction_effects: Sequence[Mapping[str, Any]] | None = None,
     long_horizon_correction_effect_consolidation: Mapping[str, Any] | None = None,
     adaptive_route_arbitration: Mapping[str, Any] | None = None,
+    adaptive_precondition_selection: Mapping[str, Any] | None = None,
     execution_constraints: Mapping[str, Any] | None = None,
 ) -> ConversationalObjective:
     provenance = dict(objective.provenance)
@@ -1573,6 +1638,8 @@ def _replace_teaching_objective(
         )
     if adaptive_route_arbitration is not None:
         provenance["adaptive_route_arbitration"] = dict(adaptive_route_arbitration)
+    if adaptive_precondition_selection is not None:
+        provenance["adaptive_precondition_selection"] = dict(adaptive_precondition_selection)
     if execution_constraints is not None:
         provenance["execution_constraints"] = dict(execution_constraints)
     return replace(objective, provenance=provenance)
@@ -3736,6 +3803,21 @@ def _apply_semantic_problem_modeling(
             else None
         ),
     )
+    adaptive_precondition_selection = _adaptive_precondition_selection_for_objective(
+        objective,
+        semantic_frames=frames,
+        analyses=analyses,
+        adaptive_route_arbitration=(
+            adaptive_route_arbitration.as_record()
+            if adaptive_route_arbitration is not None
+            else None
+        ),
+        correction_effect_consolidation=(
+            long_horizon_correction_effect_consolidation.as_record()
+            if long_horizon_correction_effect_consolidation is not None
+            else None
+        ),
+    )
     if question_request is not None:
         reply = render_evidence_bound_analysis_question(analysis, selected_candidate)
     elif is_compound:
@@ -3912,6 +3994,11 @@ def _apply_semantic_problem_modeling(
             adaptive_route_arbitration=(
                 adaptive_route_arbitration.as_record()
                 if adaptive_route_arbitration is not None
+                else None
+            ),
+            adaptive_precondition_selection=(
+                adaptive_precondition_selection.as_record()
+                if adaptive_precondition_selection is not None
                 else None
             ),
         ),
@@ -9038,6 +9125,12 @@ def _resolve_evidence_permission_request(
                 "at": utc_now(),
             },
         )
+    adaptive_precondition_selection = _adaptive_precondition_selection_for_objective(
+        objective,
+        evidence_requests=evidence_requests,
+        evidence_authorizations=authorizations,
+        evidence_next_operation_proposals=evidence_next_operation_proposals,
+    )
     updated = _replace_state(
         state,
         active_objective=_replace_teaching_objective(
@@ -9045,6 +9138,11 @@ def _resolve_evidence_permission_request(
             evidence_requests=evidence_requests,
             evidence_authorizations=authorizations,
             evidence_next_operation_proposals=evidence_next_operation_proposals,
+            adaptive_precondition_selection=(
+                adaptive_precondition_selection.as_record()
+                if adaptive_precondition_selection is not None
+                else None
+            ),
         ),
         conversation=state.conversation + (user_turn, assistant_turn),
         pending_chat_requests=(
@@ -9225,6 +9323,11 @@ def _resolve_evidence_next_operation_proposal(
                 "at": utc_now(),
             },
         )
+    adaptive_precondition_selection = _adaptive_precondition_selection_for_objective(
+        objective,
+        evidence_next_operation_proposals=proposals,
+        evidence_execution_authorities=evidence_execution_authorities,
+    )
     updated = _replace_state(
         state,
         active_objective=_replace_teaching_objective(
@@ -9232,6 +9335,11 @@ def _resolve_evidence_next_operation_proposal(
             evidence_next_operation_proposals=proposals,
             evidence_next_operation_dispositions=dispositions,
             evidence_execution_authorities=evidence_execution_authorities,
+            adaptive_precondition_selection=(
+                adaptive_precondition_selection.as_record()
+                if adaptive_precondition_selection is not None
+                else None
+            ),
         ),
         conversation=state.conversation + (user_turn, assistant_turn),
         pending_chat_requests=(
@@ -9445,12 +9553,22 @@ def _resolve_evidence_execution_authority_request(
                 "at": utc_now(),
             },
         )
+    adaptive_precondition_selection = _adaptive_precondition_selection_for_objective(
+        objective,
+        evidence_execution_authorities=records,
+        evidence_fixture_execution_plans=fixture_execution_plans,
+    )
     updated = _replace_state(
         state,
         active_objective=_replace_teaching_objective(
             objective,
             evidence_execution_authorities=records,
             evidence_fixture_execution_plans=fixture_execution_plans,
+            adaptive_precondition_selection=(
+                adaptive_precondition_selection.as_record()
+                if adaptive_precondition_selection is not None
+                else None
+            ),
         ),
         conversation=state.conversation + (user_turn, assistant_turn),
         pending_chat_requests=(
@@ -9710,6 +9828,22 @@ def _resolve_evidence_fixture_execution_plan_request(
             else None
         ),
     )
+    adaptive_precondition_selection = _adaptive_precondition_selection_for_objective(
+        objective,
+        evidence_fixture_execution_plans=plans,
+        evidence_minimal_fixture_results=minimal_fixture_results,
+        analyses=_evidence_bound_analyses_for_objective(objective),
+        adaptive_route_arbitration=(
+            adaptive_route_arbitration.as_record()
+            if adaptive_route_arbitration is not None
+            else None
+        ),
+        correction_effect_consolidation=(
+            long_horizon_correction_effect_consolidation.as_record()
+            if long_horizon_correction_effect_consolidation is not None
+            else None
+        ),
+    )
     resolved_request = replace(
         request,
         status="resolved",
@@ -9799,6 +9933,11 @@ def _resolve_evidence_fixture_execution_plan_request(
             adaptive_route_arbitration=(
                 adaptive_route_arbitration.as_record()
                 if adaptive_route_arbitration is not None
+                else None
+            ),
+            adaptive_precondition_selection=(
+                adaptive_precondition_selection.as_record()
+                if adaptive_precondition_selection is not None
                 else None
             ),
         ),
