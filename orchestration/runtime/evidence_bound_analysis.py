@@ -968,6 +968,25 @@ def compile_evidence_permission_requests(
             }
         )
     elif (
+        domain == "physics_mechanics"
+        and source_slot_id == "physics.requested_output_form"
+        and answer_status == "bound_operator_answer"
+    ):
+        request_specs.append(
+            {
+                "evidence_gap_slot_id": "physics.frictionless_incline_deterministic_calculation",
+                "evidence_kind": "deterministic_frictionless_incline_calculation",
+                "source_validation_check_id": "thirty_degree_sine",
+                "exact_information_needed": "The deterministic acceleration for the recorded frictionless 30-degree incline using the fixed local gravity constant g=9.8 m/s^2.",
+                "why_existing_evidence_is_insufficient": "The source analysis identifies the frictionless-incline model and the requested output form, but a bounded deterministic calculation has not yet been recorded through the governed fixture path.",
+                "proposed_source_scope": (
+                    "A later deterministic in-memory calculation from the recorded incline angle, frictionless constraint, and fixed local constant g=9.8 m/s^2.",
+                    "No file read, network access, provider/model/tool call, sandbox, graph mutation, review, admission, worker, scheduler, or external action is authorized by this request.",
+                ),
+                "context_answer_type": context_answer_type,
+            }
+        )
+    elif (
         domain == "defensive_cybersecurity"
         and "unsafe" in check_text
         and "construction" in check_text
@@ -1172,6 +1191,19 @@ def _next_operation_specification(
                 "operator-approved market-data source if later separately authorized",
             ),
             "expected_evidence": "Current price and correlation context, if a later gate separately authorizes retrieval.",
+        }
+    if domain == "physics_mechanics" or (not domain and "incline" in scope_text):
+        return {
+            "proposed_operation_type": "physics_frictionless_incline_calculation_proposal_only",
+            "proposed_scope": (
+                "Propose a bounded deterministic calculation for the recorded frictionless 30-degree incline using fixed local g=9.8 m/s^2."
+            ),
+            "permitted_inputs": (
+                "recorded frictionless incline constraint",
+                "recorded 30-degree angle",
+                "fixed local gravity constant g=9.8 m/s^2",
+            ),
+            "expected_evidence": "The deterministic acceleration a = g * sin(30 degrees) for the recorded idealized incline.",
         }
     if domain == "defensive_cybersecurity" or (not domain and ("fixture" in scope_text or "inspection" in scope_text)):
         return {
@@ -1622,6 +1654,28 @@ def _fixture_execution_plan_specification(proposed_operation_type: str) -> Mappi
                 "Future execution proof must show no trade, no account access, and no unapproved provider/model/network use.",
             ),
         }
+    if operation == "physics_frictionless_incline_calculation_proposal_only":
+        return {
+            "evidence_source_class": "deterministic_physics_incline_plan_only",
+            "allowed_inputs": (
+                "recorded frictionless incline constraint",
+                "recorded 30-degree angle",
+                "fixed local gravity constant g=9.8 m/s^2",
+            ),
+            "expected_result_shape": "A deterministic calculation stating a = g * sin(30 degrees) = 4.9 m/s^2, with idealized-model limits and no experimental claim.",
+            "abort_conditions": (
+                "Abort if the angle is absent, nonnumeric, or not 30 degrees in this first bounded evaluator.",
+                "Abort if a friction term or non-frictionless condition is present.",
+                "Abort if a file read, network access, provider/model/tool call, sandbox, or external action would be needed.",
+            ),
+            "validation_requirements": (
+                "Plan must remain bound to a recorded physics_mechanics analysis.",
+                "Plan must use only the frictionless 30-degree constraint and fixed local g=9.8 m/s^2.",
+            ),
+            "proof_requirements": (
+                "Execution proof must show source-bound deterministic inputs, no external observation, and no graph/review/admission mutation.",
+            ),
+        }
     if operation == "defensive_owned_fixture_read_only_proposal":
         return {
             "evidence_source_class": "owned_fixture_read_only_plan",
@@ -1834,6 +1888,20 @@ def _fixture_dry_run_specification(source_class: str, operation: str) -> Mapping
             ),
             "proof_summary": "Market dry-run used plan metadata only and blocked lookup, provider/model/tool use, network access, account access, and trading.",
         }
+    if source_class == "deterministic_physics_incline_plan_only" or operation == "physics_frictionless_incline_calculation_proposal_only":
+        return {
+            "fixture_kind": "synthetic_physics_incline_calculation_ready",
+            "deterministic_result": (
+                "Dry-run confirms that the recorded frictionless 30-degree incline can be evaluated from source-bound values and fixed local g=9.8 m/s^2. "
+                "It did not read files, access a network, call a model/provider/tool, or make an experimental claim."
+            ),
+            "limitations": (
+                "The calculation applies only to the stated frictionless 30-degree idealization.",
+                "No experimental measurement, friction estimate, or external source was used.",
+                "A later controlled fixture transition is required before a deterministic result can refine the analysis.",
+            ),
+            "proof_summary": "Physics dry-run used only recorded source constraints and fixed in-memory g=9.8 m/s^2; external actions and graph/review/admission mutation remain blocked.",
+        }
     if source_class == "owned_fixture_read_only_plan" or operation == "defensive_owned_fixture_read_only_proposal":
         return {
             "fixture_kind": "synthetic_owned_fixture_inspection_blocked",
@@ -1914,6 +1982,17 @@ def compile_evidence_minimal_fixture_results(
         return ()
     if bool(plan.get("may_execute_now")) or not bool(plan.get("execution_requires_future_gate")):
         return ()
+    if (
+        str(plan.get("evidence_source_class") or "") == "deterministic_physics_incline_plan_only"
+        or str(plan.get("proposed_operation_type") or "") == "physics_frictionless_incline_calculation_proposal_only"
+    ):
+        return _compile_frictionless_incline_fixture_result(
+            plan,
+            objective_id=objective_id,
+            source_analysis=source_analysis,
+            source_revision_candidate=source_revision_candidate,
+            source_internal_work_candidate=source_internal_work_candidate,
+        )
     if str(plan.get("evidence_source_class") or "") != "market_source_context_plan_only":
         return ()
     if str(plan.get("proposed_operation_type") or "") != "finance_market_context_proposal_only":
@@ -1959,15 +2038,7 @@ def compile_evidence_minimal_fixture_results(
     percent = f"{weighted_drawdown * 100:.1f}%"
     weight_summary = ", ".join(f"{weight * 100:.0f}%" for weight in fixture["weights"])
     stress_summary = ", ".join(f"{stress * 100:.0f}%" for stress in fixture["stress_values"])
-    blocked_actions = (
-        "No repository file read.",
-        "No local filesystem read.",
-        "No network or external source lookup.",
-        "No model, provider, or tool call.",
-        "No sandbox command execution.",
-        "No source mutation.",
-        "No graph truth mutation, review, admission, answer finalization, worker, scheduler, or external action.",
-    )
+    blocked_actions = _controlled_fixture_blocked_actions()
     return (
         EvidenceMinimalFixtureResult(
             evidence_minimal_fixture_result_id=result_id,
@@ -2031,6 +2102,130 @@ def _minimal_portfolio_fixture(source_analysis: Mapping[str, Any]) -> Mapping[st
     }
 
 
+def _compile_frictionless_incline_fixture_result(
+    plan: Mapping[str, Any],
+    *,
+    objective_id: str,
+    source_analysis: Mapping[str, Any],
+    source_revision_candidate: Mapping[str, Any] | None,
+    source_internal_work_candidate: Mapping[str, Any] | None,
+) -> tuple[EvidenceMinimalFixtureResult, ...]:
+    """Compile the one source-bound frictionless 30-degree incline result."""
+
+    if str(plan.get("evidence_source_class") or "") != "deterministic_physics_incline_plan_only":
+        return ()
+    if str(plan.get("proposed_operation_type") or "") != "physics_frictionless_incline_calculation_proposal_only":
+        return ()
+    if str(source_analysis.get("domain") or "") != "physics_mechanics":
+        return ()
+    fixture = _minimal_frictionless_thirty_degree_incline_fixture(source_analysis)
+    if fixture is None:
+        return ()
+
+    revision_candidate = dict(source_revision_candidate or {})
+    revision_id = str(revision_candidate.get("evidence_analysis_revision_candidate_id") or "")
+    source_analysis_id = str(source_analysis.get("analysis_id") or "")
+    if revision_candidate and str(revision_candidate.get("source_analysis_id") or "") != source_analysis_id:
+        return ()
+    internal_candidate = dict(source_internal_work_candidate or {})
+    internal_id = str(internal_candidate.get("internal_work_candidate_id") or "")
+    if internal_candidate and revision_id and str(internal_candidate.get("source_evidence_analysis_revision_candidate_id") or "") != revision_id:
+        return ()
+
+    plan_id = str(plan.get("evidence_fixture_execution_plan_id") or "")
+    authority_id = str(plan.get("source_evidence_execution_authority_id") or "")
+    proposal_id = str(plan.get("source_evidence_next_operation_proposal_id") or "")
+    evidence_request_id = str(plan.get("source_evidence_request_id") or "")
+    evidence_authorization_id = str(plan.get("source_evidence_authorization_id") or "")
+    if not all((objective_id, plan_id, authority_id, proposal_id, evidence_request_id, evidence_authorization_id, source_analysis_id)):
+        return ()
+
+    input_payload = {
+        "plan_id": plan_id,
+        "objective_id": objective_id,
+        "source_analysis_id": source_analysis_id,
+        "source_revision_candidate_id": revision_id,
+        "source_internal_work_candidate_id": internal_id,
+        "angle_degrees": fixture["angle_degrees"],
+        "gravity_m_per_s2": fixture["gravity_m_per_s2"],
+        "frictionless": True,
+    }
+    input_digest = _canonical_digest(input_payload)
+    result_id = stable_id(
+        "analysis-evidence-minimal-fixture-result",
+        objective_id,
+        plan_id,
+        source_analysis_id,
+        revision_id,
+        internal_id,
+        input_digest,
+    )
+    return (
+        EvidenceMinimalFixtureResult(
+            evidence_minimal_fixture_result_id=result_id,
+            source_plan_id=plan_id,
+            source_execution_authority_id=authority_id,
+            source_proposal_id=proposal_id,
+            source_evidence_request_id=evidence_request_id,
+            source_evidence_authorization_id=evidence_authorization_id,
+            source_analysis_id=source_analysis_id,
+            source_evidence_analysis_revision_candidate_id=revision_id,
+            source_internal_work_candidate_id=internal_id,
+            objective_id=objective_id,
+            fixture_kind="in_memory_frictionless_thirty_degree_incline_calculation",
+            deterministic_input_digest=input_digest,
+            deterministic_input_summary="Recorded frictionless incline angle: 30 degrees. Fixed local gravity constant: g=9.8 m/s^2.",
+            deterministic_output="Using a = g * sin(30 degrees), the deterministic frictionless-incline acceleration is 4.9 m/s^2 down the plane. This is an idealized calculation, not an experimental measurement.",
+            limitations=(
+                "The calculation applies only to the recorded frictionless 30-degree incline.",
+                "The fixed g=9.8 m/s^2 constant is a local deterministic convention rather than an observed measurement.",
+                "No friction, air resistance, experimental uncertainty, or external source is represented.",
+                "A separate controlled analysis-refinement transition is required before this result can affect objective-local posture.",
+            ),
+            blocked_actions=_controlled_fixture_blocked_actions(),
+            proof_summary="Computed only from the recorded frictionless 30-degree constraint and fixed in-memory g=9.8 m/s^2; no external source, filesystem, model, provider, tool, sandbox, graph, review, admission, or worker was used.",
+            may_update_analysis=False,
+            may_update_problem_state=False,
+            may_update_graph=False,
+            requires_analysis_refinement_gate=True,
+            status="minimal_fixture_completed",
+            created_event_id=stable_id("analysis-evidence-minimal-fixture-result-event", result_id),
+            restart_summary="The bounded physics fixture result persists exactly once from an accepted plan and recorded source analysis; it remains provisional until the controlled existing-refinement transition records its local effect.",
+        ),
+    )
+
+
+def _minimal_frictionless_thirty_degree_incline_fixture(source_analysis: Mapping[str, Any]) -> Mapping[str, float] | None:
+    source_text = str(source_analysis.get("source_text") or "")
+    lower = source_text.lower()
+    if "frictionless" not in lower:
+        return None
+    if re.search(r"\bfriction\b", lower.replace("frictionless", "")):
+        return None
+    match = re.search(r"(?<!\d)(\d+(?:\.\d+)?)\s*(?:[-\s]*(?:degrees?|degree)|°)\b", lower)
+    if match is None:
+        return None
+    try:
+        angle_degrees = float(match.group(1))
+    except (TypeError, ValueError):
+        return None
+    if not math.isclose(angle_degrees, 30.0, rel_tol=0.0, abs_tol=0.001):
+        return None
+    return {"angle_degrees": angle_degrees, "gravity_m_per_s2": 9.8}
+
+
+def _controlled_fixture_blocked_actions() -> tuple[str, ...]:
+    return (
+        "No repository file read.",
+        "No local filesystem read.",
+        "No network or external source lookup.",
+        "No model, provider, or tool call.",
+        "No sandbox command execution.",
+        "No source mutation.",
+        "No graph truth mutation, review, admission, answer finalization, worker, scheduler, or external action.",
+    )
+
+
 def render_evidence_minimal_fixture_result(result: Mapping[str, Any]) -> str:
     """Render the bounded fixture result without overstating its authority."""
 
@@ -2079,9 +2274,15 @@ def compile_controlled_fixture_analysis_refinement(
     binding_key = "|".join(("controlled_fixture", evidence_request_id, fixture_result_id))
     before_summary = str(analysis.get("result_summary") or "The source-bound analysis remains available.")
     fixture_output = str(fixture_result.get("deterministic_output") or "")
+    fixture_kind = str(fixture_result.get("fixture_kind") or "")
+    is_physics_fixture = fixture_kind == "in_memory_frictionless_thirty_degree_incline_calculation"
     after_summary = (
         f"{before_summary} Controlled fixture addition: {fixture_output} "
-        "The live-data and correlation gap remains unresolved, so this only sharpens the stated hypothetical scenario."
+        + (
+            "The result remains limited to the recorded frictionless 30-degree idealization."
+            if is_physics_fixture
+            else "The live-data and correlation gap remains unresolved, so this only sharpens the stated hypothetical scenario."
+        )
     )
     remaining_uncertainty = tuple(
         dict.fromkeys(
@@ -2095,7 +2296,11 @@ def compile_controlled_fixture_analysis_refinement(
         dict.fromkeys(
             (
                 *(str(item.get("action") or "") for item in analysis.get("safe_next_actions", ()) if isinstance(item, Mapping) and str(item.get("action") or "")),
-                "Keep the live-data and correlation uncertainty open; use the fixture only as a bounded hypothetical comparison.",
+                (
+                    "Keep the frictionless 30-degree idealization explicit; do not treat the calculation as an experimental measurement."
+                    if is_physics_fixture
+                    else "Keep the live-data and correlation uncertainty open; use the fixture only as a bounded hypothetical comparison."
+                ),
             )
         )
     )
@@ -2104,7 +2309,11 @@ def compile_controlled_fixture_analysis_refinement(
             (
                 *(str(item) for item in analysis.get("prohibited_actions", ()) if str(item)),
                 *(str(item) for item in fixture_result.get("blocked_actions", ()) if str(item)),
-                "Do not treat this fixture output as current market evidence, a forecast, investment advice, or a trade instruction.",
+                (
+                    "Do not treat this fixture output as an experimental measurement or apply it to frictional motion."
+                    if is_physics_fixture
+                    else "Do not treat this fixture output as current market evidence, a forecast, investment advice, or a trade instruction."
+                ),
             )
         )
     )
@@ -2116,10 +2325,18 @@ def compile_controlled_fixture_analysis_refinement(
         source_question_id=source_question_id,
         source_answer_id=source_answer_id,
         question_binding_key=binding_key,
-        changed_unknown_slots=("finance.hypothetical_fixture_scenario",),
+        changed_unknown_slots=(
+            "physics.frictionless_thirty_degree_calculation"
+            if is_physics_fixture
+            else "finance.hypothetical_fixture_scenario",
+        ),
         before_summary=before_summary,
         after_summary=after_summary,
-        changed_fields=("controlled_fixture_result", "hypothetical_drawdown_check"),
+        changed_fields=(
+            ("controlled_fixture_result", "frictionless_incline_calculation")
+            if is_physics_fixture
+            else ("controlled_fixture_result", "hypothetical_drawdown_check")
+        ),
         remaining_uncertainty=remaining_uncertainty,
         safe_next_actions=safe_next_actions,
         prohibited_actions=prohibited_actions,

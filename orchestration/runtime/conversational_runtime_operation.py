@@ -3136,6 +3136,7 @@ def _apply_controlled_fixture_problem_state_update(
     refinement_id = str(refinement.get("refinement_id") or "")
     revision_candidate_id = str(fixture_result.get("source_evidence_analysis_revision_candidate_id") or "")
     candidate_id = str(fixture_result.get("source_internal_work_candidate_id") or "")
+    is_physics_fixture = str(fixture_result.get("fixture_kind") or "") == "in_memory_frictionless_thirty_degree_incline_calculation"
     if not fixture_result_id or not refinement_id or not revision_candidate_id or not candidate_id:
         return candidates, selections, None, None, ()
     current = next(
@@ -3174,10 +3175,17 @@ def _apply_controlled_fixture_problem_state_update(
         "controlled_fixture_problem_state_update_id": update_id,
         "controlled_fixture_refinement_id": refinement_id,
         "source_evidence_minimal_fixture_result_id": fixture_result_id,
-        "problem_state_status": "fixture_refined_live_evidence_still_unresolved",
+        "problem_state_status": (
+            "fixture_refined_frictionless_incline_calculation_recorded"
+            if is_physics_fixture
+            else "fixture_refined_live_evidence_still_unresolved"
+        ),
         "next_operation_selection_id": selection_id,
         "safe_deterministic_next_step": (
-            "Retain the controlled hypothetical fixture result as provisional context and keep live evidence unresolved; "
+            "Retain the controlled frictionless 30-degree calculation as provisional idealized context; "
+            "do not apply it to frictional motion or execute another operation unless a later authority boundary is reached."
+            if is_physics_fixture
+            else "Retain the controlled hypothetical fixture result as provisional context and keep live evidence unresolved; "
             "do not execute another operation unless a later authority boundary is reached."
         ),
     }
@@ -3196,10 +3204,17 @@ def _apply_controlled_fixture_problem_state_update(
         "selection_status": "selected_record_only",
         "status": "selected_record_only",
         "selection_reason": (
-            "The controlled fixture refinement updated the objective-local posture while live evidence remains unresolved; "
+            "The controlled frictionless-incline calculation refined objective-local posture while remaining an idealized model; "
+            "one non-executing continuation was selected for later authority-aware handling."
+            if is_physics_fixture
+            else "The controlled fixture refinement updated the objective-local posture while live evidence remains unresolved; "
             "one non-executing continuation was selected for later authority-aware handling."
         ),
-        "selected_next_operation": "retain_fixture_context_and_wait_for_later_evidence_authority",
+        "selected_next_operation": (
+            "retain_frictionless_incline_calculation_and_wait_for_later_authority"
+            if is_physics_fixture
+            else "retain_fixture_context_and_wait_for_later_evidence_authority"
+        ),
         "selection_scope": "record_only",
         "may_execute_now": False,
         "source_evidence_minimal_fixture_result_id": fixture_result_id,
@@ -3222,7 +3237,11 @@ def _apply_controlled_fixture_problem_state_update(
             "internal_work_candidate_id": candidate_id,
             "refinement_id": refinement_id,
             "source_evidence_minimal_fixture_result_id": fixture_result_id,
-            "problem_state_status": "fixture_refined_live_evidence_still_unresolved",
+            "problem_state_status": (
+                "fixture_refined_frictionless_incline_calculation_recorded"
+                if is_physics_fixture
+                else "fixture_refined_live_evidence_still_unresolved"
+            ),
             "at": utc_now(),
         },
         {

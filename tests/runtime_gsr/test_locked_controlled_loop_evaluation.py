@@ -22,7 +22,7 @@ FINANCE = "My account is 70% aggressive tech funds, 20% cash, and 10% small-cap 
 FINANCE_MALFORMED = "My account is 70% aggressive tech funds and 20% cash. I am worried about AI stocks dropping over six months."
 CYBER = "A request parameter is appended into a SQL command before execution."
 OPERATIONS = "Invoice #331 is overdue 45 days. Crew A cannot start the Jackson job until the pump is delivered."
-PHYSICS = "A 10 kg cart rolls down a 30 degree ramp, and I want to understand its acceleration."
+PHYSICS = "A 5 kg block slides down a frictionless 30-degree incline. I want the acceleration."
 
 
 def _send(state, text, root):
@@ -72,6 +72,18 @@ def _plan_ready_state(root, scenario=FINANCE, clarification="Assume losing more 
 def _closed_loop_state(root, **kwargs):
     ready = _plan_ready_state(root, **kwargs)
     return _send(ready.state, "Yes, record this bounded plan.", root)
+
+
+def _physics_closed_loop_state(root):
+    state = start_or_restore_runtime(root)
+    started = _send(state, GOAL, root)
+    framed = _send(started.state, PHYSICS, root)
+    refined = _send(framed.state, "A numeric result is most useful.", root)
+    granted = _send(refined.state, "Yes, but only a local fixture.", root)
+    accepted = _send(granted.state, "Yes, keep that proposal ready.", root)
+    authority = _send(accepted.state, "Yes, record approval for a future bounded execution gate.", root)
+    assert authority.state.pending_chat_requests[0].request_type == "evidence_fixture_execution_plan"
+    return _send(authority.state, "Yes, record this bounded plan.", root)
 
 
 def _controlled_refinement(state):
@@ -169,20 +181,18 @@ def test_cyb_01_records_only_blocked_owned_fixture_boundary(tmp_path):
     _assert_no_positive_completion(result.state)
 
 
-def test_phy_01_unsupported_physics_creates_no_generic_execution_path(tmp_path):
-    state = start_or_restore_runtime(tmp_path)
-    started = _send(state, GOAL, tmp_path)
-    result = _send(started.state, PHYSICS, tmp_path)
+def test_phy_01_positive_physics_completion_is_source_bound(tmp_path):
+    graph_before = _graph_snapshot(tmp_path)
+    result = _physics_closed_loop_state(tmp_path)
+    fixture = _record(result.state, "evidence_minimal_fixture_results")
+    refinement = _controlled_refinement(result.state)
+    selection = _controlled_selection(result.state, refinement)
 
-    for key in (
-        "evidence_fixture_execution_plans",
-        "evidence_fixture_dry_run_results",
-        "evidence_result_ingestion_candidates",
-        "evidence_analysis_revision_candidates",
-        "evidence_minimal_fixture_results",
-        "internal_work_selections",
-    ):
-        assert not _records(result.state, key)
+    assert fixture["fixture_kind"] == "in_memory_frictionless_thirty_degree_incline_calculation"
+    assert "4.9 m/s^2" in fixture["deterministic_output"]
+    assert refinement["changed_unknown_slots"] == ("physics.frictionless_thirty_degree_calculation",)
+    assert selection["selected_next_operation"] == "retain_frictionless_incline_calculation_and_wait_for_later_authority"
+    assert _graph_snapshot(tmp_path) == graph_before
 
 
 def test_chat_01_ordinary_question_leaves_surfaced_plan_unchanged(tmp_path):
