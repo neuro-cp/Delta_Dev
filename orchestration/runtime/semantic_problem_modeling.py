@@ -135,6 +135,7 @@ class SemanticProblemCompilation:
                 else None
             ),
             "action_affordances": tuple(item.as_record() for item in self.action_affordances),
+            "capability_route_candidate": _compile_capability_route_candidate(frame),
             "summary": self.summary,
             "compiler_version": SCHEMA_VERSION,
         }
@@ -367,6 +368,120 @@ def render_semantic_problem_recall(record: Mapping[str, Any], *, focus: str) -> 
 
 def _frame_id(scope: str, domain: str, source: str) -> str:
     return stable_id("semantic-input-frame", scope, SCHEMA_VERSION, domain, " ".join(source.lower().split()))
+
+
+def _compile_capability_route_candidate(frame: Mapping[str, Any]) -> Mapping[str, Any]:
+    """Project one frame onto an existing safe capability boundary.
+
+    This is a deterministic annotation of the semantic frame, not a capability
+    manager or execution record. The conversational runtime persists the frame
+    exactly once, which keeps the candidate source-bound and restart-safe.
+    """
+
+    frame_id = str(frame.get("frame_id") or "")
+    source_text = str(frame.get("source_text") or "")
+    domain = str(frame.get("domain_guess") or "")
+    common_forbidden = (
+        "No model, provider, tool, network, sandbox, filesystem, or external action.",
+        "No graph truth mutation, review, admission, planner, scheduler, or worker.",
+        "No automatic authority, approval request, or route execution.",
+    )
+    specifications: dict[str, tuple[str, str, str, tuple[str, ...], tuple[str, ...]]] = {
+        "finance_portfolio_risk": (
+            "finance_controlled_fixture",
+            "eligible",
+            "The source-bound portfolio frame can use the existing controlled finance fixture path only after the existing evidence, authority, and accepted-plan boundaries.",
+            ("existing evidence permission, authorization, proposal, execution authority, and accepted plan",),
+            common_forbidden + ("No market lookup, account access, trade, or financial recommendation execution.",),
+        ),
+        "physics_mechanics": (
+            "physics_deterministic_calculation",
+            "eligible",
+            "The source-bound frictionless incline frame can use the existing deterministic physics calculation path only after the existing accepted-plan boundary.",
+            ("existing evidence permission, authorization, proposal, execution authority, and accepted plan",),
+            common_forbidden + ("No experimental measurement or frictional-motion inference.",),
+        ),
+        "physics_equation_model": (
+            "physics_deterministic_calculation",
+            "clarify",
+            "The equation model is safe to frame, but the existing deterministic evaluator requires a recorded frictionless 30-degree incline rather than a generic equation explanation.",
+            ("a recorded frictionless 30-degree incline before the existing calculation path is eligible",),
+            common_forbidden + ("No unsupported numeric calculation is inferred from a generic equation frame.",),
+        ),
+        "operations_logistics_receivables": (
+            "operations_blocked_external_dependency",
+            "blocked",
+            "The frame identifies an external payment and delivery dependency, but the existing boundary forbids contact, scheduling, payment, or status claims.",
+            ("explicit later authority for any external communication or status source",),
+            common_forbidden + ("No customer, supplier, payment, scheduling, or status action.",),
+        ),
+        "defensive_cybersecurity": (
+            "defensive_cyber_blocked_file_or_scan_boundary",
+            "blocked",
+            "The frame supports defensive source-to-sink interpretation only; owned-fixture file reads or scans remain separately blocked.",
+            ("explicit later authority for a bounded owned-fixture inspection",),
+            common_forbidden + ("No payload, exploit, scan, repository read, local file read, or execution.",),
+        ),
+        "health_information_safety": (
+            "health_info_safe_response",
+            "clarify",
+            "The frame supports non-diagnostic symptom and escalation-context clarification only.",
+            (),
+            common_forbidden + ("No diagnosis certainty, prescription, or evidence execution.",),
+        ),
+        "legal_financial_risk_information": (
+            "legal_financial_risk_safe_response",
+            "clarify",
+            "The frame supports non-advisory document and jurisdiction-gap clarification only.",
+            (),
+            common_forbidden + ("No legal-advice certainty, records access, or evidence execution.",),
+        ),
+        "generic_source_bound_problem": (
+            "generic_structured_problem",
+            "clarify",
+            "The source has a structured issue and uncertainty, but it does not justify a specialist capability route.",
+            (),
+            common_forbidden + ("No specialist route, inferred cause, owner, remedy, or execution.",),
+        ),
+    }
+    route_name, decision, rationale, required_authority, forbidden_actions = specifications.get(
+        domain,
+        (
+            "unsupported_source_bound_frame",
+            "unsupported",
+            "The source-bound frame has no supported deterministic capability route.",
+            (),
+            common_forbidden,
+        ),
+    )
+    source_spans = tuple(
+        dict(item)
+        for item in frame.get("source_spans", ())
+        if isinstance(item, Mapping)
+    )
+    candidate_id = stable_id(
+        "semantic-frame-capability-route",
+        frame_id,
+        domain,
+        route_name,
+        decision,
+    )
+    return {
+        "capability_route_candidate_id": candidate_id,
+        "record_kind": "semantic_frame_capability_route_candidate",
+        "source_frame_id": frame_id,
+        "source_text": source_text,
+        "source_span_refs": source_spans,
+        "domain": domain,
+        "route_name": route_name,
+        "decision": decision,
+        "rationale": rationale,
+        "required_authority_if_any": required_authority,
+        "forbidden_actions": forbidden_actions,
+        "may_execute_now": False,
+        "status": "deterministic_route_candidate_only",
+        "schema_version": SCHEMA_VERSION,
+    }
 
 
 def _problem_model_id(frame_id: str, problem_type: str) -> str:
