@@ -19,6 +19,7 @@ from urllib.request import ProxyHandler, Request, build_opener
 
 
 ALLOWED_ACTION_TYPES = {
+    "list_files",
     "read_file",
     "write_file",
     "run_command",
@@ -27,7 +28,7 @@ ALLOWED_ACTION_TYPES = {
     "start_service",
     "stop_service",
 }
-PROTECTED_MARKERS = ("DELTA-75", "live_competence_adapter.py", "reports/RC2_", ".git", ".delta_mission")
+PROTECTED_MARKERS = ("DELTA-75", "live_competence_adapter.py", "reports/RC2_", ".git", ".delta_mission", "hidden_evaluator", "sensitive.txt")
 
 
 def _stable_id(prefix: str, *parts: object) -> str:
@@ -234,7 +235,7 @@ class SandboxActionAdapter:
         requested_by: str,
     ) -> tuple[SandboxActionRequest, str]:
         normalized_target = str(target or "")
-        if action_type in {"read_file", "write_file", "read_log", "run_command", "start_service", "stop_service"}:
+        if action_type in {"list_files", "read_file", "write_file", "read_log", "run_command", "start_service", "stop_service"}:
             path, error = self._fixture_path(target or ".")
             normalized_target = str(path) if path is not None else str(target or "")
             if error:
@@ -309,6 +310,8 @@ class SandboxActionAdapter:
             return False, "sandbox_boundary_denied", request.normalized_target.split(":", 2)[1]
         if request.action_type == "run_command" and not self._allowed_command(payload):
             return False, "command_not_on_fixture_allowlist", "command_allowlist"
+        if request.action_type == "write_file" and payload.get("_controller_precondition_denial"):
+            return False, "mission_stage_precondition_denied", str(payload["_controller_precondition_denial"])
         if request.action_type in {"start_service", "stop_service"} and request.target not in {"", ".", "app.py"}:
             return False, "service_target_must_be_fixture_app", "service_target"
         if request.action_type == "http_request" and str(payload.get("method") or "GET").upper() != "GET":
@@ -330,6 +333,21 @@ class SandboxActionAdapter:
                 assert path is not None
                 text = path.read_text(encoding="utf-8")
                 return self._receipt(request, decision, replay_key, status="completed", stdout=text)
+            if request.action_type == "list_files":
+                path, _ = self._fixture_path(request.target or ".")
+                assert path is not None
+                if not path.is_dir():
+                    return self._receipt(request, decision, replay_key, status="failed", stderr="list_files_target_is_not_directory")
+                rows = []
+                for child in sorted(path.rglob("*")):
+                    if len(rows) >= 80:
+                        rows.append("... truncated ...")
+                        break
+                    relative = child.relative_to(self.fixture_root).as_posix()
+                    if any(marker.lower() in relative.lower() for marker in PROTECTED_MARKERS):
+                        continue
+                    rows.append(relative + ("/" if child.is_dir() else ""))
+                return self._receipt(request, decision, replay_key, status="completed", stdout="\n".join(rows))
             if request.action_type == "read_log":
                 path, _ = self._fixture_path(request.target or "service.log")
                 assert path is not None
