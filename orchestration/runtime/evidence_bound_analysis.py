@@ -29,6 +29,7 @@ EVIDENCE_FIXTURE_EXECUTION_PLAN_SCHEMA_VERSION = "evidence_bound_fixture_executi
 EVIDENCE_FIXTURE_DRY_RUN_SCHEMA_VERSION = "evidence_bound_fixture_dry_run_result_v1"
 EVIDENCE_RESULT_INGESTION_CANDIDATE_SCHEMA_VERSION = "evidence_bound_result_ingestion_candidate_v1"
 EVIDENCE_ANALYSIS_REVISION_CANDIDATE_SCHEMA_VERSION = "evidence_bound_analysis_revision_candidate_v1"
+EVIDENCE_MINIMAL_FIXTURE_RESULT_SCHEMA_VERSION = "evidence_bound_minimal_fixture_result_v1"
 
 
 @dataclass(frozen=True)
@@ -299,6 +300,8 @@ class AnalysisRefinement:
     created_event_id: str
     restart_summary: str
     schema_version: str = QUESTION_LOOP_SCHEMA_VERSION
+    source_evidence_minimal_fixture_result_id: str = ""
+    source_evidence_analysis_revision_candidate_id: str = ""
 
     def as_record(self) -> dict[str, Any]:
         record = asdict(self)
@@ -549,6 +552,51 @@ class EvidenceFixtureDryRunResult:
         record["limitations"] = list(self.limitations)
         record["blocked_actions"] = list(self.blocked_actions)
         record["record_kind"] = "evidence_fixture_dry_run_result"
+        return record
+
+
+@dataclass(frozen=True)
+class EvidenceMinimalFixtureResult:
+    """One bounded in-memory fixture result under an accepted execution plan.
+
+    This is the first intentionally small execution boundary. It can use only
+    static fixture values and already-recorded objective context; it cannot
+    inspect a repository, local files, network, model, provider, tool, or
+    sandbox. The result is still provisional and requires the existing
+    analysis-refinement owner before it can affect objective-local posture.
+    """
+
+    evidence_minimal_fixture_result_id: str
+    source_plan_id: str
+    source_execution_authority_id: str
+    source_proposal_id: str
+    source_evidence_request_id: str
+    source_evidence_authorization_id: str
+    source_analysis_id: str
+    source_evidence_analysis_revision_candidate_id: str
+    source_internal_work_candidate_id: str
+    objective_id: str
+    fixture_kind: str
+    deterministic_input_digest: str
+    deterministic_input_summary: str
+    deterministic_output: str
+    limitations: tuple[str, ...]
+    blocked_actions: tuple[str, ...]
+    proof_summary: str
+    may_update_analysis: bool
+    may_update_problem_state: bool
+    may_update_graph: bool
+    requires_analysis_refinement_gate: bool
+    status: str
+    created_event_id: str
+    restart_summary: str
+    schema_version: str = EVIDENCE_MINIMAL_FIXTURE_RESULT_SCHEMA_VERSION
+
+    def as_record(self) -> dict[str, Any]:
+        record = asdict(self)
+        record["limitations"] = list(self.limitations)
+        record["blocked_actions"] = list(self.blocked_actions)
+        record["record_kind"] = "evidence_minimal_fixture_result"
         return record
 
 
@@ -1833,6 +1881,271 @@ def render_evidence_fixture_dry_run_result(result: Mapping[str, Any]) -> str:
             f"Proof summary: {str(result.get('proof_summary') or '')}",
             "Blocked actions: " + ("; ".join(blocked) if blocked else "No execution, file read, network, model, provider, tool, sandbox, graph, review, admission, analysis update, or external action."),
             "Result boundary: may_update_analysis=false; may_update_graph=false; requires_result_ingestion_gate=true.",
+        )
+    )
+
+
+def compile_evidence_minimal_fixture_results(
+    plan: Mapping[str, Any],
+    *,
+    objective_id: str,
+    source_analysis: Mapping[str, Any],
+    source_revision_candidate: Mapping[str, Any] | None = None,
+    source_internal_work_candidate: Mapping[str, Any] | None = None,
+) -> tuple[EvidenceMinimalFixtureResult, ...]:
+    """Compile the first bounded fixture result from recorded objective data.
+
+    The only supported fixture deliberately stays narrow: a predeclared
+    hypothetical portfolio stress table. Its weights come from the already
+    recorded source analysis; its stress values are static fixture constants.
+    No lookup, file read, model, tool, provider, sandbox, or external action is
+    available from this helper.
+    """
+
+    plan_id = str(plan.get("evidence_fixture_execution_plan_id") or "")
+    authority_id = str(plan.get("source_evidence_execution_authority_id") or "")
+    proposal_id = str(plan.get("source_evidence_next_operation_proposal_id") or "")
+    evidence_request_id = str(plan.get("source_evidence_request_id") or "")
+    evidence_authorization_id = str(plan.get("source_evidence_authorization_id") or "")
+    source_analysis_id = str(source_analysis.get("analysis_id") or "")
+    if not all((objective_id, plan_id, authority_id, proposal_id, evidence_request_id, evidence_authorization_id, source_analysis_id)):
+        return ()
+    if str(plan.get("status") or "") not in {"accepted_pending_execution_gate", "accepted", "approved"}:
+        return ()
+    if bool(plan.get("may_execute_now")) or not bool(plan.get("execution_requires_future_gate")):
+        return ()
+    if str(plan.get("evidence_source_class") or "") != "market_source_context_plan_only":
+        return ()
+    if str(plan.get("proposed_operation_type") or "") != "finance_market_context_proposal_only":
+        return ()
+    if str(source_analysis.get("domain") or "") != "finance_portfolio_risk":
+        return ()
+
+    revision_candidate = dict(source_revision_candidate or {})
+    revision_id = str(revision_candidate.get("evidence_analysis_revision_candidate_id") or "")
+    if revision_candidate and str(revision_candidate.get("source_analysis_id") or "") != source_analysis_id:
+        return ()
+    internal_candidate = dict(source_internal_work_candidate or {})
+    internal_id = str(internal_candidate.get("internal_work_candidate_id") or "")
+    if internal_candidate and revision_id and str(internal_candidate.get("source_evidence_analysis_revision_candidate_id") or "") != revision_id:
+        return ()
+
+    fixture = _minimal_portfolio_fixture(source_analysis)
+    if fixture is None:
+        return ()
+    input_payload = {
+        "plan_id": plan_id,
+        "objective_id": objective_id,
+        "source_analysis_id": source_analysis_id,
+        "source_revision_candidate_id": revision_id,
+        "source_internal_work_candidate_id": internal_id,
+        "weights": fixture["weights"],
+        "stress_values": fixture["stress_values"],
+    }
+    input_digest = _canonical_digest(input_payload)
+    result_id = stable_id(
+        "analysis-evidence-minimal-fixture-result",
+        objective_id,
+        plan_id,
+        source_analysis_id,
+        revision_id,
+        internal_id,
+        input_digest,
+    )
+    weighted_drawdown = sum(
+        float(weight) * float(stress)
+        for weight, stress in zip(fixture["weights"], fixture["stress_values"])
+    )
+    percent = f"{weighted_drawdown * 100:.1f}%"
+    weight_summary = ", ".join(f"{weight * 100:.0f}%" for weight in fixture["weights"])
+    stress_summary = ", ".join(f"{stress * 100:.0f}%" for stress in fixture["stress_values"])
+    blocked_actions = (
+        "No repository file read.",
+        "No local filesystem read.",
+        "No network or external source lookup.",
+        "No model, provider, or tool call.",
+        "No sandbox command execution.",
+        "No source mutation.",
+        "No graph truth mutation, review, admission, answer finalization, worker, scheduler, or external action.",
+    )
+    return (
+        EvidenceMinimalFixtureResult(
+            evidence_minimal_fixture_result_id=result_id,
+            source_plan_id=plan_id,
+            source_execution_authority_id=authority_id,
+            source_proposal_id=proposal_id,
+            source_evidence_request_id=evidence_request_id,
+            source_evidence_authorization_id=evidence_authorization_id,
+            source_analysis_id=source_analysis_id,
+            source_evidence_analysis_revision_candidate_id=revision_id,
+            source_internal_work_candidate_id=internal_id,
+            objective_id=objective_id,
+            fixture_kind="in_memory_hypothetical_portfolio_drawdown_table",
+            deterministic_input_digest=input_digest,
+            deterministic_input_summary=(
+                f"Recorded portfolio weights: {weight_summary}. "
+                f"Predeclared fixture stress values: {stress_summary}."
+            ),
+            deterministic_output=(
+                f"The in-memory hypothetical table computes a weighted drawdown of {percent} "
+                "under the predeclared fixture stresses. This is a local scenario calculation, not a forecast or live-market observation."
+            ),
+            limitations=(
+                "The stress values are static fixture inputs rather than observed market data.",
+                "No current prices, correlations, account constraints, taxes, or holdings detail were read.",
+                "The result is not investment advice or a trading instruction.",
+                "A separate controlled analysis-refinement transition is required before this result can affect objective-local posture.",
+            ),
+            blocked_actions=blocked_actions,
+            proof_summary=(
+                "Computed only from already-recorded allocation weights and predeclared in-memory fixture stresses; "
+                "no external source, filesystem, model, provider, tool, sandbox, graph, review, admission, or worker was used."
+            ),
+            may_update_analysis=False,
+            may_update_problem_state=False,
+            may_update_graph=False,
+            requires_analysis_refinement_gate=True,
+            status="minimal_fixture_completed",
+            created_event_id=stable_id("analysis-evidence-minimal-fixture-result-event", result_id),
+            restart_summary=(
+                "The bounded in-memory fixture result persists exactly once from an accepted plan and recorded source analysis; "
+                "it remains provisional until the controlled existing-refinement transition records its local effect."
+            ),
+        ),
+    )
+
+
+def _minimal_portfolio_fixture(source_analysis: Mapping[str, Any]) -> Mapping[str, tuple[float, ...]] | None:
+    """Return static fixture inputs only for a complete three-sleeve source record."""
+
+    source_text = str(source_analysis.get("source_text") or "")
+    weights = tuple(float(item) / 100.0 for item in re.findall(r"(?<!\d)(\d+(?:\.\d+)?)\s*%", source_text))
+    if len(weights) < 3:
+        return None
+    selected_weights = weights[:3]
+    if not math.isclose(sum(selected_weights), 1.0, rel_tol=0.0, abs_tol=0.001):
+        return None
+    return {
+        "weights": selected_weights,
+        "stress_values": (-0.15, 0.0, -0.08),
+    }
+
+
+def render_evidence_minimal_fixture_result(result: Mapping[str, Any]) -> str:
+    """Render the bounded fixture result without overstating its authority."""
+
+    limitations = tuple(str(item) for item in result.get("limitations", ()) if str(item))
+    return "\n".join(
+        (
+            "Controlled in-memory fixture result recorded.",
+            f"Fixture result: {str(result.get('evidence_minimal_fixture_result_id') or '')}",
+            f"Source plan: {str(result.get('source_plan_id') or '')}",
+            f"Fixture: {str(result.get('fixture_kind') or '').replace('_', ' ')}",
+            f"Inputs: {str(result.get('deterministic_input_summary') or '')}",
+            f"Result: {str(result.get('deterministic_output') or '')}",
+            "Limits: " + ("; ".join(limitations) if limitations else "Fixture-only result."),
+            f"Proof: {str(result.get('proof_summary') or '')}",
+            "Status: provisional fixture result only. It has not changed graph truth, review, admission, an answer, or any external system.",
+        )
+    )
+
+
+def compile_controlled_fixture_analysis_refinement(
+    analysis: Mapping[str, Any],
+    fixture_result: Mapping[str, Any],
+    *,
+    source_evidence_request: Mapping[str, Any],
+) -> AnalysisRefinement | None:
+    """Reuse the canonical append-only refinement record for one fixture result."""
+
+    source_analysis_id = str(analysis.get("analysis_id") or "")
+    fixture_result_id = str(fixture_result.get("evidence_minimal_fixture_result_id") or "")
+    evidence_request_id = str(source_evidence_request.get("evidence_permission_request_id") or source_evidence_request.get("evidence_request_id") or "")
+    if not source_analysis_id or not fixture_result_id or not evidence_request_id:
+        return None
+    if str(fixture_result.get("source_analysis_id") or "") != source_analysis_id:
+        return None
+    if str(fixture_result.get("status") or "") != "minimal_fixture_completed":
+        return None
+    if bool(fixture_result.get("may_update_analysis")) or bool(fixture_result.get("may_update_problem_state")) or bool(fixture_result.get("may_update_graph")):
+        return None
+    if not bool(fixture_result.get("requires_analysis_refinement_gate")):
+        return None
+    if str(source_evidence_request.get("source_analysis_id") or "") != source_analysis_id:
+        return None
+
+    source_question_id = str(source_evidence_request.get("source_question_candidate_id") or evidence_request_id)
+    source_answer_id = str(source_evidence_request.get("source_question_answer_id") or "")
+    binding_key = "|".join(("controlled_fixture", evidence_request_id, fixture_result_id))
+    before_summary = str(analysis.get("result_summary") or "The source-bound analysis remains available.")
+    fixture_output = str(fixture_result.get("deterministic_output") or "")
+    after_summary = (
+        f"{before_summary} Controlled fixture addition: {fixture_output} "
+        "The live-data and correlation gap remains unresolved, so this only sharpens the stated hypothetical scenario."
+    )
+    remaining_uncertainty = tuple(
+        dict.fromkeys(
+            (
+                *(str(item) for item in analysis.get("uncertainty", ()) if str(item)),
+                *(str(item) for item in fixture_result.get("limitations", ()) if str(item)),
+            )
+        )
+    )
+    safe_next_actions = tuple(
+        dict.fromkeys(
+            (
+                *(str(item.get("action") or "") for item in analysis.get("safe_next_actions", ()) if isinstance(item, Mapping) and str(item.get("action") or "")),
+                "Keep the live-data and correlation uncertainty open; use the fixture only as a bounded hypothetical comparison.",
+            )
+        )
+    )
+    prohibited_actions = tuple(
+        dict.fromkeys(
+            (
+                *(str(item) for item in analysis.get("prohibited_actions", ()) if str(item)),
+                *(str(item) for item in fixture_result.get("blocked_actions", ()) if str(item)),
+                "Do not treat this fixture output as current market evidence, a forecast, investment advice, or a trade instruction.",
+            )
+        )
+    )
+    refinement_id = stable_id("evidence-bound-analysis-refinement", source_analysis_id, fixture_result_id)
+    return AnalysisRefinement(
+        refinement_id=refinement_id,
+        source_analysis_id=source_analysis_id,
+        source_frame_id=str(analysis.get("source_frame_id") or ""),
+        source_question_id=source_question_id,
+        source_answer_id=source_answer_id,
+        question_binding_key=binding_key,
+        changed_unknown_slots=("finance.hypothetical_fixture_scenario",),
+        before_summary=before_summary,
+        after_summary=after_summary,
+        changed_fields=("controlled_fixture_result", "hypothetical_drawdown_check"),
+        remaining_uncertainty=remaining_uncertainty,
+        safe_next_actions=safe_next_actions,
+        prohibited_actions=prohibited_actions,
+        status="controlled_fixture_refinement",
+        created_event_id=stable_id("evidence-bound-analysis-refinement-event", refinement_id),
+        restart_summary=(
+            "Append-only source-bound refinement created from one bounded in-memory fixture result; "
+            "the original analysis remains intact and graph truth, review, admission, answer finalization, and external action remain unchanged."
+        ),
+        source_evidence_minimal_fixture_result_id=fixture_result_id,
+        source_evidence_analysis_revision_candidate_id=str(
+            fixture_result.get("source_evidence_analysis_revision_candidate_id") or ""
+        ),
+    )
+
+
+def render_controlled_fixture_analysis_refinement(refinement: Mapping[str, Any]) -> str:
+    """Render the result-driven refinement distinctly from an operator answer."""
+
+    uncertainty = tuple(str(item) for item in refinement.get("remaining_uncertainty", ()) if str(item))
+    return "\n".join(
+        (
+            "I appended the controlled fixture result to the existing source-bound analysis.",
+            f"What changed: {str(refinement.get('after_summary') or '')}",
+            "Still uncertain: " + ("; ".join(uncertainty) if uncertainty else "No additional uncertainty was recorded."),
+            "Status: provisional, append-only refinement. The original analysis remains preserved; this did not create graph truth, review, admission, a final answer, or external action.",
         )
     )
 
@@ -3214,6 +3527,7 @@ __all__ = [
     "EvidenceExecutionAuthorityRecord",
     "EvidenceFixtureDryRunResult",
     "EvidenceFixtureExecutionPlan",
+    "EvidenceMinimalFixtureResult",
     "EvidenceNextOperationProposal",
     "EvidencePermissionRequest",
     "EvidenceResultIngestionCandidate",
@@ -3222,6 +3536,7 @@ __all__ = [
     "EVIDENCE_ANALYSIS_REVISION_CANDIDATE_SCHEMA_VERSION",
     "EVIDENCE_FIXTURE_DRY_RUN_SCHEMA_VERSION",
     "EVIDENCE_FIXTURE_EXECUTION_PLAN_SCHEMA_VERSION",
+    "EVIDENCE_MINIMAL_FIXTURE_RESULT_SCHEMA_VERSION",
     "EVIDENCE_NEXT_OPERATION_SCHEMA_VERSION",
     "EVIDENCE_PERMISSION_SCHEMA_VERSION",
     "EVIDENCE_RESULT_INGESTION_CANDIDATE_SCHEMA_VERSION",
@@ -3235,11 +3550,13 @@ __all__ = [
     "classify_evidence_next_operation_operator_response",
     "classify_evidence_permission_operator_response",
     "compile_analysis_revision_internal_work_candidates",
+    "compile_controlled_fixture_analysis_refinement",
     "compile_evidence_analysis_revision_candidates",
     "compile_evidence_bound_analysis",
     "compile_evidence_execution_authority_records",
     "compile_evidence_fixture_dry_run_results",
     "compile_evidence_fixture_execution_plans",
+    "compile_evidence_minimal_fixture_results",
     "compile_evidence_next_operation_proposals",
     "compile_evidence_permission_requests",
     "compile_evidence_result_ingestion_candidates",
@@ -3254,12 +3571,14 @@ __all__ = [
     "render_evidence_fixture_dry_run_result",
     "render_evidence_fixture_execution_plan",
     "render_evidence_fixture_execution_plan_update",
+    "render_evidence_minimal_fixture_result",
     "render_evidence_next_operation_disposition",
     "render_evidence_next_operation_proposal",
     "render_evidence_next_operation_recall",
     "render_evidence_result_ingestion_candidate",
     "render_evidence_permission_recall",
     "render_evidence_permission_request",
+    "render_controlled_fixture_analysis_refinement",
     "render_internal_work_disposition",
     "render_internal_work_proposal",
     "render_internal_work_recall",

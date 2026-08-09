@@ -110,12 +110,16 @@ def test_revision_candidate_routes_blocked_lookup_file_and_contact_cases(tmp_pat
     assert "external contact" in ops_route["unresolved_label"]
 
 
-def test_adapter_does_not_append_refinement_update_analysis_or_change_answer(tmp_path):
+def test_adapter_route_preserves_boundary_until_controlled_fixture_follow_on(tmp_path):
     result = _adapter_state(tmp_path)
     revision, routed = _routed_internal_candidate(result.state)
     blocked = " ".join(routed["prohibited_actions"]).lower()
+    refinements = _records(result.state, "analysis_refinements")
 
-    assert len(_records(result.state, "analysis_refinements")) == 1
+    assert len(refinements) == 2
+    fixture_refinement = refinements[-1]
+    assert fixture_refinement["status"] == "controlled_fixture_refinement"
+    assert fixture_refinement["source_evidence_minimal_fixture_result_id"]
     assert revision["may_append_refinement"] is False
     assert revision["may_update_analysis"] is False
     assert revision["may_update_problem_state"] is False

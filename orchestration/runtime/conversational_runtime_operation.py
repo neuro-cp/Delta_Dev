@@ -66,9 +66,11 @@ from orchestration.runtime.evidence_bound_analysis import (
     compile_evidence_analysis_revision_candidates,
     compile_evidence_bound_analysis,
     compile_analysis_refinement,
+    compile_controlled_fixture_analysis_refinement,
     compile_evidence_execution_authority_records,
     compile_evidence_fixture_dry_run_results,
     compile_evidence_fixture_execution_plans,
+    compile_evidence_minimal_fixture_results,
     compile_evidence_next_operation_proposals,
     compile_evidence_permission_requests,
     compile_evidence_result_ingestion_candidates,
@@ -85,12 +87,14 @@ from orchestration.runtime.evidence_bound_analysis import (
     render_evidence_fixture_dry_run_result,
     render_evidence_fixture_execution_plan,
     render_evidence_fixture_execution_plan_update,
+    render_evidence_minimal_fixture_result,
     render_evidence_next_operation_disposition,
     render_evidence_next_operation_proposal,
     render_evidence_next_operation_recall,
     render_evidence_bound_analysis_question,
     render_evidence_bound_analysis_refinement,
     render_evidence_bound_analysis_refinement_recall,
+    render_controlled_fixture_analysis_refinement,
     render_evidence_permission_recall,
     render_evidence_permission_request,
     render_evidence_result_ingestion_candidate,
@@ -1391,6 +1395,18 @@ def _evidence_fixture_dry_run_results_for_objective(
     )
 
 
+def _evidence_minimal_fixture_results_for_objective(
+    objective: ConversationalObjective | None,
+) -> tuple[dict[str, Any], ...]:
+    if objective is None or not isinstance(objective.provenance, Mapping):
+        return ()
+    return tuple(
+        dict(item)
+        for item in objective.provenance.get("evidence_minimal_fixture_results", ())
+        if isinstance(item, Mapping)
+    )
+
+
 def _evidence_result_ingestion_candidates_for_objective(
     objective: ConversationalObjective | None,
 ) -> tuple[dict[str, Any], ...]:
@@ -1440,6 +1456,7 @@ def _replace_teaching_objective(
     evidence_execution_authorities: Sequence[Mapping[str, Any]] | None = None,
     evidence_fixture_execution_plans: Sequence[Mapping[str, Any]] | None = None,
     evidence_fixture_dry_run_results: Sequence[Mapping[str, Any]] | None = None,
+    evidence_minimal_fixture_results: Sequence[Mapping[str, Any]] | None = None,
     evidence_result_ingestion_candidates: Sequence[Mapping[str, Any]] | None = None,
     evidence_analysis_revision_candidates: Sequence[Mapping[str, Any]] | None = None,
     execution_constraints: Mapping[str, Any] | None = None,
@@ -1520,6 +1537,10 @@ def _replace_teaching_objective(
     if evidence_fixture_dry_run_results is not None:
         provenance["evidence_fixture_dry_run_results"] = tuple(
             dict(item) for item in evidence_fixture_dry_run_results
+        )
+    if evidence_minimal_fixture_results is not None:
+        provenance["evidence_minimal_fixture_results"] = tuple(
+            dict(item) for item in evidence_minimal_fixture_results
         )
     if evidence_result_ingestion_candidates is not None:
         provenance["evidence_result_ingestion_candidates"] = tuple(
@@ -1876,7 +1897,7 @@ def _internal_work_recall_candidate(
                 or str(item.get("candidate_id") or "") == candidate_id
             )
             and str(item.get("status") or "")
-            in {"surfaced", "selected", "accepted", "operator_deferred", "operator_dismissed", "resolved_by_answer", "answered_unknown"}
+            in {"surfaced", "selected", "selected_record_only", "accepted", "operator_deferred", "operator_dismissed", "resolved_by_answer", "answered_unknown"}
         ),
         None,
     )
@@ -2919,6 +2940,302 @@ def _route_analysis_revision_candidate_to_internal_work(
         },
     )
     return records, routed, events
+
+
+def _compile_evidence_minimal_fixture_result_lifecycle(
+    state: ConversationalRuntimeState,
+    *,
+    objective: ConversationalObjective,
+    plan: Mapping[str, Any],
+    revision_candidate: Mapping[str, Any] | None,
+    internal_work_candidate: Mapping[str, Any] | None,
+    existing_results: Sequence[Mapping[str, Any]] | None = None,
+    ignored_pending_request_id: str = "",
+) -> tuple[list[dict[str, Any]], dict[str, Any] | None, tuple[Mapping[str, Any], ...]]:
+    """Record one allowed in-memory fixture result after the full authority chain."""
+
+    records = [
+        dict(item)
+        for item in (
+            existing_results
+            if existing_results is not None
+            else _evidence_minimal_fixture_results_for_objective(objective)
+        )
+        if isinstance(item, Mapping)
+    ]
+    plan_id = str(plan.get("evidence_fixture_execution_plan_id") or "")
+    if not plan_id or any(str(item.get("source_plan_id") or "") == plan_id for item in records):
+        return records, None, ()
+    has_pending_request = any(
+        request.status == "pending"
+        and not request.consumption_count
+        and request.request_id != ignored_pending_request_id
+        for request in state.pending_chat_requests
+    )
+    if has_pending_request:
+        return records, None, (
+            {
+                "event": "evidence_minimal_fixture_result_suppressed_existing_request",
+                "objective_id": objective.objective_id,
+                "source_plan_id": plan_id,
+                "at": utc_now(),
+            },
+        )
+    evidence_request_id = str(plan.get("source_evidence_request_id") or "")
+    source_request = next(
+        (
+            item
+            for item in _evidence_permission_requests_for_objective(objective)
+            if str(item.get("evidence_permission_request_id") or item.get("evidence_request_id") or "") == evidence_request_id
+        ),
+        None,
+    )
+    source_analysis_id = str((source_request or {}).get("source_analysis_id") or "")
+    source_analysis = next(
+        (
+            item
+            for item in _evidence_bound_analyses_for_objective(objective)
+            if str(item.get("analysis_id") or "") == source_analysis_id
+        ),
+        None,
+    )
+    if not isinstance(source_request, Mapping) or not isinstance(source_analysis, Mapping):
+        return records, None, ()
+    derived = [
+        item.as_record()
+        for item in compile_evidence_minimal_fixture_results(
+            plan,
+            objective_id=objective.objective_id,
+            source_analysis=source_analysis,
+            source_revision_candidate=revision_candidate,
+            source_internal_work_candidate=internal_work_candidate,
+        )
+    ]
+    if not derived:
+        return records, None, ()
+    result = dict(derived[0])
+    records.append(result)
+    return records, result, (
+        {
+            "event": "evidence_minimal_fixture_result_recorded",
+            "objective_id": objective.objective_id,
+            "evidence_minimal_fixture_result_id": str(result.get("evidence_minimal_fixture_result_id") or ""),
+            "source_plan_id": plan_id,
+            "source_analysis_id": source_analysis_id,
+            "fixture_kind": str(result.get("fixture_kind") or ""),
+            "at": utc_now(),
+        },
+    )
+
+
+def _compile_controlled_fixture_analysis_refinement_lifecycle(
+    *,
+    objective: ConversationalObjective,
+    fixture_result: Mapping[str, Any],
+    existing_refinements: Sequence[Mapping[str, Any]] | None = None,
+) -> tuple[list[dict[str, Any]], dict[str, Any] | None, tuple[Mapping[str, Any], ...]]:
+    """Append one existing AnalysisRefinement from a bounded fixture result."""
+
+    refinements = [
+        dict(item)
+        for item in (
+            existing_refinements
+            if existing_refinements is not None
+            else _analysis_refinements_for_objective(objective)
+        )
+        if isinstance(item, Mapping)
+    ]
+    fixture_result_id = str(fixture_result.get("evidence_minimal_fixture_result_id") or "")
+    if not fixture_result_id or any(
+        str(item.get("source_evidence_minimal_fixture_result_id") or "") == fixture_result_id
+        for item in refinements
+    ):
+        return refinements, None, ()
+    source_analysis_id = str(fixture_result.get("source_analysis_id") or "")
+    source_analysis = next(
+        (
+            item
+            for item in _evidence_bound_analyses_for_objective(objective)
+            if str(item.get("analysis_id") or "") == source_analysis_id
+        ),
+        None,
+    )
+    evidence_request_id = str(fixture_result.get("source_evidence_request_id") or "")
+    source_request = next(
+        (
+            item
+            for item in _evidence_permission_requests_for_objective(objective)
+            if str(item.get("evidence_permission_request_id") or item.get("evidence_request_id") or "") == evidence_request_id
+        ),
+        None,
+    )
+    if not isinstance(source_analysis, Mapping) or not isinstance(source_request, Mapping):
+        return refinements, None, ()
+    refinement = compile_controlled_fixture_analysis_refinement(
+        source_analysis,
+        fixture_result,
+        source_evidence_request=source_request,
+    )
+    if refinement is None:
+        return refinements, None, ()
+    record = refinement.as_record()
+    refinements.append(record)
+    return refinements, record, (
+        {
+            "event": "controlled_fixture_analysis_refinement_recorded",
+            "objective_id": objective.objective_id,
+            "refinement_id": refinement.refinement_id,
+            "source_analysis_id": source_analysis_id,
+            "source_evidence_minimal_fixture_result_id": fixture_result_id,
+            "at": utc_now(),
+        },
+    )
+
+
+def _apply_controlled_fixture_problem_state_update(
+    *,
+    objective: ConversationalObjective,
+    fixture_result: Mapping[str, Any],
+    refinement: Mapping[str, Any],
+    existing_candidates: Sequence[Mapping[str, Any]] | None = None,
+    existing_selections: Sequence[Mapping[str, Any]] | None = None,
+) -> tuple[
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+    dict[str, Any] | None,
+    dict[str, Any] | None,
+    tuple[Mapping[str, Any], ...],
+]:
+    """Project a fixture refinement into existing internal-work state only.
+
+    The existing internal-work candidate remains the owner of the unresolved
+    evidence boundary. This function only records that its local posture now
+    incorporates one fixture refinement and selects one non-executing next
+    operation. It creates no request, planner, worker, or second state owner.
+    """
+
+    candidates = [
+        dict(item)
+        for item in (
+            existing_candidates
+            if existing_candidates is not None
+            else _internal_work_candidates_for_objective(objective)
+        )
+        if isinstance(item, Mapping)
+    ]
+    selections = [
+        dict(item)
+        for item in (
+            existing_selections
+            if existing_selections is not None
+            else _internal_work_selections_for_objective(objective)
+        )
+        if isinstance(item, Mapping)
+    ]
+    fixture_result_id = str(fixture_result.get("evidence_minimal_fixture_result_id") or "")
+    refinement_id = str(refinement.get("refinement_id") or "")
+    revision_candidate_id = str(fixture_result.get("source_evidence_analysis_revision_candidate_id") or "")
+    candidate_id = str(fixture_result.get("source_internal_work_candidate_id") or "")
+    if not fixture_result_id or not refinement_id or not revision_candidate_id or not candidate_id:
+        return candidates, selections, None, None, ()
+    current = next(
+        (
+            item
+            for item in candidates
+            if str(item.get("internal_work_candidate_id") or "") == candidate_id
+            and str(item.get("source_evidence_analysis_revision_candidate_id") or "") == revision_candidate_id
+        ),
+        None,
+    )
+    if not isinstance(current, Mapping):
+        return candidates, selections, None, None, ()
+    update_id = stable_id(
+        "analysis-controlled-fixture-problem-state-update",
+        objective.objective_id,
+        candidate_id,
+        refinement_id,
+        fixture_result_id,
+    )
+    selection_id = stable_id("analysis-internal-work-selection", candidate_id, refinement_id, "controlled_fixture_next_operation")
+    existing_selection = next(
+        (
+            item
+            for item in selections
+            if str(item.get("internal_work_selection_id") or "") == selection_id
+        ),
+        None,
+    )
+    if str(current.get("controlled_fixture_problem_state_update_id") or "") == update_id and isinstance(existing_selection, Mapping):
+        return candidates, selections, None, None, ()
+    updated_candidate = {
+        **dict(current),
+        "status": "selected_next_operation_recorded",
+        "latest_state_id": refinement_id,
+        "controlled_fixture_problem_state_update_id": update_id,
+        "controlled_fixture_refinement_id": refinement_id,
+        "source_evidence_minimal_fixture_result_id": fixture_result_id,
+        "problem_state_status": "fixture_refined_live_evidence_still_unresolved",
+        "next_operation_selection_id": selection_id,
+        "safe_deterministic_next_step": (
+            "Retain the controlled hypothetical fixture result as provisional context and keep live evidence unresolved; "
+            "do not execute another operation unless a later authority boundary is reached."
+        ),
+    }
+    candidates = [
+        updated_candidate if str(item.get("internal_work_candidate_id") or "") == candidate_id else item
+        for item in candidates
+    ]
+    selection = {
+        "internal_work_selection_id": selection_id,
+        "candidate_id": candidate_id,
+        "semantic_binding_key": str(current.get("semantic_binding_key") or ""),
+        "source_frame_id": str(current.get("source_frame_id") or ""),
+        "source_analysis_id": str(current.get("source_analysis_id") or ""),
+        "source_refinement_id": refinement_id,
+        "unresolved_slot_id": str(current.get("unresolved_slot_id") or ""),
+        "selection_status": "selected_record_only",
+        "status": "selected_record_only",
+        "selection_reason": (
+            "The controlled fixture refinement updated the objective-local posture while live evidence remains unresolved; "
+            "one non-executing continuation was selected for later authority-aware handling."
+        ),
+        "selected_next_operation": "retain_fixture_context_and_wait_for_later_evidence_authority",
+        "selection_scope": "record_only",
+        "may_execute_now": False,
+        "source_evidence_minimal_fixture_result_id": fixture_result_id,
+        "source_evidence_analysis_revision_candidate_id": revision_candidate_id,
+        "controlled_fixture_problem_state_update_id": update_id,
+        "created_event_id": stable_id("analysis-internal-work-selection-event", selection_id),
+        "restart_summary": (
+            "Existing internal-work selection records one next operation from an objective-local fixture refinement; "
+            "it does not execute work, create a request, start a worker or scheduler, or change graph/review state."
+        ),
+        "schema_version": "evidence_bound_internal_work_v1",
+    }
+    if not isinstance(existing_selection, Mapping):
+        selections.append(selection)
+    events: tuple[Mapping[str, Any], ...] = (
+        {
+            "event": "controlled_fixture_problem_state_updated",
+            "objective_id": objective.objective_id,
+            "controlled_fixture_problem_state_update_id": update_id,
+            "internal_work_candidate_id": candidate_id,
+            "refinement_id": refinement_id,
+            "source_evidence_minimal_fixture_result_id": fixture_result_id,
+            "problem_state_status": "fixture_refined_live_evidence_still_unresolved",
+            "at": utc_now(),
+        },
+        {
+            "event": "controlled_fixture_next_operation_selected",
+            "objective_id": objective.objective_id,
+            "internal_work_selection_id": selection_id,
+            "internal_work_candidate_id": candidate_id,
+            "selected_next_operation": selection["selected_next_operation"],
+            "may_execute_now": False,
+            "at": utc_now(),
+        },
+    )
+    return candidates, selections, updated_candidate, selection, events
 
 
 def _compile_evidence_permission_lifecycle(
@@ -9089,6 +9406,16 @@ def _resolve_evidence_fixture_execution_plan_request(
     internal_candidates = list(_internal_work_candidates_for_objective(objective))
     routed_internal_candidate: dict[str, Any] | None = None
     routed_internal_events: tuple[Mapping[str, Any], ...] = ()
+    minimal_fixture_results = list(_evidence_minimal_fixture_results_for_objective(objective))
+    minimal_fixture_result: dict[str, Any] | None = None
+    minimal_fixture_events: tuple[Mapping[str, Any], ...] = ()
+    refinements = list(_analysis_refinements_for_objective(objective))
+    controlled_fixture_refinement: dict[str, Any] | None = None
+    controlled_fixture_refinement_events: tuple[Mapping[str, Any], ...] = ()
+    internal_selections = list(_internal_work_selections_for_objective(objective))
+    problem_state_candidate: dict[str, Any] | None = None
+    next_operation_selection: dict[str, Any] | None = None
+    problem_state_events: tuple[Mapping[str, Any], ...] = ()
     if status == "accepted_pending_execution_gate":
         (
             dry_run_results,
@@ -9151,6 +9478,43 @@ def _resolve_evidence_fixture_execution_plan_request(
                             else item
                             for item in revision_candidates
                         ]
+                        (
+                            minimal_fixture_results,
+                            minimal_fixture_result,
+                            minimal_fixture_events,
+                        ) = _compile_evidence_minimal_fixture_result_lifecycle(
+                            state,
+                            objective=objective,
+                            plan=updated_plan,
+                            revision_candidate=revision_candidate,
+                            internal_work_candidate=routed_internal_candidate,
+                            existing_results=minimal_fixture_results,
+                            ignored_pending_request_id=request.request_id,
+                        )
+                        if minimal_fixture_result is not None:
+                            (
+                                refinements,
+                                controlled_fixture_refinement,
+                                controlled_fixture_refinement_events,
+                            ) = _compile_controlled_fixture_analysis_refinement_lifecycle(
+                                objective=objective,
+                                fixture_result=minimal_fixture_result,
+                                existing_refinements=refinements,
+                            )
+                            if controlled_fixture_refinement is not None:
+                                (
+                                    internal_candidates,
+                                    internal_selections,
+                                    problem_state_candidate,
+                                    next_operation_selection,
+                                    problem_state_events,
+                                ) = _apply_controlled_fixture_problem_state_update(
+                                    objective=objective,
+                                    fixture_result=minimal_fixture_result,
+                                    refinement=controlled_fixture_refinement,
+                                    existing_candidates=internal_candidates,
+                                    existing_selections=internal_selections,
+                                )
     resolved_request = replace(
         request,
         status="resolved",
@@ -9174,7 +9538,17 @@ def _resolve_evidence_fixture_execution_plan_request(
         reply = (
             f"{reply}\n\nExisting continuation path: routed to internal work candidate "
             f"{str(routed_internal_candidate.get('internal_work_candidate_id') or '')}. "
-            "No new approval request, AnalysisRefinement append, analysis update, graph mutation, review, admission, execution, worker, scheduler, or replanning started."
+            "No new approval request or second continuation owner was created."
+        )
+    if minimal_fixture_result is not None:
+        reply = f"{reply}\n\n{render_evidence_minimal_fixture_result(minimal_fixture_result)}"
+    if controlled_fixture_refinement is not None:
+        reply = f"{reply}\n\n{render_controlled_fixture_analysis_refinement(controlled_fixture_refinement)}"
+    if problem_state_candidate is not None and next_operation_selection is not None:
+        reply = (
+            f"{reply}\n\nObjective-local problem state updated: {str(problem_state_candidate.get('problem_state_status') or '')}. "
+            f"Next operation selected: {str(next_operation_selection.get('selected_next_operation') or '')}. "
+            "It is record-only and may_execute_now=false."
         )
     assistant_turn = ConversationTurn(
         turn_id=stable_id("conversation-turn", state.runtime_id, str(len(state.conversation) + 2), reply),
@@ -9202,15 +9576,24 @@ def _resolve_evidence_fixture_execution_plan_request(
         progress = progress + revision_candidate_events
     if routed_internal_events:
         progress = progress + routed_internal_events
+    if minimal_fixture_events:
+        progress = progress + minimal_fixture_events
+    if controlled_fixture_refinement_events:
+        progress = progress + controlled_fixture_refinement_events
+    if problem_state_events:
+        progress = progress + problem_state_events
     updated = _replace_state(
         state,
         active_objective=_replace_teaching_objective(
             objective,
             evidence_fixture_execution_plans=plans,
             evidence_fixture_dry_run_results=dry_run_results,
+            evidence_minimal_fixture_results=minimal_fixture_results,
             evidence_result_ingestion_candidates=ingestion_candidates,
             evidence_analysis_revision_candidates=revision_candidates,
+            analysis_refinements=refinements,
             internal_work_candidates=internal_candidates,
+            internal_work_selections=internal_selections,
         ),
         conversation=state.conversation + (user_turn, assistant_turn),
         pending_chat_requests=tuple(item for item in state.pending_chat_requests if item.request_id != request.request_id),
@@ -9226,7 +9609,15 @@ def _resolve_evidence_fixture_execution_plan_request(
             "active_objective_provenance",
             "safe_internal",
             (),
-            ("exact_fixture_execution_plan_binding", "dry_run_result_record_only", "no_execution"),
+            (
+                "exact_fixture_execution_plan_binding",
+                "dry_run_result_record_only",
+                "controlled_in_memory_fixture_result",
+                "append_only_analysis_refinement",
+                "objective_local_problem_state_update",
+                "record_only_next_operation_selection",
+                "no_external_action",
+            ),
         ),
         reply=reply,
         chat_request=resolved_request.as_record(),
