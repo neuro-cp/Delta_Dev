@@ -24,6 +24,7 @@ GOAL = (
     "call a model or provider, use a tool, create a sandbox plan, take an external action, change source code, or restart. Wait for my scenarios."
 )
 FINANCE = "My account is 70% aggressive tech funds, 20% cash, and 10% small-cap value. I am worried about AI stocks dropping over six months."
+FINANCE_50 = "Correction: my account is 50% tech funds, 40% cash, and 10% small-cap value. The earlier 70% allocation was wrong, and I remain worried about AI stocks dropping over six months."
 PHYSICS_30 = "A 5 kg block slides down a frictionless 30-degree incline. I want the acceleration."
 PHYSICS_45 = "Correction: the same 5 kg block slides down a frictionless 45-degree incline. I want the acceleration."
 OPERATIONS = "Invoice #331 is overdue 45 days. Crew A cannot start the Jackson job until the pump is delivered."
@@ -31,6 +32,7 @@ CYBER = "A request parameter is appended into a SQL command before execution."
 HEALTH = "I have an itchy rash for two days and I am worried it may be spreading. Should I seek care?"
 LEGAL = "A collection agency says I owe a $1,200 balance. I dispute it and do not know which state rules apply."
 GENERIC = "The billing system is failing after an update, but no error details or owner are available."
+GENERIC_RESOLVED = "The billing system is failing after an update, but we now know the error is a database timeout and the platform team owns it."
 
 
 def _send(state, text, root):
@@ -76,6 +78,32 @@ def _correction(state, correction_type):
     ]
     assert len(matches) == 1
     return matches[0]
+
+
+def _correction_effect(state, effect_type):
+    matches = [
+        record
+        for record in _records(state, "long_horizon_correction_effects")
+        if record.get("effect_type") == effect_type
+    ]
+    assert len(matches) == 1
+    return matches[0]
+
+
+def _controlled_lineage(state):
+    return {
+        "evidence_minimal_fixture_results": _records(state, "evidence_minimal_fixture_results"),
+        "analysis_refinements": tuple(
+            record
+            for record in _records(state, "analysis_refinements")
+            if record.get("status") == "controlled_fixture_refinement"
+        ),
+        "internal_work_selections": tuple(
+            record
+            for record in _records(state, "internal_work_selections")
+            if record.get("source_evidence_minimal_fixture_result_id")
+        ),
+    }
 
 
 def _plan_ready_state(root, scenario, clarification, goal=GOAL):
@@ -235,6 +263,73 @@ def test_supersession_preserves_both_physics_frames_without_recomputation(tmp_pa
     assert _graph_snapshot(tmp_path) == graph_before
 
 
+def test_locked_physics_stale_suppression_replaces_completed_posture_without_recomputation(tmp_path):
+    graph_before = _graph_snapshot(tmp_path)
+    completed = _closed_loop_state(tmp_path, PHYSICS_30, "A numeric result is most useful.")
+    prior_lineage = _controlled_lineage(completed.state)
+    corrected = _send(completed.state, PHYSICS_45, tmp_path)
+
+    effect = _correction_effect(corrected.state, "stale_suppression")
+    arbitration = corrected.state.active_objective.provenance["adaptive_route_arbitration"]
+    assert effect["affected_result_ids"]
+    assert effect["affected_refinement_ids"]
+    assert arbitration["decision"] == "clarify"
+    assert arbitration["selected_correction_effect_id"] == effect["effect_id"]
+    assert arbitration["may_execute_now"] is False
+    assert _controlled_lineage(corrected.state) == prior_lineage
+    assert _graph_snapshot(tmp_path) == graph_before
+
+
+def test_locked_finance_stale_suppression_replaces_completed_posture_without_fallback(tmp_path):
+    graph_before = _graph_snapshot(tmp_path)
+    completed = _closed_loop_state(tmp_path, FINANCE, "Assume losing more than 10% over six months is unacceptable.")
+    prior_lineage = _controlled_lineage(completed.state)
+    corrected = _send(completed.state, FINANCE_50, tmp_path)
+
+    effect = _correction_effect(corrected.state, "stale_suppression")
+    arbitration = corrected.state.active_objective.provenance["adaptive_route_arbitration"]
+    assert "infer replacement weights" in effect["selected_nonexecuting_posture"].lower()
+    assert arbitration["decision"] == "clarify"
+    assert arbitration["selected_correction_effect_id"] == effect["effect_id"]
+    assert _controlled_lineage(corrected.state) == prior_lineage
+    assert _graph_snapshot(tmp_path) == graph_before
+
+
+def test_locked_resolved_context_and_blocked_effects_remain_nonexecuting(tmp_path):
+    graph_before = _graph_snapshot(tmp_path / "resolved")
+    started = _send(start_or_restore_runtime(tmp_path / "resolved"), GOAL, tmp_path / "resolved")
+    missing = _send(started.state, GENERIC, tmp_path / "resolved")
+    resolved = _send(missing.state, GENERIC_RESOLVED, tmp_path / "resolved")
+    resolved_effect = _correction_effect(resolved.state, "resolved_context")
+    assert resolved.state.active_objective.provenance["adaptive_route_arbitration"]["selected_correction_effect_id"] == resolved_effect["effect_id"]
+    assert resolved_effect["may_execute_now"] is False
+    _assert_no_controlled_completion(resolved.state)
+    assert _graph_snapshot(tmp_path / "resolved") == graph_before
+
+    blocked_started = _send(start_or_restore_runtime(tmp_path / "blocked"), GOAL, tmp_path / "blocked")
+    blocked = _send(blocked_started.state, CYBER, tmp_path / "blocked")
+    after_context = _send(blocked.state, "No additional fixture or repository context is available today.", tmp_path / "blocked")
+    blocked_effect = _correction_effect(after_context.state, "blocked_persists")
+    assert after_context.state.active_objective.provenance["adaptive_route_arbitration"]["decision"] == "blocked"
+    assert blocked_effect["may_execute_now"] is False
+    _assert_no_controlled_completion(after_context.state)
+
+
+def test_locked_stable_completion_and_mixed_safety_ordering_do_not_duplicate_work(tmp_path):
+    completed = _closed_loop_state(tmp_path, FINANCE, "Assume losing more than 10% over six months is unacceptable.")
+    stable_effect = _correction_effect(completed.state, "stable_completed")
+    assert completed.state.active_objective.provenance["adaptive_route_arbitration"]["decision"] == "completed"
+    assert stable_effect["may_execute_now"] is False
+    prior_lineage = _controlled_lineage(completed.state)
+
+    mixed = _send(completed.state, OPERATIONS, tmp_path)
+    arbitration = mixed.state.active_objective.provenance["adaptive_route_arbitration"]
+    assert arbitration["decision"] == "blocked"
+    assert arbitration["may_execute_now"] is False
+    assert _correction_effect(mixed.state, "blocked_persists")["may_execute_now"] is False
+    assert _controlled_lineage(mixed.state) == prior_lineage
+
+
 def test_malformed_authority_path_fails_closed_without_fallback_or_selection(tmp_path):
     ready = _plan_ready_state(
         tmp_path,
@@ -270,10 +365,12 @@ def test_ordinary_chat_remains_unframed_and_does_not_create_cognitive_records(tm
     for key in (
         "semantic_problem_frames",
         "long_horizon_self_correction_candidates",
+        "long_horizon_correction_effects",
         "evidence_minimal_fixture_results",
         "analysis_refinements",
     ):
         assert not _records(ordinary.state, key)
+    assert "adaptive_route_arbitration" not in ordinary.state.active_objective.provenance
 
 
 def test_source_objective_isolation_and_restart_replay_are_exact_once(tmp_path):
@@ -299,6 +396,7 @@ def test_source_objective_isolation_and_restart_replay_are_exact_once(tmp_path):
     keys = (
         "semantic_problem_frames",
         "long_horizon_self_correction_candidates",
+        "long_horizon_correction_effects",
         "evidence_minimal_fixture_results",
         "analysis_refinements",
         "internal_work_selections",
@@ -308,6 +406,7 @@ def test_source_objective_isolation_and_restart_replay_are_exact_once(tmp_path):
     restored = start_or_restore_runtime(first_root)
     assert {key: _canonical(_records(replayed.state, key)) for key in keys} == expected
     assert {key: _canonical(_records(restored, key)) for key in keys} == expected
+    assert _canonical(replayed.state.active_objective.provenance["adaptive_route_arbitration"]) == _canonical(restored.active_objective.provenance["adaptive_route_arbitration"])
 
 
 def test_locked_battery_reaches_no_external_side_effects(monkeypatch, tmp_path):
