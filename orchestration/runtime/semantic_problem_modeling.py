@@ -251,6 +251,33 @@ def compile_semantic_problem_frame(
             source_type=source_type,
             roles=operations_roles,
         )
+    health_roles = _extract_health_information_roles(source)
+    if health_roles.is_complete:
+        return _compile_health_information(
+            source,
+            frame_scope_id=frame_scope_id,
+            source_turn_id=source_turn_id,
+            source_type=source_type,
+            roles=health_roles,
+        )
+    legal_roles = _extract_legal_financial_risk_roles(source)
+    if legal_roles.is_complete:
+        return _compile_legal_financial_risk_information(
+            source,
+            frame_scope_id=frame_scope_id,
+            source_turn_id=source_turn_id,
+            source_type=source_type,
+            roles=legal_roles,
+        )
+    generic_roles = _extract_generic_structured_problem_roles(source)
+    if generic_roles.is_complete:
+        return _compile_generic_structured_problem(
+            source,
+            frame_scope_id=frame_scope_id,
+            source_turn_id=source_turn_id,
+            source_type=source_type,
+            roles=generic_roles,
+        )
     return None
 
 
@@ -936,6 +963,292 @@ def _extract_portfolio_roles(source: str) -> _RoleExtraction:
 
 def _looks_like_portfolio_risk(text: str) -> bool:
     return _extract_portfolio_roles(text).is_complete
+
+
+def _extract_health_information_roles(source: str) -> _RoleExtraction:
+    symptom_match = re.search(
+        r"\b(?P<symptom>itchy\s+rash|rash|redness|warmth|swelling|drainage|fever|pain|spreading)\b",
+        source,
+        flags=re.IGNORECASE,
+    )
+    timing_match = re.search(
+        r"\b(?P<timing>(?:for|since)\s+(?:\d+|one|two|three|four|five|several)\s*(?:hours?|days?|weeks?)|(?:started|began)\s+(?:today|yesterday|\d+\s*(?:hours?|days?|weeks?)\s+ago))\b",
+        source,
+        flags=re.IGNORECASE,
+    )
+    question_match = re.search(
+        r"\b(?P<question>worried|concerned|should\s+I|whether|need(?:s)?\s+(?:care|medical|a\s+doctor)|what\s+should)\b",
+        source,
+        flags=re.IGNORECASE,
+    )
+    return _make_role_extraction(
+        "health_information_safety",
+        ("symptom_pattern", "time_course", "information_or_care_question"),
+        (
+            _role_entry(source, "symptom_pattern", symptom_match, group="symptom"),
+            _role_entry(source, "time_course", timing_match, group="timing"),
+            _role_entry(source, "information_or_care_question", question_match, group="question"),
+        ),
+    )
+
+
+def _compile_health_information(
+    source: str,
+    *,
+    frame_scope_id: str,
+    source_turn_id: str,
+    source_type: str,
+    roles: _RoleExtraction,
+) -> SemanticProblemCompilation:
+    symptom = roles.value("symptom_pattern")
+    timing = roles.value("time_course")
+    lower = source.lower()
+    escalation_flags = tuple(
+        label
+        for label, marker in (
+            ("spreading change", "spreading"),
+            ("fever", "fever"),
+            ("warmth", "warmth"),
+            ("increasing pain", "pain"),
+            ("drainage", "drainage"),
+        )
+        if marker in lower
+    )
+    frame_id = _frame_id(frame_scope_id, "health_information_safety", source)
+    limitations = (
+        "This frame organizes the reported symptoms and uncertainty; it does not diagnose a condition or prescribe treatment.",
+        "Severity, medical history, examination findings, and medication/allergy context are not supplied.",
+    )
+    uncertainty = (
+        "Whether the symptom is changing, spreading, painful, warm, draining, or accompanied by fever is not fully established.",
+        "The relevant medical history and any exposure or treatment context are not supplied.",
+    )
+    frame = SemanticInputFrame(
+        frame_id=frame_id,
+        source_turn_id=source_turn_id,
+        source_text=source,
+        source_type=source_type,
+        domain_guess="health_information_safety",
+        entities=(_entity(source, symptom, "reported_symptom"),),
+        quantities=(),
+        relationships=({"subject": symptom, "predicate": "has_reported_time_course", "object": timing},),
+        constraints=("No diagnosis is inferred from this source-bound frame.", "No treatment or prescription is proposed."),
+        goal="Organize the reported symptom, timing, uncertainty, and escalation context for an informational discussion.",
+        unknown_target="Whether the reported pattern has escalation features that warrant timely licensed clinical assessment.",
+        uncertainty=uncertainty,
+        action_relevance=("clarify symptom progression", "identify reported escalation flags", "encourage appropriate professional assessment when warranted"),
+        required_tools=(),
+        required_operator_authority=(),
+        memory_candidates=(),
+        safety_risk_class="health_information_non_diagnostic",
+        status="provisional_interpreted",
+        limitations=limitations,
+        risks=tuple(f"reported possible escalation flag: {flag}" for flag in escalation_flags) or ("reported symptoms need contextual assessment",),
+        source_spans=_merge_spans(
+            _spans(source, ((symptom, "entity"), (timing, "time_course"))),
+            roles.source_spans,
+        ),
+        **_frame_role_fields(roles),
+    )
+    model = ProblemModel(
+        problem_model_id=_problem_model_id(frame_id, "health_information_triage_boundary"),
+        frame_id=frame_id,
+        problem_type="health_information_triage_boundary",
+        domain="health_information",
+        given_information=({"reported_symptom": symptom}, {"reported_timing": timing}, {"reported_escalation_flags": escalation_flags}),
+        unknown_target=frame.unknown_target,
+        constraints=frame.constraints,
+        assumptions=("The source describes the operator's concern accurately.",),
+        candidate_methods=("symptom and timing clarification", "non-diagnostic escalation-context review"),
+        selected_method="non-diagnostic symptom-context framing",
+        why_this_method="The source supplies a symptom and time course but not enough information to establish a diagnosis.",
+        expected_output="A bounded list of missing context and reported escalation features, without diagnosis or prescription.",
+        validation_checks=("keep uncertainty explicit", "do not name a diagnosis as certain", "do not prescribe treatment"),
+        limitations=limitations,
+        status="provisional_problem_model",
+    )
+    affordances = (
+        _affordance(frame_id, "clarify health information", risk="non-diagnostic informational boundary", authority="none", expected="make missing context and reported escalation features explicit", tool="none", next_step="Clarify progression and reported escalation features, and seek licensed medical assessment when the situation appears urgent or worsening."),
+    )
+    return SemanticProblemCompilation(frame, model, None, affordances, "The source supports a non-diagnostic health-information frame: it records the symptom and timing, preserves uncertainty, and identifies reported escalation context without labeling a condition or recommending treatment.")
+
+
+def _extract_legal_financial_risk_roles(source: str) -> _RoleExtraction:
+    party_match = re.search(
+        r"\b(?P<party>collection\s+agency|debt\s+collector|creditor|lender|landlord|tenant|consumer|company)\b",
+        source,
+        flags=re.IGNORECASE,
+    )
+    claim_match = re.search(
+        r"\b(?P<claim>debt|collection|disputed\s+balance|balance|amount\s+owed|notice|invoice)\b",
+        source,
+        flags=re.IGNORECASE,
+    )
+    uncertainty_match = re.search(
+        r"\b(?P<uncertainty>dispute(?:d)?|incorrect|do\s+not\s+recognize|not\s+sure|unclear|question)\b",
+        source,
+        flags=re.IGNORECASE,
+    )
+    return _make_role_extraction(
+        "legal_financial_risk_information",
+        ("party", "claim_or_balance", "dispute_or_uncertainty"),
+        (
+            _role_entry(source, "party", party_match, group="party"),
+            _role_entry(source, "claim_or_balance", claim_match, group="claim"),
+            _role_entry(source, "dispute_or_uncertainty", uncertainty_match, group="uncertainty"),
+        ),
+    )
+
+
+def _compile_legal_financial_risk_information(
+    source: str,
+    *,
+    frame_scope_id: str,
+    source_turn_id: str,
+    source_type: str,
+    roles: _RoleExtraction,
+) -> SemanticProblemCompilation:
+    party = roles.value("party")
+    claim = roles.value("claim_or_balance")
+    uncertainty_marker = roles.value("dispute_or_uncertainty")
+    amount_match = re.search(r"\$\s*(?P<amount>\d+(?:,\d{3})*(?:\.\d{2})?)", source)
+    amount = amount_match.group("amount") if amount_match else "not supplied"
+    frame_id = _frame_id(frame_scope_id, "legal_financial_risk_information", source)
+    limitations = (
+        "This frame organizes a reported claim or dispute; it is not legal advice or a determination of liability, validity, deadlines, or rights.",
+        "Jurisdiction, governing agreement, notice dates, and complete documents are not supplied.",
+    )
+    frame = SemanticInputFrame(
+        frame_id=frame_id,
+        source_turn_id=source_turn_id,
+        source_text=source,
+        source_type=source_type,
+        domain_guess="legal_financial_risk_information",
+        entities=(_entity(source, party, "reported_party"), _entity(source, claim, "reported_claim")),
+        quantities=(_quantity(source, "reported_amount", amount, "currency", amount_match.group(0) if amount_match else ""),) if amount_match else (),
+        relationships=({"subject": party, "predicate": "asserts_or_relates_to", "object": claim},),
+        constraints=("Do not infer legal rights, deadlines, liability, or jurisdiction.", "Do not give legal advice or instruct a legal response."),
+        goal="Organize the reported parties, claim, uncertainty, documents needed, and jurisdiction gap for informational review.",
+        unknown_target="Whether the reported claim is supported by the relevant documents and what jurisdiction-specific rules or deadlines may matter.",
+        uncertainty=("The complete notice, account history, agreement, payment records, and communications are not supplied.", "The applicable jurisdiction and any response deadline are not supplied."),
+        action_relevance=("preserve and organize documents", "clarify the jurisdiction", "seek qualified legal or consumer-assistance advice when needed"),
+        required_tools=(),
+        required_operator_authority=(),
+        memory_candidates=(),
+        safety_risk_class="legal_financial_information_non_advisory",
+        status="provisional_interpreted",
+        limitations=limitations,
+        risks=("reported financial or legal consequence remains uncertain", "jurisdiction-specific requirements may materially change interpretation"),
+        source_spans=_merge_spans(
+            _spans(source, ((party, "entity"), (claim, "claim"), (amount_match.group(0) if amount_match else "", "quantity"))),
+            roles.source_spans,
+        ),
+        **_frame_role_fields(roles),
+    )
+    model = ProblemModel(
+        problem_model_id=_problem_model_id(frame_id, "legal_financial_document_review_boundary"),
+        frame_id=frame_id,
+        problem_type="legal_financial_document_review_boundary",
+        domain="legal_financial_information",
+        given_information=({"party": party}, {"claim": claim}, {"reported_amount": amount}, {"uncertainty_marker": uncertainty_marker}),
+        unknown_target=frame.unknown_target,
+        constraints=frame.constraints,
+        assumptions=("The reported party, claim, and uncertainty marker are accurately quoted from the source.",),
+        candidate_methods=("document inventory", "jurisdiction clarification", "qualified advice referral"),
+        selected_method="source-bound document and jurisdiction gap framing",
+        why_this_method="The source reports a disputed legal-financial issue but lacks the documents and jurisdiction needed for a reliable conclusion.",
+        expected_output="A list of documents, dates, and jurisdiction details to clarify without legal advice.",
+        validation_checks=("keep liability and deadlines uncertain", "name missing documents", "name the jurisdiction gap", "avoid legal advice"),
+        limitations=limitations,
+        status="provisional_problem_model",
+    )
+    affordances = (
+        _affordance(frame_id, "prepare document clarification list", risk="non-advisory legal information boundary", authority="none", expected="identify what is missing without directing a legal response", tool="none", next_step="Preserve the notice and relevant records, identify the jurisdiction and dates, and consult a qualified local resource for advice if needed."),
+    )
+    return SemanticProblemCompilation(frame, model, None, affordances, "The source supports a non-advisory legal-financial frame: it records the parties and disputed claim, keeps jurisdiction and document gaps explicit, and does not determine liability or prescribe a response.")
+
+
+def _extract_generic_structured_problem_roles(source: str) -> _RoleExtraction:
+    issue_match = re.search(
+        r"\b(?P<issue>problem|issue|failure|failing|inconsistent|delay|blocked|risk|concern|dispute|missing|unclear)\b",
+        source,
+        flags=re.IGNORECASE,
+    )
+    uncertainty_match = re.search(
+        r"\b(?P<uncertainty>unknown|unclear|uncertain|no\s+one\s+knows|no\s+\w+\s+(?:details|information|owner|deadline)|need\s+to\s+know|whether|what\s+should|how\s+can)\b",
+        source,
+        flags=re.IGNORECASE,
+    )
+    return _make_role_extraction(
+        "generic_source_bound_problem",
+        ("observed_issue", "uncertainty_or_decision_need"),
+        (
+            _role_entry(source, "observed_issue", issue_match, group="issue"),
+            _role_entry(source, "uncertainty_or_decision_need", uncertainty_match, group="uncertainty"),
+        ),
+    )
+
+
+def _compile_generic_structured_problem(
+    source: str,
+    *,
+    frame_scope_id: str,
+    source_turn_id: str,
+    source_type: str,
+    roles: _RoleExtraction,
+) -> SemanticProblemCompilation:
+    issue = roles.value("observed_issue")
+    uncertainty_marker = roles.value("uncertainty_or_decision_need")
+    frame_id = _frame_id(frame_scope_id, "generic_source_bound_problem", source)
+    limitations = (
+        "This generic frame records only the issue and uncertainty explicitly present in the source.",
+        "It does not infer a specialist domain, cause, owner, remedy, or external action.",
+    )
+    frame = SemanticInputFrame(
+        frame_id=frame_id,
+        source_turn_id=source_turn_id,
+        source_text=source,
+        source_type=source_type,
+        domain_guess="generic_source_bound_problem",
+        entities=(_entity(source, issue, "reported_issue_marker"),),
+        quantities=(),
+        relationships=({"subject": "reported source", "predicate": "contains_issue_marker", "object": issue},),
+        constraints=("Keep the domain generic until evidence supports a more specific frame.", "Do not infer an external action or a factual resolution."),
+        goal="Preserve the structured issue and its stated uncertainty for later clarification.",
+        unknown_target="The source facts needed to identify the relevant domain, cause, owner, and next safe question.",
+        uncertainty=(f"The source signals uncertainty through: {uncertainty_marker}.", "No specialist interpretation is justified from the supplied facts."),
+        action_relevance=("ask one source-grounded clarification if an existing owner later selects it",),
+        required_tools=(),
+        required_operator_authority=(),
+        memory_candidates=(),
+        safety_risk_class="generic_source_bound_interpretation_only",
+        status="provisional_interpreted",
+        limitations=limitations,
+        risks=("premature domain assignment could misstate the source",),
+        source_spans=_merge_spans(_spans(source, ((issue, "issue_marker"), (uncertainty_marker, "uncertainty_marker"))), roles.source_spans),
+        **_frame_role_fields(roles),
+    )
+    model = ProblemModel(
+        problem_model_id=_problem_model_id(frame_id, "generic_structured_clarification"),
+        frame_id=frame_id,
+        problem_type="generic_structured_clarification",
+        domain="generic",
+        given_information=({"issue_marker": issue}, {"uncertainty_marker": uncertainty_marker}),
+        unknown_target=frame.unknown_target,
+        constraints=frame.constraints,
+        assumptions=(),
+        candidate_methods=("source-grounded clarification",),
+        selected_method="defer specialist classification and clarify missing source facts",
+        why_this_method="The source contains a structured issue and uncertainty but does not support a domain-specific interpretation.",
+        expected_output="One bounded clarification target without inferred facts or action.",
+        validation_checks=("preserve source spans", "do not assign a specialist domain", "do not infer a remedy"),
+        limitations=limitations,
+        status="provisional_problem_model",
+    )
+    affordances = (
+        _affordance(frame_id, "preserve generic clarification need", risk="interpretation only", authority="none", expected="keep the missing facts visible without overreach", tool="none", next_step="Clarify the missing source facts before assigning a domain, cause, owner, or action."),
+    )
+    return SemanticProblemCompilation(frame, model, None, affordances, "The source contains a structured issue and uncertainty, but it does not justify a domain-specific interpretation; the frame preserves only the stated clarification need.")
 
 
 def _compile_portfolio_risk(
