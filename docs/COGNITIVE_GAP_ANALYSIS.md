@@ -1,5 +1,18 @@
 # DELTA Cognitive Gap Analysis
 
+## Evaluation Update: 2026-10-19
+
+The earlier descriptions below predate the trust evaluation. Current validation:
+86 configured tests passed, one skipped; isolated 10/25/50/100-tick mock runs
+completed with correct post-tick counts and no internal fact or prediction growth.
+See `docs/TRUST_REPORT.md`, `docs/STABILITY_REPORT.md`, and
+`docs/SYSTEM_MECHANICS.md` for scope and measured limitations.
+
+The next gap is governed independent evidence, not another cognitive region.
+Learning currently proposes context relevance, not extracted factual knowledge.
+Predictions remain definition templates, and simulation remains lexical scoring.
+The older dynamics/latch engine is not exercised by the default bounded runtime.
+
 ## Existing Capabilities
 
 - Explicit cognitive cycle: observe, attend, interpret/reason, relate, evaluate,
@@ -27,7 +40,8 @@
 - Planning is a proposed-plan layer only; it is not connected to executed
   outcomes.
 - Agency is not yet part of the main cognitive cycle.
-- Prediction validation exists only as a shallow token-overlap pass.
+- Prediction validation requires explicit later outcome assessments; automatic
+  semantic/domain evaluation is not implemented.
 - Confidence evolution is still proposal-based.
 - Attention does not yet use goal relevance, novelty, contradiction pressure, or
   nervous-system signals.
@@ -47,8 +61,8 @@
 - Plan outcomes should become episodic memories.
 - Self-model health warnings should influence intrinsic goal priority.
 - Contradiction pressure should increase investigation priority.
-- Prediction validation should become evidence-aware rather than token-overlap
-  based.
+- Prediction assessment provenance now exists, but ingestion authorization,
+  evidence entailment, expiry, and conflicting later outcomes need policies.
 
 ## Continuous Operation Blockers
 
@@ -72,7 +86,7 @@
 
 ## Highest-Leverage Next Improvements
 
-1. Replace token-overlap prediction validation with evidence-aware validation.
+1. Build a governed independent-evidence episode and measurable prediction contract.
 2. Add provenance-preserving confidence revision records for semantic knowledge.
 3. Add goal progress feedback from runtime outcomes.
 4. Add relationship strengthening between repeated runtime observations.

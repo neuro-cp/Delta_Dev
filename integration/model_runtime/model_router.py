@@ -112,7 +112,7 @@ class ModelRouter:
             if model_name != self.route_chain[-1]:
                 print("[Router] Passing result to next model for critique.\n")
                 context_payload = {
-                    "question": input_payload.get("question"),
+                    **input_payload,
                     "previous_model_output": raw_output,
                 }
             else:

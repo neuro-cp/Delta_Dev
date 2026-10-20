@@ -127,7 +127,7 @@ def _state() -> dict:
     from learning.region import LearningStore
     from memory.persistent import MemoryStore
     from memory.relationships import RelationshipStore
-    from orchestration.agency import AgencyRegion, GoalStore, PlanStore
+    from orchestration.agency import GoalStore, PlanStore
     from orchestration.self_model import SelfModelRegion
 
     memory = MemoryStore(ROOT / "data" / "memory" / "persistent_memory.jsonl")
@@ -147,10 +147,7 @@ def _state() -> dict:
         contradiction_engine=contradictions,
         prediction_engine=predictions,
     ).generate()
-    latest_agency = AgencyRegion().propose(
-        goals=goals.active(),
-        self_model=snapshot.to_dict(),
-    ).to_dict()
+    latest_agency = events[-1].get("agency") if events else None
     return {
         "current_tick": events[-1] if events else None,
         "runtime_events": events[-10:],
@@ -158,7 +155,7 @@ def _state() -> dict:
         "relationships": _jsonable(relationships.all()[-10:]),
         "learning": _jsonable(learning.all()[-10:]),
         "semantic_knowledge": _jsonable(knowledge.latest()[-20:]),
-        "predictions": _jsonable(predictions.all()[-20:]),
+        "predictions": _jsonable(predictions.latest()[-20:]),
         "goals": _jsonable(goals.active()),
         "plans": _jsonable(plans.all()[-10:]),
         "latest_agency": _jsonable(latest_agency),

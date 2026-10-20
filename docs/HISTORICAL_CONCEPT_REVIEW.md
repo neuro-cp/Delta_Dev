@@ -1,5 +1,22 @@
 # DELTA Historical Concept Review
 
+## Verified Boundary: 2026-10-19
+
+The original comparison below was conceptual, not proof of equivalent mechanics.
+`engine/runtime.py` still contains the actual sustained dominance/relief decision
+latch. It is not used by the default service-cycle attention scorer. The older
+`PopulationModel` and `CompetitionKernel` dynamics remain separate from the
+bounded Python cognitive runtime; optional `RecallBridge` is an integration path.
+Their tuning was neither replaced nor validated by the current mock experiments.
+
+No standalone memory-matrix class was found in the active service path. Layered
+JSONL stores and per-cycle context are not evidence that every historical matrix
+behavior was reproduced. A mapping requires behavioral tests, not renaming.
+
+The trust evaluation found no demonstrated need for a new Global Workspace region
+to fix the observed bugs. First preserve evidence and lifecycle correctness.
+See `docs/SYSTEM_MECHANICS.md` for the implementation-level account.
+
 ## Attention Latch
 
 Status: partially subsumed.

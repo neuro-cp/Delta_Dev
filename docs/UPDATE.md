@@ -4,6 +4,101 @@ This is the canonical running handoff log for Delta development. A new Codex
 session should read `docs/ARCHITECTURE.md`, then `docs/ROADMAP.md`, then this
 file before making changes.
 
+## 2026-10-19 - Publication Scope And README Assessment
+
+At the operator's request, the evaluated changes and a candid README assessment
+are being published on `codex/evaluated-governance-baseline`. The original local
+base is `5043af4`; fetching revealed 342 newer remote commits through `f8dcb92`
+on `codex/delta-cognitive-core`. Those changes have not been reviewed or merged
+into this snapshot. Do not interpret this baseline assessment as an assessment
+of the newer branch, and do not overwrite that branch with this older tree.
+
+The README now describes actual mechanisms, software versus algorithmic
+complexity, strengths, weaknesses, validation limits, and the proposed adaptive
+comparison. No additional cognitive functionality was introduced for publication.
+The configured suite was rerun: **86 passed, 1 skipped**. Unrelated scratch files
+and the pre-existing dump deletion remain outside the publication changes.
+
+## 2026-10-19 - Evaluation And Focused Governance Repairs
+
+### Current Handoff
+
+Read `docs/ARCHITECTURE.md`, `docs/INVARIANTS.md`, `docs/ROADMAP.md`, this
+section, then `docs/TRUST_REPORT.md` and `docs/SYSTEM_MECHANICS.md`.
+The June entries below are historical snapshots, not current capability claims.
+
+Evaluated before refactoring: the unchanged baseline passed 60 configured tests
+but reproduced circular prediction validation, semantic over-suppression,
+implicit supersession, stale prediction readers, lagging event counts and a
+negative-sleep scheduler failure. No broad architecture rewrite was needed.
+
+Implemented in existing modules:
+
+- Exact identity for semantic deduplication; similarity no longer supersedes claims.
+- Typed learning candidates: context relevance remains advisory; explicit claims
+  need evidence IDs; legacy candidates default to unreviewed.
+- Later, explicitly attributed prediction outcomes with preserved forecast
+  confidence/timestamps and append-only, idempotent status revisions.
+- Latest prediction views throughout cycle, runtime, CLI, console and reports;
+  old lexical confirmations are unverified, and failed predictions do not support
+  simulations.
+- Post-tick runtime snapshots; internal prompt provenance; counted-run sleep fix;
+  zero/negative tick-bound handling; current input excluded from prior recall.
+- Console displays recorded agency instead of generating a proposal on polling.
+- Model escalation retains working memory and attended context.
+- New runtime reports use LATEST_RUNTIME_REPORT.md, preserving the first report.
+- An isolated evaluation harness and evidence-backed reports.
+
+### Verification
+
+- Configured pytest spine: **86 passed, 1 skipped**. Command:
+  `.\.venv311\Scripts\python.exe -m pytest -q -p no:cacheprovider`.
+- Deterministic CLI smoke: `What is 4 + 6?` returned `10` through the solver.
+- Fresh-store mock experiments: 10, 25, 50 and 100 ticks; all seven harness checks
+  pass. At 100 ticks: 216 experiences, 16 semantic records, 16 open predictions,
+  zero contradictions, 100 relationships, 100 learning records and four goals.
+- No external outcome was provided, so prediction accuracy correctly remains
+  unknown. No semantic facts were learned from internal prompts.
+- Separate fixtures cover new factual candidates, opposing claims, supported and
+  failed assessments, reopening stores, duplicate evidence, temporal checks,
+  context propagation and read-only inspection.
+
+Run another isolated experiment with a new output directory:
+
+```powershell
+.\.venv311\Scripts\python.exe tools\delta_stability.py --output .tmp\next-evaluation --ticks 10 25 50 100
+```
+
+Source modules changed: `knowledge/{semantic_store,consolidation_engine,prediction_engine}.py`,
+`learning/region/{learning_record,learning_engine}.py`,
+`memory/working_memory/active_context.py`, `orchestration/cycle/cognitive_cycle.py`,
+`orchestration/runtime/cognitive_runtime.py`, `orchestration/self_model/self_model.py`,
+`orchestration/simulation/simulation_region.py`, `integration/model_runtime/model_router.py`,
+`tools/{delta_cli,delta_console,runtime_report,delta_stability}.py`, and focused
+runtime tests. No biological-runtime tuning was changed.
+
+Documentation: new `TRUST_REPORT.md`, `STABILITY_REPORT.md`,
+`LONG_RUNTIME_RECOMMENDATIONS.md`, `SYSTEM_MECHANICS.md`, and portable evidence in
+`docs/evaluation/2026-10-19-stability.json`; updated architecture, invariants,
+roadmap, gap analysis and historical concept review.
+
+### Limits And Next Task
+
+The 100-tick idle benchmark passes; the broader governance phase is not complete.
+No multi-day reliability, real-model reasoning improvement, automatic confidence
+learning, or scientific predictive accuracy is established. Source labels are not
+authentication. Claim evidence still needs verification and review. JSONL reads
+remain full scans and have no multi-store transaction/crash recovery protocol.
+
+Build a single governed external-evidence episode with a reviewed claim,
+falsifiable prediction and independently assessed outcome. Then connect that
+outcome to justified confidence and goal-progress revisions. Preserve historical
+data and audit prior lexical validations before reusing live stores.
+
+Existing reports/data were not rewritten. Changes are local and uncommitted;
+no push was performed. Unrelated scratch files and the pre-existing deletion of
+`z artifacts/neural_framework_dump.txt` remain untouched.
+
 ## 2026-06-30
 
 ### Summary

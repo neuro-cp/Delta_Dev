@@ -54,7 +54,9 @@ class CognitiveCycle:
         self._learning = learning_engine or LearningEngine()
         self._working_memory = working_memory_builder or WorkingMemoryContextBuilder()
 
-    def run(self, prompt: str, *, tags: Iterable[str] = ()) -> CognitiveCycleResult:
+    def run(
+        self, prompt: str, *, tags: Iterable[str] = (), observation_source: str = "operator"
+    ) -> CognitiveCycleResult:
         normalized_prompt = str(prompt).strip()
         if not normalized_prompt:
             raise ValueError("cycle prompt cannot be empty")
@@ -68,22 +70,23 @@ class CognitiveCycle:
         stages.append(
             CycleStageRecord(
                 stage="observe",
-                summary="Captured operator text input.",
-                metadata={"input_length": len(normalized_prompt)},
+                summary="Captured cycle text input.",
+                metadata={"input_length": len(normalized_prompt), "source": observation_source},
             )
         )
 
+        # The current input is working context, not a prior repeated experience.
+        recalled = self._memory_store.recall(normalized_prompt, limit=8)
         observation = self._memory_store.add(
             text=normalized_prompt,
             kind="observation",
-            source="operator",
+            source=observation_source,
             layer="experience",
             tags=("cycle", "observation", *tuple(tags)),
             metadata={"cycle_id": cycle_id},
         )
         memory_ids.append(observation.memory_id)
 
-        recalled = self._memory_store.recall(normalized_prompt, limit=8)
         attended = self._attention.rank_memory(
             current_task=normalized_prompt,
             memories=recalled,
@@ -130,7 +133,7 @@ class CognitiveCycle:
         if self._prediction_engine is not None:
             prediction_context = [
                 prediction
-                for prediction in self._prediction_engine.all()
+                for prediction in self._prediction_engine.latest()
                 if prediction.status == "open"
                 and (
                     not semantic_ids
@@ -144,6 +147,7 @@ class CognitiveCycle:
             attended_context=attended_context,
             semantic_knowledge=semantic_context,
             predictions=prediction_context,
+            observation_source=observation_source,
         )
         stages.append(
             CycleStageRecord(
@@ -218,7 +222,7 @@ class CognitiveCycle:
                 ),
                 CycleStageRecord(
                     stage="plan",
-                    summary="Deferred: planning region is not yet implemented.",
+                    summary="Deferred: proposal planning is performed by the runtime agency stage.",
                     metadata={"status": "pending"},
                 ),
                 CycleStageRecord(
@@ -293,7 +297,7 @@ class CognitiveCycle:
             [
                 CycleStageRecord(
                     stage="consolidate_knowledge",
-                    summary="Deferred: semantic consolidation is not yet implemented.",
+                    summary="Deferred: semantic consolidation is performed by the bounded runtime.",
                     metadata={
                         "status": "pending",
                         "learning_id": learning_record.learning_id,
@@ -301,7 +305,7 @@ class CognitiveCycle:
                 ),
                 CycleStageRecord(
                     stage="update_goals",
-                    summary="Deferred: goal state is not yet implemented.",
+                    summary="Deferred: automatic goal revision is not implemented.",
                     metadata={
                         "status": "pending",
                         "goal_candidate_count": len(learning_record.goal_candidates),

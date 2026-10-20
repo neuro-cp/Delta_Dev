@@ -48,6 +48,7 @@ class LearningEngine:
                     evidence_memory_ids=repeated_ids[:5],
                     confidence=min(0.85, 0.45 + (0.08 * len(repeated_ids))),
                     rationale="Repeated attended memories overlapped with the current task.",
+                    kind="context_relevance",
                 )
             )
 

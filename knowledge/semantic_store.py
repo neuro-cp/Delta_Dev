@@ -67,23 +67,15 @@ class SemanticKnowledgeStore:
         self,
         text: str,
         *,
-        threshold: float = 0.82,
+        threshold: float = 1.0,
     ) -> SemanticKnowledgeRecord | None:
-        query_tokens = self._tokens(text)
+        """Exact normalized identity only; threshold is retained for API compatibility."""
         normalized = self._normalize(text)
-        if not query_tokens:
+        if not normalized:
             return None
 
         for record in self.latest():
-            candidate_text = record.concept + " " + record.definition
             if normalized == self._normalize(record.definition):
-                return record
-            record_tokens = self._tokens(candidate_text)
-            if not record_tokens:
-                continue
-            overlap = len(query_tokens & record_tokens)
-            union = len(query_tokens | record_tokens)
-            if union and (overlap / union) >= threshold:
                 return record
         return None
 
@@ -93,4 +85,5 @@ class SemanticKnowledgeStore:
 
     @staticmethod
     def _normalize(text: str) -> str:
-        return " ".join(sorted(SemanticKnowledgeStore._tokens(text)))
+        # Similarity belongs in retrieval, not identity: order and negation matter.
+        return " ".join(str(text).casefold().split())

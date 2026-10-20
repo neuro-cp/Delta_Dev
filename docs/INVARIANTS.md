@@ -10,6 +10,8 @@ roadmap items or feature goals; they are substrate invariants.
 - Provenance is never lost.
 - Contradictions are linked, not erased.
 - Confidence changes require evidence.
+- A claim's source observations cannot independently validate its prediction.
+- Relevance, repetition and elapsed ticks do not establish factual support.
 - LLMs propose; Delta governs.
 - Agency proposes; execution remains bounded and explicit.
 - No subsystem receives hidden execution authority.
@@ -18,6 +20,9 @@ roadmap items or feature goals; they are substrate invariants.
 
 - Append-only history must not be mistaken for current truth.
 - Current-state metrics must resolve latest valid revisions.
+- Post-tick reports describe the completed tick, not its initial state.
+- Inspection must display recorded proposals rather than generate new decisions.
+- Similarity alone cannot supersede a knowledge record or erase a contradiction.
 - Every persistent record should remain traceable to its origin.
 - Every promoted knowledge record must preserve source evidence.
 - Every prediction should remain traceable through its lifecycle.
@@ -41,5 +46,6 @@ roadmap items or feature goals; they are substrate invariants.
   adding new top-level regions.
 - Treat runtime experiments as evidence.
 - Reports must distinguish observed behavior from aspiration.
+- Preserve historical reports; subsequent reports use a separate output path.
 - Documentation must be sufficient for a cold Codex session to resume without
   rediscovering context.

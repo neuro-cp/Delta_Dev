@@ -47,7 +47,7 @@ def write_first_runtime_report(
         contradiction_engine=contradictions,
         prediction_engine=predictions,
     ).generate()
-    prediction_records = predictions.all()
+    prediction_records = predictions.latest()
     plan_records = plans.all()
     semantic_created = sum(
         int(event.get("consolidation", {}).get("semantic_created", 0))
@@ -62,17 +62,20 @@ def write_first_runtime_report(
     if not agency_proposals:
         unexpected.append("Runtime did not produce agency proposals.")
 
-    report = root / "docs" / "FIRST_RUNTIME_REPORT.md"
+    report = root / "docs" / "LATEST_RUNTIME_REPORT.md"
+    report.parent.mkdir(parents=True, exist_ok=True)
     report.write_text(
         "\n".join(
             [
-                "# DELTA First Runtime Report",
+                "# DELTA Latest Runtime Report",
                 "",
                 "## Summary",
                 "",
                 "This report is generated from Delta's recorded runtime events and",
                 "current append-only stores. It does not claim intelligence; it",
                 "evaluates whether the runtime remained coherent.",
+                "Counts cover all supplied stores/events, not deltas from one run.",
+                "Validated means an attributed explicit outcome assessment, not independent verification.",
                 "",
                 "## Counts",
                 "",
@@ -81,9 +84,13 @@ def write_first_runtime_report(
                 f"- semantic concepts formed: {len(knowledge.latest())}",
                 f"- relationships formed: {len(relationships.all())}",
                 f"- predictions made: {len(prediction_records)}",
-                f"- predictions validated: {len([item for item in prediction_records if item.status in {'succeeded', 'failed'}])}",
+                f"- prediction history rows: {len(predictions.all())}",
+                f"- predictions validated: {sum(PredictionEngine.is_evaluated(item) for item in prediction_records)}",
+                f"- predictions open: {sum(item.status == 'open' for item in prediction_records)}",
+                f"- predictions failed: {sum(item.status == 'failed' and PredictionEngine.is_evaluated(item) for item in prediction_records)}",
+                f"- unverified historical outcomes: {snapshot.predictions['unverified_terminal']}",
                 f"- contradictions found: {len(contradictions.all())}",
-                "- confidence changes: 0",
+                "- confidence changes: not measured by this report",
                 f"- goals created: {len(goals.latest())}",
                 f"- plans generated: {len(plan_records)}",
                 f"- reflections: {snapshot.metrics['reflection_count']}",
@@ -110,7 +117,7 @@ def write_first_runtime_report(
                 "",
                 "## Failure Modes",
                 "",
-                "- Prediction validation is still absent.",
+                "- Prediction validation requires later explicit outcome assessments; text overlap is insufficient.",
                 "- Confidence updates are still advisory and not applied.",
                 "- Runtime consolidation is simple and may repeatedly create related concepts.",
                 "- Console visualization is read-only and not a full live websocket interface.",

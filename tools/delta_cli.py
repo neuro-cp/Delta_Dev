@@ -264,7 +264,7 @@ def main() -> int:
     parser.add_argument(
         "--write-runtime-report",
         action="store_true",
-        help="Write docs/FIRST_RUNTIME_REPORT.md after runtime execution.",
+        help="Write docs/LATEST_RUNTIME_REPORT.md after runtime execution.",
     )
     parser.add_argument(
         "--cycle",
@@ -272,6 +272,10 @@ def main() -> int:
         help="Run one explicit observe-interpret-store-reflect cognitive cycle.",
     )
     args = parser.parse_args()
+    if args.runtime_duration < 0 or args.runtime_interval < 0 or (
+        args.runtime_ticks is not None and args.runtime_ticks < 0
+    ):
+        parser.error("runtime bounds cannot be negative")
 
     if args.list_models:
         for name, spec in list_available_models().items():
@@ -338,11 +342,9 @@ def main() -> int:
 
         duration = int(args.runtime_duration or 0)
         max_ticks = args.runtime_ticks
-        if max_ticks is not None and max_ticks <= 0:
-            max_ticks = None
         results = runtime.run(
             duration_seconds=duration,
-            interval_seconds=max(1, int(args.runtime_interval)),
+            interval_seconds=args.runtime_interval,
             max_ticks=max_ticks,
         )
         for index, result in enumerate(results, start=1):
@@ -460,7 +462,7 @@ def main() -> int:
         return 0
 
     if args.list_predictions:
-        records = predictions.all()
+        records = predictions.latest()
         if not records:
             print("no predictions")
             return 0
@@ -505,7 +507,7 @@ def main() -> int:
             options=args.simulate_option,
             semantic_knowledge=knowledge.latest(),
             relationships=relationships.all(),
-            predictions=predictions.all(),
+            predictions=predictions.latest(),
         )
         if args.json:
             print(json.dumps(_to_jsonable(report), indent=2, sort_keys=True))
@@ -544,7 +546,7 @@ def main() -> int:
             options=option_texts,
             semantic_knowledge=knowledge.latest(),
             relationships=relationships.all(),
-            predictions=predictions.all(),
+            predictions=predictions.latest(),
             goals=[goal.description for goal in active_goals],
         )
 

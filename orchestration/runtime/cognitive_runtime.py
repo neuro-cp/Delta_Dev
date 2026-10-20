@@ -74,6 +74,8 @@ class CognitiveRuntime:
         interval_seconds: int = 30,
         max_ticks: int | None = None,
     ) -> list[RuntimeTickResult]:
+        if duration_seconds < 0 or interval_seconds < 0 or (max_ticks is not None and max_ticks < 0):
+            raise ValueError("runtime bounds cannot be negative")
         duration = max(0, int(duration_seconds))
         deadline = time.monotonic() + duration
         results: list[RuntimeTickResult] = []
@@ -87,13 +89,14 @@ class CognitiveRuntime:
             results.append(self.tick(tick_index=tick_index))
             if max_ticks is not None and tick_index >= max_ticks:
                 break
-            remaining = deadline - time.monotonic() if duration else interval_seconds
+            remaining = interval_seconds if max_ticks is not None else deadline - time.monotonic()
             if max_ticks is None and remaining <= 0:
                 break
-            time.sleep(min(max(0, int(interval_seconds)), remaining))
+            time.sleep(max(0, min(float(interval_seconds), remaining)))
         return results
 
     def tick(self, *, tick_index: int) -> RuntimeTickResult:
+        started = time.perf_counter()
         self_model = self._self_model().generate()
         active_goals = self._goal_store.active()
         prompt = self._prompt_for_tick(tick_index=tick_index, self_model=self_model.to_dict())
@@ -106,9 +109,9 @@ class CognitiveRuntime:
             semantic_store=self._semantic_store,
             prediction_engine=self._prediction_engine,
         )
-        cycle_result = cycle.run(prompt, tags=("runtime",))
+        cycle_result = cycle.run(prompt, tags=("runtime",), observation_source="delta:runtime")
         validated_predictions = self._prediction_engine.validate_against_observations(
-            self._memory_store.all()[-20:]
+            self._memory_store.all()
         )
 
         consolidation = SemanticConsolidationEngine(
@@ -117,12 +120,14 @@ class CognitiveRuntime:
             prediction_engine=self._prediction_engine,
         ).consolidate(self._learning_store.all()[-3:])
 
+        self_model = self._self_model().generate()
+
         simulation = SimulationRegion().simulate(
             options=[f"pursue goal: {goal.description}" for goal in active_goals[:3]]
             or [f"investigate: {item['summary']}" for item in self_model.self_observations[:3]],
             semantic_knowledge=self._semantic_store.latest(),
             relationships=self._relationship_store.all(),
-            predictions=self._prediction_engine.all(),
+            predictions=self._prediction_engine.latest(),
             goals=[goal.description for goal in active_goals],
         )
         agency = AgencyRegion().propose(
@@ -147,9 +152,13 @@ class CognitiveRuntime:
                 "experience_count": self_model.metrics["experience_count"],
                 "semantic_knowledge_count": self_model.metrics["semantic_knowledge_count"],
                 "learning_record_count": self_model.metrics["learning_record_count"],
+                "prediction_count": self_model.metrics["prediction_count"],
+                "open_prediction_count": self_model.metrics["open_prediction_count"],
+                "prediction_accuracy": self_model.metrics["prediction_accuracy"],
                 "warnings": list(self_model.cognitive_health.get("warnings", [])),
             },
-            metadata={"tick_index": tick_index, "non_daemon": True},
+            metadata={"tick_index": tick_index, "non_daemon": True,
+                      "snapshot_phase": "post_tick", "duration_seconds": time.perf_counter() - started},
         )
         self._append_event(result)
         return result

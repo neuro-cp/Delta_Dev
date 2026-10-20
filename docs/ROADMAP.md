@@ -11,6 +11,12 @@ The current goal is to prove that Delta's existing cognitive substrate remains
 stable, auditable, and bounded over longer runtimes. The roadmap should now ask:
 what evidence says Delta is ready to build the next thing?
 
+2026-10-19 evidence: isolated 10/25/50/100-tick mock runs pass bookkeeping checks;
+86 configured tests pass, one is skipped. Read `docs/TRUST_REPORT.md` and
+`docs/STABILITY_REPORT.md`. These results do not complete the governance phase:
+external evidence, confidence revision, historical-state repair and recovery
+remain unresolved.
+
 ## Core Cognitive Cycle
 
 Delta's target loop is:
@@ -142,7 +148,7 @@ Memory is the substrate. The loop is the organism.
 - Begin adaptive prioritization from repeated success, repeated failure,
   uncertainty, and contradiction pressure.
 
-## Phase 8: Grounding And First Runtime
+## Grounding And First Runtime Foundations
 
 - Seed foundational semantic concepts with provenance.
 - Run bounded runtime ticks, not a permanent daemon.
@@ -170,7 +176,8 @@ Exit criteria:
 - Stable self-model metrics based on latest valid state.
 - No duplicate semantic explosion.
 - Predictions remain bounded and traceable through revisions.
-- Confidence changes are monotonic and evidence-based.
+- Confidence is unchanged without new evidence, decreases when contrary evidence
+  warrants it, and does not change again when the same evidence is replayed.
 - Agency proposals remain bounded and non-executing.
 
 ## Phase 9: Observability
@@ -219,22 +226,21 @@ Exit criteria:
 
 ## Maturity Scorecard
 
-These percentages are explicit engineering estimates, not objective truth. They
-should change only when runtime evidence or implementation review justifies it.
+The previous subjective percentages have been replaced with observed evidence.
 
-| Capability | Status | Confidence |
+| Capability | Status | Evidence / Limitation |
 | --- | --- | --- |
-| Experience Memory | Stable | 95% |
-| Relationships | Stable | 90% |
-| Semantic Knowledge | Stable | 80% |
-| Consolidation | Stable | 75% |
-| Prediction | Experimental | 60% |
-| Confidence Evolution | Experimental | 55% |
-| Self Model | Stable | 80% |
-| Simulation | Experimental | 65% |
-| Agency | Experimental | 55% |
-| Runtime | Stable | 85% |
-| Console | Planned | 10% |
+| Experience Memory | Bounded-run validated | 216 records after 100 ticks; crash recovery untested |
+| Relationships | Limited | One temporal link per successful cycle; no causal learning |
+| Semantic Knowledge | Governance repaired | Preserves distinct claims and provenance; review incomplete |
+| Consolidation | Explicit claims only | No internal fact growth; no automatic factual extraction |
+| Prediction | Explicit assessments | Lifecycle tested; no automatic domain evaluator |
+| Confidence Evolution | Not implemented | Original forecast retained; semantic calibration absent |
+| Self Model | Partially validated | Current counts repaired; several health metrics remain proxies |
+| Simulation | Heuristic | Weighted lexical evidence; not a learned world simulator |
+| Agency | Proposal only | Bounded in all runs; no execution/goal progress feedback |
+| Runtime | 100 mock ticks validated | No proof of multi-day, multiwriter or real-model stability |
+| Console | Basic inspector exists | Recorded agency/current predictions; richer inspection pending |
 
 ## Stabilization Rule
 
@@ -248,9 +254,11 @@ existing architecture.
 
 Continue governance and validation:
 
-1. Replace token-overlap prediction validation with evidence-aware validation.
-2. Add provenance-preserving confidence revision records for semantic knowledge.
-3. Add goal progress feedback from runtime outcomes.
-4. Add relationship strengthening between repeated runtime observations.
-5. Design Global Workspace as a tick-local integration surface before deeper
-   runtime coupling.
+1. Add one governed external-evidence ingestion/review episode with a falsifiable
+   prediction and independent outcome fixture.
+2. Audit old self-validated predictions and implicit semantic supersessions
+   without rewriting history.
+3. Add justified confidence revision and goal-progress feedback from outcomes.
+4. Establish crash recovery and single-writer ownership before longer runs.
+5. Measure real region activity before deciding whether a Global Workspace adds
+   value; no new top-level region is currently justified by this evaluation.

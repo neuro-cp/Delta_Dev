@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 from typing import Any, Iterable, Sequence
 
 from knowledge.prediction_record import PredictionRecord
+from knowledge.prediction_engine import PredictionEngine
 from knowledge.semantic_record import SemanticKnowledgeRecord
 from memory.relationships.relationship_record import RelationshipRecord
 from memory.working_memory import WorkingMemoryContext
@@ -102,7 +103,9 @@ class SimulationRegion:
         matching_predictions = [
             prediction
             for prediction in predictions
-            if option_tokens & self._tokens(prediction.expectation)
+            if (prediction.status == "open" or (
+                prediction.status == "supported" and PredictionEngine.is_evaluated(prediction)
+            )) and option_tokens & self._tokens(prediction.expectation)
         ]
         matching_knowledge = [
             record

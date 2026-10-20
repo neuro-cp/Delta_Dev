@@ -10,6 +10,7 @@ class SemanticCandidate:
     evidence_memory_ids: List[str]
     confidence: float
     rationale: str
+    kind: str = "unreviewed"
 
 
 @dataclass(frozen=True)

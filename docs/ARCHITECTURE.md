@@ -143,6 +143,12 @@ operator priority, salience, and future nervous-system signals.
 
 ## Current Architecture Status
 
+Evidence as of 2026-10-19: `docs/TRUST_REPORT.md` and
+`docs/SYSTEM_MECHANICS.md` distinguish implementation from aspiration. The
+canonical Python service runtime and the older `BrainRuntime` dynamics engine
+are separate execution paths. The 100-tick mock experiment exercises only the
+service runtime with optional runtime recall disabled.
+
 Implemented early:
 
 - CLI developer entrypoint
@@ -177,9 +183,9 @@ Incomplete:
 - completed plan execution histories
 - action beyond returning orchestration output
 - applied confidence evolution
-- prediction validation
+- domain-specific automatic prediction validation
 - durable attention state
-- scheduled consolidation
+- production background consolidation and recovery
 - simulation feedback into prediction evaluation and planning
 - live visual and auditory input
 - regulable nervous-system signals
@@ -272,6 +278,16 @@ Current knowledge implementation:
 - revisions append new records rather than overwriting old records
 - contradictions preserve both claims and link them through contradiction records
 - predictions are generated from sufficiently confident semantic records
+
+Consolidation preserves distinct claims. Similarity is a retrieval signal, not
+permission to discard or supersede a claim. Only explicitly typed claim
+candidates with evidence IDs are eligible; context-relevance and unreviewed
+proposals are not factual knowledge. Evidence entailment still requires review.
+
+Prediction validation accepts explicit later outcome assessments with attribution,
+not lexical overlap. Original forecast confidence is retained, and accuracy uses
+latest explicitly evaluated records. Legacy lexical confirmations remain visible
+as unverified history. This does not establish external source reliability.
 
 Knowledge has no direct execution authority.
 

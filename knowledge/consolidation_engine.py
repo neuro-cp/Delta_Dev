@@ -38,6 +38,7 @@ class SemanticConsolidationEngine:
         created: List[SemanticKnowledgeRecord] = []
         contradictions = []
         predictions = []
+        skipped = []
 
         existing = self._semantic_store.latest()
 
@@ -48,11 +49,18 @@ class SemanticConsolidationEngine:
                     evidence_ids = list(candidate.evidence_memory_ids)
                     confidence = float(candidate.confidence)
                     rationale = candidate.rationale
+                    kind = candidate.kind
                 else:
                     text = str(candidate.get("text", ""))
                     evidence_ids = list(candidate.get("evidence_memory_ids", []))
                     confidence = float(candidate.get("confidence", 0.0))
                     rationale = str(candidate.get("rationale", ""))
+                    kind = candidate.get("kind", "unreviewed")
+
+                if kind != "claim" or not evidence_ids:
+                    skipped.append({"learning_id": learning.learning_id,
+                                    "reason": "requires_claim_and_evidence"})
+                    continue
 
                 if not text.strip():
                     continue
@@ -61,7 +69,6 @@ class SemanticConsolidationEngine:
                 if equivalent is not None:
                     continue
 
-                related = self._semantic_store.find_related(text, threshold=0.65)
                 now = datetime.now(timezone.utc).isoformat()
                 record = SemanticKnowledgeRecord(
                     concept_id=str(uuid.uuid4()),
@@ -75,7 +82,7 @@ class SemanticConsolidationEngine:
                     relationship_ids=[],
                     creation_source=f"learning:{learning.learning_id}",
                     last_validation=None,
-                    revision_history=[item.concept_id for item in related],
+                    revision_history=[],
                     metadata={
                         "cycle_id": learning.cycle_id,
                         "rationale": rationale,
@@ -103,6 +110,7 @@ class SemanticConsolidationEngine:
             "created": created,
             "contradictions": contradictions,
             "predictions": predictions,
+            "skipped": skipped,
         }
 
     @staticmethod

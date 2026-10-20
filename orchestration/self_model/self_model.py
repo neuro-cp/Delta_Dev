@@ -161,6 +161,11 @@ class SelfModelRegion:
             contradiction_count=len(contradictions),
         )
         cognitive_health = self._health_evaluator.evaluate(metrics)
+        unverified_terminal = sum(
+            p.status != "open" and not PredictionEngine.is_evaluated(p) for p in predictions
+        )
+        if unverified_terminal:
+            cognitive_health["warnings"].append("historical prediction outcomes lack explicit validation")
         subsystem_health = self._subsystem_health(
             memories=memories,
             relationships=relationships,
@@ -199,10 +204,10 @@ class SelfModelRegion:
             limitations=[
                 "goal progress feedback is not yet implemented",
                 "planning is proposal-only and non-executing",
-                "prediction evaluation is shallow token-overlap validation",
+                "prediction evaluation requires explicit attributed outcome assessments",
                 "confidence evolution is proposal-based only",
                 "attention has no durable decay model yet",
-                "self-model is generated on demand, not continuously scheduled",
+                "self-model is computed on demand and at runtime tick boundaries",
             ],
             knowledge_coverage={
                 "semantic_records": len(knowledge),
@@ -217,6 +222,8 @@ class SelfModelRegion:
             predictions={
                 "total": len(predictions),
                 "open": metrics.open_prediction_count,
+                "validated": sum(PredictionEngine.is_evaluated(p) for p in predictions),
+                "unverified_terminal": unverified_terminal,
                 "accuracy": metrics.prediction_accuracy,
                 "recent": [prediction.prediction_id for prediction in predictions[-10:]],
             },
@@ -259,7 +266,7 @@ class SelfModelRegion:
         evaluated_predictions = [
             prediction
             for prediction in predictions
-            if prediction.status in {"supported", "succeeded", "failed"}
+            if PredictionEngine.is_evaluated(prediction)
         ]
         succeeded_predictions = [
             prediction

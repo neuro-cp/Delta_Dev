@@ -100,6 +100,7 @@ def test_consolidation_suppresses_duplicate_semantic_candidates(tmp_path):
                 evidence_memory_ids=["m1"],
                 confidence=0.8,
                 rationale="test",
+                kind="claim",
             )
         ],
     )
@@ -126,11 +127,14 @@ def test_prediction_validation_marks_supported_predictions(tmp_path):
         memory_store=memory,
         prediction_engine=predictions,
     ).seed()
+    prediction = predictions.latest()[0]
     observation = memory.add(
-        text="Confidence estimates how strongly Delta should rely on a claim.",
-        kind="observation",
-        source="test",
+        text="Observed the expected outcome in an independent fixture.",
+        kind="prediction_outcome",
+        source="test:fixture",
         tags=("test",),
+        metadata={"prediction_id": prediction.prediction_id, "outcome": "supported",
+                  "validation_source": "fixture assessment"},
     )
 
     validated = predictions.validate_against_observations([observation])

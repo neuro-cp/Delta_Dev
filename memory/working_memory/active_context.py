@@ -76,12 +76,13 @@ class WorkingMemoryContextBuilder:
         attended_context: Iterable[Dict[str, Any]],
         semantic_knowledge: Iterable[Any] = (),
         predictions: Iterable[Any] = (),
+        observation_source: str = "operator",
     ) -> WorkingMemoryContext:
         items: List[WorkingMemoryContextItem] = [
             WorkingMemoryContextItem(
                 key=f"{cycle_id}:observation",
                 kind="observation",
-                source="operator",
+                source=observation_source,
                 text=observation,
                 priority=1.0,
                 metadata={},
